@@ -108,6 +108,11 @@ namespace Json.Schema
 						var keyword = reader.GetString();
 						reader.Read();
 						var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
+						if (keywordType == null)
+						{
+							JsonDocument.ParseValue(ref reader);
+							break;
+						}
 						var implementation = (IJsonSchemaKeyword)JsonSerializer.Deserialize(ref reader, keywordType, options);
 						keywords.Add(implementation);
 						break;
@@ -123,7 +128,12 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			writer.WriteStartObject();
+			foreach (var keyword in value.Keywords)
+			{
+				JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
+			}
+			writer.WriteEndObject();
 		}
 	}
 }

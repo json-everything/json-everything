@@ -21,7 +21,7 @@ namespace Json.Schema
 				return ValidationResults.Null;
 
 			var number = context.Instance.GetDecimal();
-			return Value < number
+			return Value >= number
 				? ValidationResults.Success()
 				: ValidationResults.Fail($"{number} is not less than {Value}");
 		}
@@ -40,7 +40,7 @@ namespace Json.Schema
 		}
 		public override void Write(Utf8JsonWriter writer, MaximumKeyword value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			writer.WriteNumber("maximum", value.Value);
 		}
 	}
 }

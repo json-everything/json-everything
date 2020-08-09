@@ -39,7 +39,7 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, IdKeyword value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			writer.WriteString("$id", value.Id.OriginalString);
 		}
 	}
 }

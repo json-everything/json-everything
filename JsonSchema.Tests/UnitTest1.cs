@@ -17,13 +17,4 @@ namespace Json.Schema.Tests
 			Assert.True(results.IsValid);
 		}
 	}
-
-	public class JsonSchemaTestSuite
-	{
-		[OneTimeSetUp]
-		public void GetTests()
-		{
-
-		}
-	}
 }
