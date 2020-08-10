@@ -4,10 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
-	[SchemaKeyword("minimum")]
+	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(MinimumKeywordJsonConverter))]
 	public class MinimumKeyword : IJsonSchemaKeyword
 	{
+		internal const string Name = "minimum";
+
 		public decimal Value { get; }
 
 		public MinimumKeyword(decimal value)
@@ -23,7 +25,7 @@ namespace Json.Schema
 			var number = context.Instance.GetDecimal();
 			return Value <= number
 				? ValidationResults.Success()
-				: ValidationResults.Fail($"{number} is not less than {Value}");
+				: ValidationResults.Fail($"{number} is not less than or equal to {Value}");
 		}
 	}
 
@@ -40,7 +42,7 @@ namespace Json.Schema
 		}
 		public override void Write(Utf8JsonWriter writer, MinimumKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteNumber("minimum", value.Value);
+			writer.WriteNumber(MinimumKeyword.Name, value.Value);
 		}
 	}
 }

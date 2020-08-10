@@ -11,14 +11,11 @@ namespace Json.Schema
 	[JsonConverter(typeof(SchemaJsonConverter))]
 	public class JsonSchema
 	{
-		private static Type[] _firstKeywords = {typeof(IdKeyword)};
-		private static Type[] _lastKeywords = { };
-
 		private bool? _boolValue;
 
 		public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>());
 		public static readonly JsonSchema True = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>()) {_boolValue = true};
-		public static readonly JsonSchema False = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>()) { _boolValue = false};
+		public static readonly JsonSchema False = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>()) {_boolValue = false};
 
 		public IReadOnlyCollection<IJsonSchemaKeyword> Keywords { get; }
 

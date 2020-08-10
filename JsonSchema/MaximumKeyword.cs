@@ -4,10 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
-	[SchemaKeyword("maximum")]
+	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(MaximumKeywordJsonConverter))]
 	public class MaximumKeyword : IJsonSchemaKeyword
 	{
+		internal const string Name = "maximum";
+
 		public decimal Value { get; }
 
 		public MaximumKeyword(decimal value)
@@ -23,7 +25,7 @@ namespace Json.Schema
 			var number = context.Instance.GetDecimal();
 			return Value >= number
 				? ValidationResults.Success()
-				: ValidationResults.Fail($"{number} is not less than {Value}");
+				: ValidationResults.Fail($"{number} is not greater than or equal to {Value}");
 		}
 	}
 
@@ -40,7 +42,7 @@ namespace Json.Schema
 		}
 		public override void Write(Utf8JsonWriter writer, MaximumKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteNumber("maximum", value.Value);
+			writer.WriteNumber(MaximumKeyword.Name, value.Value);
 		}
 	}
 }

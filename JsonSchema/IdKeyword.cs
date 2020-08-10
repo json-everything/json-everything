@@ -4,11 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
-	[SchemaKeyword("$id")]
+	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue)]
 	[JsonConverter(typeof(IdKeywordJsonConverter))]
 	public class IdKeyword : IJsonSchemaKeyword
 	{
+		internal const string Name = "$id";
+
 		public Uri Id { get; }
 
 		public IdKeyword(Uri id)
@@ -39,7 +41,7 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, IdKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteString("$id", value.Id.OriginalString);
+			writer.WriteString(IdKeyword.Name, value.Id.OriginalString);
 		}
 	}
 }
