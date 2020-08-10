@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Json.More\Json.More.csproj" />
     <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
   </ItemGroup>
 

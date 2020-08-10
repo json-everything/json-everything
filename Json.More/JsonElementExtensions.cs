@@ -2,15 +2,10 @@
 using System.Linq;
 using System.Text.Json;
 
-namespace Json.Pointer
+namespace Json.More
 {
-	public static class JsonExtensions
+	public static class JsonElementExtensions
 	{
-		public static bool IsEquivalentTo(this JsonDocument a, JsonDocument b)
-		{
-			return a.RootElement.IsEquivalentTo(b.RootElement);
-		}
-
 		public static bool IsEquivalentTo(this JsonElement a, JsonElement b)
 		{
 			if (a.ValueKind != b.ValueKind) return false;

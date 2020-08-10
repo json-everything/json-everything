@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text.Json;
 using FluentAssertions;
+using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
 

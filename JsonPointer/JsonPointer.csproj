@@ -11,4 +11,8 @@
     <PackageReference Include="ZString" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Json.More\Json.More.csproj" />
+  </ItemGroup>
+
 </Project>

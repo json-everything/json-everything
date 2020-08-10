@@ -5,7 +5,10 @@ namespace Json.Schema.Tests
 {
 	public class SerializationTests
 	{
+		[TestCase("{\"$id\":\"http://some.site/schema\"}")]
+		[TestCase("{\"$schema\":\"http://some.site/schema\"}")]
 		[TestCase("{\"title\":\"some text\"}")]
+		[TestCase("{\"description\":\"some text\"}")]
 		[TestCase("{\"default\":\"some text\"}")]
 		[TestCase("{\"default\":9}")]
 		[TestCase("{\"default\":9.0}")]
@@ -14,7 +17,7 @@ namespace Json.Schema.Tests
 		[TestCase("{\"default\":null}")]
 		[TestCase("{\"default\":[]}")]
 		[TestCase("{\"default\":{}}")]
-		[TestCase("{\"$id\":\"http://some.site/schema\"}")]
+		[TestCase("{\"examples\":[1,true,false,null,\"string\",[],{}]}")]
 		public void RoundTrip(string text)
 		{
 			var schema = JsonSchema.FromText(text);
