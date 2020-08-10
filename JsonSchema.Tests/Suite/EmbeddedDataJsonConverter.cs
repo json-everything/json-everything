@@ -4,14 +4,15 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema.Tests.Suite
 {
-	public class EmbeddedDataJsonConverter : JsonConverter<JsonDocument>
+	public class EmbeddedDataJsonConverter : JsonConverter<JsonElement>
 	{
-		public override JsonDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override JsonElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			return JsonDocument.ParseValue(ref reader);
+			using var document = JsonDocument.ParseValue(ref reader);
+			return document.RootElement.Clone();
 		}
 
-		public override void Write(Utf8JsonWriter writer, JsonDocument value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, JsonElement value, JsonSerializerOptions options)
 		{
 			throw new NotImplementedException();
 		}

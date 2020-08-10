@@ -10,7 +10,7 @@ namespace Json.Schema.Tests
 		{
 			var schema = JsonSchema.FromText("{\"$id\":\"http://my.schema/test1\",\"minimum\":5}");
 
-			var json = JsonDocument.Parse("10");
+			using var json = JsonDocument.Parse("10");
 
 			var results = schema.Validate(json.RootElement);
 

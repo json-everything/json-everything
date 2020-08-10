@@ -24,8 +24,8 @@ namespace Json.Schema
 
 			var str = context.Instance.GetString();
 			return Value <= str.Length
-				? ValidationResults.Success()
-				: ValidationResults.Fail($"Value is not longer than or equal to {Value} characters");
+				? ValidationResults.Success(context)
+				: ValidationResults.Fail(context, $"Value is not longer than or equal to {Value} characters");
 		}
 	}
 

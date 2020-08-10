@@ -7,7 +7,7 @@ namespace Json.Schema.Tests.Suite
 	{
 		public string Description { get; set; }
 		[JsonConverter(typeof(EmbeddedDataJsonConverter))]
-		public JsonDocument Data { get; set; }
+		public JsonElement Data { get; set; }
 		public bool Valid { get; set; }
 	}
 }

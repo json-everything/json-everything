@@ -26,7 +26,7 @@ namespace JsonPointer.Tests
 		[TestCaseSource(nameof(ErrorCases))]
 		public void Errors(string pointerString, string expectedError)
 		{
-			var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"false\":false}}");
+			using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"false\":false}}");
 
 			var pointer = Json.Pointer.JsonPointer.Parse(pointerString);
 
@@ -38,7 +38,7 @@ namespace JsonPointer.Tests
 		[Test]
 		public void IndexingAnObjectInterpretsIndexAsKey()
 		{
-			var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
+			using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
 
 			var pointer = Json.Pointer.JsonPointer.Parse("/c/0");
 
@@ -50,7 +50,7 @@ namespace JsonPointer.Tests
 		[Test]
 		public void GettingLastItemInArray()
 		{
-			var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
+			using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
 
 			var pointer = Json.Pointer.JsonPointer.Parse("/b/-");
 

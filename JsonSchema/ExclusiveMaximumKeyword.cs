@@ -24,8 +24,8 @@ namespace Json.Schema
 
 			var number = context.Instance.GetDecimal();
 			return Value > number
-				? ValidationResults.Success()
-				: ValidationResults.Fail($"{number} is not greater than {Value}");
+				? ValidationResults.Success(context)
+				: ValidationResults.Fail(context, $"{number} is not greater than {Value}");
 		}
 	}
 

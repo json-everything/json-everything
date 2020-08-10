@@ -85,7 +85,7 @@ namespace JsonPointer.Benchmark
 
 		private static string _EvalLocal(string pointerString, string jsonString)
 		{
-			var document = JsonDocument.Parse(jsonString);
+			using var document = JsonDocument.Parse(jsonString);
 			var pointer = Json.Pointer.JsonPointer.Parse(pointerString);
 
 			var result = pointer.Evaluate(document.RootElement);
@@ -108,8 +108,8 @@ namespace JsonPointer.Benchmark
 		{
 			if (actual != null)
 			{
-				var actualJson = JsonDocument.Parse(actual);
-				var expectedJson = JsonDocument.Parse(expected);
+				using var actualJson = JsonDocument.Parse(actual);
+				using var expectedJson = JsonDocument.Parse(expected);
 
 				if (actualJson.IsEquivalentTo(expectedJson)) return true;
 			}

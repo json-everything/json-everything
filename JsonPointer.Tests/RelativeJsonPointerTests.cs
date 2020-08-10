@@ -35,15 +35,15 @@ namespace JsonPointer.Tests
 		[TestCaseSource(nameof(SpecificationExamples))]
 		public void EvaluateSuccess(string pointerString, string expectedString)
 		{
-			var json = JsonDocument.Parse("{\"foo\":[\"bar\",\"baz\"],\"highly\":{\"nested\":{\"objects\":true}}}");
+			using var json = JsonDocument.Parse("{\"foo\":[\"bar\",\"baz\"],\"highly\":{\"nested\":{\"objects\":true}}}");
 			var startElement = json.RootElement.GetProperty("foo")[1];
 
 			var pointer = RelativeJsonPointer.Parse(pointerString);
-			var expected = JsonDocument.Parse(expectedString).RootElement;
+			using var expected = JsonDocument.Parse(expectedString);
  
 			var actual = pointer.Evaluate(startElement);
 
-			Assert.True(actual.IsEquivalentTo(expected));
+			Assert.True(actual.IsEquivalentTo(expected.RootElement));
 		}
 
 		[TestCaseSource(nameof(FailureCases))]

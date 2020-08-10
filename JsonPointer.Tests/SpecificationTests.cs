@@ -68,7 +68,7 @@ namespace JsonPointer.Tests
 		[TestCaseSource(nameof(ExampleCases))]
 		public void Example(string pointerString, string expectedString)
 		{
-			var target = JsonDocument.Parse(@"{
+			using var target = JsonDocument.Parse(@"{
 				""foo"": [""bar"", ""baz""],
 				"""": 0,
 				""a/b"": 1,
@@ -85,9 +85,9 @@ namespace JsonPointer.Tests
 
 			var actual = pointer.Evaluate(target.RootElement);
 
-			var expected = JsonDocument.Parse(expectedString).RootElement;
+			using var expected = JsonDocument.Parse(expectedString);
 
-			Assert.IsTrue(actual.Value.IsEquivalentTo(expected));
+			Assert.IsTrue(actual.Value.IsEquivalentTo(expected.RootElement));
 		}
 	}
 }

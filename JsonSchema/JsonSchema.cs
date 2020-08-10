@@ -60,8 +60,8 @@ namespace Json.Schema
 			if (_boolValue.HasValue)
 			{
 				return _boolValue.Value
-					? ValidationResults.Success()
-					: ValidationResults.Fail("All values fail against the false schema");
+					? ValidationResults.Success(context)
+					: ValidationResults.Fail(context, "All values fail against the false schema");
 			}
 
 			var subschemaResults = new List<ValidationResults>();
@@ -74,9 +74,9 @@ namespace Json.Schema
 
 			var failures = subschemaResults.Where(r => !r.IsValid).ToArray();
 			if (failures.Any())
-				return ValidationResults.Fail(failures);
+				return ValidationResults.Fail(context, failures);
 
-			return ValidationResults.Success(subschemaResults);
+			return ValidationResults.Success(context, subschemaResults);
 		}
 	}
 
@@ -107,10 +107,23 @@ namespace Json.Schema
 						var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 						if (keywordType == null)
 						{
-							JsonDocument.ParseValue(ref reader);
+							using var _ = JsonDocument.ParseValue(ref reader);
 							break;
 						}
-						var implementation = (IJsonSchemaKeyword)JsonSerializer.Deserialize(ref reader, keywordType, options);
+
+						IJsonSchemaKeyword implementation;
+						if (reader.TokenType == JsonTokenType.Null)
+						{
+							implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType);
+							if (implementation == null)
+								throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
+						}
+						else
+						{
+							implementation = (IJsonSchemaKeyword)JsonSerializer.Deserialize(ref reader, keywordType, options);
+							if (implementation == null)
+								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+						}
 						keywords.Add(implementation);
 						break;
 					case JsonTokenType.EndObject:

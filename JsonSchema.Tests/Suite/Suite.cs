@@ -55,7 +55,7 @@ namespace Json.Schema.Tests.Suite
 		[TestCaseSource(nameof(TestCases))]
 		public void Test(TestCollection collection, TestCase test, string fileName)
 		{
-			var result = collection.Schema.Validate(test.Data.RootElement);
+			var result = collection.Schema.Validate(test.Data);
 
 			if (result.IsValid == test.Valid) return;
 			

@@ -29,7 +29,7 @@ namespace Json.Schema
 					InstanceRoot = source.InstanceRoot,
 					SchemaRoot = source.SchemaRoot,
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
-					Instance = instance ?? source.Instance,
+					Instance = instance?.Clone() ?? source.Instance.Clone(),
 					SchemaLocation = subschemaLocation ?? source.SchemaLocation,
 				};
 		}
