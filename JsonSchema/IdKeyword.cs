@@ -21,7 +21,7 @@ namespace Json.Schema
 		public ValidationResults Validate(ValidationContext context)
 		{
 			context.CurrentUri = Id;
-			return ValidationResults.Null;
+			return null;
 		}
 	}
 
@@ -33,7 +33,7 @@ namespace Json.Schema
 				throw new JsonException("Expected string");
 
 			var uriString = reader.GetString();
-			if (!Uri.TryCreate(uriString, UriKind.Absolute, out var uri))
+			if (!Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out var uri))
 				throw new JsonException("Expected absolute URI");
 
 			return new IdKeyword(uri);

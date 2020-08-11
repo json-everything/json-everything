@@ -19,12 +19,8 @@ namespace Json.Schema
 
 		public ValidationResults Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.String)
-				return ValidationResults.Null;
-
-			using var document = JsonDocument.Parse($"\"{Value}\"");
-
-			return ValidationResults.Annotation(context, document.RootElement);
+			context.Annotations[Name] = Value;
+			return ValidationResults.Success(context);
 		}
 	}
 

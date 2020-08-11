@@ -20,7 +20,7 @@ namespace Json.Schema
 
 		public ValidationResults Validate(ValidationContext context)
 		{
-			return ValidationResults.Null;
+			return null;
 		}
 	}
 

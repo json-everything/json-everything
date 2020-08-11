@@ -27,9 +27,8 @@ namespace Json.Schema
 
 		public ValidationResults Validate(ValidationContext context)
 		{
-			using var document = JsonDocument.Parse($"\"{Values}\"");
-
-			return ValidationResults.Annotation(context, document.RootElement);
+			context.Annotations[Name] = Values;
+			return ValidationResults.Success(context);
 		}
 	}
 

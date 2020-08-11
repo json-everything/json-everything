@@ -11,14 +11,18 @@ namespace Json.Schema
 	[JsonConverter(typeof(SchemaJsonConverter))]
 	public class JsonSchema
 	{
-		private bool? _boolValue;
-
 		public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>());
-		public static readonly JsonSchema True = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>()) {_boolValue = true};
-		public static readonly JsonSchema False = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>()) {_boolValue = false};
+		public static readonly JsonSchema True = new JsonSchema(true);
+		public static readonly JsonSchema False = new JsonSchema(false);
 
 		public IReadOnlyCollection<IJsonSchemaKeyword> Keywords { get; }
 
+		internal bool? BoolValue { get; }
+
+		private JsonSchema(bool value)
+		{
+			BoolValue = value;
+		}
 		internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 		{
 			Keywords = keywords.ToArray();
@@ -57,26 +61,40 @@ namespace Json.Schema
 
 		public ValidationResults ValidateSubschema(ValidationContext context)
 		{
-			if (_boolValue.HasValue)
+			if (BoolValue.HasValue)
 			{
-				return _boolValue.Value
+				return BoolValue.Value
 					? ValidationResults.Success(context)
 					: ValidationResults.Fail(context, "All values fail against the false schema");
 			}
 
 			var subschemaResults = new List<ValidationResults>();
 
+			ValidationContext newContext = null;
 			foreach (var keyword in Keywords.OrderBy(k => k.Priority()))
 			{
-				var newContext = ValidationContext.From(context, subschemaLocation: context.InstanceLocation.Combine(PointerSegment.Create(keyword.Keyword())));
-				subschemaResults.Add(keyword.Validate(newContext));
+				var previousContext = newContext;
+				newContext = ValidationContext.From(context, subschemaLocation: context.InstanceLocation.Combine(PointerSegment.Create(keyword.Keyword())));
+				newContext.ImportAnnotations(previousContext);
+				var subResult = keyword.Validate(newContext);
+				if (subResult != null)
+					subschemaResults.Add(subResult);
 			}
 
+			ValidationResults result;
 			var failures = subschemaResults.Where(r => !r.IsValid).ToArray();
 			if (failures.Any())
-				return ValidationResults.Fail(context, failures);
+			{
+				result = ValidationResults.Fail(context);
+				result.AddNestedResults(failures);
+			}
+			else
+			{
+				result = ValidationResults.Success(context);
+				result.AddNestedResults(subschemaResults);
+			}
 
-			return ValidationResults.Success(context, subschemaResults);
+			return result;
 		}
 	}
 
@@ -138,6 +156,16 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 		{
+			if (value.BoolValue == true)
+			{
+				writer.WriteBooleanValue(true);
+				return;
+			}
+			else if (value.BoolValue == false)
+			{
+				writer.WriteBooleanValue(false);
+				return;
+			}
 			writer.WriteStartObject();
 			foreach (var keyword in value.Keywords)
 			{

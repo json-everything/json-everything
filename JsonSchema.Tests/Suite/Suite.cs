@@ -58,12 +58,15 @@ namespace Json.Schema.Tests.Suite
 			var result = collection.Schema.Validate(test.Data);
 
 			if (result.IsValid == test.Valid) return;
+			if (collection.IsOptional)
+				Assert.Inconclusive("Test optional");
 			
 			Console.WriteLine(fileName);
 			Console.WriteLine(collection.Description);
 			Console.WriteLine(test.Description);
 			Console.WriteLine();
 			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, new JsonSerializerOptions{WriteIndented = true}));
+			Console.WriteLine();
 			Console.WriteLine(test.Data);
 
 			Assert.AreEqual(test.Valid, result.IsValid);

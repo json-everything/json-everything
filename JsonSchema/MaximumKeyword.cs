@@ -20,7 +20,7 @@ namespace Json.Schema
 		public ValidationResults Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Number)
-				return ValidationResults.Null;
+				return null;
 
 			var number = context.Instance.GetDecimal();
 			return Value >= number

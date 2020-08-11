@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -39,6 +40,66 @@ namespace Json.More
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+		}
+
+		public static JsonElement AsJsonElement(this long value)
+		{
+			var doc = JsonDocument.Parse($"{value}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this int value)
+		{
+			var doc = JsonDocument.Parse($"{value}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this short value)
+		{
+			var doc = JsonDocument.Parse($"{value}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this bool value)
+		{
+			var doc = JsonDocument.Parse($"{value.ToString().ToLower()}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this decimal value)
+		{
+			var doc = JsonDocument.Parse($"{value}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this double value)
+		{
+			var doc = JsonDocument.Parse($"{value}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this float value)
+		{
+			var doc = JsonDocument.Parse($"{value}");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this string value)
+		{
+			var doc = JsonDocument.Parse($"\"{value}\"");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this IEnumerable<JsonElement> values)
+		{
+			var doc = JsonDocument.Parse($"\"{values}\"");
+			return doc.RootElement;
+		}
+
+		public static JsonElement AsJsonElement(this IDictionary<string, JsonElement> values)
+		{
+			var doc = JsonDocument.Parse($"\"{values}\"");
+			return doc.RootElement;
 		}
 	}
 }

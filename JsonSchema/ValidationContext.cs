@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -6,6 +7,8 @@ namespace Json.Schema
 {
 	public class ValidationContext
 	{
+		private Dictionary<string, object> _annotations;
+
 		public SchemaRegistry Registry { get; internal set; }
 		public JsonSchema SchemaRoot { get; private set; }
 		public JsonElement InstanceRoot { get; internal set; }
@@ -15,6 +18,8 @@ namespace Json.Schema
 		public JsonPointer SchemaLocation { get; internal set; }
 
 		public Uri CurrentUri { get; internal set; }
+
+		public Dictionary<string, object> Annotations => _annotations ??= new Dictionary<string, object>();
 
 		internal ValidationContext() { }
 
@@ -30,8 +35,13 @@ namespace Json.Schema
 					SchemaRoot = source.SchemaRoot,
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
 					Instance = instance?.Clone() ?? source.Instance.Clone(),
-					SchemaLocation = subschemaLocation ?? source.SchemaLocation,
+					SchemaLocation = subschemaLocation ?? source.SchemaLocation
 				};
+		}
+
+		internal void ImportAnnotations(ValidationContext context)
+		{
+			_annotations = context?._annotations;
 		}
 	}
 }

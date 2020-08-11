@@ -20,7 +20,7 @@ namespace Json.Schema
 		public ValidationResults Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.String)
-				return ValidationResults.Null;
+				return null;
 
 			var str = context.Instance.GetString();
 			return Value >= str.Length

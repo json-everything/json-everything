@@ -19,7 +19,8 @@ namespace Json.Schema
 
 		public ValidationResults Validate(ValidationContext context)
 		{
-			return ValidationResults.Annotation(context, Value);
+			context.Annotations[Name] = Value;
+			return ValidationResults.Success(context);
 		}
 	}
 
