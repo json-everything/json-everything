@@ -7,6 +7,10 @@ namespace Json.Schema
 {
 	public class ValidationContext
 	{
+		public delegate void ContextConsolidator(IList<ValidationContext> sourceContexts, ValidationContext destContext);
+
+		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
+
 		private Dictionary<string, object> _annotations;
 
 		public SchemaRegistry Registry { get; internal set; }
@@ -42,6 +46,25 @@ namespace Json.Schema
 		internal void ImportAnnotations(ValidationContext context)
 		{
 			_annotations = context?._annotations;
+		}
+
+		internal void ConsolidateAnnotations(IList<ValidationContext> contexts)
+		{
+			foreach (var consolidationAction in _consolidationActions)
+			{
+				consolidationAction(contexts, this);
+			}
+		}
+
+		internal object TryGetAnnotation(string key)
+		{
+			if (_annotations == null) return null;
+			return _annotations.TryGetValue(key, out var annotation) ? annotation : null;
+		}
+
+		public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
+		{
+			_consolidationActions.Add(consolidateAnnotations);
 		}
 	}
 }

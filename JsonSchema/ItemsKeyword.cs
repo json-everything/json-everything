@@ -11,11 +11,14 @@ namespace Json.Schema
 	public class ItemsKeyword : IJsonSchemaKeyword
 	{
 		internal const string Name = "items";
-		internal const string EvaluatedCount = "items:evaluated";
 
 		public JsonSchema SingleValue { get; }
 		public List<JsonSchema> ArrayValues { get; }
 
+		static ItemsKeyword()
+		{
+			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+		}
 		public ItemsKeyword(JsonSchema value)
 		{
 			SingleValue = value;
@@ -47,7 +50,7 @@ namespace Json.Schema
 					subResults.Add(results);
 				}
 
-				context.Annotations[EvaluatedCount] = context.Instance.GetArrayLength();
+				context.Annotations[Name] = true;
 				var result = overallResult
 					? ValidationResults.Success(context)
 					: ValidationResults.Fail(context);
@@ -68,13 +71,27 @@ namespace Json.Schema
 					subResults.Add(results);
 				}
 
-				context.Annotations[EvaluatedCount] = maxEvaluations;
+				context.Annotations[Name] = maxEvaluations;
 				var result = overallResult
 					? ValidationResults.Success(context)
 					: ValidationResults.Fail(context);
 				result.AddNestedResults(subResults);
 				return result;
 			}
+		}
+
+		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		{
+			object value;
+			var allAnnotations = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+				.Where(a => a != null)
+				.ToList();
+			if (allAnnotations.OfType<bool>().Any())
+				value = true;
+			else
+				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
+			if (!Equals(value, -1))
+				destContext.Annotations[Name] = value;
 		}
 	}
 

@@ -6,20 +6,16 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
-	[SchemaPriority(10)]
+	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
-	[JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
-	public class AdditionalItemsKeyword : IJsonSchemaKeyword
+	[JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
+	public class UnevaluatedItemsKeyword : IJsonSchemaKeyword
 	{
-		internal const string Name = "additionalItems";
+		internal const string Name = "unevaluatedItems";
 
 		public JsonSchema Value { get; }
 
-		static AdditionalItemsKeyword()
-		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
-		}
-		public AdditionalItemsKeyword(JsonSchema value)
+		public UnevaluatedItemsKeyword(JsonSchema value)
 		{
 			Value = value;
 		}
@@ -38,6 +34,8 @@ namespace Json.Schema
 				if (annotation is bool) return null; // is only ever true or a number
 				startIndex = (int) annotation;
 			}
+			annotation = context.TryGetAnnotation(AdditionalItemsKeyword.Name);
+			if (annotation is bool) return null; // is only ever true
 			foreach (var item in context.Instance.EnumerateArray().Skip(startIndex))
 			{
 				var results = Value.Validate(item);
@@ -45,7 +43,6 @@ namespace Json.Schema
 				subResults.Add(results);
 			}
 
-			context.Annotations[Name] = true;
 			var result = overallResult
 				? ValidationResults.Success(context)
 				: ValidationResults.Fail(context);
@@ -53,25 +50,19 @@ namespace Json.Schema
 			result.AddNestedResults(subResults);
 			return result;
 		}
-
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
-		{
-			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-				destContext.Annotations[Name] = true;
-		}
 	}
 
-	public class AdditionalItemsKeywordJsonConverter : JsonConverter<AdditionalItemsKeyword>
+	public class UnevaluatedItemsKeywordJsonConverter : JsonConverter<UnevaluatedItemsKeyword>
 	{
-		public override AdditionalItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override UnevaluatedItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
 
-			return new AdditionalItemsKeyword(schema);
+			return new UnevaluatedItemsKeyword(schema);
 		}
-		public override void Write(Utf8JsonWriter writer, AdditionalItemsKeyword value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, UnevaluatedItemsKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(AdditionalItemsKeyword.Name);
+			writer.WritePropertyName(UnevaluatedItemsKeyword.Name);
 			JsonSerializer.Serialize(writer, value.Value, options);
 		}
 	}
