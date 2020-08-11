@@ -14,7 +14,7 @@ namespace Json.Schema
 	{
 		internal const string Name = "additionalItems";
 
-		public JsonSchema Value { get; }
+		public JsonSchema Schema { get; }
 
 		static AdditionalItemsKeyword()
 		{
@@ -22,7 +22,7 @@ namespace Json.Schema
 		}
 		public AdditionalItemsKeyword(JsonSchema value)
 		{
-			Value = value;
+			Schema = value;
 		}
 
 		public ValidationResults Validate(ValidationContext context)
@@ -46,7 +46,7 @@ namespace Json.Schema
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
-				var results = Value.ValidateSubschema(subContext);
+				var results = Schema.ValidateSubschema(subContext);
 				overallResult &= results.IsValid;
 				subResults.Add(results);
 			}
@@ -78,7 +78,7 @@ namespace Json.Schema
 		public override void Write(Utf8JsonWriter writer, AdditionalItemsKeyword value, JsonSerializerOptions options)
 		{
 			writer.WritePropertyName(AdditionalItemsKeyword.Name);
-			JsonSerializer.Serialize(writer, value.Value, options);
+			JsonSerializer.Serialize(writer, value.Schema, options);
 		}
 	}
 }

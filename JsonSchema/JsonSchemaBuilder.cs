@@ -13,7 +13,7 @@ namespace Json.Schema
 
 		public JsonSchema Build()
 		{
-			return new JsonSchema(_keywords.Values);
+			return new JsonSchema(_keywords.Values, null);
 		}
 	}
 }

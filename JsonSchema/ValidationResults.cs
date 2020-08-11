@@ -51,6 +51,11 @@ namespace Json.Schema
 			throw new NotImplementedException();
 		}
 
+		public void AddNestedResults(params ValidationResults[] nested)
+		{
+			_nestedResults = nested ?? throw new ArgumentNullException(nameof(nested));
+		}
+
 		public void AddNestedResults(IEnumerable<ValidationResults> nested)
 		{
 			if (nested == null) throw new ArgumentNullException(nameof(nested));

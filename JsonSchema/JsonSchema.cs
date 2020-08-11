@@ -11,11 +11,12 @@ namespace Json.Schema
 	[JsonConverter(typeof(SchemaJsonConverter))]
 	public class JsonSchema
 	{
-		public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>());
+		public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>(), null);
 		public static readonly JsonSchema True = new JsonSchema(true);
 		public static readonly JsonSchema False = new JsonSchema(false);
 
 		public IReadOnlyCollection<IJsonSchemaKeyword> Keywords { get; }
+		public IReadOnlyDictionary<string, JsonElement> OtherData { get; }
 
 		internal bool? BoolValue { get; }
 
@@ -23,9 +24,10 @@ namespace Json.Schema
 		{
 			BoolValue = value;
 		}
-		internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
+		internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords, IReadOnlyDictionary<string, JsonElement> otherData)
 		{
 			Keywords = keywords.ToArray();
+			OtherData = otherData;
 		}
 
 		public static JsonSchema FromFile(string fileName)
@@ -112,6 +114,7 @@ namespace Json.Schema
 				throw new JsonException("Expected token");
 
 			var keywords = new List<IJsonSchemaKeyword>();
+			var otherData = new Dictionary<string, JsonElement>();
 
 			do
 			{
@@ -125,7 +128,8 @@ namespace Json.Schema
 						var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 						if (keywordType == null)
 						{
-							using var _ = JsonDocument.ParseValue(ref reader);
+							var element = JsonDocument.ParseValue(ref reader).RootElement;
+							otherData[keyword] = element.Clone();
 							break;
 						}
 
@@ -145,7 +149,7 @@ namespace Json.Schema
 						keywords.Add(implementation);
 						break;
 					case JsonTokenType.EndObject:
-						return new JsonSchema(keywords);
+						return new JsonSchema(keywords, otherData);
 					default:
 						throw new JsonException("Expected keyword or end of schema object");
 				}
@@ -170,6 +174,11 @@ namespace Json.Schema
 			foreach (var keyword in value.Keywords)
 			{
 				JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
+			}
+			foreach (var data in value.OtherData)
+			{
+				writer.WritePropertyName(data.Key);
+				JsonSerializer.Serialize(writer, data.Value, options);
 			}
 			writer.WriteEndObject();
 		}

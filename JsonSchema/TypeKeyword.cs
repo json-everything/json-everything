@@ -36,34 +36,34 @@ namespace Json.Schema
 		public ValidationResults Validate(ValidationContext context)
 		{
 			bool valid;
-			switch (Type)
+			switch (context.Instance.ValueKind)
 			{
-				case SchemaValueType.Object:
-					valid = context.Instance.ValueKind == JsonValueKind.Object;
+				case JsonValueKind.Object:
+					valid = Type.HasFlag(SchemaValueType.Object);
 					break;
-				case SchemaValueType.Array:
-					valid = context.Instance.ValueKind == JsonValueKind.Array;
+				case JsonValueKind.Array:
+					valid = Type.HasFlag(SchemaValueType.Array);
 					break;
-				case SchemaValueType.Boolean:
-					valid = context.Instance.ValueKind == JsonValueKind.False ||
-					        context.Instance.ValueKind == JsonValueKind.True;
+				case JsonValueKind.String:
+					valid = Type.HasFlag(SchemaValueType.String);
 					break;
-				case SchemaValueType.String:
-					valid = context.Instance.ValueKind == JsonValueKind.String;
-					break;
-				case SchemaValueType.Number:
-					valid = context.Instance.ValueKind == JsonValueKind.Number;
-					break;
-				case SchemaValueType.Integer:
-					valid = context.Instance.ValueKind == JsonValueKind.Number;
-					if (valid)
+				case JsonValueKind.Number:
+					if (Type.HasFlag(SchemaValueType.Number))
+						valid = true;
+					else if (Type.HasFlag(SchemaValueType.Integer))
 					{
 						var number = context.Instance.GetDecimal();
-						valid &= number == Math.Truncate(number);
+						valid = number == Math.Truncate(number);
 					}
+					else
+						valid = false;
 					break;
-				case SchemaValueType.Null:
-					valid = context.Instance.ValueKind == JsonValueKind.Null;
+				case JsonValueKind.True:
+				case JsonValueKind.False:
+					valid = Type.HasFlag(SchemaValueType.Boolean);
+					break;
+				case JsonValueKind.Null:
+					valid = Type.HasFlag(SchemaValueType.Null);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
