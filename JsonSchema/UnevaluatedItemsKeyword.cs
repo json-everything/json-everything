@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -36,9 +37,13 @@ namespace Json.Schema
 			}
 			annotation = context.TryGetAnnotation(AdditionalItemsKeyword.Name);
 			if (annotation is bool) return null; // is only ever true
-			foreach (var item in context.Instance.EnumerateArray().Skip(startIndex))
+			for (int i = startIndex; i < context.Instance.GetArrayLength(); i++)
 			{
-				var results = Value.Validate(item);
+				var item = context.Instance[i];
+				var subContext = ValidationContext.From(context,
+					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+					item);
+				var results = Value.ValidateSubschema(subContext);
 				overallResult &= results.IsValid;
 				subResults.Add(results);
 			}

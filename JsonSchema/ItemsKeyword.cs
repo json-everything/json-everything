@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -12,8 +13,8 @@ namespace Json.Schema
 	{
 		internal const string Name = "items";
 
-		public JsonSchema SingleValue { get; }
-		public List<JsonSchema> ArrayValues { get; }
+		public JsonSchema SingleSchema { get; }
+		public List<JsonSchema> ArraySchemas { get; }
 
 		static ItemsKeyword()
 		{
@@ -21,63 +22,65 @@ namespace Json.Schema
 		}
 		public ItemsKeyword(JsonSchema value)
 		{
-			SingleValue = value;
+			SingleSchema = value;
 		}
 
 		public ItemsKeyword(params JsonSchema[] values)
 		{
-			ArrayValues = values.ToList();
+			ArraySchemas = values.ToList();
 		}
 
 		public ItemsKeyword(IEnumerable<JsonSchema> values)
 		{
-			ArrayValues = values.ToList();
+			ArraySchemas = values.ToList();
 		}
 
 		public ValidationResults Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Array)
 				return null;
-
-			if (SingleValue != null)
+			
+			var subResults = new List<ValidationResults>();
+			var overallResult = true;
+			if (SingleSchema != null)
 			{
-				var subResults = new List<ValidationResults>();
-				var overallResult = true;
-				foreach (var item in context.Instance.EnumerateArray())
+				for (int i = 0; i < context.Instance.GetArrayLength(); i++)
 				{
-					var results = SingleValue.Validate(item);
+					var item = context.Instance[i];
+					var subContext = ValidationContext.From(context,
+						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+						item);
+					var results = SingleSchema.ValidateSubschema(subContext);
 					overallResult &= results.IsValid;
 					subResults.Add(results);
 				}
 
 				context.Annotations[Name] = true;
-				var result = overallResult
-					? ValidationResults.Success(context)
-					: ValidationResults.Fail(context);
-				result.AddNestedResults(subResults);
-				return result;
 			}
 			else // array
 			{
-				var subResults = new List<ValidationResults>();
-				var overallResult = true;
-				var maxEvaluations = Math.Min(ArrayValues.Count, context.Instance.GetArrayLength());
+				var maxEvaluations = Math.Min(ArraySchemas.Count, context.Instance.GetArrayLength());
 				for (int i = 0; i < maxEvaluations; i++)
 				{
-					var schema = ArrayValues[i];
+					var schema = ArraySchemas[i];
 					var item = context.Instance[i];
-					var results = schema.Validate(item);
+					var subContext = ValidationContext.From(context,
+						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+						item,
+						context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+					var results = schema.ValidateSubschema(subContext);
 					overallResult &= results.IsValid;
 					subResults.Add(results);
 				}
 
 				context.Annotations[Name] = maxEvaluations;
-				var result = overallResult
-					? ValidationResults.Success(context)
-					: ValidationResults.Fail(context);
-				result.AddNestedResults(subResults);
-				return result;
 			}
+
+			var result = overallResult
+				? ValidationResults.Success(context)
+				: ValidationResults.Fail(context);
+			result.AddNestedResults(subResults);
+			return result;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
@@ -111,12 +114,12 @@ namespace Json.Schema
 		public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)
 		{
 			writer.WritePropertyName(ItemsKeyword.Name);
-			if (value.SingleValue != null)
-				JsonSerializer.Serialize(writer, value.SingleValue, options);
+			if (value.SingleSchema != null)
+				JsonSerializer.Serialize(writer, value.SingleSchema, options);
 			else
 			{
 				writer.WriteStartArray();
-				foreach (var schema in value.ArrayValues)
+				foreach (var schema in value.ArraySchemas)
 				{
 					JsonSerializer.Serialize(writer, schema, options);
 				}
