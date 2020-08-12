@@ -25,6 +25,7 @@ namespace Json.Schema
 			var nullElement = JsonDocument.Parse("null").RootElement;
 			_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>
 			{
+				[typeof(ConstKeyword)] = new ConstKeyword(nullElement),
 				[typeof(DefaultKeyword)] = new DefaultKeyword(nullElement)
 			};
 		}
