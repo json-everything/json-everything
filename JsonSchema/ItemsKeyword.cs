@@ -14,7 +14,7 @@ namespace Json.Schema
 		internal const string Name = "items";
 
 		public JsonSchema SingleSchema { get; }
-		public List<JsonSchema> ArraySchemas { get; }
+		public IReadOnlyList<JsonSchema> ArraySchemas { get; }
 
 		static ItemsKeyword()
 		{

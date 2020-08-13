@@ -13,7 +13,7 @@ namespace Json.Schema
 	{
 		internal const string Name = "examples";
 
-		public List<JsonElement> Values { get; }
+		public IReadOnlyList<JsonElement> Values { get; }
 
 		public ExamplesKeyword(params JsonElement[] values)
 		{

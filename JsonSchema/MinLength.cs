@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -22,8 +23,8 @@ namespace Json.Schema
 			if (context.Instance.ValueKind != JsonValueKind.String)
 				return null;
 
-			var str = context.Instance.GetString();
-			return Value <= str.Length
+			var length = new StringInfo(context.Instance.GetString()).LengthInTextElements;
+			return Value <= length
 				? ValidationResults.Success(context)
 				: ValidationResults.Fail(context, $"Value is not longer than or equal to {Value} characters");
 		}

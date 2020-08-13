@@ -12,7 +12,7 @@ namespace Json.Schema
 	{
 		internal const string Name = "required";
 
-		public List<string> Properties { get; }
+		public IReadOnlyList<string> Properties { get; }
 
 		public RequiredKeyword(params string[] values)
 		{

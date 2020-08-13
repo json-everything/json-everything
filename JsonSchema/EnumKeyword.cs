@@ -13,7 +13,7 @@ namespace Json.Schema
 	{
 		internal const string Name = "enum";
 
-		public List<JsonElement> Values { get; }
+		public IReadOnlyList<JsonElement> Values { get; }
 
 		public EnumKeyword(IEnumerable<JsonElement> value)
 		{

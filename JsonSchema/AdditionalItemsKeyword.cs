@@ -32,13 +32,10 @@ namespace Json.Schema
 
 			var subResults = new List<ValidationResults>();
 			var overallResult = true;
-			int startIndex = 0;
 			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
-			if (annotation != null)
-			{
-				if (annotation is bool) return null; // is only ever true or a number
-				startIndex = (int) annotation;
-			}
+			if (annotation == null) return null;
+			if (annotation is bool) return null; // is only ever true or a number
+			var startIndex = (int) annotation;
 
 			for (int i = startIndex; i < context.Instance.GetArrayLength(); i++)
 			{

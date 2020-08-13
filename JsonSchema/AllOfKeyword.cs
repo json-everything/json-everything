@@ -13,7 +13,7 @@ namespace Json.Schema
 	{
 		internal const string Name = "allOf";
 
-		public List<JsonSchema> Schemas { get; }
+		public IReadOnlyList<JsonSchema> Schemas { get; }
 
 		public AllOfKeyword(params JsonSchema[] values)
 		{
