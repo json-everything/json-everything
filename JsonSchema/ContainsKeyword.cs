@@ -42,7 +42,7 @@ namespace Json.Schema
 			context.Annotations[Name] = found;
 			context.IsValid = found != 0;
 			if (!context.IsValid)
-				context.Message = "Expected array to contain indicated value but it did not";
+				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
 		}
 	}
 

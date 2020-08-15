@@ -13,11 +13,13 @@ namespace Json.Schema
 
 		private Dictionary<string, object> _annotations;
 		private List<ValidationContext> _nestedContexts;
+		private List<ValidationContext> _siblingContexts;
 
 		public bool IsValid { get; set; }
 		public string Message { get; set; }
 		public Dictionary<string, object> Annotations => _annotations ??= new Dictionary<string, object>();
 		public List<ValidationContext> NestedContexts => _nestedContexts ??= new List<ValidationContext>();
+		internal List<ValidationContext> SiblingContexts => _siblingContexts ??= new List<ValidationContext>();
 
 		public SchemaRegistry Registry { get; internal set; }
 		public JsonSchema SchemaRoot { get; private set; }
@@ -26,8 +28,9 @@ namespace Json.Schema
 		public JsonElement Instance { get; internal set; }
 		public JsonPointer SchemaLocation { get; internal set; }
 		public Uri CurrentUri { get; internal set; }
-		
-		public bool HasNestedContexts => _nestedContexts != null;
+
+		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count == 0;
+		internal bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count == 0;
 
 		internal ValidationContext() { }
 

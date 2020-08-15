@@ -10,9 +10,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "minItems";
 
-		public decimal Value { get; }
+		public int Value { get; }
 
-		public MinItemsKeyword(decimal value)
+		public MinItemsKeyword(int value)
 		{
 			Value = value;
 		}
@@ -39,7 +39,7 @@ namespace Json.Schema
 			if (reader.TokenType != JsonTokenType.Number)
 				throw new JsonException("Expected number");
 
-			var number = reader.GetDecimal();
+			var number = reader.GetInt32();
 
 			return new MinItemsKeyword(number);
 		}
