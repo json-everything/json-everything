@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Text.Json;
-using FluentAssertions;
 using Json.More;
-using Json.Pointer;
 using NUnit.Framework;
 
 namespace JsonPointer.Tests
@@ -88,6 +85,7 @@ namespace JsonPointer.Tests
 
 			using var expected = JsonDocument.Parse(expectedString);
 
+			// ReSharper disable once PossibleInvalidOperationException
 			Assert.IsTrue(actual.Value.IsEquivalentTo(expected.RootElement));
 		}
 	}

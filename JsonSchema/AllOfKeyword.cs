@@ -28,7 +28,6 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			var subContexts = new List<ValidationContext>();
 			var overallResult = true;
 			for (var i = 0; i < Schemas.Count; i++)
 			{
@@ -36,7 +35,6 @@ namespace Json.Schema
 				var subContext = ValidationContext.From(context, subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 				schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
-				subContexts.Add(subContext);
 				context.NestedContexts.Add(subContext);
 			}
 

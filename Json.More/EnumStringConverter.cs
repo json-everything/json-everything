@@ -13,6 +13,7 @@ namespace Json.More
 	{
 		private static Dictionary<string, T> _readValues;
 		private static Dictionary<T, string> _writeValues;
+		// ReSharper disable once StaticMemberInGenericType
 		private static readonly object _lock = new object();
 
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

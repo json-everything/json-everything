@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -12,19 +11,19 @@ namespace JsonPointer.Tests
 		{
 			get
 			{
-				yield return new TestCaseData("/d", "/d");
-				yield return new TestCaseData("/a/0", "/a/0");
-				yield return new TestCaseData("/d/something", "/d");
-				yield return new TestCaseData("/b/false", "/b/false");
-				yield return new TestCaseData("/b/-1", "/b/-1");
-				yield return new TestCaseData("/b/5", "/b/5");
-				yield return new TestCaseData("/c/1", "/c/1");
-				yield return new TestCaseData("/b/001", "/b/001");
+				yield return new TestCaseData("/d");
+				yield return new TestCaseData("/a/0");
+				yield return new TestCaseData("/d/something");
+				yield return new TestCaseData("/b/false");
+				yield return new TestCaseData("/b/-1");
+				yield return new TestCaseData("/b/5");
+				yield return new TestCaseData("/c/1");
+				yield return new TestCaseData("/b/001");
 			}
 		}
 
 		[TestCaseSource(nameof(ErrorCases))]
-		public void Errors(string pointerString, string expectedError)
+		public void Errors(string pointerString)
 		{
 			using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"false\":false}}");
 
@@ -44,6 +43,7 @@ namespace JsonPointer.Tests
 
 			var actual = pointer.Evaluate(target.RootElement);
 
+			// ReSharper disable once PossibleInvalidOperationException
 			Assert.AreEqual(false, actual.Value.GetBoolean());
 		}
 
@@ -56,6 +56,7 @@ namespace JsonPointer.Tests
 
 			var actual = pointer.Evaluate(target.RootElement);
 
+			// ReSharper disable once PossibleInvalidOperationException
 			Assert.AreEqual(JsonValueKind.Null, actual.Value.ValueKind);
 		}
 	}
