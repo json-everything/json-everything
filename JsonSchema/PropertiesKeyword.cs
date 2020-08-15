@@ -7,6 +7,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(PropertiesKeywordJsonConverter))]
 	public class PropertiesKeyword : IJsonSchemaKeyword
@@ -25,12 +26,14 @@ namespace Json.Schema
 			Properties = values;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Object)
-				return null;
-			
-			var subResults = new List<ValidationResults>();
+			{
+				context.IsValid = true;
+				return;
+			}
+
 			var overallResult = true;
 			var evaluatedProperties = new List<string>();
 			foreach (var property in Properties)
@@ -43,33 +46,29 @@ namespace Json.Schema
 					context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
 					item,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
-				var results = schema.ValidateSubschema(subContext);
-				overallResult &= results.IsValid;
-				subResults.Add(results);
-				evaluatedProperties.Add(name);
+				schema.ValidateSubschema(subContext);
+				overallResult &= subContext.IsValid;
+				context.NestedContexts.Add(subContext);
+				if (subContext.IsValid)
+					evaluatedProperties.Add(name);
 			}
 
 			context.Annotations[Name] = evaluatedProperties;
-
-			var result = overallResult
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context);
-			result.AddNestedResults(subResults);
-			return result;
+			context.IsValid = overallResult;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
 		{
-			object value;
-			var allAnnotations = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allProperties = sourceContexts.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
+				.Cast<List<string>>()
+				.SelectMany(a => a)
+				.Distinct()
 				.ToList();
-			if (allAnnotations.OfType<bool>().Any())
-				value = true;
+			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+				annotation.AddRange(allProperties);
 			else
-				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
-			if (!Equals(value, -1))
-				destContext.Annotations[Name] = value;
+				destContext.Annotations[Name] = allProperties;
 		}
 	}
 
@@ -86,12 +85,13 @@ namespace Json.Schema
 		public override void Write(Utf8JsonWriter writer, PropertiesKeyword value, JsonSerializerOptions options)
 		{
 			writer.WritePropertyName(PropertiesKeyword.Name);
-			writer.WriteStartArray();
-			foreach (var schema in value.Properties)
+			writer.WriteStartObject();
+			foreach (var kvp in value.Properties)
 			{
-				JsonSerializer.Serialize(writer, schema, options);
+				writer.WritePropertyName(kvp.Key);
+				JsonSerializer.Serialize(writer, kvp.Value, options);
 			}
-			writer.WriteEndArray();
+			writer.WriteEndObject();
 		}
 	}
 }

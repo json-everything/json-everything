@@ -17,15 +17,18 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Number)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var number = context.Instance.GetDecimal();
-			return number % Value == 0
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, $"{number} a multiple of {Value}");
+			context.IsValid = number % Value == 0;
+			if (!context.IsValid)
+				context.Message = $"{number} a multiple of {Value}";
 		}
 	}
 

@@ -58,19 +58,20 @@ namespace Json.Schema
 					SchemaLocation = JsonPointer.Empty
 				};
 
-			return ValidateSubschema(context);
+			ValidateSubschema(context);
+
+			return new ValidationResults(context);
 		}
 
-		public ValidationResults ValidateSubschema(ValidationContext context)
+		public void ValidateSubschema(ValidationContext context)
 		{
 			if (BoolValue.HasValue)
 			{
-				return BoolValue.Value
-					? ValidationResults.Success(context)
-					: ValidationResults.Fail(context, "All values fail against the false schema");
+				context.IsValid = BoolValue.Value;
+				if (!context.IsValid)
+					context.Message = "All values fail against the false schema";
+				return;
 			}
-
-			var subschemaResults = new List<ValidationResults>();
 
 			ValidationContext newContext = null;
 			foreach (var keyword in Keywords.OrderBy(k => k.Priority()))
@@ -78,25 +79,12 @@ namespace Json.Schema
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context, subschemaLocation: context.InstanceLocation.Combine(PointerSegment.Create(keyword.Keyword())));
 				newContext.ImportAnnotations(previousContext);
-				var subResult = keyword.Validate(newContext);
-				if (subResult != null)
-					subschemaResults.Add(subResult);
+				keyword.Validate(newContext);
+				context.NestedContexts.Add(newContext);
 			}
 
-			ValidationResults result;
-			var failures = subschemaResults.Where(r => !r.IsValid).ToArray();
-			if (failures.Any())
-			{
-				result = ValidationResults.Fail(context);
-				result.AddNestedResults(failures);
-			}
-			else
-			{
-				result = ValidationResults.Success(context);
-				result.AddNestedResults(subschemaResults);
-			}
-
-			return result;
+			context.ImportAnnotations(newContext);
+			context.IsValid = context.NestedContexts.All(c => c.IsValid);
 		}
 	}
 

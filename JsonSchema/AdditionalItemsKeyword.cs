@@ -25,16 +25,26 @@ namespace Json.Schema
 			Schema = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Array)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
-			var subResults = new List<ValidationResults>();
 			var overallResult = true;
 			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
-			if (annotation == null) return null;
-			if (annotation is bool) return null; // is only ever true or a number
+			if (annotation == null)
+			{
+				context.IsValid = true;
+				return;
+			}
+			if (annotation is bool)
+			{
+				context.IsValid = true;
+				return;
+			}
 			var startIndex = (int) annotation;
 
 			for (int i = startIndex; i < context.Instance.GetArrayLength(); i++)
@@ -43,18 +53,12 @@ namespace Json.Schema
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
-				var results = Schema.ValidateSubschema(subContext);
-				overallResult &= results.IsValid;
-				subResults.Add(results);
+				Schema.ValidateSubschema(subContext);
+				overallResult &= subContext.IsValid;
 			}
 
 			context.Annotations[Name] = true;
-			var result = overallResult
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context);
-
-			result.AddNestedResults(subResults);
-			return result;
+			context.IsValid = overallResult;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

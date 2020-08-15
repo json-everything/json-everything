@@ -21,12 +21,19 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Array)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
-			if (!Value) return ValidationResults.Success(context);
+			if (!Value)
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var count = context.Instance.GetArrayLength();
 			var duplicates = new List<(int, int)>();
@@ -37,13 +44,13 @@ namespace Json.Schema
 					duplicates.Add((i, j));
 			}
 
-			if (duplicates.Any())
+			context.IsValid = !duplicates.Any();
+			if (!context.IsValid)
 			{
+				context.IsValid = false;
 				var pairs = ZString.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-				return ValidationResults.Fail(context, $"Found duplicates at the following index pairs: {pairs}");
+				context.Message = $"Found duplicates at the following index pairs: {pairs}";
 			}
-
-			return ValidationResults.Success(context);
 		}
 	}
 

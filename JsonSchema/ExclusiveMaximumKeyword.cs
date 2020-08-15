@@ -17,15 +17,18 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Number)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var number = context.Instance.GetDecimal();
-			return Value > number
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, $"{number} is not greater than {Value}");
+			context.IsValid = Value > number;
+			if (!context.IsValid)
+				context.Message = $"{number} is not greater than {Value}";
 		}
 	}
 

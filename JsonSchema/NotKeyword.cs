@@ -7,7 +7,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
-	[SchemaPriority(10)]
+	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(NotKeywordJsonConverter))]
 	public class NotKeyword : IJsonSchemaKeyword
@@ -25,18 +25,13 @@ namespace Json.Schema
 			Schema = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			var subContext = ValidationContext.From(context,
 				subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
-			var results = Schema.ValidateSubschema(subContext);
-
-			var result = !results.IsValid
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context);
-
-			result.AddNestedResults(results);
-			return result;
+			Schema.ValidateSubschema(subContext);
+			context.NestedContexts.Add(subContext);
+			context.IsValid = !subContext.IsValid;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

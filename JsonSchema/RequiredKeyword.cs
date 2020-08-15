@@ -24,10 +24,13 @@ namespace Json.Schema
 			Properties = values as List<string> ?? values.ToList();
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Object)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var notFound = new List<string>();
 			for (int i = 0; i < Properties.Count; i++)
@@ -38,8 +41,9 @@ namespace Json.Schema
 					notFound.Add(property);
 			}
 
-			if (notFound.Count == 0) return ValidationResults.Success(context);
-			return ValidationResults.Fail(context, $"Required properties [{string.Join(", ", notFound)}] were not present");
+			context.IsValid = notFound.Count == 0;
+			if (!context.IsValid)
+				context.Message = $"Required properties [{string.Join(", ", notFound)}] were not present";
 		}
 	}
 

@@ -6,7 +6,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
-	[SchemaPriority(20)]
+	[SchemaPriority(30)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
 	public class UnevaluatedItemsKeyword : IJsonSchemaKeyword
@@ -20,39 +20,44 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Array)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
-			var subResults = new List<ValidationResults>();
 			var overallResult = true;
 			int startIndex = 0;
 			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation != null)
 			{
-				if (annotation is bool) return null; // is only ever true or a number
+				if (annotation is bool) // is only ever true or a number
+				{
+					context.IsValid = true;
+					return;
+				}
 				startIndex = (int) annotation;
 			}
 			annotation = context.TryGetAnnotation(AdditionalItemsKeyword.Name);
-			if (annotation is bool) return null; // is only ever true
+			if (annotation is bool) // is only ever true
+			{
+				context.IsValid = true;
+				return;
+			}
 			for (int i = startIndex; i < context.Instance.GetArrayLength(); i++)
 			{
 				var item = context.Instance[i];
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
-				var results = Value.ValidateSubschema(subContext);
-				overallResult &= results.IsValid;
-				subResults.Add(results);
+				Value.ValidateSubschema(subContext);
+				overallResult &= subContext.IsValid;
+				context.NestedContexts.Add(subContext);
 			}
 
-			var result = overallResult
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context);
-
-			result.AddNestedResults(subResults);
-			return result;
+			context.IsValid = overallResult;
 		}
 	}
 

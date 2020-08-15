@@ -18,15 +18,18 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.String)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var str = context.Instance.GetString();
-			return Value.IsMatch(str)
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, "The string value was not a match for the indicated regular expression");
+			context.IsValid = Value.IsMatch(str);
+			if (!context.IsValid)
+				context.Message = "The string value was not a match for the indicated regular expression";
 		}
 	}
 

@@ -20,11 +20,11 @@ namespace Json.Schema
 			Values = value.Select(e => e.Clone()).ToList();
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
-			return Values.Contains(context.Instance, JsonElementEqualityComparer.Instance)
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, "Expected value to match given value");
+			context.IsValid = Values.Contains(context.Instance, JsonElementEqualityComparer.Instance);
+			if (!context.IsValid)
+				context.Message = "Expected value to match given value";
 		}
 	}
 

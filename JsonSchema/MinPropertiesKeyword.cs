@@ -18,15 +18,18 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Object)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var number = context.Instance.EnumerateObject().Count();
-			return Value <= number
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, $"Value has more than {Value} properties");
+			context.IsValid = Value <= number;
+			if (!context.IsValid)
+				context.Message = $"Value has more than {Value} properties";
 		}
 	}
 

@@ -35,12 +35,14 @@ namespace Json.Schema
 			ArraySchemas = values.ToList();
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Array)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 			
-			var subResults = new List<ValidationResults>();
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
@@ -50,9 +52,9 @@ namespace Json.Schema
 					var subContext = ValidationContext.From(context,
 						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 						item);
-					var results = SingleSchema.ValidateSubschema(subContext);
-					overallResult &= results.IsValid;
-					subResults.Add(results);
+					SingleSchema.ValidateSubschema(subContext);
+					overallResult &= subContext.IsValid;
+					context.NestedContexts.Add(subContext);
 				}
 
 				context.Annotations[Name] = true;
@@ -68,19 +70,18 @@ namespace Json.Schema
 						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 						item,
 						context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-					var results = schema.ValidateSubschema(subContext);
-					overallResult &= results.IsValid;
-					subResults.Add(results);
+					schema.ValidateSubschema(subContext);
+					overallResult &= subContext.IsValid;
+					context.NestedContexts.Add(subContext);
 				}
 
-				context.Annotations[Name] = maxEvaluations;
+				if (maxEvaluations == context.Instance.GetArrayLength())
+					context.Annotations[Name] = true;
+				else
+					context.Annotations[Name] = maxEvaluations;
 			}
 
-			var result = overallResult
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context);
-			result.AddNestedResults(subResults);
-			return result;
+			context.IsValid = overallResult;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

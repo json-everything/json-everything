@@ -26,12 +26,14 @@ namespace Json.Schema
 			Patterns = values;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Object)
-				return null;
-			
-			var subResults = new List<ValidationResults>();
+			{
+				context.IsValid = true;
+				return;
+			}
+
 			var overallResult = true;
 			var evaluatedProperties = new List<string>();
 			var instanceProperties = context.Instance.EnumerateObject().ToList();
@@ -45,19 +47,15 @@ namespace Json.Schema
 						context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Name}")),
 						instanceProperty.Value,
 						context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-					var results = schema.ValidateSubschema(subContext);
-					overallResult &= results.IsValid;
-					subResults.Add(results);
+					schema.ValidateSubschema(subContext);
+					overallResult &= subContext.IsValid;
+					context.NestedContexts.Add(subContext);
 					evaluatedProperties.Add(instanceProperty.Name);
 				}
 			}
 
 			context.Annotations[Name] = evaluatedProperties.Distinct().ToList();
-			var result = overallResult
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context);
-			result.AddNestedResults(subResults);
-			return result;
+			context.IsValid = overallResult;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
@@ -89,12 +87,13 @@ namespace Json.Schema
 		public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)
 		{
 			writer.WritePropertyName(PatternPropertiesKeyword.Name);
-			writer.WriteStartArray();
+			writer.WriteStartObject();
 			foreach (var schema in value.Patterns)
 			{
-				JsonSerializer.Serialize(writer, schema, options);
+				writer.WritePropertyName(schema.Key.ToString());
+				JsonSerializer.Serialize(writer, schema.Value, options);
 			}
-			writer.WriteEndArray();
+			writer.WriteEndObject();
 		}
 	}
 }

@@ -2,6 +2,6 @@
 {
 	public interface IJsonSchemaKeyword
 	{
-		ValidationResults Validate(ValidationContext context);
+		void Validate(ValidationContext context);
 	}
 }

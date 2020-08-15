@@ -12,18 +12,22 @@ namespace Json.Schema
 		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
 
 		private Dictionary<string, object> _annotations;
+		private List<ValidationContext> _nestedContexts;
+
+		public bool IsValid { get; set; }
+		public string Message { get; set; }
+		public Dictionary<string, object> Annotations => _annotations ??= new Dictionary<string, object>();
+		public List<ValidationContext> NestedContexts => _nestedContexts ??= new List<ValidationContext>();
 
 		public SchemaRegistry Registry { get; internal set; }
 		public JsonSchema SchemaRoot { get; private set; }
 		public JsonElement InstanceRoot { get; internal set; }
-
 		public JsonPointer InstanceLocation { get; internal set; }
 		public JsonElement Instance { get; internal set; }
 		public JsonPointer SchemaLocation { get; internal set; }
-
 		public Uri CurrentUri { get; internal set; }
-
-		public Dictionary<string, object> Annotations => _annotations ??= new Dictionary<string, object>();
+		
+		public bool HasNestedContexts => _nestedContexts != null;
 
 		internal ValidationContext() { }
 
@@ -48,11 +52,12 @@ namespace Json.Schema
 			_annotations = context?._annotations;
 		}
 
-		internal void ConsolidateAnnotations(IList<ValidationContext> contexts)
+		internal void ConsolidateAnnotations()
 		{
+			if (!HasNestedContexts) return;
 			foreach (var consolidationAction in _consolidationActions)
 			{
-				consolidationAction(contexts, this);
+				consolidationAction(NestedContexts, this);
 			}
 		}
 

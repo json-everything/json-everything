@@ -33,46 +33,44 @@ namespace Json.Schema
 			Type = types.Aggregate((x, y) => x | y);
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
-			bool valid;
 			switch (context.Instance.ValueKind)
 			{
 				case JsonValueKind.Object:
-					valid = Type.HasFlag(SchemaValueType.Object);
+					context.IsValid = Type.HasFlag(SchemaValueType.Object);
 					break;
 				case JsonValueKind.Array:
-					valid = Type.HasFlag(SchemaValueType.Array);
+					context.IsValid = Type.HasFlag(SchemaValueType.Array);
 					break;
 				case JsonValueKind.String:
-					valid = Type.HasFlag(SchemaValueType.String);
+					context.IsValid = Type.HasFlag(SchemaValueType.String);
 					break;
 				case JsonValueKind.Number:
 					if (Type.HasFlag(SchemaValueType.Number))
-						valid = true;
+						context.IsValid = true;
 					else if (Type.HasFlag(SchemaValueType.Integer))
 					{
 						var number = context.Instance.GetDecimal();
-						valid = number == Math.Truncate(number);
+						context.IsValid = number == Math.Truncate(number);
 					}
 					else
-						valid = false;
+						context.IsValid = false;
 					break;
 				case JsonValueKind.True:
 				case JsonValueKind.False:
-					valid = Type.HasFlag(SchemaValueType.Boolean);
+					context.IsValid = Type.HasFlag(SchemaValueType.Boolean);
 					break;
 				case JsonValueKind.Null:
-					valid = Type.HasFlag(SchemaValueType.Null);
+					context.IsValid = Type.HasFlag(SchemaValueType.Null);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 			var found = context.Instance.ValueKind.ToString().ToLower();
 			var expected = Type.ToString().ToLower();
-			return valid
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, $"Value is {found} but should be {expected}");
+			if (!context.IsValid)
+				context.Message = $"Value is {found} but should be {expected}";
 		}
 	}
 

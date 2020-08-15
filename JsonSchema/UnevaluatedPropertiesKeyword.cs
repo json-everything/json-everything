@@ -7,20 +7,20 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
-	[SchemaPriority(10)]
+	[SchemaPriority(30)]
 	[SchemaKeyword(Name)]
-	[JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-	public class AdditionalPropertiesKeyword : IJsonSchemaKeyword
+	[JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
+	public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword
 	{
-		internal const string Name = "additionalProperties";
+		internal const string Name = "unevaluatedProperties";
 
 		public JsonSchema Schema { get; }
 
-		static AdditionalPropertiesKeyword()
+		static UnevaluatedPropertiesKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
-		public AdditionalPropertiesKeyword(JsonSchema value)
+		public UnevaluatedPropertiesKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
@@ -38,9 +38,11 @@ namespace Json.Schema
 			var evaluatedProperties = (annotation as List<string>)?.ToList() ?? new List<string>();
 			annotation = context.TryGetAnnotation(PatternPropertiesKeyword.Name);
 			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
-			var additionalProperties = context.Instance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
+			annotation = context.TryGetAnnotation(AdditionalPropertiesKeyword.Name);
+			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
+			var unevaluatedProperties = context.Instance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
 			evaluatedProperties.Clear();
-			foreach (var property in additionalProperties)
+			foreach (var property in unevaluatedProperties)
 			{
 				if (!context.Instance.TryGetProperty(property.Name, out var item)) continue;
 
@@ -49,9 +51,9 @@ namespace Json.Schema
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				context.NestedContexts.Add(subContext);
 				if (subContext.IsValid)
 					evaluatedProperties.Add(property.Name);
-				context.NestedContexts.Add(subContext);
 			}
 
 			context.Annotations[Name] = evaluatedProperties;
@@ -73,17 +75,17 @@ namespace Json.Schema
 		}
 	}
 
-	public class AdditionalPropertiesKeywordJsonConverter : JsonConverter<AdditionalPropertiesKeyword>
+	public class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<UnevaluatedPropertiesKeyword>
 	{
-		public override AdditionalPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override UnevaluatedPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
 
-			return new AdditionalPropertiesKeyword(schema);
+			return new UnevaluatedPropertiesKeyword(schema);
 		}
-		public override void Write(Utf8JsonWriter writer, AdditionalPropertiesKeyword value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, UnevaluatedPropertiesKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(AdditionalPropertiesKeyword.Name);
+			writer.WritePropertyName(UnevaluatedPropertiesKeyword.Name);
 			JsonSerializer.Serialize(writer, value.Schema, options);
 		}
 	}

@@ -18,11 +18,11 @@ namespace Json.Schema
 			Value = value.Clone();
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
-			return Value.IsEquivalentTo(context.Instance)
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, "Expected value to match given value");
+			context.IsValid = Value.IsEquivalentTo(context.Instance);
+			if (!context.IsValid)
+				context.Message = "Expected value to match given value";
 		}
 	}
 

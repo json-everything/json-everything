@@ -18,9 +18,9 @@ namespace Json.Schema
 			Schema = schema;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
-			return null;
+			context.IsValid = true;
 		}
 	}
 

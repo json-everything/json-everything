@@ -25,10 +25,10 @@ namespace Json.Schema
 			Values = values.Select(e => e.Clone()).ToList();
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			context.Annotations[Name] = Values;
-			return ValidationResults.Success(context);
+			context.IsValid = true;
 		}
 	}
 

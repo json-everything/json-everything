@@ -17,10 +17,10 @@ namespace Json.Schema
 			Value = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			context.Annotations[Name] = Value;
-			return ValidationResults.Success(context);
+			context.IsValid = true;
 		}
 	}
 

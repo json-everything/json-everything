@@ -18,10 +18,10 @@ namespace Json.Schema
 			Id = id;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			context.CurrentUri = Id;
-			return null;
+			context.IsValid = true;
 		}
 	}
 

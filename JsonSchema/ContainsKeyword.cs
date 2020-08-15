@@ -20,30 +20,30 @@ namespace Json.Schema
 			Schema = value;
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
 			if (context.Instance.ValueKind != JsonValueKind.Array)
-				return null;
+			{
+				context.IsValid = true;
+				return;
+			}
 
 			var count = context.Instance.GetArrayLength();
-			var subResults = new List<ValidationResults>();
 			for (int i = 0; i < count; i++)
 			{
 				// TODO: shortcut if flag output
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					context.Instance[i]);
-				var subResult = Schema.ValidateSubschema(subContext);
-				subResults.Add(subResult);
+				Schema.ValidateSubschema(subContext);
+				context.NestedContexts.Add(subContext);
 			}
 
-			var found = subResults.Count(r => r.IsValid);
+			var found = context.NestedContexts.Count(r => r.IsValid);
 			context.Annotations[Name] = found;
-			var result = found != 0
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, "Expected array to contain indicated value but it did not");
-			result.AddNestedResults(subResults);
-			return result;
+			context.IsValid = found != 0;
+			if (!context.IsValid)
+				context.Message = "Expected array to contain indicated value but it did not";
 		}
 	}
 

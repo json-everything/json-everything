@@ -7,6 +7,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(OneOfKeywordJsonConverter))]
 	public class OneOfKeyword : IJsonSchemaKeyword
@@ -25,27 +26,22 @@ namespace Json.Schema
 			Schemas = values.ToList();
 		}
 
-		public ValidationResults Validate(ValidationContext context)
+		public void Validate(ValidationContext context)
 		{
-			var subContexts = new List<ValidationContext>();
-			var subResults = new List<ValidationResults>();
 			var validCount = 0;
 			for (var i = 0; i < Schemas.Count; i++)
 			{
 				var schema = Schemas[i];
 				var subContext = ValidationContext.From(context, subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-				var results = schema.ValidateSubschema(subContext);
-				validCount += results.IsValid ? 1 : 0;
-				subResults.Add(results);
-				subContexts.Add(subContext);
+				schema.ValidateSubschema(subContext);
+				validCount += subContext.IsValid ? 1 : 0;
+				context.NestedContexts.Add(subContext);
 			}
 
-			context.ConsolidateAnnotations(subContexts);
-			var result = validCount == 1
-				? ValidationResults.Success(context)
-				: ValidationResults.Fail(context, $"Expected 1 matching subschema but found {validCount}");
-			result.AddNestedResults(subResults);
-			return result;
+			context.ConsolidateAnnotations();
+			context.IsValid = validCount == 1;
+			if (!context.IsValid)
+				context.Message = $"Expected 1 matching subschema but found {validCount}";
 		}
 	}
 
