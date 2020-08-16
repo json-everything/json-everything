@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(PropertiesKeywordJsonConverter))]
-	public class PropertiesKeyword : IJsonSchemaKeyword
+	public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "properties";
 
@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -40,7 +40,7 @@ namespace Json.Schema
 			{
 				var schema = property.Value;
 				var name = property.Key;
-				if (!context.Instance.TryGetProperty(name, out var item)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out var item)) continue;
 				
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
@@ -69,6 +69,11 @@ namespace Json.Schema
 				annotation.AddRange(allProperties);
 			else
 				destContext.Annotations[Name] = allProperties;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return Properties.TryGetValue(value, out var schema) ? schema : null;
 		}
 	}
 

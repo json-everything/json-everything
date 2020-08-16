@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -40,11 +40,11 @@ namespace Json.Schema
 			{
 				var dependencies = property.Value;
 				var name = property.Key;
-				if (!context.Instance.TryGetProperty(name, out _)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out _)) continue;
 
 				foreach (var dependency in dependencies)
 				{
-					if (context.Instance.TryGetProperty(dependency, out _)) continue;
+					if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
 
 					overallResult = false;
 					if (!missingDependencies.TryGetValue(name, out var list)) 

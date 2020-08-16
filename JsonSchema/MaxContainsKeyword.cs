@@ -20,7 +20,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;

@@ -11,6 +11,7 @@ namespace Json.Schema.Tests.Suite
 	public class Suite
 	{
 		private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
+		private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
 		public static IEnumerable<TestCaseData> TestCases()
 		{
@@ -50,6 +51,23 @@ namespace Json.Schema.Tests.Suite
 			}
 
 			return allTests;
+		}
+
+		[OneTimeSetUp]
+		public void LoadRemoteSchemas()
+		{
+			var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _remoteSchemasPath)
+				.AdjustForPlatform();
+			if (!Directory.Exists(remotesPath)) throw new Exception("Cannot find remotes folder");
+
+			var fileNames = Directory.GetFiles(remotesPath, "*.json", SearchOption.AllDirectories);
+
+			foreach (var fileName in fileNames)
+			{
+				var schema = JsonSchema.FromFile(fileName);
+				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
+				SchemaRegistry.Global.Register(uri, schema);
+			}
 		}
 
 		[TestCaseSource(nameof(TestCases))]

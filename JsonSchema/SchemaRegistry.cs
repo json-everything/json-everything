@@ -12,22 +12,27 @@ namespace Json.Schema
 		public void Register(Uri uri, JsonSchema schema)
 		{
 			_registered ??= new Dictionary<Uri, JsonSchema>();
-			throw new NotImplementedException();
+			_registered[uri] = schema;
 		}
 
+		// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
+		// tl;dr - URI equality doesn't consider fragments
 		public JsonSchema Get(Uri uri)
 		{
+			JsonSchema schema = null;
 			// check local
-			if (_registered == null)
-			{
-				
-			}
+			if (_registered != null)
+				schema = CheckRegistry(_registered, uri);
 			// if not found, check global
-			if (!ReferenceEquals(Global, this))
-			{
+			if (schema == null && !ReferenceEquals(Global, this)) 
+				schema = CheckRegistry(Global._registered, uri);
 
-			}
-			throw new NotImplementedException();
+			return schema;
+		}
+
+		private static JsonSchema CheckRegistry(Dictionary<Uri, JsonSchema> lookup, Uri uri)
+		{
+			return lookup.TryGetValue(uri, out var schema) ? schema : null;
 		}
 	}
 }

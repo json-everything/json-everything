@@ -11,7 +11,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(PropertyNamesKeywordJsonConverter))]
-	public class PropertyNamesKeyword : IJsonSchemaKeyword
+	public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "propertyNames";
 
@@ -29,15 +29,14 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
 			}
 
 			var overallResult = true;
-			var evaluatedPropertyNames = new List<string>();
-			foreach (var name in context.Instance.EnumerateObject().Select(p => p.Name))
+			foreach (var name in context.LocalInstance.EnumerateObject().Select(p => p.Name))
 			{
 				var instance = name.AsJsonElement();
 				var subContext = ValidationContext.From(context,
@@ -46,8 +45,6 @@ namespace Json.Schema
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
 				context.NestedContexts.Add(subContext);
-				if (subContext.IsValid)
-					evaluatedPropertyNames.Add(name);
 			}
 
 			context.IsValid = overallResult;
@@ -65,6 +62,11 @@ namespace Json.Schema
 				annotation.AddRange(allPropertyNames);
 			else
 				destContext.Annotations[Name] = allPropertyNames;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

@@ -26,7 +26,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -37,7 +37,7 @@ namespace Json.Schema
 			{
 				// TODO: add shortcutting
 				var property = Properties[i];
-				if (!context.Instance.TryGetProperty(property, out _))
+				if (!context.LocalInstance.TryGetProperty(property, out _))
 					notFound.Add(property);
 			}
 

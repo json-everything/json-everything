@@ -22,7 +22,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			context.IsValid = Values.Contains(context.Instance, JsonElementEqualityComparer.Instance);
+			context.IsValid = Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance);
 			if (!context.IsValid)
 				context.Message = "Expected value to match given value";
 		}

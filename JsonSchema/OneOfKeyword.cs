@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(OneOfKeywordJsonConverter))]
-	public class OneOfKeyword : IJsonSchemaKeyword
+	public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "oneOf";
 
@@ -42,6 +42,14 @@ namespace Json.Schema
 			context.IsValid = validCount == 1;
 			if (!context.IsValid)
 				context.Message = $"Expected 1 matching subschema but found {validCount}";
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			if (!int.TryParse(value, out var index)) return null;
+			if (index < 0 || Schemas.Count <= index) return null;
+
+			return Schemas[index];
 		}
 	}
 

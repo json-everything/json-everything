@@ -23,7 +23,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;
@@ -35,12 +35,12 @@ namespace Json.Schema
 				return;
 			}
 
-			var count = context.Instance.GetArrayLength();
+			var count = context.LocalInstance.GetArrayLength();
 			var duplicates = new List<(int, int)>();
 			for (int i = 0; i < count - 1; i++)
 			for (int j = i + 1; j < count; j++)
 			{
-				if (context.Instance[i].IsEquivalentTo(context.Instance[j]))
+				if (context.LocalInstance[i].IsEquivalentTo(context.LocalInstance[j]))
 					duplicates.Add((i, j));
 			}
 

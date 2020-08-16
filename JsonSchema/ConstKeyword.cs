@@ -20,7 +20,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			context.IsValid = Value.IsEquivalentTo(context.Instance);
+			context.IsValid = Value.IsEquivalentTo(context.LocalInstance);
 			if (!context.IsValid)
 				context.Message = "Expected value to match given value";
 		}

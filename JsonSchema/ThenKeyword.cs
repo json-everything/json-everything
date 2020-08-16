@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -8,7 +6,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(ThenKeywordJsonConverter))]
-	public class ThenKeyword : IJsonSchemaKeyword
+	public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "then";
 
@@ -34,6 +32,11 @@ namespace Json.Schema
 
 			context.ConsolidateAnnotations();
 			context.IsValid = subContext.IsValid;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

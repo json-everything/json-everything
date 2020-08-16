@@ -19,13 +19,13 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;
 			}
 
-			var number = context.Instance.GetArrayLength();
+			var number = context.LocalInstance.GetArrayLength();
 			context.IsValid = Value <= number;
 			if (!context.IsValid)
 				context.Message = $"Value has less than {Value} items";

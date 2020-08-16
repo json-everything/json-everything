@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(DependenciesKeywordJsonConverter))]
-	public class DependenciesKeyword : IJsonSchemaKeyword
+	public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "dependencies";
 
@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -40,7 +40,7 @@ namespace Json.Schema
 			{
 				var requirements = property.Value;
 				var name = property.Key;
-				if (!context.Instance.TryGetProperty(name, out _)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out _)) continue;
 
 				if (requirements.Schema != null)
 				{
@@ -57,7 +57,7 @@ namespace Json.Schema
 					var missingDependencies = new List<string>();
 					foreach (var dependency in requirements.Requirements)
 					{
-						if (context.Instance.TryGetProperty(dependency, out _)) continue;
+						if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
 
 						overallResult = false;
 						missingDependencies.Add(dependency);
@@ -87,6 +87,13 @@ namespace Json.Schema
 				annotation.AddRange(allDependencies);
 			else
 				destContext.Annotations[Name] = allDependencies;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			if (!Requirements.TryGetValue(value, out var entry)) return null;
+
+			return entry.Schema;
 		}
 	}
 
@@ -128,21 +135,21 @@ namespace Json.Schema
 			if (reader.TokenType == JsonTokenType.StartArray)
 				return new SchemaOrPropertyList
 				{
-					Requirements = JsonSerializer.Deserialize<List<string>>(ref reader)
+					Requirements = JsonSerializer.Deserialize<List<string>>(ref reader, options)
 				};
 
 			return new SchemaOrPropertyList
 			{
-				Schema = JsonSerializer.Deserialize<JsonSchema>(ref reader)
+				Schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)
 			};
 		}
 
 		public override void Write(Utf8JsonWriter writer, SchemaOrPropertyList value, JsonSerializerOptions options)
 		{
 			if (value.Schema != null)
-				JsonSerializer.Serialize(writer, value.Schema);
+				JsonSerializer.Serialize(writer, value.Schema, options);
 			else
-				JsonSerializer.Serialize(writer, value.Requirements);
+				JsonSerializer.Serialize(writer, value.Requirements, options);
 		}
 	}
 }

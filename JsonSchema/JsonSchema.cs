@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using Json.Pointer;
 
 namespace Json.Schema
 {
 	[JsonConverter(typeof(SchemaJsonConverter))]
-	public class JsonSchema
+	public class JsonSchema : IRefResolvable
 	{
 		public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>(), null);
 		public static readonly JsonSchema True = new JsonSchema(true);
@@ -52,15 +54,22 @@ namespace Json.Schema
 			var context = new ValidationContext
 				{
 					Registry = new SchemaRegistry(),
-					Instance = root,
+					LocalInstance = root,
 					InstanceLocation = JsonPointer.Empty,
 					InstanceRoot = root,
-					SchemaLocation = JsonPointer.Empty
+					SchemaLocation = JsonPointer.Empty,
+					SchemaRoot = this
 				};
 
+			RegisterSubschemas(context.Registry);
 			ValidateSubschema(context);
 
 			return new ValidationResults(context);
+		}
+
+		public void RegisterSubschemas(SchemaRegistry registry)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void ValidateSubschema(ValidationContext context)
@@ -77,7 +86,10 @@ namespace Json.Schema
 			foreach (var keyword in Keywords.OrderBy(k => k.Priority()))
 			{
 				var previousContext = newContext;
-				newContext = ValidationContext.From(context, subschemaLocation: context.InstanceLocation.Combine(PointerSegment.Create(keyword.Keyword())));
+				newContext = ValidationContext.From(context,
+					subschemaLocation: context.InstanceLocation.Combine(PointerSegment.Create(keyword.Keyword())));
+				newContext.ParentContext = context;
+				newContext.LocalSchema = this;
 				newContext.ImportAnnotations(previousContext);
 				if (context.HasNestedContexts)
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
@@ -87,6 +99,33 @@ namespace Json.Schema
 
 			context.ImportAnnotations(newContext);
 			context.IsValid = context.NestedContexts.All(c => c.IsValid);
+		}
+
+		public JsonSchema FindSubschema(JsonPointer pointer)
+		{
+			IRefResolvable resolvable = this;
+			foreach (var segment in pointer.Segments)
+			{
+				var newResolvable = resolvable.ResolvePointerSegment(segment.Value);
+				if (newResolvable == null)
+				{
+					// TODO: Check other data
+					return null;
+				}
+
+				resolvable = newResolvable;
+			}
+
+			if (!(resolvable is JsonSchema))
+				resolvable = resolvable.ResolvePointerSegment(null);
+
+			return resolvable as JsonSchema;
+		}
+
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		{
+			var keyword = Keywords.FirstOrDefault(k => k.Name() == value);
+			return keyword as IRefResolvable;
 		}
 	}
 
@@ -155,11 +194,13 @@ namespace Json.Schema
 				writer.WriteBooleanValue(true);
 				return;
 			}
-			else if (value.BoolValue == false)
+
+			if (value.BoolValue == false)
 			{
 				writer.WriteBooleanValue(false);
 				return;
 			}
+
 			writer.WriteStartObject();
 			foreach (var keyword in value.Keywords)
 			{
@@ -171,6 +212,32 @@ namespace Json.Schema
 				JsonSerializer.Serialize(writer, data.Value, options);
 			}
 			writer.WriteEndObject();
+		}
+	}
+
+	public static class JsonSchemaKeywordExtensions
+	{
+		private static readonly Dictionary<Type, string> _attributes =
+			typeof(IJsonSchemaKeyword).Assembly
+				.GetTypes()
+				.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
+				            !t.IsAbstract &&
+				            !t.IsInterface)
+				.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
+
+		public static string Name(this IJsonSchemaKeyword keyword)
+		{
+			var keywordType = keyword.GetType();
+			if (!_attributes.TryGetValue(keywordType, out var name))
+			{
+				name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
+				if (name == null)
+					throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
+
+				_attributes[keywordType] = name;
+			}
+
+			return name;
 		}
 	}
 }

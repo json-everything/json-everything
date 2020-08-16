@@ -6,7 +6,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(IfKeywordJsonConverter))]
-	public class IfKeyword : IJsonSchemaKeyword
+	public class IfKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "if";
 
@@ -26,6 +26,11 @@ namespace Json.Schema
 			context.Annotations[Name] = subContext.IsValid;
 			context.ConsolidateAnnotations();
 			context.IsValid = true;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

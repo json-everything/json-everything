@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(AllOfKeywordJsonConverter))]
-	public class AllOfKeyword : IJsonSchemaKeyword
+	public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "allOf";
 
@@ -40,6 +40,14 @@ namespace Json.Schema
 
 			context.ConsolidateAnnotations();
 			context.IsValid = overallResult;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			if (!int.TryParse(value, out var index)) return null;
+			if (index < 0 || Schemas.Count <= index) return null;
+
+			return Schemas[index];
 		}
 	}
 

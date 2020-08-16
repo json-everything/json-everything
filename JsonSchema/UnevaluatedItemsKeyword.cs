@@ -8,20 +8,20 @@ namespace Json.Schema
 	[SchemaPriority(30)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
-	public class UnevaluatedItemsKeyword : IJsonSchemaKeyword
+	public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "unevaluatedItems";
 
-		public JsonSchema Value { get; }
+		public JsonSchema Schema { get; }
 
 		public UnevaluatedItemsKeyword(JsonSchema value)
 		{
-			Value = value;
+			Schema = value;
 		}
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;
@@ -45,18 +45,23 @@ namespace Json.Schema
 				context.IsValid = true;
 				return;
 			}
-			for (int i = startIndex; i < context.Instance.GetArrayLength(); i++)
+			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
-				var item = context.Instance[i];
+				var item = context.LocalInstance[i];
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
-				Value.ValidateSubschema(subContext);
+				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
 				context.NestedContexts.Add(subContext);
 			}
 
 			context.IsValid = overallResult;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 
@@ -71,7 +76,7 @@ namespace Json.Schema
 		public override void Write(Utf8JsonWriter writer, UnevaluatedItemsKeyword value, JsonSerializerOptions options)
 		{
 			writer.WritePropertyName(UnevaluatedItemsKeyword.Name);
-			JsonSerializer.Serialize(writer, value.Value, options);
+			JsonSerializer.Serialize(writer, value.Schema, options);
 		}
 	}
 }

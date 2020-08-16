@@ -9,7 +9,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(ItemsKeywordJsonConverter))]
-	public class ItemsKeyword : IJsonSchemaKeyword
+	public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "items";
 
@@ -37,7 +37,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;
@@ -46,13 +46,14 @@ namespace Json.Schema
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
-				for (int i = 0; i < context.Instance.GetArrayLength(); i++)
+				for (int i = 0; i < context.LocalInstance.GetArrayLength(); i++)
 				{
-					var item = context.Instance[i];
+					var item = context.LocalInstance[i];
 					var subContext = ValidationContext.From(context,
 						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 						item);
 					SingleSchema.ValidateSubschema(subContext);
+					context.CurrentUri ??= subContext.CurrentUri;
 					overallResult &= subContext.IsValid;
 					context.NestedContexts.Add(subContext);
 				}
@@ -61,11 +62,11 @@ namespace Json.Schema
 			}
 			else // array
 			{
-				var maxEvaluations = Math.Min(ArraySchemas.Count, context.Instance.GetArrayLength());
+				var maxEvaluations = Math.Min(ArraySchemas.Count, context.LocalInstance.GetArrayLength());
 				for (int i = 0; i < maxEvaluations; i++)
 				{
 					var schema = ArraySchemas[i];
-					var item = context.Instance[i];
+					var item = context.LocalInstance[i];
 					var subContext = ValidationContext.From(context,
 						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 						item,
@@ -75,7 +76,7 @@ namespace Json.Schema
 					context.NestedContexts.Add(subContext);
 				}
 
-				if (maxEvaluations == context.Instance.GetArrayLength())
+				if (maxEvaluations == context.LocalInstance.GetArrayLength())
 					context.Annotations[Name] = true;
 				else
 					context.Annotations[Name] = maxEvaluations;
@@ -96,6 +97,16 @@ namespace Json.Schema
 				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 			if (!Equals(value, -1))
 				destContext.Annotations[Name] = value;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			if (value == null) return SingleSchema;
+
+			if (!int.TryParse(value, out var index)) return null;
+			if (index < 0 || ArraySchemas.Count <= index) return null;
+
+			return ArraySchemas[index];
 		}
 	}
 

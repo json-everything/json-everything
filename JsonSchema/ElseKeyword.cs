@@ -6,7 +6,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(ElseKeywordJsonConverter))]
-	public class ElseKeyword : IJsonSchemaKeyword
+	public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "else";
 
@@ -32,6 +32,11 @@ namespace Json.Schema
 
 			context.ConsolidateAnnotations();
 			context.IsValid = subContext.IsValid;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
-	public class DependentSchemasKeyword : IJsonSchemaKeyword
+	public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "dependentSchemas";
 
@@ -23,7 +23,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -35,7 +35,7 @@ namespace Json.Schema
 			{
 				var schema = property.Value;
 				var name = property.Key;
-				if (!context.Instance.TryGetProperty(name, out _)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out _)) continue;
 				
 				var subContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
@@ -50,6 +50,11 @@ namespace Json.Schema
 			context.IsValid = overallResult;
 			if (!context.IsValid)
 				context.Message = $"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}";
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return Schemas.TryGetValue(value, out var schema) ? schema : null;
 		}
 	}
 

@@ -20,8 +20,11 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			context.CurrentUri = Id;
+			context.ParentContext.CurrentUri = context.CurrentUri == null ? Id : new Uri(context.CurrentUri, Id);
 			context.IsValid = true;
+
+			if (Id.IsAbsoluteUri)
+				context.Registry.Register(Id, context.LocalSchema);
 		}
 	}
 

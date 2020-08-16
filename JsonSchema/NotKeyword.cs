@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(NotKeywordJsonConverter))]
-	public class NotKeyword : IJsonSchemaKeyword
+	public class NotKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "not";
 
@@ -38,6 +38,11 @@ namespace Json.Schema
 		{
 			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
 				destContext.Annotations[Name] = true;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

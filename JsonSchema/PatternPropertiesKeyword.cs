@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -36,7 +36,7 @@ namespace Json.Schema
 
 			var overallResult = true;
 			var evaluatedProperties = new List<string>();
-			var instanceProperties = context.Instance.EnumerateObject().ToList();
+			var instanceProperties = context.LocalInstance.EnumerateObject().ToList();
 			foreach (var entry in Patterns)
 			{
 				var schema = entry.Value;
@@ -70,6 +70,12 @@ namespace Json.Schema
 				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 			if (!Equals(value, -1))
 				destContext.Annotations[Name] = value;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			var regex = new Regex(value);
+			return Patterns.TryGetValue(regex, out var schema) ? schema : null;
 		}
 	}
 

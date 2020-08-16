@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(30)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
-	public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword
+	public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "unevaluatedProperties";
 
@@ -27,7 +27,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -40,11 +40,13 @@ namespace Json.Schema
 			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
 			annotation = context.TryGetAnnotation(AdditionalPropertiesKeyword.Name);
 			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
-			var unevaluatedProperties = context.Instance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
+			annotation = context.TryGetAnnotation(Name);
+			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
+			var unevaluatedProperties = context.LocalInstance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
 			evaluatedProperties.Clear();
 			foreach (var property in unevaluatedProperties)
 			{
-				if (!context.Instance.TryGetProperty(property.Name, out var item)) continue;
+				if (!context.LocalInstance.TryGetProperty(property.Name, out var item)) continue;
 
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")),
@@ -58,6 +60,7 @@ namespace Json.Schema
 
 			context.Annotations[Name] = evaluatedProperties;
 			context.IsValid = overallResult;
+			context.ConsolidateAnnotations();
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
@@ -72,6 +75,11 @@ namespace Json.Schema
 				annotation.AddRange(allProperties);
 			else
 				destContext.Annotations[Name] = allProperties;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

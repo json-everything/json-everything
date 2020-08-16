@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
-	public class AdditionalItemsKeyword : IJsonSchemaKeyword
+	public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "additionalItems";
 
@@ -27,7 +27,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;
@@ -47,9 +47,9 @@ namespace Json.Schema
 			}
 			var startIndex = (int) annotation;
 
-			for (int i = startIndex; i < context.Instance.GetArrayLength(); i++)
+			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
-				var item = context.Instance[i];
+				var item = context.LocalInstance[i];
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
@@ -65,6 +65,11 @@ namespace Json.Schema
 		{
 			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
 				destContext.Annotations[Name] = true;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-	public class AdditionalPropertiesKeyword : IJsonSchemaKeyword
+	public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "additionalProperties";
 
@@ -27,7 +27,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
@@ -38,11 +38,11 @@ namespace Json.Schema
 			var evaluatedProperties = (annotation as List<string>)?.ToList() ?? new List<string>();
 			annotation = context.TryGetAnnotation(PatternPropertiesKeyword.Name);
 			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
-			var additionalProperties = context.Instance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
+			var additionalProperties = context.LocalInstance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
 			evaluatedProperties.Clear();
 			foreach (var property in additionalProperties)
 			{
-				if (!context.Instance.TryGetProperty(property.Name, out var item)) continue;
+				if (!context.LocalInstance.TryGetProperty(property.Name, out var item)) continue;
 
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")),
@@ -70,6 +70,11 @@ namespace Json.Schema
 				annotation.AddRange(allProperties);
 			else
 				destContext.Annotations[Name] = allProperties;
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

@@ -20,13 +20,13 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Object)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
 				return;
 			}
 
-			var number = context.Instance.EnumerateObject().Count();
+			var number = context.LocalInstance.EnumerateObject().Count();
 			context.IsValid = Value <= number;
 			if (!context.IsValid)
 				context.Message = $"Value has more than {Value} properties";

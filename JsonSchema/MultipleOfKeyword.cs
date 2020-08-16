@@ -19,13 +19,13 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Number)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Number)
 			{
 				context.IsValid = true;
 				return;
 			}
 
-			var number = context.Instance.GetDecimal();
+			var number = context.LocalInstance.GetDecimal();
 			context.IsValid = number % Value == 0;
 			if (!context.IsValid)
 				context.Message = $"{number} a multiple of {Value}";

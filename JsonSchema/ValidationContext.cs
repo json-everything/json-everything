@@ -22,12 +22,14 @@ namespace Json.Schema
 		internal List<ValidationContext> SiblingContexts => _siblingContexts ??= new List<ValidationContext>();
 
 		public SchemaRegistry Registry { get; internal set; }
-		public JsonSchema SchemaRoot { get; private set; }
+		public JsonSchema SchemaRoot { get; internal set; }
+		public JsonPointer SchemaLocation { get; internal set; }
+		public JsonSchema LocalSchema { get; internal set; }
 		public JsonElement InstanceRoot { get; internal set; }
 		public JsonPointer InstanceLocation { get; internal set; }
-		public JsonElement Instance { get; internal set; }
-		public JsonPointer SchemaLocation { get; internal set; }
+		public JsonElement LocalInstance { get; internal set; }
 		public Uri CurrentUri { get; internal set; }
+		internal ValidationContext ParentContext { get; set; }
 
 		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count != 0;
 		internal bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count != 0;
@@ -44,9 +46,11 @@ namespace Json.Schema
 					Registry = source.Registry,
 					InstanceRoot = source.InstanceRoot,
 					SchemaRoot = source.SchemaRoot,
+					SchemaLocation = subschemaLocation ?? source.SchemaLocation,
+					LocalSchema = source.LocalSchema,
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
-					Instance = instance?.Clone() ?? source.Instance.Clone(),
-					SchemaLocation = subschemaLocation ?? source.SchemaLocation
+					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
+					CurrentUri = source.CurrentUri
 				};
 		}
 

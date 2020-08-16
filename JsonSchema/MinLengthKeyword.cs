@@ -20,13 +20,13 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.String)
+			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
 				context.IsValid = true;
 				return;
 			}
 
-			var length = new StringInfo(context.Instance.GetString()).LengthInTextElements;
+			var length = new StringInfo(context.LocalInstance.GetString()).LengthInTextElements;
 			context.IsValid = Value <= length;
 			if (!context.IsValid)
 				context.Message = $"Value is not longer than or equal to {Value} characters";

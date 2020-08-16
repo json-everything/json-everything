@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Cysharp.Text;
 
 namespace Json.Pointer
 {
+	[JsonConverter(typeof(JsonPointerJsonConverter))]
 	public struct JsonPointer
 	{
 		public static readonly JsonPointer Empty =

@@ -33,7 +33,7 @@ namespace Json.Schema
 				return;
 			}
 
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;

@@ -8,7 +8,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(ContainsKeywordJsonConverter))]
-	public class ContainsKeyword : IJsonSchemaKeyword
+	public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable
 	{
 		internal const string Name = "contains";
 
@@ -21,19 +21,19 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.Array)
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.IsValid = true;
 				return;
 			}
 
-			var count = context.Instance.GetArrayLength();
+			var count = context.LocalInstance.GetArrayLength();
 			for (int i = 0; i < count; i++)
 			{
 				// TODO: shortcut if flag output
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-					context.Instance[i]);
+					context.LocalInstance[i]);
 				Schema.ValidateSubschema(subContext);
 				context.NestedContexts.Add(subContext);
 			}
@@ -43,6 +43,11 @@ namespace Json.Schema
 			context.IsValid = found != 0;
 			if (!context.IsValid)
 				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
+		}
+
+		public IRefResolvable ResolvePointerSegment(string value)
+		{
+			return value == null ? Schema : null;
 		}
 	}
 

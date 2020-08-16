@@ -20,13 +20,13 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			if (context.Instance.ValueKind != JsonValueKind.String)
+			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
 				context.IsValid = true;
 				return;
 			}
 
-			var str = context.Instance.GetString();
+			var str = context.LocalInstance.GetString();
 			context.IsValid = Value.IsMatch(str);
 			if (!context.IsValid)
 				context.Message = "The string value was not a match for the indicated regular expression";

@@ -35,7 +35,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			switch (context.Instance.ValueKind)
+			switch (context.LocalInstance.ValueKind)
 			{
 				case JsonValueKind.Object:
 					context.IsValid = Type.HasFlag(SchemaValueType.Object);
@@ -51,7 +51,7 @@ namespace Json.Schema
 						context.IsValid = true;
 					else if (Type.HasFlag(SchemaValueType.Integer))
 					{
-						var number = context.Instance.GetDecimal();
+						var number = context.LocalInstance.GetDecimal();
 						context.IsValid = number == Math.Truncate(number);
 					}
 					else
@@ -67,7 +67,7 @@ namespace Json.Schema
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-			var found = context.Instance.ValueKind.ToString().ToLower();
+			var found = context.LocalInstance.ValueKind.ToString().ToLower();
 			var expected = Type.ToString().ToLower();
 			if (!context.IsValid)
 				context.Message = $"Value is {found} but should be {expected}";
@@ -78,20 +78,14 @@ namespace Json.Schema
 	{
 		public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			//if (reader.TokenType == JsonTokenType.StartArray)
-			//{
-			//	var types = JsonSerializer.Deserialize<List<SchemaValueType>>(ref reader);
-			//	return new TypeKeyword(types);
-			//}
-
-			var type = JsonSerializer.Deserialize<SchemaValueType>(ref reader);
+			var type = JsonSerializer.Deserialize<SchemaValueType>(ref reader, options);
 
 			return new TypeKeyword(type);
 		}
 		public override void Write(Utf8JsonWriter writer, TypeKeyword value, JsonSerializerOptions options)
 		{
 			writer.WritePropertyName(TypeKeyword.Name);
-			JsonSerializer.Serialize(writer, value.Type);
+			JsonSerializer.Serialize(writer, value.Type, options);
 		}
 	}
 }
