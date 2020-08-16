@@ -16,11 +16,6 @@ namespace Json.Schema
 
 		public IReadOnlyDictionary<string, JsonSchema> Schemas { get; }
 
-		static DependentSchemasKeyword()
-		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
-		}
-
 		public DependentSchemasKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
 			Schemas = values;
@@ -55,20 +50,6 @@ namespace Json.Schema
 			context.IsValid = overallResult;
 			if (!context.IsValid)
 				context.Message = $"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}";
-		}
-
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
-		{
-			var allDependentSchemas = sourceContexts.Select(c => c.TryGetAnnotation(Name))
-				.Where(a => a != null)
-				.Cast<List<string>>()
-				.SelectMany(a => a)
-				.Distinct()
-				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
-				annotation.AddRange(allDependentSchemas);
-			else
-				destContext.Annotations[Name] = allDependentSchemas;
 		}
 	}
 
