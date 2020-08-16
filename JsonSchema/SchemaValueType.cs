@@ -9,7 +9,6 @@ namespace Json.Schema
 	[JsonConverter(typeof(EnumStringConverter<SchemaValueType>))]
 	public enum SchemaValueType
 	{
-		Unknown,
 		[Description("object")]
 		Object = 1 << 0,
 		[Description("array")]

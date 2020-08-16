@@ -29,8 +29,8 @@ namespace Json.Schema
 		public JsonPointer SchemaLocation { get; internal set; }
 		public Uri CurrentUri { get; internal set; }
 
-		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count == 0;
-		internal bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count == 0;
+		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count != 0;
+		internal bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count != 0;
 
 		internal ValidationContext() { }
 

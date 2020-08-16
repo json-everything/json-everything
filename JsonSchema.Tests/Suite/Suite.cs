@@ -57,10 +57,6 @@ namespace Json.Schema.Tests.Suite
 		{
 			var result = collection.Schema.Validate(test.Data);
 
-			if (result.IsValid == test.Valid) return;
-			if (collection.IsOptional)
-				Assert.Inconclusive("Test optional");
-			
 			Console.WriteLine(fileName);
 			Console.WriteLine(collection.Description);
 			Console.WriteLine(test.Description);
@@ -69,6 +65,8 @@ namespace Json.Schema.Tests.Suite
 			Console.WriteLine();
 			Console.WriteLine(test.Data);
 
+			if (collection.IsOptional && result.IsValid != test.Valid)
+				Assert.Inconclusive("Test optional");
 			Assert.AreEqual(test.Valid, result.IsValid);
 		}
 	}

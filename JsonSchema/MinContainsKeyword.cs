@@ -24,9 +24,12 @@ namespace Json.Schema
 			if (Value == 0)
 			{
 				context.IsValid = true;
-				var containsContext = context.SiblingContexts.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault().Value == ContainsKeyword.Name);
-				if (containsContext != null)
-					containsContext.IsValid = true;
+				if (context.HasSiblingContexts)
+				{
+					var containsContext = context.SiblingContexts.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault().Value == ContainsKeyword.Name);
+					if (containsContext != null)
+						containsContext.IsValid = true;
+				}
 				return;
 			}
 

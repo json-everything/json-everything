@@ -78,11 +78,11 @@ namespace Json.Schema
 	{
 		public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType == JsonTokenType.StartArray)
-			{
-				var types = JsonSerializer.Deserialize<List<SchemaValueType>>(ref reader);
-				return new TypeKeyword(types);
-			}
+			//if (reader.TokenType == JsonTokenType.StartArray)
+			//{
+			//	var types = JsonSerializer.Deserialize<List<SchemaValueType>>(ref reader);
+			//	return new TypeKeyword(types);
+			//}
 
 			var type = JsonSerializer.Deserialize<SchemaValueType>(ref reader);
 

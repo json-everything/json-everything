@@ -79,7 +79,8 @@ namespace Json.Schema
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context, subschemaLocation: context.InstanceLocation.Combine(PointerSegment.Create(keyword.Keyword())));
 				newContext.ImportAnnotations(previousContext);
-				newContext.SiblingContexts.AddRange(context.NestedContexts);
+				if (context.HasNestedContexts)
+					newContext.SiblingContexts.AddRange(context.NestedContexts);
 				keyword.Validate(newContext);
 				context.NestedContexts.Add(newContext);
 			}
