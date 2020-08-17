@@ -28,6 +28,14 @@ namespace Json.Schema
 		{
 			return Definitions.TryGetValue(value, out var schema) ? schema : null;
 		}
+
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			foreach (var schema in Definitions.Values)
+			{
+				schema.RegisterSubschemas(registry, currentUri);
+			}
+		}
 	}
 
 	public class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>

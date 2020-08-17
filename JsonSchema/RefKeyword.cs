@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -25,20 +24,25 @@ namespace Json.Schema
 			var baseUri = parts[0];
 			var pointerString = parts.Length > 1 ? parts[1] : null;
 
+			Uri newUri;
 			JsonSchema baseSchema = null;
 			if (!string.IsNullOrEmpty(baseUri))
 			{
-				if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newBase))
-					baseSchema = context.Registry.Get(newBase);
+				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
+					baseSchema = context.Registry.Get(newUri);
 				else if (context.CurrentUri != null)
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/") ? context.CurrentUri : context.CurrentUri.GetParentUri();
-					newBase = new Uri(uriFolder, baseUri);
-					baseSchema = context.Registry.Get(newBase);
+					newUri = uriFolder;
+					var newBaseUri = new Uri(uriFolder, baseUri);
+					baseSchema = context.Registry.Get(newBaseUri);
 				}
 			}
 			else
+			{
 				baseSchema = context.SchemaRoot;
+				newUri = context.CurrentUri;
+			}
 			if (baseSchema == null)
 			{
 				context.IsValid = false;
@@ -56,7 +60,7 @@ namespace Json.Schema
 					context.Message = $"Could not parse pointer `{pointerString}`";
 					return;
 				}
-				schema = baseSchema.FindSubschema(pointer);
+				(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
 			}
 			else
 				schema = baseSchema;
@@ -68,7 +72,8 @@ namespace Json.Schema
 				return;
 			}
 
-			var subContext = ValidationContext.From(context);
+			var subContext = ValidationContext.From(context, newUri: newUri);
+			//var subContext = ValidationContext.From(context);
 			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
 				subContext.SchemaRoot = baseSchema;
 			schema.ValidateSubschema(subContext);

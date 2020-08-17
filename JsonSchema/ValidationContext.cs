@@ -39,7 +39,8 @@ namespace Json.Schema
 		public static ValidationContext From(ValidationContext source,
 		                                     JsonPointer? instanceLocation = null,
 		                                     JsonElement? instance = null,
-		                                     JsonPointer? subschemaLocation = null)
+		                                     JsonPointer? subschemaLocation = null,
+		                                     Uri newUri = null)
 		{
 			return new ValidationContext
 				{
@@ -50,7 +51,7 @@ namespace Json.Schema
 					LocalSchema = source.LocalSchema,
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
 					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
-					CurrentUri = source.CurrentUri
+					CurrentUri = newUri ?? source.CurrentUri
 				};
 		}
 

@@ -49,6 +49,14 @@ namespace Json.Schema
 
 			return Schemas[index];
 		}
+
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			foreach (var schema in Schemas)
+			{
+				schema.RegisterSubschemas(registry, currentUri);
+			}
+		}
 	}
 
 	public class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>

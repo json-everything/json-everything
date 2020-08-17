@@ -108,6 +108,19 @@ namespace Json.Schema
 
 			return ArraySchemas[index];
 		}
+
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			if (SingleSchema != null)
+				SingleSchema.RegisterSubschemas(registry, currentUri);
+			else
+			{
+				foreach (var schema in ArraySchemas)
+				{
+					schema.RegisterSubschemas(registry, currentUri);
+				}
+			}
+		}
 	}
 
 	public class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>

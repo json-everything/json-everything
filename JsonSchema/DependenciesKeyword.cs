@@ -95,6 +95,14 @@ namespace Json.Schema
 
 			return entry.Schema;
 		}
+
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			foreach (var requirement in Requirements.Values)
+			{
+				requirement.Schema?.RegisterSubschemas(registry, currentUri);
+			}
+		}
 	}
 
 	public class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyword>

@@ -61,15 +61,28 @@ namespace Json.Schema
 					SchemaRoot = this
 				};
 
-			RegisterSubschemas(context.Registry);
+			RegisterSubschemas(context.Registry, null);
 			ValidateSubschema(context);
 
 			return new ValidationResults(context);
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry)
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
-			throw new NotImplementedException();
+			if (Keywords == null) return; // boolean cases
+
+			var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
+			if (idKeyword != null)
+			{
+				currentUri = idKeyword.UpdateUri(currentUri);
+				registry.Register(currentUri, this);
+			}
+
+			var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
+			foreach (var keyword in keywords)
+			{
+				keyword.RegisterSubschemas(registry, currentUri);
+			}
 		}
 
 		public void ValidateSubschema(ValidationContext context)
@@ -101,7 +114,7 @@ namespace Json.Schema
 			context.IsValid = context.NestedContexts.All(c => c.IsValid);
 		}
 
-		public JsonSchema FindSubschema(JsonPointer pointer)
+		internal (JsonSchema, Uri) FindSubschema(JsonPointer pointer, Uri currentUri)
 		{
 			IRefResolvable resolvable = this;
 			foreach (var segment in pointer.Segments)
@@ -109,8 +122,22 @@ namespace Json.Schema
 				var newResolvable = resolvable.ResolvePointerSegment(segment.Value);
 				if (newResolvable == null)
 				{
-					// TODO: Check other data
-					return null;
+					// TODO: document that this process does not consider `$id` in extraneous data
+					if (OtherData != null && OtherData.TryGetValue(segment.Value, out var element))
+					{
+						var newPointer = JsonPointer.Create(pointer.Segments.Skip(1), true);
+						var value = newPointer.Evaluate(element);
+						var asSchema = FromText(value.ToString());
+						return (asSchema, currentUri);
+					}
+					return (null, currentUri);
+				}
+
+				if (newResolvable is JsonSchema schema && schema.Keywords != null)
+				{
+					var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
+					if (idKeyword != null)
+						currentUri = idKeyword.UpdateUri(currentUri);
 				}
 
 				resolvable = newResolvable;
@@ -119,7 +146,7 @@ namespace Json.Schema
 			if (!(resolvable is JsonSchema))
 				resolvable = resolvable.ResolvePointerSegment(null);
 
-			return resolvable as JsonSchema;
+			return (resolvable as JsonSchema, currentUri);
 		}
 
 		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)

@@ -32,6 +32,11 @@ namespace Json.Schema
 		{
 			return value == null ? Schema : null;
 		}
+
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			Schema.RegisterSubschemas(registry, currentUri);
+		}
 	}
 
 	public class IfKeywordJsonConverter : JsonConverter<IfKeyword>

@@ -75,6 +75,14 @@ namespace Json.Schema
 		{
 			return Properties.TryGetValue(value, out var schema) ? schema : null;
 		}
+
+		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			foreach (var schema in Properties.Values)
+			{
+				schema.RegisterSubschemas(registry, currentUri);
+			}
+		}
 	}
 
 	public class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>
