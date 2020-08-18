@@ -39,9 +39,10 @@ namespace Json.Schema
 			}
 
 			var found = context.NestedContexts.Count(r => r.IsValid);
-			context.Annotations[Name] = found;
 			context.IsValid = found != 0;
-			if (!context.IsValid)
+			if (context.IsValid)
+				context.Annotations[Name] = found;
+			else
 				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
 		}
 

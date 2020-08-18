@@ -68,7 +68,7 @@ namespace Json.Schema
 				.ToList();
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependentRequired);
-			else
+			else if (allDependentRequired.Any())
 				destContext.Annotations[Name] = allDependentRequired;
 		}
 	}

@@ -54,22 +54,29 @@ namespace Json.Schema
 				}
 			}
 
-			context.Annotations[Name] = evaluatedProperties.Distinct().ToList();
+			if (overallResult)
+			{
+				if (context.TryGetAnnotation(Name) is List<string> annotation)
+					annotation.AddRange(evaluatedProperties);
+				else
+					context.Annotations[Name] = evaluatedProperties;
+			}
+			// TODO: add message
 			context.IsValid = overallResult;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
 		{
-			object value;
-			var allAnnotations = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allProperties = sourceContexts.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
+				.Cast<List<string>>()
+				.SelectMany(a => a)
+				.Distinct()
 				.ToList();
-			if (allAnnotations.OfType<bool>().Any())
-				value = true;
-			else
-				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
-			if (!Equals(value, -1))
-				destContext.Annotations[Name] = value;
+			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+				annotation.AddRange(allProperties);
+			else if (allProperties.Any())
+				destContext.Annotations[Name] = allProperties;
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

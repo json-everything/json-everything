@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -14,6 +16,10 @@ namespace Json.Schema
 
 		public JsonSchema Schema { get; }
 
+		static UnevaluatedItemsKeyword()
+		{
+			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+		}
 		public UnevaluatedItemsKeyword(JsonSchema value)
 		{
 			Schema = value;
@@ -45,6 +51,12 @@ namespace Json.Schema
 				context.IsValid = true;
 				return;
 			}
+			annotation = context.TryGetAnnotation(Name);
+			if (annotation is bool) // is only ever true
+			{
+				context.IsValid = true;
+				return;
+			}
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
 				var item = context.LocalInstance[i];
@@ -56,7 +68,15 @@ namespace Json.Schema
 				context.NestedContexts.Add(subContext);
 			}
 
+			if (overallResult)
+				context.Annotations[Name] = true;
 			context.IsValid = overallResult;
+		}
+
+		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		{
+			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
+				destContext.Annotations[Name] = true;
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

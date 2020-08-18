@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -16,10 +14,6 @@ namespace Json.Schema
 
 		public JsonSchema Schema { get; }
 
-		static NotKeyword()
-		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
-		}
 		public NotKeyword(JsonSchema value)
 		{
 			Schema = value;
@@ -32,12 +26,7 @@ namespace Json.Schema
 			Schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
 			context.IsValid = !subContext.IsValid;
-		}
-
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
-		{
-			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-				destContext.Annotations[Name] = true;
+			context.ConsolidateAnnotations();
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

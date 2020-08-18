@@ -57,7 +57,8 @@ namespace Json.Schema
 				overallResult &= subContext.IsValid;
 			}
 
-			context.Annotations[Name] = true;
+			if (overallResult)
+				context.Annotations[Name] = true;
 			context.IsValid = overallResult;
 		}
 

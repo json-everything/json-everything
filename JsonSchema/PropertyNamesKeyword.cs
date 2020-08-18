@@ -58,9 +58,10 @@ namespace Json.Schema
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
+			// TODO: add message
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allPropertyNames);
-			else
+			else if (allPropertyNames.Any())
 				destContext.Annotations[Name] = allPropertyNames;
 		}
 

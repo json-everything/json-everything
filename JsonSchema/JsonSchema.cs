@@ -110,8 +110,9 @@ namespace Json.Schema
 				context.NestedContexts.Add(newContext);
 			}
 
-			context.ImportAnnotations(newContext);
 			context.IsValid = context.NestedContexts.All(c => c.IsValid);
+			if (context.IsValid)
+				context.ImportAnnotations(newContext);
 		}
 
 		internal (JsonSchema, Uri) FindSubschema(JsonPointer pointer, Uri currentUri)

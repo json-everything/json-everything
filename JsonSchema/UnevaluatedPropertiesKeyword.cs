@@ -58,7 +58,9 @@ namespace Json.Schema
 					evaluatedProperties.Add(property.Name);
 			}
 
-			context.Annotations[Name] = evaluatedProperties;
+			if (overallResult)
+				context.Annotations[Name] = evaluatedProperties;
+			// TODO: add message
 			context.IsValid = overallResult;
 			context.ConsolidateAnnotations();
 		}
@@ -73,7 +75,7 @@ namespace Json.Schema
 				.ToList();
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allProperties);
-			else
+			else if (allProperties.Any())
 				destContext.Annotations[Name] = allProperties;
 		}
 

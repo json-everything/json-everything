@@ -42,7 +42,8 @@ namespace Json.Schema
 				context.IsValid = true;
 				return;
 			}
-			
+
+			bool overwriteAnnotation = !(context.TryGetAnnotation(Name) is bool);
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
@@ -58,7 +59,11 @@ namespace Json.Schema
 					context.NestedContexts.Add(subContext);
 				}
 
-				context.Annotations[Name] = true;
+				if (overwriteAnnotation)
+				{
+					// TODO: add message
+					if (overallResult) context.Annotations[Name] = true;
+				}
 			}
 			else // array
 			{
@@ -76,10 +81,17 @@ namespace Json.Schema
 					context.NestedContexts.Add(subContext);
 				}
 
-				if (maxEvaluations == context.LocalInstance.GetArrayLength())
-					context.Annotations[Name] = true;
-				else
-					context.Annotations[Name] = maxEvaluations;
+				if (overwriteAnnotation)
+				{
+					// TODO: add message
+					if (overallResult)
+					{
+						if (maxEvaluations == context.LocalInstance.GetArrayLength())
+							context.Annotations[Name] = true;
+						else
+							context.Annotations[Name] = maxEvaluations;
+					}
+				}
 			}
 
 			context.IsValid = overallResult;
