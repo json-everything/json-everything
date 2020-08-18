@@ -15,9 +15,14 @@ namespace Json.Schema
 
 		public IReadOnlyList<JsonElement> Values { get; }
 
-		public EnumKeyword(IEnumerable<JsonElement> value)
+		public EnumKeyword(params JsonElement[] values)
 		{
-			Values = value.Select(e => e.Clone()).ToList();
+			Values = values.Select(e => e.Clone()).ToList();
+		}
+
+		public EnumKeyword(IEnumerable<JsonElement> values)
+		{
+			Values = values.Select(e => e.Clone()).ToList();
 		}
 
 		public void Validate(ValidationContext context)

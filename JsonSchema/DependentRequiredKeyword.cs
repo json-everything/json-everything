@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -14,14 +13,14 @@ namespace Json.Schema
 	{
 		internal const string Name = "dependentRequired";
 
-		public IReadOnlyDictionary<string, List<string>> Requirements { get; }
+		public IReadOnlyDictionary<string, IReadOnlyList<string>> Requirements { get; }
 
 		static DependentRequiredKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 
-		public DependentRequiredKeyword(IReadOnlyDictionary<string, List<string>> values)
+		public DependentRequiredKeyword(IReadOnlyDictionary<string, IReadOnlyList<string>> values)
 		{
 			Requirements = values;
 		}
@@ -81,7 +80,7 @@ namespace Json.Schema
 				throw new JsonException("Expected object");
 
 			var requirements = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref reader, options);
-			return new DependentRequiredKeyword(requirements);
+			return new DependentRequiredKeyword(requirements.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.Value));
 		}
 		public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 		{

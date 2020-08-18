@@ -10,9 +10,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "deprecated";
 
-		public string Value { get; }
+		public bool Value { get; }
 
-		public DeprecatedKeyword(string value)
+		public DeprecatedKeyword(bool value)
 		{
 			Value = value;
 		}
@@ -28,16 +28,16 @@ namespace Json.Schema
 	{
 		public override DeprecatedKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.String)
-				throw new JsonException("Expected string");
+			if (reader.TokenType != JsonTokenType.True || reader.TokenType != JsonTokenType.False)
+				throw new JsonException("Expected boolean");
 
-			var str = reader.GetString();
+			var value = reader.GetBoolean();
 
-			return new DeprecatedKeyword(str);
+			return new DeprecatedKeyword(value);
 		}
 		public override void Write(Utf8JsonWriter writer, DeprecatedKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteString(DeprecatedKeyword.Name, value.Value);
+			writer.WriteBoolean(DeprecatedKeyword.Name, value.Value);
 		}
 	}
 }

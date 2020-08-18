@@ -11,9 +11,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "maxLength";
 
-		public decimal Value { get; }
+		public uint Value { get; }
 
-		public MaxLengthKeyword(decimal value)
+		public MaxLengthKeyword(uint value)
 		{
 			Value = value;
 		}
@@ -40,7 +40,7 @@ namespace Json.Schema
 			if (reader.TokenType != JsonTokenType.Number)
 				throw new JsonException("Expected number");
 
-			var number = reader.GetDecimal();
+			var number = reader.GetUInt32();
 
 			return new MaxLengthKeyword(number);
 		}

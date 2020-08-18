@@ -7,7 +7,14 @@ namespace Json.Schema
 	{
 		private Dictionary<Uri, JsonSchema> _registered;
 
-		public static SchemaRegistry Global { get; } = new SchemaRegistry();
+		public static SchemaRegistry Global { get; }
+
+		static SchemaRegistry()
+		{
+			Global = new SchemaRegistry();
+
+			Global.Register(MetaSchemas.Draft_2019_09_Id, MetaSchemas.Draft_2019_09);
+		}
 
 		public void Register(Uri uri, JsonSchema schema)
 		{

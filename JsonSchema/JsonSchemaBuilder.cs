@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Json.Schema
 {
@@ -13,6 +16,13 @@ namespace Json.Schema
 
 		public JsonSchema Build()
 		{
+			var duplicates = _keywords.GroupBy(k => k.GetType())
+				.Where(g => g.Count() > 1)
+				.Select(g => g.Key.GetCustomAttribute<SchemaKeywordAttribute>()?.Name)
+				.ToList();
+			if (duplicates.Any())
+				throw new ArgumentException($"Found duplicate keywords: [{string.Join(", ", duplicates)}]");
+
 			return new JsonSchema(_keywords.Values, null);
 		}
 	}

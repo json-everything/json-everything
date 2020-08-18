@@ -12,9 +12,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "minContains";
 
-		public int Value { get; }
+		public uint Value { get; }
 
-		public MinContainsKeyword(int value)
+		public MinContainsKeyword(uint value)
 		{
 			Value = value;
 		}
@@ -60,7 +60,7 @@ namespace Json.Schema
 			if (reader.TokenType != JsonTokenType.Number)
 				throw new JsonException("Expected number");
 
-			var number = reader.GetInt32();
+			var number = reader.GetUInt32();
 
 			return new MinContainsKeyword(number);
 		}

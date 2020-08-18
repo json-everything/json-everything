@@ -10,9 +10,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "writeOnly";
 
-		public string Value { get; }
+		public bool Value { get; }
 
-		public WriteOnlyKeyword(string value)
+		public WriteOnlyKeyword(bool value)
 		{
 			Value = value;
 		}
@@ -28,16 +28,16 @@ namespace Json.Schema
 	{
 		public override WriteOnlyKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.String)
-				throw new JsonException("Expected string");
+			if (reader.TokenType != JsonTokenType.True || reader.TokenType != JsonTokenType.False)
+				throw new JsonException("Expected boolean");
 
-			var str = reader.GetString();
+			var str = reader.GetBoolean();
 
 			return new WriteOnlyKeyword(str);
 		}
 		public override void Write(Utf8JsonWriter writer, WriteOnlyKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteString(WriteOnlyKeyword.Name, value.Value);
+			writer.WriteBoolean(WriteOnlyKeyword.Name, value.Value);
 		}
 	}
 }
