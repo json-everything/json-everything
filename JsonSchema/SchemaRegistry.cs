@@ -15,7 +15,7 @@ namespace Json.Schema
 
 			Global.Register(MetaSchemas.Draft6_Id, MetaSchemas.Draft6);
 			Global.Register(MetaSchemas.Draft7_Id, MetaSchemas.Draft7);
-			Global.Register(MetaSchemas.Draft_2019_09_Id, MetaSchemas.Draft_2019_09);
+			Global.Register(MetaSchemas.Draft2019_09_Id, MetaSchemas.Draft2019_09);
 		}
 
 		public void Register(Uri uri, JsonSchema schema)

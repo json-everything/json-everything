@@ -47,11 +47,12 @@ namespace Json.Schema
 			//return JsonSerializer.Deserialize<JsonSchema>()
 		}
 
-		public ValidationResults Validate(JsonElement root)
+		public ValidationResults Validate(JsonElement root, ValidationOptions options = null)
 		{
 			var context = new ValidationContext
 				{
 					Registry = new SchemaRegistry(),
+					Options = options ?? ValidationOptions.Default,
 					LocalInstance = root,
 					InstanceLocation = JsonPointer.Empty,
 					InstanceRoot = root,
@@ -93,8 +94,11 @@ namespace Json.Schema
 				return;
 			}
 
+			var metaSchemaUri = Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.Registry);
+
 			ValidationContext newContext = null;
-			foreach (var keyword in Keywords.OrderBy(k => k.Priority()))
+			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context,

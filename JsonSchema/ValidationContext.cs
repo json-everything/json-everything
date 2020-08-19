@@ -22,6 +22,8 @@ namespace Json.Schema
 		internal List<ValidationContext> SiblingContexts => _siblingContexts ??= new List<ValidationContext>();
 
 		public SchemaRegistry Registry { get; internal set; }
+		public ValidationOptions Options { get; internal set; }
+
 		public JsonSchema SchemaRoot { get; internal set; }
 		public JsonPointer SchemaLocation { get; internal set; }
 		public JsonSchema LocalSchema { get; internal set; }
@@ -45,6 +47,7 @@ namespace Json.Schema
 			return new ValidationContext
 				{
 					Registry = source.Registry,
+					Options = source.Options,
 					InstanceRoot = source.InstanceRoot,
 					SchemaRoot = source.SchemaRoot,
 					SchemaLocation = subschemaLocation ?? source.SchemaLocation,

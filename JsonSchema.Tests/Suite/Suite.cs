@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using Humanizer;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace Json.Schema.Tests.Suite
 {
@@ -28,6 +27,19 @@ namespace Json.Schema.Tests.Suite
 			if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
 			var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
+			var options = new ValidationOptions();
+			switch (draftFolder)
+			{
+				case "draft6":
+					options.ValidateAs = Draft.Draft6;
+					break;
+				case "draft7":
+					options.ValidateAs = Draft.Draft7;
+					break;
+				case "draft2019-09":
+					//options.ValidateAs = Draft.Draft2019_09;
+					break;
+			}
 
 			var allTests = new List<TestCaseData>();
 			foreach (var fileName in fileNames)
@@ -46,7 +58,7 @@ namespace Json.Schema.Tests.Suite
 					{
 						var optional = collection.IsOptional ? "(optional)/" : null;
 						var name = $"{draftFolder}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
-						allTests.Add(new TestCaseData(collection, test, shortFileName) { TestName = name });
+						allTests.Add(new TestCaseData(collection, test, shortFileName, options) { TestName = name });
 					}
 				}
 			}
@@ -72,12 +84,12 @@ namespace Json.Schema.Tests.Suite
 		}
 
 		[TestCaseSource(nameof(TestCases))]
-		public void Test(TestCollection collection, TestCase test, string fileName)
+		public void Test(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
 		{
 			if (!InstanceIsDeserializable(test.Data))
 				Assert.Inconclusive("Test optional");
 
-			var result = collection.Schema.Validate(test.Data);
+			var result = collection.Schema.Validate(test.Data, options);
 
 			Console.WriteLine(fileName);
 			Console.WriteLine(collection.Description);
