@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Json.More;
 
 namespace Json.Schema
 {
@@ -176,6 +177,12 @@ namespace Json.Schema
 			return builder;
 		}
 
+		public static JsonSchemaBuilder Format(this JsonSchemaBuilder builder, Format format)
+		{
+			builder.Add(new FormatKeyword(format));
+			return builder;
+		}
+
 		public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, Uri id)
 		{
 			builder.Add(new IdKeyword(id));
@@ -329,6 +336,12 @@ namespace Json.Schema
 		public static JsonSchemaBuilder Ref(this JsonSchemaBuilder builder, Uri reference)
 		{
 			builder.Add(new RefKeyword(reference));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder Ref(this JsonSchemaBuilder builder, string reference)
+		{
+			builder.Add(new RefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
 			return builder;
 		}
 

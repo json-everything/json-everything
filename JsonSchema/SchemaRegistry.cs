@@ -13,6 +13,8 @@ namespace Json.Schema
 		{
 			Global = new SchemaRegistry();
 
+			Global.Register(MetaSchemas.Draft6_Id, MetaSchemas.Draft6);
+			Global.Register(MetaSchemas.Draft7_Id, MetaSchemas.Draft7);
 			Global.Register(MetaSchemas.Draft_2019_09_Id, MetaSchemas.Draft_2019_09);
 		}
 

@@ -8,7 +8,7 @@ namespace Json.Schema
 	[JsonConverter(typeof(CommentKeywordJsonConverter))]
 	public class CommentKeyword : IJsonSchemaKeyword
 	{
-		internal const string Name = "comment";
+		internal const string Name = "$comment";
 
 		public string Value { get; }
 

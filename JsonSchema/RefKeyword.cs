@@ -35,6 +35,8 @@ namespace Json.Schema
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/") ? context.CurrentUri : context.CurrentUri.GetParentUri();
 					newUri = uriFolder;
 					var newBaseUri = new Uri(uriFolder, baseUri);
+					if (!string.IsNullOrEmpty(pointerString))
+						newUri = newBaseUri;
 					baseSchema = context.Registry.Get(newBaseUri);
 				}
 			}
@@ -63,7 +65,7 @@ namespace Json.Schema
 				(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
 			}
 			else
-				schema = baseSchema;
+	{			schema = baseSchema;}
 
 			if (schema == null)
 			{

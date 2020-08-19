@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Humanizer;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace Json.Schema.Tests.Suite
 {
@@ -73,6 +74,9 @@ namespace Json.Schema.Tests.Suite
 		[TestCaseSource(nameof(TestCases))]
 		public void Test(TestCollection collection, TestCase test, string fileName)
 		{
+			if (!InstanceIsDeserializable(test.Data))
+				Assert.Inconclusive("Test optional");
+
 			var result = collection.Schema.Validate(test.Data);
 
 			Console.WriteLine(fileName);
@@ -86,6 +90,29 @@ namespace Json.Schema.Tests.Suite
 			if (collection.IsOptional && result.IsValid != test.Valid)
 				Assert.Inconclusive("Test optional");
 			Assert.AreEqual(test.Valid, result.IsValid);
+		}
+
+		private bool InstanceIsDeserializable(in JsonElement testData)
+		{
+			try
+			{
+				switch (testData.ValueKind)
+				{
+					case JsonValueKind.Undefined:
+						return false;
+					case JsonValueKind.Number:
+						// some tests involve numbers larger than c# can handle.  they're optional, though.
+						testData.GetDecimal();
+						return true;
+					default:
+						return true;
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return false;
+			}
 		}
 	}
 }

@@ -14,9 +14,14 @@ namespace Json.Schema
 			_keywords[keyword.Keyword()] = keyword;
 		}
 
+		public static JsonSchema RefRoot()
+		{
+			return new JsonSchemaBuilder().Ref(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
+		}
+
 		public JsonSchema Build()
 		{
-			var duplicates = _keywords.GroupBy(k => k.GetType())
+			var duplicates = _keywords.GroupBy(k => k.Value.GetType())
 				.Where(g => g.Count() > 1)
 				.Select(g => g.Key.GetCustomAttribute<SchemaKeywordAttribute>()?.Name)
 				.ToList();
@@ -24,6 +29,11 @@ namespace Json.Schema
 				throw new ArgumentException($"Found duplicate keywords: [{string.Join(", ", duplicates)}]");
 
 			return new JsonSchema(_keywords.Values, null);
+		}
+
+		public static implicit operator JsonSchema(JsonSchemaBuilder builder)
+		{
+			return builder.Build();
 		}
 	}
 }

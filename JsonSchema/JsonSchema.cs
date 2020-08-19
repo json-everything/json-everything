@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
 using Json.Pointer;
 
 namespace Json.Schema
@@ -118,8 +116,9 @@ namespace Json.Schema
 		internal (JsonSchema, Uri) FindSubschema(JsonPointer pointer, Uri currentUri)
 		{
 			IRefResolvable resolvable = this;
-			foreach (var segment in pointer.Segments)
+			for (var i = 0; i < pointer.Segments.Length; i++)
 			{
+				var segment = pointer.Segments[i];
 				var newResolvable = resolvable.ResolvePointerSegment(segment.Value);
 				if (newResolvable == null)
 				{
@@ -131,13 +130,14 @@ namespace Json.Schema
 						var asSchema = FromText(value.ToString());
 						return (asSchema, currentUri);
 					}
+
 					return (null, currentUri);
 				}
 
 				if (newResolvable is JsonSchema schema && schema.Keywords != null)
 				{
-					var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
-					if (idKeyword != null)
+					var idKeyword = schema.Keywords.OfType<IdKeyword>().SingleOrDefault();
+					if (idKeyword != null && i != pointer.Segments.Length - 1)
 						currentUri = idKeyword.UpdateUri(currentUri);
 				}
 
@@ -154,6 +154,11 @@ namespace Json.Schema
 		{
 			var keyword = Keywords.FirstOrDefault(k => k.Name() == value);
 			return keyword as IRefResolvable;
+		}
+
+		public static implicit operator JsonSchema(bool value)
+		{
+			return value ? True : False;
 		}
 	}
 
@@ -240,32 +245,6 @@ namespace Json.Schema
 				JsonSerializer.Serialize(writer, data.Value, options);
 			}
 			writer.WriteEndObject();
-		}
-	}
-
-	public static class JsonSchemaKeywordExtensions
-	{
-		private static readonly Dictionary<Type, string> _attributes =
-			typeof(IJsonSchemaKeyword).Assembly
-				.GetTypes()
-				.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-				            !t.IsAbstract &&
-				            !t.IsInterface)
-				.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
-
-		public static string Name(this IJsonSchemaKeyword keyword)
-		{
-			var keywordType = keyword.GetType();
-			if (!_attributes.TryGetValue(keywordType, out var name))
-			{
-				name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
-				if (name == null)
-					throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
-
-				_attributes[keywordType] = name;
-			}
-
-			return name;
 		}
 	}
 }
