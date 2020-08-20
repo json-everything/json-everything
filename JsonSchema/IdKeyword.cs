@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
-	[SchemaPriority(long.MinValue)]
+	[SchemaPriority(long.MinValue + 1)]
 	[JsonConverter(typeof(IdKeywordJsonConverter))]
 	public class IdKeyword : IJsonSchemaKeyword
 	{

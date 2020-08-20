@@ -37,6 +37,7 @@ namespace Json.Schema.Tests.Suite
 					options.ValidateAs = Draft.Draft7;
 					break;
 				case "draft2019-09":
+					// will set this when implementing the next draft
 					//options.ValidateAs = Draft.Draft2019_09;
 					break;
 			}
@@ -94,6 +95,7 @@ namespace Json.Schema.Tests.Suite
 			Console.WriteLine(fileName);
 			Console.WriteLine(collection.Description);
 			Console.WriteLine(test.Description);
+			Console.WriteLine(test.Valid ? "valid" : "invalid");
 			Console.WriteLine();
 			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, new JsonSerializerOptions{WriteIndented = true}));
 			Console.WriteLine();
@@ -104,7 +106,7 @@ namespace Json.Schema.Tests.Suite
 			Assert.AreEqual(test.Valid, result.IsValid);
 		}
 
-		private bool InstanceIsDeserializable(in JsonElement testData)
+		private static bool InstanceIsDeserializable(in JsonElement testData)
 		{
 			try
 			{

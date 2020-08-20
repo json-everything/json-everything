@@ -26,7 +26,7 @@ namespace Json.Schema
 			}
 
 			context.Annotations[Name] = Value;
-			context.IsValid = true;
+			context.IsValid = Value.Validate(context.LocalInstance);
 		}
 	}
 

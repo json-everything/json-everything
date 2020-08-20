@@ -20,7 +20,6 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			context.Annotations[Name] = Schema;
 			context.IsValid = true;
 		}
 	}
