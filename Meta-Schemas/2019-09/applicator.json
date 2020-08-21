@@ -7,6 +7,7 @@
     "$recursiveAnchor": true,
 
     "title": "Applicator vocabulary meta-schema",
+    "type": ["object", "boolean"],
     "properties": {
         "additionalItems": { "$recursiveRef": "#" },
         "unevaluatedItems": { "$recursiveRef": "#" },
@@ -18,12 +19,7 @@
         },
         "contains": { "$recursiveRef": "#" },
         "additionalProperties": { "$recursiveRef": "#" },
-        "unevaluatedProperties": {
-            "type": "object",
-            "additionalProperties": {
-                "$recursiveRef": "#"
-            }
-        },
+        "unevaluatedProperties": { "$recursiveRef": "#" },
         "properties": {
             "type": "object",
             "additionalProperties": { "$recursiveRef": "#" },

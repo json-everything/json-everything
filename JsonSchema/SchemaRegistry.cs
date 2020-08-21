@@ -23,9 +23,15 @@ namespace Json.Schema
 		{
 			Global = new SchemaRegistry();
 
-			Global.Register(MetaSchemas.Draft6_Id, MetaSchemas.Draft6);
-			Global.Register(MetaSchemas.Draft7_Id, MetaSchemas.Draft7);
-			Global.Register(MetaSchemas.Draft2019_09_Id, MetaSchemas.Draft2019_09);
+			Global.Register(MetaSchemas.Draft6Id, MetaSchemas.Draft6);
+			Global.Register(MetaSchemas.Draft7Id, MetaSchemas.Draft7);
+			Global.Register(MetaSchemas.Draft201909Id, MetaSchemas.Draft201909);
+			Global.Register(MetaSchemas.Core201909Id, MetaSchemas.Core201909);
+			Global.Register(MetaSchemas.Applicator201909Id, MetaSchemas.Applicator201909);
+			Global.Register(MetaSchemas.Validation201909Id, MetaSchemas.Validation201909);
+			Global.Register(MetaSchemas.Metadata201909Id, MetaSchemas.Metadata201909);
+			Global.Register(MetaSchemas.Format201909Id, MetaSchemas.Format201909);
+			Global.Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
 		}
 
 		public void Register(Uri uri, JsonSchema schema)

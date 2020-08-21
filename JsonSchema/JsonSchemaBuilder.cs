@@ -19,6 +19,11 @@ namespace Json.Schema
 			return new JsonSchemaBuilder().Ref(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
 		}
 
+		public static JsonSchema RecursiveRefRoot()
+		{
+			return new JsonSchemaBuilder().RecursiveRef(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
+		}
+
 		public JsonSchema Build()
 		{
 			var duplicates = _keywords.GroupBy(k => k.Value.GetType())

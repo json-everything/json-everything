@@ -8,11 +8,11 @@ namespace Json.Schema
 {
 	public static partial class MetaSchemas
 	{
-		public static readonly Uri Draft7_Id = new Uri("http://json-schema.org/draft-07/schema#");
+		public static readonly Uri Draft7Id = new Uri("http://json-schema.org/draft-07/schema#");
 
 		public static readonly JsonSchema Draft7 = new JsonSchemaBuilder()
-			.Schema(Draft7_Id)
-			.Id(Draft7_Id)
+			.Schema(Draft7Id)
+			.Id(Draft7Id)
 			.Title("Core schema meta-schema")
 			.Definitions(
 				("schemaArray", new JsonSchemaBuilder()

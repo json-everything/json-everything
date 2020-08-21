@@ -5,6 +5,6 @@
 		Unspecified,
 		Draft6,
 		Draft7,
-		Draft2019_09
+		Draft201909
 	}
 }

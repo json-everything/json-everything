@@ -11,7 +11,7 @@ namespace Json.Schema
 	public class AnchorKeyword : IJsonSchemaKeyword
 	{
 		internal const string Name = "$anchor";
-		internal static readonly Regex AnchorPattern = new Regex(@"^[a-zA-Z][a-zA-Z0-9\-:_\.]*$");
+		internal static readonly Regex AnchorPattern = new Regex("^[A-Za-z][-A-Za-z0-9.:_]*$");
 
 		public string Anchor { get; }
 

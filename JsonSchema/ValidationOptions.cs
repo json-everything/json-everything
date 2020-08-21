@@ -14,9 +14,9 @@ namespace Json.Schema
 		{
 			while (metaSchemaId != null)
 			{
-				if (metaSchemaId == MetaSchemas.Draft6_Id || metaSchemaId == MetaSchemas.Draft7_Id)
+				if (metaSchemaId == MetaSchemas.Draft6Id || metaSchemaId == MetaSchemas.Draft7Id)
 					return DisallowSiblingRef(keywords);
-				if (metaSchemaId == MetaSchemas.Draft2019_09_Id)
+				if (metaSchemaId == MetaSchemas.Draft201909Id)
 					return AllowSiblingRef(keywords);
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null) return ByOption(keywords);
@@ -34,7 +34,7 @@ namespace Json.Schema
 				case Draft.Draft7:
 					return DisallowSiblingRef(keywords);
 				case Draft.Unspecified:
-				case Draft.Draft2019_09:
+				case Draft.Draft201909:
 				default:
 					return AllowSiblingRef(keywords);
 			}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using Json.More;
 
 namespace Json.Schema
@@ -189,6 +190,12 @@ namespace Json.Schema
 			return builder;
 		}
 
+		public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, string id)
+		{
+			builder.Add(new IdKeyword(new Uri(id, UriKind.Absolute)));
+			return builder;
+		}
+
 		public static JsonSchemaBuilder If(this JsonSchemaBuilder builder, JsonSchema schema)
 		{
 			builder.Add(new IfKeyword(schema));
@@ -297,6 +304,12 @@ namespace Json.Schema
 			return builder;
 		}
 
+		public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [RegexPattern] string pattern)
+		{
+			builder.Add(new PatternKeyword(new Regex(pattern, RegexOptions.ECMAScript | RegexOptions.Compiled)));
+			return builder;
+		}
+
 		public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<Regex, JsonSchema> deps)
 		{
 			builder.Add(new PatternPropertiesKeyword(deps));
@@ -333,6 +346,24 @@ namespace Json.Schema
 			return builder;
 		}
 
+		public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder, bool value)
+		{
+			builder.Add(new RecursiveAnchorKeyword(value));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder RecursiveRef(this JsonSchemaBuilder builder, Uri reference)
+		{
+			builder.Add(new RecursiveRefKeyword(reference));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder RecursiveRef(this JsonSchemaBuilder builder, string reference)
+		{
+			builder.Add(new RecursiveRefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
+			return builder;
+		}
+
 		public static JsonSchemaBuilder Ref(this JsonSchemaBuilder builder, Uri reference)
 		{
 			builder.Add(new RefKeyword(reference));
@@ -360,6 +391,12 @@ namespace Json.Schema
 		public static JsonSchemaBuilder Schema(this JsonSchemaBuilder builder, Uri uri)
 		{
 			builder.Add(new SchemaKeyword(uri));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder Schema(this JsonSchemaBuilder builder, string uri)
+		{
+			builder.Add(new SchemaKeyword(new Uri(uri, UriKind.Absolute)));
 			return builder;
 		}
 
@@ -408,6 +445,30 @@ namespace Json.Schema
 		public static JsonSchemaBuilder UniqueItems(this JsonSchemaBuilder builder, bool value)
 		{
 			builder.Add(new UniqueItemsKeyword(value));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (Uri id, bool required)[] vocabs)
+		{
+			builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => x.id, x => x.required)));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (string id, bool required)[] vocabs)
+		{
+			builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.id, UriKind.Absolute), x => x.required)));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<Uri, bool> vocabs)
+		{
+			builder.Add(new VocabularyKeyword(vocabs));
+			return builder;
+		}
+
+		public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, bool> vocabs)
+		{
+			builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.Key, UriKind.Absolute), x => x.Value)));
 			return builder;
 		}
 
