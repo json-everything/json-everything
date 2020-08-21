@@ -74,8 +74,17 @@ namespace Json.Schema
 			if (idKeyword != null)
 			{
 				currentUri = idKeyword.UpdateUri(currentUri);
-				registry.Register(currentUri, this);
+				var parts = idKeyword.Id.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
+				var fragment = parts.Length > 1 ? parts[1] : null;
+				if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
+					registry.Register(currentUri, this);
+				else
+					registry.RegisterAnchor(currentUri, fragment, this);
 			}
+
+			var anchorKeyword = Keywords.OfType<AnchorKeyword>().SingleOrDefault();
+			if (anchorKeyword != null) 
+				registry.RegisterAnchor(currentUri, anchorKeyword.Anchor, this);
 
 			var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
 			foreach (var keyword in keywords)

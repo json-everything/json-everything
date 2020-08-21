@@ -39,7 +39,7 @@ namespace Json.Schema
 
 			var uriString = reader.GetString();
 			if (!Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out var uri))
-				throw new JsonException("Expected absolute URI");
+				throw new JsonException("Expected URI");
 
 			return new IdKeyword(uri);
 		}

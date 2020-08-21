@@ -5,7 +5,17 @@ namespace Json.Schema
 {
 	public class SchemaRegistry
 	{
-		private Dictionary<Uri, JsonSchema> _registered;
+		private class Registration
+		{
+			private Dictionary<string, JsonSchema> _anchors;
+			public JsonSchema Root { get; set; }
+
+			public Dictionary<string, JsonSchema> Anchors => _anchors ??= new Dictionary<string, JsonSchema>();
+		}
+
+		private static readonly Uri _empty = new Uri("http://everything.json/");
+
+		private Dictionary<Uri, Registration> _registered;
 
 		public static SchemaRegistry Global { get; }
 
@@ -20,28 +30,54 @@ namespace Json.Schema
 
 		public void Register(Uri uri, JsonSchema schema)
 		{
-			_registered ??= new Dictionary<Uri, JsonSchema>();
-			_registered[uri] = schema;
+			_registered ??= new Dictionary<Uri, Registration>();
+			uri = MakeAbsolute(uri);
+			var registry = CheckRegistry(_registered, uri);
+			if (registry == null)
+				_registered[uri] = registry = new Registration();
+			registry.Root = schema;
+		}
+
+		public void RegisterAnchor(Uri uri, string anchor, JsonSchema schema)
+		{
+			_registered ??= new Dictionary<Uri, Registration>();
+			uri = MakeAbsolute(uri);
+			var registry = CheckRegistry(_registered, uri);
+			if (registry == null)
+				_registered[uri] = registry = new Registration();
+			registry.Anchors[anchor] = schema;
 		}
 
 		// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 		// tl;dr - URI equality doesn't consider fragments
-		public JsonSchema Get(Uri uri)
+		public JsonSchema Get(Uri uri, string anchor = null)
 		{
-			JsonSchema schema = null;
+			Registration registration = null;
+			uri = MakeAbsolute(uri);
 			// check local
 			if (_registered != null)
-				schema = CheckRegistry(_registered, uri);
+				registration = CheckRegistry(_registered, uri);
 			// if not found, check global
-			if (schema == null && !ReferenceEquals(Global, this)) 
-				schema = CheckRegistry(Global._registered, uri);
+			if (registration == null && !ReferenceEquals(Global, this))
+				registration = CheckRegistry(Global._registered, uri);
 
-			return schema;
+			if (registration == null) return null;
+			if (string.IsNullOrEmpty(anchor)) return registration.Root;
+			return registration.Anchors.TryGetValue(anchor, out var schema) ? schema : null;
 		}
 
-		private static JsonSchema CheckRegistry(Dictionary<Uri, JsonSchema> lookup, Uri uri)
+		private static Registration CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
 		{
-			return lookup.TryGetValue(uri, out var schema) ? schema : null;
+			return lookup.TryGetValue(uri, out var registration) ? registration : null;
+		}
+
+		private static Uri MakeAbsolute(Uri uri)
+		{
+			if (uri == null) return _empty;
+
+			if (uri.IsAbsoluteUri) return uri;
+
+			return new Uri(_empty, uri);
 		}
 	}
 }

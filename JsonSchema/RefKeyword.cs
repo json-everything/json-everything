@@ -22,7 +22,7 @@ namespace Json.Schema
 		{
 			var parts = Reference.OriginalString.Split(new []{'#'}, StringSplitOptions.None);
 			var baseUri = parts[0];
-			var pointerString = parts.Length > 1 ? parts[1] : null;
+			var fragment = parts.Length > 1 ? parts[1] : null;
 
 			Uri newUri;
 			JsonSchema baseSchema = null;
@@ -35,7 +35,7 @@ namespace Json.Schema
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/") ? context.CurrentUri : context.CurrentUri.GetParentUri();
 					newUri = uriFolder;
 					var newBaseUri = new Uri(uriFolder, baseUri);
-					if (!string.IsNullOrEmpty(pointerString))
+					if (!string.IsNullOrEmpty(fragment))
 						newUri = newBaseUri;
 					baseSchema = context.Registry.Get(newBaseUri);
 				}
@@ -45,27 +45,33 @@ namespace Json.Schema
 				baseSchema = context.SchemaRoot;
 				newUri = context.CurrentUri;
 			}
-			if (baseSchema == null)
-			{
-				context.IsValid = false;
-				context.Message = $"Could not resolve base URI `{baseUri}`";
-				return;
-			}
 
 			JsonSchema schema;
-			if (!string.IsNullOrEmpty(pointerString))
+			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment))
+				schema = context.Registry.Get(newUri, fragment);
+			else
 			{
-				pointerString = $"#{pointerString}";
-				if (!JsonPointer.TryParse(pointerString, out var pointer))
+				if (baseSchema == null)
 				{
 					context.IsValid = false;
-					context.Message = $"Could not parse pointer `{pointerString}`";
+					context.Message = $"Could not resolve base URI `{baseUri}`";
 					return;
 				}
-				(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
+
+				if (!string.IsNullOrEmpty(fragment))
+				{
+					fragment = $"#{fragment}";
+					if (!JsonPointer.TryParse(fragment, out var pointer))
+					{
+						context.IsValid = false;
+						context.Message = $"Could not parse pointer `{fragment}`";
+						return;
+					}
+					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
+				}
+				else
+					schema = baseSchema;
 			}
-			else
-	{			schema = baseSchema;}
 
 			if (schema == null)
 			{
@@ -75,7 +81,6 @@ namespace Json.Schema
 			}
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
-			//var subContext = ValidationContext.From(context);
 			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
 				subContext.SchemaRoot = baseSchema;
 			schema.ValidateSubschema(subContext);
