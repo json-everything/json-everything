@@ -32,7 +32,9 @@ namespace Json.Schema
 					baseSchema = context.Registry.Get(newUri);
 				else if (context.CurrentUri != null)
 				{
-					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/") ? context.CurrentUri : context.CurrentUri.GetParentUri();
+					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
+						? context.CurrentUri
+						: context.CurrentUri.GetParentUri();
 					newUri = uriFolder;
 					var newBaseUri = new Uri(uriFolder, baseUri);
 					if (!string.IsNullOrEmpty(fragment))

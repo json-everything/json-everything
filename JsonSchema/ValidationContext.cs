@@ -31,6 +31,7 @@ namespace Json.Schema
 		public JsonPointer InstanceLocation { get; internal set; }
 		public JsonElement LocalInstance { get; internal set; }
 		public Uri CurrentUri { get; internal set; }
+		public JsonSchema CurrentAnchor { get; internal set; }
 		internal ValidationContext ParentContext { get; set; }
 
 		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count != 0;
@@ -54,6 +55,7 @@ namespace Json.Schema
 					LocalSchema = source.LocalSchema,
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
 					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
+					CurrentAnchor = source.CurrentAnchor,
 					CurrentUri = newUri ?? source.CurrentUri
 				};
 		}

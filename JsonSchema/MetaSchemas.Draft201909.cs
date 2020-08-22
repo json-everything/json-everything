@@ -78,7 +78,7 @@ namespace Json.Schema
 						.Type(SchemaValueType.String)
 						.Format(Formats.UriReference)
 						.Comment("Non-empty fragments not allowed.")
-						.Pattern("^[^#]#?$")
+						.Pattern("^[^#]*#?$")
 					),
 					(SchemaKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)

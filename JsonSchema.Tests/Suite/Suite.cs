@@ -100,6 +100,11 @@ namespace Json.Schema.Tests.Suite
 			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, new JsonSerializerOptions{WriteIndented = true}));
 			Console.WriteLine();
 			Console.WriteLine(test.Data);
+			if (false)
+			{
+				Console.WriteLine();
+				Console.WriteLine(JsonSerializer.Serialize(result));
+			}
 
 			if (collection.IsOptional && result.IsValid != test.Valid)
 				Assert.Inconclusive("Test optional");

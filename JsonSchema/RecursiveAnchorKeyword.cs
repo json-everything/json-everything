@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	[SchemaPriority(long.MinValue + 3)]
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(RecursiveAnchorKeywordJsonConverter))]
 	public class RecursiveAnchorKeyword : IJsonSchemaKeyword
@@ -19,6 +20,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
+			context.CurrentAnchor ??= context.LocalSchema;
 			context.Annotations[Name] = Value;
 			context.IsValid = true;
 		}

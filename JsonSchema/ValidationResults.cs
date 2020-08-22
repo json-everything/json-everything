@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Json.Pointer;
 
 namespace Json.Schema
@@ -15,6 +16,7 @@ namespace Json.Schema
 		public JsonPointer SchemaLocation { get; }
 		public JsonPointer InstanceLocation { get; }
 		public IReadOnlyCollection<ValidationResults> NestedResults { get; }
+		[JsonIgnore]
 		public Uri AbsoluteSchemaLocation => _absoluteUri ??= _BuildAbsoluteUri();
 
 		internal ValidationResults(ValidationContext context)
