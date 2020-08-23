@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using Json.More;
 
 namespace Json.Schema
 {
@@ -192,7 +191,7 @@ namespace Json.Schema
 
 		public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, string id)
 		{
-			builder.Add(new IdKeyword(new Uri(id, UriKind.Absolute)));
+			builder.Add(new IdKeyword(new Uri(id, UriKind.RelativeOrAbsolute)));
 			return builder;
 		}
 
@@ -310,15 +309,15 @@ namespace Json.Schema
 			return builder;
 		}
 
-		public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<Regex, JsonSchema> deps)
+		public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<Regex, JsonSchema> props)
 		{
-			builder.Add(new PatternPropertiesKeyword(deps));
+			builder.Add(new PatternPropertiesKeyword(props));
 			return builder;
 		}
 
-		public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (Regex pattern, JsonSchema schema)[] deps)
+		public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (Regex pattern, JsonSchema schema)[] props)
 		{
-			builder.Add(new PatternPropertiesKeyword(deps.ToDictionary(x => x.pattern, x => x.schema)));
+			builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => x.pattern, x => x.schema)));
 			return builder;
 		}
 

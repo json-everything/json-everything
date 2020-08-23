@@ -48,102 +48,102 @@ namespace Json.Schema
 			)
 			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 			.Properties(
-				("$id", new JsonSchemaBuilder()
+				(IdKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.UriReference)
 				),
-				("$schema", new JsonSchemaBuilder()
+				(SchemaKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.Uri)
 				),
-				("$ref", new JsonSchemaBuilder()
+				(RefKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.UriReference)
 				),
-				("$comment", new JsonSchemaBuilder()
+				(CommentKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
-				("title", new JsonSchemaBuilder()
+				(TitleKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
-				("description", new JsonSchemaBuilder()
+				(DescriptionKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
-				("default", true),
-				("readOnly", new JsonSchemaBuilder()
+				(DefaultKeyword.Name, true),
+				(ReadOnlyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
 					.Default(false.AsJsonElement())
 				),
-				("writeOnly", new JsonSchemaBuilder()
+				(WriteOnlyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
 					.Default(false.AsJsonElement())
 				),
-				("examples", new JsonSchemaBuilder()
+				(ExamplesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)
 					.Items(true)
 				),
-				("multipleOf", new JsonSchemaBuilder()
+				(MultipleOfKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
 					.ExclusiveMinimum(0)
 				),
-				("maximum", new JsonSchemaBuilder()
+				(MaximumKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
 				),
-				("exclusiveMaximum", new JsonSchemaBuilder()
+				(ExclusiveMaximumKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
 				),
-				("minimum", new JsonSchemaBuilder()
+				(MinimumKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
 				),
-				("exclusiveMinimum", new JsonSchemaBuilder()
+				(ExclusiveMinimumKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
 				),
-				("maxLength", new JsonSchemaBuilder()
+				(MaxLengthKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/definitions/nonNegativeInteger")
 				),
-				("minLength", new JsonSchemaBuilder()
+				(MinLengthKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/definitions/nonNegativeIntegerDefault0")
 				),
-				("pattern", new JsonSchemaBuilder()
+				(PatternKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.Regex)
 				),
-				("additionalItems", JsonSchemaBuilder.RefRoot()),
-				("items", new JsonSchemaBuilder()
+				(AdditionalItemsKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(ItemsKeyword.Name, new JsonSchemaBuilder()
 					.AnyOf(
 						JsonSchemaBuilder.RefRoot(),
 						new JsonSchemaBuilder().Ref("#/definitions/schemaArray")
 					)
 					.Default(true.AsJsonElement())
 				),
-				("maxItems", new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger")),
-				("minItems", new JsonSchemaBuilder().Ref("#/definitions/nonNegativeIntegerDefault0")),
-				("uniqueItems", new JsonSchemaBuilder()
+				(MaxItemsKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger")),
+				(MinItemsKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeIntegerDefault0")),
+				(UniqueItemsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
 					.Default(false.AsJsonElement())
 				),
-				("contains", JsonSchemaBuilder.RefRoot()),
-				("maxProperties", new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger")),
-				("minProperties", new JsonSchemaBuilder().Ref("#/definitions/nonNegativeIntegerDefault0")),
-				("required", new JsonSchemaBuilder().Ref("#/definitions/stringArray")),
-				("additionalProperties", JsonSchemaBuilder.RefRoot()),
-				("definitions", new JsonSchemaBuilder()
+				(ContainsKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(MaxPropertiesKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger")),
+				(MinPropertiesKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeIntegerDefault0")),
+				(RequiredKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/stringArray")),
+				(AdditionalPropertiesKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(DefinitionsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RefRoot())
 					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 				),
-				("properties", new JsonSchemaBuilder()
+				(PropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RefRoot())
 					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 				),
-				("patternProperties", new JsonSchemaBuilder()
+				(PatternPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RefRoot())
 					.PropertyNames(new JsonSchemaBuilder().Format(Formats.Regex))
 					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 				),
-				("dependencies", new JsonSchemaBuilder()
+				(DependenciesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.AnyOf(
@@ -152,15 +152,15 @@ namespace Json.Schema
 						)
 					)
 				),
-				("propertyNames", JsonSchemaBuilder.RefRoot()),
-				("const", JsonSchema.Empty),
-				("enum", new JsonSchemaBuilder()
+				(PropertyNamesKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(ConstKeyword.Name, JsonSchema.Empty),
+				(EnumKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)
 					.Items(true)
 					.MinItems(1)
 					.UniqueItems(true)
 				),
-				("type", new JsonSchemaBuilder()
+				(TypeKeyword.Name, new JsonSchemaBuilder()
 					.AnyOf(
 						new JsonSchemaBuilder().Ref("#/definitions/simpleTypes"),
 						new JsonSchemaBuilder()
@@ -170,16 +170,16 @@ namespace Json.Schema
 							.UniqueItems(true)
 					)
 				),
-				("format", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-				("contentMediaType", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-				("contentEncoding", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-				("if", JsonSchemaBuilder.RefRoot()),
-				("then", JsonSchemaBuilder.RefRoot()),
-				("else", JsonSchemaBuilder.RefRoot()),
-				("allOf", new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
-				("anyOf", new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
-				("oneOf", new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
-				("not", JsonSchemaBuilder.RefRoot())
+				(FormatKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				(ContentMediaTypeKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				(ContentMediaEncodingKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				(IfKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(ThenKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(ElseKeyword.Name, JsonSchemaBuilder.RefRoot()),
+				(AllOfKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
+				(AnyOfKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
+				(OneOfKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
+				(NotKeyword.Name, JsonSchemaBuilder.RefRoot())
 			)
 			.Default(true.AsJsonElement());
 	}
