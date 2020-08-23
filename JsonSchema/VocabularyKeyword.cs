@@ -9,7 +9,7 @@ namespace Json.Schema
 	[SchemaPriority(long.MinValue)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(VocabularyRegistry.Core201909Id)]
 	[JsonConverter(typeof(VocabularyKeywordJsonConverter))]
 	public class VocabularyKeyword : IJsonSchemaKeyword
 	{
@@ -29,7 +29,19 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			context.IsValid = true;
+			var overallResult = true;
+			var violations = new List<Uri>();
+			foreach (var kvp in Vocabulary)
+			{
+				var isKnown = context.VocabularyRegistry.IsKnown(kvp.Key);
+				var isValid = !kvp.Value || isKnown;
+				if (!isValid)
+					violations.Add(kvp.Key);
+				overallResult &= isValid;
+			}
+			context.IsValid = overallResult;
+			if (!overallResult)
+				context.Message = $"Validator does not know about these required vocabularies: [{string.Join(", ", violations)}]";
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

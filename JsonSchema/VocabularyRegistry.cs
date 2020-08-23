@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 
 namespace Json.Schema
 {
-	public static class Vocabularies
+	public class VocabularyRegistry
 	{
 		public const string Core201909Id = "https://json-schema.org/draft/2019-09/vocab/core";
 		public const string Applicator201909Id = "https://json-schema.org/draft/2019-09/vocab/applicator";
@@ -13,6 +14,8 @@ namespace Json.Schema
 		public const string Format201909Id = "https://json-schema.org/draft/2019-09/vocab/format";
 		public const string Content201909Id = "https://json-schema.org/draft/2019-09/vocab/content";
 
+		private readonly ConcurrentDictionary<Uri, Vocabulary> _vocabularies = new ConcurrentDictionary<Uri, Vocabulary>();
+		
 		public static readonly Vocabulary Core201909;
 		public static readonly Vocabulary Applicator201909;
 		public static readonly Vocabulary Validation201909;
@@ -20,7 +23,9 @@ namespace Json.Schema
 		public static readonly Vocabulary Format201909;
 		public static readonly Vocabulary Content201909;
 
-		static Vocabularies()
+		public static VocabularyRegistry Global { get; }
+
+		static VocabularyRegistry()
 		{
 			var keywords = typeof(IJsonSchemaKeyword)
 				.Assembly
@@ -58,6 +63,29 @@ namespace Json.Schema
 				Content201909Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Content201909Id))
 					.Select(k => k.Type));
+
+			Global = new VocabularyRegistry();
+			Global.Register(Core201909);
+			Global.Register(Applicator201909);
+			Global.Register(Validation201909);
+			Global.Register(Metadata201909);
+			Global.Register(Format201909);
+			Global.Register(Content201909);
+		}
+
+		public void Register(Vocabulary vocabulary)
+		{
+			_vocabularies[vocabulary.Id] = vocabulary;
+		}
+
+		public bool IsKnown(Uri vocabularyId)
+		{
+			if (_vocabularies.ContainsKey(vocabularyId)) return true;
+
+			if (!ReferenceEquals(this, Global))
+				return Global._vocabularies.ContainsKey(vocabularyId);
+
+			return false;
 		}
 	}
 }

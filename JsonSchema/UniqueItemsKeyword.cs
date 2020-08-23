@@ -12,7 +12,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Validation201909Id)]
+	[Vocabulary(VocabularyRegistry.Validation201909Id)]
 	[JsonConverter(typeof(UniqueItemsKeywordJsonConverter))]
 	public class UniqueItemsKeyword : IJsonSchemaKeyword
 	{

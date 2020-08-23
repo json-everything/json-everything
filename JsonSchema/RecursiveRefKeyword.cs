@@ -7,7 +7,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(VocabularyRegistry.Core201909Id)]
 	[JsonConverter(typeof(RecursiveRefKeywordJsonConverter))]
 	public class RecursiveRefKeyword : IJsonSchemaKeyword
 	{
@@ -31,7 +31,7 @@ namespace Json.Schema
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-					baseSchema = context.Registry.Get(newUri);
+					baseSchema = context.SchemaRegistry.Get(newUri);
 				else if (context.CurrentUri != null)
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
@@ -41,7 +41,7 @@ namespace Json.Schema
 					var newBaseUri = new Uri(uriFolder, baseUri);
 					if (!string.IsNullOrEmpty(fragment))
 						newUri = newBaseUri;
-					baseSchema = context.Registry.Get(newBaseUri);
+					baseSchema = context.SchemaRegistry.Get(newBaseUri);
 				}
 			}
 			else
@@ -52,7 +52,7 @@ namespace Json.Schema
 
 			JsonSchema schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment))
-				schema = context.Registry.Get(newUri, fragment);
+				schema = context.SchemaRegistry.Get(newUri, fragment);
 			else
 			{
 				if (baseSchema == null)

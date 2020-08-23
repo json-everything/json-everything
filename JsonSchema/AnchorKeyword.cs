@@ -8,7 +8,7 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue + 2)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(VocabularyRegistry.Core201909Id)]
 	[JsonConverter(typeof(AnchorKeywordJsonConverter))]
 	public class AnchorKeyword : IJsonSchemaKeyword
 	{

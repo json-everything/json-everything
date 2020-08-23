@@ -7,7 +7,7 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Applicator201909Id)]
+	[Vocabulary(VocabularyRegistry.Applicator201909Id)]
 	[JsonConverter(typeof(ElseKeywordJsonConverter))]
 	public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable
 	{

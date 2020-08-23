@@ -6,7 +6,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)] [SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Content201909Id)]
+	[Vocabulary(VocabularyRegistry.Content201909Id)]
 	[JsonConverter(typeof(ContentMediaEncodingKeywordJsonConverter))]
 	public class ContentMediaEncodingKeyword : IJsonSchemaKeyword
 	{

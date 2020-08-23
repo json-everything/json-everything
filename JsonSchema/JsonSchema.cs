@@ -51,7 +51,8 @@ namespace Json.Schema
 		{
 			var context = new ValidationContext
 				{
-					Registry = new SchemaRegistry(),
+					SchemaRegistry = new SchemaRegistry(),
+					VocabularyRegistry = new VocabularyRegistry(),
 					Options = options ?? ValidationOptions.Default,
 					LocalInstance = root,
 					InstanceLocation = JsonPointer.Empty,
@@ -60,7 +61,7 @@ namespace Json.Schema
 					SchemaRoot = this
 				};
 
-			RegisterSubschemas(context.Registry, null);
+			RegisterSubschemas(context.SchemaRegistry, null);
 			ValidateSubschema(context);
 
 			return new ValidationResults(context);
@@ -104,7 +105,7 @@ namespace Json.Schema
 			}
 
 			var metaSchemaUri = Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.Registry);
+			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.SchemaRegistry);
 
 			ValidationContext newContext = null;
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))

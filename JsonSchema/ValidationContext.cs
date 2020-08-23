@@ -21,7 +21,8 @@ namespace Json.Schema
 		public List<ValidationContext> NestedContexts => _nestedContexts ??= new List<ValidationContext>();
 		internal List<ValidationContext> SiblingContexts => _siblingContexts ??= new List<ValidationContext>();
 
-		public SchemaRegistry Registry { get; internal set; }
+		public SchemaRegistry SchemaRegistry { get; internal set; }
+		public VocabularyRegistry VocabularyRegistry { get; internal set; }
 		public ValidationOptions Options { get; internal set; }
 
 		public JsonSchema SchemaRoot { get; internal set; }
@@ -47,7 +48,8 @@ namespace Json.Schema
 		{
 			return new ValidationContext
 				{
-					Registry = source.Registry,
+					SchemaRegistry = source.SchemaRegistry,
+					VocabularyRegistry = source.VocabularyRegistry,
 					Options = source.Options,
 					InstanceRoot = source.InstanceRoot,
 					SchemaRoot = source.SchemaRoot,

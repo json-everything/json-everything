@@ -7,7 +7,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Validation201909Id)]
+	[Vocabulary(VocabularyRegistry.Validation201909Id)]
 	[JsonConverter(typeof(MaxContainsKeywordJsonConverter))]
 	public class MaxContainsKeyword : IJsonSchemaKeyword
 	{

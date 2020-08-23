@@ -6,7 +6,7 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Metadata201909Id)]
+	[Vocabulary(VocabularyRegistry.Metadata201909Id)]
 	[JsonConverter(typeof(ReadOnlyKeywordJsonConverter))]
 	public class ReadOnlyKeyword : IJsonSchemaKeyword
 	{
