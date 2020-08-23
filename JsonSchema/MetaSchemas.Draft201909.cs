@@ -16,24 +16,17 @@ namespace Json.Schema
 		public static readonly Uri Format201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/format");
 		public static readonly Uri Content201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/content");
 
-		public static readonly Uri Core201909VocabularyId = new Uri("https://json-schema.org/draft/2019-09/vocab/core");
-		public static readonly Uri Applicator201909VocabularyId = new Uri("https://json-schema.org/draft/2019-09/vocab/applicator");
-		public static readonly Uri Validation201909VocabularyId = new Uri("https://json-schema.org/draft/2019-09/vocab/validation");
-		public static readonly Uri Metadata201909VocabularyId = new Uri("https://json-schema.org/draft/2019-09/vocab/meta-data");
-		public static readonly Uri Format201909VocabularyId = new Uri("https://json-schema.org/draft/2019-09/vocab/format");
-		public static readonly Uri Content201909VocabularyId = new Uri("https://json-schema.org/draft/2019-09/vocab/content");
-
 		public static readonly JsonSchema Draft201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Draft201909Id)
 				.Vocabulary(
-					(Core201909VocabularyId, true),
-					(Applicator201909VocabularyId, true),
-					(Validation201909VocabularyId, true),
-					(Metadata201909VocabularyId, true),
-					(Format201909VocabularyId, false),
-					(Content201909VocabularyId, true)
+					(Vocabularies.Core201909Id, true),
+					(Vocabularies.Applicator201909Id, true),
+					(Vocabularies.Validation201909Id, true),
+					(Vocabularies.Metadata201909Id, true),
+					(Vocabularies.Format201909Id, false),
+					(Vocabularies.Content201909Id, true)
 				)
 				.RecursiveAnchor(true)
 				.Title("Core and Validation specifications meta-schema")
@@ -69,7 +62,7 @@ namespace Json.Schema
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Core201909Id)
-				.Vocabulary((Core201909VocabularyId, true))
+				.Vocabulary((Vocabularies.Core201909Id, true))
 				.RecursiveAnchor(true)
 				.Title("Core vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
@@ -124,7 +117,7 @@ namespace Json.Schema
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Applicator201909Id)
-				.Vocabulary((Applicator201909VocabularyId, true))
+				.Vocabulary((Vocabularies.Applicator201909Id, true))
 				.RecursiveAnchor(true)
 				.Title("Applicator vocabulary meta-schema")
 				.Properties(
@@ -183,7 +176,7 @@ namespace Json.Schema
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Validation201909Id)
-				.Vocabulary((Validation201909VocabularyId, true))
+				.Vocabulary((Vocabularies.Validation201909Id, true))
 				.RecursiveAnchor(true)
 				.Title("Validation vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
@@ -294,7 +287,7 @@ namespace Json.Schema
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Metadata201909Id)
-				.Vocabulary((Metadata201909VocabularyId, true))
+				.Vocabulary((Vocabularies.Metadata201909Id, true))
 				.RecursiveAnchor(true)
 				.Title("Meta-data vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
@@ -327,7 +320,7 @@ namespace Json.Schema
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Format201909Id)
-				.Vocabulary((Format201909VocabularyId, true))
+				.Vocabulary((Vocabularies.Format201909Id, true))
 				.RecursiveAnchor(true)
 				.Title("Format vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
@@ -341,7 +334,7 @@ namespace Json.Schema
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Content201909Id)
-				.Vocabulary((Content201909VocabularyId, true))
+				.Vocabulary((Vocabularies.Content201909Id, true))
 				.RecursiveAnchor(true)
 				.Title("Content vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)

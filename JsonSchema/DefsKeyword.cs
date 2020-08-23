@@ -7,6 +7,8 @@ namespace Json.Schema
 {
 	[SchemaPriority(long.MinValue + 1)]
 	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft201909)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(DefsKeywordJsonConverter))]
 	public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable
 	{

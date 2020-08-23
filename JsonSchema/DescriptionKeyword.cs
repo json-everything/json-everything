@@ -5,6 +5,10 @@ using System.Text.Json.Serialization;
 namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft6)]
+	[SchemaDraft(Draft.Draft7)]
+	[SchemaDraft(Draft.Draft201909)]
+	[Vocabulary(Vocabularies.Metadata201909Id)]
 	[JsonConverter(typeof(DescriptionKeywordJsonConverter))]
 	public class DescriptionKeyword : IJsonSchemaKeyword
 	{

@@ -5,6 +5,8 @@ using System.Text.Json.Serialization;
 namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
+	[Vocabulary(Vocabularies.Metadata201909Id)]
+	[SchemaDraft(Draft.Draft201909)]
 	[JsonConverter(typeof(DeprecatedKeywordJsonConverter))]
 	public class DeprecatedKeyword : IJsonSchemaKeyword
 	{

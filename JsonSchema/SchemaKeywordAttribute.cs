@@ -2,6 +2,7 @@
 
 namespace Json.Schema
 {
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	public class SchemaKeywordAttribute : Attribute
 	{
 		public string Name { get; }
@@ -12,6 +13,7 @@ namespace Json.Schema
 		}
 	}
 
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	public class SchemaPriorityAttribute : Attribute
 	{
 		private readonly long? _actualPriority;

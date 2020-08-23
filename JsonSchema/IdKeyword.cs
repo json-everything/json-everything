@@ -6,6 +6,10 @@ namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue + 1)]
+	[SchemaDraft(Draft.Draft6)]
+	[SchemaDraft(Draft.Draft7)]
+	[SchemaDraft(Draft.Draft201909)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(IdKeywordJsonConverter))]
 	public class IdKeyword : IJsonSchemaKeyword
 	{

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -9,6 +8,8 @@ namespace Json.Schema
 {
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft201909)]
+	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
 	public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable
 	{

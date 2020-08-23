@@ -6,6 +6,8 @@ namespace Json.Schema
 {
 	[SchemaPriority(long.MinValue + 3)]
 	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft201909)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(RecursiveAnchorKeywordJsonConverter))]
 	public class RecursiveAnchorKeyword : IJsonSchemaKeyword
 	{

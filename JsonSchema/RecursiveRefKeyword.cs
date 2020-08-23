@@ -6,6 +6,8 @@ using Json.Pointer;
 namespace Json.Schema
 {
 	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft201909)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(RecursiveRefKeywordJsonConverter))]
 	public class RecursiveRefKeyword : IJsonSchemaKeyword
 	{
