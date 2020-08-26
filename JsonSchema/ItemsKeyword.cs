@@ -7,6 +7,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -66,7 +67,7 @@ namespace Json.Schema
 				if (overwriteAnnotation)
 				{
 					// TODO: add message
-					if (overallResult) context.Annotations[Name] = true;
+					if (overallResult) context.SetAnnotation(Name, true);
 				}
 			}
 			else // array
@@ -91,9 +92,9 @@ namespace Json.Schema
 					if (overallResult)
 					{
 						if (maxEvaluations == context.LocalInstance.GetArrayLength())
-							context.Annotations[Name] = true;
+							context.SetAnnotation(Name, true);
 						else
-							context.Annotations[Name] = maxEvaluations;
+							context.SetAnnotation(Name, maxEvaluations);
 					}
 				}
 			}
@@ -112,7 +113,7 @@ namespace Json.Schema
 			else
 				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 			if (!Equals(value, -1))
-				destContext.Annotations[Name] = value;
+				destContext.SetAnnotation(Name, value);
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

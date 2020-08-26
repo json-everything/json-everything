@@ -55,9 +55,9 @@ namespace Json.Schema
 					VocabularyRegistry = new VocabularyRegistry(),
 					Options = options ?? ValidationOptions.Default,
 					LocalInstance = root,
-					InstanceLocation = JsonPointer.Empty,
+					InstanceLocation = JsonPointer.UrlEmpty,
 					InstanceRoot = root,
-					SchemaLocation = JsonPointer.Empty,
+					SchemaLocation = JsonPointer.UrlEmpty,
 					SchemaRoot = this
 				};
 
@@ -99,6 +99,7 @@ namespace Json.Schema
 			if (BoolValue.HasValue)
 			{
 				context.IsValid = BoolValue.Value;
+				context.SchemaLocation = context.SchemaLocation.Combine(PointerSegment.Create($"[{BoolValue}]".ToLowerInvariant()));
 				if (!context.IsValid)
 					context.Message = "All values fail against the false schema";
 				return;
@@ -119,8 +120,10 @@ namespace Json.Schema
 				newContext.ImportAnnotations(previousContext);
 				if (context.HasNestedContexts)
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
+				newContext.RequiredInResult = keyword.IsApplicator();
 				keyword.Validate(newContext);
-				context.NestedContexts.Add(newContext);
+				if (!newContext.Ignore)
+					context.NestedContexts.Add(newContext);
 			}
 
 			context.IsValid = context.NestedContexts.All(c => c.IsValid);

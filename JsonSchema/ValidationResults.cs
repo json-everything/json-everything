@@ -1,42 +1,189 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
 namespace Json.Schema
 {
+	[JsonConverter(typeof(ValidationResultsJsonConverter))]
 	public class ValidationResults
 	{
-		private readonly Uri _currentUri;
+		private List<ValidationResults> _nestedResults;
+		private Uri _currentUri;
 		private Uri _absoluteUri;
+		private bool _required;
 
-		public bool IsValid { get; }
-		public string Message { get; }
-		public JsonPointer SchemaLocation { get; }
-		public JsonPointer InstanceLocation { get; }
-		public IReadOnlyCollection<ValidationResults> NestedResults { get; }
-		[JsonIgnore]
+		public bool IsValid { get; internal set; }
+		public IReadOnlyList<Annotation> Annotations { get; internal set; }
+		public string Message { get; internal set; }
+		public JsonPointer SchemaLocation { get; internal set; }
+		public JsonPointer InstanceLocation { get; internal set; }
+
 		public Uri AbsoluteSchemaLocation => _absoluteUri ??= _BuildAbsoluteUri();
+		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults;
+
+		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep) || _required;
 
 		internal ValidationResults(ValidationContext context)
 		{
-			// TODO: capture annotations from context (only if valid)
 			IsValid = context.IsValid;
+			Annotations = context.IsValid
+				? context.Annotations.ToList()
+				: new List<Annotation>();
 			Message = context.Message;
 			SchemaLocation = context.SchemaLocation;
 			_currentUri = context.CurrentUri;
 			InstanceLocation = context.InstanceLocation;
-			if (context.HasNestedContexts)
-				NestedResults = context.NestedContexts.Select(c => new ValidationResults(c)).ToList();
+			_nestedResults = context.HasNestedContexts
+				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
+				: new List<ValidationResults>();
+			_required = context.RequiredInResult;
+		}
+
+		public void ToDetailed()
+		{
+			if (!Annotations.Any() && Message == null && NestedResults.Count == 0) return;
+			if (!_required && NestedResults.Count == 1)
+			{
+				NestedResults[0].ToDetailed();
+				CopyFrom(NestedResults[0]);
+				return;
+			}
+
+			var condensed = new List<ValidationResults>();
+			foreach (var result in NestedResults)
+			{
+				result.ToDetailed();
+				if (_required || result.Keep)
+					condensed.Add(result);
+			}
+
+			_nestedResults.Clear();
+
+			if (!_required && condensed.Count == 1)
+				CopyFrom(condensed[0]);
+			else
+				_nestedResults.AddRange(condensed);
+		}
+
+		public void ToList()
+		{
+			var children = _GetAllChildren().ToList();
+			if (!children.Any()) return;
+
+			children.Remove(this);
+			_nestedResults.Clear();
+			_nestedResults.AddRange(children);
+		}
+
+		private void CopyFrom(ValidationResults other)
+		{
+			IsValid = other.IsValid;
+			Annotations = other.Annotations;
+			Message = other.Message;
+			SchemaLocation = other.SchemaLocation;
+			_currentUri = other._currentUri;
+			InstanceLocation = other.InstanceLocation;
+			_nestedResults = other._nestedResults;
+			_absoluteUri = other._absoluteUri;
+			_required = other._required;
 		}
 
 		private Uri _BuildAbsoluteUri()
 		{
-			if (_currentUri == null) return null;
-			if (SchemaLocation.Segments.All(s => s.Value != "$ref")) return null;
+			if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
+			if (SchemaLocation.Segments.All(s => s.Value != RefKeyword.Name &&
+			                                     s.Value != RecursiveRefKeyword.Name))
+				return null;
 
+			return new Uri(_currentUri, SchemaLocation.ToString());
+		}
+
+		private IEnumerable<ValidationResults> _GetAllChildren()
+		{
+			var all = new List<ValidationResults>();
+			if (Annotations.Any() || Message != null) all.Add(this);
+			all.AddRange(NestedResults.SelectMany(r => r._GetAllChildren()));
+
+			_nestedResults.Clear();
+
+			return all;
+		}
+	}
+
+	internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
+	{
+		public override ValidationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
 			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+
+			writer.WriteBoolean("valid", value.IsValid);
+
+			writer.WritePropertyName("keywordLocation");
+			JsonSerializer.Serialize(writer, value.SchemaLocation);
+
+			if (value.AbsoluteSchemaLocation != null)
+			{
+				writer.WritePropertyName("absoluteKeywordLocation");
+				JsonSerializer.Serialize(writer, value.AbsoluteSchemaLocation);
+			}
+
+			writer.WritePropertyName("instanceLocation");
+			JsonSerializer.Serialize(writer, value.InstanceLocation);
+
+			if (value.Message != null)
+			{
+				writer.WriteString("error", value.Message);
+
+				if (value.NestedResults.Any())
+				{
+					writer.WritePropertyName("errors");
+					JsonSerializer.Serialize(writer, value.NestedResults);
+				}
+			}
+			else if (value.Annotations.Any() || value.NestedResults.Any())
+			{
+				writer.WritePropertyName("annotations");
+				writer.WriteStartArray();
+				foreach (var annotation in value.Annotations.Where(a => Equals(a.Source, value.SchemaLocation)))
+				{
+					writer.WriteStartObject();
+
+					writer.WriteBoolean("valid", value.IsValid);
+
+					writer.WritePropertyName("keywordLocation");
+					JsonSerializer.Serialize(writer, value.SchemaLocation);
+
+					if (value.AbsoluteSchemaLocation != null)
+					{
+						writer.WritePropertyName("absoluteKeywordLocation");
+						JsonSerializer.Serialize(writer, value.AbsoluteSchemaLocation);
+					}
+
+					writer.WritePropertyName("instanceLocation");
+					JsonSerializer.Serialize(writer, value.InstanceLocation);
+
+					writer.WritePropertyName("annotation");
+					JsonSerializer.Serialize(writer, annotation.Value);
+				
+					writer.WriteEndObject();
+				}
+
+				foreach (var result in value.NestedResults)
+				{
+					JsonSerializer.Serialize(writer, result);
+				}
+				writer.WriteEndArray();
+			}
+
+			writer.WriteEndObject();
 		}
 	}
 }

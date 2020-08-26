@@ -70,7 +70,7 @@ namespace Json.Schema
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependentRequired);
 			else if (allDependentRequired.Any())
-				destContext.Annotations[Name] = allDependentRequired;
+				destContext.SetAnnotation(Name, allDependentRequired);
 		}
 	}
 

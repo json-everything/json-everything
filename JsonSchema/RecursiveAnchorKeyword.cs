@@ -23,7 +23,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.CurrentAnchor ??= context.LocalSchema;
-			context.Annotations[Name] = Value;
+			context.SetAnnotation(Name, Value);
 			context.IsValid = true;
 		}
 	}

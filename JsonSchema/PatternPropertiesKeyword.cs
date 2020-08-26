@@ -8,6 +8,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -63,7 +64,7 @@ namespace Json.Schema
 				if (context.TryGetAnnotation(Name) is List<string> annotation)
 					annotation.AddRange(evaluatedProperties);
 				else
-					context.Annotations[Name] = evaluatedProperties;
+					context.SetAnnotation(Name, evaluatedProperties);
 			}
 			// TODO: add message
 			context.IsValid = overallResult;
@@ -80,7 +81,7 @@ namespace Json.Schema
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allProperties);
 			else if (allProperties.Any())
-				destContext.Annotations[Name] = allProperties;
+				destContext.SetAnnotation(Name, allProperties);
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)
@@ -98,7 +99,7 @@ namespace Json.Schema
 				throw new JsonException("Expected object");
 
 			var schemas = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options)
-				.ToDictionary(kvp => new Regex(kvp.Key), kvp => kvp.Value);
+				.ToDictionary(kvp => new Regex(kvp.Key, RegexOptions.ECMAScript | RegexOptions.Compiled), kvp => kvp.Value);
 			return new PatternPropertiesKeyword(schemas);
 		}
 		public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)

@@ -31,7 +31,7 @@ namespace Json.Schema
 
 		public void Validate(ValidationContext context)
 		{
-			context.Annotations[Name] = Values;
+			context.SetAnnotation(Name, Values);
 			context.IsValid = true;
 		}
 	}

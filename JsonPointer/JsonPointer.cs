@@ -8,7 +8,7 @@ using Cysharp.Text;
 namespace Json.Pointer
 {
 	[JsonConverter(typeof(JsonPointerJsonConverter))]
-	public struct JsonPointer
+	public struct JsonPointer : IEquatable<JsonPointer>
 	{
 		public static readonly JsonPointer Empty =
 			new JsonPointer
@@ -214,6 +214,34 @@ namespace Json.Pointer
 		public override string ToString()
 		{
 			return Source;
+		}
+
+		public bool Equals(JsonPointer other)
+		{
+			return Segments.SequenceEqual(other.Segments) && IsUriEncoded == other.IsUriEncoded;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is JsonPointer other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (Segments.GetCollectionHashCode() * 397) ^ IsUriEncoded.GetHashCode();
+			}
+		}
+
+		public static bool operator ==(JsonPointer left, JsonPointer right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(JsonPointer left, JsonPointer right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

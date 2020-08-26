@@ -17,11 +17,6 @@ namespace Json.Schema
 
 		public IReadOnlyDictionary<Uri, bool> Vocabulary { get; }
 
-		static VocabularyKeyword()
-		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
-		}
-
 		public VocabularyKeyword(IReadOnlyDictionary<Uri, bool> values)
 		{
 			Vocabulary = values;
@@ -42,20 +37,6 @@ namespace Json.Schema
 			context.IsValid = overallResult;
 			if (!overallResult)
 				context.Message = $"Validator does not know about these required vocabularies: [{string.Join(", ", violations)}]";
-		}
-
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
-		{
-			var allVocabulary = sourceContexts.Select(c => c.TryGetAnnotation(Name))
-				.Where(a => a != null)
-				.Cast<List<string>>()
-				.SelectMany(a => a)
-				.Distinct()
-				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
-				annotation.AddRange(allVocabulary);
-			else if (allVocabulary.Any())
-				destContext.Annotations[Name] = allVocabulary;
 		}
 	}
 

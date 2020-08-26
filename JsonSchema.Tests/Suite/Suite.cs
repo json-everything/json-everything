@@ -92,23 +92,39 @@ namespace Json.Schema.Tests.Suite
 
 			var result = collection.Schema.Validate(test.Data, options);
 
+			var serializerOptions = new JsonSerializerOptions {WriteIndented = true};
 			Console.WriteLine(fileName);
 			Console.WriteLine(collection.Description);
 			Console.WriteLine(test.Description);
 			Console.WriteLine(test.Valid ? "valid" : "invalid");
 			Console.WriteLine();
-			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, new JsonSerializerOptions{WriteIndented = true}));
+			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 			Console.WriteLine();
 			Console.WriteLine(test.Data);
-			if (false)
-			{
-				Console.WriteLine();
-				Console.WriteLine(JsonSerializer.Serialize(result));
-			}
+			Console.WriteLine();
+			result.ToDetailed();
+			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
-			if (collection.IsOptional && result.IsValid != test.Valid)
+			if (collection.IsOptional && result?.IsValid != test.Valid)
 				Assert.Inconclusive("Test optional");
 			Assert.AreEqual(test.Valid, result.IsValid);
+		}
+
+		private static int Depth(ValidationResults results)
+		{
+			if (!results.NestedResults.Any()) return 1;
+			return results.NestedResults.Max(Depth) + 1;
+		}
+
+		private static List<ValidationResults> GetAll(ValidationResults results)
+		{
+			var list = new List<ValidationResults> {results};
+			foreach (var nestedResult in results.NestedResults)
+			{
+				list.AddRange(GetAll(nestedResult));
+			}
+
+			return list;
 		}
 
 		private static bool InstanceIsDeserializable(in JsonElement testData)

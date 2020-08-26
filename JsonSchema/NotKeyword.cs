@@ -5,6 +5,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]

@@ -7,6 +7,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -62,14 +63,14 @@ namespace Json.Schema
 			}
 
 			if (overallResult)
-				context.Annotations[Name] = true;
+				context.SetAnnotation(Name, true);
 			context.IsValid = overallResult;
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
 		{
 			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-				destContext.Annotations[Name] = true;
+				destContext.SetAnnotation(Name, true);
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

@@ -7,6 +7,7 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -62,7 +63,7 @@ namespace Json.Schema
 				if (context.TryGetAnnotation(Name) is List<string> annotation)
 					annotation.AddRange(evaluatedProperties);
 				else
-					context.Annotations[Name] = evaluatedProperties;
+					context.SetAnnotation(Name, evaluatedProperties);
 			}
 			// TODO: add message
 			context.IsValid = overallResult;
@@ -79,7 +80,7 @@ namespace Json.Schema
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allProperties);
 			else if (allProperties.Any())
-				destContext.Annotations[Name] = allProperties;
+				destContext.SetAnnotation(Name, allProperties);
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

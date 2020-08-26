@@ -3,7 +3,7 @@ using Cysharp.Text;
 
 namespace Json.Pointer
 {
-	public struct PointerSegment
+	public struct PointerSegment : IEquatable<PointerSegment>
 	{
 		public string Source { get; private set; }
 		public string Value { get; private set; }
@@ -139,6 +139,31 @@ namespace Json.Pointer
 			}
 
 			return builder.ToString();
+		}
+
+		public bool Equals(PointerSegment other)
+		{
+			return string.Equals(Value, other.Value, StringComparison.InvariantCulture);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is PointerSegment other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			return (Value != null ? StringComparer.InvariantCulture.GetHashCode(Value) : 0);
+		}
+
+		public static bool operator ==(PointerSegment left, PointerSegment right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(PointerSegment left, PointerSegment right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

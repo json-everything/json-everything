@@ -50,5 +50,10 @@ namespace Json.Schema
 
 			return name;
 		}
+
+		internal static bool IsApplicator(this IJsonSchemaKeyword keyword)
+		{
+			return keyword.GetType().GetCustomAttribute<ApplicatorAttribute>() != null;
+		}
 	}
 }

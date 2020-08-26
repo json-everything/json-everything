@@ -32,7 +32,7 @@ namespace Json.Schema
 			var number = context.LocalInstance.GetDecimal();
 			context.IsValid = Value <= number;
 			if (!context.IsValid)
-				context.Message = $"{number} is not less than or equal to {Value}";
+				context.Message = $"{number} is less than or equal to {Value}";
 		}
 	}
 

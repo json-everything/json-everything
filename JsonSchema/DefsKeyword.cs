@@ -24,6 +24,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.IsValid = true;
+			context.Ignore = true;
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

@@ -45,7 +45,7 @@ namespace Json.Schema
 				throw new JsonException("Expected string");
 
 			var str = reader.GetString();
-			var regex = new Regex(str);
+			var regex = new Regex(str, RegexOptions.ECMAScript | RegexOptions.Compiled);
 
 			return new PatternKeyword(regex);
 		}

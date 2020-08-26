@@ -29,7 +29,7 @@ namespace Json.Schema
 				return;
 			}
 
-			context.Annotations[Name] = Value;
+			context.SetAnnotation(Name, Value);
 			context.IsValid = Value.Validate(context.LocalInstance);
 		}
 	}

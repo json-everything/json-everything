@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]

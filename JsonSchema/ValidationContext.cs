@@ -11,13 +11,14 @@ namespace Json.Schema
 
 		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
 
-		private Dictionary<string, object> _annotations;
+		private Dictionary<string, Annotation> _annotations;
 		private List<ValidationContext> _nestedContexts;
 		private List<ValidationContext> _siblingContexts;
 
 		public bool IsValid { get; set; }
+		public bool Ignore { get; set; }
 		public string Message { get; set; }
-		public Dictionary<string, object> Annotations => _annotations ??= new Dictionary<string, object>();
+		public IReadOnlyCollection<Annotation> Annotations => (_annotations ??= new Dictionary<string, Annotation>()).Values;
 		public List<ValidationContext> NestedContexts => _nestedContexts ??= new List<ValidationContext>();
 		internal List<ValidationContext> SiblingContexts => _siblingContexts ??= new List<ValidationContext>();
 
@@ -34,6 +35,7 @@ namespace Json.Schema
 		public Uri CurrentUri { get; internal set; }
 		public JsonSchema CurrentAnchor { get; internal set; }
 		internal ValidationContext ParentContext { get; set; }
+		internal bool RequiredInResult { get; set; }
 
 		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count != 0;
 		internal bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count != 0;
@@ -41,9 +43,9 @@ namespace Json.Schema
 		internal ValidationContext() { }
 
 		public static ValidationContext From(ValidationContext source,
-		                                     JsonPointer? instanceLocation = null,
-		                                     JsonElement? instance = null,
-		                                     JsonPointer? subschemaLocation = null,
+		                                     in JsonPointer? instanceLocation = null,
+		                                     in JsonElement? instance = null,
+		                                     in JsonPointer? subschemaLocation = null,
 		                                     Uri newUri = null)
 		{
 			return new ValidationContext
@@ -67,7 +69,7 @@ namespace Json.Schema
 			_annotations = context?._annotations;
 		}
 
-		internal void ConsolidateAnnotations()
+		public void ConsolidateAnnotations()
 		{
 			if (!HasNestedContexts) return;
 			foreach (var consolidationAction in _consolidationActions)
@@ -76,15 +78,35 @@ namespace Json.Schema
 			}
 		}
 
-		internal object TryGetAnnotation(string key)
+		public void SetAnnotation(string owner, object value)
+		{
+			_annotations ??= new Dictionary<string, Annotation>();
+			_annotations[owner] = new Annotation(owner, value, SchemaLocation);
+		}
+
+		public object TryGetAnnotation(string key)
 		{
 			if (_annotations == null) return null;
-			return _annotations.TryGetValue(key, out var annotation) ? annotation : null;
+			return _annotations.TryGetValue(key, out var annotation) ? annotation.Value : null;
 		}
 
 		public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
 		{
 			_consolidationActions.Add(consolidateAnnotations);
+		}
+	}
+
+	public class Annotation
+	{
+		public string Owner { get; }
+		public object Value { get; }
+		public JsonPointer Source { get; }
+
+		public Annotation(string owner, object value, in JsonPointer source)
+		{
+			Owner = owner;
+			Value = value;
+			Source = source;
 		}
 	}
 }

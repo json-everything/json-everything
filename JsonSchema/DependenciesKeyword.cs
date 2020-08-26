@@ -88,7 +88,7 @@ namespace Json.Schema
 			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependencies);
 			else if (allDependencies.Any())
-				destContext.Annotations[Name] = allDependencies;
+				destContext.SetAnnotation(Name, allDependencies);
 		}
 
 		public IRefResolvable ResolvePointerSegment(string value)

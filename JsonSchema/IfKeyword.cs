@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -26,7 +27,7 @@ namespace Json.Schema
 			Schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
 
-			context.Annotations[Name] = subContext.IsValid;
+			context.SetAnnotation(Name, subContext.IsValid);
 			context.ConsolidateAnnotations();
 			context.IsValid = true;
 		}
