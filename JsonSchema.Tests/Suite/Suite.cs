@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Humanizer;
 using NUnit.Framework;
@@ -87,17 +88,24 @@ namespace Json.Schema.Tests.Suite
 		[TestCaseSource(nameof(TestCases))]
 		public void Test(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
 		{
-			if (!InstanceIsDeserializable(test.Data))
-				Assert.Inconclusive("Test optional");
-
-			var result = collection.Schema.Validate(test.Data, options);
-
-			var serializerOptions = new JsonSerializerOptions {WriteIndented = true};
+			Console.WriteLine();
+			Console.WriteLine();
 			Console.WriteLine(fileName);
 			Console.WriteLine(collection.Description);
 			Console.WriteLine(test.Description);
 			Console.WriteLine(test.Valid ? "valid" : "invalid");
 			Console.WriteLine();
+
+			if (!InstanceIsDeserializable(test.Data))
+				Assert.Inconclusive("Test optional");
+
+			var result = collection.Schema.Validate(test.Data, options);
+
+			var serializerOptions = new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			};
 			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 			Console.WriteLine();
 			Console.WriteLine(test.Data);

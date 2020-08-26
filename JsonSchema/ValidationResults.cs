@@ -138,9 +138,10 @@ namespace Json.Schema
 			writer.WritePropertyName("instanceLocation");
 			JsonSerializer.Serialize(writer, value.InstanceLocation);
 
-			if (value.Message != null)
+			if (!value.IsValid)
 			{
-				writer.WriteString("error", value.Message);
+				if (value.Message != null)
+					writer.WriteString("error", value.Message);
 
 				if (value.NestedResults.Any())
 				{
