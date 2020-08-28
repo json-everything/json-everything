@@ -2,10 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Json.More.Net</PackageId>
+    <Authors>Greg Dennis</Authors>
+    <Version>1.0.0-rc1</Version>
+    <Description>Provides extended functionality for the System.Text.Json namespace.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageTags>json system.text.json</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

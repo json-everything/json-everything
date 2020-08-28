@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Json.Pointer</RootNamespace>
+    <Version>1.0.0-rc1</Version>
+    <PackageId>JsonPointer.Net</PackageId>
+    <Authors>Greg Dennis</Authors>
+    <Product>JsonPointer.Net</Product>
+    <Description>JSON Pointer built on the System.Text.Json namespace.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageTags>json-pointer json pointer</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>JsonPointer.Net</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Json.More\Json.More.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

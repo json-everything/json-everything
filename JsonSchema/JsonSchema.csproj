@@ -4,6 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Json.Schema</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>JsonSchema.Net</PackageId>
+    <Authors>Greg Dennis</Authors>
+    <Company />
+    <Product>JsonSchema.Net</Product>
+    <Description>JSON Schema built on the System.Text.Json namespace.</Description>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageTags>json-schema validation schema json</PackageTags>
+    <Version>1.0.0-rc1</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyName>JsonSchema.Net</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +26,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Json.More\Json.More.csproj" />
     <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

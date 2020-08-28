@@ -1,44 +1,48 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
-trigger:
-- master
-
 pool:
-  vmImage: 'windows-latest'
+  vmImage: windows-2019
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: Release
+  buildPlatform: Any CPU
+  coreSolution: 'json-everything.sln'
 
 steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
+- task: UseDotNet@2
+  displayName: 'Install .NET Core 3'
   inputs:
-    restoreSolution: '$(solution)'
+    packageType: 'sdk'
+    useGlobalJson: true
 
 - task: VSBuild@1
+  displayName: Nuget Restore
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
+    solution: '$(coreSolution)'
+    msbuildArgs: '/t:Restore'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: VSBuild@1
+  displayName: Build & Pack Core Solution
   inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*test*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Pack'
 
-- task: PublishPipelineArtifact@1
+- task: DotNetCoreCLI@2
+  displayName: Run Unit Tests
   inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifact: '**/*.nupkg'
-    publishLocation: 'pipeline'
+    command: test
+    projects: '**/*Test*/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- task: CopyFiles@2
+  displayName: Copy Packages to Artifact Directory
+  inputs:
+    Contents: 'packages\*.nupkg'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Package Artifacts
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: Packages
