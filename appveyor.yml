@@ -1,0 +1,69 @@
+# --------------------- MASTER BRANCH --------------------------
+
+- branches:
+    only:
+      - master
+  skip_commits:
+    files:
+    - docs/**/*
+  image: Visual Studio 2019
+  environment:
+    gh_access_token:
+      secure: jm9ZkMmKGxetJfX6wsjFYUYiLhsX1yC7185wYdFHLicXGUD+vm5ywPNfK3mWSPzk
+
+  build:
+    project: json-everything.sln
+
+  # build Configuration, i.e. Debug, Release, etc.
+  configuration: Release
+
+  before_build:
+  - dotnet restore json-everything.sln
+  - git submodule update --init
+
+  artifacts:
+    - path: '**/*.nupkg'
+      name: Nuget Pkg
+
+  deploy:
+    provider: NuGet
+    # server:                  # remove to push to NuGet.org
+    api_key:
+      secure: 0DpgELXSkUlWoanPj51ZRVPnIi0QeIGPsA6vTwiMTu/7FTA3QIOP3D8QFO/eFBhb
+    skip_symbols: false
+    # symbol_server:           # remove to push symbols to SymbolSource.org
+    artifact: /(Json.More|JsonPointer|JsonSchema)\..*\.nupkg/
+    on:
+      branch: master
+  after_deploy:
+    # Switch branches to gh-pages, clean the folder, copy everything in from the Wyam output, and commit/push
+    # See http://www.appveyor.com/docs/how-to/git-push for more info
+#    - git config --global credential.helper store
+    # EDIT your Git email and name
+#    - git config --global user.email gregsdennis@yahoo.com
+#    - git config --global user.name "Greg Dennis"
+#    - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_access_token):x-oauth-basic@github.com`n"
+#    - cmd: build-docs.bat
+    # EDIT the origin of your repository - have to reset it here because AppVeyor pulls from SSH, but GitHub won't accept SSH pushes
+#    - git remote set-url origin https://github.com/gregsdennis/Manatee.Json.git
+#    - git checkout master
+#    - git add -A
+#    - git commit -a -m "regenerated docs"
+#    - git push
+
+# --------------------- ALL OTHER BRANCHES ---------------------
+
+- branches:
+    except:
+      - master
+  image: Visual Studio 2019
+
+  build:
+    project: json-everything.sln
+
+  # build Configuration, i.e. Debug, Release, etc.
+  configuration: Release
+
+  before_build:
+  - dotnet restore json-everything.sln
+  - git submodule update --init
