@@ -21,7 +21,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: VSBuild@1
-  displayName: Build & Pack Core Solution
+  displayName: Build Core Solution
   inputs:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
@@ -34,6 +34,14 @@ steps:
     command: test
     projects: '**/*Test*/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- task: VSBuild@1
+  displayName: Pack Core Solution
+  inputs:
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Pack'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
