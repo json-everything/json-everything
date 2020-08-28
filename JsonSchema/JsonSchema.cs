@@ -64,7 +64,25 @@ namespace Json.Schema
 			RegisterSubschemas(context.Options.SchemaRegistry, null);
 			ValidateSubschema(context);
 
-			return new ValidationResults(context);
+			var results = new ValidationResults(context);
+			switch (options.OutputFormat)
+			{
+				case OutputFormat.Flag:
+					results.ToFlag();
+					break;
+				case OutputFormat.Basic:
+					results.ToBasic();
+					break;
+				case OutputFormat.Detailed:
+					results.ToDetailed();
+					break;
+				case OutputFormat.Verbose:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			return results;
 		}
 
 		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

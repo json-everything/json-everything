@@ -28,7 +28,10 @@ namespace Json.Schema.Tests.Suite
 			if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
 			var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-			var options = new ValidationOptions();
+			var options = new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Verbose
+			};
 			switch (draftFolder)
 			{
 				case "draft6":
@@ -118,21 +121,18 @@ namespace Json.Schema.Tests.Suite
 			Assert.AreEqual(test.Valid, result.IsValid);
 		}
 
-		private static int Depth(ValidationResults results)
+		[TestCaseSource(nameof(TestCases))]
+		public void Benchmark(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
 		{
-			if (!results.NestedResults.Any()) return 1;
-			return results.NestedResults.Max(Depth) + 1;
-		}
+			if (!InstanceIsDeserializable(test.Data))
+				Assert.Inconclusive("Test optional");
 
-		private static List<ValidationResults> GetAll(ValidationResults results)
-		{
-			var list = new List<ValidationResults> {results};
-			foreach (var nestedResult in results.NestedResults)
-			{
-				list.AddRange(GetAll(nestedResult));
-			}
+			options.OutputFormat = OutputFormat.Flag;
+			var result = collection.Schema.Validate(test.Data, options);
 
-			return list;
+			if (collection.IsOptional && result?.IsValid != test.Valid)
+				Assert.Inconclusive("Test optional");
+			Assert.AreEqual(test.Valid, result.IsValid);
 		}
 
 		private static bool InstanceIsDeserializable(in JsonElement testData)
@@ -144,7 +144,7 @@ namespace Json.Schema.Tests.Suite
 					case JsonValueKind.Undefined:
 						return false;
 					case JsonValueKind.Number:
-						// some tests involve numbers larger than c# can handle.  they're optional, though.
+						// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
 						testData.GetDecimal();
 						return true;
 					default:

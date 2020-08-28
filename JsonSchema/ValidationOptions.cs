@@ -10,6 +10,7 @@ namespace Json.Schema
 
 		public Draft ValidateAs { get; set; }
 		public bool ValidateMetaSchema { get; set; }
+		public OutputFormat OutputFormat { get; set; }
 
 		public SchemaRegistry SchemaRegistry { get; } = new SchemaRegistry();
 		public VocabularyRegistry VocabularyRegistry { get; } = new VocabularyRegistry();

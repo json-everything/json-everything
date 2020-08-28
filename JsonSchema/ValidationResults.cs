@@ -68,7 +68,7 @@ namespace Json.Schema
 				_nestedResults.AddRange(condensed);
 		}
 
-		public void ToList()
+		public void ToBasic()
 		{
 			var children = _GetAllChildren().ToList();
 			if (!children.Any()) return;
@@ -76,6 +76,11 @@ namespace Json.Schema
 			children.Remove(this);
 			_nestedResults.Clear();
 			_nestedResults.AddRange(children);
+		}
+
+		public void ToFlag()
+		{
+			_nestedResults.Clear();
 		}
 
 		private void CopyFrom(ValidationResults other)
