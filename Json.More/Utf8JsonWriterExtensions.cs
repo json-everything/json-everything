@@ -3,8 +3,16 @@ using System.Text.Json;
 
 namespace Json.More
 {
+	/// <summary>
+	/// Provides extension functionality for <see cref="Utf8JsonWriter"/>.
+	/// </summary>
 	public static class Utf8JsonWriterExtensions
 	{
+		/// <summary>
+		/// Writes a <see cref="JsonElement"/> to the stream.
+		/// </summary>
+		/// <param name="writer">The JSON stream writer.</param>
+		/// <param name="element">The element to write.</param>
 		public static void WriteValue(this Utf8JsonWriter writer, JsonElement element)
 		{
 			switch (element.ValueKind)
@@ -35,7 +43,7 @@ namespace Json.More
 			}
 		}
 
-		public static void WriteObject(this Utf8JsonWriter writer, JsonElement element)
+		private static void WriteObject(this Utf8JsonWriter writer, JsonElement element)
 		{
 			writer.WriteStartObject();
 			foreach (var property in element.EnumerateObject())
@@ -46,7 +54,7 @@ namespace Json.More
 			writer.WriteEndObject();
 		}
 
-		public static void WriteArray(this Utf8JsonWriter writer, JsonElement element)
+		private static void WriteArray(this Utf8JsonWriter writer, JsonElement element)
 		{
 			writer.WriteStartArray();
 			foreach (var item in element.EnumerateArray())
