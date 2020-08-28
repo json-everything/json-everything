@@ -9,7 +9,7 @@ namespace Json.Schema
 	[SchemaPriority(long.MinValue)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(VocabularyRegistry.Core201909Id)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(VocabularyKeywordJsonConverter))]
 	public class VocabularyKeyword : IJsonSchemaKeyword
 	{
@@ -26,9 +26,17 @@ namespace Json.Schema
 		{
 			var overallResult = true;
 			var violations = new List<Uri>();
-			foreach (var kvp in Vocabulary)
+			var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
+			switch (context.Options.ValidateAs)
 			{
-				var isKnown = context.VocabularyRegistry.IsKnown(kvp.Key);
+				case Draft.Unspecified:
+				case Draft.Draft201909:
+					vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
+					break;
+			}
+			foreach (var kvp in vocabularies)
+			{
+				var isKnown = context.Options.VocabularyRegistry.IsKnown(kvp.Key);
 				var isValid = !kvp.Value || isKnown;
 				if (!isValid)
 					violations.Add(kvp.Key);

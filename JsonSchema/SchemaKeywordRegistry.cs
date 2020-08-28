@@ -40,6 +40,16 @@ namespace Json.Schema
 			_keywords[keyword.Name] = typeof(T);
 		}
 
+		public static void Unregister<T>()
+			where T : IJsonSchemaKeyword
+		{
+			var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
+			if (keyword == null)
+				throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
+
+			_keywords.TryRemove(keyword.Name, out _);
+		}
+
 		public static Type GetImplementationType(string keyword)
 		{
 			return _keywords.TryGetValue(keyword, out var implementationType)

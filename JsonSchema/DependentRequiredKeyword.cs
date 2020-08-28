@@ -9,7 +9,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(VocabularyRegistry.Validation201909Id)]
+	[Vocabulary(Vocabularies.Validation201909Id)]
 	[JsonConverter(typeof(DependentRequiredKeywordJsonConverter))]
 	public class DependentRequiredKeyword : IJsonSchemaKeyword
 	{

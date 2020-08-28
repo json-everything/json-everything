@@ -9,7 +9,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(VocabularyRegistry.Core201909Id)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(IdKeywordJsonConverter))]
 	public class IdKeyword : IJsonSchemaKeyword
 	{

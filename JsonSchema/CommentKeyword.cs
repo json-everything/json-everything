@@ -7,7 +7,7 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(VocabularyRegistry.Core201909Id)]
+	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(CommentKeywordJsonConverter))]
 	public class CommentKeyword : IJsonSchemaKeyword
 	{

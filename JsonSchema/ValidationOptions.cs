@@ -9,6 +9,18 @@ namespace Json.Schema
 		public static ValidationOptions Default { get; } = new ValidationOptions();
 
 		public Draft ValidateAs { get; set; }
+		public bool ValidateMetaSchema { get; set; }
+
+		public SchemaRegistry SchemaRegistry { get; } = new SchemaRegistry();
+		public VocabularyRegistry VocabularyRegistry { get; } = new VocabularyRegistry();
+
+		public static ValidationOptions From(ValidationOptions other)
+		{
+			var options = new ValidationOptions {ValidateAs = other.ValidateAs};
+			options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
+			options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
+			return options;
+		}
 
 		internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri metaSchemaId, SchemaRegistry registry)
 		{

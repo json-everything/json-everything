@@ -10,7 +10,7 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(VocabularyRegistry.Applicator201909Id)]
+	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
 	public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable
 	{

@@ -8,7 +8,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(VocabularyRegistry.Validation201909Id)]
+	[Vocabulary(Vocabularies.Validation201909Id)]
 	[JsonConverter(typeof(ExclusiveMinimumKeywordJsonConverter))]
 	public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
 	{

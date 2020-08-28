@@ -49,10 +49,10 @@ namespace Json.Schema
 
 		public ValidationResults Validate(JsonElement root, ValidationOptions options = null)
 		{
+			options ??= ValidationOptions.Default;
+
 			var context = new ValidationContext
 				{
-					SchemaRegistry = new SchemaRegistry(),
-					VocabularyRegistry = new VocabularyRegistry(),
 					Options = options ?? ValidationOptions.Default,
 					LocalInstance = root,
 					InstanceLocation = JsonPointer.UrlEmpty,
@@ -61,7 +61,7 @@ namespace Json.Schema
 					SchemaRoot = this
 				};
 
-			RegisterSubschemas(context.SchemaRegistry, null);
+			RegisterSubschemas(context.Options.SchemaRegistry, null);
 			ValidateSubschema(context);
 
 			return new ValidationResults(context);
@@ -106,7 +106,7 @@ namespace Json.Schema
 			}
 
 			var metaSchemaUri = Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.SchemaRegistry);
+			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.Options.SchemaRegistry);
 
 			ValidationContext newContext = null;
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
@@ -257,11 +257,16 @@ namespace Json.Schema
 			{
 				JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
 			}
-			foreach (var data in value.OtherData)
+
+			if (value.OtherData != null)
 			{
-				writer.WritePropertyName(data.Key);
-				JsonSerializer.Serialize(writer, data.Value, options);
+				foreach (var data in value.OtherData)
+				{
+					writer.WritePropertyName(data.Key);
+					JsonSerializer.Serialize(writer, data.Value, options);
+				}
 			}
+
 			writer.WriteEndObject();
 		}
 	}

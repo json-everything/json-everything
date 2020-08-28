@@ -85,5 +85,21 @@ namespace Json.Schema
 
 			return new Uri(_empty, uri);
 		}
+
+		internal void CopyFrom(SchemaRegistry other)
+		{
+			if (other._registered == null) return;
+
+			if (_registered == null)
+			{
+				_registered = new Dictionary<Uri, Registration>(other._registered);
+				return;
+			}
+
+			foreach (var registration in other._registered)
+			{
+				_registered[registration.Key] = registration.Value;
+			}
+		}
 	}
 }
