@@ -56,6 +56,7 @@ namespace Json.Schema
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 				if (subContext.IsValid)
 					evaluatedProperties.Add(property.Name);

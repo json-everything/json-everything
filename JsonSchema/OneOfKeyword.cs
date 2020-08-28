@@ -40,6 +40,7 @@ namespace Json.Schema
 				var subContext = ValidationContext.From(context, subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 				schema.ValidateSubschema(subContext);
 				validCount += subContext.IsValid ? 1 : 0;
+				if (validCount > 1 && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
 

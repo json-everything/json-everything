@@ -35,7 +35,6 @@ namespace Json.Schema
 			var count = context.LocalInstance.GetArrayLength();
 			for (int i = 0; i < count; i++)
 			{
-				// TODO: shortcut if flag output
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					context.LocalInstance[i]);
@@ -44,7 +43,11 @@ namespace Json.Schema
 			}
 
 			var found = context.NestedContexts.Count(r => r.IsValid);
-			context.IsValid = found != 0;
+			var minContainsKeyword = context.LocalSchema.Keywords.OfType<MinContainsKeyword>().FirstOrDefault();
+			if (minContainsKeyword != null && minContainsKeyword.Value == 0)
+				context.IsValid = true;
+			else
+				context.IsValid = found != 0;
 			if (context.IsValid)
 				context.SetAnnotation(Name, found);
 			else

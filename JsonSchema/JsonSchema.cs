@@ -127,6 +127,7 @@ namespace Json.Schema
 			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.Options.SchemaRegistry);
 
 			ValidationContext newContext = null;
+			var overallResult = true;
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
 				var previousContext = newContext;
@@ -140,11 +141,13 @@ namespace Json.Schema
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
 				newContext.RequiredInResult = keyword.IsApplicator();
 				keyword.Validate(newContext);
+				overallResult &= newContext.IsValid;
+				if (!overallResult && context.ApplyOptimizations) break;
 				if (!newContext.Ignore)
 					context.NestedContexts.Add(newContext);
 			}
 
-			context.IsValid = context.NestedContexts.All(c => c.IsValid);
+			context.IsValid = overallResult;
 			if (context.IsValid)
 				context.ImportAnnotations(newContext);
 		}

@@ -35,6 +35,7 @@ namespace Json.Schema
 		internal ValidationContext ParentContext { get; set; }
 		internal bool RequiredInResult { get; set; }
 
+		public bool ApplyOptimizations => Options.OutputFormat == OutputFormat.Flag;
 		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count != 0;
 		internal bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count != 0;
 

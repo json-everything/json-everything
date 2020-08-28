@@ -49,6 +49,7 @@ namespace Json.Schema
 					instance);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
 

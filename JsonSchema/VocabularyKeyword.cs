@@ -41,6 +41,7 @@ namespace Json.Schema
 				if (!isValid)
 					violations.Add(kvp.Key);
 				overallResult &= isValid;
+				if (!overallResult && context.ApplyOptimizations) break;
 			}
 			context.IsValid = overallResult;
 			if (!overallResult)

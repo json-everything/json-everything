@@ -60,6 +60,7 @@ namespace Json.Schema
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
 			if (overallResult)

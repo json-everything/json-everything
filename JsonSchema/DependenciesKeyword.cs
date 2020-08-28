@@ -70,6 +70,8 @@ namespace Json.Schema
 					else
 						overallResult = false;
 				}
+
+				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
 			context.IsValid = overallResult;

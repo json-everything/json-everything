@@ -48,10 +48,12 @@ namespace Json.Schema
 					if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
 
 					overallResult = false;
+					if (context.ApplyOptimizations) break;
 					if (!missingDependencies.TryGetValue(name, out var list)) 
 						list = missingDependencies[name] = new List<string>();
 					list.Add(dependency);
 				}
+				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
 			context.IsValid = overallResult;

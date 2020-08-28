@@ -54,6 +54,7 @@ namespace Json.Schema
 						context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
 					schema.ValidateSubschema(subContext);
 					overallResult &= subContext.IsValid;
+					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 					evaluatedProperties.Add(instanceProperty.Name);
 				}

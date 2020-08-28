@@ -28,6 +28,7 @@ namespace Json.Schema
 
 		internal ValidationResults(ValidationContext context)
 		{
+			// TODO: apply format stuff here, not in JsonSchema
 			IsValid = context.IsValid;
 			Annotations = context.IsValid
 				? context.Annotations.ToList()

@@ -43,7 +43,8 @@ namespace Json.Schema
 				context.NestedContexts.Add(subContext);
 			}
 
-			context.ConsolidateAnnotations();
+			if (overallResult)
+				context.ConsolidateAnnotations();
 			context.IsValid = overallResult;
 		}
 

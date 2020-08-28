@@ -61,6 +61,7 @@ namespace Json.Schema
 					SingleSchema.ValidateSubschema(subContext);
 					context.CurrentUri ??= subContext.CurrentUri;
 					overallResult &= subContext.IsValid;
+					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 				}
 
@@ -83,6 +84,7 @@ namespace Json.Schema
 						context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 					schema.ValidateSubschema(subContext);
 					overallResult &= subContext.IsValid;
+					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 				}
 
