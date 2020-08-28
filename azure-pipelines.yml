@@ -11,7 +11,7 @@ steps:
   displayName: 'Install .NET Core 3'
   inputs:
     packageType: 'sdk'
-    useGlobalJson: true
+    useGlobalJson: false
 
 - task: VSBuild@1
   displayName: Nuget Restore
