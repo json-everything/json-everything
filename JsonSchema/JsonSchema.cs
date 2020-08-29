@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema
@@ -74,13 +75,11 @@ namespace Json.Schema
 		/// <summary>
 		/// Deserializes a <see cref="JsonSchema"/> from a stream.
 		/// </summary>
-		/// <param name="reader">A stream reader.</param>
+		/// <param name="source">A stream.</param>
 		/// <returns>A new <see cref="JsonSchema"/>.</returns>
-		[Obsolete("This method is not yet implemented.")]
-		public static JsonSchema FromStream(StreamReader reader)
+		public static ValueTask<JsonSchema> FromStream(Stream source)
 		{
-			throw new NotImplementedException();
-			//return JsonSerializer.Deserialize<JsonSchema>()
+			return JsonSerializer.DeserializeAsync<JsonSchema>(source);
 		}
 
 		/// <summary>
