@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `deprecated`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[Vocabulary(Vocabularies.Metadata201909Id)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -12,13 +15,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "deprecated";
 
+		/// <summary>
+		/// Whether the schema is deprecated.
+		/// </summary>
 		public bool Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="DeprecatedKeyword"/>.
+		/// </summary>
+		/// <param name="value">Whether the schema is deprecated.</param>
 		public DeprecatedKeyword(bool value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.SetAnnotation(Name, Value);

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Json.Pointer
 {
 	/// <summary>
 	/// Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02
 	/// </summary>
+	[JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
 	public readonly struct RelativeJsonPointer
 	{
 		/// <summary>
@@ -158,6 +160,13 @@ namespace Json.Pointer
 		public JsonElement Evaluate(JsonElement element)
 		{
 			throw new NotSupportedException("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452");
+		}
+
+		/// <summary>Returns the fully qualified type name of this instance.</summary>
+		/// <returns>The fully qualified type name.</returns>
+		public override string ToString()
+		{
+			return $"{ParentSteps}{Pointer}";
 		}
 	}
 }

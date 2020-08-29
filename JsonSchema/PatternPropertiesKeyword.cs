@@ -8,6 +8,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `patternProperties`.
+	/// </summary>
 	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -19,6 +22,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "patternProperties";
 
+		/// <summary>
+		/// The pattern-keyed schemas.
+		/// </summary>
 		public IReadOnlyDictionary<Regex, JsonSchema> Patterns { get; }
 
 		static PatternPropertiesKeyword()
@@ -26,11 +32,19 @@ namespace Json.Schema
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="PatternPropertiesKeyword"/>.
+		/// </summary>
+		/// <param name="values">The pattern-keyed schemas.</param>
 		public PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values)
 		{
 			Patterns = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -83,12 +97,6 @@ namespace Json.Schema
 				annotation.AddRange(allProperties);
 			else if (allProperties.Any())
 				destContext.SetAnnotation(Name, allProperties);
-		}
-
-		public IRefResolvable ResolvePointerSegment(string value)
-		{
-			var regex = new Regex(value);
-			return Patterns.TryGetValue(regex, out var schema) ? schema : null;
 		}
 	}
 

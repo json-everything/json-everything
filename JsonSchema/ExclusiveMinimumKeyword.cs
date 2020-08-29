@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `exclusiveMinimum`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "exclusiveMinimum";
 
+		/// <summary>
+		/// The minimum value.
+		/// </summary>
 		public decimal Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ExclusiveMinimumKeyword"/>.
+		/// </summary>
+		/// <param name="value">The minimum value.</param>
 		public ExclusiveMinimumKeyword(decimal value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Number)

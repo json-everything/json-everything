@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// The results object for validations.
+	/// </summary>
 	[JsonConverter(typeof(ValidationResultsJsonConverter))]
 	public class ValidationResults
 	{
@@ -15,13 +18,34 @@ namespace Json.Schema
 		private Uri _absoluteUri;
 		private bool _required;
 
+		/// <summary>
+		/// Indicates whether the validation passed or failed.
+		/// </summary>
 		public bool IsValid { get; internal set; }
+		/// <summary>
+		/// The collection of annotations from this node.
+		/// </summary>
 		public IReadOnlyList<Annotation> Annotations { get; internal set; }
+		/// <summary>
+		/// The error message, if any.
+		/// </summary>
 		public string Message { get; internal set; }
+		/// <summary>
+		/// The schema location that generated this node.
+		/// </summary>
 		public JsonPointer SchemaLocation { get; internal set; }
+		/// <summary>
+		/// The instance location that was processed.
+		/// </summary>
 		public JsonPointer InstanceLocation { get; internal set; }
 
+		/// <summary>
+		/// The absolute schema location.  Only available if the schema had an absolute URI ID.
+		/// </summary>
 		public Uri AbsoluteSchemaLocation => _absoluteUri ??= _BuildAbsoluteUri();
+		/// <summary>
+		/// The collection of nested results.
+		/// </summary>
 		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults;
 
 		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep) || _required;
@@ -43,6 +67,9 @@ namespace Json.Schema
 			_required = context.RequiredInResult;
 		}
 
+		/// <summary>
+		/// Transforms the results to the `details` format.
+		/// </summary>
 		public void ToDetailed()
 		{
 			if (!Annotations.Any() && Message == null && NestedResults.Count == 0) return;
@@ -69,6 +96,9 @@ namespace Json.Schema
 				_nestedResults.AddRange(condensed);
 		}
 
+		/// <summary>
+		/// Transforms the results to the `basic` format.
+		/// </summary>
 		public void ToBasic()
 		{
 			var children = _GetAllChildren().ToList();
@@ -79,6 +109,9 @@ namespace Json.Schema
 			_nestedResults.AddRange(children);
 		}
 
+		/// <summary>
+		/// Transforms the results to the `flag` format.
+		/// </summary>
 		public void ToFlag()
 		{
 			_nestedResults.Clear();

@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `unevaluatedProperties`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(30)]
 	[SchemaKeyword(Name)]
@@ -17,17 +20,28 @@ namespace Json.Schema
 	{
 		internal const string Name = "unevaluatedProperties";
 
+		/// <summary>
+		/// The schema by which to validation additional properties.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
 		static UnevaluatedPropertiesKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
+		/// <summary>
+		/// Creates a new <see cref="UnevaluatedPropertiesKeyword"/>.
+		/// </summary>
+		/// <param name="value"></param>
 		public UnevaluatedPropertiesKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -83,12 +97,12 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, allProperties);
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}

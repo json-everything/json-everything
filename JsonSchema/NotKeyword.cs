@@ -5,6 +5,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `not`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
@@ -17,13 +20,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "not";
 
+		/// <summary>
+		/// The schema to not match.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="NotKeyword"/>.
+		/// </summary>
+		/// <param name="value">The schema to not match.</param>
 		public NotKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var subContext = ValidationContext.From(context,
@@ -34,12 +48,12 @@ namespace Json.Schema
 			context.ConsolidateAnnotations();
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}

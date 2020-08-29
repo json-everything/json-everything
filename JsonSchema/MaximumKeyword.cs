@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `maximum`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "maximum";
 
+		/// <summary>
+		/// The maximum expected value.
+		/// </summary>
 		public decimal Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MaximumKeyword"/>.
+		/// </summary>
+		/// <param name="value">The maximum expected value.</param>
 		public MaximumKeyword(decimal value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Number)

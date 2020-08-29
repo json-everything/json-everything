@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `minLength`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "minLength";
 
+		/// <summary>
+		/// The minimum expected string length.
+		/// </summary>
 		public uint Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MinLengthKeyword"/>.
+		/// </summary>
+		/// <param name="value">The minimum expected string length.</param>
 		public MinLengthKeyword(uint value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)

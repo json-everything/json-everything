@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `anyOf`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
@@ -19,18 +22,33 @@ namespace Json.Schema
 	{
 		internal const string Name = "anyOf";
 
+		/// <summary>
+		/// The keywords schema collection.
+		/// </summary>
 		public IReadOnlyList<JsonSchema> Schemas { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="AnyOfKeyword"/>.
+		/// </summary>
+		/// <param name="values">The set of schemas.</param>
 		public AnyOfKeyword(params JsonSchema[] values)
 		{
 			Schemas = values.ToList();
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="AnyOfKeyword"/>.
+		/// </summary>
+		/// <param name="values">The set of schemas.</param>
 		public AnyOfKeyword(IEnumerable<JsonSchema> values)
 		{
 			Schemas = values.ToList();
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var overallResult = false;
@@ -48,7 +66,7 @@ namespace Json.Schema
 			context.IsValid = overallResult;
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			if (!int.TryParse(value, out var index)) return null;
 			if (index < 0 || Schemas.Count <= index) return null;
@@ -56,7 +74,7 @@ namespace Json.Schema
 			return Schemas[index];
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			foreach (var schema in Schemas)
 			{

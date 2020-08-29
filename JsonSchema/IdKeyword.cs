@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `$id`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue + 1)]
 	[SchemaDraft(Draft.Draft6)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "$id";
 
+		/// <summary>
+		/// The ID.
+		/// </summary>
 		public Uri Id { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="IdKeyword"/>.
+		/// </summary>
+		/// <param name="id">The ID.</param>
 		public IdKeyword(Uri id)
 		{
 			Id = id;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.ParentContext.CurrentUri = UpdateUri(context.CurrentUri);

@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `$defs`.
+	/// </summary>
 	[SchemaPriority(long.MinValue + 1)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -14,25 +17,36 @@ namespace Json.Schema
 	{
 		internal const string Name = "$defs";
 
+		/// <summary>
+		/// The collection of schema definitions.
+		/// </summary>
 		public IReadOnlyDictionary<string, JsonSchema> Definitions { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="DefsKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of schema definitions.</param>
 		public DefsKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
 			Definitions = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.IsValid = true;
 			context.Ignore = true;
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return Definitions.TryGetValue(value, out var schema) ? schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			foreach (var schema in Definitions.Values)
 			{

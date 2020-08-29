@@ -6,6 +6,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `dependentSchemas`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
@@ -16,13 +19,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "dependentSchemas";
 
+		/// <summary>
+		/// The collection of "schema"-type dependencies.
+		/// </summary>
 		public IReadOnlyDictionary<string, JsonSchema> Schemas { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="DependentSchemasKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of "schema"-type dependencies.</param>
 		public DependentSchemasKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
 			Schemas = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -55,12 +69,12 @@ namespace Json.Schema
 				context.Message = $"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}";
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return Schemas.TryGetValue(value, out var schema) ? schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			foreach (var schema in Schemas.Values)
 			{

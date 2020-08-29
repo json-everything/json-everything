@@ -5,6 +5,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `contentSchema`.
+	/// </summary>
 	[SchemaPriority(20)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "contentSchema";
 
+		/// <summary>
+		/// The schema against which to validate the content.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ContentSchemaKeyword"/>.
+		/// </summary>
+		/// <param name="value">The schema against which to validate the content.</param>
 		public ContentSchemaKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var subContext = ValidationContext.From(context,
@@ -31,12 +45,12 @@ namespace Json.Schema
 			context.ConsolidateAnnotations();
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}

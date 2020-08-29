@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `title`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "title";
 
+		/// <summary>
+		/// The title.
+		/// </summary>
 		public string Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="TitleKeyword"/>.
+		/// </summary>
+		/// <param name="value">The title.</param>
 		public TitleKeyword(string value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.SetAnnotation(Name, Value);

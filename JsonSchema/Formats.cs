@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// The formats supported by JSON Schema base specifications.
+	/// </summary>
 	public static class Formats
 	{
 		private static readonly ConcurrentDictionary<string, Format> _registry;
@@ -36,26 +39,86 @@ namespace Json.Schema
 			"'HH':'mm':'ss"
 		};
 
+		/// <summary>
+		/// Defines the `date` format.
+		/// </summary>
 		public static readonly Format Date = new PredicateFormat("date", CheckDate);
+		/// <summary>
+		/// Defines the `date-time` format.
+		/// </summary>
 		public static readonly Format DateTime = new PredicateFormat("date-time", CheckDateTime);
+		/// <summary>
+		/// Defines the `duration` format.
+		/// </summary>
 		public static readonly Format Duration = new PredicateFormat("duration", CheckDuration);
+		/// <summary>
+		/// Defines the `email` format.
+		/// </summary>
 		public static readonly Format Email = new PredicateFormat("email", CheckEmail);
+		/// <summary>
+		/// Defines the `hostname` format.
+		/// </summary>
 		public static readonly Format Hostname = new PredicateFormat("hostname", CheckHostName);
+		/// <summary>
+		/// Defines the `idn-email` format.
+		/// </summary>
 		public static readonly Format IdnEmail = new PredicateFormat("idn-email", CheckEmail);
+		/// <summary>
+		/// Defines the `idn-hostname` format.
+		/// </summary>
 		public static readonly Format IdnHostname = new PredicateFormat("idn-hostname", CheckHostName);
+		/// <summary>
+		/// Defines the `ipv4` format.
+		/// </summary>
 		public static readonly Format Ipv4 = new PredicateFormat("ipv4", CheckIpv4);
+		/// <summary>
+		/// Defines the `ipv6` format.
+		/// </summary>
 		public static readonly Format Ipv6 = new PredicateFormat("ipv6", CheckIpv6);
+		/// <summary>
+		/// Defines the `iri` format.
+		/// </summary>
 		public static readonly Format Iri = new PredicateFormat("iri", CheckUriFormatting);
+		/// <summary>
+		/// Defines the `iri-reference` format.
+		/// </summary>
 		public static readonly Format IriReference = new PredicateFormat("iri-reference", CheckUriFormatting);
+		/// <summary>
+		/// Defines the `json-pointer` format.
+		/// </summary>
 		public static readonly Format JsonPointer = new PredicateFormat("json-pointer", CheckJsonPointer);
+		/// <summary>
+		/// Defines the `regex` format.
+		/// </summary>
 		public static readonly Format Regex = new Format("regex");
+		/// <summary>
+		/// Defines the `relative-json-pointer` format.
+		/// </summary>
 		public static readonly Format RelativeJsonPointer = new PredicateFormat("relative-json-pointer", CheckRelativeJsonPointer);
+		/// <summary>
+		/// Defines the `time` format.
+		/// </summary>
 		public static readonly Format Time = new PredicateFormat("time", CheckTime);
+		/// <summary>
+		/// Defines the `uri` format.
+		/// </summary>
 		public static readonly Format Uri = new PredicateFormat("uri", CheckUriFormatting);
+		/// <summary>
+		/// Defines the `uri-reference` format.
+		/// </summary>
 		public static readonly Format UriReference = new PredicateFormat("uri-reference", CheckUriFormatting);
+		/// <summary>
+		/// Defines the `uri-template` format.
+		/// </summary>
 		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUriFormatting);
+		/// <summary>
+		/// Defines the `uuid` format.
+		/// </summary>
 		public static readonly Format Uuid = new PredicateFormat("uuid", CheckUuid);
 
+		/// <summary>
+		/// A placeholder for an unknown format.
+		/// </summary>
 		public static readonly Format Unknown = new Format();
 
 		static Formats()
@@ -68,11 +131,20 @@ namespace Json.Schema
 					.ToDictionary(f => f.Key));
 		}
 
+		/// <summary>
+		/// Gets a format by its key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>The specified format, if known; otherwise null.</returns>
 		public static Format Get(string key)
 		{
 			return _registry.TryGetValue(key, out var format) ? format : Unknown;
 		}
 
+		/// <summary>
+		/// Registers a new format.
+		/// </summary>
+		/// <param name="format"></param>
 		public static void Register(Format format)
 		{
 			if (format == null)

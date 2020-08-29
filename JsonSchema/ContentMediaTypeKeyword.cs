@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `contentMediaType`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -13,13 +16,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "contentMediaType";
 
+		/// <summary>
+		/// The media type.
+		/// </summary>
 		public string Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ContentMediaTypeKeyword"/>.
+		/// </summary>
+		/// <param name="value">The media type.</param>
 		public ContentMediaTypeKeyword(string value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.SetAnnotation(Name, Value);

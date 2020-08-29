@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `if`.
+	/// </summary>
 	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "if";
 
+		/// <summary>
+		/// The schema to match.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="IfKeyword"/>.
+		/// </summary>
+		/// <param name="value">The schema to match.</param>
 		public IfKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var subContext = ValidationContext.From(context);
@@ -32,12 +46,12 @@ namespace Json.Schema
 			context.IsValid = true;
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}

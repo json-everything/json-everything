@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `minContains`.
+	/// </summary>
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "minContains";
 
+		/// <summary>
+		/// The minimum expected matching items.
+		/// </summary>
 		public uint Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MinContainsKeyword"/>.
+		/// </summary>
+		/// <param name="value">The minimum expected matching items.</param>
 		public MinContainsKeyword(uint value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (Value == 0)

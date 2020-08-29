@@ -5,6 +5,9 @@ using Json.More;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `const`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "const";
 
+		/// <summary>
+		/// The constant value.
+		/// </summary>
 		public JsonElement Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ConstKeyword"/>.
+		/// </summary>
+		/// <param name="value">The constant value.</param>
 		public ConstKeyword(JsonElement value)
 		{
 			Value = value.Clone();
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.IsValid = Value.IsEquivalentTo(context.LocalInstance);

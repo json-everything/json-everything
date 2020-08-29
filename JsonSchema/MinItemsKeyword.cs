@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `minItems`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "minItems";
 
+		/// <summary>
+		/// The expected minimum number of items.
+		/// </summary>
 		public uint Value { get; }
 
+		/// <summary>
+		/// Create a new <see cref="MinItemsKeyword"/>.
+		/// </summary>
+		/// <param name="value">The expected minimum number of items.</param>
 		public MinItemsKeyword(uint value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)

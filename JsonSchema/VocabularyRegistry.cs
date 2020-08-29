@@ -3,10 +3,16 @@ using System.Collections.Concurrent;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// A registry for vocabularies.
+	/// </summary>
 	public class VocabularyRegistry
 	{
 		private ConcurrentDictionary<Uri, Vocabulary> _vocabularies;
 
+		/// <summary>
+		/// The global registry.
+		/// </summary>
 		public static VocabularyRegistry Global { get; }
 
 		static VocabularyRegistry()
@@ -20,12 +26,25 @@ namespace Json.Schema
 			Global.Register(Vocabularies.Content201909);
 		}
 
+		/// <summary>
+		/// Registers a vocabulary.  This does not register the vocabulary's
+		/// keywords.  This must be done separately.
+		/// </summary>
+		/// <param name="vocabulary"></param>
 		public void Register(Vocabulary vocabulary)
 		{
 			_vocabularies ??= new ConcurrentDictionary<Uri, Vocabulary>();
 			_vocabularies[vocabulary.Id] = vocabulary;
 		}
 
+		/// <summary>
+		/// Indicates whether a vocabulary is known by URI ID and/or anchor.
+		/// </summary>
+		/// <param name="vocabularyId">The URI ID.</param>
+		/// <returns>
+		/// <code>true</code>, if registered in either this or the global registry;
+		/// <code>false</code> otherwise.
+		/// </returns>
 		public bool IsKnown(Uri vocabularyId)
 		{
 			if (_vocabularies != null && _vocabularies.ContainsKey(vocabularyId)) return true;

@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `maxProperties`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "maxProperties";
 
+		/// <summary>
+		/// The maximum expected number of properties.
+		/// </summary>
 		public uint Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MaxPropertiesKeyword"/>.
+		/// </summary>
+		/// <param name="value">The maximum expected number of properties.</param>
 		public MaxPropertiesKeyword(uint value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)

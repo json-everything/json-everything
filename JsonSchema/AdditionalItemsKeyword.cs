@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `additionalItems`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
@@ -19,17 +22,28 @@ namespace Json.Schema
 	{
 		internal const string Name = "additionalItems";
 
+		/// <summary>
+		/// The schema by which to validation additional items.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
 		static AdditionalItemsKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
+		/// <summary>
+		/// Creates a new <see cref="AdditionalItemsKeyword"/>.
+		/// </summary>
+		/// <param name="value">The keyword's schema.</param>
 		public AdditionalItemsKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
@@ -74,12 +88,12 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, true);
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}

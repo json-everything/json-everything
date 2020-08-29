@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `readOnly`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Metadata201909Id)]
@@ -12,13 +15,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "readOnly";
 
+		/// <summary>
+		/// Whether the instance is read-only.
+		/// </summary>
 		public bool Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ReadOnlyKeyword"/>.
+		/// </summary>
+		/// <param name="value">Whether the instance is read-only.</param>
 		public ReadOnlyKeyword(bool value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.SetAnnotation(Name, Value);

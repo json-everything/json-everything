@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `pattern`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "pattern";
 
+		/// <summary>
+		/// The regular expression.
+		/// </summary>
 		public Regex Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="PatternKeyword"/>.
+		/// </summary>
+		/// <param name="value">The regular expression.</param>
 		public PatternKeyword(Regex value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)

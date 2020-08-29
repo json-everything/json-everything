@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `dependencies`.
+	/// </summary>
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -16,18 +19,28 @@ namespace Json.Schema
 	{
 		internal const string Name = "dependencies";
 
+		/// <summary>
+		/// The collection of dependencies.
+		/// </summary>
 		public IReadOnlyDictionary<string, SchemaOrPropertyList> Requirements { get; }
 
 		static DependenciesKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
-
+		/// <summary>
+		/// Creates a new <see cref="DependenciesKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of dependencies.</param>
 		public DependenciesKeyword(IReadOnlyDictionary<string, SchemaOrPropertyList> values)
 		{
 			Requirements = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -93,14 +106,14 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, allDependencies);
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			if (!Requirements.TryGetValue(value, out var entry)) return null;
 
 			return entry.Schema;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			foreach (var requirement in Requirements.Values)
 			{
@@ -133,27 +146,48 @@ namespace Json.Schema
 		}
 	}
 
+	/// <summary>
+	/// A holder for either a schema dependency or a requirements dependency.
+	/// </summary>
 	[JsonConverter(typeof(SchemaOrPropertyListJsonConverter))]
 	public class SchemaOrPropertyList
 	{
-		public JsonSchema Schema { get; set; }
-		public List<string> Requirements { get; set; }
+		/// <summary>
+		/// The schema dependency.
+		/// </summary>
+		public JsonSchema Schema { get; }
+		/// <summary>
+		/// The property dependency.
+		/// </summary>
+		public List<string> Requirements { get; }
+
+		/// <summary>
+		/// Creates a schema dependency.
+		/// </summary>
+		/// <param name="schema">The schema dependency.</param>
+		public SchemaOrPropertyList(JsonSchema schema)
+		{
+			Schema = schema;
+		}
+
+		/// <summary>
+		/// Creates a property dependency.
+		/// </summary>
+		/// <param name="requirements">The property dependency.</param>
+		public SchemaOrPropertyList(List<string> requirements)
+		{
+			Requirements = requirements;
+		}
 	}
 
-	public class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropertyList>
+	internal class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropertyList>
 	{
 		public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.StartArray)
-				return new SchemaOrPropertyList
-				{
-					Requirements = JsonSerializer.Deserialize<List<string>>(ref reader, options)
-				};
+				return new SchemaOrPropertyList(JsonSerializer.Deserialize<List<string>>(ref reader, options));
 
-			return new SchemaOrPropertyList
-			{
-				Schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)
-			};
+			return new SchemaOrPropertyList(JsonSerializer.Deserialize<JsonSchema>(ref reader, options));
 		}
 
 		public override void Write(Utf8JsonWriter writer, SchemaOrPropertyList value, JsonSerializerOptions options)

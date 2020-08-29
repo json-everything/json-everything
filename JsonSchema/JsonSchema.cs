@@ -53,6 +53,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="fileName">The filename to load.</param>
 		/// <returns>A new <see cref="JsonSchema"/>.</returns>
+		/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 		public static JsonSchema FromFile(string fileName)
 		{
 			var text = File.ReadAllText(fileName);
@@ -64,6 +65,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="jsonText">The text to parse.</param>
 		/// <returns>A new <see cref="JsonSchema"/>.</returns>
+		/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 		public static JsonSchema FromText(string jsonText)
 		{
 			return JsonSerializer.Deserialize<JsonSchema>(jsonText);
@@ -240,10 +242,14 @@ namespace Json.Schema
 
 		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
-			var keyword = Keywords.FirstOrDefault(k => k.Name() == value);
+			var keyword = Keywords.FirstOrDefault(k => k.Keyword() == value);
 			return keyword as IRefResolvable;
 		}
 
+		/// <summary>
+		/// Implicitly converts a boolean value into one of the boolean schemas.
+		/// </summary>
+		/// <param name="value">The boolean value.</param>
 		public static implicit operator JsonSchema(bool value)
 		{
 			return value ? True : False;

@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `$schema`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue)]
 	[SchemaDraft(Draft.Draft6)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "$schema";
 
+		/// <summary>
+		/// The meta-schema ID.
+		/// </summary>
 		public Uri Schema { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="SchemaKeyword"/>.
+		/// </summary>
+		/// <param name="schema">The meta-schema ID.</param>
 		public SchemaKeyword(Uri schema)
 		{
 			Schema = schema;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (!context.Options.ValidateMetaSchema)

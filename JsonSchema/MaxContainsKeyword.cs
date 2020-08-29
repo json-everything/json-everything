@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `maxContains`.
+	/// </summary>
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -13,13 +16,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "maxContains";
 
+		/// <summary>
+		/// The maximum expected matching items.
+		/// </summary>
 		public uint Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MaxContainsKeyword"/>.
+		/// </summary>
+		/// <param name="value">The maximum expected matching items.</param>
 		public MaxContainsKeyword(uint value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
