@@ -28,7 +28,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DescriptionKeywordJsonConverter : JsonConverter<DescriptionKeyword>
+	internal class DescriptionKeywordJsonConverter : JsonConverter<DescriptionKeyword>
 	{
 		public override DescriptionKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

@@ -65,7 +65,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class AnyOfKeywordJsonConverter : JsonConverter<AnyOfKeyword>
+	internal class AnyOfKeywordJsonConverter : JsonConverter<AnyOfKeyword>
 	{
 		public override AnyOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

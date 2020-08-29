@@ -142,7 +142,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
+	internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	{
 		public override ItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

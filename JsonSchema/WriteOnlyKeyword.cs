@@ -26,7 +26,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class WriteOnlyKeywordJsonConverter : JsonConverter<WriteOnlyKeyword>
+	internal class WriteOnlyKeywordJsonConverter : JsonConverter<WriteOnlyKeyword>
 	{
 		public override WriteOnlyKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

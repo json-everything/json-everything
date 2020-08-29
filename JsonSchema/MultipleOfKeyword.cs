@@ -36,7 +36,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
+	internal class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
 	{
 		public override MultipleOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

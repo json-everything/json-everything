@@ -26,7 +26,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DeprecatedKeywordJsonConverter : JsonConverter<DeprecatedKeyword>
+	internal class DeprecatedKeywordJsonConverter : JsonConverter<DeprecatedKeyword>
 	{
 		public override DeprecatedKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

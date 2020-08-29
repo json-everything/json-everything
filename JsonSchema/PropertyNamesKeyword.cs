@@ -82,7 +82,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>
+	internal class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>
 	{
 		public override PropertyNamesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

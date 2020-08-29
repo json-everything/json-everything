@@ -41,7 +41,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
+	internal class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
 	{
 		public override DefsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

@@ -49,7 +49,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
+	internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 	{
 		public override VocabularyKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

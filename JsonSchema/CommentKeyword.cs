@@ -27,7 +27,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
+	internal class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
 	{
 		public override CommentKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

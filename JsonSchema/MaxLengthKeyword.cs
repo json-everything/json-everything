@@ -37,7 +37,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
+	internal class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
 	{
 		public override MaxLengthKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

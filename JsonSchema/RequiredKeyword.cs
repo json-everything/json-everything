@@ -51,7 +51,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
+	internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 	{
 		public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

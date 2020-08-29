@@ -28,7 +28,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RecursiveAnchorKeywordJsonConverter : JsonConverter<RecursiveAnchorKeyword>
+	internal class RecursiveAnchorKeywordJsonConverter : JsonConverter<RecursiveAnchorKeyword>
 	{
 		public override RecursiveAnchorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

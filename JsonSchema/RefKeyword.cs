@@ -96,7 +96,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RefKeywordJsonConverter : JsonConverter<RefKeyword>
+	internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	{
 		public override RefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

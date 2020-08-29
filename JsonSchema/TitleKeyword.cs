@@ -28,7 +28,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
+	internal class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
 	{
 		public override TitleKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

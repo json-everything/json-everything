@@ -37,7 +37,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKeyword>
+	internal class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKeyword>
 	{
 		public override MinPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

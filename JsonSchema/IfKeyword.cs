@@ -43,7 +43,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class IfKeywordJsonConverter : JsonConverter<IfKeyword>
+	internal class IfKeywordJsonConverter : JsonConverter<IfKeyword>
 	{
 		public override IfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

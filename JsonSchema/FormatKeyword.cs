@@ -34,7 +34,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
+	internal class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
 	{
 		public override FormatKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

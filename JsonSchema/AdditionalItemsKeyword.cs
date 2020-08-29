@@ -85,7 +85,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class AdditionalItemsKeywordJsonConverter : JsonConverter<AdditionalItemsKeyword>
+	internal class AdditionalItemsKeywordJsonConverter : JsonConverter<AdditionalItemsKeyword>
 	{
 		public override AdditionalItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

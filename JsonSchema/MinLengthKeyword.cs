@@ -37,7 +37,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
+	internal class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
 	{
 		public override MinLengthKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

@@ -94,7 +94,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
+	internal class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
 	{
 		public override RecursiveRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

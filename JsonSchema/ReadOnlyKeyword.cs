@@ -26,7 +26,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ReadOnlyKeywordJsonConverter : JsonConverter<ReadOnlyKeyword>
+	internal class ReadOnlyKeywordJsonConverter : JsonConverter<ReadOnlyKeyword>
 	{
 		public override ReadOnlyKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

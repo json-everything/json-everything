@@ -37,7 +37,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
+	internal class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 	{
 		public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

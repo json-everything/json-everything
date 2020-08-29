@@ -40,7 +40,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
+	internal class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
 	{
 		public override DefinitionsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

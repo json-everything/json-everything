@@ -55,7 +55,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeyword>
+	internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeyword>
 	{
 		public override MinContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

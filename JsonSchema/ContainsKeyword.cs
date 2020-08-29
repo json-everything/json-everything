@@ -65,7 +65,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
+	internal class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
 	{
 		public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

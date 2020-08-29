@@ -36,7 +36,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>
+	internal class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>
 	{
 		public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

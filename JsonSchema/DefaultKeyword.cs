@@ -28,7 +28,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
+	internal class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 	{
 		public override DefaultKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

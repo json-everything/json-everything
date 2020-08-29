@@ -27,7 +27,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMediaTypeKeyword>
+	internal class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMediaTypeKeyword>
 	{
 		public override ContentMediaTypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

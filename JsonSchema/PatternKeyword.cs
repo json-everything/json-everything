@@ -37,7 +37,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
+	internal class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 	{
 		public override PatternKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

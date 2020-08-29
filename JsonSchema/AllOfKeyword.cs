@@ -65,7 +65,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
+	internal class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
 	{
 		public override AllOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

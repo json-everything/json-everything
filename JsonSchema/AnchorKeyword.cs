@@ -28,7 +28,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class AnchorKeywordJsonConverter : JsonConverter<AnchorKeyword>
+	internal class AnchorKeywordJsonConverter : JsonConverter<AnchorKeyword>
 	{
 		public override AnchorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

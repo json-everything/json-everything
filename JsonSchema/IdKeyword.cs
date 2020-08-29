@@ -34,7 +34,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class IdKeywordJsonConverter : JsonConverter<IdKeyword>
+	internal class IdKeywordJsonConverter : JsonConverter<IdKeyword>
 	{
 		public override IdKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

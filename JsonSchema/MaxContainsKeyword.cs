@@ -42,7 +42,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsKeyword>
+	internal class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsKeyword>
 	{
 		public override MaxContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

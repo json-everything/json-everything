@@ -49,7 +49,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
+	internal class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
 	{
 		public override ThenKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

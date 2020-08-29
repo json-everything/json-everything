@@ -69,7 +69,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSchemasKeyword>
+	internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSchemasKeyword>
 	{
 		public override DependentSchemasKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

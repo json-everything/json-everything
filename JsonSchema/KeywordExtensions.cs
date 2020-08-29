@@ -18,7 +18,7 @@ namespace Json.Schema
 			return keywordAttribute.Name;
 		}
 
-		internal static long Priority(this IJsonSchemaKeyword keyword)
+		public static long Priority(this IJsonSchemaKeyword keyword)
 		{
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
@@ -51,7 +51,7 @@ namespace Json.Schema
 			return name;
 		}
 
-		internal static bool IsApplicator(this IJsonSchemaKeyword keyword)
+		public static bool IsApplicator(this IJsonSchemaKeyword keyword)
 		{
 			return keyword.GetType().GetCustomAttribute<ApplicatorAttribute>() != null;
 		}

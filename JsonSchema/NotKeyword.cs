@@ -45,7 +45,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class NotKeywordJsonConverter : JsonConverter<NotKeyword>
+	internal class NotKeywordJsonConverter : JsonConverter<NotKeyword>
 	{
 		public override NotKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
