@@ -1035,11 +1035,11 @@
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
             <exception cref="T:System.Text.Json.JsonException">Could not deserialize a portion of the schema.</exception>
         </member>
-        <member name="M:Json.Schema.JsonSchema.FromStream(System.IO.StreamReader)">
+        <member name="M:Json.Schema.JsonSchema.FromStream(System.IO.Stream)">
             <summary>
             Deserializes a <see cref="T:Json.Schema.JsonSchema"/> from a stream.
             </summary>
-            <param name="reader">A stream reader.</param>
+            <param name="source">A stream.</param>
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
         </member>
         <member name="M:Json.Schema.JsonSchema.Validate(System.Text.Json.JsonElement,Json.Schema.ValidationOptions)">
