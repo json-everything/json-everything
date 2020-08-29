@@ -44,6 +44,7 @@ namespace Json.More
 		/// <param name="typeToConvert">The type to convert.</param>
 		/// <param name="options">An object that specifies serialization options to use.</param>
 		/// <returns>The converted value.</returns>
+		/// <exception cref="JsonException">Element was not a string or could not identify the JSON value as a known enum value.</exception>
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			EnsureMap();

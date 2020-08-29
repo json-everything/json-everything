@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JsonSchema.Net</name>
+    </assembly>
+    <members>
+        <member name="M:Json.Schema.UriExtensions.GetParentUri(System.Uri)">
+            <summary>
+            Gets the Uri to the parent object.
+            </summary>
+            <param name="uri">The <see cref="T:System.Uri" /> of a resource, for which the parent Uri should be retrieved.</param>
+            <returns>
+            The parent <see cref="T:System.Uri" />.
+            </returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="uri" /> is <c>null</c>.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="uri" /> has no parent, it refers to a root resource.</exception>
+        </member>
+    </members>
+</doc>

@@ -16,6 +16,7 @@ namespace Json.More
 		/// <param name="a">The first element.</param>
 		/// <param name="b">The second element.</param>
 		/// <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">The <see cref="JsonElement.ValueKind"/> is not valid.</exception>
 		public static bool IsEquivalentTo(this JsonElement a, JsonElement b)
 		{
 			if (a.ValueKind != b.ValueKind) return false;
@@ -155,7 +156,7 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this IEnumerable<JsonElement> values)
 		{
-			var doc = JsonDocument.Parse($"[{string.Join(",", values)}");
+			var doc = JsonDocument.Parse($"[{string.Join(",", values)}]");
 			return doc.RootElement;
 		}
 
@@ -167,7 +168,7 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this IDictionary<string, JsonElement> values)
 		{
-			var doc = JsonDocument.Parse($"{string.Join(",", values.Select(v => $"{v.Key}:{v.Value}"))}");
+			var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{v.Key}:{v.Value}"))}}}");
 			return doc.RootElement;
 		}
 	}

@@ -13,6 +13,7 @@ namespace Json.More
 		/// </summary>
 		/// <param name="writer">The JSON stream writer.</param>
 		/// <param name="element">The element to write.</param>
+		/// <exception cref="ArgumentOutOfRangeException">The <see cref="JsonElement.ValueKind"/> is not valid.</exception>
 		public static void WriteValue(this Utf8JsonWriter writer, JsonElement element)
 		{
 			switch (element.ValueKind)
