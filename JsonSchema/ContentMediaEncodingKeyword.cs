@@ -4,7 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
-	[SchemaKeyword(Name)] [SchemaDraft(Draft.Draft7)]
+	/// <summary>
+	/// Handles `contentMediaEncoding`.
+	/// </summary>
+	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Content201909Id)]
 	[JsonConverter(typeof(ContentMediaEncodingKeywordJsonConverter))]
@@ -12,13 +16,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "contentMediaEncoding";
 
+		/// <summary>
+		/// The encoding value.
+		/// </summary>
 		public string Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ContentMediaEncodingKeyword"/>.
+		/// </summary>
+		/// <param name="value">The encoding value.</param>
 		public ContentMediaEncodingKeyword(string value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.SetAnnotation(Name, Value);
@@ -26,7 +41,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ContentMediaEncodingKeywordJsonConverter : JsonConverter<ContentMediaEncodingKeyword>
+	internal class ContentMediaEncodingKeywordJsonConverter : JsonConverter<ContentMediaEncodingKeyword>
 	{
 		public override ContentMediaEncodingKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

@@ -6,6 +6,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `contains`.
+	/// </summary>
 	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -17,13 +20,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "contains";
 
+		/// <summary>
+		/// The schema to match.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="ContainsKeyword"/>.
+		/// </summary>
+		/// <param name="value">The schema to match.</param>
 		public ContainsKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
@@ -54,18 +68,18 @@ namespace Json.Schema
 				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}
 	}
 
-	public class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
+	internal class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
 	{
 		public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

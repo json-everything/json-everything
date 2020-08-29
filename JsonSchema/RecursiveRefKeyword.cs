@@ -5,6 +5,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `$recursiveRef`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Core201909Id)]
@@ -13,13 +16,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "$recursiveRef";
 
+		/// <summary>
+		/// The URI reference.
+		/// </summary>
 		public Uri Reference { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="RecursiveRefKeyword"/>.
+		/// </summary>
+		/// <param name="value"></param>
 		public RecursiveRefKeyword(Uri value)
 		{
 			Reference = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var parts = Reference.OriginalString.Split(new []{'#'}, StringSplitOptions.None);
@@ -94,7 +108,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
+	internal class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
 	{
 		public override RecursiveRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

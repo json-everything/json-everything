@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Json.Pointer
 {
-	public class JsonPointerJsonConverter : JsonConverter<JsonPointer>
+	internal class JsonPointerJsonConverter : JsonConverter<JsonPointer>
 	{
 		public override JsonPointer Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

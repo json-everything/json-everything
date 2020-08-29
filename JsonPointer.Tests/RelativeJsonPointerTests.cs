@@ -43,7 +43,9 @@ namespace JsonPointer.Tests
 			var pointer = RelativeJsonPointer.Parse(pointerString);
 			using var expected = JsonDocument.Parse(expectedString);
  
+#pragma warning disable 618
 			var actual = pointer.Evaluate(startElement);
+#pragma warning restore 618
 
 			Assert.True(actual.IsEquivalentTo(expected.RootElement));
 		}

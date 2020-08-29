@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `type`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -16,13 +19,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "type";
 
+		/// <summary>
+		/// The expected type.
+		/// </summary>
 		public SchemaValueType Type { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="TypeKeyword"/>.
+		/// </summary>
+		/// <param name="type">The expected type.</param>
 		public TypeKeyword(SchemaValueType type)
 		{
 			Type = type;
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="TypeKeyword"/>.
+		/// </summary>
+		/// <param name="types">The expected types.</param>
 		public TypeKeyword(params SchemaValueType[] types)
 		{
 			// TODO: protect input
@@ -30,6 +44,10 @@ namespace Json.Schema
 			Type = types.Aggregate((x, y) => x | y);
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="TypeKeyword"/>.
+		/// </summary>
+		/// <param name="types">The expected types.</param>
 		public TypeKeyword(IEnumerable<SchemaValueType> types)
 		{
 			// TODO: protect input
@@ -37,6 +55,10 @@ namespace Json.Schema
 			Type = types.Aggregate((x, y) => x | y);
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			switch (context.LocalInstance.ValueKind)
@@ -78,7 +100,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
+	internal class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	{
 		public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

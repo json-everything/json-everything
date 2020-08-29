@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `properties`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
@@ -19,6 +22,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "properties";
 
+		/// <summary>
+		/// The property schemas.
+		/// </summary>
 		public IReadOnlyDictionary<string, JsonSchema> Properties { get; }
 
 		static PropertiesKeyword()
@@ -26,11 +32,19 @@ namespace Json.Schema
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="PropertiesKeyword"/>.
+		/// </summary>
+		/// <param name="values">The property schemas.</param>
 		public PropertiesKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
 			Properties = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -84,12 +98,12 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, allProperties);
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return Properties.TryGetValue(value, out var schema) ? schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			foreach (var schema in Properties.Values)
 			{
@@ -98,7 +112,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>
+	internal class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>
 	{
 		public override PropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

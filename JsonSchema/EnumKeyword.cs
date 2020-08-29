@@ -7,6 +7,9 @@ using Json.More;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `enum`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -17,18 +20,33 @@ namespace Json.Schema
 	{
 		internal const string Name = "enum";
 
+		/// <summary>
+		/// The collection of enum values (they don't need to be strings).
+		/// </summary>
 		public IReadOnlyList<JsonElement> Values { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="EnumKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of enum values.</param>
 		public EnumKeyword(params JsonElement[] values)
 		{
 			Values = values.Select(e => e.Clone()).ToList();
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="EnumKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of enum values.</param>
 		public EnumKeyword(IEnumerable<JsonElement> values)
 		{
 			Values = values.Select(e => e.Clone()).ToList();
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.IsValid = Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance);
@@ -37,7 +55,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
+	internal class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 	{
 		public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

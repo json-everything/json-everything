@@ -5,6 +5,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `$ref`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "$ref";
 
+		/// <summary>
+		/// The URI reference.
+		/// </summary>
 		public Uri Reference { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="RefKeyword"/>.
+		/// </summary>
+		/// <param name="value">The URI reference.</param>
 		public RefKeyword(Uri value)
 		{
 			Reference = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var parts = Reference.OriginalString.Split(new []{'#'}, StringSplitOptions.None);
@@ -96,7 +110,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RefKeywordJsonConverter : JsonConverter<RefKeyword>
+	internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	{
 		public override RefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

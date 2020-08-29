@@ -8,8 +8,14 @@ namespace Json.Schema
 {
 	public static partial class MetaSchemas
 	{
+		/// <summary>
+		/// The Draft 6 Core meta-schema ID.
+		/// </summary>
 		public static readonly Uri Draft6Id = new Uri("http://json-schema.org/draft-06/schema#");
 
+		/// <summary>
+		/// The Draft 6 Core meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Draft6 = new JsonSchemaBuilder()
 			.Schema(Draft6Id)
 			.Id(Draft6Id)

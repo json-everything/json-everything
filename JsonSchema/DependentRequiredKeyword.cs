@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `dependentRequired`.
+	/// </summary>
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -15,18 +18,28 @@ namespace Json.Schema
 	{
 		internal const string Name = "dependentRequired";
 
+		/// <summary>
+		/// The collection of "required"-type dependencies.
+		/// </summary>
 		public IReadOnlyDictionary<string, IReadOnlyList<string>> Requirements { get; }
 
 		static DependentRequiredKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
-
+		/// <summary>
+		/// Creates a new <see cref="DependentRequiredKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of "required"-type dependencies.</param>
 		public DependentRequiredKeyword(IReadOnlyDictionary<string, IReadOnlyList<string>> values)
 		{
 			Requirements = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -76,7 +89,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>
+	internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>
 	{
 		public override DependentRequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

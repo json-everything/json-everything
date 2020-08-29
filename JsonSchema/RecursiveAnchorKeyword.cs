@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `$recursiveAnchor`.
+	/// </summary>
 	[SchemaPriority(long.MinValue + 3)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -13,35 +16,32 @@ namespace Json.Schema
 	{
 		internal const string Name = "$recursiveAnchor";
 
-		public bool Value { get; }
-
-		public RecursiveAnchorKeyword(bool value)
-		{
-			Value = value;
-		}
-
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.CurrentAnchor ??= context.LocalSchema;
-			context.SetAnnotation(Name, Value);
+			context.SetAnnotation(Name, true);
 			context.IsValid = true;
 		}
 	}
 
-	public class RecursiveAnchorKeywordJsonConverter : JsonConverter<RecursiveAnchorKeyword>
+	internal class RecursiveAnchorKeywordJsonConverter : JsonConverter<RecursiveAnchorKeyword>
 	{
 		public override RecursiveAnchorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.True || reader.TokenType != JsonTokenType.False)
-				throw new JsonException("Expected boolean");
+			if (reader.TokenType != JsonTokenType.True)
+				throw new JsonException("Expected true");
 
-			var str = reader.GetBoolean();
+			reader.GetBoolean();
 
-			return new RecursiveAnchorKeyword(str);
+			return new RecursiveAnchorKeyword();
 		}
 		public override void Write(Utf8JsonWriter writer, RecursiveAnchorKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteBoolean(RecursiveAnchorKeyword.Name, value.Value);
+			writer.WriteBoolean(RecursiveAnchorKeyword.Name, true);
 		}
 	}
 }

@@ -3,11 +3,31 @@ using Cysharp.Text;
 
 namespace Json.Pointer
 {
+	/// <summary>
+	/// Represents a single segment of a JSON Pointer.
+	/// </summary>
 	public struct PointerSegment : IEquatable<PointerSegment>
 	{
+		/// <summary>
+		/// Gets the source string.
+		/// </summary>
 		public string Source { get; private set; }
+		/// <summary>
+		/// Gets the segment value.
+		/// </summary>
+		/// <remarks>
+		/// This may differ from <see cref="Source"/> in that the segment may be URL-encoded.  This contains the decoded value.
+		/// </remarks>
 		public string Value { get; private set; }
 
+		/// <summary>
+		/// Parses a JSON Pointer segment from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
+		/// <returns>A JSON Pointer segment.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+		/// <exception cref="PointerParseException"><paramref name="source"/> contains an invalid escape sequence or an invalid URI-encoded sequence or ends with `~`.</exception>
 		public static PointerSegment Parse(string source, bool uriFormatted)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
@@ -19,6 +39,13 @@ namespace Json.Pointer
 				};
 		}
 
+		/// <summary>
+		/// Parses a JSON Pointer segment from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
+		/// <param name="segment">The resulting segments.</param>
+		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
 		public static bool TryParse(string source, bool uriFormatted, out PointerSegment segment)
 		{
 			if (source == null)
@@ -43,6 +70,12 @@ namespace Json.Pointer
 			return true;
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="PointerSegment"/>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="uriFormatted">Whether the segment should be URL-encoded.</param>
+		/// <returns></returns>
 		public static PointerSegment Create(string value, bool uriFormatted = false)
 		{
 			if (value == null) throw new ArgumentNullException(nameof(value));
@@ -141,26 +174,46 @@ namespace Json.Pointer
 			return builder.ToString();
 		}
 
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 		public bool Equals(PointerSegment other)
 		{
 			return string.Equals(Value, other.Value, StringComparison.InvariantCulture);
 		}
 
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare with the current instance.</param>
+		/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
 		public override bool Equals(object obj)
 		{
 			return obj is PointerSegment other && Equals(other);
 		}
 
+		/// <summary>Returns the hash code for this instance.</summary>
+		/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
 		public override int GetHashCode()
 		{
 			return (Value != null ? StringComparer.InvariantCulture.GetHashCode(Value) : 0);
 		}
 
+		/// <summary>
+		/// Evaluates equality via <see cref="Equals(PointerSegment)"/>.
+		/// </summary>
+		/// <param name="left">A JSON Pointer.</param>
+		/// <param name="right">A JSON Pointer.</param>
+		/// <returns><code>true</code> if the pointers are equal; <code>false</code> otherwise.</returns>
 		public static bool operator ==(PointerSegment left, PointerSegment right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		/// Evaluates inequality via <see cref="Equals(PointerSegment)"/>.
+		/// </summary>
+		/// <param name="left">A JSON Pointer.</param>
+		/// <param name="right">A JSON Pointer.</param>
+		/// <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
 		public static bool operator !=(PointerSegment left, PointerSegment right)
 		{
 			return !left.Equals(right);

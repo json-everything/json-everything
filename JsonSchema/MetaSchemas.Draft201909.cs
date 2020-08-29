@@ -7,15 +7,39 @@ namespace Json.Schema
 {
 	public static partial class MetaSchemas
 	{
+		/// <summary>
+		/// The Draft 2019-09 meta-schema ID.
+		/// </summary>
 		public static readonly Uri Draft201909Id = new Uri("https://json-schema.org/draft/2019-09/schema");
 		
+		/// <summary>
+		/// The Draft 2019-09 Core meta-schema ID.
+		/// </summary>
 		public static readonly Uri Core201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/core");
+		/// <summary>
+		/// The Draft 2019-09 Applicator meta-schema ID.
+		/// </summary>
 		public static readonly Uri Applicator201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/applicator");
+		/// <summary>
+		/// The Draft 2019-09 Validation meta-schema ID.
+		/// </summary>
 		public static readonly Uri Validation201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/validation");
+		/// <summary>
+		/// The Draft 2019-09 Metadata meta-schema ID.
+		/// </summary>
 		public static readonly Uri Metadata201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/meta-data");
+		/// <summary>
+		/// The Draft 2019-09 Format meta-schema ID.
+		/// </summary>
 		public static readonly Uri Format201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/format");
+		/// <summary>
+		/// The Draft 2019-09 Content meta-schema ID.
+		/// </summary>
 		public static readonly Uri Content201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/content");
 
+		/// <summary>
+		/// The Draft 2019-09 meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Draft201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
@@ -28,7 +52,7 @@ namespace Json.Schema
 					(Vocabularies.Format201909Id, false),
 					(Vocabularies.Content201909Id, true)
 				)
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Core and Validation specifications meta-schema")
 				.AllOf(
 					new JsonSchemaBuilder().Ref("meta/core"),
@@ -58,12 +82,15 @@ namespace Json.Schema
 					)
 				);
 
+		/// <summary>
+		/// The Draft 2019-09 Core meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Core201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Core201909Id)
 				.Vocabulary((Vocabularies.Core201909Id, true))
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Core vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
@@ -113,12 +140,15 @@ namespace Json.Schema
 					)
 				);
 
+		/// <summary>
+		/// The Draft 2019-09 Applicator meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Applicator201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Applicator201909Id)
 				.Vocabulary((Vocabularies.Applicator201909Id, true))
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Applicator vocabulary meta-schema")
 				.Properties(
 					(AdditionalItemsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
@@ -172,12 +202,15 @@ namespace Json.Schema
 					)
 				);
 
+		/// <summary>
+		/// The Draft 2019-09 Validation meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Validation201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Validation201909Id)
 				.Vocabulary((Vocabularies.Validation201909Id, true))
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Validation vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
@@ -283,12 +316,15 @@ namespace Json.Schema
 					)
 				);
 
+		/// <summary>
+		/// The Draft 2019-09 Metadata meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Metadata201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Metadata201909Id)
 				.Vocabulary((Vocabularies.Metadata201909Id, true))
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Meta-data vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
@@ -316,12 +352,15 @@ namespace Json.Schema
 					)
 				);
 
+		/// <summary>
+		/// The Draft 2019-09 Format meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Format201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Format201909Id)
 				.Vocabulary((Vocabularies.Format201909Id, true))
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Format vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
@@ -330,12 +369,15 @@ namespace Json.Schema
 					)
 				);
 
+		/// <summary>
+		/// The Draft 2019-09 Content meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Content201909 =
 			new JsonSchemaBuilder()
 				.Schema(Draft201909Id)
 				.Id(Content201909Id)
 				.Vocabulary((Vocabularies.Content201909Id, true))
-				.RecursiveAnchor(true)
+				.RecursiveAnchor()
 				.Title("Content vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(

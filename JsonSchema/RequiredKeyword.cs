@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `requires`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -16,18 +19,33 @@ namespace Json.Schema
 	{
 		internal const string Name = "required";
 
+		/// <summary>
+		/// The required properties.
+		/// </summary>
 		public IReadOnlyList<string> Properties { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="RequiredKeyword"/>.
+		/// </summary>
+		/// <param name="values">The required properties.</param>
 		public RequiredKeyword(params string[] values)
 		{
 			Properties = values.ToList();
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="RequiredKeyword"/>.
+		/// </summary>
+		/// <param name="values">The required properties.</param>
 		public RequiredKeyword(IEnumerable<string> values)
 		{
 			Properties = values as List<string> ?? values.ToList();
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -39,10 +57,10 @@ namespace Json.Schema
 			var notFound = new List<string>();
 			for (int i = 0; i < Properties.Count; i++)
 			{
-				// TODO: add shortcutting
 				var property = Properties[i];
 				if (!context.LocalInstance.TryGetProperty(property, out _))
 					notFound.Add(property);
+				if (notFound.Count != 0 && context.ApplyOptimizations) break;
 			}
 
 			context.IsValid = notFound.Count == 0;
@@ -51,7 +69,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
+	internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 	{
 		public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

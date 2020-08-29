@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `multipleOf`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -14,13 +17,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "multipleOf";
 
+		/// <summary>
+		/// The expected divisor of a value.
+		/// </summary>
 		public decimal Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MultipleOfKeyword"/>.
+		/// </summary>
+		/// <param name="value">The expected divisor of a value.</param>
 		public MultipleOfKeyword(decimal value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Number)
@@ -36,7 +50,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
+	internal class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
 	{
 		public override MultipleOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

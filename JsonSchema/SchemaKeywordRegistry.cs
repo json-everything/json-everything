@@ -6,6 +6,14 @@ using System.Text.Json;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Manages which keywords are known by the system.
+	/// </summary>
+	/// <remarks>
+	/// Because the deserialization process relies on keywords being registered,
+	/// this class cannot be an instance class like the other registries in this
+	/// library.  Therefore keywords are registered for all schemas.
+	/// </remarks>
 	public static class SchemaKeywordRegistry
 	{
 		private static readonly ConcurrentDictionary<string, Type> _keywords;
@@ -30,6 +38,10 @@ namespace Json.Schema
 			};
 		}
 
+		/// <summary>
+		/// Registers a new keyword type.
+		/// </summary>
+		/// <typeparam name="T">The keyword type.</typeparam>
 		public static void Register<T>()
 			where T : IJsonSchemaKeyword
 		{
@@ -40,6 +52,10 @@ namespace Json.Schema
 			_keywords[keyword.Name] = typeof(T);
 		}
 
+		/// <summary>
+		/// Unregisters a keyword type.
+		/// </summary>
+		/// <typeparam name="T">The keyword type.</typeparam>
 		public static void Unregister<T>()
 			where T : IJsonSchemaKeyword
 		{
@@ -50,6 +66,11 @@ namespace Json.Schema
 			_keywords.TryRemove(keyword.Name, out _);
 		}
 
+		/// <summary>
+		/// Gets the implementation for a given keyword name.
+		/// </summary>
+		/// <param name="keyword">The keyword name.</param>
+		/// <returns>The keyword type, if registered; otherwise null.</returns>
 		public static Type GetImplementationType(string keyword)
 		{
 			return _keywords.TryGetValue(keyword, out var implementationType)
@@ -57,6 +78,15 @@ namespace Json.Schema
 				: null;
 		}
 
+		/// <summary>
+		/// Registers a null-value for a keyword.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="nullKeyword"></param>
+		/// <remarks>
+		/// This is important for keywords that accept null, like `default` and `const`.  Without
+		/// this step, the serializer will skip keywords that have nulls.
+		/// </remarks>
 		public static void RegisterNullValue<T>(T nullKeyword)
 			where T : IJsonSchemaKeyword
 		{

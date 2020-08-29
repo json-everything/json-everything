@@ -2,14 +2,38 @@
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Represents an ISO 8601 ABNF duration value.
+	/// </summary>
 	public readonly struct Duration
 	{
+		/// <summary>
+		/// The number of years.
+		/// </summary>
 		public uint Years { get; }
+		/// <summary>
+		/// The number of months.
+		/// </summary>
 		public uint Months { get; }
+		/// <summary>
+		/// The number of weeks.  Incompatible with <see cref="Years"/>, <see cref="Months"/>, and <see cref="Days"/>.
+		/// </summary>
 		public uint Weeks { get; }
+		/// <summary>
+		/// The number of days.
+		/// </summary>
 		public uint Days { get; }
+		/// <summary>
+		/// The number of hours.
+		/// </summary>
 		public uint Hours { get; }
+		/// <summary>
+		/// The number of minutes.
+		/// </summary>
 		public uint Minutes { get; }
+		/// <summary>
+		/// The number of seconds.
+		/// </summary>
 		public uint Seconds { get; }
 
 		private Duration(uint years, uint months, uint weeks, uint days, uint hours, uint minutes, uint seconds)
@@ -23,6 +47,12 @@ namespace Json.Schema
 			Seconds = seconds;
 		}
 
+		/// <summary>
+		/// Parses a <see cref="Duration"/> from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <returns>A duration.</returns>
+		/// <exception cref="ArgumentException"><paramref name="source"/> does not contains a valid duration string.</exception>
 		public static Duration Parse(string source)
 		{
 			if (TryParse(source, out var duration)) return duration;
@@ -30,6 +60,12 @@ namespace Json.Schema
 			throw new ArgumentException("Source string does not contain a valid duration", nameof(source));
 		}
 
+		/// <summary>
+		/// Parses a <see cref="Duration"/> from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <param name="duration">The resulting duration.</param>
+		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
 		public static bool TryParse(string source, out Duration duration)
 		{
 			duration = default;

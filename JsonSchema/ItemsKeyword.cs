@@ -7,6 +7,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `items`.
+	/// </summary>
 	[Applicator]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -18,28 +21,54 @@ namespace Json.Schema
 	{
 		internal const string Name = "items";
 
+		/// <summary>
+		/// The schema for the "single schema" form.
+		/// </summary>
 		public JsonSchema SingleSchema { get; }
+		/// <summary>
+		/// The collection of schemas for the "schema array" form.
+		/// </summary>
 		public IReadOnlyList<JsonSchema> ArraySchemas { get; }
 
 		static ItemsKeyword()
 		{
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
+		/// <summary>
+		/// Creates a new <see cref="ItemsKeyword"/>.
+		/// </summary>
+		/// <param name="value">The schema for the "single schema" form.</param>
 		public ItemsKeyword(JsonSchema value)
 		{
 			SingleSchema = value;
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="ItemsKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of schemas for the "schema array" form.</param>
+		/// <remarks>
+		/// Using the `params` constructor to build an array-form `items` keyword with a single schema
+		/// will confuse the compiler.  To achieve this, you'll need to explicitly specify the array.
+		/// </remarks>
 		public ItemsKeyword(params JsonSchema[] values)
 		{
 			ArraySchemas = values.ToList();
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="ItemsKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of schemas for the "schema array" form.</param>
 		public ItemsKeyword(IEnumerable<JsonSchema> values)
 		{
 			ArraySchemas = values.ToList();
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
@@ -118,7 +147,7 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, value);
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			if (value == null) return SingleSchema;
 
@@ -128,7 +157,7 @@ namespace Json.Schema
 			return ArraySchemas[index];
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			if (SingleSchema != null)
 				SingleSchema.RegisterSubschemas(registry, currentUri);
@@ -142,7 +171,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
+	internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	{
 		public override ItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `maxLength`.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "maxLength";
 
+		/// <summary>
+		/// The maximum expected string length.
+		/// </summary>
 		public uint Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="MaxLengthKeyword"/>.
+		/// </summary>
+		/// <param name="value">The maximum expected string length.</param>
 		public MaxLengthKeyword(uint value)
 		{
 			Value = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)
@@ -37,7 +51,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
+	internal class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
 	{
 		public override MaxLengthKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

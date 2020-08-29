@@ -2,34 +2,24 @@
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Indicates the keyword as it appears in a schema.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	public class SchemaKeywordAttribute : Attribute
 	{
+		/// <summary>
+		/// The keyword name.
+		/// </summary>
 		public string Name { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="SchemaKeywordAttribute"/>.
+		/// </summary>
+		/// <param name="name"></param>
 		public SchemaKeywordAttribute(string name)
 		{
 			Name = name;
-		}
-	}
-
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-	public class SchemaPriorityAttribute : Attribute
-	{
-		private readonly long? _actualPriority;
-
-		public int Priority { get; }
-
-		internal long ActualPriority => _actualPriority ?? Priority;
-
-		public SchemaPriorityAttribute(int priority)
-		{
-			Priority = priority;
-		}
-
-		internal SchemaPriorityAttribute(long actualPriority)
-		{
-			_actualPriority = actualPriority;
 		}
 	}
 }

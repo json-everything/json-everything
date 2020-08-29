@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// A registry for schemas.
+	/// </summary>
 	public class SchemaRegistry
 	{
 		private class Registration
@@ -17,6 +20,9 @@ namespace Json.Schema
 
 		private Dictionary<Uri, Registration> _registered;
 
+		/// <summary>
+		/// The global registry.
+		/// </summary>
 		public static SchemaRegistry Global { get; }
 
 		static SchemaRegistry()
@@ -34,6 +40,16 @@ namespace Json.Schema
 			Global.Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
 		}
 
+		internal SchemaRegistry()
+		{
+
+		}
+
+		/// <summary>
+		/// Registers a schema by URI.
+		/// </summary>
+		/// <param name="uri">The URI ID of the schema..</param>
+		/// <param name="schema">The schema.</param>
 		public void Register(Uri uri, JsonSchema schema)
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
@@ -44,6 +60,12 @@ namespace Json.Schema
 			registry.Root = schema;
 		}
 
+		/// <summary>
+		/// Registers a schema by a named anchor.
+		/// </summary>
+		/// <param name="uri">The URI ID of the schema.</param>
+		/// <param name="anchor">The anchor name.</param>
+		/// <param name="schema">The schema.</param>
 		public void RegisterAnchor(Uri uri, string anchor, JsonSchema schema)
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
@@ -54,6 +76,15 @@ namespace Json.Schema
 			registry.Anchors[anchor] = schema;
 		}
 
+		/// <summary>
+		/// Gets a schema by URI ID and/or anchor.
+		/// </summary>
+		/// <param name="uri">The URI ID.</param>
+		/// <param name="anchor">(optional) The anchor name.</param>
+		/// <returns>
+		/// The schema, if registered in either this or the global registry;4
+		/// otherwise null.
+		/// </returns>
 		// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 		// tl;dr - URI equality doesn't consider fragments
 		public JsonSchema Get(Uri uri, string anchor = null)

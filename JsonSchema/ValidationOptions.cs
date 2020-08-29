@@ -4,20 +4,48 @@ using System.Linq;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Allows configuration of the validation process.
+	/// </summary>
 	public class ValidationOptions
 	{
+		/// <summary>
+		/// The default settings.
+		/// </summary>
 		public static ValidationOptions Default { get; } = new ValidationOptions();
 
+		/// <summary>
+		/// Indicates which schema draft to process as.  This will filter the keywords
+		/// of a schema based on their support.
+		/// </summary>
 		public Draft ValidateAs { get; set; }
+		/// <summary>
+		/// Indicates whether the schema should be validated against its `$schema` value.
+		/// this is not typically necessary.
+		/// </summary>
 		public bool ValidateMetaSchema { get; set; }
+		/// <summary>
+		/// Specifies the output format.
+		/// </summary>
 		public OutputFormat OutputFormat { get; set; }
-
+		/// <summary>
+		/// The local schema registry.  If a schema is not found here, it will
+		/// automatically check the global registry as well.
+		/// </summary>
 		public SchemaRegistry SchemaRegistry { get; } = new SchemaRegistry();
+		/// <summary>
+		/// The local vocabulary registry.  If a schema is not found here, it will
+		/// automatically check the global registry as well.
+		/// </summary>
 		public VocabularyRegistry VocabularyRegistry { get; } = new VocabularyRegistry();
 
-		public static ValidationOptions From(ValidationOptions other)
+		internal static ValidationOptions From(ValidationOptions other)
 		{
-			var options = new ValidationOptions {ValidateAs = other.ValidateAs};
+			var options = new ValidationOptions
+			{
+				ValidateAs = other.ValidateAs,
+				OutputFormat = other.OutputFormat
+			};
 			options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 			options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
 			return options;

@@ -5,25 +5,44 @@ using System.Reflection;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// A fluent-style builder for <see cref="JsonSchema"/>.
+	/// </summary>
 	public class JsonSchemaBuilder
 	{
 		private readonly Dictionary<string, IJsonSchemaKeyword> _keywords = new Dictionary<string, IJsonSchemaKeyword>();
 
+		/// <summary>
+		/// Adds a new keyword.
+		/// </summary>
+		/// <param name="keyword">The keyword to add.</param>
 		public void Add(IJsonSchemaKeyword keyword)
 		{
 			_keywords[keyword.Keyword()] = keyword;
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="JsonSchema"/>.
+		/// </summary>
+		/// <returns>A JSON Schema that simply refers back to the root schema.</returns>
 		public static JsonSchema RefRoot()
 		{
 			return new JsonSchemaBuilder().Ref(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="JsonSchema"/>.
+		/// </summary>
+		/// <returns>A JSON Schema that simply refers back to the recursive root schema.</returns>
 		public static JsonSchema RecursiveRefRoot()
 		{
 			return new JsonSchemaBuilder().RecursiveRef(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
 		}
 
+		/// <summary>
+		/// Builds the schema.
+		/// </summary>
+		/// <returns>A <see cref="JsonSchema"/>.</returns>
 		public JsonSchema Build()
 		{
 			var duplicates = _keywords.GroupBy(k => k.Value.GetType())
@@ -36,6 +55,10 @@ namespace Json.Schema
 			return new JsonSchema(_keywords.Values, null);
 		}
 
+		/// <summary>
+		/// For convenience, implicitly calls <see cref="Build()"/>.
+		/// </summary>
+		/// <returns>A <see cref="JsonSchema"/>.</returns>
 		public static implicit operator JsonSchema(JsonSchemaBuilder builder)
 		{
 			return builder.Build();

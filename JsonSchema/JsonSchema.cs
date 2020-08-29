@@ -8,14 +8,32 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Represents a JSON Schema.
+	/// </summary>
 	[JsonConverter(typeof(SchemaJsonConverter))]
 	public class JsonSchema : IRefResolvable
 	{
+		/// <summary>
+		/// The empty schema <code>{}</code>.  Functionally equivalent to <see cref="True"/>.
+		/// </summary>
 		public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>(), null);
+		/// <summary>
+		/// The <code>true</code> schema.  Passes all instances.
+		/// </summary>
 		public static readonly JsonSchema True = new JsonSchema(true);
+		/// <summary>
+		/// The <code>false</code> schema.  Fails all instances.
+		/// </summary>
 		public static readonly JsonSchema False = new JsonSchema(false);
 
+		/// <summary>
+		/// Gets the keywords contained in the schema.
+		/// </summary>
 		public IReadOnlyCollection<IJsonSchemaKeyword> Keywords { get; }
+		/// <summary>
+		/// Gets other non-keyword (or unknown keyword) properties in the schema.
+		/// </summary>
 		public IReadOnlyDictionary<string, JsonElement> OtherData { get; }
 
 		internal bool? BoolValue { get; }
@@ -30,23 +48,47 @@ namespace Json.Schema
 			OtherData = otherData;
 		}
 
+		/// <summary>
+		/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
+		/// </summary>
+		/// <param name="fileName">The filename to load.</param>
+		/// <returns>A new <see cref="JsonSchema"/>.</returns>
+		/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 		public static JsonSchema FromFile(string fileName)
 		{
 			var text = File.ReadAllText(fileName);
 			return FromText(text);
 		}
 
+		/// <summary>
+		/// Deserializes a <see cref="JsonSchema"/> from text.
+		/// </summary>
+		/// <param name="jsonText">The text to parse.</param>
+		/// <returns>A new <see cref="JsonSchema"/>.</returns>
+		/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 		public static JsonSchema FromText(string jsonText)
 		{
 			return JsonSerializer.Deserialize<JsonSchema>(jsonText);
 		}
 
+		/// <summary>
+		/// Deserializes a <see cref="JsonSchema"/> from a stream.
+		/// </summary>
+		/// <param name="reader">A stream reader.</param>
+		/// <returns>A new <see cref="JsonSchema"/>.</returns>
+		[Obsolete("This method is not yet implemented.")]
 		public static JsonSchema FromStream(StreamReader reader)
 		{
 			throw new NotImplementedException();
 			//return JsonSerializer.Deserialize<JsonSchema>()
 		}
 
+		/// <summary>
+		/// Validates an instance against this schema.
+		/// </summary>
+		/// <param name="root">The root instance.</param>
+		/// <param name="options">The options to use for this validation.</param>
+		/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
 		public ValidationResults Validate(JsonElement root, ValidationOptions options = null)
 		{
 			options ??= ValidationOptions.Default;
@@ -85,6 +127,11 @@ namespace Json.Schema
 			return results;
 		}
 
+		/// <summary>
+		/// Registers a subschema.  To be called from <see cref="IRefResolvable"/> keywords.
+		/// </summary>
+		/// <param name="registry">The registry into which the subschema should be registered.</param>
+		/// <param name="currentUri">The current URI.</param>
 		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			if (Keywords == null) return; // boolean cases
@@ -112,6 +159,10 @@ namespace Json.Schema
 			}
 		}
 
+		/// <summary>
+		/// Validates as a subschema.  To be called from within keywords.
+		/// </summary>
+		/// <param name="context">The validation context for this validation pass.</param>
 		public void ValidateSubschema(ValidationContext context)
 		{
 			if (BoolValue.HasValue)
@@ -191,17 +242,21 @@ namespace Json.Schema
 
 		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
-			var keyword = Keywords.FirstOrDefault(k => k.Name() == value);
+			var keyword = Keywords.FirstOrDefault(k => k.Keyword() == value);
 			return keyword as IRefResolvable;
 		}
 
+		/// <summary>
+		/// Implicitly converts a boolean value into one of the boolean schemas.
+		/// </summary>
+		/// <param name="value">The boolean value.</param>
 		public static implicit operator JsonSchema(bool value)
 		{
 			return value ? True : False;
 		}
 	}
 
-	public class SchemaJsonConverter : JsonConverter<JsonSchema>
+	internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 	{
 		public override JsonSchema Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

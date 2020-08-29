@@ -8,6 +8,9 @@ using Json.Pointer;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `propertyNames`.
+	/// </summary>
 	[Applicator]
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
@@ -20,6 +23,9 @@ namespace Json.Schema
 	{
 		internal const string Name = "propertyNames";
 
+		/// <summary>
+		/// The schema to match.
+		/// </summary>
 		public JsonSchema Schema { get; }
 
 		static PropertyNamesKeyword()
@@ -27,11 +33,19 @@ namespace Json.Schema
 			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="PropertyNamesKeyword"/>.
+		/// </summary>
+		/// <param name="value">The schema to match.</param>
 		public PropertyNamesKeyword(JsonSchema value)
 		{
 			Schema = value;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
@@ -71,18 +85,18 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, allPropertyNames);
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return value == null ? Schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			Schema.RegisterSubschemas(registry, currentUri);
 		}
 	}
 
-	public class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>
+	internal class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>
 	{
 		public override PropertyNamesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

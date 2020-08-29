@@ -1,14 +1,31 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Json.Pointer
 {
+	/// <summary>
+	/// Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02
+	/// </summary>
+	[JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
 	public readonly struct RelativeJsonPointer
 	{
+		/// <summary>
+		/// The null pointer.  Indicates no navigation should occur.
+		/// </summary>
 		public static readonly RelativeJsonPointer Null = new RelativeJsonPointer(0, JsonPointer.Empty);
 
+		/// <summary>
+		/// Gets whether the pointer is an index query, which returns the index within the parent rather than the value.
+		/// </summary>
 		public bool IsIndexQuery { get; }
+		/// <summary>
+		/// Gets the number of parent (root) steps to take.
+		/// </summary>
 		public uint ParentSteps { get; }
+		/// <summary>
+		/// Gets the pointer to follow after taking <see cref="ParentSteps"/> steps upward.
+		/// </summary>
 		public JsonPointer Pointer { get; }
 
 		private RelativeJsonPointer(uint parentSteps)
@@ -24,12 +41,30 @@ namespace Json.Pointer
 			Pointer = pointer;
 		}
 
+		/// <summary>
+		/// Creates an index query pointer.
+		/// </summary>
+		/// <param name="parentSteps"></param>
+		/// <returns>A Relative JSON Pointer.</returns>
 		public static RelativeJsonPointer IndexQuery(uint parentSteps) => 
 			new RelativeJsonPointer(parentSteps);
-		
+
+		/// <summary>
+		/// Creates a Relative JSON Pointer from a JSON Pointer and a number of parent steps.
+		/// </summary>
+		/// <param name="parentSteps">The number of parent steps.</param>
+		/// <param name="pointer">The JSON Pointer.</param>
+		/// <returns>A Relative JSON Pointer.</returns>
 		public static RelativeJsonPointer FromPointer(uint parentSteps, JsonPointer pointer) =>
 			new RelativeJsonPointer(parentSteps, pointer);
 
+		/// <summary>
+		/// Parses a JSON Pointer segment from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <returns>A Relative JSON Pointer.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+		/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid relative pointer.</exception>
 		public static RelativeJsonPointer Parse(string source)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
@@ -56,6 +91,13 @@ namespace Json.Pointer
 			return new RelativeJsonPointer(number, pointer);
 		}
 
+		/// <summary>
+		/// Parses a JSON Pointer from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <param name="relativePointer">The resulting relative pointer.</param>
+		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 		public static bool TryParse(string source, out RelativeJsonPointer relativePointer)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
@@ -108,9 +150,23 @@ namespace Json.Pointer
 			return true;
 		}
 
+		/// <summary>
+		/// Evaluates the relative pointer over a <see cref="JsonElement"/>.
+		/// </summary>
+		/// <param name="element">The <see cref="JsonElement"/>.</param>
+		/// <returns>The sub-element at the relative pointer's location, or null if the path does not exist.</returns>
+		/// <exception cref="NotSupportedException">This method is not yet supported.  Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452</exception>
+		[Obsolete("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452")]
 		public JsonElement Evaluate(JsonElement element)
 		{
-			throw new NotImplementedException("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452");
+			throw new NotSupportedException("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452");
+		}
+
+		/// <summary>Returns the fully qualified type name of this instance.</summary>
+		/// <returns>The fully qualified type name.</returns>
+		public override string ToString()
+		{
+			return $"{ParentSteps}{Pointer}";
 		}
 	}
 }

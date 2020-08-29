@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
+	/// <summary>
+	/// Handles `definitions`.
+	/// </summary>
 	[SchemaPriority(long.MinValue + 1)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
@@ -14,24 +17,35 @@ namespace Json.Schema
 	{
 		internal const string Name = "definitions";
 
+		/// <summary>
+		/// The collection of schema definitions.
+		/// </summary>
 		public IReadOnlyDictionary<string, JsonSchema> Definitions { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="DefinitionsKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of schema definitions.</param>
 		public DefinitionsKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
 			Definitions = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			context.IsValid = true;
 		}
 
-		public IRefResolvable ResolvePointerSegment(string value)
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
 		{
 			return Definitions.TryGetValue(value, out var schema) ? schema : null;
 		}
 
-		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
 			foreach (var schema in Definitions.Values)
 			{
@@ -40,7 +54,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
+	internal class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
 	{
 		public override DefinitionsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

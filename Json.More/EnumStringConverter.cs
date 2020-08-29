@@ -9,6 +9,27 @@ using System.Text.Json.Serialization;
 
 namespace Json.More
 {
+	/// <summary>
+	/// Enum to string converter.
+	/// </summary>
+	/// <typeparam name="T">The supported enum.</typeparam>
+	/// <remarks>
+	///	This serializer supports the <see cref="DescriptionAttribute"/> to indicate custom value naming.
+	///
+	/// The <see cref="FlagsAttribute"/> is supported via serializing to an array of base values.  Inclusion
+	/// of composite values is not supported.
+	/// </remarks>
+	/// <example>
+	/// public class MyClass {
+	///	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
+	///	    public MyEnum Value { get; set; }
+	/// }
+	/// 
+	/// public enum MyEnum {
+	///     Foo,
+	///     Bar
+	/// }
+	/// </example>
 	public class EnumStringConverter<T> : JsonConverter<T>
 		where T : Enum
 	{
@@ -18,6 +39,12 @@ namespace Json.More
 		// ReSharper disable once StaticMemberInGenericType
 		private static readonly object _lock = new object();
 
+		/// <summary>Reads and converts the JSON to type <typeparamref name="T" />.</summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="typeToConvert">The type to convert.</param>
+		/// <param name="options">An object that specifies serialization options to use.</param>
+		/// <returns>The converted value.</returns>
+		/// <exception cref="JsonException">Element was not a string or could not identify the JSON value as a known enum value.</exception>
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			EnsureMap();
@@ -53,6 +80,10 @@ namespace Json.More
 				: throw new JsonException($"Could not find appropriate value for {str} in type {typeToConvert.Name}");
 		}
 
+		/// <summary>Writes a specified value as JSON.</summary>
+		/// <param name="writer">The writer to write to.</param>
+		/// <param name="value">The value to convert to JSON.</param>
+		/// <param name="options">An object that specifies serialization options to use.</param>
 		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
 		{
 			EnsureMap();
@@ -72,7 +103,7 @@ namespace Json.More
 			writer.WriteStringValue(_writeValues[value]);
 		}
 
-		public static T ToCombined(IEnumerable<T> list)
+		private static T ToCombined(IEnumerable<T> list)
 		{
 			if (_aggregator == null)
 			{

@@ -6,8 +6,11 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema
 {
-	[SchemaPriority(long.MinValue)]
+	/// <summary>
+	/// Handles `$vocabulary`.
+	/// </summary>
 	[SchemaKeyword(Name)]
+	[SchemaPriority(long.MinValue)]
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(VocabularyKeywordJsonConverter))]
@@ -15,13 +18,24 @@ namespace Json.Schema
 	{
 		internal const string Name = "$vocabulary";
 
+		/// <summary>
+		/// The collection of vocabulary requirements.
+		/// </summary>
 		public IReadOnlyDictionary<Uri, bool> Vocabulary { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="VocabularyKeyword"/>.
+		/// </summary>
+		/// <param name="values">The collection of vocabulary requirements.</param>
 		public VocabularyKeyword(IReadOnlyDictionary<Uri, bool> values)
 		{
 			Vocabulary = values;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var overallResult = true;
@@ -49,7 +63,7 @@ namespace Json.Schema
 		}
 	}
 
-	public class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
+	internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 	{
 		public override VocabularyKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
