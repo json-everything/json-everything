@@ -1,4 +1,4 @@
-# JSON Schema Overview
+# JsonSchema<nsp>.Net Overview
 
 The occasion may arise when you wish to validate that a JSON object is in the correct form (has the appropriate keys and the right types of values).  Enter JSON Schema.  Much like XML Schema with XML, JSON Schema defines a pattern for JSON data.  A JSON Schema validator can verify that a given JSON object meets the requirements as defined by the JSON Schema.  This validation can come in handy as a precursor step before deserializing.
 
@@ -10,13 +10,13 @@ To support JSON Schema, Manatee.Json exposes the `JsonSchema` type.  This type i
 
 There are currently five active drafts of the JSON Schema specification:
 
-- Draft 03
-- Draft 04
-- Draft 06
-- Draft 07
+- Draft 3
+- Draft 4
+- Draft 6
+- Draft 7
 - Draft 2019-09
 
-Manatee.Json supports draft 04 and later.
+JsonSchema<nsp>.Net supports draft 6 and later.
 
 ### Meta-schemas
 

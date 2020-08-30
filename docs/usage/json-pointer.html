@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Json.More.Net </title>
+    <title>JsonPointer.Net </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Json.More.Net ">
+    <meta name="title" content="JsonPointer.Net ">
     <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -67,63 +67,53 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="jsonmorenet">Json.More<nsp>.Net</nsp></h1>
+<h1 id="jsonpointernet">JsonPointer<nsp>.Net</nsp></h1>
 
-<p>Json.More<nsp>.Net aims to fill gaps left by <code>System.Text.Json</code>.  To this end, it supplies four additional functions.<p>
-<h2 id="equality-comparison">Equality comparison</h2>
-<p>Sadly, it seems equality was considered unnecessary.  To remedy that, the <code>.IsEquivalentTo()</code> extension method is supplied for <code>JsonDocument</code> and <code>JsonElement</code>.</p>
-<p>This extension method calculates the JSON-equality of the nodes.  This means that objects are key-matched (unordered) and arrays are sequence-matched (ordered).</p>
-<p>From json.org:</p>
-<blockquote>
-<p>An <em>object</em> is an unordered set of name/value pairs.</p>
-</blockquote>
-<p>and</p>
-<blockquote>
-<p>An <em>array</em> is an ordered collection of values.</p>
-</blockquote>
-<p>Additionally, an <code>IEqualityComparer&lt;JsonElement&gt;</code> is supplied (<code>JsonElementEqualityComparer</code>) which has a convenient static <code>Instance</code> property.</p>
-<h2 id="enum-serialization">Enum serialization</h2>
-<p>The <code>EnumStringConverter&lt;T&gt;</code> class enables string encoding of enum values.  <code>T</code> is the enum.</p>
-<p>The default behavior is to simply encode the C# enum value name.  This can be overridden with the <code>System.ComponentModel.DescripitionAttribute</code>.</p>
-<pre><code class="lang-c#">public enum MyEnum
+<p>[JSON Pointer] is a mechanism that allows you to isolate a single element within a JSON document by navigating down a series of object properties and array indices.</p>
+<h2 id="the-syntax">The syntax</h2>
+<p>The syntax is really simple:</p>
+<pre><code>/objects/and/3/arrays
+</code></pre>
+<p>This pointer has four segments.  Each segment specifies either an object property or, if the segment is a number, an array index.  Interestingly, the <code>3</code> above could be either an object property <em>or</em> an array index.  There's nothing about the pointer that specifies a distinction.  It will resolve for both of these documents:</p>
+<pre><code class="lang-json">{
+  &quot;objects&quot;: {
+    &quot;and&quot;: [
+      &quot;item zero&quot;,
+      null,
+      2,
+      {
+        &quot;arrays&quot;: &quot;found me&quot;
+      }
+    ]
+  }
+}
+
 {
-    Foo,                    // serializes as &quot;Foo&quot;
-    [Description(&quot;bar&quot;)]
-    Bar                     // serializes as &quot;bar&quot;
+  &quot;objects&quot;: {
+    &quot;and&quot;: {
+      &quot;3&quot;: {
+        &quot;arrays&quot;: &quot;found me&quot;
+      }
+    }
+  }
 }
 </code></pre>
-<p>It also supports <code>[Flags]</code> enums by encoding the base values into an array.  It does not support composite values.</p>
-<pre><code class="lang-c#">[Flags]
-public enum MyFlagsEnum
-{
-    Foo = 1,
-    Bar = 2,
-    Composite = 3           // serializes as [&quot;Foo&quot;, &quot;Bar&quot;]
-}
+<p>If a property contains a <code>/</code>, it must be escaped by replacing it with <code>~1</code>.  Additionally, the escape character <code>~</code> must be escaped by replacing it with <code>~0</code>.</p>
+<p>It also supports a URL format, which is essentially the same thing, except that it starts with a <code>#</code>, then followed by the standard pointer.  This format also will <code>%</code>-encode any URL-reserved characters, like <code>=</code> and <code>?</code>.</p>
+<h2 id="in-code">In code</h2>
+<p>The <code>JsonPointer</code> struct is the model for JSON Pointer.</p>
+<p>The easiest way to create one is to parse it with either <code>Parse()</code> or <code>TryParse()</code>.  This will give you an instance of the model that can be used to evaluate instances.</p>
+<p>Evaluating the above example might look something like this:</p>
+<pre><code class="lang-c#">var element = JsonDocument.Parse(&quot;{\&quot;objects\&quot;:{\&quot;and\&quot;:[\&quot;item zero\&quot;,null,2,{\&quot;arrays\&quot;:\&quot;found me\&quot;}]}}&quot;);
+var pointer = JsonPointer.Parse(&quot;/objects/and/3/arrays&quot;);
+
+var result = pointer.Evaluate(element); // contains a JsonElement with a &quot;found me&quot; value.
 </code></pre>
-<p>To use this converter, apply the <code>[JsonConverter(typeof(EnumStringConverter&lt;T&gt;))]</code> to either the enum or an enum-valued property.</p>
-<h2 id="data-conversions">Data conversions</h2>
-<p>Sometimes you just want a <code>JsonElement</code> that represents a simple value, like a string, boolean, or number.  This library exposes several overloads of the <code>.AsJsonElement()</code> extension that can do this for you.</p>
-<p>Supported types are:</p>
-<ul>
-<li><code>bool</code></li>
-<li>Numeric types (e.g. <code>double</code>, <code>decimal</code>, <code>int</code>, etc.)</li>
-<li><code>string</code></li>
-<li><code>IEnumerable&lt;JsonElement&gt;</code> (for arrays)</li>
-<li><code>IDicationary&lt;string, JsonElement&gt;</code> (for objects)</li>
-</ul>
-<p>For example, to create an empty array, you can use</p>
-<pre><code class="lang-c#">var emptyArray = new JsonElement[0].AsJsonElement();
-</code></pre>
-<p>To create an object with an <code>6</code> in the <code>myInt</code> property:</p>
-<pre><code class="lang-c#">var obj = new Dictionary&lt;string, JsonElement&gt;{
-    [&quot;myInt&quot;] = 6.AsJsonElement()
-}
-</code></pre>
-<h2 id="json-model-serialization">JSON model serialization</h2>
-<p>The .Net team did a great job of supporting fast serialization, but for whatever reason they didn't implement serializing their data model.  The <code>Utf8JsonWriterExtensions</code> class fills that gap.</p>
-<p>This provides an extension method that writes a <code>JsonElement</code> to the stream.</p>
-</nsp></article>
+<h2 id="relative-json-pointers">Relative JSON Pointers</h2>
+<p><a href="https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/">JSON Hyperschema</a> relies on a variation of JSON Pointers that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.</p>
+<p>Relative JSON Pointers are implemented with the <code>RelativeJsonPointer</code> struct.  Interactions with this struct are very similar to <code>JsonPointer</code>.</p>
+<p>Unfortunately, since evaluation of these pointers require parent navigation, a feature which is <a href="https://github.com/dotnet/runtime/issues/40452">currently unsupported by <code>System.Text.Json</code></a>, only the model is functional at this time.</p>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -131,7 +121,7 @@ public enum MyFlagsEnum
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/docs_source/usage/json-more.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/docs_source/usage/json-pointer.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

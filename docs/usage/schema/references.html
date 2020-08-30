@@ -69,19 +69,13 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="managing-references-ref">Managing references (<code>$ref</code>)</h1>
 
-<p>Manatee.Json handles all references as defined in the draft 2019-09 version of the JSON Schema specification.  This is <em>not</em> a change as of v11.0.0;  Manatee.Json has always behaved this way.  The only change for draft 2019-09 schemas in Manatee.Json is that <code>$ref</code> can now exist alongside other keywords; for earlier drafts, keywords as siblings to <code>$ref</code> will be ignored.</p>
+<p>JsonSchema<nsp>.Net handles all references as defined in the draft 2019-09 version of the JSON Schema specification.  This is <em>not</em> a change as of v11.0.0;  JsonSchema<nsp>.Net has always behaved this way.  The only change for draft 2019-09 schemas in JsonSchema<nsp>.Net is that <code>$ref</code> can now exist alongside other keywords; for earlier drafts, keywords as siblings to <code>$ref</code> will be ignored.<p>
 <h2 id="automatic-resolution">Automatic resolution</h2>
-<p>Manatee.Json will automatically attempt to find schemas based on the current document path.  That is, if the <code>$id</code> URI is a local or network location, it will be loaded and registered without any additional work from you.  This is performed via the protocol defined by the <code>$id</code>.  The following are supported:</p>
-<ul>
-<li><code>http</code>/<code>https</code> - Will attempt to download the schema from the specified online location.</li>
-<li><code>file</code> - Will attempt to load the schema from the specified disk location.</li>
-</ul>
-<p>Any other protocols will result in an error.</p>
-<p>This behavior can be overridden, however.  The <code>JsonSchemaOptions.Download</code> static property is a function that takes a string (the <code>$id</code> URI) and returns the serialized JSON Schema content.  This method is used by the <code>JsonSchemaRegistry</code> static class (see <a href="#schema-registration">below</a>) to obtain schema data.  This setting can also be used if the <code>$id</code> URIs are not located at the network address they specify.  See the <a href="https://github.com/gregsdennis/Manatee.Json/blob/master/Manatee.Json.Tests/Schema/TestSuite/JsonSchemaTestSuite.cs#L77-L88">JSON Schema Test Suite runner</a> for an example of where localhost URIs are translated into file paths.</p>
-<p>Another interesting use case for this is is loading schemas from a database, where the data is indexed by the <code>$id</code> URI.</p>
+<p>JsonSchema<nsp>.Net will not automatically download schemas from URIs that look like network locations.  This may be added in future versions as an option, but it is not supported at this time.<p>
 <h2 id="schema-registration">Schema registration</h2>
-<p>In order to prevent having to download schemas over and over, Manatee.Json maintains a registry for all schemas that it has encountered.  The first step in resolving a reference is to determine if it has already resolved it.</p>
-<p>A <code>JsonSchema</code> instance will automatically register itself upon calling <code>Validate()</code>.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it may be necessary to register the schema instances explicitly.</p>
+<p>In order to resolve references more quickly, JsonSchema<nsp>.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.<p>
+<p>A <code>JsonSchema</code> instance will automatically register itself upon calling <code>Validate()</code>.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to validation.</p>
+<p>For example, given these two schemas</p>
 <pre><code class="lang-json">{
   &quot;$id&quot;: &quot;http://localhost/my-schema&quot;,
   &quot;$type&quot;: &quot;object&quot;,
@@ -95,30 +89,12 @@
   &quot;type&quot;: &quot;string&quot;
 }
 </code></pre>
-<p>If these schemas were located at the specified network locations, when <code>my-schema</code> is used to validate, it would</p>
-<ol>
-<li>register itself</li>
-<li>continue validation, hitting the reference to <code>random-string</code></li>
-<li>download <code>random-string</code></li>
-<li>start validation of <code>random-string</code></li>
-<li>register <code>random-string</code></li>
-<li>continue validation</li>
-</ol>
-<p>This works fine because Manatee.Json can resolve <code>random-string</code> on its own.  This would be different if they were defined in code or if they weren't available at the network locations.</p>
-<pre><code class="lang-c#">var mySchema = new JsonSchema()
-    .Id(&quot;http://localhost/my-schema&quot;)
-    .Type(JsonSchemaType.Object)
-    .Property(&quot;refProp&quot;, new JsonSchema().Ref(&quot;http://localhost/random-string&quot;));
-var randomString = new JsonSchema()
-    .Id(&quot;http://localhost/random-string&quot;)
-    .Type(JsonSchemaType.String);
+<p>You must register <code>random-string</code> before you attempt to validate with <code>my-schema</code>.</p>
+<pre><code class="lang-c#">var randomString = JsonSchema.FromFile(&quot;random-string.json&quot;);
+SchemaRegistry.Global.Register(&quot;http://localhost/random-string&quot;, randomString);
 </code></pre>
-<p>In this case, the registry wouldn't know about <code>randomString</code>, so we need to explicitly register it.</p>
-<pre><code class="lang-c#">JsonSchemaRegistry.Register(mySchema);
-JsonSchemaRegistry.Register(randomString);
-</code></pre>
-<p>Now Manatee.Json will be able to resolve the reference.</p>
-</article>
+<p>Now JsonSchema<nsp>.Net will be able to resolve the reference.<p>
+</nsp></nsp></nsp></nsp></nsp></nsp></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
