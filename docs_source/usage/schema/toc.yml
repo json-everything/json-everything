@@ -2,7 +2,9 @@
   href: building.md
 - name: Validation
   href: validation.md
-- name: References
+- name: Managing References
   href: references.md
+- name: Custom Keywords
+  href: keywords.md
 - name: Vocabularies
   href: vocabs.md
