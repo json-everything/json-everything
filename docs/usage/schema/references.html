@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Managing references ($ref) </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Managing references ($ref) ">
+    <meta name="generator" content="docfx 2.52.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="managing-references-ref">Managing references (<code>$ref</code>)</h1>
+
+<p>Manatee.Json handles all references as defined in the draft 2019-09 version of the JSON Schema specification.  This is <em>not</em> a change as of v11.0.0;  Manatee.Json has always behaved this way.  The only change for draft 2019-09 schemas in Manatee.Json is that <code>$ref</code> can now exist alongside other keywords; for earlier drafts, keywords as siblings to <code>$ref</code> will be ignored.</p>
+<h2 id="automatic-resolution">Automatic resolution</h2>
+<p>Manatee.Json will automatically attempt to find schemas based on the current document path.  That is, if the <code>$id</code> URI is a local or network location, it will be loaded and registered without any additional work from you.  This is performed via the protocol defined by the <code>$id</code>.  The following are supported:</p>
+<ul>
+<li><code>http</code>/<code>https</code> - Will attempt to download the schema from the specified online location.</li>
+<li><code>file</code> - Will attempt to load the schema from the specified disk location.</li>
+</ul>
+<p>Any other protocols will result in an error.</p>
+<p>This behavior can be overridden, however.  The <code>JsonSchemaOptions.Download</code> static property is a function that takes a string (the <code>$id</code> URI) and returns the serialized JSON Schema content.  This method is used by the <code>JsonSchemaRegistry</code> static class (see <a href="#schema-registration">below</a>) to obtain schema data.  This setting can also be used if the <code>$id</code> URIs are not located at the network address they specify.  See the <a href="https://github.com/gregsdennis/Manatee.Json/blob/master/Manatee.Json.Tests/Schema/TestSuite/JsonSchemaTestSuite.cs#L77-L88">JSON Schema Test Suite runner</a> for an example of where localhost URIs are translated into file paths.</p>
+<p>Another interesting use case for this is is loading schemas from a database, where the data is indexed by the <code>$id</code> URI.</p>
+<h2 id="schema-registration">Schema registration</h2>
+<p>In order to prevent having to download schemas over and over, Manatee.Json maintains a registry for all schemas that it has encountered.  The first step in resolving a reference is to determine if it has already resolved it.</p>
+<p>A <code>JsonSchema</code> instance will automatically register itself upon calling <code>Validate()</code>.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it may be necessary to register the schema instances explicitly.</p>
+<pre><code class="lang-json">{
+  &quot;$id&quot;: &quot;http://localhost/my-schema&quot;,
+  &quot;$type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;refProp&quot;: { &quot;$ref&quot;: &quot;http://localhost/random-string&quot; }
+  }
+}
+
+{
+  &quot;$id&quot;: &quot;http://localhost/random-string&quot;,
+  &quot;type&quot;: &quot;string&quot;
+}
+</code></pre>
+<p>If these schemas were located at the specified network locations, when <code>my-schema</code> is used to validate, it would</p>
+<ol>
+<li>register itself</li>
+<li>continue validation, hitting the reference to <code>random-string</code></li>
+<li>download <code>random-string</code></li>
+<li>start validation of <code>random-string</code></li>
+<li>register <code>random-string</code></li>
+<li>continue validation</li>
+</ol>
+<p>This works fine because Manatee.Json can resolve <code>random-string</code> on its own.  This would be different if they were defined in code or if they weren't available at the network locations.</p>
+<pre><code class="lang-c#">var mySchema = new JsonSchema()
+    .Id(&quot;http://localhost/my-schema&quot;)
+    .Type(JsonSchemaType.Object)
+    .Property(&quot;refProp&quot;, new JsonSchema().Ref(&quot;http://localhost/random-string&quot;));
+var randomString = new JsonSchema()
+    .Id(&quot;http://localhost/random-string&quot;)
+    .Type(JsonSchemaType.String);
+</code></pre>
+<p>In this case, the registry wouldn't know about <code>randomString</code>, so we need to explicitly register it.</p>
+<pre><code class="lang-c#">JsonSchemaRegistry.Register(mySchema);
+JsonSchemaRegistry.Register(randomString);
+</code></pre>
+<p>Now Manatee.Json will be able to resolve the reference.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/docs_source/usage/schema/references.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Extending schemas </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Extending schemas ">
+    <meta name="generator" content="docfx 2.52.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="extending-schemas">Extending schemas</h1>
+
+<h2 id="vocabularies">Vocabularies</h2>
+<p>JSON Schema draft-08 has introduced the idea of vocabularies to enable some spec support for custom keywords.</p>
+<p>A vocabulary is a collection of keywords.  It will be identified by a URI and should have an associated specification that describes the function of each of the keywords.  There <em>may</em> also be an associated meta-schema.</p>
+<p>Because Manatee.Json supported extending schemas with custom keywords before vocabularies were introduced, creating a vocabulary isn't strictly required.  But if you're using it to consume and validate draft-08 schemas, it is strongly suggested.</p>
+<p>This is best explained with an example.  Suppose we have a meta-schema <strong>M</strong>, a schema <strong>S</strong> that uses <strong>M</strong> as its <code>$schema</code>, and a couple instances <strong>I1</strong> and <strong>I2</strong> to be validated by <strong>S</strong>.</p>
+<pre><code class="lang-json">// meta-schema M
+{
+  &quot;$schema&quot;: &quot;https://myserver.net/meta-schema#&quot;,                           // 1
+  &quot;$id&quot;: &quot;https://myserver.net/meta-schema#&quot;,
+  &quot;$vocabulary&quot;: {
+    &quot;https://json-schema.org/draft/2019-WIP/vocab/core&quot;: true,              // 2
+    &quot;https://json-schema.org/draft/2019-WIP/vocab/applicator&quot;: true,
+    &quot;https://json-schema.org/draft/2019-WIP/vocab/validation&quot;: true,
+    &quot;https://json-schema.org/draft/2019-WIP/vocab/meta-data&quot;: true,
+    &quot;https://json-schema.org/draft/2019-WIP/vocab/format&quot;: true,
+    &quot;https://json-schema.org/draft/2019-WIP/vocab/content&quot;: true,
+    &quot;https://myserver.net/my-vocab&quot;: true
+  },
+  &quot;allOf&quot;: [                                                                // 3
+    { &quot;$ref&quot;: &quot;https://json-schema.org/draft/2019-06/schema#&quot; }
+  ],
+  &quot;properties&quot;: {
+    &quot;minDate&quot;: {                                                            // 4
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;format&quot;: &quot;date&quot;
+    }
+  }
+}
+
+// schema S
+{
+  &quot;$schema&quot;: &quot;https://myserver.net/meta-schema#&quot;,                           // 5
+  &quot;$id&quot;: &quot;https://myserver.net/schema#&quot;,
+  &quot;properties&quot;: {
+    &quot;publishedOnDate&quot;: {
+      &quot;minDate&quot;: &quot;2019-01-01&quot;                                               // 6
+    }
+  }
+}
+
+// instance I1
+{
+  &quot;publishedOnDate&quot;: &quot;2019-06-22&quot;                                           // 7
+}
+// instance I2
+{
+  &quot;publishedOnDate&quot;: &quot;1998-06-22&quot;                                           // 8
+}
+</code></pre>
+<ol>
+<li>We declare a meta-schema.  The meta-schema should validate itself, so we declare <code>$schema</code> to be the same as <code>$id</code>.</li>
+<li>We list the vocabularies that the Manatee.Json should know about in order to process schemas that declare this meta-schema as their <code>$schema</code> (see #5).  This includes all of the vocabularies from draft-08 (because we want all of the draft-08 capabilities) as well as the vocab for this meta-schema.  We'll explain a bit more about this later.</li>
+<li>We also need all of the syntactic validation from draft-08, so we include it in an <code>allOf</code>.</li>
+<li>We define a new keyword, <code>minDate</code>, that takes a date-formatted string value.</li>
+<li>We create a schema that uses our new meta-schema (because we want to use the new keyword).</li>
+<li>We use the new keyword to define a property to be found in the instance.</li>
+<li>The first instance defines a date after the minimum required date.</li>
+<li>The second date defines a date before the minimum required date.</li>
+</ol>
+<p>The kicker here is that we can read &quot;minDate&quot; and know that its value represents the minimum acceptable date... because we're human, and we understand things like that.  However, a validator isn't going to be able to infer that.  It can only validate that a date-formatted string was given for <code>minDate</code> in the schema (<strong>S</strong>).</p>
+<p>That's where the vocabulary comes in.  The vocabulary is a human-readable document that gives <em>semantic</em> meaning to <code>minDate</code>.  It is documentation of business logic that allows a programmer to code an extension that provides additional validation.  For example, this is the documentation for <code>minLength</code> in the Schema Validation specification:</p>
+<blockquote>
+<p><strong>6.3.2. minLength</strong></p>
+<p>The value of this keyword MUST be a non-negative integer.</p>
+<p>A string instance is valid against this keyword if its length is greater than, or equal to, the value of this keyword.</p>
+<p>The length of a string instance is defined as the number of its characters as defined by RFC 8259.</p>
+<p>Omitting this keyword has the same behavior as a value of 0.</p>
+</blockquote>
+<p>It gives meaning to the keyword beyond how the meta-schema describes it: a non-negative integer.</p>
+<p>Any validator can validate that <code>minDate</code> is a date-formatted string, but only a validator that understands <code>https://myserver.net/my-vocab</code> as a vocabulary will understand that <code>minDate</code> should validate that a date in the instance should be later than that in the schema.</p>
+<p>Now, if you look at the <code>$vocabulary</code> entry for <code>https://myserver.net/my-vocab</code>, the vocabulary has its ID as the key with a boolean value.  In this case, that value is <code>true</code>.  That means that if Manatee.Json <em>doesn't</em> know about the vocabulary, it <strong>must</strong> refuse to process any schema that declares <strong>M</strong> as its <code>$schema</code> (as <strong>S</strong> does).  If this value were <code>false</code>, then Manatee.Json would be allowed to continue, which means that only syntactic analysis (i.e. &quot;Is <code>minDate</code> a date-formatted string?&quot;) would be performed.</p>
+<p>So, back to the example, because we declare the vocabulary to be required (by giving it a value of <code>true</code>) <em>and</em> because Manatee.Json knows about it, <strong>I1</strong> is reported as valid and <strong>I2</strong> is not.  If the vocabulary had not been required <em>and</em> Manatee.Json didn't know about the vocabulary, both <strong>I1</strong> and <strong>I2</strong> would be reported as valid because the <code>minDate</code> keyword would not have been enforced.</p>
+<h3 id="registering-a-vocabulary">Registering a vocabulary</h3>
+<p>To tell Manatee.Json about a vocabulary, you just need to create a <code>SchemaVocabulary</code> instance, return it <a href="#Vocabulary">from a new keyword</a>, and register the new keyword using <code>SchemaKeywordCatalog.Add&lt;T&gt;()</code>.  The vocabulary will automatically register.</p>
+<p>The <code>SchemaVocabulary</code> class is quite simple.  It just links the vocabulary URI to the associated meta-schema URI.  These URIs are both required in the constructor.</p>
+<p>If you have multiple keywords defined by the same vocabulary, <em>you need to add them all</em>.  Manatee.Json learns about vocabularies via the keywords that are added.  There is currently no mechanism defined by JSON Schema that makes all of the keywords defined by a vocabulary known to the implementation.  (This is functionality that will likely come in later drafts as a machine-readable vocabulary document.)</p>
+<h2 id="write-a-keyword">Write a keyword</h2>
+<p><code>JsonSchema</code> has been designed to allow you to create your own keywords.  There are several steps that need to be performed to do this.</p>
+<ol>
+<li>Implement <code>IJsonSchemaKeyword</code>.</li>
+<li>Add the keyword implementation to the catalog.</li>
+<li>... um... yeah, I guess that's it.</li>
+</ol>
+<p>This is what you'll need to implement:</p>
+<h3 id="name"><code>Name</code></h3>
+<p>This property returns the keyword's string form (e.g. <code>$id</code> or <code>maximum</code>)</p>
+<h3 id="supportedversions"><code>SupportedVersions</code></h3>
+<p>This property returns the official draft versions that are supported by this keyword.  For example, if you want to support all of the official schema drafts, you can return <code>JsonSchemaVersion.All</code>, but if you only want draft-06 and draft-07 supported, you can return <code>JsonSchemaVersion.Draft06 | JsonSchemaVersion.Draft07</code>.</p>
+<h3 id="validationsequence"><code>ValidationSequence</code></h3>
+<p>This property becomes important when you have several keywords that must be evaluated in a specific order.  A prime example of this are the <code>properties</code>, <code>patternProperties</code>, and <code>additionalProperties</code> (and soon <code>unevaluatedProperties</code> from draft-08).  These keywords must be evaluated in that order.  Generally, if you are creating an independent keyword (as most of them should be), this can simply return 1.</p>
+<h3 id="vocabulary"><code>Vocabulary</code></h3>
+<p>If the keyword is to be supported as part of JSON Schema draft-08, then this should return the <code>SchemaVocabulary</code> object that defines the keyword.  Otherwise it should just return <code>SchemaVocabularies.None</code>.</p>
+<h3 id="registersubschemasuri"><code>RegisterSubschemas(Uri)</code></h3>
+<p>The validation logic is performed iteratively.  This means that it can't  look forward when resolving <code>$ref</code> keywords (e.g. if the <code>definitions</code> keyword appears at the end of the schema).  To account for this, each schema will do an initialization pass when validating for the first time.  This ensures that any subschemas have been registered prior to any attempt at <code>$ref</code> resolution.</p>
+<p>If your keyword does not contain a schema as part of its value, then this method can be a no-op.  Otherwise, simply call <code>JsonSchema</code>'s corresponding <code>RegisterSubschemas(Uri)</code> method and just pass the parameter.  <code>JsonSchema</code> will take care of the rest.</p>
+<h3 id="resolvesubschemajsonpointer-uri"><code>ResolveSubschema(JsonPointer, Uri)</code></h3>
+<p>This method is called during <code>$ref</code> resolution.  If your keyword doesn't contain a schema, just return null.  Otherwise, simply pass the call onto <code>JsonSchema</code>'s corresponding <code>ResolveSubschema(JsonPointer, Uri)</code> method.</p>
+<h3 id="validatejsonschemacontext"><code>Validate(JsonSchemaContext)</code></h3>
+<p>This is the guts of the keyword, where all of the actual validation takes place.</p>
+<h4 id="the-validation-context">The validation context</h4>
+<p>The context fulfills two purposes: provide all of the required validation information to the keyword, and provide all of the location information needed to report any annotations and errors.  Below is a breakdown of all of the properties on the context and their roles in validation.</p>
+<ul>
+<li><code>Local</code> - This property indicates the local schema that is being validated.  It's automatically set by the <code>JsonSchema</code> class, so you don't ever need to set this or modify it.</li>
+<li><code>Root</code> - This is the root schema.  This is set at the beginning of the validation process and should never be updated.</li>
+<li><code>RecursiveAnchor</code> - This defines the schema that is currently pointed to by the <code>$recursiveAnchor</code> and <code>$recursiveRoot</code> keywords.</li>
+<li><code>Instance</code> - This is the instance being validated <em>at the current level</em>.  This may be a nested value inside the original instance.</li>
+<li><code>EvaluatedPropertyNames</code> - This is a list of property names that have been validated by either your keyword or by subschemas.  You will need to add any properties your keyword processes as well as any properties in the contexts you send to subschemas to this list.</li>
+<li><code>LocallyEvaluatedPropertyNames</code> - Similar to <code>EvaluatedPropertyNames</code> except that it only tracks those properties which have been evaluated by keywords at the current tier of the schema.</li>
+<li><code>LastEvaluatedIndex</code> - Indicates the last evaluated index in an array.</li>
+<li><code>LocalTierLastEvaluatedIndex</code> - Indicates the last evaluated index in an array by keywords at the current tier of the schema.</li>
+<li><code>BaseUri</code> - This is the current base URI.  It will change throughout the validation process as subschemas declare <code>$id</code> or <code>id</code> keywords.</li>
+<li><code>InstanceLocation</code> - This is the location of the <code>Instance</code> property within the original instance.</li>
+<li><code>RelativeLocation</code> - This is the location of the current subschema with respect to the root schema.  It will contain <code>$ref</code> segments for any references that have been processed.</li>
+<li><code>BaseRelativeLocation</code> - This is the location of the current subschema relative to the <code>BaseUri</code>.</li>
+<li><code>IsMetaSchemaValidation</code> - Indicates that the current validation pass is a meta-schema validation (validation of a schema by another schema).</li>
+<li><code>Misc</code> - This is just a string-based lookup for any additional data you may need passed between keywords.  The <code>if</code>/<code>then</code>/<code>else</code> keywords do this.</li>
+</ul>
+<p>If your keyword contains a nested schema, it's important that you create a new context based on the properties in the context that was given to your keyword.  Changing the existing context will affect the validation of sibling or cousin keywords.  Some of the context properties will have to be modified based on how your keyword behaves.</p>
+<p>To create a new context, pass your keyword's name and the context you've been given into the <code>SchemaValidationContext(string, SchemaValdiationContext)</code> constructor.  This will create a new context, copying all of the properties while adjusting all of the pointers accordingly.  If there are special cases, the properties are settable so that you can make any changes you need to.</p>
+<p>An example of further modification can be found in the <code>items</code> keyword, which modifies the instance path to which the subschema applies by adding the appropriate item index.</p>
+<h4 id="building-a-result">Building a result</h4>
+<p>The result object is defined by a current proposal for draft-08 which seeks to standardize the output produced by a schema.  Manatee.Json builds the verbose hierarchy format then condenses it according to the <code>JsonSchemaOptions.OutputFormat</code> static property.  The location properties are taken care of simply by passing the context into the constructor.  You'll need to set the validation-oriented ones yourself.</p>
+<ul>
+<li><code>IsValid</code> - This property defaults to <code>true</code>, so you'll need to set it to false when validation fails.</li>
+<li><code>AnnotationValue</code> - If your keyword generates annotations, set this property when the validation passes.</li>
+<li><code>ErrorMessage</code> - This is the error message generated by the schema.  It is intended to have all values inline rather than being a format string.</li>
+<li><code>AdditionalInfo</code> - This is just a <code>JsonObject</code> that you can use to pass any other pertinent information.</li>
+<li><code>NestedResults</code> - If your keyword has one or more subschemas, this property is for the validation results that they produce.</li>
+</ul>
+<h4 id="short-circuiting-the-validation">Short-circuiting the validation</h4>
+<p>For schema keywords that contain subschemas, there are two cases when a validation should be short-circuited: if the output format (specified by <code>JsonSchemaOptions.OutputFormat</code> is <code>Flag</code>) or if the user has configured the keyword or specific location (via the <code>JsonSchemaOptions.IgnoreErrorsForChildren()</code> methods).</p>
+<p>If the output is configured as <code>Flag</code>, then simply check whether the final validation result can be determined (e.g. at the first failing subschema of the <code>allOf</code> keyword).  If it <em>can</em> be determined, you can immediately return the correct result.  (Note also that for this case, nested results don't need to be collected.)</p>
+<p>Otherwise, check if the keyword should collect errors/annotations from subschemas by calling <code>JsonSchemaOptions.ShouldReportChildErrors(IJsonSchema, SchemaValidationContext)</code> and pass your keyword and the context that was passed to it.  If so, then include any nested results.</p>
+<p>In implementing the keywords contained in the library, I generally found that manually looping through the subschemas and tracking the valid state and nested results was facilitated by this pattern, though you may come up with your own.</p>
+<pre><code class="lang-csharp">var valid = true;
+for(var currentSchema in subschemas)
+{
+    var newContext = ...;  // copy the context then modify it for subschemas
+    var localResults = currentSchema.Validate(newContext);
+    valid &amp;= localResults.IsValid;  // if valid initializes as true
+    //valid |= localResults.IsValid;  // if valid initializes as false
+
+    ... // other stuff you may need to do
+
+    if (JsonSchemaOptions.OutputFormat == SchemaValidationOutputFormat.Flag)
+    {
+        if (!valid) break;
+    }
+    else if (reportChildErrors)
+        nestedResults.Add(localResults);
+}
+</code></pre>
+<p>For full examples, you can view the <a href="https://github.com/gregsdennis/Manatee.Json/tree/master/Manatee.Json/Schema/Keywords">keyword source files</a>.</p>
+<h2 id="add-your-keyword-to-the-catalog">Add your keyword to the catalog</h2>
+<p>The <code>SchemaKeywordCatalog</code> static class is the curator of all of the keywords.  It also provides the keyword instances during deserialization.</p>
+<p>To make your keyword available for use, call the <code>Add&lt;T&gt;()</code> method using your keyword type as the type parameter.  The method <em>does</em> contain type constraints that required <code>T</code> to implement <code>IJsonSchemaKeyword</code> and to have a parameterless constructor.</p>
+<p><em><strong>NOTE</strong> All of the built-in keywords also follow this convention, exposing parameterless constructors.  These constructors have been marked with a <code>DeserializationUseOnlyAttribute</code> as a reminder not to use them.</em></p>
+<h2 id="now-make-it-nice-to-use">Now make it nice to use</h2>
+<p>To enable the fluent construction interface for your keyword, simply create an extension method on <code>JsonSchema</code> that adds the keyword and returns the schema.  For example, adding a <code>description</code> keyword is implemented by this method:</p>
+<pre><code class="lang-csharp">public static JsonSchema Description(this JsonSchema schema, string description)
+{
+    schema.Add(new DescriptionKeyword(description));
+    return schema;
+}
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/docs_source/usage/schema/vocabs.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

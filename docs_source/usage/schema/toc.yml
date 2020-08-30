@@ -1,0 +1,8 @@
+- name: Building a Schema
+  href: building.md
+- name: Validation
+  href: validation.md
+- name: References
+  href: references.md
+- name: Vocabularies
+  href: vocabs.md

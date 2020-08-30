@@ -1,0 +1,9 @@
+- name: More JSON
+  href: json-more.md
+  homepage: schema/overview.md
+- name: JSON Pointer
+  href: pointer/toc.yml
+  homepage: pointer/overview.md
+- name: JSON Schema
+  href: schema/toc.yml
+  homepage: schema/overview.md
