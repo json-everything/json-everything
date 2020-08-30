@@ -1,0 +1,573 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class JsonSchemaBuilder
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class JsonSchemaBuilder
+   ">
+    <meta name="generator" content="docfx 2.52.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Json.Schema.JsonSchemaBuilder">
+  
+  
+  <h1 id="Json_Schema_JsonSchemaBuilder" data-uid="Json.Schema.JsonSchemaBuilder" class="text-break">Class JsonSchemaBuilder
+  </h1>
+  <div class="markdown level0 summary"><p>A fluent-style builder for <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">JsonSchemaBuilder</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
+  <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
+  <h5 id="Json_Schema_JsonSchemaBuilder_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class JsonSchemaBuilder</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/add-docs/apiSpec/new?filename=Json_Schema_JsonSchemaBuilder_Add_Json_Schema_IJsonSchemaKeyword_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchemaBuilder.Add(Json.Schema.IJsonSchemaKeyword)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/JsonSchema/JsonSchemaBuilder.cs/#L19">View Source</a>
+  </span>
+  <a id="Json_Schema_JsonSchemaBuilder_Add_" data-uid="Json.Schema.JsonSchemaBuilder.Add*"></a>
+  <h4 id="Json_Schema_JsonSchemaBuilder_Add_Json_Schema_IJsonSchemaKeyword_" data-uid="Json.Schema.JsonSchemaBuilder.Add(Json.Schema.IJsonSchemaKeyword)">Add(IJsonSchemaKeyword)</h4>
+  <div class="markdown level1 summary"><p>Adds a new keyword.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Add(IJsonSchemaKeyword keyword)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></td>
+        <td><span class="parametername">keyword</span></td>
+        <td><p>The keyword to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/add-docs/apiSpec/new?filename=Json_Schema_JsonSchemaBuilder_Build.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchemaBuilder.Build%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/JsonSchema/JsonSchemaBuilder.cs/#L46">View Source</a>
+  </span>
+  <a id="Json_Schema_JsonSchemaBuilder_Build_" data-uid="Json.Schema.JsonSchemaBuilder.Build*"></a>
+  <h4 id="Json_Schema_JsonSchemaBuilder_Build" data-uid="Json.Schema.JsonSchemaBuilder.Build">Build()</h4>
+  <div class="markdown level1 summary"><p>Builds the schema.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonSchema Build()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a></td>
+        <td><p>A <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/add-docs/apiSpec/new?filename=Json_Schema_JsonSchemaBuilder_RecursiveRefRoot.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchemaBuilder.RecursiveRefRoot%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/JsonSchema/JsonSchemaBuilder.cs/#L37">View Source</a>
+  </span>
+  <a id="Json_Schema_JsonSchemaBuilder_RecursiveRefRoot_" data-uid="Json.Schema.JsonSchemaBuilder.RecursiveRefRoot*"></a>
+  <h4 id="Json_Schema_JsonSchemaBuilder_RecursiveRefRoot" data-uid="Json.Schema.JsonSchemaBuilder.RecursiveRefRoot">RecursiveRefRoot()</h4>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JsonSchema RecursiveRefRoot()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a></td>
+        <td><p>A JSON Schema that simply refers back to the recursive root schema.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/add-docs/apiSpec/new?filename=Json_Schema_JsonSchemaBuilder_RefRoot.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchemaBuilder.RefRoot%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/JsonSchema/JsonSchemaBuilder.cs/#L28">View Source</a>
+  </span>
+  <a id="Json_Schema_JsonSchemaBuilder_RefRoot_" data-uid="Json.Schema.JsonSchemaBuilder.RefRoot*"></a>
+  <h4 id="Json_Schema_JsonSchemaBuilder_RefRoot" data-uid="Json.Schema.JsonSchemaBuilder.RefRoot">RefRoot()</h4>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JsonSchema RefRoot()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a></td>
+        <td><p>A JSON Schema that simply refers back to the root schema.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="operators">Operators
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/add-docs/apiSpec/new?filename=Json_Schema_JsonSchemaBuilder_op_Implicit_Json_Schema_JsonSchemaBuilder__Json_Schema_JsonSchema.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchemaBuilder.op_Implicit(Json.Schema.JsonSchemaBuilder)~Json.Schema.JsonSchema%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/JsonSchema/JsonSchemaBuilder.cs/#L62">View Source</a>
+  </span>
+  <a id="Json_Schema_JsonSchemaBuilder_op_Implicit_" data-uid="Json.Schema.JsonSchemaBuilder.op_Implicit*"></a>
+  <h4 id="Json_Schema_JsonSchemaBuilder_op_Implicit_Json_Schema_JsonSchemaBuilder__Json_Schema_JsonSchema" data-uid="Json.Schema.JsonSchemaBuilder.op_Implicit(Json.Schema.JsonSchemaBuilder)~Json.Schema.JsonSchema">Implicit(JsonSchemaBuilder to JsonSchema)</h4>
+  <div class="markdown level1 summary"><p>For convenience, implicitly calls <a class="xref" href="Json.Schema.JsonSchemaBuilder.html#Json_Schema_JsonSchemaBuilder_Build">Build()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator JsonSchema(JsonSchemaBuilder builder)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.JsonSchemaBuilder.html">JsonSchemaBuilder</a></td>
+        <td><span class="parametername">builder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a></td>
+        <td><p>A <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AdditionalItems_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.AdditionalItems(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AdditionalProperties_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.AdditionalProperties(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AllOf_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema___">JsonSchemaBuilderExtensions.AllOf(JsonSchemaBuilder, JsonSchema[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AllOf_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.AllOf(JsonSchemaBuilder, IEnumerable&lt;JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AnyOf_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema___">JsonSchemaBuilderExtensions.AnyOf(JsonSchemaBuilder, JsonSchema[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AnyOf_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.AnyOf(JsonSchemaBuilder, IEnumerable&lt;JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Comment_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Comment(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Const_Json_Schema_JsonSchemaBuilder_System_Text_Json_JsonElement_">JsonSchemaBuilderExtensions.Const(JsonSchemaBuilder, JsonElement)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Contains_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.Contains(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Default_Json_Schema_JsonSchemaBuilder_System_Text_Json_JsonElement_">JsonSchemaBuilderExtensions.Default(JsonSchemaBuilder, JsonElement)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Definitions_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.Definitions(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Definitions_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_Json_Schema_JsonSchema____">JsonSchemaBuilderExtensions.Definitions(JsonSchemaBuilder, (String name, JsonSchema schema)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Defs_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.Defs(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Defs_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_Json_Schema_JsonSchema____">JsonSchemaBuilderExtensions.Defs(JsonSchemaBuilder, (String name, JsonSchema schema)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Dependencies_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_SchemaOrPropertyList__">JsonSchemaBuilderExtensions.Dependencies(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, SchemaOrPropertyList&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Dependencies_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_Json_Schema_SchemaOrPropertyList____">JsonSchemaBuilderExtensions.Dependencies(JsonSchemaBuilder, (String name, SchemaOrPropertyList dep)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DependentRequired_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Collections_Generic_IReadOnlyList_System_String___">JsonSchemaBuilderExtensions.DependentRequired(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, IReadOnlyList&lt;String&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DependentRequired_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_System_Collections_Generic_IEnumerable_System_String_____">JsonSchemaBuilderExtensions.DependentRequired(JsonSchemaBuilder, (String name, IEnumerable&lt;String&gt; properties)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DependentSchemas_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.DependentSchemas(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DependentSchemas_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_Json_Schema_JsonSchema____">JsonSchemaBuilderExtensions.DependentSchemas(JsonSchemaBuilder, (String name, JsonSchema schema)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Deprecated_Json_Schema_JsonSchemaBuilder_System_Boolean_">JsonSchemaBuilderExtensions.Deprecated(JsonSchemaBuilder, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Description_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Description(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Else_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.Else(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Enum_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_System_Text_Json_JsonElement__">JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, IEnumerable&lt;JsonElement&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Enum_Json_Schema_JsonSchemaBuilder_System_Text_Json_JsonElement___">JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, JsonElement[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Examples_Json_Schema_JsonSchemaBuilder_System_Text_Json_JsonElement___">JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, JsonElement[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_ExclusiveMaximum_Json_Schema_JsonSchemaBuilder_System_Decimal_">JsonSchemaBuilderExtensions.ExclusiveMaximum(JsonSchemaBuilder, Decimal)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_ExclusiveMinimum_Json_Schema_JsonSchemaBuilder_System_Decimal_">JsonSchemaBuilderExtensions.ExclusiveMinimum(JsonSchemaBuilder, Decimal)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Format_Json_Schema_JsonSchemaBuilder_Json_Schema_Format_">JsonSchemaBuilderExtensions.Format(JsonSchemaBuilder, Format)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Id_Json_Schema_JsonSchemaBuilder_System_Uri_">JsonSchemaBuilderExtensions.Id(JsonSchemaBuilder, Uri)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Id_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Id(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_If_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.If(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Items_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.Items(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Items_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.Items(JsonSchemaBuilder, IEnumerable&lt;JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MaxContains_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MaxContains(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Maximum_Json_Schema_JsonSchemaBuilder_System_Decimal_">JsonSchemaBuilderExtensions.Maximum(JsonSchemaBuilder, Decimal)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MaxItems_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MaxItems(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MaxLength_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MaxLength(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MaxProperties_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MaxProperties(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MinContains_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MinContains(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Minimum_Json_Schema_JsonSchemaBuilder_System_Decimal_">JsonSchemaBuilderExtensions.Minimum(JsonSchemaBuilder, Decimal)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MinItems_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MinItems(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MinLength_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MinLength(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MinProperties_Json_Schema_JsonSchemaBuilder_System_UInt32_">JsonSchemaBuilderExtensions.MinProperties(JsonSchemaBuilder, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_MultipleOf_Json_Schema_JsonSchemaBuilder_System_Decimal_">JsonSchemaBuilderExtensions.MultipleOf(JsonSchemaBuilder, Decimal)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Not_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.Not(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_OneOf_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema___">JsonSchemaBuilderExtensions.OneOf(JsonSchemaBuilder, JsonSchema[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_OneOf_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.OneOf(JsonSchemaBuilder, IEnumerable&lt;JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Pattern_Json_Schema_JsonSchemaBuilder_System_Text_RegularExpressions_Regex_">JsonSchemaBuilderExtensions.Pattern(JsonSchemaBuilder, Regex)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Pattern_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Pattern(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PatternProperties_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_Text_RegularExpressions_Regex_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.PatternProperties(JsonSchemaBuilder, IReadOnlyDictionary&lt;Regex, JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PatternProperties_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_Text_RegularExpressions_Regex_Json_Schema_JsonSchema____">JsonSchemaBuilderExtensions.PatternProperties(JsonSchemaBuilder, (Regex pattern, JsonSchema schema)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Properties_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_JsonSchema__">JsonSchemaBuilderExtensions.Properties(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, JsonSchema&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Properties_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_Json_Schema_JsonSchema____">JsonSchemaBuilderExtensions.Properties(JsonSchemaBuilder, (String name, JsonSchema schema)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PropertyNames_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.PropertyNames(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_ReadOnly_Json_Schema_JsonSchemaBuilder_System_Boolean_">JsonSchemaBuilderExtensions.ReadOnly(JsonSchemaBuilder, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_RecursiveAnchor_Json_Schema_JsonSchemaBuilder_">JsonSchemaBuilderExtensions.RecursiveAnchor(JsonSchemaBuilder)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_RecursiveRef_Json_Schema_JsonSchemaBuilder_System_Uri_">JsonSchemaBuilderExtensions.RecursiveRef(JsonSchemaBuilder, Uri)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_RecursiveRef_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.RecursiveRef(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Ref_Json_Schema_JsonSchemaBuilder_System_Uri_">JsonSchemaBuilderExtensions.Ref(JsonSchemaBuilder, Uri)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Ref_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Ref(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Required_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_System_String__">JsonSchemaBuilderExtensions.Required(JsonSchemaBuilder, IEnumerable&lt;String&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Required_Json_Schema_JsonSchemaBuilder_System_String___">JsonSchemaBuilderExtensions.Required(JsonSchemaBuilder, String[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Schema_Json_Schema_JsonSchemaBuilder_System_Uri_">JsonSchemaBuilderExtensions.Schema(JsonSchemaBuilder, Uri)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Schema_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Schema(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Then_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.Then(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Title_Json_Schema_JsonSchemaBuilder_System_String_">JsonSchemaBuilderExtensions.Title(JsonSchemaBuilder, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Type_Json_Schema_JsonSchemaBuilder_Json_Schema_SchemaValueType_">JsonSchemaBuilderExtensions.Type(JsonSchemaBuilder, SchemaValueType)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Type_Json_Schema_JsonSchemaBuilder_Json_Schema_SchemaValueType___">JsonSchemaBuilderExtensions.Type(JsonSchemaBuilder, SchemaValueType[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Type_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IEnumerable_Json_Schema_SchemaValueType__">JsonSchemaBuilderExtensions.Type(JsonSchemaBuilder, IEnumerable&lt;SchemaValueType&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_UnevaluatedItems_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.UnevaluatedItems(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_UnevaluatedProperties_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_">JsonSchemaBuilderExtensions.UnevaluatedProperties(JsonSchemaBuilder, JsonSchema)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_UniqueItems_Json_Schema_JsonSchemaBuilder_System_Boolean_">JsonSchemaBuilderExtensions.UniqueItems(JsonSchemaBuilder, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Vocabulary_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_Uri_System_Boolean____">JsonSchemaBuilderExtensions.Vocabulary(JsonSchemaBuilder, (Uri id, Boolean required)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Vocabulary_Json_Schema_JsonSchemaBuilder_System_ValueTuple_System_String_System_Boolean____">JsonSchemaBuilderExtensions.Vocabulary(JsonSchemaBuilder, (String id, Boolean required)[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Vocabulary_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_Uri_System_Boolean__">JsonSchemaBuilderExtensions.Vocabulary(JsonSchemaBuilder, IReadOnlyDictionary&lt;Uri, Boolean&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Vocabulary_Json_Schema_JsonSchemaBuilder_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Boolean__">JsonSchemaBuilderExtensions.Vocabulary(JsonSchemaBuilder, IReadOnlyDictionary&lt;String, Boolean&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_WriteOnly_Json_Schema_JsonSchemaBuilder_System_Boolean_">JsonSchemaBuilderExtensions.WriteOnly(JsonSchemaBuilder, Boolean)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/new/add-docs/apiSpec/new?filename=Json_Schema_JsonSchemaBuilder.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchemaBuilder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/add-docs/JsonSchema/JsonSchemaBuilder.cs/#L11" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

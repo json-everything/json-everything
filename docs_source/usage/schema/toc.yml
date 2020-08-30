@@ -1,0 +1,10 @@
+- name: Building a Schema
+  href: building.md
+- name: Validation
+  href: validation.md
+- name: Managing References
+  href: references.md
+- name: Custom Keywords
+  href: keywords.md
+- name: Vocabularies
+  href: vocabs.md
