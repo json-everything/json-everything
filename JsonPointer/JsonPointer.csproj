@@ -15,6 +15,7 @@
     <PackageTags>json-pointer json pointer</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>JsonPointer.Net</AssemblyName>
+    <PackageIcon>json-logo-256.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -32,6 +33,10 @@
 
   <ItemGroup>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\Resources\json-logo-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

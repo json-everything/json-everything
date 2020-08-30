@@ -1,6 +1,6 @@
-# Json.More.Net
+# Json.More<nsp>.Net
 
-Json.More.Net aims to fill gaps left by `System.Text.Json`.  To this end, it supplies four additional functions.
+Json.More<nsp>.Net aims to fill gaps left by `System.Text.Json`.  To this end, it supplies four additional functions.
 
 ## Equality comparison
 
