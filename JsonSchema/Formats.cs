@@ -78,11 +78,11 @@ namespace Json.Schema
 		/// <summary>
 		/// Defines the `iri` format.
 		/// </summary>
-		public static readonly Format Iri = new PredicateFormat("iri", CheckUriFormatting);
+		public static readonly Format Iri = new PredicateFormat("iri", CheckAbsoluteUri);
 		/// <summary>
 		/// Defines the `iri-reference` format.
 		/// </summary>
-		public static readonly Format IriReference = new PredicateFormat("iri-reference", CheckUriFormatting);
+		public static readonly Format IriReference = new PredicateFormat("iri-reference", CheckUri);
 		/// <summary>
 		/// Defines the `json-pointer` format.
 		/// </summary>
@@ -102,15 +102,19 @@ namespace Json.Schema
 		/// <summary>
 		/// Defines the `uri` format.
 		/// </summary>
-		public static readonly Format Uri = new PredicateFormat("uri", CheckUriFormatting);
+		public static readonly Format Uri = new PredicateFormat("uri", CheckAbsoluteUri);
 		/// <summary>
 		/// Defines the `uri-reference` format.
 		/// </summary>
-		public static readonly Format UriReference = new PredicateFormat("uri-reference", CheckUriFormatting);
+		public static readonly Format UriReference = new PredicateFormat("uri-reference", CheckUri);
 		/// <summary>
 		/// Defines the `uri-template` format.
 		/// </summary>
-		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUriFormatting);
+		/// <remarks>
+		/// This is currently the same check as `uri`.  The infrastructure to check URI templates
+		/// [does not yet exist in .Net Standard/Core](https://github.com/dotnet/runtime/issues/41587).
+		/// </remarks>
+		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUri);
 		/// <summary>
 		/// Defines the `uuid` format.
 		/// </summary>
@@ -153,11 +157,26 @@ namespace Json.Schema
 			_registry[format.Key] = format;
 		}
 
-		private static bool CheckUriFormatting(JsonElement element)
+		private static bool CheckAbsoluteUri(JsonElement element)
+		{
+			if (element.ValueKind != JsonValueKind.String) return false;
+
+			return System.Uri.TryCreate(element.GetString(), UriKind.Absolute, out _);
+		}
+
+		private static bool CheckUri(JsonElement element)
 		{
 			if (element.ValueKind != JsonValueKind.String) return false;
 
 			return System.Uri.TryCreate(element.GetString(), UriKind.RelativeOrAbsolute, out _);
+		}
+
+		private static bool CheckUriTemplate(JsonElement element)
+		{
+			if (element.ValueKind != JsonValueKind.String) return false;
+
+			throw new NotSupportedException("The UriTemplate class has not been ported to .Net Standard/Core yet.");
+			//return System.UriTemplate.Match(element.GetString());
 		}
 
 		private static bool CheckJsonPointer(JsonElement element)
