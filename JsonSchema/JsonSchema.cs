@@ -212,9 +212,11 @@ namespace Json.Schema
 				if (newResolvable == null)
 				{
 					// TODO: document that this process does not consider `$id` in extraneous data
-					if (OtherData != null && OtherData.TryGetValue(segment.Value, out var element))
+					if (resolvable is JsonSchema subSchema &&
+					    subSchema.OtherData != null &&
+					    subSchema.OtherData.TryGetValue(segment.Value, out var element))
 					{
-						var newPointer = JsonPointer.Create(pointer.Segments.Skip(1), true);
+						var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
 						var value = newPointer.Evaluate(element);
 						var asSchema = FromText(value.ToString());
 						return (asSchema, currentUri);
