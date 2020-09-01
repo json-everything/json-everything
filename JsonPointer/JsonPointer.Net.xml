@@ -68,6 +68,11 @@
             Gets whether the pointer is URL-encoded.
             </summary>
         </member>
+        <member name="P:Json.Pointer.JsonPointer.Kind">
+            <summary>
+            Gets the kind of pointer.
+            </summary>
+        </member>
         <member name="M:Json.Pointer.JsonPointer.Parse(System.String,Json.Pointer.JsonPointerKind)">
             <summary>
             Parses a JSON Pointer from a string.
