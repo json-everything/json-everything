@@ -29,7 +29,7 @@ namespace Json.Pointer
 			new JsonPointer
 				{
 					_source = "#",
-					IsUriEncoded = true,
+					Kind = JsonPointerKind.UriEncoded,
 					Segments = new PointerSegment[0]
 				};
 
@@ -46,7 +46,11 @@ namespace Json.Pointer
 		/// <summary>
 		/// Gets whether the pointer is URL-encoded.
 		/// </summary>
-		public bool IsUriEncoded { get; private set; }
+		public bool IsUriEncoded => Kind == JsonPointerKind.UriEncoded;
+		/// <summary>
+		/// Gets the kind of pointer.
+		/// </summary>
+		public JsonPointerKind Kind { get; private set; }
 
 		/// <summary>
 		/// Parses a JSON Pointer from a string.
@@ -98,7 +102,7 @@ namespace Json.Pointer
 				{
 					_source = source,
 					Segments = segments,
-					IsUriEncoded = isUriEncoded
+					Kind = isUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
 
@@ -177,7 +181,7 @@ namespace Json.Pointer
 				{
 					_source = source,
 					Segments = segments,
-					IsUriEncoded = isUriEncoded
+					Kind = isUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 			return true;
 		}
@@ -193,7 +197,7 @@ namespace Json.Pointer
 			return new JsonPointer
 				{
 					Segments = segments.ToArray(),
-					IsUriEncoded = isUriEncoded
+					Kind = isUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
 
@@ -211,7 +215,7 @@ namespace Json.Pointer
 			return new JsonPointer
 				{
 					Segments = segments,
-					IsUriEncoded = IsUriEncoded
+					Kind = IsUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
 
@@ -229,7 +233,7 @@ namespace Json.Pointer
 			return new JsonPointer
 				{
 					Segments = segments,
-					IsUriEncoded = IsUriEncoded
+					Kind = IsUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
 

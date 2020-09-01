@@ -840,6 +840,10 @@
             <summary>
             Defines the `uri-template` format.
             </summary>
+            <remarks>
+            This is currently the same check as `uri`.  The infrastructure to check URI templates
+            [does not yet exist in .Net Standard/Core](https://github.com/dotnet/runtime/issues/41587).
+            </remarks>
         </member>
         <member name="F:Json.Schema.Formats.Uuid">
             <summary>

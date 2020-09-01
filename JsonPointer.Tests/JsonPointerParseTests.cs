@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Json.Pointer;
 using NUnit.Framework;
