@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Json.Pointer;
 using NUnit.Framework;
@@ -95,6 +97,36 @@ namespace JsonPointer.Tests
 		public void TryParseFailure(string pointerString)
 		{
 			Assert.False(Json.Pointer.JsonPointer.TryParse(pointerString, out _));
+		}
+
+		[Test]
+		public void ParseExpectPlainGetUriEncoded()
+		{
+			Assert.Throws<PointerParseException>(() =>
+			{
+				Json.Pointer.JsonPointer.Parse("#/one/2/three", JsonPointerKind.Plain);
+			});
+		}
+
+		[Test]
+		public void ParseExpectUriEncodedGetPlain()
+		{
+			Assert.Throws<PointerParseException>(() =>
+			{
+				Json.Pointer.JsonPointer.Parse("/one/2/three", JsonPointerKind.UriEncoded);
+			});
+		}
+
+		[Test]
+		public void TryParseExpectPlainGetUriEncoded()
+		{
+			Assert.IsFalse(Json.Pointer.JsonPointer.TryParse("#/one/2/three", out _, JsonPointerKind.Plain));
+		}
+
+		[Test]
+		public void TryParseExpectUriEncodedGetPlain()
+		{
+			Assert.IsFalse(Json.Pointer.JsonPointer.TryParse("/one/2/three", out _, JsonPointerKind.UriEncoded));
 		}
 	}
 }

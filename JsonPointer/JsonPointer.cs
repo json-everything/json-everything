@@ -52,10 +52,11 @@ namespace Json.Pointer
 		/// Parses a JSON Pointer from a string.
 		/// </summary>
 		/// <param name="source">The source string.</param>
+		/// <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="JsonPointerKind.Unspecified"/> (default) allows both.</param>
 		/// <returns>A JSON Pointer.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-		/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer.</exception>
-		public static JsonPointer Parse(string source)
+		/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
+		public static JsonPointer Parse(string source, JsonPointerKind pointerKind = JsonPointerKind.Unspecified)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (source == string.Empty) return Empty;
@@ -70,6 +71,22 @@ namespace Json.Pointer
 				i++;
 			}
 			else throw new PointerParseException("Pointer must start with either `#` or `/` or be empty");
+
+			switch (pointerKind)
+			{
+				case JsonPointerKind.Unspecified:
+					break;
+				case JsonPointerKind.Plain:
+					if (isUriEncoded)
+						throw new PointerParseException("Pointer is URI-encoded, but plain was expected.");
+					break;
+				case JsonPointerKind.UriEncoded:
+					if (!isUriEncoded)
+						throw new PointerParseException("Pointer is plain, but URI-encoded was expected.");
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pointerKind), pointerKind, null);
+			}
 
 			var segments = new PointerSegment[parts.Length - i];
 			for (; i < parts.Length; i++)
@@ -90,9 +107,10 @@ namespace Json.Pointer
 		/// </summary>
 		/// <param name="source">The source string.</param>
 		/// <param name="pointer">The resulting pointer.</param>
+		/// <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="JsonPointerKind.Unspecified"/> (default) allows both.</param>
 		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-		public static bool TryParse(string source, out JsonPointer pointer)
+		public static bool TryParse(string source, out JsonPointer pointer, JsonPointerKind pointerKind = JsonPointerKind.Unspecified)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (source == string.Empty)
@@ -118,6 +136,28 @@ namespace Json.Pointer
 			{
 				pointer = default;
 				return false;
+			}
+
+			switch (pointerKind)
+			{
+				case JsonPointerKind.Unspecified:
+					break;
+				case JsonPointerKind.Plain:
+					if (isUriEncoded)
+					{
+						pointer = default;
+						return false;
+					}
+					break;
+				case JsonPointerKind.UriEncoded:
+					if (!isUriEncoded)
+					{
+						pointer = default;
+						return false;
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pointerKind), pointerKind, null);
 			}
 
 			var segments = new PointerSegment[parts.Length - i];
