@@ -1,6 +1,6 @@
 # 1.0.1
 
-Updated validation of formats `hostname`, `iri`, `uri`, and `time`.
+Updated validation of formats `hostname`, `iri`, `uri`, `regex`, and `time`.
 
 Fixed issue resolving references (`$ref` & `$recursiveRef`) to miscellaneous (non-keyword) schema data.
 
