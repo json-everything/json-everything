@@ -28,15 +28,15 @@ namespace Json.Schema
 		};
 		private static readonly string[] _timeFormats =
 		{
-			"'HH':'mm':'ss'.'fffffffK",
-			"'HH':'mm':'ss'.'ffffffK",
-			"'HH':'mm':'ss'.'fffffK",
-			"'HH':'mm':'ss'.'ffffK",
-			"'HH':'mm':'ss'.'fffK",
-			"'HH':'mm':'ss'.'ffK",
-			"'HH':'mm':'ss'.'fK",
-			"'HH':'mm':'ssK",
-			"'HH':'mm':'ss"
+			"HH':'mm':'ss'.'fffffffK",
+			"HH':'mm':'ss'.'ffffffK",
+			"HH':'mm':'ss'.'fffffK",
+			"HH':'mm':'ss'.'ffffK",
+			"HH':'mm':'ss'.'fffK",
+			"HH':'mm':'ss'.'ffK",
+			"HH':'mm':'ss'.'fK",
+			"HH':'mm':'ssK",
+			"HH':'mm':'ss"
 		};
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace Json.Schema
 		/// <summary>
 		/// Defines the `hostname` format.
 		/// </summary>
-		public static readonly Format Hostname = new PredicateFormat("hostname", CheckHostName);
+		public static readonly Format Hostname = new RegexFormat("hostname", "^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$");
 		/// <summary>
 		/// Defines the `idn-email` format.
 		/// </summary>
@@ -78,11 +78,11 @@ namespace Json.Schema
 		/// <summary>
 		/// Defines the `iri` format.
 		/// </summary>
-		public static readonly Format Iri = new PredicateFormat("iri", CheckUriFormatting);
+		public static readonly Format Iri = new PredicateFormat("iri", CheckAbsoluteUri);
 		/// <summary>
 		/// Defines the `iri-reference` format.
 		/// </summary>
-		public static readonly Format IriReference = new PredicateFormat("iri-reference", CheckUriFormatting);
+		public static readonly Format IriReference = new PredicateFormat("iri-reference", CheckUri);
 		/// <summary>
 		/// Defines the `json-pointer` format.
 		/// </summary>
@@ -90,7 +90,7 @@ namespace Json.Schema
 		/// <summary>
 		/// Defines the `regex` format.
 		/// </summary>
-		public static readonly Format Regex = new Format("regex");
+		public static readonly Format Regex = new PredicateFormat("regex", CheckRegex);
 		/// <summary>
 		/// Defines the `relative-json-pointer` format.
 		/// </summary>
@@ -102,15 +102,19 @@ namespace Json.Schema
 		/// <summary>
 		/// Defines the `uri` format.
 		/// </summary>
-		public static readonly Format Uri = new PredicateFormat("uri", CheckUriFormatting);
+		public static readonly Format Uri = new PredicateFormat("uri", CheckAbsoluteUri);
 		/// <summary>
 		/// Defines the `uri-reference` format.
 		/// </summary>
-		public static readonly Format UriReference = new PredicateFormat("uri-reference", CheckUriFormatting);
+		public static readonly Format UriReference = new PredicateFormat("uri-reference", CheckUri);
 		/// <summary>
 		/// Defines the `uri-template` format.
 		/// </summary>
-		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUriFormatting);
+		/// <remarks>
+		/// This is currently the same check as `uri`.  The infrastructure to check URI templates
+		/// [does not yet exist in .Net Standard/Core](https://github.com/dotnet/runtime/issues/41587).
+		/// </remarks>
+		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUri);
 		/// <summary>
 		/// Defines the `uuid` format.
 		/// </summary>
@@ -153,11 +157,26 @@ namespace Json.Schema
 			_registry[format.Key] = format;
 		}
 
-		private static bool CheckUriFormatting(JsonElement element)
+		private static bool CheckAbsoluteUri(JsonElement element)
+		{
+			if (element.ValueKind != JsonValueKind.String) return false;
+
+			return System.Uri.TryCreate(element.GetString(), UriKind.Absolute, out _);
+		}
+
+		private static bool CheckUri(JsonElement element)
 		{
 			if (element.ValueKind != JsonValueKind.String) return false;
 
 			return System.Uri.TryCreate(element.GetString(), UriKind.RelativeOrAbsolute, out _);
+		}
+
+		private static bool CheckUriTemplate(JsonElement element)
+		{
+			if (element.ValueKind != JsonValueKind.String) return false;
+
+			throw new NotSupportedException("The UriTemplate class has not been ported to .Net Standard/Core yet.");
+			//return System.UriTemplate.Match(element.GetString());
 		}
 
 		private static bool CheckJsonPointer(JsonElement element)
@@ -255,7 +274,9 @@ namespace Json.Schema
 		{
 			if (element.ValueKind != JsonValueKind.String) return false;
 
-			return System.Uri.CheckHostName(element.GetString()) != UriHostNameType.Unknown;
+			var type = System.Uri.CheckHostName(element.GetString());
+
+			return type != UriHostNameType.Unknown;
 		}
 
 		private static bool CheckIpv4(JsonElement element)
@@ -272,7 +293,9 @@ namespace Json.Schema
 		{
 			if (element.ValueKind != JsonValueKind.String) return false;
 
-			return System.Uri.CheckHostName(element.GetString()) == type;
+			var actualType = System.Uri.CheckHostName(element.GetString());
+
+			return actualType == type;
 		}
 
 		private static bool CheckDuration(JsonElement element)
@@ -280,6 +303,21 @@ namespace Json.Schema
 			if (element.ValueKind != JsonValueKind.String) return false;
 
 			return Schema.Duration.TryParse(element.GetString(), out _);
+		}
+
+		private static bool CheckRegex(JsonElement element)
+		{
+			if (element.ValueKind != JsonValueKind.String) return false;
+
+			try
+			{
+				var _ = new Regex(element.GetString());
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 	}
 }

@@ -116,7 +116,7 @@ namespace Json.Schema.Tests.Suite
 			result.ToDetailed();
 			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
-			if (collection.IsOptional && result?.IsValid != test.Valid)
+			if (collection.IsOptional && result.IsValid != test.Valid)
 				Assert.Inconclusive("Test optional");
 			Assert.AreEqual(test.Valid, result.IsValid);
 		}
