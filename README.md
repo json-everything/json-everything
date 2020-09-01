@@ -4,26 +4,29 @@
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](http://isitmaintained.com/project/gregsdennis/json-everything "Average time to resolve an issue")
 ![License](https://img.shields.io/github/license/gregsdennis/json-everything)
 
-<table>
-    <tr>
+<table style="width:100%;">
+    <tr style="text-align:center;">
         <td>JsonSchema.Net</td>
         <td>JsonPointer.Net</td>
         <td>Json.More.Net</td>
     </tr>
-    <tr>
+    <tr style="text-align:center;">
         <td>
             <a href="https://www.nuget.org/packages/JsonSchema.Net/">
-                <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img><br>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img>
             </a>
         </td>
         <td>
             <a href="https://www.nuget.org/packages/JsonPointer.Net/">
-                <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPointer.Net.svg?svg=true"></img>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPointer.Net.svg?svg=true"></img><br>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img>
             </a>
         </td>
         <td>
             <a href="https://www.nuget.org/packages/Json.More.Net/">
-                <img alt="NuGet version" src="https://img.shields.io/nuget/v/Json.More.Net.svg?svg=true"></img>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/v/Json.More.Net.svg?svg=true"></img><br>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img>
             </a>
         </td>
     </tr>

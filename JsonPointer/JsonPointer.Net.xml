@@ -68,21 +68,28 @@
             Gets whether the pointer is URL-encoded.
             </summary>
         </member>
-        <member name="M:Json.Pointer.JsonPointer.Parse(System.String)">
+        <member name="P:Json.Pointer.JsonPointer.Kind">
+            <summary>
+            Gets the kind of pointer.
+            </summary>
+        </member>
+        <member name="M:Json.Pointer.JsonPointer.Parse(System.String,Json.Pointer.JsonPointerKind)">
             <summary>
             Parses a JSON Pointer from a string.
             </summary>
             <param name="source">The source string.</param>
+            <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="F:Json.Pointer.JsonPointerKind.Unspecified"/> (default) allows both.</param>
             <returns>A JSON Pointer.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
-            <exception cref="T:Json.Pointer.PointerParseException"><paramref name="source"/> does not contain a valid pointer.</exception>
+            <exception cref="T:Json.Pointer.PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
         </member>
-        <member name="M:Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@)">
+        <member name="M:Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@,Json.Pointer.JsonPointerKind)">
             <summary>
             Parses a JSON Pointer from a string.
             </summary>
             <param name="source">The source string.</param>
             <param name="pointer">The resulting pointer.</param>
+            <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="F:Json.Pointer.JsonPointerKind.Unspecified"/> (default) allows both.</param>
             <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
         </member>
@@ -148,6 +155,26 @@
             <param name="left">A JSON Pointer.</param>
             <param name="right">A JSON Pointer.</param>
             <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
+        </member>
+        <member name="T:Json.Pointer.JsonPointerKind">
+            <summary>
+            Enumerates the different styles of JSON pointers.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.JsonPointerKind.Unspecified">
+            <summary>
+            No format specified.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.JsonPointerKind.Plain">
+            <summary>
+            Indicates only plain JSON pointers.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.JsonPointerKind.UriEncoded">
+            <summary>
+            Indicates only URI-encoded JSON pointers.
+            </summary>
         </member>
         <member name="T:Json.Pointer.PointerParseException">
             <summary>

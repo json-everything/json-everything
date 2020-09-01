@@ -439,6 +439,19 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.JsonPointer.IsUriEncoded
   nameWithType: JsonPointer.IsUriEncoded
+- uid: Json.Pointer.JsonPointer.Kind
+  name: Kind
+  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Kind
+  commentId: P:Json.Pointer.JsonPointer.Kind
+  fullName: Json.Pointer.JsonPointer.Kind
+  nameWithType: JsonPointer.Kind
+- uid: Json.Pointer.JsonPointer.Kind*
+  name: Kind
+  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Kind_
+  commentId: Overload:Json.Pointer.JsonPointer.Kind
+  isSpec: "True"
+  fullName: Json.Pointer.JsonPointer.Kind
+  nameWithType: JsonPointer.Kind
 - uid: Json.Pointer.JsonPointer.op_Equality(Json.Pointer.JsonPointer,Json.Pointer.JsonPointer)
   name: Equality(JsonPointer, JsonPointer)
   href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_op_Equality_Json_Pointer_JsonPointer_Json_Pointer_JsonPointer_
@@ -465,12 +478,12 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.JsonPointer.Inequality
   nameWithType: JsonPointer.Inequality
-- uid: Json.Pointer.JsonPointer.Parse(System.String)
-  name: Parse(String)
-  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Parse_System_String_
-  commentId: M:Json.Pointer.JsonPointer.Parse(System.String)
-  fullName: Json.Pointer.JsonPointer.Parse(System.String)
-  nameWithType: JsonPointer.Parse(String)
+- uid: Json.Pointer.JsonPointer.Parse(System.String,Json.Pointer.JsonPointerKind)
+  name: Parse(String, JsonPointerKind)
+  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Parse_System_String_Json_Pointer_JsonPointerKind_
+  commentId: M:Json.Pointer.JsonPointer.Parse(System.String,Json.Pointer.JsonPointerKind)
+  fullName: Json.Pointer.JsonPointer.Parse(System.String, Json.Pointer.JsonPointerKind)
+  nameWithType: JsonPointer.Parse(String, JsonPointerKind)
 - uid: Json.Pointer.JsonPointer.Parse*
   name: Parse
   href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Parse_
@@ -517,15 +530,15 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.JsonPointer.ToString
   nameWithType: JsonPointer.ToString
-- uid: Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@)
-  name: TryParse(String, out JsonPointer)
-  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_TryParse_System_String_Json_Pointer_JsonPointer__
-  commentId: M:Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@)
-  name.vb: TryParse(String, ByRef JsonPointer)
-  fullName: Json.Pointer.JsonPointer.TryParse(System.String, out Json.Pointer.JsonPointer)
-  fullName.vb: Json.Pointer.JsonPointer.TryParse(System.String, ByRef Json.Pointer.JsonPointer)
-  nameWithType: JsonPointer.TryParse(String, out JsonPointer)
-  nameWithType.vb: JsonPointer.TryParse(String, ByRef JsonPointer)
+- uid: Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@,Json.Pointer.JsonPointerKind)
+  name: TryParse(String, out JsonPointer, JsonPointerKind)
+  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_TryParse_System_String_Json_Pointer_JsonPointer__Json_Pointer_JsonPointerKind_
+  commentId: M:Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@,Json.Pointer.JsonPointerKind)
+  name.vb: TryParse(String, ByRef JsonPointer, JsonPointerKind)
+  fullName: Json.Pointer.JsonPointer.TryParse(System.String, out Json.Pointer.JsonPointer, Json.Pointer.JsonPointerKind)
+  fullName.vb: Json.Pointer.JsonPointer.TryParse(System.String, ByRef Json.Pointer.JsonPointer, Json.Pointer.JsonPointerKind)
+  nameWithType: JsonPointer.TryParse(String, out JsonPointer, JsonPointerKind)
+  nameWithType.vb: JsonPointer.TryParse(String, ByRef JsonPointer, JsonPointerKind)
 - uid: Json.Pointer.JsonPointer.TryParse*
   name: TryParse
   href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_TryParse_
@@ -539,6 +552,30 @@ references:
   commentId: F:Json.Pointer.JsonPointer.UrlEmpty
   fullName: Json.Pointer.JsonPointer.UrlEmpty
   nameWithType: JsonPointer.UrlEmpty
+- uid: Json.Pointer.JsonPointerKind
+  name: JsonPointerKind
+  href: api/Json.Pointer.JsonPointerKind.html
+  commentId: T:Json.Pointer.JsonPointerKind
+  fullName: Json.Pointer.JsonPointerKind
+  nameWithType: JsonPointerKind
+- uid: Json.Pointer.JsonPointerKind.Plain
+  name: Plain
+  href: api/Json.Pointer.JsonPointerKind.html#Json_Pointer_JsonPointerKind_Plain
+  commentId: F:Json.Pointer.JsonPointerKind.Plain
+  fullName: Json.Pointer.JsonPointerKind.Plain
+  nameWithType: JsonPointerKind.Plain
+- uid: Json.Pointer.JsonPointerKind.Unspecified
+  name: Unspecified
+  href: api/Json.Pointer.JsonPointerKind.html#Json_Pointer_JsonPointerKind_Unspecified
+  commentId: F:Json.Pointer.JsonPointerKind.Unspecified
+  fullName: Json.Pointer.JsonPointerKind.Unspecified
+  nameWithType: JsonPointerKind.Unspecified
+- uid: Json.Pointer.JsonPointerKind.UriEncoded
+  name: UriEncoded
+  href: api/Json.Pointer.JsonPointerKind.html#Json_Pointer_JsonPointerKind_UriEncoded
+  commentId: F:Json.Pointer.JsonPointerKind.UriEncoded
+  fullName: Json.Pointer.JsonPointerKind.UriEncoded
+  nameWithType: JsonPointerKind.UriEncoded
 - uid: Json.Pointer.PointerParseException
   name: PointerParseException
   href: api/Json.Pointer.PointerParseException.html
