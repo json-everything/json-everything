@@ -82,6 +82,15 @@
             <param name="b">The second document.</param>
             <returns><code>true</code> if the documents are equivalent; <code>false</code> otherwise.</returns>
         </member>
+        <member name="M:Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Converts an object to a <see cref="T:System.Text.Json.JsonDocument"/>.
+            </summary>
+            <typeparam name="T">The type of the object.</typeparam>
+            <param name="value">The value to convert.</param>
+            <param name="options">(optional) JSON serialization options.</param>
+            <returns>A <see cref="T:System.Text.Json.JsonDocument"/> representing the vale.</returns>
+        </member>
         <member name="T:Json.More.JsonElementEqualityComparer">
              <summary>
              Calculates equality between two <see cref="T:System.Text.Json.JsonElement"/>s.

@@ -30,7 +30,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2019-09", "schema2019
 		Meta-Schemas\2019-09\validation.json = Meta-Schemas\2019-09\validation.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json.More", "Json.More\Json.More.csproj", "{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Json.More", "Json.More\Json.More.csproj", "{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPath", "JsonPath\JsonPath.csproj", "{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPath.Tests", "JsonPath.Tests\JsonPath.Tests.csproj", "{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +66,14 @@ Global
 		{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

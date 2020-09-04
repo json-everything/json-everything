@@ -16,6 +16,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>JsonPointer.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-pointer.html</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
