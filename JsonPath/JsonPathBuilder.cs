@@ -4,14 +4,14 @@ namespace JsonPath
 {
 	public class JsonPathBuilder
 	{
-		private readonly List<PathNode> _nodes = new List<PathNode>();
+		private readonly List<IPathNode> _nodes = new List<IPathNode>();
 
 		public JsonPath Build()
 		{
 			return new JsonPath(_nodes);
 		}
 
-		public void Add(PathNode node)
+		public void Add(IPathNode node)
 		{
 			_nodes.Add(node);
 		}
