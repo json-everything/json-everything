@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -29,6 +30,14 @@ namespace JsonPath
 			if (!match.Value.TryGetProperty(Name, out var prop)) yield break;
 
 			yield return new PathMatch(prop, match.Location.Combine(PointerSegment.Create(Name)));
+		}
+	}
+
+	internal class RootNode : PathNodeBase
+	{
+		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
+		{
+			return new[] {match};
 		}
 	}
 }

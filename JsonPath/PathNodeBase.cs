@@ -4,7 +4,7 @@ namespace JsonPath
 {
 	public abstract class PathNodeBase : IPathNode
 	{
-		public void Evaluate(EvaluationContext context)
+		public virtual void Evaluate(EvaluationContext context)
 		{
 			var toProcess = new List<PathMatch>(context.Current);
 			context.Current.Clear();

@@ -18,7 +18,6 @@ namespace JsonPath
 			switch (match.Value.ValueKind)
 			{
 				case JsonValueKind.Object:
-					Console.WriteLine(match.Location);
 					yield return match;
 					foreach (var prop in match.Value.EnumerateObject())
 					{
@@ -30,7 +29,6 @@ namespace JsonPath
 					}
 					break;
 				case JsonValueKind.Array:
-					Console.WriteLine(match.Location);
 					yield return match;
 					foreach (var (item, index) in match.Value.EnumerateArray().Select((item, i) => (item, i)))
 					{
@@ -46,7 +44,6 @@ namespace JsonPath
 				case JsonValueKind.True:
 				case JsonValueKind.False:
 				case JsonValueKind.Null:
-					Console.WriteLine(match.Location);
 					yield return match;
 					break;
 				case JsonValueKind.Undefined:

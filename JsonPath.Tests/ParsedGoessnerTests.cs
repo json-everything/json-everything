@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace JsonPath.Tests
 {
-	public class InlineGoessnerTests
+	public class ParsedGoessnerTests
 	{
 		//{ "store": {
 		//		"book": [
@@ -42,7 +42,7 @@ namespace JsonPath.Tests
 		//}
 		private readonly JsonElement _instance;
 
-		public InlineGoessnerTests()
+		public ParsedGoessnerTests()
 		{
 			var model = new Repository
 			{
@@ -99,11 +99,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void GrammarExample()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Property("store")
-				.Property("book")
-				.Index((SimpleIndex)0)
-				.Property("title");
+			var path =JsonPath.Parse("$.store.book[0].title");
 
 			var result = path.Evaluate(_instance);
 
@@ -116,11 +112,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example1()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Property("store")
-				.Property("book")
-				.Index((RangeIndex)(..))
-				.Property("author");
+			var path = JsonPath.Parse("$.store.book[*].author");
 
 			var result = path.Evaluate(_instance);
 
@@ -136,9 +128,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example2()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Recursive()
-				.Property("author");
+			var path = JsonPath.Parse("$..author");
 
 			var result = path.Evaluate(_instance);
 
@@ -154,9 +144,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example3()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Property("store")
-				.AllProperties();
+			var path = JsonPath.Parse("$.store.*");
 
 			var result = path.Evaluate(_instance);
 
@@ -170,10 +158,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example4()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Property("store")
-				.Recursive()
-				.Property("price");
+			var path = JsonPath.Parse("$.store..price");
 
 			var result = path.Evaluate(_instance);
 
@@ -190,10 +175,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example5()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Recursive()
-				.Property("book")
-				.Index((SimpleIndex)2);
+			var path = JsonPath.Parse("$..book[2]");
 
 			var result = path.Evaluate(_instance);
 
@@ -206,10 +188,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example6b()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Recursive()
-				.Property("book")
-				.Index((SimpleIndex)(^1));
+			var path = JsonPath.Parse("$..book[-1:]");
 
 			var result = path.Evaluate(_instance);
 
@@ -222,10 +201,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example7a()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Recursive()
-				.Property("book")
-				.Index((SimpleIndex)0, (SimpleIndex)1);
+			var path = JsonPath.Parse("$..book[0,1]");
 
 			var result = path.Evaluate(_instance);
 
@@ -239,10 +215,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example7b()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Recursive()
-				.Property("book")
-				.Index((RangeIndex)(..2));
+			var path = JsonPath.Parse("$..book[:2]");
 
 			var result = path.Evaluate(_instance);
 
@@ -256,9 +229,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example10()
 		{
-			JsonPath path = new JsonPathBuilder()
-				.Recursive()
-				.AllProperties();
+			var path = JsonPath.Parse("$..*");
 
 			var result = path.Evaluate(_instance);
 

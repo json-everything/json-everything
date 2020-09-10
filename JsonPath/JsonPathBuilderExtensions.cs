@@ -14,7 +14,7 @@
 			return builder;
 		}
 
-		public static JsonPathBuilder Index(this JsonPathBuilder builder, params IndexOrRange[] ranges)
+		public static JsonPathBuilder Index(this JsonPathBuilder builder, params IIndexExpression[] ranges)
 		{
 			builder.Add(new IndexNode(ranges));
 			return builder;
