@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Text.Json;
-
-namespace JsonPath
+﻿namespace JsonPath
 {
 	public interface IIndexExpression
 	{
-		IEnumerable<int> GetIndices(JsonElement array);
 	}
 }

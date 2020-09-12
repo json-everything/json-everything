@@ -7,24 +7,56 @@ namespace JsonPath
 {
 	internal class IndexNode : PathNodeBase
 	{
-		public IReadOnlyList<IIndexExpression> Ranges { get; }
+		private readonly List<IIndexExpression> _ranges;
 
 		public IndexNode(IEnumerable<IIndexExpression> ranges)
 		{
-			Ranges = ranges.ToList();
+			_ranges = ranges?.ToList();
+		}
+
+		public IndexNode(IIndexExpression first, IEnumerable<IIndexExpression> additionalRanges)
+		{
+			_ranges = additionalRanges.ToList();
+			_ranges.Insert(0, first);
 		}
 
 		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
 		{
-			if (match.Value.ValueKind != JsonValueKind.Array) yield break;
-
-			var array = match.Value.EnumerateArray().ToArray();
-			var indices = Ranges.SelectMany(r => r.GetIndices(match.Value))
-				.OrderBy(i => i)
-				.Distinct();
-			foreach (var index in indices)
+			switch (match.Value.ValueKind)
 			{
-				yield return new PathMatch(array[index], match.Location.Combine(PointerSegment.Create($"{index}")));
+				case JsonValueKind.Array:
+					var array = match.Value.EnumerateArray().ToArray();
+					IEnumerable<int> indices;
+					indices = _ranges?.OfType<IArrayIndexExpression>()
+						          .SelectMany(r => r.GetIndices(match.Value))
+						          .OrderBy(i => i)
+						          .Where(i => 0 <= i && i < array.Length)
+						          .Distinct() ??
+					          Enumerable.Range(0, array.Length);
+					foreach (var index in indices)
+					{
+						yield return new PathMatch(array[index], match.Location.Combine(PointerSegment.Create(index.ToString())));
+					}
+					break;
+				case JsonValueKind.Object:
+					if (_ranges != null)
+					{
+						var props = _ranges.OfType<IObjectIndexExpression>()
+							.SelectMany(r => r.GetProperties(match.Value))
+							.Distinct();
+						foreach (var prop in props)
+						{
+							yield return new PathMatch(match.Value.GetProperty(prop), match.Location.Combine(PointerSegment.Create(prop)));
+						}
+					}
+					else
+					{
+						foreach (var prop in match.Value.EnumerateObject())
+						{
+							yield return new PathMatch(prop.Value, match.Location.Combine(PointerSegment.Create(prop.Name)));
+						}
+					}
+					break;
 			}
 		}
 	}

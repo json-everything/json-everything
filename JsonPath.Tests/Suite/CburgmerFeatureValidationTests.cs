@@ -106,6 +106,7 @@ namespace JsonPath.Suite
 		}
 
 		[TestCaseSource(nameof(TestCases))]
+		[Timeout(100)]
 		public void Run(CburgmerTestCase testCase)
 		{
 			if (_notSupported.Contains(testCase.PathString))
@@ -116,9 +117,9 @@ namespace JsonPath.Suite
 
 			var actual = Evaluate(testCase.JsonString, testCase.PathString);
 
+			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
 			if (testCase.Consensus == null)
 			{
-				Console.WriteLine($"Actual: {actual}");
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 			}
 			else

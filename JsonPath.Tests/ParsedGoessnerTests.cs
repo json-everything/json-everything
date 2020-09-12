@@ -7,39 +7,6 @@ namespace JsonPath.Tests
 {
 	public class ParsedGoessnerTests
 	{
-		//{ "store": {
-		//		"book": [
-		//		{ "category": "reference",
-		//			"author": "Nigel Rees",
-		//			"title": "Sayings of the Century",
-		//			"price": 8.95
-		//		},
-		//		{ "category": "fiction",
-		//			"author": "Evelyn Waugh",
-		//			"title": "Sword of Honour",
-		//			"price": 12.99
-		//		},
-		//		{
-		//			"category": "fiction",
-		//			"author": "Herman Melville",
-		//			"title": "Moby Dick",
-		//			"isbn": "0-553-21311-3",
-		//			"price": 8.99
-		//		},
-		//		{
-		//			"category": "fiction",
-		//			"author": "J. R. R. Tolkien",
-		//			"title": "The Lord of the Rings",
-		//			"isbn": "0-395-19395-8",
-		//			"price": 22.99
-		//		}
-		//		],
-		//		"bicycle": {
-		//			"color": "red",
-		//			"price": 19.95
-		//		}
-		//	}
-		//}
 		private readonly JsonElement _instance;
 
 		public ParsedGoessnerTests()
@@ -95,7 +62,6 @@ namespace JsonPath.Tests
 			}).RootElement;
 		}
 
-		// $.store.book[0].title
 		[Test]
 		public void GrammarExample()
 		{
@@ -108,7 +74,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetString());
 		}
 
-		// $.store.book[*].author
 		[Test]
 		public void Example1()
 		{
@@ -124,7 +89,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("J. R. R. Tolkien", result.Matches[3].Value.GetString());
 		}
 
-		// $..author
 		[Test]
 		public void Example2()
 		{
@@ -140,7 +104,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("J. R. R. Tolkien", result.Matches[3].Value.GetString());
 		}
 
-		// $.store.*
 		[Test]
 		public void Example3()
 		{
@@ -154,7 +117,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual(2, result.Matches[1].Value.EnumerateObject().Count());
 		}
 
-		// $.store..price
 		[Test]
 		public void Example4()
 		{
@@ -171,7 +133,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual(19.95m, result.Matches[4].Value.GetDecimal());
 		}
 
-		// $..book[2]
 		[Test]
 		public void Example5()
 		{
@@ -184,7 +145,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("Moby Dick", result.Matches[0].Value.GetProperty("title").GetString());
 		}
 
-		// $..book[-1:]
 		[Test]
 		public void Example6b()
 		{
@@ -197,7 +157,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("The Lord of the Rings", result.Matches[0].Value.GetProperty("title").GetString());
 		}
 
-		// $..book[0,1]
 		[Test]
 		public void Example7a()
 		{
@@ -211,7 +170,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("Sword of Honour", result.Matches[1].Value.GetProperty("title").GetString());
 		}
 
-		// $..book[:2]
 		[Test]
 		public void Example7b()
 		{
@@ -225,7 +183,6 @@ namespace JsonPath.Tests
 			Assert.AreEqual("Sword of Honour", result.Matches[1].Value.GetProperty("title").GetString());
 		}
 
-		// $..*
 		[Test]
 		public void Example10()
 		{

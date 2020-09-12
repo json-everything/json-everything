@@ -6,6 +6,16 @@ namespace JsonPath
 {
 	public class JsonPath
 	{
+		private delegate bool TryParseMethod(ReadOnlySpan<char> span, ref int i, out IIndexExpression index);
+
+		private static readonly List<TryParseMethod> _parseMethods =
+			new List<TryParseMethod>
+			{
+				RangeIndex.TryParse,
+				SimpleIndex.TryParse,
+				PropertyNameIndex.TryParse
+			};
+
 		private readonly IEnumerable<IPathNode> _nodes;
 
 		internal JsonPath(IEnumerable<IPathNode> nodes)
@@ -86,38 +96,58 @@ namespace JsonPath
 				return new PropertyNode(null);
 			}
 
+			slice = slice.Slice(1);
 			var propertyNameLength = slice.IndexOfAny('.', '[');
-			if (propertyNameLength == 0)
-				propertyNameLength = slice.Length - 1;
+			if (propertyNameLength == -1)
+				propertyNameLength = slice.Length;
 
-			var propertyName = slice.Slice(1, propertyNameLength);
+			var propertyName = slice.Slice(0, propertyNameLength);
 			i += 1 + propertyNameLength;
 			return new PropertyNode(propertyName.ToString());
 		}
 
 		private static IPathNode AddIndex(ReadOnlySpan<char> span, ref int i)
 		{
-			var openCount = 1;
-			var length = 0;
-			while (openCount != 0 && i + length < span.Length)
+			var slice = span.Slice(i);
+			if (slice.StartsWith("[*]"))
 			{
-				if (span[i + length] == '[') openCount++;
-				if (span[i + length] == ']') openCount--;
-				length++;
+				i += 3;
+				return new IndexNode(null);
 			}
 
-			if (openCount != 0) return null;
+			// consume [
+			i++;
+			var ch = ',';
+			var indices = new List<IIndexExpression>();
+			while (ch == ',')
+			{
+				var index = ParseIndex(span, ref i);
+				if (index == null) return null;
 
-			var newSpan = span.Slice(i, length - 1);
-			var ranges = new List<IIndexExpression>();
-			var index = 0;
-			//while (RangeIndex.TryParse(newSpan, ref index, out var range))
-			//{
-			//	ranges.Add(range);
-			//}
+				indices.Add(index);
 
-			i += length;
-			return new IndexNode(ranges);
+				ch = span[i];
+				i++;
+			}
+
+			if (ch != ']') return null;
+			
+			return new IndexNode(indices);
+		}
+
+		private static IIndexExpression ParseIndex(ReadOnlySpan<char> span, ref int i)
+		{
+			foreach (var tryParse in _parseMethods)
+			{
+				var j = i;
+				if (tryParse(span, ref j, out var index))
+				{
+					i = j;
+					return index;
+				}
+			}
+
+			return null;
 		}
 
 		public PathResult Evaluate(in JsonElement root)

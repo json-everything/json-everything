@@ -1,4 +1,6 @@
-﻿namespace JsonPath
+﻿using System.Linq;
+
+namespace JsonPath
 {
 	public static class JsonPathBuilderExtensions
 	{
@@ -14,9 +16,15 @@
 			return builder;
 		}
 
-		public static JsonPathBuilder Index(this JsonPathBuilder builder, params IIndexExpression[] ranges)
+		public static JsonPathBuilder Index(this JsonPathBuilder builder, IIndexExpression firstRange, params IIndexExpression[] additionalRanges)
 		{
-			builder.Add(new IndexNode(ranges));
+			builder.Add(new IndexNode(firstRange, additionalRanges));
+			return builder;
+		}
+
+		public static JsonPathBuilder AllIndices(this JsonPathBuilder builder)
+		{
+			builder.Add(new IndexNode(null));
 			return builder;
 		}
 
