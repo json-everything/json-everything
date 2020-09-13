@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JsonPath
+namespace Json.Path
 {
 	public class PathParseException : Exception
 	{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace JsonPath
+namespace Json.Path
 {
 	public class JsonPath
 	{
@@ -109,6 +109,7 @@ namespace JsonPath
 		private static IPathNode AddIndex(ReadOnlySpan<char> span, ref int i)
 		{
 			var slice = span.Slice(i);
+			// replace this with an actual index parser that returns null to handle spaces
 			if (slice.StartsWith("[*]"))
 			{
 				i += 3;
@@ -121,11 +122,12 @@ namespace JsonPath
 			var indices = new List<IIndexExpression>();
 			while (ch == ',')
 			{
-				var index = ParseIndex(span, ref i);
-				if (index == null) return null;
+				span.ConsumeWhitespace(ref i);
+				if (!ParseIndex(span, ref i, out var index)) return null;
 
 				indices.Add(index);
 
+				span.ConsumeWhitespace(ref i);
 				ch = span[i];
 				i++;
 			}
@@ -135,19 +137,20 @@ namespace JsonPath
 			return new IndexNode(indices);
 		}
 
-		private static IIndexExpression ParseIndex(ReadOnlySpan<char> span, ref int i)
+		private static bool ParseIndex(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
 		{
 			foreach (var tryParse in _parseMethods)
 			{
 				var j = i;
-				if (tryParse(span, ref j, out var index))
+				if (tryParse(span, ref j, out index))
 				{
 					i = j;
-					return index;
+					return true;
 				}
 			}
 
-			return null;
+			index = null;
+			return false;
 		}
 
 		public PathResult Evaluate(in JsonElement root)

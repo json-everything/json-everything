@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
-namespace JsonPath
+namespace Json.Path
 {
 	public class RangeIndex : IArrayIndexExpression
 	{
@@ -62,8 +62,8 @@ namespace JsonPath
 			i++;
 			if (!span.TryGetInt(ref i, out v))
 			{
-				index = null;
-				return false;
+				index = new RangeIndex(start..end);
+				return true;
 			}
 			index = new RangeIndex(start..end, v);
 			return true;

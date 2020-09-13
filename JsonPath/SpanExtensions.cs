@@ -1,9 +1,17 @@
 ﻿using System;
 
-namespace JsonPath
+namespace Json.Path
 {
 	internal static class SpanExtensions
 	{
+		public static void ConsumeWhitespace(this ReadOnlySpan<char> span, ref int i)
+		{
+			while (i < span.Length && char.IsWhiteSpace(span[i]))
+			{
+				i++;
+			}
+		}
+
 		public static bool TryGetInt(this ReadOnlySpan<char> span, ref int i, out int value)
 		{
 			var negative = false;

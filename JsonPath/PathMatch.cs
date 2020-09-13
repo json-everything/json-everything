@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Json.Pointer;
 
-namespace JsonPath
+namespace Json.Path
 {
 	public class PathMatch
 	{

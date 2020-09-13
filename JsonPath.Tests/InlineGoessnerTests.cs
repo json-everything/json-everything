@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.Json;
 using Json.More;
+using Json.Path;
 using NUnit.Framework;
 
 namespace JsonPath.Tests
@@ -66,7 +67,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void GrammarExample()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Property("store")
 				.Property("book")
 				.Index((SimpleIndex)0)
@@ -83,7 +84,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example1()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Property("store")
 				.Property("book")
 				.AllIndices()
@@ -103,7 +104,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example2()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Recursive()
 				.Property("author");
 
@@ -121,7 +122,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example3()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Property("store")
 				.AllProperties();
 
@@ -137,7 +138,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example4()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Property("store")
 				.Recursive()
 				.Property("price");
@@ -157,7 +158,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example5()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Recursive()
 				.Property("book")
 				.Index((SimpleIndex)2);
@@ -173,7 +174,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example6b()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Recursive()
 				.Property("book")
 				.Index((SimpleIndex)(^1));
@@ -189,7 +190,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example7a()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Recursive()
 				.Property("book")
 				.Index((SimpleIndex)0, (SimpleIndex)1);
@@ -206,7 +207,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example7b()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Recursive()
 				.Property("book")
 				.Index((RangeIndex)(..2));
@@ -223,7 +224,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example10()
 		{
-			JsonPath path = new JsonPathBuilder()
+			Json.Path.JsonPath path = new JsonPathBuilder()
 				.Recursive()
 				.AllProperties();
 

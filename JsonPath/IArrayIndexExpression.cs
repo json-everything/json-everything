@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 
-namespace JsonPath
+namespace Json.Path
 {
 	public interface IArrayIndexExpression : IIndexExpression
 	{

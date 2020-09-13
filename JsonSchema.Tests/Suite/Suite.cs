@@ -100,7 +100,7 @@ namespace Json.Schema.Tests.Suite
 			Console.WriteLine();
 
 			if (!InstanceIsDeserializable(test.Data))
-				Assert.Inconclusive("Test optional");
+				Assert.Inconclusive("Instance not deserializable");
 
 			var result = collection.Schema.Validate(test.Data, options);
 
@@ -125,7 +125,7 @@ namespace Json.Schema.Tests.Suite
 		public void Benchmark(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
 		{
 			if (!InstanceIsDeserializable(test.Data))
-				Assert.Inconclusive("Test optional");
+				Assert.Inconclusive("Instance not deserializable");
 
 			options.OutputFormat = OutputFormat.Flag;
 			var result = collection.Schema.Validate(test.Data, options);

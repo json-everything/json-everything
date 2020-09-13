@@ -65,7 +65,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void GrammarExample()
 		{
-			var path =JsonPath.Parse("$.store.book[0].title");
+			var path =Json.Path.JsonPath.Parse("$.store.book[0].title");
 
 			var result = path.Evaluate(_instance);
 
@@ -77,7 +77,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example1()
 		{
-			var path = JsonPath.Parse("$.store.book[*].author");
+			var path = Json.Path.JsonPath.Parse("$.store.book[*].author");
 
 			var result = path.Evaluate(_instance);
 
@@ -92,7 +92,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example2()
 		{
-			var path = JsonPath.Parse("$..author");
+			var path = Json.Path.JsonPath.Parse("$..author");
 
 			var result = path.Evaluate(_instance);
 
@@ -107,7 +107,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example3()
 		{
-			var path = JsonPath.Parse("$.store.*");
+			var path = Json.Path.JsonPath.Parse("$.store.*");
 
 			var result = path.Evaluate(_instance);
 
@@ -120,7 +120,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example4()
 		{
-			var path = JsonPath.Parse("$.store..price");
+			var path = Json.Path.JsonPath.Parse("$.store..price");
 
 			var result = path.Evaluate(_instance);
 
@@ -136,7 +136,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example5()
 		{
-			var path = JsonPath.Parse("$..book[2]");
+			var path = Json.Path.JsonPath.Parse("$..book[2]");
 
 			var result = path.Evaluate(_instance);
 
@@ -148,7 +148,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example6b()
 		{
-			var path = JsonPath.Parse("$..book[-1:]");
+			var path = Json.Path.JsonPath.Parse("$..book[-1:]");
 
 			var result = path.Evaluate(_instance);
 
@@ -160,7 +160,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example7a()
 		{
-			var path = JsonPath.Parse("$..book[0,1]");
+			var path = Json.Path.JsonPath.Parse("$..book[0,1]");
 
 			var result = path.Evaluate(_instance);
 
@@ -173,7 +173,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example7b()
 		{
-			var path = JsonPath.Parse("$..book[:2]");
+			var path = Json.Path.JsonPath.Parse("$..book[:2]");
 
 			var result = path.Evaluate(_instance);
 
@@ -186,7 +186,7 @@ namespace JsonPath.Tests
 		[Test]
 		public void Example10()
 		{
-			var path = JsonPath.Parse("$..*");
+			var path = Json.Path.JsonPath.Parse("$..*");
 
 			var result = path.Evaluate(_instance);
 

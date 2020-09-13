@@ -4,7 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 using Json.More;
+using Json.Path;
 using NUnit.Framework;
 
 namespace JsonPath.Suite
@@ -106,7 +110,6 @@ namespace JsonPath.Suite
 		}
 
 		[TestCaseSource(nameof(TestCases))]
-		[Timeout(100)]
 		public void Run(CburgmerTestCase testCase)
 		{
 			if (_notSupported.Contains(testCase.PathString))
@@ -115,13 +118,14 @@ namespace JsonPath.Suite
 			Console.WriteLine(testCase);
 			Console.WriteLine();
 
-			var actual = Evaluate(testCase.JsonString, testCase.PathString);
+			PathResult actual = null;
+
+			using var cts = new CancellationTokenSource(100);
+			Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token).Wait(cts.Token);
 
 			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
 			if (testCase.Consensus == null)
-			{
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
-			}
 			else
 			{
 				var expected = JsonDocument.Parse(testCase.Consensus).RootElement;
@@ -129,14 +133,29 @@ namespace JsonPath.Suite
 			}
 		}
 
-		private PathResult Evaluate(string jsonString, string pathString)
+		private static PathResult Evaluate(string jsonString, string pathString)
 		{
 			var o = JsonDocument.Parse(jsonString).RootElement;
 			var selector = pathString;
-			var path = JsonPath.Parse(selector);
+			if (!Json.Path.JsonPath.TryParse(selector, out var path))
+				// todo change to inconclusive
+				Assert.Fail($"Could not parse path: {selector}");
 			var results = path.Evaluate(o);
 
 			return results;
 		}
-	}
+
+		[Test]
+		public void Inconclusive()
+		{
+			Assert.Inconclusive();
+		}
+
+		[Test]
+		[Timeout(1000)]
+		public void Fails()
+		{
+			Assert.Inconclusive();
+		}
+	} 
 }

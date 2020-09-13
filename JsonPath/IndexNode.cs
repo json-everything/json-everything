@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
 
-namespace JsonPath
+namespace Json.Path
 {
 	internal class IndexNode : PathNodeBase
 	{
@@ -46,7 +46,8 @@ namespace JsonPath
 							.Distinct();
 						foreach (var prop in props)
 						{
-							yield return new PathMatch(match.Value.GetProperty(prop), match.Location.Combine(PointerSegment.Create(prop)));
+							if (!match.Value.TryGetProperty(prop, out var value)) continue;
+							yield return new PathMatch(value, match.Location.Combine(PointerSegment.Create(prop)));
 						}
 					}
 					else

@@ -1,4 +1,4 @@
-﻿namespace JsonPath
+﻿namespace Json.Path
 {
 	public interface IIndexExpression
 	{

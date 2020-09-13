@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace JsonPath
+﻿namespace Json.Path
 {
 	public static class JsonPathBuilderExtensions
 	{

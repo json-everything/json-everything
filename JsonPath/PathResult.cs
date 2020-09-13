@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JsonPath
+namespace Json.Path
 {
 	public class PathResult
 	{

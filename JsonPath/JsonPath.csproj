@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Json.Path</RootNamespace>
+    <AssemblyName>JsonPath.Net</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
