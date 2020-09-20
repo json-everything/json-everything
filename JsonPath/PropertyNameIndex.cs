@@ -13,12 +13,12 @@ namespace Json.Path
 			_name = name;
 		}
 
-		public IEnumerable<string> GetProperties(JsonElement obj)
+		IEnumerable<string> IObjectIndexExpression.GetProperties(JsonElement obj)
 		{
 			return new[] {_name};
 		}
 
-		public static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
 		{
 			if (span[i] != '\'' && span[i] != '"')
 			{

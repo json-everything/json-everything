@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Json.Path
 {
-	public interface IObjectIndexExpression : IIndexExpression
+	internal interface IObjectIndexExpression : IIndexExpression
 	{
 		IEnumerable<string> GetProperties(JsonElement obj);
 	}

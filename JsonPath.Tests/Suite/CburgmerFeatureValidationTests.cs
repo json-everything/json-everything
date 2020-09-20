@@ -6,12 +6,11 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Json.More;
 using Json.Path;
 using NUnit.Framework;
 
-namespace JsonPath.Suite
+namespace JsonPath.Tests.Suite
 {
 	/// <summary>
 	/// These are a set of tests that GitHub user cburgmer uses to check all JSON Path implementations
@@ -143,19 +142,6 @@ namespace JsonPath.Suite
 			var results = path.Evaluate(o);
 
 			return results;
-		}
-
-		[Test]
-		public void Inconclusive()
-		{
-			Assert.Inconclusive();
-		}
-
-		[Test]
-		[Timeout(1000)]
-		public void Fails()
-		{
-			Assert.Inconclusive();
 		}
 	} 
 }

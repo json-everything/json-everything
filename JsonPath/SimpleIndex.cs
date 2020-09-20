@@ -13,14 +13,14 @@ namespace Json.Path
 			_index = index;
 		}
 
-		public IEnumerable<int> GetIndices(JsonElement array)
+		IEnumerable<int> IArrayIndexExpression.GetIndices(JsonElement array)
 		{
 			var length = array.GetArrayLength();
 			var end = _index.IsFromEnd ? length - _index.Value : _index.Value;
 			return new[] {end};
 		}
 
-		public static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
 		{
 			if (!span.TryGetInt(ref i, out var value))
 			{

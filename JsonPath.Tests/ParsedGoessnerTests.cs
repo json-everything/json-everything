@@ -146,6 +146,18 @@ namespace JsonPath.Tests
 		}
 
 		[Test]
+		public void Example6a()
+		{
+			var path = Json.Path.JsonPath.Parse("$..book[(@.length-1)]");
+
+			var result = path.Evaluate(_instance);
+
+			Assert.IsNull(result.Error);
+			Assert.AreEqual(1, result.Matches.Count);
+			Assert.AreEqual("The Lord of the Rings", result.Matches[0].Value.GetProperty("title").GetString());
+		}
+
+		[Test]
 		public void Example6b()
 		{
 			var path = Json.Path.JsonPath.Parse("$..book[-1:]");
@@ -181,6 +193,32 @@ namespace JsonPath.Tests
 			Assert.AreEqual(2, result.Matches.Count);
 			Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetProperty("title").GetString());
 			Assert.AreEqual("Sword of Honour", result.Matches[1].Value.GetProperty("title").GetString());
+		}
+
+		[Test]
+		public void Example8()
+		{
+			var path = Json.Path.JsonPath.Parse("$..book[?(@.isbn)]");
+
+			var result = path.Evaluate(_instance);
+
+			Assert.IsNull(result.Error);
+			Assert.AreEqual(2, result.Matches.Count);
+			Assert.AreEqual("Moby Dick", result.Matches[0].Value.GetProperty("title").GetString());
+			Assert.AreEqual("The Lord of the Rings", result.Matches[1].Value.GetProperty("title").GetString());
+		}
+
+		[Test]
+		public void Example9()
+		{
+			var path = Json.Path.JsonPath.Parse("$..book[?(@.price<10)]");
+
+			var result = path.Evaluate(_instance);
+
+			Assert.IsNull(result.Error);
+			Assert.AreEqual(29, result.Matches.Count);
+			Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetProperty("title").GetString());
+			Assert.AreEqual("Moby Dick", result.Matches[1].Value.GetProperty("title").GetString());
 		}
 
 		[Test]

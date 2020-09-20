@@ -16,7 +16,7 @@ namespace Json.Path
 			_step = step;
 		}
 
-		public IEnumerable<int> GetIndices(JsonElement array)
+		IEnumerable<int> IArrayIndexExpression.GetIndices(JsonElement array)
 		{
 			var length = array.GetArrayLength();
 			var end = _range.End.IsFromEnd ? length - _range.End.Value : _range.End.Value;
@@ -41,7 +41,7 @@ namespace Json.Path
 				.Select(x => x.index);
 		}
 
-		public static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
 		{
 			Index start = Index.Start, end = Index.End;
 			if (span.TryGetInt(ref i, out var v)) 
