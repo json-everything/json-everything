@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Json.Path
 {
-	public class PropertyNameIndex : IObjectIndexExpression
+	internal class PropertyNameIndex : IObjectIndexExpression
 	{
 		private readonly string _name;
 		

@@ -1,30 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.Json;
+using Json.Path.QueryExpressions;
 
 namespace Json.Path
 {
-	public class ItemQueryIndex : IArrayIndexExpression, IObjectIndexExpression
+	internal class ItemQueryIndex : IArrayIndexExpression, IObjectIndexExpression
 	{
-		private readonly Expression<Func<JsonElement, bool>> _expression;
-		private readonly Func<JsonElement, bool> _compiled;
+		private readonly QueryExpressionNode _expression;
 
-		public ItemQueryIndex(Expression<Func<JsonElement, bool>> expression)
+		public ItemQueryIndex(QueryExpressionNode expression)
 		{
 			_expression = expression;
-			_compiled = expression.Compile();
 		}
 
 		IEnumerable<int> IArrayIndexExpression.GetIndices(JsonElement array)
 		{
-			return array.EnumerateArray().Select((e,i) => (e,i)).Where(x => _compiled(x.e)).Select(x => x.i);
+			return array.EnumerateArray().Select((e, i) => (Evaluate(e), i))
+				.Where(x => x.Item1)
+				.Select(x => x.i);
 		}
 
 		IEnumerable<string> IObjectIndexExpression.GetProperties(JsonElement obj)
 		{
-			return obj.EnumerateObject().Where(x => _compiled(x.Value)).Select(x => x.Name);
+			return obj.EnumerateObject().Select(p => (Evaluate(p.Value), p.Name))
+				.Where(x => x.Item1)
+				.Select(x => x.Name);
+		}
+
+		private bool Evaluate(JsonElement item)
+		{
+			if (_expression.OutputType != QueryExpressionType.Number ||
+			    _expression.OutputType != QueryExpressionType.InstanceDependent)
+				return false;
+
+			var result = _expression.Evaluate(item);
+			if (result.ValueKind != JsonValueKind.Number) return false;
+
+			var index = result.GetDecimal();
+			if (Math.Truncate(index) != index) return false;
+			return true;
 		}
 
 		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)

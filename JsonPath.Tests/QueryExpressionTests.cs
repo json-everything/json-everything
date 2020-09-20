@@ -17,7 +17,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Number, exp.OutputType);
-			Assert.IsTrue(9.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(9.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -30,7 +30,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.String, exp.OutputType);
-			Assert.IsTrue("yesmaybe".AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue("yesmaybe".AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -55,7 +55,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Number, exp.OutputType);
-			Assert.AreEqual(default(JsonElement), exp.Value);
+			Assert.AreEqual(default(JsonElement), exp.Evaluate(default));
 		}
 
 		[Test]
@@ -68,7 +68,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Number, exp.OutputType);
-			Assert.IsTrue(1.6.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(1.6.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -81,7 +81,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
-			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -94,7 +94,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
-			Assert.IsTrue(true.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(true.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -107,7 +107,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
-			Assert.IsTrue(true.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(true.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -120,7 +120,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
-			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -133,7 +133,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
-			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 
 		[Test]
@@ -146,7 +146,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
-			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Value));
+			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
 		}
 	}
 }

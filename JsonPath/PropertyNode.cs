@@ -44,12 +44,4 @@ namespace Json.Path
 			yield return new PathMatch(prop, match.Location.Combine(PointerSegment.Create(_name)));
 		}
 	}
-
-	internal class RootNode : PathNodeBase
-	{
-		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
-		{
-			return new[] {match};
-		}
-	}
 }

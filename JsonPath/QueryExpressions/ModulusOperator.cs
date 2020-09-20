@@ -12,11 +12,11 @@ namespace Json.Path.QueryExpressions
 			return QueryExpressionType.Invalid;
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right)
+		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			var rValue = right.Value.GetDecimal();
+			var rValue = right.Evaluate(element).GetDecimal();
 			if (rValue == 0) return default;
-			return (left.Value.GetDecimal() % rValue).AsJsonElement();
+			return (left.Evaluate(element).GetDecimal() % rValue).AsJsonElement();
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)

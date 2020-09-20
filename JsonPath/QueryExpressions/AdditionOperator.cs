@@ -16,12 +16,12 @@ namespace Json.Path.QueryExpressions
 			};
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right)
+		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
 			return left.OutputType switch
 			{
-				QueryExpressionType.Number => (left.Value.GetDecimal() + right.Value.GetDecimal()).AsJsonElement(),
-				QueryExpressionType.String => string.Concat(left.Value.GetString(), right.Value.GetString()).AsJsonElement(),
+				QueryExpressionType.Number => (left.Evaluate(element).GetDecimal() + right.Evaluate(element).GetDecimal()).AsJsonElement(),
+				QueryExpressionType.String => string.Concat(left.Evaluate(element).GetString(), right.Evaluate(element).GetString()).AsJsonElement(),
 				_ => default
 			};
 		}

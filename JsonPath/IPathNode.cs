@@ -1,6 +1,6 @@
 ﻿namespace Json.Path
 {
-	public interface IPathNode
+	internal interface IPathNode
 	{
 		void Evaluate(EvaluationContext context);
 	}

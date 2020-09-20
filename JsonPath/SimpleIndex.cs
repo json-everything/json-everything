@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Json.Path
 {
-	public class SimpleIndex : IArrayIndexExpression
+	internal class SimpleIndex : IArrayIndexExpression
 	{
 		private readonly Index _index;
 

@@ -3,7 +3,7 @@
 	internal enum QueryExpressionType
 	{
 		Invalid,
-		Value,
+		InstanceDependent,
 		Boolean,
 		Number,
 		String

@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Json.Path
 {
-	public class RangeIndex : IArrayIndexExpression
+	internal class RangeIndex : IArrayIndexExpression
 	{
 		private readonly Range _range;
 		private readonly int _step;

@@ -14,12 +14,6 @@ namespace Json.Path
 			_ranges = ranges?.ToList();
 		}
 
-		public IndexNode(IIndexExpression first, IEnumerable<IIndexExpression> additionalRanges)
-		{
-			_ranges = additionalRanges.ToList();
-			_ranges.Insert(0, first);
-		}
-
 		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
 		{
 			switch (match.Value.ValueKind)
