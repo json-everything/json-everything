@@ -1,4 +1,4 @@
-﻿namespace Json.Path.Expressions
+﻿namespace Json.Path.QueryExpressions
 {
 	internal static class Operators
 	{
