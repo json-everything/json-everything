@@ -8,5 +8,10 @@ namespace Json.Path
 		{
 			return new[] {match};
 		}
+
+		public override string ToString()
+		{
+			return "@";
+		}
 	}
 }

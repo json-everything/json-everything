@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 
 namespace Json.Path
@@ -72,6 +73,23 @@ namespace Json.Path
 		public static implicit operator RangeIndex(Range range)
 		{
 			return new RangeIndex(range);
+		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			if (!_range.Start.Equals(Index.Start))
+				sb.Append(_range.Start.ToPathString());
+			sb.Append(":");
+			if (!_range.End.Equals(Index.End))
+				sb.Append(_range.End.ToPathString());
+			if (_step != 1)
+			{
+				sb.Append(":");
+				sb.Append(_step);
+			}
+
+			return sb.ToString();
 		}
 	}
 }

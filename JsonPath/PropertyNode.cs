@@ -43,5 +43,10 @@ namespace Json.Path
 
 			yield return new PathMatch(prop, match.Location.Combine(PointerSegment.Create(_name)));
 		}
+
+		public override string ToString()
+		{
+			return _name == null ? ".*" : $".{_name}";
+		}
 	}
 }

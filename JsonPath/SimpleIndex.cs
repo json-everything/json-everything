@@ -46,5 +46,10 @@ namespace Json.Path
 		{
 			return new SimpleIndex(index);
 		}
+
+		public override string ToString()
+		{
+			return _index.ToPathString();
+		}
 	}
 }

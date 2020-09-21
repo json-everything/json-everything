@@ -18,6 +18,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Number, exp.OutputType);
 			Assert.IsTrue(9.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("4+5", exp.ToString());
 		}
 
 		[Test]
@@ -31,6 +32,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.String, exp.OutputType);
 			Assert.IsTrue("yesmaybe".AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("\"yes\"+\"maybe\"", exp.ToString());
 		}
 
 		[Test]
@@ -43,6 +45,7 @@ namespace JsonPath.Tests
 			);
 
 			Assert.AreEqual(QueryExpressionType.Invalid, exp.OutputType);
+			Assert.AreEqual("\"yes\"+5", exp.ToString());
 		}
 
 		[Test]
@@ -56,6 +59,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Number, exp.OutputType);
 			Assert.AreEqual(default(JsonElement), exp.Evaluate(default));
+			Assert.AreEqual("4/0", exp.ToString());
 		}
 
 		[Test]
@@ -69,6 +73,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Number, exp.OutputType);
 			Assert.IsTrue(1.6.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("8/5", exp.ToString());
 		}
 
 		[Test]
@@ -82,6 +87,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
 			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("8<5", exp.ToString());
 		}
 
 		[Test]
@@ -95,6 +101,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
 			Assert.IsTrue(true.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("4<5", exp.ToString());
 		}
 
 		[Test]
@@ -108,6 +115,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
 			Assert.IsTrue(true.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("true&&true", exp.ToString());
 		}
 
 		[Test]
@@ -121,6 +129,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
 			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("false&&true", exp.ToString());
 		}
 
 		[Test]
@@ -134,6 +143,7 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
 			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("true&&false", exp.ToString());
 		}
 
 		[Test]
@@ -147,6 +157,21 @@ namespace JsonPath.Tests
 
 			Assert.AreEqual(QueryExpressionType.Boolean, exp.OutputType);
 			Assert.IsTrue(false.AsJsonElement().IsEquivalentTo(exp.Evaluate(default)));
+			Assert.AreEqual("false&&false", exp.ToString());
+		}
+
+		[Test]
+		public void LengthMinusOne()
+		{
+			var exp = new QueryExpressionNode(
+				new QueryExpressionNode(Json.Path.JsonPath.Parse("@.length")),
+				Operators.Subtraction,
+				new QueryExpressionNode(1.AsJsonElement())
+			);
+
+			Assert.AreEqual(QueryExpressionType.InstanceDependent, exp.OutputType);
+			Assert.IsTrue(2.AsJsonElement().IsEquivalentTo(exp.Evaluate(JsonDocument.Parse("[1,2,3]").RootElement)));
+			Assert.AreEqual("@.length-1", exp.ToString());
 		}
 	}
 }

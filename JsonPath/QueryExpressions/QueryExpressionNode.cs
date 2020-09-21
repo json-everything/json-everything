@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Path.QueryExpressions
 {
@@ -40,7 +41,7 @@ namespace Json.Path.QueryExpressions
 			if (_path != null)
 			{
 				var result = _path.Evaluate(element);
-				// don't set value; need to always eval
+				// don't set _value; need to always eval
 				return result.Matches.Count == 1
 					? result.Matches[0].Value
 					: default;
@@ -89,7 +90,7 @@ namespace Json.Path.QueryExpressions
 
 		public override string ToString()
 		{
-			return Operator?.ToString(Left, Right) ?? _value.ToString();
+			return Operator?.ToString(Left, Right) ?? _value?.ToJsonString() ?? _path.ToString();
 		}
 	}
 }

@@ -16,6 +16,11 @@ namespace Json.Path
 				SimpleIndex.TryParse,
 				PropertyNameIndex.TryParse
 			};
+		private static readonly Dictionary<string, IPathNode> _reservedWords =
+			new Dictionary<string, IPathNode>
+			{
+				["length"] = LengthNode.Instance
+			};
 
 		private readonly IEnumerable<IPathNode> _nodes;
 
@@ -135,7 +140,9 @@ namespace Json.Path
 
 			var propertyName = slice.Slice(0, propertyNameLength);
 			i += 1 + propertyNameLength;
-			return new PropertyNode(propertyName.ToString());
+			return _reservedWords.TryGetValue(propertyName.ToString(), out var node)
+				? node
+				: new PropertyNode(propertyName.ToString());
 		}
 
 		private static IPathNode AddIndex(ReadOnlySpan<char> span, ref int i)
@@ -195,6 +202,11 @@ namespace Json.Path
 			}
 
 			return context.BuildResult();
+		}
+
+		public override string ToString()
+		{
+			return string.Concat(_nodes.Select(n => n.ToString()));
 		}
 	}
 }

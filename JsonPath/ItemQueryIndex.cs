@@ -47,5 +47,10 @@ namespace Json.Path
 		{
 			throw new NotImplementedException();
 		}
+
+		public override string ToString()
+		{
+			return $"?({_expression})";
+		}
 	}
 }

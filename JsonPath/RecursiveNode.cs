@@ -51,5 +51,10 @@ namespace Json.Path
 					throw new ArgumentOutOfRangeException();
 			}
 		}
+
+		public override string ToString()
+		{
+			return ".";
+		}
 	}
 }

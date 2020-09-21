@@ -7,10 +7,12 @@ namespace Json.Path
 	internal class PropertyNameIndex : IObjectIndexExpression
 	{
 		private readonly string _name;
-		
-		public PropertyNameIndex(string name)
+		private readonly char _quoteChar;
+
+		private PropertyNameIndex(string name, char quoteChar)
 		{
 			_name = name;
+			_quoteChar = quoteChar;
 		}
 
 		IEnumerable<string> IObjectIndexExpression.GetProperties(JsonElement obj)
@@ -22,6 +24,7 @@ namespace Json.Path
 		{
 			if (span[i] != '\'' && span[i] != '"')
 			{
+
 				index = null;
 				return false;
 			}
@@ -33,7 +36,7 @@ namespace Json.Path
 			{
 				if (span[i + length] == '\\')
 				{
-					// ignoring escape sequences for now.
+					// TODO: process escape sequences
 					length+=2;
 					continue;
 				}
@@ -43,8 +46,14 @@ namespace Json.Path
 
 			var name = span.Slice(i, length);
 			i += length + 1;
-			index = new PropertyNameIndex(name.ToString());
+			index = new PropertyNameIndex(name.ToString(), start);
 			return true;
+		}
+
+		public override string ToString()
+		{
+			// TODO: add escaping
+			return $"{_quoteChar}{_name}{_quoteChar}";
 		}
 	}
 }

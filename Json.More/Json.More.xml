@@ -133,6 +133,16 @@
             <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">The <see cref="P:System.Text.Json.JsonElement.ValueKind"/> is not valid.</exception>
         </member>
+        <member name="M:Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)">
+            <summary>
+            Serializes a <see cref="T:System.Text.Json.JsonElement"/> into a proper JSON string.
+            </summary>
+            <param name="element">The value to convert.</param>
+            <returns>A JSON string.</returns>
+            <remarks>
+            Booleans don't case right.  See https://github.com/dotnet/runtime/issues/42502
+            </remarks>
+        </member>
         <member name="M:Json.More.JsonElementExtensions.AsJsonElement(System.Int64)">
             <summary>
             Converts a <see cref="T:System.Int64"/> to a <see cref="T:System.Text.Json.JsonElement"/>.

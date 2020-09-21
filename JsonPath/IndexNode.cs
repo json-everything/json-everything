@@ -54,5 +54,10 @@ namespace Json.Path
 					break;
 			}
 		}
+
+		public override string ToString()
+		{
+			return _ranges == null ? "[*]" : $"[{string.Join(",", _ranges.Select(r => r.ToString()))}]";
+		}
 	}
 }
