@@ -5,6 +5,8 @@ namespace Json.Path.QueryExpressions
 {
 	internal class NotEqualToOperator : IQueryExpressionOperator
 	{
+		public int OrderOfOperation => 4;
+
 		public QueryExpressionType GetOutputType(QueryExpressionNode left, QueryExpressionNode right)
 		{
 			if (left.OutputType != right.OutputType) return QueryExpressionType.Invalid;

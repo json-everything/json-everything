@@ -58,7 +58,8 @@ namespace JsonPath.Tests
 
 			_instance = model.ToJsonDocument(new JsonSerializerOptions
 			{
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				IgnoreNullValues = true
 			}).RootElement;
 		}
 
@@ -240,7 +241,7 @@ namespace JsonPath.Tests
 			var result = path.Evaluate(_instance);
 
 			Assert.IsNull(result.Error);
-			Assert.AreEqual(29, result.Matches.Count);
+			Assert.AreEqual(2, result.Matches.Count);
 			Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetProperty("title").GetString());
 			Assert.AreEqual("Moby Dick", result.Matches[1].Value.GetProperty("title").GetString());
 			Assert.AreEqual(input, path.ToString());
@@ -255,7 +256,7 @@ namespace JsonPath.Tests
 			var result = path.Evaluate(_instance);
 
 			Assert.IsNull(result.Error);
-			Assert.AreEqual(29, result.Matches.Count);
+			Assert.AreEqual(27, result.Matches.Count);
 			Assert.AreEqual(input, path.ToString());
 		}
 	}

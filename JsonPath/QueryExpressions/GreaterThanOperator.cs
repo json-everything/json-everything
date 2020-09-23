@@ -6,6 +6,8 @@ namespace Json.Path.QueryExpressions
 {
 	internal class GreaterThanOperator : IQueryExpressionOperator
 	{
+		public int OrderOfOperation => 4;
+
 		public QueryExpressionType GetOutputType(QueryExpressionNode left, QueryExpressionNode right)
 		{
 			if (left.OutputType != right.OutputType) return QueryExpressionType.Invalid;
@@ -19,10 +21,15 @@ namespace Json.Path.QueryExpressions
 
 		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			return left.OutputType switch
+			var leftValue = left.Evaluate(element);
+			var rightValue = right.Evaluate(element);
+
+			if (leftValue.ValueKind != rightValue.ValueKind) return default;
+
+			return leftValue.ValueKind switch
 			{
-				QueryExpressionType.Number => (left.Evaluate(element).GetDecimal() > right.Evaluate(element).GetDecimal()).AsJsonElement(),
-				QueryExpressionType.String => (string.Compare(left.Evaluate(element).GetString(), right.Evaluate(element).GetString(), StringComparison.Ordinal) > 0).AsJsonElement(),
+				JsonValueKind.Number => (leftValue.GetDecimal() > rightValue.GetDecimal()).AsJsonElement(),
+				JsonValueKind.String => (string.Compare(leftValue.GetString(), rightValue.GetString(), StringComparison.Ordinal) > 0).AsJsonElement(),
 				_ => default
 			};
 		}

@@ -12,9 +12,11 @@ namespace Json.Path
 		private static readonly List<TryParseMethod> _parseMethods =
 			new List<TryParseMethod>
 			{
+				ContainerQueryIndex.TryParse,
+				ItemQueryIndex.TryParse,
+				PropertyNameIndex.TryParse,
 				RangeIndex.TryParse,
-				SimpleIndex.TryParse,
-				PropertyNameIndex.TryParse
+				SimpleIndex.TryParse
 			};
 		private static readonly Dictionary<string, IPathNode> _reservedWords =
 			new Dictionary<string, IPathNode>
@@ -31,11 +33,6 @@ namespace Json.Path
 
 		public static JsonPath Parse(string source)
 		{
-			return Parse(source, false);
-		}
-
-		internal static JsonPath Parse(string source, bool allowTrailingContent)
-		{
 			var i = 0;
 			var span = source.AsSpan();
 			var nodes = new List<IPathNode>();
@@ -51,10 +48,7 @@ namespace Json.Path
 				};
 
 				if (node == null)
-				{
-					if (allowTrailingContent) break;
 					throw new PathParseException(i, "Could not identify operator");
-				}
 
 				nodes.Add(node);
 			}
@@ -67,13 +61,13 @@ namespace Json.Path
 
 		public static bool TryParse(string source, out JsonPath path)
 		{
-			return TryParse(source, false, out path);
-		}
-
-		internal static bool TryParse(string source, bool allowTrailingContent, out JsonPath path)
-		{
 			var i = 0;
 			var span = source.AsSpan();
+			return TryParse(span, ref i, false, out path);
+		}
+
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, bool allowTrailingContent, out JsonPath path)
+		{
 			var nodes = new List<IPathNode>();
 			while (i < span.Length)
 			{
@@ -134,15 +128,24 @@ namespace Json.Path
 			}
 
 			slice = slice.Slice(1);
-			var propertyNameLength = slice.IndexOfAny('.', '[');
-			if (propertyNameLength == -1)
-				propertyNameLength = slice.Length;
+			var propertyNameLength = 0;
+			while (propertyNameLength < slice.Length && IsValidForPropertyName(slice[propertyNameLength]))
+			{
+				propertyNameLength++;
+			}
 
 			var propertyName = slice.Slice(0, propertyNameLength);
 			i += 1 + propertyNameLength;
 			return _reservedWords.TryGetValue(propertyName.ToString(), out var node)
 				? node
 				: new PropertyNode(propertyName.ToString());
+		}
+
+		private static bool IsValidForPropertyName(char ch)
+		{
+			return ('a' <= ch && ch <= 'z') ||
+			       ('A' <= ch && ch <= 'Z') ||
+			       ('0' <= ch && ch <= '9');
 		}
 
 		private static IPathNode AddIndex(ReadOnlySpan<char> span, ref int i)
@@ -167,6 +170,8 @@ namespace Json.Path
 				indices.Add(index);
 
 				span.ConsumeWhitespace(ref i);
+				if (i >= span.Length) break;
+
 				ch = span[i];
 				i++;
 			}

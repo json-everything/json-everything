@@ -16,7 +16,7 @@ namespace Json.Path
 
 		IEnumerable<int> IArrayIndexExpression.GetIndices(JsonElement array)
 		{
-			if (_expression.OutputType != QueryExpressionType.Number ||
+			if (_expression.OutputType != QueryExpressionType.Number &&
 			    _expression.OutputType != QueryExpressionType.InstanceDependent)
 				return new int[] { };
 
@@ -30,7 +30,7 @@ namespace Json.Path
 
 		IEnumerable<string> IObjectIndexExpression.GetProperties(JsonElement obj)
 		{
-			if (_expression.OutputType != QueryExpressionType.String ||
+			if (_expression.OutputType != QueryExpressionType.String &&
 			    _expression.OutputType != QueryExpressionType.InstanceDependent)
 				return new string[] { };
 
@@ -43,7 +43,31 @@ namespace Json.Path
 
 		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
 		{
-			throw new NotImplementedException();
+			if (span[i] != '(')
+			{
+				index = null;
+				return false;
+			}
+
+			var localIndex = i;
+			if (!span.TryParseExpression(ref localIndex, out var expression) ||
+			    !(expression.OutputType == QueryExpressionType.Number || 
+			      expression.OutputType == QueryExpressionType.InstanceDependent))
+			{
+				index = null;
+				return false;
+			}
+
+			i = localIndex;
+			if (i >= span.Length || span[i] != ')')
+			{
+				index = null;
+				return false;
+			}
+
+			i++;
+			index = new ItemQueryIndex(expression);
+			return true;
 		}
 
 		public override string ToString()

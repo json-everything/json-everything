@@ -31,21 +31,45 @@ namespace Json.Path
 
 		private bool Evaluate(JsonElement item)
 		{
-			if (_expression.OutputType != QueryExpressionType.Number ||
+			if (_expression.OutputType != QueryExpressionType.Boolean &&
 			    _expression.OutputType != QueryExpressionType.InstanceDependent)
 				return false;
 
 			var result = _expression.Evaluate(item);
-			if (result.ValueKind != JsonValueKind.Number) return false;
+			if (result.ValueKind != JsonValueKind.True &&
+			    result.ValueKind != JsonValueKind.False)
+				return false;
 
-			var index = result.GetDecimal();
-			if (Math.Truncate(index) != index) return false;
-			return true;
+			return result.GetBoolean();
 		}
 
 		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
 		{
-			throw new NotImplementedException();
+			if (span[i] != '?' || span[i+1] != '(')
+			{
+				index = null;
+				return false;
+			}
+
+			var localIndex = i + 1;
+			if (!span.TryParseExpression(ref localIndex, out var expression) ||
+			    !(expression.OutputType == QueryExpressionType.Boolean ||
+			      expression.OutputType == QueryExpressionType.InstanceDependent))
+			{
+				index = null;
+				return false;
+			}
+
+			i = localIndex;
+			if (i >= span.Length || span[i] != ')')
+			{
+				index = null;
+				return false;
+			}
+
+			i++;
+			index = new ItemQueryIndex(expression);
+			return true;
 		}
 
 		public override string ToString()

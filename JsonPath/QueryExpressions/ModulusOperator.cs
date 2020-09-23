@@ -5,6 +5,8 @@ namespace Json.Path.QueryExpressions
 {
 	internal class ModulusOperator : IQueryExpressionOperator
 	{
+		public int OrderOfOperation => 2;
+
 		public QueryExpressionType GetOutputType(QueryExpressionNode left, QueryExpressionNode right)
 		{
 			if (left.OutputType != right.OutputType) return QueryExpressionType.Invalid;

@@ -12,7 +12,7 @@ namespace Json.Path.QueryExpressions
 
 		public QueryExpressionNode Left { get; }
 		public IQueryExpressionOperator Operator { get; }
-		public QueryExpressionNode Right { get; }
+		public QueryExpressionNode Right { get; private set; }
 
 		public QueryExpressionType OutputType => _outputType ??= GetOutputType();
 
@@ -47,9 +47,37 @@ namespace Json.Path.QueryExpressions
 					: default;
 			}
 
-			return OutputType == QueryExpressionType.Invalid
-				? default
-				: _value ??= Operator.Evaluate(Left, Right, element);
+			if (OutputType == QueryExpressionType.Invalid) return default;
+			
+			var value = Operator.Evaluate(Left, Right, element);
+			if (OutputType != QueryExpressionType.InstanceDependent)
+				_value = value;
+			return value;
+		}
+
+		public void InsertRight(IQueryExpressionOperator op, QueryExpressionNode newRight)
+		{
+			Right = new QueryExpressionNode(Right, op, newRight);
+		}
+
+		public static bool TryParseSingle(ReadOnlySpan<char> span, ref int i, out QueryExpressionNode node)
+		{
+			if (JsonPath.TryParse(span, ref i, true, out var path))
+			{
+				node = new QueryExpressionNode(path);
+				return true;
+			}
+
+			// TODO: this should really be extracting a JsonElement,
+			// but I don't know how to parse that from a string with trailing content
+			if (span.TryGetInt(ref i, out var value))
+			{
+				node = new QueryExpressionNode(value.AsJsonElement());
+				return true;
+			}
+
+			node = null;
+			return false;
 		}
 
 		private QueryExpressionType GetOutputType()
@@ -58,15 +86,13 @@ namespace Json.Path.QueryExpressions
 			if (_path != null) return QueryExpressionType.InstanceDependent;
 
 			if (Left.OutputType == QueryExpressionType.Invalid ||
-			    Right.OutputType == QueryExpressionType.Invalid)
+			    Right?.OutputType == QueryExpressionType.Invalid)
 				return QueryExpressionType.Invalid;
 
-			// this might be optimizable depending on the operation
+			// TODO: this might be optimizable depending on the operation
 			if (Left.OutputType == QueryExpressionType.InstanceDependent ||
-			    Right.OutputType == QueryExpressionType.InstanceDependent)
+			    Right?.OutputType == QueryExpressionType.InstanceDependent)
 				return QueryExpressionType.InstanceDependent;
-
-			if (_path != null) return QueryExpressionType.InstanceDependent;
 
 			return Operator?.GetOutputType(Left, Right) ?? GetValueType();
 		}
