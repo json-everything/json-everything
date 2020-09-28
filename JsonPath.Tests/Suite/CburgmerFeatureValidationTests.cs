@@ -114,6 +114,8 @@ namespace JsonPath.Tests.Suite
 			if (_notSupported.Contains(testCase.PathString))
 				Assert.Inconclusive("This case will not be supported.");
 
+			Console.WriteLine();
+			Console.WriteLine();
 			Console.WriteLine(testCase);
 			Console.WriteLine();
 
@@ -122,11 +124,21 @@ namespace JsonPath.Tests.Suite
 			using var cts = new CancellationTokenSource(100);
 			Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token).Wait(cts.Token);
 
+			if (actual == null)
+			{
+				if (testCase.Consensus == "NOT_SUPPORTED") return;
+				if (testCase.Consensus == null)
+					Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
+
+				Assert.Fail($"Could not parse path: {testCase.PathString}");
+			}
+
 			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
 			if (testCase.Consensus == null)
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 			else
 			{
+				if (testCase.Consensus == "NOT_SUPPORTED") return;
 				var expected = JsonDocument.Parse(testCase.Consensus).RootElement;
 				Assert.IsTrue(expected.EnumerateArray().All(v => actual.Matches.Any(m => JsonElementEqualityComparer.Instance.Equals(v, m.Value))));
 			}
@@ -137,11 +149,10 @@ namespace JsonPath.Tests.Suite
 			var o = JsonDocument.Parse(jsonString).RootElement;
 			var selector = pathString;
 			if (!Json.Path.JsonPath.TryParse(selector, out var path))
-				// todo change to inconclusive
-				Assert.Fail($"Could not parse path: {selector}");
+				return null;
 			var results = path.Evaluate(o);
 
 			return results;
 		}
-	} 
+	}
 }

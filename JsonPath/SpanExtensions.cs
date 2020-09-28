@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using Json.Path.QueryExpressions;
 
 namespace Json.Path
@@ -49,7 +53,7 @@ namespace Json.Path
 			}
 
 			index++;
-			if (!QueryExpressionNode.TryParseSingle(span, ref index, out var left))
+			if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out var left))
 			{
 				expression = null;
 				return false;
@@ -73,7 +77,7 @@ namespace Json.Path
 						return false;
 					}
 				}
-				else if (!QueryExpressionNode.TryParseSingle(span, ref index, out right))
+				else if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out right))
 				{
 					expression = null;
 					return false;
@@ -117,6 +121,97 @@ namespace Json.Path
 			i = index;
 			expression = root;
 			return true;
+		}
+
+		public static bool TryParseJsonElement(this ReadOnlySpan<char> span, ref int i, out JsonElement element)
+		{
+			try
+			{
+				int end = i;
+				switch (span[i])
+				{
+					case 'f':
+						end += 5;
+						break;
+					case 't':
+					case 'n':
+						end += 4;
+						break;
+					case '.':
+					case '-':
+					case '0':
+					case '1':
+					case '2':
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+					case '9':
+						end = i;
+						var allowDash = false;
+						while (end < span.Length && (span[end].In('0'..'9') || span[end].In('e', '.', '-')))
+						{
+							if (!allowDash && span[end] == '-') break;
+							allowDash = span[end] == 'e';
+							end++;
+						}
+						break;
+					case '"':
+						end = i + 1;
+						while (end < span.Length && span[end] != '"')
+						{
+							if (span[end] == '\\')
+							{
+								end++;
+								if (end >= span.Length) break;
+							}
+							end++;
+						}
+
+						end++;
+						break;
+					case '{':
+					case '[':
+						end = i + 1;
+						var endChar = span[i] == '{' ? '}' : ']';
+						var inString = false;
+						while (end < span.Length)
+						{
+							var escaped = false;
+							if (span[end] == '\\')
+							{
+								escaped = true;
+								end++;
+								if (end >= span.Length) break;
+							}
+							if (!escaped && span[end] == '"')
+							{
+								inString = !inString;
+							}
+							else if (!inString && span[end] == endChar) break;
+
+							end++;
+						}
+
+						end++;
+						break;
+					default:
+						element = default;
+						return false;
+				}
+				
+				var block = span.Slice(i, end - i);
+				element = JsonDocument.Parse(block.ToString()).RootElement;
+				i = end;
+				return true;
+			}
+			catch
+			{
+				element = default;
+				return false;
+			}
 		}
 	}
 }

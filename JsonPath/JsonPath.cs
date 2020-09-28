@@ -15,7 +15,7 @@ namespace Json.Path
 				ContainerQueryIndex.TryParse,
 				ItemQueryIndex.TryParse,
 				PropertyNameIndex.TryParse,
-				RangeIndex.TryParse,
+				SliceIndex.TryParse,
 				SimpleIndex.TryParse
 			};
 		private static readonly Dictionary<string, IPathNode> _reservedWords =
@@ -143,9 +143,11 @@ namespace Json.Path
 
 		private static bool IsValidForPropertyName(char ch)
 		{
-			return ('a' <= ch && ch <= 'z') ||
-			       ('A' <= ch && ch <= 'Z') ||
-			       ('0' <= ch && ch <= '9');
+			return ch.In('a'..'z') ||
+			       ch.In('A'..'Z') ||
+			       ch.In('0'..'9') ||
+			       ch.In('_') ||
+			       ch.In(0x80..0x10FFFF);
 		}
 
 		private static IPathNode AddIndex(ReadOnlySpan<char> span, ref int i)

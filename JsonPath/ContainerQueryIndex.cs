@@ -66,7 +66,7 @@ namespace Json.Path
 			}
 
 			i++;
-			index = new ItemQueryIndex(expression);
+			index = new ContainerQueryIndex(expression);
 			return true;
 		}
 

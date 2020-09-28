@@ -6,12 +6,12 @@ using System.Text.Json;
 
 namespace Json.Path
 {
-	internal class RangeIndex : IArrayIndexExpression
+	internal class SliceIndex : IArrayIndexExpression
 	{
 		private readonly Range _range;
 		private readonly int _step;
 
-		public RangeIndex(Range range, int step = 1)
+		public SliceIndex(Range range, int step = 1)
 		{
 			_range = range;
 			_step = step;
@@ -57,22 +57,27 @@ namespace Json.Path
 				end = new Index(Math.Abs(v), v < 0);
 			if (span[i] != ':')
 			{
-				index = new RangeIndex(start..end);
+				index = new SliceIndex(start..end);
 				return true;
 			}
 			i++;
 			if (!span.TryGetInt(ref i, out v))
 			{
-				index = new RangeIndex(start..end);
+				index = new SliceIndex(start..end);
 				return true;
 			}
-			index = new RangeIndex(start..end, v);
+			if (v == 0)
+			{
+				index = null;
+				return false;
+			}
+			index = new SliceIndex(start..end, v);
 			return true;
 		}
 
-		public static implicit operator RangeIndex(Range range)
+		public static implicit operator SliceIndex(Range range)
 		{
-			return new RangeIndex(range);
+			return new SliceIndex(range);
 		}
 
 		public override string ToString()

@@ -60,11 +60,17 @@ namespace Json.Path.QueryExpressions
 			Right = new QueryExpressionNode(Right, op, newRight);
 		}
 
-		public static bool TryParseSingle(ReadOnlySpan<char> span, ref int i, out QueryExpressionNode node)
+		public static bool TryParseSingleValue(ReadOnlySpan<char> span, ref int i, out QueryExpressionNode node)
 		{
 			if (JsonPath.TryParse(span, ref i, true, out var path))
 			{
 				node = new QueryExpressionNode(path);
+				return true;
+			}
+
+			if (span.TryParseJsonElement(ref i, out var element))
+			{
+				node = new QueryExpressionNode(element);
 				return true;
 			}
 
