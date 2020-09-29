@@ -25,4 +25,4 @@ JsonSchema.Net provides [JSON Schema](https://json-schema.org) support for draft
 
 ### JsonPath.Net
 
-JsonPath.Net provides JSON querying using the JSON Path querying language inspired by XPath and [conceptualized by Matt Goessner](https://goessner.net/articles/JsonPath/).  A standard is currently in progress for JSON Path.  This library will update as the spec evolves.
+JsonPath.Net provides JSON querying using the JSON Path querying language inspired by XPath and [conceptualized by Matt Goessner](https://goessner.net/articles/JsonPath/).  An [RFC](https://github.com/jsonpath-standard/internet-draft) is currently being developed for JSON Path.  This library will update as the upcoming spec evolves.
