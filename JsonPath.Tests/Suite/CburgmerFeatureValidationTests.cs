@@ -27,37 +27,13 @@ namespace JsonPath.Tests.Suite
 		private static readonly Regex _consensusPattern = new Regex(@"    consensus: (?<value>.*)");
 		private static readonly string[] _notSupported =
 			{
-				//// invalid
-				//"$[?(@.key=42)]",
-				//"$[?(@)]",
-				//"$['single'quote']",
+				// expect these to be out of spec soon
+				"$.key-dash",
+				"$.length",
 
-				//// nested expression
-				//"$[?(@.a[?(@.price>10)])]",
-				
-				//// unions
-				//"$['key','another']",
-				//"$['one','three'].key",
-				//"$[?(@<3),?(@>6)]",
-				//"$[:]['c','d']",
-				//"$[0]['c','d']",
-				//"$.*['c','d']",
-
-				//// path within indexer
-				//"$['two'.'some']",
-				//"$[two.some]",
-
-				//// unquoted keys
-				//"$[key]",
-				//"$.[key]",
-				
-				//// no search term
-				//"$..",
-				
-				//// maybe add support for this later
-				//"$..[?(@.id==2)]",
-				//"$..[?(@.id)]",
-				//"$[?(@.name=~/hello.*/)]",
+				// big numbers not supported
+				"$[2:-113667776004:-1]",
+				"$[113667776004:2:-1]"
 			};
 
 		//  - id: array_index

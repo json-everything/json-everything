@@ -16,13 +16,12 @@ namespace Json.Path.QueryExpressions
 
 		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			var leftValue = left.Evaluate(element);
-			if (leftValue.ValueKind == JsonValueKind.Undefined) return default;
+			var lElement = left.Evaluate(element);
+			if (lElement.ValueKind != JsonValueKind.Number) return default;
+			var rElement = right.Evaluate(element);
+			if (rElement.ValueKind != JsonValueKind.Number) return default;
 
-			var rightValue = right.Evaluate(element);
-			if (rightValue.ValueKind == JsonValueKind.Undefined) return default;
-
-			return (leftValue.GetDecimal() - rightValue.GetDecimal()).AsJsonElement();
+			return (lElement.GetDecimal() - rElement.GetDecimal()).AsJsonElement();
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)

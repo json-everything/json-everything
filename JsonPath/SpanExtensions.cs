@@ -201,7 +201,7 @@ namespace Json.Path
 				var block = span[i..end];
 				if (block[0] == '\'' && block[^1] == '\'')
 					block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-				element = JsonDocument.Parse(block.ToString()).RootElement;
+				element = JsonDocument.Parse(block.ToString()).RootElement.Clone();
 				i = end;
 				return true;
 			}

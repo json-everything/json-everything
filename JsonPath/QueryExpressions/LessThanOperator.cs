@@ -21,17 +21,21 @@ namespace Json.Path.QueryExpressions
 
 		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			var leftValue = left.Evaluate(element);
-			var rightValue = right.Evaluate(element);
-
-			if (leftValue.ValueKind != rightValue.ValueKind) return default;
-
-			return leftValue.ValueKind switch
+			var lElement = left.Evaluate(element);
+			var rElement = right.Evaluate(element);
+			switch (lElement.ValueKind)
 			{
-				JsonValueKind.Number => (leftValue.GetDecimal() < rightValue.GetDecimal()).AsJsonElement(),
-				JsonValueKind.String => (string.Compare(leftValue.GetString(), rightValue.GetString(), StringComparison.Ordinal) < 0).AsJsonElement(),
-				_ => default
-			};
+				case JsonValueKind.Number:
+					if (lElement.ValueKind != JsonValueKind.Number ||
+					    rElement.ValueKind != JsonValueKind.Number) return default;
+					return (lElement.GetDecimal() < rElement.GetDecimal()).AsJsonElement();
+				case JsonValueKind.String:
+					if (lElement.ValueKind != JsonValueKind.String ||
+					    rElement.ValueKind != JsonValueKind.String) return default;
+					return (string.Compare(lElement.GetString(), rElement.GetString(), StringComparison.Ordinal) < 0).AsJsonElement();
+				default:
+					return default;
+			}
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)
