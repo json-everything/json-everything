@@ -5,20 +5,19 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>Json.Schema.Tests</RootNamespace>
+    <RootNamespace>JsonPath.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Humanizer" Version="2.8.26" />
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+    <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
   </ItemGroup>
 
 </Project>

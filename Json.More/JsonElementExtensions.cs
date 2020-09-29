@@ -53,6 +53,29 @@ namespace Json.More
 		}
 
 		/// <summary>
+		/// Serializes a <see cref="JsonElement"/> into a proper JSON string.
+		/// </summary>
+		/// <param name="element">The value to convert.</param>
+		/// <returns>A JSON string.</returns>
+		/// <remarks>
+		/// Booleans don't case right.  See https://github.com/dotnet/runtime/issues/42502
+		/// </remarks>
+		public static string ToJsonString(this JsonElement element)
+		{
+			return element.ValueKind switch
+			{
+				JsonValueKind.Object => $"{{{string.Join(",", element.EnumerateObject().Select(p => $"\"{p.Name}\":{p.Value.ToJsonString()}"))}}}",
+				JsonValueKind.Array => $"[{string.Join(",", element.EnumerateArray().Select(i => i.ToJsonString()))}]",
+				JsonValueKind.String => $"\"{element}\"",
+				JsonValueKind.Number => element.ToString(),
+				JsonValueKind.True => "true",
+				JsonValueKind.False => "false",
+				JsonValueKind.Null => "null",
+				_ => throw new ArgumentOutOfRangeException()
+			};
+		}
+
+		/// <summary>
 		/// Converts a <see cref="long"/> to a <see cref="JsonElement"/>.
 		/// </summary>
 		/// <param name="value">The value to convert.</param>

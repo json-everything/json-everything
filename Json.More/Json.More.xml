@@ -82,6 +82,15 @@
             <param name="b">The second document.</param>
             <returns><code>true</code> if the documents are equivalent; <code>false</code> otherwise.</returns>
         </member>
+        <member name="M:Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Converts an object to a <see cref="T:System.Text.Json.JsonDocument"/>.
+            </summary>
+            <typeparam name="T">The type of the object.</typeparam>
+            <param name="value">The value to convert.</param>
+            <param name="options">(optional) JSON serialization options.</param>
+            <returns>A <see cref="T:System.Text.Json.JsonDocument"/> representing the vale.</returns>
+        </member>
         <member name="T:Json.More.JsonElementEqualityComparer">
              <summary>
              Calculates equality between two <see cref="T:System.Text.Json.JsonElement"/>s.
@@ -123,6 +132,16 @@
             <param name="b">The second element.</param>
             <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">The <see cref="P:System.Text.Json.JsonElement.ValueKind"/> is not valid.</exception>
+        </member>
+        <member name="M:Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)">
+            <summary>
+            Serializes a <see cref="T:System.Text.Json.JsonElement"/> into a proper JSON string.
+            </summary>
+            <param name="element">The value to convert.</param>
+            <returns>A JSON string.</returns>
+            <remarks>
+            Booleans don't case right.  See https://github.com/dotnet/runtime/issues/42502
+            </remarks>
         </member>
         <member name="M:Json.More.JsonElementExtensions.AsJsonElement(System.Int64)">
             <summary>

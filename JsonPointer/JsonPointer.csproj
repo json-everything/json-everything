@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Json.Pointer</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <PackageId>JsonPointer.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Product>JsonPointer.Net</Product>
@@ -16,6 +16,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>JsonPointer.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-pointer.html</PackageReleaseNotes>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

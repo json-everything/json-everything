@@ -19,6 +19,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>JsonSchema.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
