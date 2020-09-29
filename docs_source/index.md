@@ -22,3 +22,7 @@ JsonPointer.Net provides an implementation of JSON Pointer ([RFC 6901](https://t
 JsonSchema.Net provides [JSON Schema](https://json-schema.org) support for drafts 6 and after.  It is 100% compliant and passes all required and most optional tests of the [JSON Schema Test Suite](https://github.com/json-schema-org/JSON-Schema-Test-Suite).
 
 ***NOTE** The remaining optional tests involve ECMA Regular Expressions, big-num support, and some string formats.*
+
+### JsonPath.Net
+
+JsonPath.Net provides JSON querying using the JSON Path querying language inspired by XPath and [conceptualized by Matt Goessner](https://goessner.net/articles/JsonPath/).  A standard is currently in progress for JSON Path.  This library will update as the spec evolves.

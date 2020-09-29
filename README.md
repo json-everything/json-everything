@@ -8,6 +8,7 @@
     <tr style="text-align:center;">
         <td>JsonSchema.Net</td>
         <td>JsonPointer.Net</td>
+        <td>JsonPath.Net</td>
         <td>Json.More.Net</td>
     </tr>
     <tr style="text-align:center;">
@@ -21,6 +22,12 @@
             <a href="https://www.nuget.org/packages/JsonPointer.Net/">
                 <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPointer.Net.svg?svg=true"></img><br>
                 <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img>
+            </a>
+        </td>
+        <td>
+            <a href="https://www.nuget.org/packages/JsonPath.Net/">
+                <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPath.Net.svg?svg=true"></img><br>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPath.Net.svg?svg=true"></img>
             </a>
         </td>
         <td>
@@ -42,6 +49,6 @@
 Currently supported:
 
 - [JSON Pointer (RFC 6901)](https://tools.ietf.org/html/rfc6901)
-- [JSON Relative Pointer]()
+- [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - [JSON Schema (drafts 6 and higher)](https://json-schema.org)
-
+- [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft)
