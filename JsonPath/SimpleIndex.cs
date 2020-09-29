@@ -28,7 +28,7 @@ namespace Json.Path
 				return false;
 			}
 
-			index = value < 0 ? new SimpleIndex(^value) : new SimpleIndex(value);
+			index = value < 0 ? new SimpleIndex(^(-value)) : new SimpleIndex(value);
 			return true;
 		}
 

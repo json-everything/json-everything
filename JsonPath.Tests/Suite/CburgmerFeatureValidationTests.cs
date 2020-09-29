@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -121,7 +122,8 @@ namespace JsonPath.Tests.Suite
 
 			PathResult actual = null;
 
-			using var cts = new CancellationTokenSource(100);
+			var time = Debugger.IsAttached ? int.MaxValue : 100;
+			using var cts = new CancellationTokenSource(time);
 			Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token).Wait(cts.Token);
 
 			if (actual == null)

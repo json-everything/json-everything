@@ -128,6 +128,7 @@ namespace Json.Path
 			try
 			{
 				int end = i;
+				char endChar;
 				switch (span[i])
 				{
 					case 'f':
@@ -137,30 +138,25 @@ namespace Json.Path
 					case 'n':
 						end += 4;
 						break;
-					case '.':
-					case '-':
-					case '0':
-					case '1':
-					case '2':
-					case '3':
-					case '4':
-					case '5':
-					case '6':
-					case '7':
-					case '8':
-					case '9':
+					case '.': case '-': case '0':
+					case '1': case '2': case '3':
+					case '4': case '5': case '6':
+					case '7': case '8': case '9':
 						end = i;
 						var allowDash = false;
-						while (end < span.Length && (span[end].In('0'..'9') || span[end].In('e', '.', '-')))
+						while (end < span.Length && (span[end].In('0'..'9') ||
+						                             span[end].In('e', '.', '-')))
 						{
 							if (!allowDash && span[end] == '-') break;
 							allowDash = span[end] == 'e';
 							end++;
 						}
 						break;
+					case '\'':
 					case '"':
 						end = i + 1;
-						while (end < span.Length && span[end] != '"')
+						endChar = span[i];
+						while (end < span.Length && span[end] != endChar)
 						{
 							if (span[end] == '\\')
 							{
@@ -175,7 +171,7 @@ namespace Json.Path
 					case '{':
 					case '[':
 						end = i + 1;
-						var endChar = span[i] == '{' ? '}' : ']';
+						endChar = span[i] == '{' ? '}' : ']';
 						var inString = false;
 						while (end < span.Length)
 						{
@@ -202,7 +198,9 @@ namespace Json.Path
 						return false;
 				}
 				
-				var block = span.Slice(i, end - i);
+				var block = span[i..end];
+				if (block[0] == '\'' && block[^1] == '\'')
+					block = $"\"{block[1..^1].ToString()}\"".AsSpan();
 				element = JsonDocument.Parse(block.ToString()).RootElement;
 				i = end;
 				return true;
