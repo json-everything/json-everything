@@ -17,9 +17,9 @@ namespace Json.Path.QueryExpressions
 		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
 			var lElement = left.Evaluate(element);
-			if (lElement.ValueKind.In(JsonValueKind.False, JsonValueKind.True)) return default;
+			if (!lElement.ValueKind.In(JsonValueKind.False, JsonValueKind.True)) return default;
 			var rElement = right.Evaluate(element);
-			if (rElement.ValueKind.In(JsonValueKind.False, JsonValueKind.True)) return default;
+			if (!rElement.ValueKind.In(JsonValueKind.False, JsonValueKind.True)) return default;
 			return (lElement.GetBoolean() || rElement.GetBoolean()).AsJsonElement();
 		}
 

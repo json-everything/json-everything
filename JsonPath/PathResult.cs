@@ -2,16 +2,25 @@
 
 namespace Json.Path
 {
+	/// <summary>
+	/// The results of a JSON Path evaluation against a JSON instance.
+	/// </summary>
 	public class PathResult
 	{
+		/// <summary>
+		/// The list of matches.
+		/// </summary>
 		public IReadOnlyList<PathMatch> Matches { get; }
+		/// <summary>
+		/// An error, if any, that occurred during evaluation.
+		/// </summary>
 		public string Error { get; }
 
-		public PathResult(IReadOnlyList<PathMatch> matches)
+		internal PathResult(IReadOnlyList<PathMatch> matches)
 		{
 			Matches = matches;
 		}
-		public PathResult(string error)
+		internal PathResult(string error)
 		{
 			Error = error;
 		}

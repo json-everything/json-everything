@@ -5,6 +5,9 @@ using System.Text.Json;
 
 namespace Json.Path
 {
+	/// <summary>
+	/// Represents a JSON Path.
+	/// </summary>
 	public class JsonPath
 	{
 		private delegate bool TryParseMethod(ReadOnlySpan<char> span, ref int i, out IIndexExpression index);
@@ -31,6 +34,12 @@ namespace Json.Path
 			_nodes = nodes;
 		}
 
+		/// <summary>
+		/// Parses a <see cref="JsonPath"/> from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <returns>The parsed path.</returns>
+		/// <exception cref="PathParseException">Thrown if a syntax error occurred.</exception>
 		public static JsonPath Parse(string source)
 		{
 			var i = 0;
@@ -48,7 +57,7 @@ namespace Json.Path
 				};
 
 				if (node == null)
-					throw new PathParseException(i, "Could not identify operator");
+					throw new PathParseException(i, "Could not identify selector");
 
 				nodes.Add(node);
 			}
@@ -59,6 +68,12 @@ namespace Json.Path
 			return new JsonPath(nodes);
 		}
 
+		/// <summary>
+		/// Attempts to parse a <see cref="JsonPath"/> from a string.
+		/// </summary>
+		/// <param name="source">The source string.</param>
+		/// <param name="path">The resulting path.</param>
+		/// <returns><code>true</code> if successful; otherwise <code>false</code>.</returns>
 		public static bool TryParse(string source, out JsonPath path)
 		{
 			var i = 0;
@@ -199,6 +214,11 @@ namespace Json.Path
 			return false;
 		}
 
+		/// <summary>
+		/// Evaluates the path against a JSON instance.
+		/// </summary>
+		/// <param name="root">The root of the JSON instance.</param>
+		/// <returns>The results of the evaluation.</returns>
 		public PathResult Evaluate(in JsonElement root)
 		{
 			var context = new EvaluationContext(root);
@@ -211,6 +231,8 @@ namespace Json.Path
 			return context.BuildResult();
 		}
 
+		/// <summary>Returns a string that represents the current object.</summary>
+		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
 			return string.Concat(_nodes.Select(n => n.ToString()));

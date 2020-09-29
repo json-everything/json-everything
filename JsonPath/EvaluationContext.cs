@@ -4,7 +4,7 @@ using Json.Pointer;
 
 namespace Json.Path
 {
-	public class EvaluationContext
+	internal class EvaluationContext
 	{
 		public JsonElement Root { get; }
 		public List<PathMatch> Current { get; }
