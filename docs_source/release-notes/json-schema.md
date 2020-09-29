@@ -1,3 +1,9 @@
+# [1.0.3](https://github.com/gregsdennis/json-everything/pull/11)
+
+[#9](https://github.com/gregsdennis/json-everything/pull/11) `if`/`then`/`else` are processed in serialized order instead of processing `if` first.
+
+[#10](https://github.com/gregsdennis/json-everything/pull/10) Bug fix around deserialization of `readonly` keyword.
+
 # [1.0.2](https://github.com/gregsdennis/json-everything/pull/7)
 
 Updated format `json-pointer` to require plain pointers.  URI-encoded pointers are invalid.
