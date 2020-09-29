@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
@@ -59,11 +59,22 @@ namespace JsonPath.Tests.Suite
 			Console.WriteLine(testCase);
 			Console.WriteLine();
 
+			Json.Path.JsonPath path = null;
 			PathResult actual = null;
 
 			var time = Debugger.IsAttached ? int.MaxValue : 100;
 			using var cts = new CancellationTokenSource(time);
-			Task.Run(() => actual = Evaluate(testCase.Document, testCase.Selector), cts.Token).Wait(cts.Token);
+			Task.Run(() =>
+			{
+				if (!Json.Path.JsonPath.TryParse(testCase.Selector, out path)) return;
+
+				if (testCase.Document.ValueKind == JsonValueKind.Undefined) return;
+
+				actual = path.Evaluate(testCase.Document);
+			}, cts.Token).Wait(cts.Token);
+
+			if (path != null && testCase.InvalidSelector)
+				Assert.Inconclusive($"{testCase.Selector} is not a valid path but was parsed without error.");
 
 			if (actual == null)
 			{
@@ -85,11 +96,13 @@ namespace JsonPath.Tests.Suite
 			return default;
 		}
 
-		private static PathResult Evaluate(JsonElement element, string pathString)
+		private static PathResult Evaluate(JsonElement element, string pathString, bool invalidSelector)
 		{
 			var selector = pathString;
 			if (!Json.Path.JsonPath.TryParse(selector, out var path))
 				return null;
+			if (invalidSelector)
+				Assert.Inconclusive($"{pathString} is not a valid path but was parsed without error.");
 			var results = path.Evaluate(element);
 
 			return results;

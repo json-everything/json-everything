@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace JsonPath.Tests.Suite
 {
@@ -15,10 +17,11 @@ namespace JsonPath.Tests.Suite
 
 		public override string ToString()
 		{
+			var result = Result == null ? null : $"[{string.Join(", ", Result.Select(e => e.ToJsonString()))}]";
 			return $"Name:     {Name}\n" +
 			       $"Selector: {Selector}\n" +
 			       $"Document: {Document}\n" +
-			       $"Result:   {Result}\n" +
+			       $"Result:   {result}\n" +
 			       $"IsValid:  {!InvalidSelector}";
 		}
 	}

@@ -46,7 +46,17 @@ namespace Json.Path
 
 			var name = span.Slice(i, length);
 			i += length + 1;
-			index = new PropertyNameIndex(name.ToString(), start);
+			JsonElement element;
+			try
+			{
+				element = JsonDocument.Parse($"\"{name.ToString()}\"").RootElement;
+			}
+			catch
+			{
+				index = null;
+				return false;
+			}
+			index = new PropertyNameIndex(element.GetString(), start);
 			return true;
 		}
 
