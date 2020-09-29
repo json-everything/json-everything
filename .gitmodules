@@ -3,4 +3,4 @@
 	url = https://github.com/json-schema-org/JSON-Schema-Test-Suite.git
 [submodule "ref-repos/json-path-comparison"]
 	path = ref-repos/json-path-comparison
-	url = git@github.com:cburgmer/json-path-comparison.git
+	url = https://github.com/cburgmer/json-path-comparison.git
