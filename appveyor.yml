@@ -32,7 +32,7 @@
       secure: F7U8mhZHK/BKgGeJ24Kj4xuWo1UwBVZQV5iH1JgsZ6eGUwCMno4GoHC9Tl3VDaso
     skip_symbols: false
     # symbol_server:           # remove to push symbols to SymbolSource.org
-    artifact: /(Json.More|JsonPointer|JsonSchema)\..*\.nupkg/
+    artifact: /(Json.More|JsonPointer|JsonSchema|JsonPath)\..*\.nupkg/
     on:
       branch: master
   after_deploy:
@@ -45,7 +45,7 @@
    - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_access_token):x-oauth-basic@github.com`n"
    - cmd: build-docs.bat
     # EDIT the origin of your repository - have to reset it here because AppVeyor pulls from SSH, but GitHub won't accept SSH pushes
-   - git remote set-url origin https://github.com/gregsdennis/Manatee.Json.git
+   - git remote set-url origin https://github.com/gregsdennis/json-everything.git
    - git checkout master
    - git add -A
    - git commit -a -m "regenerated docs"

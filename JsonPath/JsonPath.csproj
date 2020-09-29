@@ -14,6 +14,7 @@
     <PackageTags>json-path query json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
     <Version>0.1.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
