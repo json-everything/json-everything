@@ -32,6 +32,8 @@ namespace Json.Schema.Tests
 		[TestCase("{\"additionalItems\":true}")]
 		[TestCase("{\"additionalItems\":false}")]
 		[TestCase("{\"additionalItems\":{\"$id\":\"http://some.site/schema\"}}")]
+		[TestCase("{\"readOnly\":true}")]
+		[TestCase("{\"readOnly\":false}")]
 		public void RoundTrip(string text)
 		{
 			var schema = JsonSchema.FromText(text);
