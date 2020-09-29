@@ -19,6 +19,12 @@
             "JsonSchema.csproj"
           ],
           "src":"../JsonSchema/"
+        },
+        {
+          "files": [
+            "JsonPath.csproj"
+          ],
+          "src":"../JsonPath/"
         }
       ],
       "dest": "api",
