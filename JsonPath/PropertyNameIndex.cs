@@ -56,15 +56,9 @@ namespace Json.Path
 			}
 			try
 			{
-				if (start == '\'')
-				{
-					key = key.Replace("\\'", "\\\"");
-				}
+				if (start == '\'') 
+					key = key.Replace("\\'", "'").Replace("\"", "\\\"");
 				key = JsonDocument.Parse($"\"{key}\"").RootElement.GetString();
-				if (start == '\'')
-				{
-					key = key.Replace("\"", "'");
-				}
 			}
 			catch
 			{

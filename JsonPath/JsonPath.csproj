@@ -27,10 +27,6 @@
       <PackagePath></PackagePath>
       <Pack>True</Pack>
     </None>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
     <None Include="..\Resources\json-logo-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
