@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Json.Path
 {
@@ -30,13 +31,13 @@ namespace Json.Path
 			}
 
 			var start = span[i];
+			var other = start == '\'' ? '"' : '\'';
 			i++;
 			var length = 0;
 			while (i + length < span.Length)
 			{
 				if (span[i + length] == '\\')
 				{
-					// TODO: process escape sequences
 					length+=2;
 					continue;
 				}
@@ -46,17 +47,31 @@ namespace Json.Path
 
 			var name = span.Slice(i, length);
 			i += length + 1;
-			JsonElement element;
+			var key = name.ToString();
+			// don't escape the other quote
+			if (Regex.IsMatch(key, $@"(^|[^\\])\\{other}"))
+			{
+				index = null;
+				return false;
+			}
 			try
 			{
-				element = JsonDocument.Parse($"\"{name.ToString()}\"").RootElement;
+				if (start == '\'')
+				{
+					key = key.Replace("\\'", "\\\"");
+				}
+				key = JsonDocument.Parse($"\"{key}\"").RootElement.GetString();
+				if (start == '\'')
+				{
+					key = key.Replace("\"", "'");
+				}
 			}
 			catch
 			{
 				index = null;
 				return false;
 			}
-			index = new PropertyNameIndex(element.GetString(), start);
+			index = new PropertyNameIndex(key, start);
 			return true;
 		}
 
