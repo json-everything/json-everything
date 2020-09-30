@@ -193,11 +193,23 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "usage/json-path.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/json-path.html",
+          "hash": "4vNAyroYrav2rNa3Qxi8Ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "usage/json-pointer.md",
       "output": {
         ".html": {
           "relative_path": "usage/json-pointer.html",
-          "hash": "PfiTBtCu0SksXRSdozLjng=="
+          "hash": "KJqMvKRgIHCTlJpIA9gX0Q=="
         }
       },
       "is_incremental": false,
@@ -284,7 +296,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "QpYwxanliyzdalVShg0C4A=="
+          "hash": "mmq/2ulwCAu7BVIEPn3pzg=="
         }
       },
       "is_incremental": false,
@@ -305,7 +317,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 17,
+          "total_file_count": 18,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

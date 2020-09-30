@@ -69,7 +69,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="jsonpointernet">JsonPointer<nsp>.Net</nsp></h1>
 
-<p>[JSON Pointer] is a mechanism that allows you to isolate a single element within a JSON document by navigating down a series of object properties and array indices.</p>
+<p><a href="https://tools.ietf.org/html/rfc6901">JSON Pointer</a> is a mechanism that allows you to isolate a single element within a JSON document by navigating down a series of object properties and array indices.</p>
 <h2 id="the-syntax">The syntax</h2>
 <p>The syntax is really simple:</p>
 <pre><code>/objects/and/3/arrays
@@ -110,7 +110,7 @@ var pointer = JsonPointer.Parse(&quot;/objects/and/3/arrays&quot;);
 var result = pointer.Evaluate(element); // contains a JsonElement with a &quot;found me&quot; value.
 </code></pre>
 <h2 id="relative-json-pointers">Relative JSON Pointers</h2>
-<p><a href="https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/">JSON Hyperschema</a> relies on a variation of JSON Pointers that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.</p>
+<p><a href="https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/">JSON Hyperschema</a> relies on a variation of JSON Pointers called <a href="https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html">Relative JSON Pointers</a> that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.</p>
 <p>Relative JSON Pointers are implemented with the <code>RelativeJsonPointer</code> struct.  Interactions with this struct are very similar to <code>JsonPointer</code>.</p>
 <p>Unfortunately, since evaluation of these pointers require parent navigation, a feature which is <a href="https://github.com/dotnet/runtime/issues/40452">currently unsupported by <code>System.Text.Json</code></a>, only the model is functional at this time.</p>
 </article>
