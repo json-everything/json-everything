@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -13,8 +13,9 @@
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageTags>json-path query json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,10 +26,6 @@
     <None Include="..\LICENSE" Link="LICENSE">
       <PackagePath></PackagePath>
       <Pack>True</Pack>
-    </None>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
     </None>
     <None Include="..\Resources\json-logo-256.png">
       <Pack>True</Pack>

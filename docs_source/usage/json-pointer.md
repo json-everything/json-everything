@@ -1,6 +1,6 @@
 # JsonPointer<nsp>.Net
 
-[JSON Pointer] is a mechanism that allows you to isolate a single element within a JSON document by navigating down a series of object properties and array indices.
+[JSON Pointer](https://tools.ietf.org/html/rfc6901) is a mechanism that allows you to isolate a single element within a JSON document by navigating down a series of object properties and array indices.
 
 ## The syntax
 
@@ -58,7 +58,7 @@ var result = pointer.Evaluate(element); // contains a JsonElement with a "found 
 
 ## Relative JSON Pointers
 
-[JSON Hyperschema](https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/) relies on a variation of JSON Pointers that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.
+[JSON Hyperschema](https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/) relies on a variation of JSON Pointers called [Relative JSON Pointers](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html) that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.
 
 Relative JSON Pointers are implemented with the `RelativeJsonPointer` struct.  Interactions with this struct are very similar to `JsonPointer`.
 
