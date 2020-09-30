@@ -51,4 +51,4 @@ Currently supported:
 - [JSON Pointer (RFC 6901)](https://tools.ietf.org/html/rfc6901)
 - [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - [JSON Schema (drafts 6 and higher)](https://json-schema.org)
-- [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft)
+- [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)
