@@ -5,3 +5,5 @@
 - name: JSON Schema
   href: schema/toc.yml
   homepage: schema/overview.md
+- name: JSON Path
+  href: json-path.md
