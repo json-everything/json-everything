@@ -2,10 +2,6 @@
 
 JsonSchema<nsp>.Net handles all references as defined in the draft 2019-09 version of the JSON Schema specification.  This is *not* a change as of v11.0.0;  JsonSchema<nsp>.Net has always behaved this way.  The only change for draft 2019-09 schemas in JsonSchema<nsp>.Net is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
 
-## Automatic resolution
-
-JsonSchema<nsp>.Net will not automatically download schemas from URIs that look like network locations.  This may be added in future versions as an option, but it is not supported at this time.
-
 ## Schema registration
 
 In order to resolve references more quickly, JsonSchema<nsp>.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
@@ -37,3 +33,7 @@ SchemaRegistry.Global.Register("http://localhost/random-string", randomString);
 ```
 
 Now JsonSchema<nsp>.Net will be able to resolve the reference.
+
+## Automatic resolution
+
+In order to support scenarios where schemas cannot be registered ahead of time, the `SchemaRegistry` class exposes the `Fetch` property which is defined as `Func<Uri, JsonSchema>`.  This property can be set to a method which downloads the content from the supplied URI and deserializes it into a `JsonSchema` object.
