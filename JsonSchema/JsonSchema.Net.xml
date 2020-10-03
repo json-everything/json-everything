@@ -2534,6 +2534,11 @@
             The global registry.
             </summary>
         </member>
+        <member name="P:Json.Schema.SchemaRegistry.Fetch">
+            <summary>
+            Gets or sets a method to enable automatic download of schemas by `$id` URI.
+            </summary>
+        </member>
         <member name="M:Json.Schema.SchemaRegistry.Register(System.Uri,Json.Schema.JsonSchema)">
             <summary>
             Registers a schema by URI.

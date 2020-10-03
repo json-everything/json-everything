@@ -19,11 +19,21 @@ namespace Json.Schema
 		private static readonly Uri _empty = new Uri("http://everything.json/");
 
 		private Dictionary<Uri, Registration> _registered;
+		private Func<Uri, JsonSchema> _fetch;
 
 		/// <summary>
 		/// The global registry.
 		/// </summary>
 		public static SchemaRegistry Global { get; }
+
+		/// <summary>
+		/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
+		/// </summary>
+		public Func<Uri, JsonSchema> Fetch
+		{
+			get => _fetch ??= uri => null;
+			set => _fetch = value;
+		}
 
 		static SchemaRegistry()
 		{
@@ -54,10 +64,10 @@ namespace Json.Schema
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			uri = MakeAbsolute(uri);
-			var registry = CheckRegistry(_registered, uri);
-			if (registry == null)
-				_registered[uri] = registry = new Registration();
-			registry.Root = schema;
+			var registration = CheckRegistry(_registered, uri);
+			if (registration == null)
+				_registered[uri] = registration = new Registration();
+			registration.Root = schema;
 		}
 
 		/// <summary>
@@ -70,10 +80,10 @@ namespace Json.Schema
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			uri = MakeAbsolute(uri);
-			var registry = CheckRegistry(_registered, uri);
-			if (registry == null)
-				_registered[uri] = registry = new Registration();
-			registry.Anchors[anchor] = schema;
+			var registration = CheckRegistry(_registered, uri);
+			if (registration == null)
+				_registered[uri] = registration = new Registration();
+			registration.Anchors[anchor] = schema;
 		}
 
 		/// <summary>
@@ -98,9 +108,18 @@ namespace Json.Schema
 			if (registration == null && !ReferenceEquals(Global, this))
 				registration = CheckRegistry(Global._registered, uri);
 
-			if (registration == null) return null;
+			JsonSchema schema;
+			if (registration == null)
+			{
+				schema = Fetch(uri) ?? Global.Fetch(uri);
+				if (schema == null) return null;
+
+				Register(uri, schema);
+				schema.RegisterSubschemas(this, uri);
+				registration = CheckRegistry(_registered, uri);
+			}
 			if (string.IsNullOrEmpty(anchor)) return registration.Root;
-			return registration.Anchors.TryGetValue(anchor, out var schema) ? schema : null;
+			return registration.Anchors.TryGetValue(anchor, out schema) ? schema : null;
 		}
 
 		private static Registration CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
