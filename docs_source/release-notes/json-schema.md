@@ -1,3 +1,7 @@
+# [1.1.0](https://github.com/gregsdennis/json-everything/pull/11)
+
+Added `SchemaRegistry.Fetch` property to enable automatic downloading of referenced schemas.
+
 # [1.0.3](https://github.com/gregsdennis/json-everything/pull/11)
 
 [#9](https://github.com/gregsdennis/json-everything/pull/11) `if`/`then`/`else` are processed in serialized order instead of processing `if` first.
