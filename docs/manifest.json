@@ -125,7 +125,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "if0e+5xn3T0O1JV/mlGA1Q=="
+          "hash": "7f4yfD9M6y0FBysNk3Wo9w=="
         }
       },
       "is_incremental": false,
@@ -257,7 +257,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema/references.html",
-          "hash": "WJfrLWFT8p0zvKrdza+vLw=="
+          "hash": "oJpwIQqNw+lopwX2842WfA=="
         }
       },
       "is_incremental": false,
