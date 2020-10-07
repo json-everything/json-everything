@@ -14,7 +14,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(IdKeywordJsonConverter))]
-	public class IdKeyword : IJsonSchemaKeyword
+	public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 	{
 		internal const string Name = "$id";
 
@@ -45,6 +45,31 @@ namespace Json.Schema
 		internal Uri UpdateUri(Uri currentUri)
 		{
 			return currentUri == null ? Id : new Uri(currentUri, Id);
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(IdKeyword other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Equals(Id, other.Id);
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as IdKeyword);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			return (Id != null ? Id.GetHashCode() : 0);
 		}
 	}
 

@@ -43,7 +43,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <typeparam name="T">The keyword type.</typeparam>
 		public static void Register<T>()
-			where T : IJsonSchemaKeyword
+			where T : IJsonSchemaKeyword, IEquatable<T>
 		{
 			var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
 			if (keyword == null)

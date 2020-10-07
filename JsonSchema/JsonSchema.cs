@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema
@@ -287,7 +288,7 @@ namespace Json.Schema
 						(td, od) => new {ThisData = td, OtherData = od})
 					.ToList();
 				if (byKey.Count != OtherData.Count) return false;
-				if (!byKey.All(k => k.ThisData.Equals(k.OtherData))) return false;
+				if (!byKey.All(k => k.ThisData.Value.IsEquivalentTo(k.OtherData.Value))) return false;
 			}
 
 			return true;
