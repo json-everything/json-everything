@@ -29,7 +29,7 @@
     provider: NuGet
     # server:                  # remove to push to NuGet.org
     api_key:
-      secure: F7U8mhZHK/BKgGeJ24Kj4xuWo1UwBVZQV5iH1JgsZ6eGUwCMno4GoHC9Tl3VDaso
+      secure: I2uIJbT1h5SIKT6RD4n4V+b302AX4q/a4NmvFy65IjKlCYE/Fo9BMqGoDNeylnNQ
     skip_symbols: false
     # symbol_server:           # remove to push symbols to SymbolSource.org
     artifact: /(Json.More|JsonPointer|JsonSchema|JsonPath)\..*\.nupkg/
