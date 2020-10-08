@@ -11,7 +11,6 @@ namespace Json.Schema
 	/// Handles `properties`.
 	/// </summary>
 	[Applicator]
-	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
