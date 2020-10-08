@@ -2,7 +2,9 @@
 
 ([json-schema<nsp>.org #358](https://github.com/json-schema-org/json-schema-org.github.io/pull/358)) Published draft 06 meta-schema doesn't match the copy in the spec repo.
 
-[#16](https://github.com/gregsdennis/json-everything/pull/16) `JsonSchema` equality checking.
+[#16](https://github.com/gregsdennis/json-everything/pull/16) `JsonSchema` equality checking.  Along with this, added `IEquatable<T>` to `SchemaKeywordRegistry.Register<T>()`.
+
+Added `EnumerableExtensions.ContentsEqual()`.
 
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/11)
 
