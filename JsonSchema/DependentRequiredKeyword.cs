@@ -119,7 +119,16 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Requirements?.GetCollectionHashCode() ?? 0;
+			return Requirements.Aggregate(0, (current, obj) =>
+			{
+				unchecked
+				{
+					var hashCode = current;
+					hashCode = (hashCode * 397) ^ (obj.Key?.GetHashCode() ?? 0);
+					hashCode = (hashCode * 397) ^ (obj.Value != null ? obj.Value.GetCollectionHashCode() : 0);
+					return hashCode;
+				}
+			});
 		}
 	}
 

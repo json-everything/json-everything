@@ -69,7 +69,7 @@ namespace Json.Schema
 	{
 		public override DeprecatedKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.True || reader.TokenType != JsonTokenType.False)
+			if (reader.TokenType != JsonTokenType.True && reader.TokenType != JsonTokenType.False)
 				throw new JsonException("Expected boolean");
 
 			var value = reader.GetBoolean();

@@ -895,6 +895,30 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.EnumerableExtensions">
+            <summary>
+            More extensions on <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IReadOnlyList{``0})">
+            <summary>
+            Determines contents-based equality: each element appears equally in each set.
+            </summary>
+            <param name="collection">The first collection.</param>
+            <param name="other">The second collection.</param>
+            <typeparam name="T">The element type.</typeparam>
+            <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            Determines contents-based equality: each element appears equally in each set.
+            </summary>
+            <param name="collection">The first collection.</param>
+            <param name="other">The second collection.</param>
+            <param name="comparer">A custom equality comparer.</param>
+            <typeparam name="T">The element type.</typeparam>
+            <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+        </member>
         <member name="T:Json.Schema.EnumKeyword">
             <summary>
             Handles `enum`.
