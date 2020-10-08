@@ -2,6 +2,8 @@
 
 ([json-schema<nsp>.org #358](https://github.com/json-schema-org/json-schema-org.github.io/pull/358)) Published draft 06 meta-schema doesn't match the copy in the spec repo.
 
+[#16](https://github.com/gregsdennis/json-everything/pull/16) `JsonSchema` equality checking.
+
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/11)
 
 Added `SchemaRegistry.Fetch` property to enable automatic downloading of referenced schemas.
