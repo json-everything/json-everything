@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -15,7 +16,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Validation201909Id)]
 	[JsonConverter(typeof(RequiredKeywordJsonConverter))]
-	public class RequiredKeyword : IJsonSchemaKeyword
+	public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	{
 		internal const string Name = "required";
 
@@ -66,6 +67,31 @@ namespace Json.Schema
 			context.IsValid = notFound.Count == 0;
 			if (!context.IsValid)
 				context.Message = $"Required properties [{string.Join(", ", notFound)}] were not present";
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(RequiredKeyword other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Properties.ContentsEqual(other.Properties);
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as RequiredKeyword);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			return Properties?.GetCollectionHashCode() ?? 0;
 		}
 	}
 

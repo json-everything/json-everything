@@ -18,7 +18,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
-	public class PatternPropertiesKeyword : IJsonSchemaKeyword
+	public class PatternPropertiesKeyword : IJsonSchemaKeyword, IEquatable<PatternPropertiesKeyword>
 	{
 		internal const string Name = "patternProperties";
 
@@ -97,6 +97,39 @@ namespace Json.Schema
 				annotation.AddRange(allProperties);
 			else if (allProperties.Any())
 				destContext.SetAnnotation(Name, allProperties);
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(PatternPropertiesKeyword other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			if (Patterns.Count != other.Patterns.Count) return false;
+			var byKey = Patterns.Join(other.Patterns,
+					td => td.Key.ToString(),
+					od => od.Key.ToString(),
+					(td, od) => new {ThisDef = td.Value, OtherDef = od.Value})
+				.ToList();
+			if (byKey.Count != Patterns.Count) return false;
+
+			return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as PatternPropertiesKeyword);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			return Patterns?.GetCollectionHashCode() ?? 0;
 		}
 	}
 

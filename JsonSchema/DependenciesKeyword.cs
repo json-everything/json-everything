@@ -15,7 +15,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[JsonConverter(typeof(DependenciesKeywordJsonConverter))]
-	public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable
+	public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<DependenciesKeyword>
 	{
 		internal const string Name = "dependencies";
 
@@ -120,11 +120,43 @@ namespace Json.Schema
 				requirement.Schema?.RegisterSubschemas(registry, currentUri);
 			}
 		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(DependenciesKeyword other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			if (Requirements.Count != other.Requirements.Count) return false;
+			var byKey = Requirements.Join(other.Requirements,
+					td => td.Key,
+					od => od.Key,
+					(td, od) => new {ThisDef = td.Value, OtherDef = od.Value})
+				.ToList();
+			if (byKey.Count != Requirements.Count) return false;
+
+			return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as DependenciesKeyword);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			return Requirements?.GetCollectionHashCode() ?? 0;
+		}
 	}
 
 	internal class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyword>
 	{
-
 		public override DependenciesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType != JsonTokenType.StartObject)
@@ -150,7 +182,7 @@ namespace Json.Schema
 	/// A holder for either a schema dependency or a requirements dependency.
 	/// </summary>
 	[JsonConverter(typeof(SchemaOrPropertyListJsonConverter))]
-	public class SchemaOrPropertyList
+	public class SchemaOrPropertyList : IEquatable<SchemaOrPropertyList>
 	{
 		/// <summary>
 		/// The schema dependency.
@@ -177,6 +209,34 @@ namespace Json.Schema
 		public SchemaOrPropertyList(List<string> requirements)
 		{
 			Requirements = requirements;
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(SchemaOrPropertyList other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Equals(Schema, other.Schema) && Requirements.ContentsEqual(other.Requirements);
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as SchemaOrPropertyList);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return ((Schema?.GetHashCode() ?? 0) * 397) ^ (Requirements?.GetHashCode() ?? 0);
+			}
 		}
 	}
 

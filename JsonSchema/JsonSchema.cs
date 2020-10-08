@@ -285,10 +285,10 @@ namespace Json.Schema
 				var byKey = OtherData.Join(other.OtherData,
 						td => td.Key,
 						od => od.Key,
-						(td, od) => new {ThisData = td, OtherData = od})
+						(td, od) => new {ThisData = td.Value, OtherData = od.Value})
 					.ToList();
 				if (byKey.Count != OtherData.Count) return false;
-				if (!byKey.All(k => k.ThisData.Value.IsEquivalentTo(k.OtherData.Value))) return false;
+				if (!byKey.All(k => k.ThisData.IsEquivalentTo(k.OtherData))) return false;
 			}
 
 			return true;
