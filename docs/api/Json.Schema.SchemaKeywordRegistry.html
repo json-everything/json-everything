@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class SchemaKeywordRegistry
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -183,7 +183,6 @@ library.  Therefore keywords are registered for all schemas.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void Register&lt;T&gt;()
-
     where T : IJsonSchemaKeyword, IEquatable&lt;T&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
@@ -217,7 +216,6 @@ library.  Therefore keywords are registered for all schemas.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void RegisterNullValue&lt;T&gt;(T nullKeyword)
-
     where T : IJsonSchemaKeyword</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -271,7 +269,6 @@ this step, the serializer will skip keywords that have nulls.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void Unregister&lt;T&gt;()
-
     where T : IJsonSchemaKeyword</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
