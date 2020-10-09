@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/wda5exdfiuic3kg2/branch/master?svg=true)](https://ci.appveyor.com/project/gregsdennis/json-everything/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/rsygk3k1bxqflu20/branch/master?svg=true)](https://ci.appveyor.com/project/gregsdennis/json-everything/branch/master)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/gregsdennis/json-everything?svg=true)](https://ci.appveyor.com/project/gregsdennis/json-everything/branch/master)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](http://isitmaintained.com/project/gregsdennis/json-everything "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](http://isitmaintained.com/project/gregsdennis/json-everything "Average time to resolve an issue")
