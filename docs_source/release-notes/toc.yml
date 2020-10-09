@@ -4,3 +4,5 @@
   href: json-pointer.md
 - name: JsonSchema.Net
   href: json-schema.md
+- name: JsonPath.Net
+  href: json-path.md
