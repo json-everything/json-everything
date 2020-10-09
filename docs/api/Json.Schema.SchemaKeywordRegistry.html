@@ -120,10 +120,10 @@ library.  Therefore keywords are registered for all schemas.</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_GetImplementationType_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.GetImplementationType(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_GetImplementationType_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.GetImplementationType(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/SchemaKeywordRegistry.cs/#L74">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L74">View Source</a>
   </span>
   <a id="Json_Schema_SchemaKeywordRegistry_GetImplementationType_" data-uid="Json.Schema.SchemaKeywordRegistry.GetImplementationType*"></a>
   <h4 id="Json_Schema_SchemaKeywordRegistry_GetImplementationType_System_String_" data-uid="Json.Schema.SchemaKeywordRegistry.GetImplementationType(System.String)">GetImplementationType(String)</h4>
@@ -170,10 +170,10 @@ library.  Therefore keywords are registered for all schemas.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_Register__1.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.Register%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_Register__1.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.Register%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/SchemaKeywordRegistry.cs/#L45">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L45">View Source</a>
   </span>
   <a id="Json_Schema_SchemaKeywordRegistry_Register_" data-uid="Json.Schema.SchemaKeywordRegistry.Register*"></a>
   <h4 id="Json_Schema_SchemaKeywordRegistry_Register__1" data-uid="Json.Schema.SchemaKeywordRegistry.Register``1">Register&lt;T&gt;()</h4>
@@ -183,7 +183,8 @@ library.  Therefore keywords are registered for all schemas.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void Register&lt;T&gt;()
-    where T : IJsonSchemaKeyword</code></pre>
+
+    where T : IJsonSchemaKeyword, IEquatable&lt;T&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -203,10 +204,10 @@ library.  Therefore keywords are registered for all schemas.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_RegisterNullValue__1___0_.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.RegisterNullValue%60%601(%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_RegisterNullValue__1___0_.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.RegisterNullValue%60%601(%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/SchemaKeywordRegistry.cs/#L90">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L90">View Source</a>
   </span>
   <a id="Json_Schema_SchemaKeywordRegistry_RegisterNullValue_" data-uid="Json.Schema.SchemaKeywordRegistry.RegisterNullValue*"></a>
   <h4 id="Json_Schema_SchemaKeywordRegistry_RegisterNullValue__1___0_" data-uid="Json.Schema.SchemaKeywordRegistry.RegisterNullValue``1(``0)">RegisterNullValue&lt;T&gt;(T)</h4>
@@ -216,6 +217,7 @@ library.  Therefore keywords are registered for all schemas.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void RegisterNullValue&lt;T&gt;(T nullKeyword)
+
     where T : IJsonSchemaKeyword</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -256,10 +258,10 @@ this step, the serializer will skip keywords that have nulls.</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_Unregister__1.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.Unregister%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_Unregister__1.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.Unregister%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/SchemaKeywordRegistry.cs/#L59">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L59">View Source</a>
   </span>
   <a id="Json_Schema_SchemaKeywordRegistry_Unregister_" data-uid="Json.Schema.SchemaKeywordRegistry.Unregister*"></a>
   <h4 id="Json_Schema_SchemaKeywordRegistry_Unregister__1" data-uid="Json.Schema.SchemaKeywordRegistry.Unregister``1">Unregister&lt;T&gt;()</h4>
@@ -269,6 +271,7 @@ this step, the serializer will skip keywords that have nulls.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void Unregister&lt;T&gt;()
+
     where T : IJsonSchemaKeyword</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
@@ -295,10 +298,10 @@ this step, the serializer will skip keywords that have nulls.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/SchemaKeywordRegistry.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -85,17 +85,12 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
     <div><a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.ElseKeyword.html">ElseKeyword</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -115,20 +110,21 @@
   <h5 id="Json_Schema_ElseKeyword_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[SchemaKeyword(&quot;else&quot;)]
+[SchemaPriority(10)]
 [SchemaDraft(Draft.Draft7)]
 [SchemaDraft(Draft.Draft201909)]
 [Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/applicator&quot;)]
 [JsonConverter(typeof(ElseKeywordJsonConverter))]
-public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
+public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable&lt;ElseKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_ElseKeyword__ctor_Json_Schema_JsonSchema_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.%23ctor(Json.Schema.JsonSchema)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword__ctor_Json_Schema_JsonSchema_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.%23ctor(Json.Schema.JsonSchema)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/ElseKeyword.cs/#L29">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L30">View Source</a>
   </span>
   <a id="Json_Schema_ElseKeyword__ctor_" data-uid="Json.Schema.ElseKeyword.#ctor*"></a>
   <h4 id="Json_Schema_ElseKeyword__ctor_Json_Schema_JsonSchema_" data-uid="Json.Schema.ElseKeyword.#ctor(Json.Schema.JsonSchema)">ElseKeyword(JsonSchema)</h4>
@@ -161,10 +157,10 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_ElseKeyword_Schema.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Schema%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_Schema.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Schema%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/ElseKeyword.cs/#L23">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L24">View Source</a>
   </span>
   <a id="Json_Schema_ElseKeyword_Schema_" data-uid="Json.Schema.ElseKeyword.Schema*"></a>
   <h4 id="Json_Schema_ElseKeyword_Schema" data-uid="Json.Schema.ElseKeyword.Schema">Schema</h4>
@@ -194,10 +190,146 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_ElseKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_Equals_Json_Schema_ElseKeyword_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Equals(Json.Schema.ElseKeyword)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/ElseKeyword.cs/#L38">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L69">View Source</a>
+  </span>
+  <a id="Json_Schema_ElseKeyword_Equals_" data-uid="Json.Schema.ElseKeyword.Equals*"></a>
+  <h4 id="Json_Schema_ElseKeyword_Equals_Json_Schema_ElseKeyword_" data-uid="Json.Schema.ElseKeyword.Equals(Json.Schema.ElseKeyword)">Equals(ElseKeyword)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(ElseKeyword other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.ElseKeyword.html">ElseKeyword</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>An object to compare with this object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>true if the current object is equal to the <code data-dev-comment-type="paramref" class="paramref">other</code> parameter; otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L79">View Source</a>
+  </span>
+  <a id="Json_Schema_ElseKeyword_Equals_" data-uid="Json.Schema.ElseKeyword.Equals*"></a>
+  <h4 id="Json_Schema_ElseKeyword_Equals_System_Object_" data-uid="Json.Schema.ElseKeyword.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>The object to compare with the current object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>true if the specified object  is equal to the current object; otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L86">View Source</a>
+  </span>
+  <a id="Json_Schema_ElseKeyword_GetHashCode_" data-uid="Json.Schema.ElseKeyword.GetHashCode*"></a>
+  <h4 id="Json_Schema_ElseKeyword_GetHashCode" data-uid="Json.Schema.ElseKeyword.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p>A hash code for the current object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L39">View Source</a>
   </span>
   <a id="Json_Schema_ElseKeyword_Validate_" data-uid="Json.Schema.ElseKeyword.Validate*"></a>
   <h4 id="Json_Schema_ElseKeyword_Validate_Json_Schema_ValidationContext_" data-uid="Json.Schema.ElseKeyword.Validate(Json.Schema.ValidationContext)">Validate(ValidationContext)</h4>
@@ -230,10 +362,10 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Json%23Schema%23IRefResolvable%23RegisterSubschemas(Json.Schema.SchemaRegistry%2CSystem.Uri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Json%23Schema%23IRefResolvable%23RegisterSubschemas(Json.Schema.SchemaRegistry%2CSystem.Uri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/ElseKeyword.cs/#L60">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L61">View Source</a>
   </span>
   <a id="Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_" data-uid="Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#RegisterSubschemas*"></a>
   <h4 id="Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_" data-uid="Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)">IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)</h4>
@@ -267,10 +399,10 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Json%23Schema%23IRefResolvable%23ResolvePointerSegment(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword.Json%23Schema%23IRefResolvable%23ResolvePointerSegment(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/ElseKeyword.cs/#L55">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L56">View Source</a>
   </span>
   <a id="Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_" data-uid="Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*"></a>
   <h4 id="Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_" data-uid="Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)">IRefResolvable.ResolvePointerSegment(String)</h4>
@@ -319,7 +451,13 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
   <div>
       <a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a>
   </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+  </div>
   <div>
       <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Keyword_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Keyword(IJsonSchemaKeyword)</a>
   </div>
@@ -337,10 +475,10 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_ElseKeyword.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ElseKeyword.md&amp;value=---%0Auid%3A%20Json.Schema.ElseKeyword%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/ElseKeyword.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ElseKeyword.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

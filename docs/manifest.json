@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "C:/projects/json-everything/docs_source",
+  "source_base_path": "c:/projects/json-everything/docs_source",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -9,7 +9,1351 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "boPuFj7aPQqND5tNzCshiQ=="
+          "hash": "vSSCEen5tdh0UDfhMjv/Ag=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.EnumStringConverter-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.EnumStringConverter-1.html",
+          "hash": "AVeqh/E+VGDfRjXi+1gJ0Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.JsonDocumentEqualityComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.JsonDocumentEqualityComparer.html",
+          "hash": "0t8TWRumRzXPqhR4r1G6OQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.JsonDocumentExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.JsonDocumentExtensions.html",
+          "hash": "SaUZ920P/VgdOHmC8WXJsA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.JsonElementEqualityComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.JsonElementEqualityComparer.html",
+          "hash": "F5E2vWy+RBgjet3dYUkqIA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.JsonElementExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.JsonElementExtensions.html",
+          "hash": "sQNcS8vtKcXzy9AuwVyn9A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.Utf8JsonWriterExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.Utf8JsonWriterExtensions.html",
+          "hash": "PrT/Jqts2NYNjD5QnH+/4A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.More.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.More.html",
+          "hash": "TNTZVDC2hBHmiOpWGAhMrg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.JsonPath.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.JsonPath.html",
+          "hash": "fR46vsLyYAQm7xHCjL8JJA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.PathMatch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.PathMatch.html",
+          "hash": "b76PIEW8dai9pVAzQ7vl6g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.PathParseException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.PathParseException.html",
+          "hash": "v0peqMZN0R2PmAvacGCnDA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.PathResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.PathResult.html",
+          "hash": "tedRcZGQ3qYEtg6Ooj8yrw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.html",
+          "hash": "x3ACODOUm6hJEDuMaZbymQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.CharExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.CharExtensions.html",
+          "hash": "QWG1YQNCWhHyXZu8gA+QUg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.EnumerableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.EnumerableExtensions.html",
+          "hash": "peAR7Vw3tQw+35HWox7P5A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.JsonPointer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.JsonPointer.html",
+          "hash": "OnuIyVcB57uJAwbSRLpkqQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.JsonPointerKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.JsonPointerKind.html",
+          "hash": "BJ3+yNziwyxR9/4e3qWckw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.PointerParseException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.PointerParseException.html",
+          "hash": "Dl+kzB2YMWZV0EWymz6v3w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.PointerSegment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.PointerSegment.html",
+          "hash": "RjZZV6YZeLHsU0gHfIkq6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.RelativeJsonPointer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.RelativeJsonPointer.html",
+          "hash": "GpEzmFjgIfcHMAllIV2Cbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Pointer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Pointer.html",
+          "hash": "sNFNNBgQ6dvuJAtkHlT2Jw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.AdditionalItemsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.AdditionalItemsKeyword.html",
+          "hash": "LQSwfmyazbYCUYCHmSymXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.AdditionalPropertiesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.AdditionalPropertiesKeyword.html",
+          "hash": "HB5nD0CIxZSKX/wgZItv5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.AllOfKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.AllOfKeyword.html",
+          "hash": "lUI8r5YV+PFhZ9/dqkO6gA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.AnchorKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.AnchorKeyword.html",
+          "hash": "J2+HcI9v2mCJmTUf018k4w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Annotation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Annotation.html",
+          "hash": "Nl6jmLN/DX0dEghrSarF7A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.AnyOfKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.AnyOfKeyword.html",
+          "hash": "oxrHPTjarA3/i5vG3FUVYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ApplicatorAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ApplicatorAttribute.html",
+          "hash": "LWb5kaG4zOKg6FOsw9aUFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.CommentKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.CommentKeyword.html",
+          "hash": "7zyFHGnY4j464kQpiFTPRQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ConstKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ConstKeyword.html",
+          "hash": "iyiLxXRruHqwbnAz1yXF2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ContainsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ContainsKeyword.html",
+          "hash": "4mPxNSnNbc9p8xWEMaERNA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ContentMediaEncodingKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ContentMediaEncodingKeyword.html",
+          "hash": "OQOYcOeYSOXsf/8hWXOGyA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ContentMediaTypeKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ContentMediaTypeKeyword.html",
+          "hash": "YW7/0WDV3W4QUumZi+9d0g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ContentSchemaKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ContentSchemaKeyword.html",
+          "hash": "h7Jz38wxD0lHBAr+40WFEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DefaultKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DefaultKeyword.html",
+          "hash": "avjmGBfuCo/mmaFl9CNemA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DefinitionsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DefinitionsKeyword.html",
+          "hash": "g19Ocau5hJWG0bzag+eAmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DefsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DefsKeyword.html",
+          "hash": "2n8ZTSAVd5CgN39jB+WCQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DependenciesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DependenciesKeyword.html",
+          "hash": "Z/QVMmeoVI/AuztxyNzO9A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DependentRequiredKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DependentRequiredKeyword.html",
+          "hash": "8uUFYODg+8egmmk88n9muQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DependentSchemasKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DependentSchemasKeyword.html",
+          "hash": "QLr+kW4ZQBXlxVHBqwOy5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DeprecatedKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DeprecatedKeyword.html",
+          "hash": "0BhopgN60ORKe3NY2KW+hA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.DescriptionKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.DescriptionKeyword.html",
+          "hash": "0RkZI8InRiArCQ+3vPZ1hw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Draft.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Draft.html",
+          "hash": "xo0JUtRB1r2IOv4whBquCQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Duration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Duration.html",
+          "hash": "O5y20m/yNldJAu/UHlE69g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ElseKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ElseKeyword.html",
+          "hash": "Ov/KP1sdH9Jh3ZHUUd8oyw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.EnumKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.EnumKeyword.html",
+          "hash": "MTdkrECSI55hIPbMBpqCOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.EnumerableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.EnumerableExtensions.html",
+          "hash": "c5gsFmjkXe+PTzJ8hkwTMA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ExamplesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ExamplesKeyword.html",
+          "hash": "RHZDF//1jeo0QauK8+ABBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ExclusiveMaximumKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ExclusiveMaximumKeyword.html",
+          "hash": "pqi33zoMwMCmeCPQTtRrjA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ExclusiveMinimumKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ExclusiveMinimumKeyword.html",
+          "hash": "V2Xgfkh4nsegrDbnro/COg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Format.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Format.html",
+          "hash": "Yzv2bpVJLRqZDBOLsrxKCA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.FormatKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.FormatKeyword.html",
+          "hash": "VyuDidef58K+NeCIcJnpHA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Formats.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Formats.html",
+          "hash": "mMHM8R1fPSu1WNvlBLZIJQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.IJsonSchemaKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.IJsonSchemaKeyword.html",
+          "hash": "7t37J/P6QD76Tcj1mbr+Xw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.IRefResolvable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.IRefResolvable.html",
+          "hash": "zdtR6D+kFMB/KwX0k9A24g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.IdKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.IdKeyword.html",
+          "hash": "OSF5HKdQ8FbNJmf9CEy6Iw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.IfKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.IfKeyword.html",
+          "hash": "bU+Kvq/rl/9tiznNydKs4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ItemsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ItemsKeyword.html",
+          "hash": "qd67i79hTGIgdQDFBHkPuw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.JsonSchema.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.JsonSchema.html",
+          "hash": "JjdCSIbJP7Pgu58eZG+lhA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.JsonSchemaBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.JsonSchemaBuilder.html",
+          "hash": "npAc5gUMS8+E7bTxEXTX3Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.JsonSchemaBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.JsonSchemaBuilderExtensions.html",
+          "hash": "nluMhDkw4SExjYUW7F6ctw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.KeywordExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.KeywordExtensions.html",
+          "hash": "0E//4UCtzdnR/7QnfL2RnQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MaxContainsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MaxContainsKeyword.html",
+          "hash": "mImy6avkMWHijNRfzDRzbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MaxItemsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MaxItemsKeyword.html",
+          "hash": "ls2Ga+gr0PzRN1yd40ubow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MaxLengthKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MaxLengthKeyword.html",
+          "hash": "FCMY+SgneOs7Q/TrDonc9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MaxPropertiesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MaxPropertiesKeyword.html",
+          "hash": "ApbzR9MiWFpBcO+IW9+HaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MaximumKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MaximumKeyword.html",
+          "hash": "+BCBUC54mUDT/ZyCxiGMQA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MetaSchemas.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MetaSchemas.html",
+          "hash": "JwCJnr1XQjVZHv448zMS4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MinContainsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MinContainsKeyword.html",
+          "hash": "rC0heX3TqzHKEOwvRIFnDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MinItemsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MinItemsKeyword.html",
+          "hash": "7FbAyRoOd+7RaTs+LRL1hA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MinLengthKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MinLengthKeyword.html",
+          "hash": "10T20NGSllCCgy39aLQgzQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MinPropertiesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MinPropertiesKeyword.html",
+          "hash": "WBKnzPQzLMnRrE3ET17d+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MinimumKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MinimumKeyword.html",
+          "hash": "ON+cLN4mdx1bpl9D+9AR5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.MultipleOfKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.MultipleOfKeyword.html",
+          "hash": "tehhbgOojlO4obhhKQCIzg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.NotKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.NotKeyword.html",
+          "hash": "K2XLVVjGqzhVTYE85YNl6A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.OneOfKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.OneOfKeyword.html",
+          "hash": "7JqV/tKPZFd0rA8oijVVLw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.OutputFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.OutputFormat.html",
+          "hash": "SV24JjrEaU59jn12ZUKplQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.PatternKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.PatternKeyword.html",
+          "hash": "guxCTZEPPftYmdOxaII7Rw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.PatternPropertiesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.PatternPropertiesKeyword.html",
+          "hash": "g/rfAO0RGBVHJ+WWqlzaVA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.PredicateFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.PredicateFormat.html",
+          "hash": "PzA9fB8UAzRq17GUwxWbDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.PropertiesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.PropertiesKeyword.html",
+          "hash": "ABvAM7B9R3ndM7ETOeAkaw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.PropertyNamesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.PropertyNamesKeyword.html",
+          "hash": "5n4uBsHGtIcB+cVR2gvFwg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ReadOnlyKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ReadOnlyKeyword.html",
+          "hash": "/ni7bD2pfIYKt09SiDa6kQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.RecursiveAnchorKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.RecursiveAnchorKeyword.html",
+          "hash": "6JZujM5eT7bmKyNyQQT0Dg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.RecursiveRefKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.RecursiveRefKeyword.html",
+          "hash": "7+QCfgtSJoJeGrbzkXwLaw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.RefKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.RefKeyword.html",
+          "hash": "9W+55IpCAg4v8edZ/Uq4WQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.RegexFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.RegexFormat.html",
+          "hash": "mXZjgSp6udFNfFfkOi0WKg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.RequiredKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.RequiredKeyword.html",
+          "hash": "WwR1UNkSn10KvzZSdBhr+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaDraftAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaDraftAttribute.html",
+          "hash": "VczRi3RWMOD/G7n/gbzQkA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaKeyword.html",
+          "hash": "MKjTlUkN6hHpa2rHIu1RfQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaKeywordAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaKeywordAttribute.html",
+          "hash": "177RKkWIYtZEV4F3SrOKvQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaKeywordRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaKeywordRegistry.html",
+          "hash": "YvYQJbvSbpudlkb0GDi7Bw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaOrPropertyList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaOrPropertyList.html",
+          "hash": "Unu/4WP4Up1Zd1vqOic38g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaPriorityAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaPriorityAttribute.html",
+          "hash": "MIxeJDDcxZYpz4hjtyZp4w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaRegistry.html",
+          "hash": "VHzwo5TG2DDxvCCdamry9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.SchemaValueType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.SchemaValueType.html",
+          "hash": "6jYdYWrwlb0THFwpGmTybg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ThenKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ThenKeyword.html",
+          "hash": "JB1XFDe23VR1VnMSC/Qykw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.TitleKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.TitleKeyword.html",
+          "hash": "iI/9Vnxy9NOJOb3Cj/WJaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.TypeKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.TypeKeyword.html",
+          "hash": "z/0Rns3/nOMgOyWRTXm7OQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.UnevaluatedItemsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.UnevaluatedItemsKeyword.html",
+          "hash": "72Rc4UwNLrxm+U1TeY2bDA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.UnevaluatedPropertiesKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.UnevaluatedPropertiesKeyword.html",
+          "hash": "0CT8axpTi4BYfBuWBwlTxw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.UniqueItemsKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.UniqueItemsKeyword.html",
+          "hash": "yGNbuFO2QKPzOHcIWPdbUg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ValidationContext.ContextConsolidator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ValidationContext.ContextConsolidator.html",
+          "hash": "StQ9l36alHql25mdSvCrfQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ValidationContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ValidationContext.html",
+          "hash": "C+wFV28O7694qehr7wcvCQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ValidationOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ValidationOptions.html",
+          "hash": "qScqKhuWV6WOLA6gBt/aig=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.ValidationResults.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.ValidationResults.html",
+          "hash": "i07EnDP2KIAFchllI9LoPA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Vocabularies.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Vocabularies.html",
+          "hash": "BTVukgtkN2NM4+4oAOUYKw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Vocabulary.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Vocabulary.html",
+          "hash": "viYBVHVfXBpiFEwMpGdUvw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.VocabularyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.VocabularyAttribute.html",
+          "hash": "L6GaGtKvXHsDt5UmTaZV+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.VocabularyKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.VocabularyKeyword.html",
+          "hash": "yeLn22mC5XWnHUbcZKgEZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.VocabularyRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.VocabularyRegistry.html",
+          "hash": "S1FsSK0A7BR5kNRSEOCXdA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.WriteOnlyKeyword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.WriteOnlyKeyword.html",
+          "hash": "7fQLkQB0VxV0//tSI1IvKQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.html",
+          "hash": "thOFJ49eehpudsKHVhkBHA=="
         }
       },
       "is_incremental": false,
@@ -21,7 +1365,19 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "n6jfGwTSkXH75n0MD4MTdA=="
+          "hash": "p3Z6A3dRHF5mbyAalgNklw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "6ZMWCgt85GS6ReGtYJkCfg=="
         }
       },
       "is_incremental": false,
@@ -77,10 +1433,10 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "5qXwQMb2vtp/x2I8uqB2Hw=="
+          "hash": "0GBQ/Jsbk/5T2w9SEfj6xQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -89,10 +1445,10 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/index.html",
-          "hash": "kQ2KX72CeB0eLfOfBRVRpw=="
+          "hash": "GHOGAs+uMjyxKdldZ4EAuA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -101,10 +1457,10 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-more.html",
-          "hash": "au3SzgvPEKV82KSNh2l9gg=="
+          "hash": "oGzTAYql4KPzVTIs3dDltA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -113,10 +1469,10 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-pointer.html",
-          "hash": "hZp9CcFVK3FmZJAZxO1rcg=="
+          "hash": "e/RxechDKPmkYDhJjCzMhw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -125,10 +1481,10 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "2HrW6IPC3n/3Gtiiqx5hXQ=="
+          "hash": "+0fYhsZeCLfAiFMgByXNVQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -137,7 +1493,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/toc.html",
-          "hash": "f/guhK2NsxIK8znt64grOw=="
+          "hash": "Urgeo0XCRVKdvYhxnzZ03Q=="
         }
       },
       "is_incremental": false,
@@ -149,10 +1505,10 @@
       "output": {
         ".html": {
           "relative_path": "support.html",
-          "hash": "UJzQZfL4p2ckrs6LRFWQ9g=="
+          "hash": "qVayVWfVfr9x6s9MP1Fm6w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -161,7 +1517,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "smnG/YAVnGXvLP3XkpZf+A=="
+          "hash": "cfp8iuaKf47+gs9sr1hKpw=="
         }
       },
       "is_incremental": false,
@@ -173,10 +1529,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/index.html",
-          "hash": "QvYQ/rKeY8ulFkTBrD2CqA=="
+          "hash": "o6EN8rHmGUrq4Lzinw6dOQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -185,10 +1541,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/json-more.html",
-          "hash": "1mRS6IjfBKKwXjeL3ijUEg=="
+          "hash": "ZBC4AhuBPyPeRyxrFLpzLQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -197,10 +1553,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/json-path.html",
-          "hash": "4vNAyroYrav2rNa3Qxi8Ag=="
+          "hash": "rKECikwgxB/y+6ikMnTTbg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -209,10 +1565,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/json-pointer.html",
-          "hash": "KJqMvKRgIHCTlJpIA9gX0Q=="
+          "hash": "cL45cr8KJ2qdPULiuEa0Lg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -221,10 +1577,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema/building.html",
-          "hash": "/LN48SRrZjrrQDc4NsoY9A=="
+          "hash": "RCbTLvzUt2qCGA0wIx52xQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -233,10 +1589,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema/keywords.html",
-          "hash": "kpOvzVnUssd0EqqdhbhLCw=="
+          "hash": "POpYikfKQh+HVVsobSfhdw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -245,10 +1601,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema/overview.html",
-          "hash": "m2qt2uB1Fe0Dd2sAbfGpgA=="
+          "hash": "pAS1mCErSf2fNpc8rXcDFg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -257,10 +1613,10 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema/references.html",
-          "hash": "oJpwIQqNw+lopwX2842WfA=="
+          "hash": "tXfXBaXZawnlCBT/KQcqKw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -269,22 +1625,19 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema/validation.html",
-          "hash": "Oo3BoY/b+AjgEyH6tGMKGw=="
+          "hash": "LXhND0chL+c/i+ZM14w5rQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "usage/schema/vocabs.md",
       "output": {
         ".html": {
           "relative_path": "usage/schema/vocabs.html",
-          "hash": "2Rlw/JxQyg9gM6HOBAVYyQ=="
+          "hash": "nai+IxrMNzCczJ+0NdFu/w=="
         }
       },
       "is_incremental": false,
@@ -296,7 +1649,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "mmq/2ulwCAu7BVIEPn3pzg=="
+          "hash": "Slz/NizT/IDI57jgXKeMfw=="
         }
       },
       "is_incremental": false,
@@ -306,25 +1659,29 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot build incrementally because last build info is missing.",
+        "can_incremental": true,
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0,
-        "full_build_reason_code": "NoAvailableBuildCache"
+        "skipped_file_count": 0
       },
       "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 18,
+          "skipped_file_count": 17
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 112,
+          "skipped_file_count": 33
+        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
-          "skipped_file_count": 0
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 18,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
@@ -338,8 +1695,8 @@
     },
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
         "incrementalPhase": "postProcessing",
         "total_file_count": 0,
         "skipped_file_count": 0

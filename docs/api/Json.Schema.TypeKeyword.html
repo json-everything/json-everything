@@ -84,17 +84,12 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.TypeKeyword.html">TypeKeyword</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -119,16 +114,16 @@
 [SchemaDraft(Draft.Draft201909)]
 [Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/validation&quot;)]
 [JsonConverter(typeof(TypeKeywordJsonConverter))]
-public class TypeKeyword : IJsonSchemaKeyword</code></pre>
+public class TypeKeyword : IJsonSchemaKeyword, IEquatable&lt;TypeKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_TypeKeyword__ctor_Json_Schema_SchemaValueType_.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.%23ctor(Json.Schema.SchemaValueType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword__ctor_Json_Schema_SchemaValueType_.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.%23ctor(Json.Schema.SchemaValueType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/TypeKeyword.cs/#L31">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L31">View Source</a>
   </span>
   <a id="Json_Schema_TypeKeyword__ctor_" data-uid="Json.Schema.TypeKeyword.#ctor*"></a>
   <h4 id="Json_Schema_TypeKeyword__ctor_Json_Schema_SchemaValueType_" data-uid="Json.Schema.TypeKeyword.#ctor(Json.Schema.SchemaValueType)">TypeKeyword(SchemaValueType)</h4>
@@ -159,10 +154,10 @@ public class TypeKeyword : IJsonSchemaKeyword</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_TypeKeyword__ctor_Json_Schema_SchemaValueType___.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.%23ctor(Json.Schema.SchemaValueType%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword__ctor_Json_Schema_SchemaValueType___.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.%23ctor(Json.Schema.SchemaValueType%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/TypeKeyword.cs/#L40">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L40">View Source</a>
   </span>
   <a id="Json_Schema_TypeKeyword__ctor_" data-uid="Json.Schema.TypeKeyword.#ctor*"></a>
   <h4 id="Json_Schema_TypeKeyword__ctor_Json_Schema_SchemaValueType___" data-uid="Json.Schema.TypeKeyword.#ctor(Json.Schema.SchemaValueType[])">TypeKeyword(SchemaValueType[])</h4>
@@ -193,10 +188,10 @@ public class TypeKeyword : IJsonSchemaKeyword</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_TypeKeyword__ctor_System_Collections_Generic_IEnumerable_Json_Schema_SchemaValueType__.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.%23ctor(System.Collections.Generic.IEnumerable%7BJson.Schema.SchemaValueType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword__ctor_System_Collections_Generic_IEnumerable_Json_Schema_SchemaValueType__.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.%23ctor(System.Collections.Generic.IEnumerable%7BJson.Schema.SchemaValueType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/TypeKeyword.cs/#L51">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L51">View Source</a>
   </span>
   <a id="Json_Schema_TypeKeyword__ctor_" data-uid="Json.Schema.TypeKeyword.#ctor*"></a>
   <h4 id="Json_Schema_TypeKeyword__ctor_System_Collections_Generic_IEnumerable_Json_Schema_SchemaValueType__" data-uid="Json.Schema.TypeKeyword.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.SchemaValueType})">TypeKeyword(IEnumerable&lt;SchemaValueType&gt;)</h4>
@@ -229,10 +224,10 @@ public class TypeKeyword : IJsonSchemaKeyword</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_TypeKeyword_Type.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword_Type.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/TypeKeyword.cs/#L25">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L25">View Source</a>
   </span>
   <a id="Json_Schema_TypeKeyword_Type_" data-uid="Json.Schema.TypeKeyword.Type*"></a>
   <h4 id="Json_Schema_TypeKeyword_Type" data-uid="Json.Schema.TypeKeyword.Type">Type</h4>
@@ -262,10 +257,146 @@ public class TypeKeyword : IJsonSchemaKeyword</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_TypeKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword_Equals_Json_Schema_TypeKeyword_.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.Equals(Json.Schema.TypeKeyword)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/TypeKeyword.cs/#L62">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L105">View Source</a>
+  </span>
+  <a id="Json_Schema_TypeKeyword_Equals_" data-uid="Json.Schema.TypeKeyword.Equals*"></a>
+  <h4 id="Json_Schema_TypeKeyword_Equals_Json_Schema_TypeKeyword_" data-uid="Json.Schema.TypeKeyword.Equals(Json.Schema.TypeKeyword)">Equals(TypeKeyword)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(TypeKeyword other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.TypeKeyword.html">TypeKeyword</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>An object to compare with this object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>true if the current object is equal to the <code data-dev-comment-type="paramref" class="paramref">other</code> parameter; otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L115">View Source</a>
+  </span>
+  <a id="Json_Schema_TypeKeyword_Equals_" data-uid="Json.Schema.TypeKeyword.Equals*"></a>
+  <h4 id="Json_Schema_TypeKeyword_Equals_System_Object_" data-uid="Json.Schema.TypeKeyword.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>The object to compare with the current object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>true if the specified object  is equal to the current object; otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L122">View Source</a>
+  </span>
+  <a id="Json_Schema_TypeKeyword_GetHashCode_" data-uid="Json.Schema.TypeKeyword.GetHashCode*"></a>
+  <h4 id="Json_Schema_TypeKeyword_GetHashCode" data-uid="Json.Schema.TypeKeyword.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p>A hash code for the current object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L62">View Source</a>
   </span>
   <a id="Json_Schema_TypeKeyword_Validate_" data-uid="Json.Schema.TypeKeyword.Validate*"></a>
   <h4 id="Json_Schema_TypeKeyword_Validate_Json_Schema_ValidationContext_" data-uid="Json.Schema.TypeKeyword.Validate(Json.Schema.ValidationContext)">Validate(ValidationContext)</h4>
@@ -298,7 +429,13 @@ public class TypeKeyword : IJsonSchemaKeyword</code></pre>
   <div>
       <a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a>
   </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+  </div>
   <div>
       <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Keyword_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Keyword(IJsonSchemaKeyword)</a>
   </div>
@@ -316,10 +453,10 @@ public class TypeKeyword : IJsonSchemaKeyword</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/new/schema-requires-plain-pointers/apiSpec/new?filename=Json_Schema_TypeKeyword.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_TypeKeyword.md&amp;value=---%0Auid%3A%20Json.Schema.TypeKeyword%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/schema-requires-plain-pointers/JsonSchema/TypeKeyword.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/TypeKeyword.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
