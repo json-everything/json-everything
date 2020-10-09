@@ -42,14 +42,14 @@
     # EDIT your Git email and name
    - git config --global user.email gregsdennis@yahoo.com
    - git config --global user.name "Greg Dennis"
-   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_access_token):x-oauth-basic@github.com`n"
+   - ps: Add-Content "$HOME\.git-credentials" "https://$($env:gh_access_token):x-oauth-basic@github.com`n" -NoNewline
    - cmd: build-docs.bat
     # EDIT the origin of your repository - have to reset it here because AppVeyor pulls from SSH, but GitHub won't accept SSH pushes
    - git remote set-url origin https://github.com/gregsdennis/json-everything.git
    - git checkout master
    - git add -A
    - git commit -a -m "regenerated docs"
-   - git push
+   - git push -v
 
 # --------------------- ALL OTHER BRANCHES ---------------------
 
