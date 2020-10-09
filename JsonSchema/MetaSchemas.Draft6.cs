@@ -135,6 +135,7 @@ namespace Json.Schema
 				(PatternPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RefRoot())
+					.PropertyNames(new JsonSchemaBuilder().Format(Formats.Regex))
 					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 				),
 				(DependenciesKeyword.Name, new JsonSchemaBuilder()

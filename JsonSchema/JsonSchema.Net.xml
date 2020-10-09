@@ -26,6 +26,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.AdditionalItemsKeyword.Equals(Json.Schema.AdditionalItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AdditionalItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AdditionalItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.AdditionalPropertiesKeyword">
             <summary>
             Handles `additionalProperties`.
@@ -47,6 +61,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.AdditionalPropertiesKeyword.Equals(Json.Schema.AdditionalPropertiesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AdditionalPropertiesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AdditionalPropertiesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.AllOfKeyword">
             <summary>
@@ -76,6 +104,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.AllOfKeyword.Equals(Json.Schema.AllOfKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AllOfKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AllOfKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.AnchorKeyword">
             <summary>
             Handles `$anchor`.
@@ -97,6 +139,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.AnchorKeyword.Equals(Json.Schema.AnchorKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AnchorKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AnchorKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.Annotation">
             <summary>
@@ -154,6 +210,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.AnyOfKeyword.Equals(Json.Schema.AnyOfKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AnyOfKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.AnyOfKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.ApplicatorAttribute">
             <summary>
             Indicates that the keyword is classified as an applicator.
@@ -185,6 +255,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.CommentKeyword.Equals(Json.Schema.CommentKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.CommentKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.CommentKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.ConstKeyword">
             <summary>
             Handles `const`.
@@ -206,6 +290,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.ConstKeyword.Equals(Json.Schema.ConstKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ConstKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ConstKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.ContainsKeyword">
             <summary>
@@ -229,6 +327,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ContainsKeyword.Equals(Json.Schema.ContainsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContainsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContainsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.ContentMediaEncodingKeyword">
             <summary>
             Handles `contentMediaEncoding`.
@@ -250,6 +362,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.ContentMediaEncodingKeyword.Equals(Json.Schema.ContentMediaEncodingKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContentMediaEncodingKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContentMediaEncodingKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.ContentMediaTypeKeyword">
             <summary>
@@ -273,6 +399,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ContentMediaTypeKeyword.Equals(Json.Schema.ContentMediaTypeKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContentMediaTypeKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContentMediaTypeKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.ContentSchemaKeyword">
             <summary>
             Handles `contentSchema`.
@@ -294,6 +434,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.ContentSchemaKeyword.Equals(Json.Schema.ContentSchemaKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContentSchemaKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ContentSchemaKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.DefaultKeyword">
             <summary>
@@ -317,6 +471,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.DefaultKeyword.Equals(Json.Schema.DefaultKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DefaultKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DefaultKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.DefinitionsKeyword">
             <summary>
             Handles `definitions`.
@@ -338,6 +506,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.DefinitionsKeyword.Equals(Json.Schema.DefinitionsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DefinitionsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DefinitionsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.DefsKeyword">
             <summary>
@@ -361,6 +543,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.DefsKeyword.Equals(Json.Schema.DefsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DefsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DefsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.DependenciesKeyword">
             <summary>
             Handles `dependencies`.
@@ -382,6 +578,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.DependenciesKeyword.Equals(Json.Schema.DependenciesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DependenciesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DependenciesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.SchemaOrPropertyList">
             <summary>
@@ -410,6 +620,20 @@
             </summary>
             <param name="requirements">The property dependency.</param>
         </member>
+        <member name="M:Json.Schema.SchemaOrPropertyList.Equals(Json.Schema.SchemaOrPropertyList)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.SchemaOrPropertyList.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.SchemaOrPropertyList.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.DependentRequiredKeyword">
             <summary>
             Handles `dependentRequired`.
@@ -431,6 +655,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.DependentRequiredKeyword.Equals(Json.Schema.DependentRequiredKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DependentRequiredKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DependentRequiredKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.DependentSchemasKeyword">
             <summary>
@@ -454,6 +692,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.DependentSchemasKeyword.Equals(Json.Schema.DependentSchemasKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DependentSchemasKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DependentSchemasKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.DeprecatedKeyword">
             <summary>
             Handles `deprecated`.
@@ -476,6 +728,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.DeprecatedKeyword.Equals(Json.Schema.DeprecatedKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DeprecatedKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DeprecatedKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.DescriptionKeyword">
             <summary>
             Handles `description`.
@@ -497,6 +763,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.DescriptionKeyword.Equals(Json.Schema.DescriptionKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DescriptionKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DescriptionKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.Draft">
             <summary>
@@ -601,6 +881,44 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ElseKeyword.Equals(Json.Schema.ElseKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ElseKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ElseKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.EnumerableExtensions">
+            <summary>
+            More extensions on <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IReadOnlyList{``0})">
+            <summary>
+            Determines contents-based equality: each element appears equally in each set.
+            </summary>
+            <param name="collection">The first collection.</param>
+            <param name="other">The second collection.</param>
+            <typeparam name="T">The element type.</typeparam>
+            <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            Determines contents-based equality: each element appears equally in each set.
+            </summary>
+            <param name="collection">The first collection.</param>
+            <param name="other">The second collection.</param>
+            <param name="comparer">A custom equality comparer.</param>
+            <typeparam name="T">The element type.</typeparam>
+            <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+        </member>
         <member name="T:Json.Schema.EnumKeyword">
             <summary>
             Handles `enum`.
@@ -628,6 +946,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.EnumKeyword.Equals(Json.Schema.EnumKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.EnumKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.EnumKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.ExamplesKeyword">
             <summary>
@@ -657,6 +989,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ExamplesKeyword.Equals(Json.Schema.ExamplesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ExamplesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ExamplesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.ExclusiveMaximumKeyword">
             <summary>
             Handles `exclusiveMaximum`.
@@ -679,6 +1025,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ExclusiveMaximumKeyword.Equals(Json.Schema.ExclusiveMaximumKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ExclusiveMaximumKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ExclusiveMaximumKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.ExclusiveMinimumKeyword">
             <summary>
             Handles `exclusiveMinimum`.
@@ -700,6 +1060,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.ExclusiveMinimumKeyword.Equals(Json.Schema.ExclusiveMinimumKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ExclusiveMinimumKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ExclusiveMinimumKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.Format">
             <summary>
@@ -745,6 +1119,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.FormatKeyword.Equals(Json.Schema.FormatKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.FormatKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.FormatKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.Formats">
             <summary>
@@ -890,6 +1278,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.IdKeyword.Equals(Json.Schema.IdKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.IdKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.IdKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.IfKeyword">
             <summary>
             Handles `if`.
@@ -911,6 +1313,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.IfKeyword.Equals(Json.Schema.IfKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.IfKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.IfKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.IJsonSchemaKeyword">
             <summary>
@@ -993,6 +1409,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ItemsKeyword.Equals(Json.Schema.ItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.JsonSchema">
             <summary>
             Represents a JSON Schema.
@@ -1072,6 +1502,20 @@
             Implicitly converts a boolean value into one of the boolean schemas.
             </summary>
             <param name="value">The boolean value.</param>
+        </member>
+        <member name="M:Json.Schema.JsonSchema.Equals(Json.Schema.JsonSchema)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchema.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchema.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.JsonSchemaBuilder">
             <summary>
@@ -1789,6 +2233,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MaxContainsKeyword.Equals(Json.Schema.MaxContainsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxContainsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxContainsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.MaximumKeyword">
             <summary>
             Handles `maximum`.
@@ -1810,6 +2268,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.MaximumKeyword.Equals(Json.Schema.MaximumKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaximumKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaximumKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.MaxItemsKeyword">
             <summary>
@@ -1833,6 +2305,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MaxItemsKeyword.Equals(Json.Schema.MaxItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.MaxLengthKeyword">
             <summary>
             Handles `maxLength`.
@@ -1855,6 +2341,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MaxLengthKeyword.Equals(Json.Schema.MaxLengthKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxLengthKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxLengthKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.MaxPropertiesKeyword">
             <summary>
             Handles `maxProperties`.
@@ -1876,6 +2376,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.MaxPropertiesKeyword.Equals(Json.Schema.MaxPropertiesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxPropertiesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MaxPropertiesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.MetaSchemas">
             <summary>
@@ -1994,6 +2508,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MinContainsKeyword.Equals(Json.Schema.MinContainsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinContainsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinContainsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.MinimumKeyword">
             <summary>
             Handles `minimum`.
@@ -2015,6 +2543,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.MinimumKeyword.Equals(Json.Schema.MinimumKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinimumKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinimumKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.MinItemsKeyword">
             <summary>
@@ -2038,6 +2580,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MinItemsKeyword.Equals(Json.Schema.MinItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.MinLengthKeyword">
             <summary>
             Handles `minLength`.
@@ -2059,6 +2615,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.MinLengthKeyword.Equals(Json.Schema.MinLengthKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinLengthKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinLengthKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.MinPropertiesKeyword">
             <summary>
@@ -2082,6 +2652,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MinPropertiesKeyword.Equals(Json.Schema.MinPropertiesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinPropertiesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MinPropertiesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.MultipleOfKeyword">
             <summary>
             Handles `multipleOf`.
@@ -2104,6 +2688,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.MultipleOfKeyword.Equals(Json.Schema.MultipleOfKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MultipleOfKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.MultipleOfKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.NotKeyword">
             <summary>
             Handles `not`.
@@ -2125,6 +2723,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.NotKeyword.Equals(Json.Schema.NotKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.NotKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.NotKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.OneOfKeyword">
             <summary>
@@ -2153,6 +2765,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.OneOfKeyword.Equals(Json.Schema.OneOfKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OneOfKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OneOfKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.OutputFormat">
             <summary>
@@ -2201,6 +2827,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.PatternKeyword.Equals(Json.Schema.PatternKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PatternKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PatternKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.PatternPropertiesKeyword">
             <summary>
             Handles `patternProperties`.
@@ -2222,6 +2862,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.PatternPropertiesKeyword.Equals(Json.Schema.PatternPropertiesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PatternPropertiesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PatternPropertiesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.PredicateFormat">
             <summary>
@@ -2264,6 +2918,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.PropertiesKeyword.Equals(Json.Schema.PropertiesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertiesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertiesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.PropertyNamesKeyword">
             <summary>
             Handles `propertyNames`.
@@ -2285,6 +2953,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.PropertyNamesKeyword.Equals(Json.Schema.PropertyNamesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyNamesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyNamesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.ReadOnlyKeyword">
             <summary>
@@ -2308,6 +2990,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ReadOnlyKeyword.Equals(Json.Schema.ReadOnlyKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ReadOnlyKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ReadOnlyKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.RecursiveAnchorKeyword">
             <summary>
             Handles `$recursiveAnchor`.
@@ -2318,6 +3014,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.RecursiveAnchorKeyword.Equals(Json.Schema.RecursiveAnchorKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RecursiveAnchorKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RecursiveAnchorKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.RecursiveRefKeyword">
             <summary>
@@ -2341,6 +3051,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.RecursiveRefKeyword.Equals(Json.Schema.RecursiveRefKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RecursiveRefKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RecursiveRefKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.RefKeyword">
             <summary>
             Handles `$ref`.
@@ -2362,6 +3086,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.RefKeyword.Equals(Json.Schema.RefKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RefKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RefKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.RegexFormat">
             <summary>
@@ -2410,6 +3148,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.RequiredKeyword.Equals(Json.Schema.RequiredKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RequiredKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.RequiredKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.SchemaDraftAttribute">
             <summary>
             Indicates which JSON Schema draft versions are supported by a keyword.
@@ -2447,6 +3199,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.SchemaKeyword.Equals(Json.Schema.SchemaKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.SchemaKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.SchemaKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.SchemaKeywordAttribute">
             <summary>
@@ -2631,6 +3397,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.ThenKeyword.Equals(Json.Schema.ThenKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ThenKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.ThenKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.TitleKeyword">
             <summary>
             Handles `title`.
@@ -2652,6 +3432,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.TitleKeyword.Equals(Json.Schema.TitleKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.TitleKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.TitleKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.TypeKeyword">
             <summary>
@@ -2687,6 +3481,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.TypeKeyword.Equals(Json.Schema.TypeKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.TypeKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.TypeKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.UnevaluatedItemsKeyword">
             <summary>
             Handles `unevaluatedItems`.
@@ -2708,6 +3516,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.UnevaluatedItemsKeyword.Equals(Json.Schema.UnevaluatedItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.UnevaluatedItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.UnevaluatedItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.UnevaluatedPropertiesKeyword">
             <summary>
@@ -2731,6 +3553,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.UnevaluatedPropertiesKeyword.Equals(Json.Schema.UnevaluatedPropertiesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.UnevaluatedPropertiesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.UnevaluatedPropertiesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.UniqueItemsKeyword">
             <summary>
             Handles `uniqueItems`.
@@ -2752,6 +3588,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.UniqueItemsKeyword.Equals(Json.Schema.UniqueItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.UniqueItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.UniqueItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="M:Json.Schema.UriExtensions.GetParentUri(System.Uri)">
             <summary>
@@ -3138,6 +3988,20 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="M:Json.Schema.VocabularyKeyword.Equals(Json.Schema.VocabularyKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.VocabularyKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.VocabularyKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.VocabularyRegistry">
             <summary>
             A registry for vocabularies.
@@ -3186,6 +4050,20 @@
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.WriteOnlyKeyword.Equals(Json.Schema.WriteOnlyKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.WriteOnlyKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.WriteOnlyKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
     </members>
 </doc>

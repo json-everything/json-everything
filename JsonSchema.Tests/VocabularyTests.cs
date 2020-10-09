@@ -11,7 +11,7 @@ namespace Json.Schema.Tests
 	{
 		[SchemaKeyword(Name)]
 		[JsonConverter(typeof(MinDateJsonConverter))]
-		public class MinDateKeyword : IJsonSchemaKeyword
+		public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
 			internal const string Name = "minDate";
 
@@ -31,6 +31,23 @@ namespace Json.Schema.Tests
 
 				if (!context.IsValid)
 					context.Message = $"{date:O} must be on or after {Date:O}";
+			}
+
+			public bool Equals(MinDateKeyword other)
+			{
+				if (ReferenceEquals(null, other)) return false;
+				if (ReferenceEquals(this, other)) return true;
+				return Date.Equals(other.Date);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as MinDateKeyword);
+			}
+
+			public override int GetHashCode()
+			{
+				return Date.GetHashCode();
 			}
 		}
 
@@ -55,7 +72,7 @@ namespace Json.Schema.Tests
 
 		[SchemaKeyword(Name)]
 		[JsonConverter(typeof(MaxDateJsonConverter))]
-		public class MaxDateKeyword : IJsonSchemaKeyword
+		public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
 		{
 			internal const string Name = "maxDate";
 
@@ -75,6 +92,23 @@ namespace Json.Schema.Tests
 
 				if (!context.IsValid)
 					context.Message = $"{date:O} must be on or before {Date:O}";
+			}
+
+			public bool Equals(MaxDateKeyword other)
+			{
+				if (ReferenceEquals(null, other)) return false;
+				if (ReferenceEquals(this, other)) return true;
+				return Date.Equals(other.Date);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as MaxDateKeyword);
+			}
+
+			public override int GetHashCode()
+			{
+				return Date.GetHashCode();
 			}
 		}
 

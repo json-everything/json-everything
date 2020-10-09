@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema
@@ -13,7 +14,7 @@ namespace Json.Schema
 	/// Represents a JSON Schema.
 	/// </summary>
 	[JsonConverter(typeof(SchemaJsonConverter))]
-	public class JsonSchema : IRefResolvable
+	public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	{
 		/// <summary>
 		/// The empty schema <code>{}</code>.  Functionally equivalent to <see cref="True"/>.
@@ -254,6 +255,65 @@ namespace Json.Schema
 		public static implicit operator JsonSchema(bool value)
 		{
 			return value ? True : False;
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(JsonSchema other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+
+			if (BoolValue.HasValue) return BoolValue == other.BoolValue;
+			if (other.BoolValue.HasValue) return false;
+			if (Keywords.Count != other.Keywords.Count) return false;
+			if (OtherData.Count != other.OtherData.Count) return false;
+
+			if (Keywords != null)
+			{
+				var byKeyword = Keywords.Join(other.Keywords,
+						tk => tk.Keyword(),
+						ok => ok.Keyword(),
+						(tk, ok) => new {ThisKeyword = tk, OtherKeyword = ok})
+					.ToList();
+				if (byKeyword.Count != Keywords.Count) return false;
+				if (!byKeyword.All(k => k.ThisKeyword.Equals(k.OtherKeyword))) return false;
+			}
+
+			if (OtherData != null)
+			{
+				var byKey = OtherData.Join(other.OtherData,
+						td => td.Key,
+						od => od.Key,
+						(td, od) => new {ThisData = td.Value, OtherData = od.Value})
+					.ToList();
+				if (byKey.Count != OtherData.Count) return false;
+				if (!byKey.All(k => k.ThisData.IsEquivalentTo(k.OtherData))) return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as JsonSchema);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = Keywords?.GetCollectionHashCode() ?? 0;
+				hashCode = (hashCode * 397) ^ (OtherData?.GetCollectionHashCode() ?? 0);
+				hashCode = (hashCode * 397) ^ BoolValue.GetHashCode();
+				return hashCode;
+			}
 		}
 	}
 
