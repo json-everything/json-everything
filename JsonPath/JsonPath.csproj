@@ -6,12 +6,12 @@
     <AssemblyName>JsonPath.Net</AssemblyName>
     <Authors>Greg Dennis</Authors>
     <Company>Greg Dennis</Company>
-    <Description>JSON Path build on the System.Text.Json namespace.</Description>
+    <Description>JSON Path built on the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageTags>json-path query json</PackageTags>
+    <PackageTags>json-path jsonpath query json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
     <Version>0.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
