@@ -1,12 +1,12 @@
 ﻿namespace Json.Patch
 {
-	public class RemoveOperationHandler : IPatchOperationHandler
+	internal class RemoveOperationHandler : IPatchOperationHandler
 	{
 		public static IPatchOperationHandler Instance { get; } = new RemoveOperationHandler();
 
 		private RemoveOperationHandler() { }
 
-		public void Process(PatchContext context)
+		public void Process(PatchContext context, PatchOperation operation)
 		{
 			throw new System.NotImplementedException();
 		}

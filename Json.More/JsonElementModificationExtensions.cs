@@ -33,7 +33,10 @@ namespace Json.More
 				throw new JsonException("This extension method is only valid for arrays.");
 
 			var arr = array.EnumerateArray().ToList();
-			arr.Insert(index, value.Clone());
+			if (index == -1)
+				arr.Add(value.Clone());
+			else
+				arr.Insert(index, value.Clone());
 
 			return arr.AsJsonElement();
 		}

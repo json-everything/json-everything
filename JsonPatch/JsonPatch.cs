@@ -15,6 +15,19 @@ namespace Json.Patch
 		{
 			Operations = operations.ToList().AsReadOnly();
 		}
+
+		public PatchResult Process(JsonElement source)
+		{
+			var context = new PatchContext{Source = source};
+
+			foreach (var operation in Operations)
+			{
+				operation.Handle(context);
+				if (context.Message != null) break;
+			}
+
+			return new PatchResult(context);
+		}
 	}
 
 	internal class PatchJsonConverter : JsonConverter<JsonPatch>

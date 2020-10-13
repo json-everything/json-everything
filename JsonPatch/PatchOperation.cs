@@ -56,7 +56,7 @@ namespace Json.Patch
 
 		internal void Handle(PatchContext context)
 		{
-			_handler.Process(context);
+			_handler.Process(context, this);
 		}
 	}
 

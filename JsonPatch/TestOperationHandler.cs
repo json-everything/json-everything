@@ -1,12 +1,12 @@
 ﻿namespace Json.Patch
 {
-	public class TestOperationHandler : IPatchOperationHandler
+	internal class TestOperationHandler : IPatchOperationHandler
 	{
 		public static IPatchOperationHandler Instance { get; } = new TestOperationHandler();
 
 		private TestOperationHandler() { }
 
-		public void Process(PatchContext context)
+		public void Process(PatchContext context, PatchOperation operation)
 		{
 			throw new System.NotImplementedException();
 		}
