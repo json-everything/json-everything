@@ -85,5 +85,20 @@ namespace JsonPatch.Tests
 
 			Assert.AreEqual("Path `/inserted/hello` could not be reached.", actual.Error);
 		}
+
+		[Test]
+		public void Replace_Local()
+		{
+			var patch = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(
+				"[{ \"op\": \"replace\", \"path\": \"/something\", \"value\": \"boo\" }]");
+
+			var element = JsonDocument.Parse("{\"something\":\"added\"}").RootElement;
+			var expected = JsonDocument.Parse("{\"something\":\"boo\"}").RootElement;
+
+			var actual = patch.Process(element);
+
+			Assert.IsNull(actual.Error);
+			Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
+		}
 	}
 }

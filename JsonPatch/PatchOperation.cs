@@ -11,47 +11,47 @@ namespace Json.Patch
 		private readonly IPatchOperationHandler _handler;
 
 		public OperationType Op { get; }
-		public JsonPointer? From { get; }
-		public JsonPointer? Path { get; }
-		public JsonElement? Value { get; }
+		public JsonPointer From { get; }
+		public JsonPointer Path { get; }
+		public JsonElement Value { get; }
 
-		private PatchOperation(OperationType op, JsonPointer? from, JsonPointer? path, JsonElement? value, IPatchOperationHandler handler)
+		private PatchOperation(OperationType op, JsonPointer from, JsonPointer path, JsonElement value, IPatchOperationHandler handler)
 		{
 			_handler = handler;
 			Op = op;
 			From = from;
 			Path = path;
-			Value = value?.Clone();
+			Value = value.ValueKind == JsonValueKind.Undefined ? default : value.Clone();
 		}
 
 		public static PatchOperation Add(JsonPointer path, JsonElement value)
 		{
-			return new PatchOperation(OperationType.Add, null, path, value, AddOperationHandler.Instance);
+			return new PatchOperation(OperationType.Add, default, path, value, AddOperationHandler.Instance);
 		}
 
 		public static PatchOperation Remove(JsonPointer path)
 		{
-			return new PatchOperation(OperationType.Remove, null, path, null, RemoveOperationHandler.Instance);
+			return new PatchOperation(OperationType.Remove, default, path, default, RemoveOperationHandler.Instance);
 		}
 
 		public static PatchOperation Replace(JsonPointer path, JsonElement value)
 		{
-			return new PatchOperation(OperationType.Replace, null, path, value, ReplaceOperationHandler.Instance);
+			return new PatchOperation(OperationType.Replace, default, path, value, ReplaceOperationHandler.Instance);
 		}
 
 		public static PatchOperation Move(JsonPointer from, JsonPointer path)
 		{
-			return new PatchOperation(OperationType.Move, from, path, null, MoveOperationHandler.Instance);
+			return new PatchOperation(OperationType.Move, from, path, default, MoveOperationHandler.Instance);
 		}
 
 		public static PatchOperation Copy(JsonPointer from, JsonPointer path)
 		{
-			return new PatchOperation(OperationType.Copy, from, path, null, CopyOperationHandler.Instance);
+			return new PatchOperation(OperationType.Copy, from, path, default, CopyOperationHandler.Instance);
 		}
 
 		public static PatchOperation Test(JsonPointer path, JsonElement value)
 		{
-			return new PatchOperation(OperationType.Test, null, path, value, TestOperationHandler.Instance);
+			return new PatchOperation(OperationType.Test, default, path, value, TestOperationHandler.Instance);
 		}
 
 		internal void Handle(PatchContext context)

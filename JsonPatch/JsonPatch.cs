@@ -18,12 +18,13 @@ namespace Json.Patch
 
 		public PatchResult Process(JsonElement source)
 		{
-			var context = new PatchContext{Source = source};
+			var context = new PatchContext {Source = new EditableJsonElement(source)};
 
 			foreach (var operation in Operations)
 			{
 				operation.Handle(context);
 				if (context.Message != null) break;
+				context.Index++;
 			}
 
 			return new PatchResult(context);

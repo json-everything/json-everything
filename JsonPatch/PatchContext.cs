@@ -1,10 +1,9 @@
-﻿using System.Text.Json;
-
-namespace Json.Patch
+﻿namespace Json.Patch
 {
 	internal class PatchContext
 	{
-		public JsonElement Source { get; set; }
+		public EditableJsonElement Source { get; set; }
 		public string Message { get; set; }
+		public int Index { get; set; }
 	}
 }

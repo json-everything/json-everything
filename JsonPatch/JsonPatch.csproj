@@ -15,6 +15,7 @@
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageTags>json-patch jsonpatch json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-patch.html</PackageReleaseNotes>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

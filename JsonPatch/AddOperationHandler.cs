@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using Json.More;
-using Json.Pointer;
+﻿using System.Linq;
 
 namespace Json.Patch
 {
@@ -15,79 +10,47 @@ namespace Json.Patch
 
 		public void Process(PatchContext context, PatchOperation operation)
 		{
-			var pointer = operation.Path.Value;
-			var elementStack = new Stack<(string, JsonElement)>();
-			JsonElement? localValue = context.Source;
-			foreach (var segment in pointer.Segments.Take(pointer.Segments.Length - 1))
-			{
-				elementStack.Push((segment.Value, localValue.Value));
-				var localPointer = JsonPointer.Create(new[] {segment}, false);
-				localValue = localPointer.Evaluate(localValue.Value);
-				if (localValue == null)
-				{
-					context.Message = $"Path `{operation.Path}` could not be reached.";
-					return;
-				}
-			}
+			var current = context.Source;
 
-			var key = pointer.Segments.Last().Value;
-			var target = elementStack.Any() ? elementStack.Last().Item2 : context.Source;
-			switch (target.ValueKind)
+			foreach (var segment in operation.Path.Segments.Take(operation.Path.Segments.Length - 1))
 			{
-				case JsonValueKind.Object:
-					target = localValue.Value.AddOrReplaceKeyInObject(key, operation.Value.Value);
-					break;
-				case JsonValueKind.Array:
-					int index;
-					if (key == "-")
-						index = -1;
-					else if (!int.TryParse(key, out index))
+				if (current.Object != null)
+				{
+					if (current.Object.TryGetValue(segment.Value, out current)) continue;
+				}
+				else if (current.Array != null)
+				{
+					if (int.TryParse(segment.Value, out var index) &&
+					    -1 <= index && index < current.Array.Count)
 					{
-						context.Message = $"Path `{operation.Path}` leads to an array, but `{key}` is not a valid index.";
-						return;
+						current = index == -1 ? current.Array.Last() : current.Array[index];
+						continue;
 					}
-					target = localValue.Value.InsertElementInArray(index, operation.Value.Value);
-					break;
-				case JsonValueKind.Undefined:
-				case JsonValueKind.String:
-				case JsonValueKind.Number:
-				case JsonValueKind.True:
-				case JsonValueKind.False:
-				case JsonValueKind.Null:
-				default:
+				}
+
+				context.Message = $"Path `{operation.Path}` could not be reached.";
+				return;
+			}
+
+			var last = operation.Path.Segments.Last();
+			if (current.Object != null)
+			{
+				current.Object[last.Value] = new EditableJsonElement(operation.Value);
+				return;
+			}
+			if (current.Array != null)
+			{
+				if (!int.TryParse(last.Value, out var index) || -1 > index || index >= current.Array.Count)
+				{
 					context.Message = $"Path `{operation.Path}` could not be reached.";
 					return;
-			}
-
-			while (elementStack.Any())
-			{
-				JsonElement local;
-				(key, local) = elementStack.Pop();
-				switch (local.ValueKind)
-				{
-					case JsonValueKind.Object:
-						target = local.AddOrReplaceKeyInObject(key, target);
-						break;
-					case JsonValueKind.Array:
-						int index;
-						if (key == "-")
-							index = -1;
-						else if (!int.TryParse(key, out index))
-							throw new Exception($"Cannot reassemble JSON element at `{key}`.");
-						target = local.InsertElementInArray(index, target);
-						break;
-					case JsonValueKind.Undefined:
-					case JsonValueKind.String:
-					case JsonValueKind.Number:
-					case JsonValueKind.True:
-					case JsonValueKind.False:
-					case JsonValueKind.Null:
-					default:
-						throw new Exception($"Cannot reassemble JSON element at `{key}`.");
 				}
+
+				current.Array.Insert(index, new EditableJsonElement(operation.Value));
+				return;
 			}
 
-			context.Source = target;
+			context.Message = $"Path `{operation.Path}` could not be reached.";
 		}
 	}
 }
