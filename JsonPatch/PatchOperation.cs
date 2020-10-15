@@ -67,49 +67,40 @@ namespace Json.Patch
 			public OperationType Op { get; set; }
 			public JsonPointer? From { get; set; }
 			public JsonPointer? Path { get; set; }
-			public JsonElement? Value { get; set; }
+			public JsonElement Value { get; set; }
 		}
 
 		public override PatchOperation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			var model = JsonSerializer.Deserialize<Model>(ref reader, options);
 
+			if (!model.Path.HasValue)
+				throw new JsonException($"`{model.Op}` operation requires `path`");
+
 			switch (model.Op)
 			{
 				case OperationType.Add:
-					if (!model.Path.HasValue)
-						throw new JsonException("`add` operation requires `path`");
-					if (!model.Value.HasValue)
+					if (model.Value.ValueKind == JsonValueKind.Undefined)
 						throw new JsonException("`add` operation requires `value`");
-					return PatchOperation.Add(model.Path.Value, model.Value.Value);
+					return PatchOperation.Add(model.Path.Value, model.Value);
 				case OperationType.Remove:
-					if (!model.Path.HasValue)
-						throw new JsonException("`remove` operation requires `path`");
 					return PatchOperation.Remove(model.Path.Value);
 				case OperationType.Replace:
-					if (!model.Path.HasValue)
-						throw new JsonException("`replace` operation requires `path`");
-					if (!model.Value.HasValue)
+					if (model.Value.ValueKind == JsonValueKind.Undefined)
 						throw new JsonException("`replace` operation requires `value`");
-					return PatchOperation.Replace(model.Path.Value, model.Value.Value);
+					return PatchOperation.Replace(model.Path.Value, model.Value);
 				case OperationType.Move:
 					if (!model.From.HasValue)
 						throw new JsonException("`move` operation requires `from`");
-					if (!model.Path.HasValue)
-						throw new JsonException("`move` operation requires `path`");
 					return PatchOperation.Move(model.Path.Value, model.Path.Value);
 				case OperationType.Copy:
 					if (!model.From.HasValue)
 						throw new JsonException("`copy` operation requires `from`");
-					if (!model.Path.HasValue)
-						throw new JsonException("`copy` operation requires `path`");
 					return PatchOperation.Copy(model.From.Value, model.Path.Value);
 				case OperationType.Test:
-					if (!model.Path.HasValue)
-						throw new JsonException("`test` operation requires `path`");
-					if (!model.Value.HasValue)
+					if (model.Value.ValueKind == JsonValueKind.Undefined)
 						throw new JsonException("`test` operation requires `value`");
-					return PatchOperation.Test(model.Path.Value, model.Value.Value);
+					return PatchOperation.Test(model.Path.Value, model.Value);
 				case OperationType.Unknown:
 				default:
 					throw new JsonException();
@@ -118,7 +109,44 @@ namespace Json.Patch
 
 		public override void Write(Utf8JsonWriter writer, PatchOperation value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			writer.WriteStartObject();
+
+			writer.WritePropertyName("op");
+			JsonSerializer.Serialize(writer, value.Op);
+
+			writer.WritePropertyName("path");
+			JsonSerializer.Serialize(writer, value.Path);
+
+			switch (value.Op)
+			{
+				case OperationType.Add:
+					writer.WritePropertyName("value");
+					JsonSerializer.Serialize(writer, value.Value);
+					break;
+				case OperationType.Remove:
+					break;
+				case OperationType.Replace:
+					writer.WritePropertyName("value");
+					JsonSerializer.Serialize(writer, value.Value);
+					break;
+				case OperationType.Move:
+					writer.WritePropertyName("from");
+					JsonSerializer.Serialize(writer, value.From);
+					break;
+				case OperationType.Copy:
+					writer.WritePropertyName("from");
+					JsonSerializer.Serialize(writer, value.From);
+					break;
+				case OperationType.Test:
+					writer.WritePropertyName("value");
+					JsonSerializer.Serialize(writer, value.Value);
+					break;
+				case OperationType.Unknown:
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			writer.WriteEndObject();
 		}
 	}
 }

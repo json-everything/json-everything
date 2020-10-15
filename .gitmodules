@@ -7,3 +7,6 @@
 [submodule "ref-repos/jsonpath-reference-implementation"]
 	path = ref-repos/jsonpath-reference-implementation
 	url = https://github.com/jsonpath-standard/jsonpath-reference-implementation.git
+[submodule "ref-repos\\json-patch-tests"]
+	path = ref-repos\\json-patch-tests
+	url = https://github.com/json-patch/json-patch-tests.git

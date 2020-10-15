@@ -42,7 +42,7 @@ namespace Json.Patch
 
 		public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			JsonSerializer.Serialize(writer, value.Operations);
 		}
 	}
 }
