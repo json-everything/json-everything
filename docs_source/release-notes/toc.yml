@@ -6,3 +6,5 @@
   href: json-schema.md
 - name: JsonPath.Net
   href: json-path.md
+- name: JsonPatch.Net
+  href: json-patch.md
