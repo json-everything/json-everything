@@ -69,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.More.JsonElementExtensions.html",
-          "hash": "179msv0p3/HODN8Wqmod/Q=="
+          "hash": "GlzwBm3kazGP2dhdYkWAlg=="
         }
       },
       "is_incremental": false,
@@ -94,6 +94,66 @@
         ".html": {
           "relative_path": "api/Json.More.html",
           "hash": "0s2I5FmU8FYHDL06v6xGDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Patch.JsonPatch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Patch.JsonPatch.html",
+          "hash": "SSW/3TCASJVFlA0EQAajNw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Patch.OperationType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Patch.OperationType.html",
+          "hash": "Nn/0fHPShWaBXSdJRYevZw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Patch.PatchOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Patch.PatchOperation.html",
+          "hash": "zMVK6DNYzmaoSMsnd0QiLQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Patch.PatchResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Patch.PatchResult.html",
+          "hash": "+2jN/28q4eKbEyP6w2o0+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Patch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Patch.html",
+          "hash": "y4PfliKxXCjET33XPup/4Q=="
         }
       },
       "is_incremental": false,
@@ -1377,7 +1437,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "6ZMWCgt85GS6ReGtYJkCfg=="
+          "hash": "9aG89JN/5J58+PwnaNEydg=="
         }
       },
       "is_incremental": false,
@@ -1433,7 +1493,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "rmviYmZBWaXnVu3siJ9lXw=="
+          "hash": "aXdorsuR7zcQnh60oZZMFQ=="
         }
       },
       "is_incremental": false,
@@ -1457,7 +1517,19 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-more.html",
-          "hash": "2fjAfOYkIfRUheDr/p1b7A=="
+          "hash": "+CK6HA+Sm7+hHX2oM0K6ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "release-notes/json-patch.md",
+      "output": {
+        ".html": {
+          "relative_path": "release-notes/json-patch.html",
+          "hash": "0TtbVIz4eZSDfX5nwWUFZg=="
         }
       },
       "is_incremental": false,
@@ -1505,7 +1577,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/toc.html",
-          "hash": "aD5CCxCLvZFWWNmx4Gj5MA=="
+          "hash": "IkqZD/2Vb4i9zBAhBzhr3Q=="
         }
       },
       "is_incremental": false,
@@ -1554,6 +1626,18 @@
         ".html": {
           "relative_path": "usage/json-more.html",
           "hash": "MvxUc5wjep2+o8T2Ghtc3w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/json-patch.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/json-patch.html",
+          "hash": "9/x4cl7vsXm+DFltyZeCqg=="
         }
       },
       "is_incremental": false,
@@ -1661,7 +1745,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "Slz/NizT/IDI57jgXKeMfw=="
+          "hash": "t56ojki/fXi730WnSVPVzg=="
         }
       },
       "is_incremental": false,
@@ -1682,13 +1766,13 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 19,
+          "total_file_count": 21,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 112,
+          "total_file_count": 117,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
