@@ -8,10 +8,12 @@ namespace Json.Schema
 {
 	public static partial class MetaSchemas
 	{
+		internal const string Draft6IdValue = "http://json-schema.org/draft-06/schema#";
+
 		/// <summary>
 		/// The Draft 6 Core meta-schema ID.
 		/// </summary>
-		public static readonly Uri Draft6Id = new Uri("http://json-schema.org/draft-06/schema#");
+		public static readonly Uri Draft6Id = new Uri(Draft6IdValue);
 
 		/// <summary>
 		/// The Draft 6 Core meta-schema.

@@ -171,5 +171,39 @@ namespace Json.Schema.Tests
 
 			result.AssertInvalid();
 		}
+
+		[TestCase(Draft.Draft7, @"{}", true)]
+		[TestCase(Draft.Draft7, @"{""abc"": 1}", false)]
+		[TestCase(Draft.Draft7, @"{""abc"": 1, ""d7"": 7}", true)]
+		[TestCase(Draft.Draft7, @"{""abc"": 1, ""d9"": 9}", false)]
+		[TestCase(Draft.Draft7, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
+		[TestCase(Draft.Draft201909, @"{}", true)]
+		[TestCase(Draft.Draft201909, @"{""abc"": 1}", false)]
+		[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d7"": 7}", false)]
+		[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d9"": 9}", true)]
+		[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
+		public void Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(Draft draft, string instance, bool isValid)
+		{
+			var schema = JsonSerializer.Deserialize<JsonSchema>(@"
+{
+    ""dependencies"": {
+        ""abc"": [ ""d7"" ]
+    },
+    ""dependentRequired"": {
+        ""abc"": [ ""d9"" ]
+    }
+}");
+			var opts = new ValidationOptions
+			{
+				ValidateAs = draft,
+				OutputFormat = OutputFormat.Detailed
+			};
+			var element = JsonDocument.Parse(instance).RootElement;
+
+			var val = schema.Validate(element, opts);
+			Console.WriteLine("Elem `{0}` got validation `{1}`", instance, val.IsValid);
+			if (isValid) val.AssertValid();
+			else val.AssertInvalid();
+		}
 	}
 }

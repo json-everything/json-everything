@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Json.Schema
 {
@@ -53,12 +54,20 @@ namespace Json.Schema
 
 		internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri metaSchemaId, SchemaRegistry registry)
 		{
-			while (metaSchemaId != null)
+			Draft draft = Draft.Unspecified;
+			while (metaSchemaId != null && draft == Draft.Unspecified)
 			{
+				draft = metaSchemaId.OriginalString switch
+				{
+					MetaSchemas.Draft6IdValue => Draft.Draft6,
+					MetaSchemas.Draft7IdValue => Draft.Draft7,
+					MetaSchemas.Draft201909IdValue => Draft.Draft201909,
+					_ => Draft.Unspecified
+				};
 				if (metaSchemaId == MetaSchemas.Draft6Id || metaSchemaId == MetaSchemas.Draft7Id)
-					return DisallowSiblingRef(keywords);
+					return DisallowSiblingRef(keywords, draft);
 				if (metaSchemaId == MetaSchemas.Draft201909Id)
-					return AllowSiblingRef(keywords);
+					return AllowSiblingRef(keywords, draft);
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null) return ByOption(keywords);
 				metaSchemaId = metaSchema.Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
@@ -73,24 +82,31 @@ namespace Json.Schema
 			{
 				case Draft.Draft6:
 				case Draft.Draft7:
-					return DisallowSiblingRef(keywords);
+					return DisallowSiblingRef(keywords, ValidateAs);
 				case Draft.Unspecified:
 				case Draft.Draft201909:
 				default:
-					return AllowSiblingRef(keywords);
+					return AllowSiblingRef(keywords, ValidateAs);
 			}
 		}
 
-		private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords)
+		private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
 		{
 			var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
 
-			return refKeyword != null ? new[] {refKeyword} : keywords;
+			return refKeyword != null ? new[] {refKeyword} : FilterByDraft(keywords, draft);
 		}
 
-		private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords)
+		private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
 		{
-			return keywords;
+			return FilterByDraft(keywords, draft);
+		}
+
+		private static IEnumerable<IJsonSchemaKeyword> FilterByDraft(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+		{
+			if (draft == Draft.Unspecified) return keywords;
+
+			return keywords.Where(k => k.GetType().GetCustomAttributes<SchemaDraftAttribute>().Any(a => a.Draft == draft));
 		}
 	}
 }
