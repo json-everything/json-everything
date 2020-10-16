@@ -49,7 +49,7 @@
    - choco install docfx
    - docfx docs_source\docfx.json
    - git add -A
-   - git commit -m "regenerated docs"
+   - git diff-index --quiet HEAD || git commit -m "regenerated docs"
    - git push -v
 
 # --------------------- ALL OTHER BRANCHES ---------------------
