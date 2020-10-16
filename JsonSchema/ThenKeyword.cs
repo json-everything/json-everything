@@ -14,7 +14,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(ThenKeywordJsonConverter))]
-	public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<ThenKeyword>
+	public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ThenKeyword>
 	{
 		internal const string Name = "then";
 

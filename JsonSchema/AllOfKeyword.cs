@@ -18,7 +18,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(AllOfKeywordJsonConverter))]
-	public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<AllOfKeyword>
+	public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<AllOfKeyword>
 	{
 		internal const string Name = "allOf";
 

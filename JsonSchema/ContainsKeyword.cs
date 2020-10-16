@@ -16,7 +16,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(ContainsKeywordJsonConverter))]
-	public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<ContainsKeyword>
+	public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContainsKeyword>
 	{
 		internal const string Name = "contains";
 

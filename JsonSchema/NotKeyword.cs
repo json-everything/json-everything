@@ -16,7 +16,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(NotKeywordJsonConverter))]
-	public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<NotKeyword>
+	public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<NotKeyword>
 	{
 		internal const string Name = "not";
 

@@ -16,7 +16,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
-	public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<UnevaluatedPropertiesKeyword>
+	public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<UnevaluatedPropertiesKeyword>
 	{
 		internal const string Name = "unevaluatedProperties";
 

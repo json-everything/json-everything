@@ -18,7 +18,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
-	public class PatternPropertiesKeyword : IJsonSchemaKeyword, IEquatable<PatternPropertiesKeyword>
+	public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<PatternPropertiesKeyword>
 	{
 		internal const string Name = "patternProperties";
 
@@ -26,6 +26,8 @@ namespace Json.Schema
 		/// The pattern-keyed schemas.
 		/// </summary>
 		public IReadOnlyDictionary<Regex, JsonSchema> Patterns { get; }
+
+		IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
 
 		static PatternPropertiesKeyword()
 		{
@@ -83,6 +85,19 @@ namespace Json.Schema
 			}
 			// TODO: add message
 			context.IsValid = overallResult;
+		}
+
+		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		{
+			return Patterns.TryGetValue(new Regex(value), out var schema) ? schema : null;
+		}
+
+		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+		{
+			foreach (var schema in Patterns.Values)
+			{
+				schema.RegisterSubschemas(registry, currentUri);
+			}
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

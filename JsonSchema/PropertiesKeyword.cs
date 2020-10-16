@@ -17,7 +17,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(PropertiesKeywordJsonConverter))]
-	public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<PropertiesKeyword>
+	public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<PropertiesKeyword>
 	{
 		internal const string Name = "properties";
 
@@ -25,6 +25,8 @@ namespace Json.Schema
 		/// The property schemas.
 		/// </summary>
 		public IReadOnlyDictionary<string, JsonSchema> Properties { get; }
+
+		IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Properties;
 
 		static PropertiesKeyword()
 		{

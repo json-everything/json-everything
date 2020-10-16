@@ -15,7 +15,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Core201909Id)]
 	[JsonConverter(typeof(DefsKeywordJsonConverter))]
-	public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<DefsKeyword>
+	public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DefsKeyword>
 	{
 		internal const string Name = "$defs";
 
@@ -23,6 +23,8 @@ namespace Json.Schema
 		/// The collection of schema definitions.
 		/// </summary>
 		public IReadOnlyDictionary<string, JsonSchema> Definitions { get; }
+
+		IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Definitions;
 
 		/// <summary>
 		/// Creates a new <see cref="DefsKeyword"/>.
