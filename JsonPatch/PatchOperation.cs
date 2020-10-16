@@ -5,14 +5,29 @@ using Json.Pointer;
 
 namespace Json.Patch
 {
+	/// <summary>
+	/// Represents a single JSON Patch operation.
+	/// </summary>
 	[JsonConverter(typeof(PatchOperationJsonConverter))]
 	public readonly struct PatchOperation
 	{
 		private readonly IPatchOperationHandler _handler;
 
+		/// <summary>
+		/// Gets the operation type.
+		/// </summary>
 		public OperationType Op { get; }
+		/// <summary>
+		/// Gets the source path.
+		/// </summary>
 		public JsonPointer From { get; }
+		/// <summary>
+		/// Gets the target path.
+		/// </summary>
 		public JsonPointer Path { get; }
+		/// <summary>
+		/// Gets the discrete value.
+		/// </summary>
 		public JsonElement Value { get; }
 
 		private PatchOperation(OperationType op, JsonPointer from, JsonPointer path, JsonElement value, IPatchOperationHandler handler)
@@ -24,31 +39,66 @@ namespace Json.Patch
 			Value = value.ValueKind == JsonValueKind.Undefined ? default : value.Clone();
 		}
 
+		/// <summary>
+		/// Creates an `add` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <param name="value">The value to add.</param>
+		/// <returns>An `add` operation.</returns>
 		public static PatchOperation Add(JsonPointer path, JsonElement value)
 		{
 			return new PatchOperation(OperationType.Add, default, path, value, AddOperationHandler.Instance);
 		}
 
+		/// <summary>
+		/// Creates an `remove` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <returns>An `remove` operation.</returns>
 		public static PatchOperation Remove(JsonPointer path)
 		{
 			return new PatchOperation(OperationType.Remove, default, path, default, RemoveOperationHandler.Instance);
 		}
 
+		/// <summary>
+		/// Creates an `replace` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <param name="value">The value to add.</param>
+		/// <returns>An `replace` operation.</returns>
 		public static PatchOperation Replace(JsonPointer path, JsonElement value)
 		{
 			return new PatchOperation(OperationType.Replace, default, path, value, ReplaceOperationHandler.Instance);
 		}
 
+		/// <summary>
+		/// Creates an `move` operation.
+		/// </summary>
+		/// <param name="path">The target path.</param>
+		/// <param name="from">The path to the value to move.</param>
+		/// <returns>An `move` operation.</returns>
 		public static PatchOperation Move(JsonPointer from, JsonPointer path)
 		{
 			return new PatchOperation(OperationType.Move, from, path, default, MoveOperationHandler.Instance);
 		}
 
+		/// <summary>
+		/// Creates an `copy` operation.
+		/// </summary>
+		/// <param name="path">The target path.</param>
+		/// <param name="from">The path to the value to move.</param>
+		/// <returns>An `copy` operation.</returns>
 		public static PatchOperation Copy(JsonPointer from, JsonPointer path)
 		{
 			return new PatchOperation(OperationType.Copy, from, path, default, CopyOperationHandler.Instance);
 		}
 
+		/// <summary>
+		/// Creates an `test` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <param name="value">The value to match.</param>
+		/// <returns>An `test` operation.</returns>
 		public static PatchOperation Test(JsonPointer path, JsonElement value)
 		{
 			return new PatchOperation(OperationType.Test, default, path, value, TestOperationHandler.Instance);

@@ -7,3 +7,5 @@
   homepage: schema/overview.md
 - name: JSON Path
   href: json-path.md
+- name: JSON Patch
+  href: json-patch.md

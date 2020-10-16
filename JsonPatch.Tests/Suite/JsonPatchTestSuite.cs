@@ -57,7 +57,7 @@ namespace JsonPatch.Tests.Suite
 			{
 				try
 				{
-					result = test.Patch.Process(test.Doc);
+					result = test.Patch.Apply(test.Doc);
 
 					Assert.AreNotEqual(test.ExpectsError, result.IsSuccess);
 

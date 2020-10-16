@@ -31,7 +31,7 @@ namespace JsonPatch.Tests
 			var element = JsonDocument.Parse("{\"something\":\"added\"}").RootElement;
 			var expected = JsonDocument.Parse("{\"something\":\"added\",\"hello\":[\"world\"]}").RootElement;
 
-			var actual = patch.Process(element);
+			var actual = patch.Apply(element);
 
 			Assert.IsNull(actual.Error);
 			Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
@@ -46,7 +46,7 @@ namespace JsonPatch.Tests
 			var element = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{}}").RootElement;
 			var expected = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}").RootElement;
 
-			var actual = patch.Process(element);
+			var actual = patch.Apply(element);
 
 			Console.WriteLine(actual.Result.ToJsonString());
 
@@ -63,7 +63,7 @@ namespace JsonPatch.Tests
 			var element = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":\"replace me\"}}").RootElement;
 			var expected = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}").RootElement;
 
-			var actual = patch.Process(element);
+			var actual = patch.Apply(element);
 
 			Console.WriteLine(actual.Result.ToJsonString());
 
@@ -79,7 +79,7 @@ namespace JsonPatch.Tests
 
 			var element = JsonDocument.Parse("{\"something\":\"added\",\"insert here\":{}}").RootElement;
 
-			var actual = patch.Process(element);
+			var actual = patch.Apply(element);
 
 			Console.WriteLine(actual.Result.ToJsonString());
 
@@ -95,7 +95,7 @@ namespace JsonPatch.Tests
 			var element = JsonDocument.Parse("{\"something\":\"added\"}").RootElement;
 			var expected = JsonDocument.Parse("{\"something\":\"boo\"}").RootElement;
 
-			var actual = patch.Process(element);
+			var actual = patch.Apply(element);
 
 			Assert.IsNull(actual.Error);
 			Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
