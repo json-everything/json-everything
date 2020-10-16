@@ -12,6 +12,12 @@ namespace Json.Patch
 
 		public void Process(PatchContext context, PatchOperation operation)
 		{
+			if (operation.Path.Segments.Length == 0)
+			{
+				context.Source = new EditableJsonElement(operation.Value);
+				return;
+			}
+
 			var current = context.Source;
 			var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
 
@@ -30,9 +36,21 @@ namespace Json.Patch
 
 			if (current.Array != null)
 			{
-				if (!int.TryParse(last.Value, out var index) || -1 > index || index >= current.Array.Count)
+				if (last.Value == "-")
+				{
+					current.Array.Add(new EditableJsonElement(operation.Value));
+					return;
+				}
+
+				if (!int.TryParse(last.Value, out var index) || 0 > index || index > current.Array.Count)
 				{
 					context.Message = $"Path `{operation.Path}` could not be reached.";
+					return;
+				}
+				if ((index != 0 && last.Value[0] == '0') ||
+				    (index == 0 && last.Value.Length > 1))
+				{
+					context.Message = $"Path `{operation.Path}` is not present in the instance.";
 					return;
 				}
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Json.More;
 using Json.Patch;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -56,23 +57,12 @@ namespace JsonPatch.Tests.Suite
 			{
 				try
 				{
-					//var schemaValidation = JsonPatchTest.Schema.Validate(testJson);
-					//if (!schemaValidation.IsValid)
-					//{
-					//	foreach (var error in schemaValidation.NestedResults)
-					//	{
-					//		Console.WriteLine(error);
-					//	}
-
-					//	return;
-					//}
-
 					result = test.Patch.Process(test.Doc);
 
 					Assert.AreNotEqual(test.ExpectsError, result.IsSuccess);
 
 					if (test.HasExpectedValue)
-						Assert.AreEqual(test.ExpectedValue, result.Result);
+						Assert.IsTrue(test.ExpectedValue.IsEquivalentTo(result.Result));
 				}
 				catch (Exception e)
 				{
@@ -82,7 +72,11 @@ namespace JsonPatch.Tests.Suite
 					Console.WriteLine(e.Message);
 					Console.WriteLine(e.StackTrace);
 					if (result != null)
+					{
+						if (result.Result.ValueKind != JsonValueKind.Undefined)
+							Console.WriteLine(result.Result.GetRawText());
 						Console.WriteLine(result.Error);
+					}
 					if (isOptional)
 						Assert.Inconclusive("This is an acceptable failure.  Test case failed, but was marked as 'disabled'.");
 					throw;

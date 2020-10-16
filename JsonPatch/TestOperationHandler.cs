@@ -1,4 +1,7 @@
-﻿namespace Json.Patch
+﻿using System.Linq;
+using Json.More;
+
+namespace Json.Patch
 {
 	internal class TestOperationHandler : IPatchOperationHandler
 	{
@@ -8,7 +11,18 @@
 
 		public void Process(PatchContext context, PatchOperation operation)
 		{
-			throw new System.NotImplementedException();
+			var current = context.Source;
+			var message = EditableJsonElementHelpers.FindTarget(ref current, operation.Path);
+
+			if (message != null)
+			{
+				context.Message = message;
+				return;
+			}
+
+			if (current.ToElement().IsEquivalentTo(operation.Value)) return;
+
+			context.Message = $"Path `{operation.Path}` is not equal to the indicated value.";
 		}
 	}
 }

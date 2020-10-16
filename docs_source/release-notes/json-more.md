@@ -1,3 +1,7 @@
+# [1.2.1](???)
+
+`.ToJsonString()` now just calls the serializer.
+
 # [1.2.0](???)
 
 ???

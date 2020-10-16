@@ -92,7 +92,7 @@ namespace Json.Patch
 				case OperationType.Move:
 					if (!model.From.HasValue)
 						throw new JsonException("`move` operation requires `from`");
-					return PatchOperation.Move(model.Path.Value, model.Path.Value);
+					return PatchOperation.Move(model.From.Value, model.Path.Value);
 				case OperationType.Copy:
 					if (!model.From.HasValue)
 						throw new JsonException("`copy` operation requires `from`");

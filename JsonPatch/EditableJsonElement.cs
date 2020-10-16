@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Patch
 {
@@ -48,14 +49,14 @@ namespace Json.Patch
 		public override string ToString()
 		{
 			if (Object != null)
-				return $"{{{string.Join(",", Object.Select(p => $"\"{p.Key}\":{p.Value}"))}}}";
+				return $"{{{string.Join(",", Object.Select(p => $"{JsonSerializer.Serialize(p.Key)}:{p.Value}"))}}}";
 
 			if (Array != null)
 				return $"[{string.Join(",", Array)}]";
 
 			return _raw.ValueKind switch
 			{
-				JsonValueKind.String => $"\"{_raw}\"",
+				JsonValueKind.String => _raw.GetRawText(),
 				JsonValueKind.Number => _raw.ToString(),
 				JsonValueKind.True => "true",
 				JsonValueKind.False => "false",

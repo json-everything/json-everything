@@ -80,7 +80,7 @@ namespace JsonPatch.Tests.Suite
 		private class Model
 		{
 			public JsonElement Doc { get; set; }
-			public JsonElement ExpectedValue { get; set; }
+			public JsonElement Expected { get; set; }
 			public string Error { get; set; }
 			public string Comment { get; set; }
 			public Json.Patch.JsonPatch Patch { get; set; }
@@ -98,7 +98,7 @@ namespace JsonPatch.Tests.Suite
 				return new JsonPatchTest
 				{
 					Doc = model.Doc.ValueKind == JsonValueKind.Undefined ? default : model.Doc.Clone(),
-					ExpectedValue = model.ExpectedValue.ValueKind == JsonValueKind.Undefined ? default : model.ExpectedValue.Clone(),
+					ExpectedValue = model.Expected.ValueKind == JsonValueKind.Undefined ? default : model.Expected.Clone(),
 					Error = model.Error,
 					Comment = model.Comment,
 					Patch = model.Patch,
@@ -120,8 +120,8 @@ namespace JsonPatch.Tests.Suite
 			}
 			if (value.ExpectedValue.ValueKind != JsonValueKind.Undefined)
 			{
-				writer.WritePropertyName("expectedValue");
-				value.Doc.WriteTo(writer);
+				writer.WritePropertyName("expected");
+				value.ExpectedValue.WriteTo(writer);
 			}
 			if (value.Error != null) 
 				writer.WriteString("error", value.Error);
