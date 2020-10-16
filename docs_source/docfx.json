@@ -25,6 +25,12 @@
             "JsonPath.csproj"
           ],
           "src":"../JsonPath/"
+        },
+        {
+          "files": [
+            "JsonPatch.csproj"
+          ],
+          "src":"../JsonPatch/"
         }
       ],
       "dest": "api",

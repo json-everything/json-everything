@@ -62,17 +62,19 @@ namespace Json.More
 		/// </remarks>
 		public static string ToJsonString(this JsonElement element)
 		{
-			return element.ValueKind switch
-			{
-				JsonValueKind.Object => $"{{{string.Join(",", element.EnumerateObject().Select(p => $"\"{p.Name}\":{p.Value.ToJsonString()}"))}}}",
-				JsonValueKind.Array => $"[{string.Join(",", element.EnumerateArray().Select(i => i.ToJsonString()))}]",
-				JsonValueKind.String => $"\"{element}\"",
-				JsonValueKind.Number => element.ToString(),
-				JsonValueKind.True => "true",
-				JsonValueKind.False => "false",
-				JsonValueKind.Null => "null",
-				_ => throw new ArgumentOutOfRangeException()
-			};
+			return JsonSerializer.Serialize(element);
+
+			//return element.ValueKind switch
+			//{
+			//	JsonValueKind.Object => $"{{{string.Join(",", element.EnumerateObject().Select(p => $"{JsonSerializer.Serialize(p.Name)}:{p.Value.ToJsonString()}"))}}}",
+			//	JsonValueKind.Array => $"[{string.Join(",", element.EnumerateArray().Select(i => i.ToJsonString()))}]",
+			//	JsonValueKind.String => JsonSerializer.Serialize(element),
+			//	JsonValueKind.Number => element.ToString(),
+			//	JsonValueKind.True => "true",
+			//	JsonValueKind.False => "false",
+			//	JsonValueKind.Null => "null",
+			//	_ => throw new ArgumentOutOfRangeException()
+			//};
 		}
 
 		/// <summary>
@@ -167,7 +169,7 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this string value)
 		{
-			var doc = JsonDocument.Parse($"\"{value}\"");
+			var doc = JsonDocument.Parse(JsonSerializer.Serialize(value));
 			return doc.RootElement;
 		}
 
@@ -179,7 +181,7 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this IEnumerable<JsonElement> values)
 		{
-			var doc = JsonDocument.Parse($"[{string.Join(",", values)}]");
+			var doc = JsonDocument.Parse($"[{string.Join(",", values.Select(v => v.ToJsonString()))}]");
 			return doc.RootElement;
 		}
 
@@ -191,7 +193,7 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this IDictionary<string, JsonElement> values)
 		{
-			var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{v.Key}:{v.Value}"))}}}");
+			var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{JsonSerializer.Serialize(v.Key)}:{v.Value.ToJsonString()}"))}}}");
 			return doc.RootElement;
 		}
 	}

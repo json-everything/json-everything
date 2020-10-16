@@ -36,6 +36,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPath", "JsonPath\JsonPa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPath.Tests", "JsonPath.Tests\JsonPath.Tests.csproj", "{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPatch", "JsonPatch\JsonPatch.csproj", "{1771519F-C54F-4C3F-8377-65C67D47727A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPatch.Tests", "JsonPatch.Tests\JsonPatch.Tests.csproj", "{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1771519F-C54F-4C3F-8377-65C67D47727A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1771519F-C54F-4C3F-8377-65C67D47727A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1771519F-C54F-4C3F-8377-65C67D47727A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1771519F-C54F-4C3F-8377-65C67D47727A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

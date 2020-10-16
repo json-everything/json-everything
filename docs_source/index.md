@@ -6,7 +6,7 @@ The libraries contained here are built for speed and designed for usability.
 
 ## The Libraries
 
-Currently there are three libraries output by this project:
+Currently there are four libraries output by this project:
 
 ### Json.More.Net
 

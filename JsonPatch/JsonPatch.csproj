@@ -1,36 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>Json.Path</RootNamespace>
-    <AssemblyName>JsonPath.Net</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Json.Patch</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>JsonPatch.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Company>Greg Dennis</Company>
-    <Description>JSON Path built on the System.Text.Json namespace.</Description>
+    <Product>JsonPatch.Net</Product>
+    <Description>JSON Patch built on the System.Test.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageTags>json-path jsonpath query json</PackageTags>
-    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
-    <Version>0.1.1</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <PackageTags>json-patch jsonpatch json</PackageTags>
+    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-patch.html</PackageReleaseNotes>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\projects\json-everything\JsonPath\JsonPath.Net.xml</DocumentationFile>
+    <DocumentationFile>C:\projects\json-everything\JsonPatch\JsonPatch.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE" Link="LICENSE">
-      <PackagePath></PackagePath>
+    <None Include="..\LICENSE">
       <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
     <None Include="..\Resources\json-logo-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
   <ItemGroup>
