@@ -32,7 +32,7 @@
       secure: I2uIJbT1h5SIKT6RD4n4V+b302AX4q/a4NmvFy65IjKlCYE/Fo9BMqGoDNeylnNQ
     skip_symbols: false
     # symbol_server:           # remove to push symbols to SymbolSource.org
-    artifact: /(Json.More|JsonPointer|JsonSchema|JsonPath)\..*\.nupkg/
+    artifact: /(Json.More|JsonPointer|JsonSchema|JsonPath|JsonPatch)\..*\.nupkg/
     on:
       branch: master
   after_deploy:
