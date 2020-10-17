@@ -2650,6 +2650,23 @@ references:
   isSpec: "True"
   fullName: Json.Schema.DefinitionsKeyword.GetHashCode
   nameWithType: DefinitionsKeyword.GetHashCode
+- uid: Json.Schema.DefinitionsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.DefinitionsKeyword.html#Json_Schema_DefinitionsKeyword_Json_Schema_IKeyedSchemaCollector_Schemas
+  commentId: P:Json.Schema.DefinitionsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.DefinitionsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: DefinitionsKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: DefinitionsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.DefinitionsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas*
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.DefinitionsKeyword.html#Json_Schema_DefinitionsKeyword_Json_Schema_IKeyedSchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.DefinitionsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.DefinitionsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: DefinitionsKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: DefinitionsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
 - uid: Json.Schema.DefinitionsKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)
   name: IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
   href: api/Json.Schema.DefinitionsKeyword.html#Json_Schema_DefinitionsKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_
@@ -2764,6 +2781,23 @@ references:
   isSpec: "True"
   fullName: Json.Schema.DefsKeyword.GetHashCode
   nameWithType: DefsKeyword.GetHashCode
+- uid: Json.Schema.DefsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.DefsKeyword.html#Json_Schema_DefsKeyword_Json_Schema_IKeyedSchemaCollector_Schemas
+  commentId: P:Json.Schema.DefsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.DefsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: DefsKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: DefsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.DefsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas*
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.DefsKeyword.html#Json_Schema_DefsKeyword_Json_Schema_IKeyedSchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.DefsKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.DefsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: DefsKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: DefsKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
 - uid: Json.Schema.DefsKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)
   name: IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
   href: api/Json.Schema.DefsKeyword.html#Json_Schema_DefsKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_
@@ -2865,6 +2899,23 @@ references:
   isSpec: "True"
   fullName: Json.Schema.DependenciesKeyword.GetHashCode
   nameWithType: DependenciesKeyword.GetHashCode
+- uid: Json.Schema.DependenciesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.DependenciesKeyword.html#Json_Schema_DependenciesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas
+  commentId: P:Json.Schema.DependenciesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.DependenciesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: DependenciesKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: DependenciesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.DependenciesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas*
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.DependenciesKeyword.html#Json_Schema_DependenciesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.DependenciesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.DependenciesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: DependenciesKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: DependenciesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
 - uid: Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)
   name: IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
   href: api/Json.Schema.DependenciesKeyword.html#Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_
@@ -4384,6 +4435,25 @@ references:
   isSpec: "True"
   fullName: Json.Schema.IJsonSchemaKeyword.Validate
   nameWithType: IJsonSchemaKeyword.Validate
+- uid: Json.Schema.IKeyedSchemaCollector
+  name: IKeyedSchemaCollector
+  href: api/Json.Schema.IKeyedSchemaCollector.html
+  commentId: T:Json.Schema.IKeyedSchemaCollector
+  fullName: Json.Schema.IKeyedSchemaCollector
+  nameWithType: IKeyedSchemaCollector
+- uid: Json.Schema.IKeyedSchemaCollector.Schemas
+  name: Schemas
+  href: api/Json.Schema.IKeyedSchemaCollector.html#Json_Schema_IKeyedSchemaCollector_Schemas
+  commentId: P:Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.IKeyedSchemaCollector.Schemas*
+  name: Schemas
+  href: api/Json.Schema.IKeyedSchemaCollector.html#Json_Schema_IKeyedSchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.IKeyedSchemaCollector.Schemas
+  isSpec: "True"
+  fullName: Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: IKeyedSchemaCollector.Schemas
 - uid: Json.Schema.IRefResolvable
   name: IRefResolvable
   href: api/Json.Schema.IRefResolvable.html
@@ -4416,6 +4486,44 @@ references:
   isSpec: "True"
   fullName: Json.Schema.IRefResolvable.ResolvePointerSegment
   nameWithType: IRefResolvable.ResolvePointerSegment
+- uid: Json.Schema.ISchemaCollector
+  name: ISchemaCollector
+  href: api/Json.Schema.ISchemaCollector.html
+  commentId: T:Json.Schema.ISchemaCollector
+  fullName: Json.Schema.ISchemaCollector
+  nameWithType: ISchemaCollector
+- uid: Json.Schema.ISchemaCollector.Schemas
+  name: Schemas
+  href: api/Json.Schema.ISchemaCollector.html#Json_Schema_ISchemaCollector_Schemas
+  commentId: P:Json.Schema.ISchemaCollector.Schemas
+  fullName: Json.Schema.ISchemaCollector.Schemas
+  nameWithType: ISchemaCollector.Schemas
+- uid: Json.Schema.ISchemaCollector.Schemas*
+  name: Schemas
+  href: api/Json.Schema.ISchemaCollector.html#Json_Schema_ISchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.ISchemaCollector.Schemas
+  isSpec: "True"
+  fullName: Json.Schema.ISchemaCollector.Schemas
+  nameWithType: ISchemaCollector.Schemas
+- uid: Json.Schema.ISchemaContainer
+  name: ISchemaContainer
+  href: api/Json.Schema.ISchemaContainer.html
+  commentId: T:Json.Schema.ISchemaContainer
+  fullName: Json.Schema.ISchemaContainer
+  nameWithType: ISchemaContainer
+- uid: Json.Schema.ISchemaContainer.Schema
+  name: Schema
+  href: api/Json.Schema.ISchemaContainer.html#Json_Schema_ISchemaContainer_Schema
+  commentId: P:Json.Schema.ISchemaContainer.Schema
+  fullName: Json.Schema.ISchemaContainer.Schema
+  nameWithType: ISchemaContainer.Schema
+- uid: Json.Schema.ISchemaContainer.Schema*
+  name: Schema
+  href: api/Json.Schema.ISchemaContainer.html#Json_Schema_ISchemaContainer_Schema_
+  commentId: Overload:Json.Schema.ISchemaContainer.Schema
+  isSpec: "True"
+  fullName: Json.Schema.ISchemaContainer.Schema
+  nameWithType: ISchemaContainer.Schema
 - uid: Json.Schema.ItemsKeyword
   name: ItemsKeyword
   href: api/Json.Schema.ItemsKeyword.html
@@ -4532,6 +4640,40 @@ references:
   fullName: Json.Schema.ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment
   nameWithType: ItemsKeyword.IRefResolvable.ResolvePointerSegment
   nameWithType.vb: ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment
+- uid: Json.Schema.ItemsKeyword.Json#Schema#ISchemaCollector#Schemas
+  name: ISchemaCollector.Schemas
+  href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_ISchemaCollector_Schemas
+  commentId: P:Json.Schema.ItemsKeyword.Json#Schema#ISchemaCollector#Schemas
+  name.vb: Json.Schema.ISchemaCollector.Schemas
+  fullName: Json.Schema.ItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+  nameWithType: ItemsKeyword.ISchemaCollector.Schemas
+  nameWithType.vb: ItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+- uid: Json.Schema.ItemsKeyword.Json#Schema#ISchemaCollector#Schemas*
+  name: ISchemaCollector.Schemas
+  href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_ISchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.ItemsKeyword.Json#Schema#ISchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.ISchemaCollector.Schemas
+  fullName: Json.Schema.ItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+  nameWithType: ItemsKeyword.ISchemaCollector.Schemas
+  nameWithType.vb: ItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+- uid: Json.Schema.ItemsKeyword.Json#Schema#ISchemaContainer#Schema
+  name: ISchemaContainer.Schema
+  href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_ISchemaContainer_Schema
+  commentId: P:Json.Schema.ItemsKeyword.Json#Schema#ISchemaContainer#Schema
+  name.vb: Json.Schema.ISchemaContainer.Schema
+  fullName: Json.Schema.ItemsKeyword.Json.Schema.ISchemaContainer.Schema
+  nameWithType: ItemsKeyword.ISchemaContainer.Schema
+  nameWithType.vb: ItemsKeyword.Json.Schema.ISchemaContainer.Schema
+- uid: Json.Schema.ItemsKeyword.Json#Schema#ISchemaContainer#Schema*
+  name: ISchemaContainer.Schema
+  href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_ISchemaContainer_Schema_
+  commentId: Overload:Json.Schema.ItemsKeyword.Json#Schema#ISchemaContainer#Schema
+  isSpec: "True"
+  name.vb: Json.Schema.ISchemaContainer.Schema
+  fullName: Json.Schema.ItemsKeyword.Json.Schema.ISchemaContainer.Schema
+  nameWithType: ItemsKeyword.ISchemaContainer.Schema
+  nameWithType.vb: ItemsKeyword.Json.Schema.ISchemaContainer.Schema
 - uid: Json.Schema.ItemsKeyword.SingleSchema
   name: SingleSchema
   href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_SingleSchema
@@ -5792,6 +5934,19 @@ references:
   commentId: T:Json.Schema.KeywordExtensions
   fullName: Json.Schema.KeywordExtensions
   nameWithType: KeywordExtensions
+- uid: Json.Schema.KeywordExtensions.GetSubschemas(Json.Schema.IJsonSchemaKeyword)
+  name: GetSubschemas(IJsonSchemaKeyword)
+  href: api/Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_
+  commentId: M:Json.Schema.KeywordExtensions.GetSubschemas(Json.Schema.IJsonSchemaKeyword)
+  fullName: Json.Schema.KeywordExtensions.GetSubschemas(Json.Schema.IJsonSchemaKeyword)
+  nameWithType: KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)
+- uid: Json.Schema.KeywordExtensions.GetSubschemas*
+  name: GetSubschemas
+  href: api/Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_
+  commentId: Overload:Json.Schema.KeywordExtensions.GetSubschemas
+  isSpec: "True"
+  fullName: Json.Schema.KeywordExtensions.GetSubschemas
+  nameWithType: KeywordExtensions.GetSubschemas
 - uid: Json.Schema.KeywordExtensions.IsApplicator(Json.Schema.IJsonSchemaKeyword)
   name: IsApplicator(IJsonSchemaKeyword)
   href: api/Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_
@@ -7187,6 +7342,57 @@ references:
   isSpec: "True"
   fullName: Json.Schema.PatternPropertiesKeyword.GetHashCode
   nameWithType: PatternPropertiesKeyword.GetHashCode
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas
+  commentId: P:Json.Schema.PatternPropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: PatternPropertiesKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas*
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.PatternPropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: PatternPropertiesKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)
+  name: IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_
+  commentId: M:Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)
+  name.vb: Json.Schema.IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas(Json.Schema.SchemaRegistry, System.Uri)
+  nameWithType: PatternPropertiesKeyword.IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas*
+  name: IRefResolvable.RegisterSubschemas
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_
+  commentId: Overload:Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas
+  isSpec: "True"
+  name.vb: Json.Schema.IRefResolvable.RegisterSubschemas
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
+  nameWithType: PatternPropertiesKeyword.IRefResolvable.RegisterSubschemas
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
+  name: IRefResolvable.ResolvePointerSegment(String)
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
+  commentId: M:Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
+  nameWithType: PatternPropertiesKeyword.IRefResolvable.ResolvePointerSegment(String)
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
+  name: IRefResolvable.ResolvePointerSegment
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
+  commentId: Overload:Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment
+  isSpec: "True"
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment
+  nameWithType: PatternPropertiesKeyword.IRefResolvable.ResolvePointerSegment
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment
 - uid: Json.Schema.PatternPropertiesKeyword.Patterns
   name: Patterns
   href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Patterns
@@ -7302,6 +7508,23 @@ references:
   isSpec: "True"
   fullName: Json.Schema.PropertiesKeyword.GetHashCode
   nameWithType: PropertiesKeyword.GetHashCode
+- uid: Json.Schema.PropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.PropertiesKeyword.html#Json_Schema_PropertiesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas
+  commentId: P:Json.Schema.PropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.PropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: PropertiesKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: PropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.PropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas*
+  name: IKeyedSchemaCollector.Schemas
+  href: api/Json.Schema.PropertiesKeyword.html#Json_Schema_PropertiesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.PropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.IKeyedSchemaCollector.Schemas
+  fullName: Json.Schema.PropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
+  nameWithType: PropertiesKeyword.IKeyedSchemaCollector.Schemas
+  nameWithType.vb: PropertiesKeyword.Json.Schema.IKeyedSchemaCollector.Schemas
 - uid: Json.Schema.PropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)
   name: IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
   href: api/Json.Schema.PropertiesKeyword.html#Json_Schema_PropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_

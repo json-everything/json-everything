@@ -85,6 +85,7 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
     <div><a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a></div>
+    <div><a class="xref" href="Json.Schema.ISchemaContainer.html">ISchemaContainer</a></div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.IfKeyword.html">IfKeyword</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -114,7 +115,7 @@
 [SchemaDraft(Draft.Draft201909)]
 [Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/applicator&quot;)]
 [JsonConverter(typeof(IfKeywordJsonConverter))]
-public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable&lt;IfKeyword&gt;</code></pre>
+public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable&lt;IfKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -451,6 +452,9 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable&lt;IfKey
       <a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a>
   </div>
   <div>
+      <a class="xref" href="Json.Schema.ISchemaContainer.html">ISchemaContainer</a>
+  </div>
+  <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
@@ -465,6 +469,9 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable&lt;IfKey
   </div>
   <div>
       <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.IsApplicator(IJsonSchemaKeyword)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)</a>
   </div>
 </article>
           </div>

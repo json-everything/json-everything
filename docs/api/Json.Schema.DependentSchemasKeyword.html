@@ -85,6 +85,7 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
     <div><a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a></div>
+    <div><a class="xref" href="Json.Schema.IKeyedSchemaCollector.html">IKeyedSchemaCollector</a></div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.DependentSchemasKeyword.html">DependentSchemasKeyword</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -114,7 +115,7 @@
 [SchemaDraft(Draft.Draft201909)]
 [Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/applicator&quot;)]
 [JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
-public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable&lt;DependentSchemasKeyword&gt;</code></pre>
+public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable&lt;DependentSchemasKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -451,6 +452,9 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IEqua
       <a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a>
   </div>
   <div>
+      <a class="xref" href="Json.Schema.IKeyedSchemaCollector.html">IKeyedSchemaCollector</a>
+  </div>
+  <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
@@ -465,6 +469,9 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IEqua
   </div>
   <div>
       <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.IsApplicator(IJsonSchemaKeyword)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)</a>
   </div>
 </article>
           </div>

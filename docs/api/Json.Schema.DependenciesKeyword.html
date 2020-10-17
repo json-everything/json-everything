@@ -85,6 +85,7 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
     <div><a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a></div>
+    <div><a class="xref" href="Json.Schema.IKeyedSchemaCollector.html">IKeyedSchemaCollector</a></div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.DependenciesKeyword.html">DependenciesKeyword</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -114,7 +115,7 @@
 [SchemaDraft(Draft.Draft6)]
 [SchemaDraft(Draft.Draft7)]
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
-public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable&lt;DependenciesKeyword&gt;</code></pre>
+public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable&lt;DependenciesKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -123,7 +124,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword__ctor_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_SchemaOrPropertyList__.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.%23ctor(System.Collections.Generic.IReadOnlyDictionary%7BSystem.String%2CJson.Schema.SchemaOrPropertyList%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L35">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L38">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword__ctor_" data-uid="Json.Schema.DependenciesKeyword.#ctor*"></a>
   <h4 id="Json_Schema_DependenciesKeyword__ctor_System_Collections_Generic_IReadOnlyDictionary_System_String_Json_Schema_SchemaOrPropertyList__" data-uid="Json.Schema.DependenciesKeyword.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,Json.Schema.SchemaOrPropertyList})">DependenciesKeyword(IReadOnlyDictionary&lt;String, SchemaOrPropertyList&gt;)</h4>
@@ -192,7 +193,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_Equals_Json_Schema_DependenciesKeyword_.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.Equals(Json.Schema.DependenciesKeyword)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L127">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L130">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword_Equals_" data-uid="Json.Schema.DependenciesKeyword.Equals*"></a>
   <h4 id="Json_Schema_DependenciesKeyword_Equals_Json_Schema_DependenciesKeyword_" data-uid="Json.Schema.DependenciesKeyword.Equals(Json.Schema.DependenciesKeyword)">Equals(DependenciesKeyword)</h4>
@@ -242,7 +243,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L145">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L148">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword_Equals_" data-uid="Json.Schema.DependenciesKeyword.Equals*"></a>
   <h4 id="Json_Schema_DependenciesKeyword_Equals_System_Object_" data-uid="Json.Schema.DependenciesKeyword.Equals(System.Object)">Equals(Object)</h4>
@@ -294,7 +295,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L152">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L155">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword_GetHashCode_" data-uid="Json.Schema.DependenciesKeyword.GetHashCode*"></a>
   <h4 id="Json_Schema_DependenciesKeyword_GetHashCode" data-uid="Json.Schema.DependenciesKeyword.GetHashCode">GetHashCode()</h4>
@@ -328,7 +329,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L44">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L47">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword_Validate_" data-uid="Json.Schema.DependenciesKeyword.Validate*"></a>
   <h4 id="Json_Schema_DependenciesKeyword_Validate_Json_Schema_ValidationContext_" data-uid="Json.Schema.DependenciesKeyword.Validate(Json.Schema.ValidationContext)">Validate(ValidationContext)</h4>
@@ -361,10 +362,40 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.Json%23Schema%23IKeyedSchemaCollector%23Schemas%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L27">View Source</a>
+  </span>
+  <a id="Json_Schema_DependenciesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas_" data-uid="Json.Schema.DependenciesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas*"></a>
+  <h4 id="Json_Schema_DependenciesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas" data-uid="Json.Schema.DependenciesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas">IKeyedSchemaCollector.Schemas</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IReadOnlyDictionary&lt;string, JsonSchema&gt; IKeyedSchemaCollector.Schemas { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.Json%23Schema%23IRefResolvable%23RegisterSubschemas(Json.Schema.SchemaRegistry%2CSystem.Uri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L116">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L119">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_" data-uid="Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas*"></a>
   <h4 id="Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_" data-uid="Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)">IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)</h4>
@@ -401,7 +432,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.DependenciesKeyword.Json%23Schema%23IRefResolvable%23ResolvePointerSegment(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L109">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/DependenciesKeyword.cs/#L112">View Source</a>
   </span>
   <a id="Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_" data-uid="Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*"></a>
   <h4 id="Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_" data-uid="Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)">IRefResolvable.ResolvePointerSegment(String)</h4>
@@ -451,6 +482,9 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
       <a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a>
   </div>
   <div>
+      <a class="xref" href="Json.Schema.IKeyedSchemaCollector.html">IKeyedSchemaCollector</a>
+  </div>
+  <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
@@ -465,6 +499,9 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatabl
   </div>
   <div>
       <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.IsApplicator(IJsonSchemaKeyword)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)</a>
   </div>
 </article>
           </div>

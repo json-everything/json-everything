@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.2.0 </title>
+    <title>1.3.0 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.2.0 ">
+    <meta name="title" content="1.3.0 ">
     <meta name="generator" content="docfx 2.56.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -67,8 +67,11 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="120"><a href="https://github.com/gregsdennis/json-everything/pull/17">1.2.0</a></h1>
+<h1 id="130"><a href="https://github.com/gregsdennis/json-everything/pull/25">1.3.0</a></h1>
 
+<p><a href="https://github.com/gregsdennis/json-everything/issues/15">#15</a> Easier navigation of the schema and its subschemas. Added <code>ISchemaContainer</code>, <code>ISchemaCollector</code>, and <code>IKeyedSchemaCollector</code> for the varying sets of subschemas that keywords can have.  Added <code>SchemaKeywordExtensions.GetSubschemas()</code> extension method.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/19">#19</a> Keyword filtering doesn't consider declared draft or <code>ValidationOptions.ValidateAs</code>.</p>
+<h1 id="120"><a href="https://github.com/gregsdennis/json-everything/pull/17">1.2.0</a></h1>
 <p>(<a href="https://github.com/json-schema-org/json-schema-org.github.io/pull/358">json-schema<nsp>.org #358</nsp></a>) Published draft 06 meta-schema doesn't match the copy in the spec repo.</p>
 <p><a href="https://github.com/gregsdennis/json-everything/issues/16">#16</a> <code>JsonSchema</code> equality checking.  Along with this, added <code>IEquatable&lt;T&gt;</code> to <code>SchemaKeywordRegistry.Register&lt;T&gt;()</code>.</p>
 <p><a href="https://github.com/gregsdennis/json-everything/issues/18">#18</a> <code>properties</code> keyword is processed with same priority as <code>additionalProperties</code> making keyword order important, but it shouldn't be.</p>
