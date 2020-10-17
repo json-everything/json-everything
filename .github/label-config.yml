@@ -12,5 +12,3 @@
 
 "pkg:patch":
   - ./JsonPatch/**/*
-
-  
