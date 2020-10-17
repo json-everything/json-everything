@@ -18,7 +18,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(AnyOfKeywordJsonConverter))]
-	public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<AnyOfKeyword>
+	public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<AnyOfKeyword>
 	{
 		internal const string Name = "anyOf";
 

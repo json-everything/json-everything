@@ -15,7 +15,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[JsonConverter(typeof(DependenciesKeywordJsonConverter))]
-	public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<DependenciesKeyword>
+	public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DependenciesKeyword>
 	{
 		internal const string Name = "dependencies";
 
@@ -23,6 +23,9 @@ namespace Json.Schema
 		/// The collection of dependencies.
 		/// </summary>
 		public IReadOnlyDictionary<string, SchemaOrPropertyList> Requirements { get; }
+
+		IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas =>
+			Requirements.Where(x => x.Value.Schema != null).ToDictionary(x => x.Key, x => x.Value.Schema);
 
 		static DependenciesKeyword()
 		{

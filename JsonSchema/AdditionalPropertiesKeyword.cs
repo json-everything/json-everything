@@ -18,7 +18,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-	public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<AdditionalPropertiesKeyword>
+	public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
 	{
 		internal const string Name = "additionalProperties";
 

@@ -7,10 +7,12 @@ namespace Json.Schema
 {
 	public static partial class MetaSchemas
 	{
+		internal const string Draft201909IdValue = "https://json-schema.org/draft/2019-09/schema";
+
 		/// <summary>
 		/// The Draft 2019-09 meta-schema ID.
 		/// </summary>
-		public static readonly Uri Draft201909Id = new Uri("https://json-schema.org/draft/2019-09/schema");
+		public static readonly Uri Draft201909Id = new Uri(Draft201909IdValue);
 		
 		/// <summary>
 		/// The Draft 2019-09 Core meta-schema ID.

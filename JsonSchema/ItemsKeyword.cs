@@ -17,7 +17,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(ItemsKeywordJsonConverter))]
-	public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<ItemsKeyword>
+	public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
 	{
 		internal const string Name = "items";
 
@@ -25,10 +25,15 @@ namespace Json.Schema
 		/// The schema for the "single schema" form.
 		/// </summary>
 		public JsonSchema SingleSchema { get; }
+
+		JsonSchema ISchemaContainer.Schema => SingleSchema;
+
 		/// <summary>
 		/// The collection of schemas for the "schema array" form.
 		/// </summary>
 		public IReadOnlyList<JsonSchema> ArraySchemas { get; }
+
+		IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas;
 
 		static ItemsKeyword()
 		{

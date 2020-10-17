@@ -13,7 +13,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Content201909Id)]
 	[JsonConverter(typeof(ContentSchemaKeywordJsonConverter))]
-	public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<ContentSchemaKeyword>
+	public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContentSchemaKeyword>
 	{
 		internal const string Name = "contentSchema";
 

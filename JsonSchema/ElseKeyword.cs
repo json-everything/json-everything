@@ -14,7 +14,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(ElseKeywordJsonConverter))]
-	public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<ElseKeyword>
+	public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ElseKeyword>
 	{
 		internal const string Name = "else";
 

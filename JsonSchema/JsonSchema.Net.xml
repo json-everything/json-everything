@@ -1339,6 +1339,16 @@
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
+        <member name="T:Json.Schema.IKeyedSchemaCollector">
+            <summary>
+            Indicates that the keyword contains a named collection of schemas.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.IKeyedSchemaCollector.Schemas">
+            <summary>
+            The subschemas.
+            </summary>
+        </member>
         <member name="T:Json.Schema.IRefResolvable">
             <summary>
             Defines functionality required to resolve `$ref` and `$recursiveRef` keywords.
@@ -1365,6 +1375,26 @@
             Just call <see cref="M:Json.Schema.JsonSchema.RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)"/> on each schema
             contained within the keyword.  
             </remarks>
+        </member>
+        <member name="T:Json.Schema.ISchemaCollector">
+            <summary>
+            Indicates that the keyword contains a collection of schemas.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.ISchemaCollector.Schemas">
+            <summary>
+            The subschemas.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.ISchemaContainer">
+            <summary>
+            Indicates that the keyword contains a single schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.ISchemaContainer.Schema">
+            <summary>
+            A subschema.
+            </summary>
         </member>
         <member name="T:Json.Schema.ItemsKeyword">
             <summary>
@@ -2210,6 +2240,13 @@
             </summary>
             <param name="keyword">The keyword.</param>
             <returns><code>true</code> if the keyword is an applicator; <code>false</code> otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.KeywordExtensions.GetSubschemas(Json.Schema.IJsonSchemaKeyword)">
+            <summary>
+            Gets all immediate subschemas for a keyword.
+            </summary>
+            <param name="keyword">The keyword.</param>
+            <returns>An `IEnumerable&lt;JsonSchema&gt;`.</returns>
         </member>
         <member name="T:Json.Schema.MaxContainsKeyword">
             <summary>

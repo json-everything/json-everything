@@ -16,7 +16,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
-	public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<DependentSchemasKeyword>
+	public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DependentSchemasKeyword>
 	{
 		internal const string Name = "dependentSchemas";
 

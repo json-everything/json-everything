@@ -13,7 +13,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
 	[JsonConverter(typeof(IfKeywordJsonConverter))]
-	public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<IfKeyword>
+	public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<IfKeyword>
 	{
 		internal const string Name = "if";
 

@@ -66,5 +66,21 @@ namespace Json.Schema
 		{
 			return keyword.GetType().GetCustomAttribute<ApplicatorAttribute>() != null;
 		}
+
+		/// <summary>
+		/// Gets all immediate subschemas for a keyword.
+		/// </summary>
+		/// <param name="keyword">The keyword.</param>
+		/// <returns>An `IEnumerable&lt;JsonSchema&gt;`.</returns>
+		public static IEnumerable<JsonSchema> GetSubschemas(this IJsonSchemaKeyword keyword)
+		{
+			return keyword switch
+			{
+				ISchemaContainer container => new[] {container.Schema},
+				ISchemaCollector collector => collector.Schemas,
+				IKeyedSchemaCollector collector => collector.Schemas.Values,
+				_ => Enumerable.Empty<JsonSchema>()
+			};
+		}
 	}
 }
