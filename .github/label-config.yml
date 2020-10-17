@@ -1,16 +1,16 @@
-"pkg:more"
-  - Json.More/**/*
+"pkg:more":
+  - ./Json.More/**/*
 
-"pkg:schema"
-  - JsonSchema/**/*
+"pkg:schema":
+  - ./JsonSchema/**/*
 
-"pkg:pointer"
-  - JsonPointer/**/*
+"pkg:pointer":
+  - ./JsonPointer/**/*
 
-"pkg:path"
-  - JsonPath/**/*
+"pkg:path":
+  - ./JsonPath/**/*
 
-"pkg:patch"
-  - JsonPatch/**/*
+"pkg:patch":
+  - ./JsonPatch/**/*
 
   
