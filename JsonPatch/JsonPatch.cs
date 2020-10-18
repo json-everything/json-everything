@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Patch
 {
@@ -10,7 +11,7 @@ namespace Json.Patch
 	/// Models a JSON Patch document.
 	/// </summary>
 	[JsonConverter(typeof(PatchJsonConverter))]
-	public class JsonPatch
+	public class JsonPatch : IEquatable<JsonPatch>
 	{
 		/// <summary>
 		/// Gets the collection of operations.
@@ -52,6 +53,31 @@ namespace Json.Patch
 			}
 
 			return new PatchResult(context);
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(JsonPatch other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Operations != null && Operations.SequenceEqual(other.Operations);
+		}
+
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as JsonPatch);
+		}
+
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
+		public override int GetHashCode()
+		{
+			return Operations?.GetCollectionHashCode() ?? 0;
 		}
 	}
 

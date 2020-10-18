@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Patch
@@ -9,7 +10,7 @@ namespace Json.Patch
 	/// Represents a single JSON Patch operation.
 	/// </summary>
 	[JsonConverter(typeof(PatchOperationJsonConverter))]
-	public readonly struct PatchOperation
+	public readonly struct PatchOperation : IEquatable<PatchOperation>
 	{
 		private readonly IPatchOperationHandler _handler;
 
@@ -107,6 +108,39 @@ namespace Json.Patch
 		internal void Handle(PatchContext context)
 		{
 			_handler.Process(context, this);
+		}
+
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+		public bool Equals(PatchOperation other)
+		{
+			return Op == other.Op &&
+			       From.Equals(other.From) &&
+			       Path.Equals(other.Path) &&
+			       Value.IsEquivalentTo(other.Value);
+		}
+
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare with the current instance.</param>
+		/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			return obj is PatchOperation other && Equals(other);
+		}
+
+		/// <summary>Returns the hash code for this instance.</summary>
+		/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = (int) Op;
+				hashCode = (hashCode * 397) ^ From.GetHashCode();
+				hashCode = (hashCode * 397) ^ Path.GetHashCode();
+				hashCode = (hashCode * 397) ^ Value.GetHashCode();
+				return hashCode;
+			}
 		}
 	}
 
