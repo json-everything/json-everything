@@ -58,6 +58,7 @@
     except:
       - master
   image: Visual Studio 2019
+  skip_branch_with_pr: true
 
   build:
     project: json-everything.sln
