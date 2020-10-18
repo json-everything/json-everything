@@ -350,6 +350,38 @@ references:
   isSpec: "True"
   fullName: Json.Patch.JsonPatch.Apply
   nameWithType: JsonPatch.Apply
+- uid: Json.Patch.JsonPatch.Equals(Json.Patch.JsonPatch)
+  name: Equals(JsonPatch)
+  href: api/Json.Patch.JsonPatch.html#Json_Patch_JsonPatch_Equals_Json_Patch_JsonPatch_
+  commentId: M:Json.Patch.JsonPatch.Equals(Json.Patch.JsonPatch)
+  fullName: Json.Patch.JsonPatch.Equals(Json.Patch.JsonPatch)
+  nameWithType: JsonPatch.Equals(JsonPatch)
+- uid: Json.Patch.JsonPatch.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Json.Patch.JsonPatch.html#Json_Patch_JsonPatch_Equals_System_Object_
+  commentId: M:Json.Patch.JsonPatch.Equals(System.Object)
+  fullName: Json.Patch.JsonPatch.Equals(System.Object)
+  nameWithType: JsonPatch.Equals(Object)
+- uid: Json.Patch.JsonPatch.Equals*
+  name: Equals
+  href: api/Json.Patch.JsonPatch.html#Json_Patch_JsonPatch_Equals_
+  commentId: Overload:Json.Patch.JsonPatch.Equals
+  isSpec: "True"
+  fullName: Json.Patch.JsonPatch.Equals
+  nameWithType: JsonPatch.Equals
+- uid: Json.Patch.JsonPatch.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Patch.JsonPatch.html#Json_Patch_JsonPatch_GetHashCode
+  commentId: M:Json.Patch.JsonPatch.GetHashCode
+  fullName: Json.Patch.JsonPatch.GetHashCode()
+  nameWithType: JsonPatch.GetHashCode()
+- uid: Json.Patch.JsonPatch.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Patch.JsonPatch.html#Json_Patch_JsonPatch_GetHashCode_
+  commentId: Overload:Json.Patch.JsonPatch.GetHashCode
+  isSpec: "True"
+  fullName: Json.Patch.JsonPatch.GetHashCode
+  nameWithType: JsonPatch.GetHashCode
 - uid: Json.Patch.JsonPatch.Operations
   name: Operations
   href: api/Json.Patch.JsonPatch.html#Json_Patch_JsonPatch_Operations
@@ -443,6 +475,25 @@ references:
   isSpec: "True"
   fullName: Json.Patch.PatchOperation.Copy
   nameWithType: PatchOperation.Copy
+- uid: Json.Patch.PatchOperation.Equals(Json.Patch.PatchOperation)
+  name: Equals(PatchOperation)
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Equals_Json_Patch_PatchOperation_
+  commentId: M:Json.Patch.PatchOperation.Equals(Json.Patch.PatchOperation)
+  fullName: Json.Patch.PatchOperation.Equals(Json.Patch.PatchOperation)
+  nameWithType: PatchOperation.Equals(PatchOperation)
+- uid: Json.Patch.PatchOperation.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Equals_System_Object_
+  commentId: M:Json.Patch.PatchOperation.Equals(System.Object)
+  fullName: Json.Patch.PatchOperation.Equals(System.Object)
+  nameWithType: PatchOperation.Equals(Object)
+- uid: Json.Patch.PatchOperation.Equals*
+  name: Equals
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Equals_
+  commentId: Overload:Json.Patch.PatchOperation.Equals
+  isSpec: "True"
+  fullName: Json.Patch.PatchOperation.Equals
+  nameWithType: PatchOperation.Equals
 - uid: Json.Patch.PatchOperation.From
   name: From
   href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_From
@@ -456,6 +507,19 @@ references:
   isSpec: "True"
   fullName: Json.Patch.PatchOperation.From
   nameWithType: PatchOperation.From
+- uid: Json.Patch.PatchOperation.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_GetHashCode
+  commentId: M:Json.Patch.PatchOperation.GetHashCode
+  fullName: Json.Patch.PatchOperation.GetHashCode()
+  nameWithType: PatchOperation.GetHashCode()
+- uid: Json.Patch.PatchOperation.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_GetHashCode_
+  commentId: Overload:Json.Patch.PatchOperation.GetHashCode
+  isSpec: "True"
+  fullName: Json.Patch.PatchOperation.GetHashCode
+  nameWithType: PatchOperation.GetHashCode
 - uid: Json.Patch.PatchOperation.Move(Json.Pointer.JsonPointer,Json.Pointer.JsonPointer)
   name: Move(JsonPointer, JsonPointer)
   href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Move_Json_Pointer_JsonPointer_Json_Pointer_JsonPointer_
