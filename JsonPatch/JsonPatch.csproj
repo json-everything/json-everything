@@ -16,6 +16,8 @@
     <PackageTags>json-patch jsonpatch json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-patch.html</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
