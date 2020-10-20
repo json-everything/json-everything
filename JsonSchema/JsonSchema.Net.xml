@@ -3848,11 +3848,6 @@
             Indicates whether the validation passed or failed.
             </summary>
         </member>
-        <member name="P:Json.Schema.ValidationResults.Annotations">
-            <summary>
-            The collection of annotations from this node.
-            </summary>
-        </member>
         <member name="P:Json.Schema.ValidationResults.Message">
             <summary>
             The error message, if any.
@@ -3876,6 +3871,11 @@
         <member name="P:Json.Schema.ValidationResults.NestedResults">
             <summary>
             The collection of nested results.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.ValidationResults.Annotations">
+            <summary>
+            The collection of annotations from this node.
             </summary>
         </member>
         <member name="M:Json.Schema.ValidationResults.ToDetailed">

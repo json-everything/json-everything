@@ -135,12 +135,12 @@
         </member>
         <member name="M:Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)">
             <summary>
-            Serializes a <see cref="T:System.Text.Json.JsonElement"/> into a proper JSON string.
+            Just a shortcut for calling `JsonSerializer.Serialize()` because `.ToString()` doesn't do what you might expect.
             </summary>
             <param name="element">The value to convert.</param>
             <returns>A JSON string.</returns>
             <remarks>
-            Booleans don't case right.  See https://github.com/dotnet/runtime/issues/42502
+            See https://github.com/dotnet/runtime/issues/42502
             </remarks>
         </member>
         <member name="M:Json.More.JsonElementExtensions.AsJsonElement(System.Int64)">

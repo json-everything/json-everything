@@ -168,7 +168,7 @@ namespace Json.Schema
 			if (BoolValue.HasValue)
 			{
 				context.IsValid = BoolValue.Value;
-				context.SchemaLocation = context.SchemaLocation.Combine(PointerSegment.Create($"[{BoolValue}]".ToLowerInvariant()));
+				context.SchemaLocation = context.SchemaLocation.Combine(PointerSegment.Create($"${BoolValue}".ToLowerInvariant()));
 				if (!context.IsValid)
 					context.Message = "All values fail against the false schema";
 				return;
