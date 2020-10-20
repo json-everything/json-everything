@@ -73,6 +73,30 @@ namespace Json.Schema.Tests
 			}
 		}
 
+		[Test]
+		public void Detailed_Success()
+		{
+			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Detailed);
+
+			result.AssertValid();
+			Assert.IsEmpty(result.NestedResults);
+			Assert.IsNotEmpty(result.Annotations);
+		}
+
+		[Test]
+		public void Detailed_Failure()
+		{
+			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Detailed);
+
+			result.AssertInvalid();
+			Assert.IsNotEmpty(result.NestedResults);
+			foreach (var node in result.NestedResults)
+			{
+				Assert.IsEmpty(node.NestedResults);
+				Assert.IsEmpty(node.Annotations);
+			}
+		}
+
 		private static ValidationResults Validate(string json, OutputFormat format)
 		{
 			var instance = JsonDocument.Parse(json);

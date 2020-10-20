@@ -85,7 +85,7 @@ namespace Json.Schema
 			foreach (var result in NestedResults)
 			{
 				result.ToDetailed();
-				if (_required || result.Keep)
+				if (result.Keep)
 					condensed.Add(result);
 			}
 
@@ -153,7 +153,7 @@ namespace Json.Schema
 		private IEnumerable<ValidationResults> _GetAllChildren()
 		{
 			var all = new List<ValidationResults>();
-			if (Annotations.Any() || Message != null || _nestedResults.Count == 0) all.Add(this);
+			if (Annotations.Any() || Message != null) all.Add(this);
 			all.AddRange(NestedResults.SelectMany(r => r._GetAllChildren()));
 
 			_nestedResults.Clear();
@@ -202,31 +202,17 @@ namespace Json.Schema
 			{
 				writer.WritePropertyName("annotations");
 				writer.WriteStartArray();
+
+				var annotations = value.Annotations.ToList();
+
 				foreach (var result in value.NestedResults)
 				{
-					var annotation = value.Annotations.SingleOrDefault(a => a.Source.Equals(result.SchemaLocation));
+					var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.SchemaLocation));
 					if (annotation != null)
 					{
-						writer.WriteStartObject();
+						annotations.Remove(annotation);
 
-						writer.WriteBoolean("valid", value.IsValid);
-
-						writer.WritePropertyName("keywordLocation");
-						JsonSerializer.Serialize(writer, annotation.Source);
-
-						if (value.AbsoluteSchemaLocation != null)
-						{
-							writer.WritePropertyName("absoluteKeywordLocation");
-							JsonSerializer.Serialize(writer, value.BuildAbsoluteUri(annotation.Source));
-						}
-
-						writer.WritePropertyName("instanceLocation");
-						JsonSerializer.Serialize(writer, value.InstanceLocation);
-
-						writer.WritePropertyName("annotation");
-						JsonSerializer.Serialize(writer, annotation.Value);
-
-						writer.WriteEndObject();
+						WriteAnnotation(writer, value, annotation);
 					}
 					else
 					{
@@ -234,8 +220,37 @@ namespace Json.Schema
 					}
 				}
 
+				foreach (var annotation in annotations)
+				{
+					WriteAnnotation(writer, value, annotation);
+				}
+
 				writer.WriteEndArray();
 			}
+
+			writer.WriteEndObject();
+		}
+
+		private static void WriteAnnotation(Utf8JsonWriter writer, ValidationResults value, Annotation annotation)
+		{
+			writer.WriteStartObject();
+
+			writer.WriteBoolean("valid", value.IsValid);
+
+			writer.WritePropertyName("keywordLocation");
+			JsonSerializer.Serialize(writer, annotation.Source);
+
+			if (value.AbsoluteSchemaLocation != null)
+			{
+				writer.WritePropertyName("absoluteKeywordLocation");
+				JsonSerializer.Serialize(writer, value.BuildAbsoluteUri(annotation.Source));
+			}
+
+			writer.WritePropertyName("instanceLocation");
+			JsonSerializer.Serialize(writer, value.InstanceLocation);
+
+			writer.WritePropertyName("annotation");
+			JsonSerializer.Serialize(writer, annotation.Value);
 
 			writer.WriteEndObject();
 		}
