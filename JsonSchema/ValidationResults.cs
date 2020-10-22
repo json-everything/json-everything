@@ -14,39 +14,41 @@ namespace Json.Schema
 	public class ValidationResults
 	{
 		private List<ValidationResults> _nestedResults;
+		private List<Annotation> _annotations;
 		private Uri _currentUri;
 		private Uri _absoluteUri;
+		private JsonPointer? _reference;
 		private bool _required;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
 		/// </summary>
-		public bool IsValid { get; internal set; }
-		/// <summary>
-		/// The collection of annotations from this node.
-		/// </summary>
-		public IReadOnlyList<Annotation> Annotations { get; internal set; }
+		public bool IsValid { get; private set; }
 		/// <summary>
 		/// The error message, if any.
 		/// </summary>
-		public string Message { get; internal set; }
+		public string Message { get; private set; }
 		/// <summary>
 		/// The schema location that generated this node.
 		/// </summary>
-		public JsonPointer SchemaLocation { get; internal set; }
+		public JsonPointer SchemaLocation { get; private set; }
 		/// <summary>
 		/// The instance location that was processed.
 		/// </summary>
-		public JsonPointer InstanceLocation { get; internal set; }
+		public JsonPointer InstanceLocation { get; private set; }
 
 		/// <summary>
 		/// The absolute schema location.  Only available if the schema had an absolute URI ID.
 		/// </summary>
-		public Uri AbsoluteSchemaLocation => _absoluteUri ??= _BuildAbsoluteUri();
+		public Uri AbsoluteSchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
 		/// <summary>
 		/// The collection of nested results.
 		/// </summary>
 		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults;
+		/// <summary>
+		/// The collection of annotations from this node.
+		/// </summary>
+		public IReadOnlyList<Annotation> Annotations => _annotations;
 
 		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep) || _required;
 
@@ -54,7 +56,7 @@ namespace Json.Schema
 		{
 			// TODO: apply format stuff here, not in JsonSchema
 			IsValid = context.IsValid;
-			Annotations = context.IsValid
+			_annotations = context.IsValid
 				? context.Annotations.ToList()
 				: new List<Annotation>();
 			Message = context.Message;
@@ -65,6 +67,7 @@ namespace Json.Schema
 				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
 				: new List<ValidationResults>();
 			_required = context.RequiredInResult;
+			_reference = context.Reference;
 		}
 
 		/// <summary>
@@ -84,7 +87,7 @@ namespace Json.Schema
 			foreach (var result in NestedResults)
 			{
 				result.ToDetailed();
-				if (_required || result.Keep)
+				if (result.Keep)
 					condensed.Add(result);
 			}
 
@@ -107,6 +110,9 @@ namespace Json.Schema
 			children.Remove(this);
 			_nestedResults.Clear();
 			_nestedResults.AddRange(children);
+
+			//_annotations.AddRange(_nestedResults.SelectMany(r => r.Annotations));
+			_nestedResults.ForEach(r => r._annotations.Clear());
 		}
 
 		/// <summary>
@@ -115,12 +121,13 @@ namespace Json.Schema
 		public void ToFlag()
 		{
 			_nestedResults.Clear();
+			_annotations.Clear();
 		}
 
 		private void CopyFrom(ValidationResults other)
 		{
 			IsValid = other.IsValid;
-			Annotations = other.Annotations;
+			_annotations = other._annotations;
 			Message = other.Message;
 			SchemaLocation = other.SchemaLocation;
 			_currentUri = other._currentUri;
@@ -128,16 +135,30 @@ namespace Json.Schema
 			_nestedResults = other._nestedResults;
 			_absoluteUri = other._absoluteUri;
 			_required = other._required;
+			_reference = other._reference;
 		}
 
-		private Uri _BuildAbsoluteUri()
+		internal Uri BuildAbsoluteUri(JsonPointer pointer)
 		{
 			if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
-			if (SchemaLocation.Segments.All(s => s.Value != RefKeyword.Name &&
-			                                     s.Value != RecursiveRefKeyword.Name))
+			if (pointer.Segments.All(s => s.Value != RefKeyword.Name &&
+			                              s.Value != RecursiveRefKeyword.Name))
 				return null;
 
-			return new Uri(_currentUri, SchemaLocation.ToString());
+			var lastIndexOfRef = pointer.Segments
+				.Select((s, i) => (s, i))
+				.Last(s => s.s.Value == RefKeyword.Name || s.s.Value == RecursiveRefKeyword.Name).i;
+			var absoluteSegments = pointer.Segments.Skip(lastIndexOfRef + 1);
+
+			if (_reference != null) 
+				absoluteSegments = _reference.Value.Segments.Concat(absoluteSegments);
+
+			return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());
+		}
+
+		private Uri BuildAbsoluteUri()
+		{
+			return BuildAbsoluteUri(SchemaLocation);
 		}
 
 		private IEnumerable<ValidationResults> _GetAllChildren()
@@ -188,40 +209,59 @@ namespace Json.Schema
 					JsonSerializer.Serialize(writer, value.NestedResults);
 				}
 			}
-			else if (value.Annotations.Any() || value.NestedResults.Any())
+			else if (value.Annotations.Any(a => !a.WasConsolidated) || value.NestedResults.Any())
 			{
 				writer.WritePropertyName("annotations");
 				writer.WriteStartArray();
-				foreach (var annotation in value.Annotations.Where(a => Equals(a.Source, value.SchemaLocation)))
-				{
-					writer.WriteStartObject();
 
-					writer.WriteBoolean("valid", value.IsValid);
-
-					writer.WritePropertyName("keywordLocation");
-					JsonSerializer.Serialize(writer, value.SchemaLocation);
-
-					if (value.AbsoluteSchemaLocation != null)
-					{
-						writer.WritePropertyName("absoluteKeywordLocation");
-						JsonSerializer.Serialize(writer, value.AbsoluteSchemaLocation);
-					}
-
-					writer.WritePropertyName("instanceLocation");
-					JsonSerializer.Serialize(writer, value.InstanceLocation);
-
-					writer.WritePropertyName("annotation");
-					JsonSerializer.Serialize(writer, annotation.Value);
-				
-					writer.WriteEndObject();
-				}
+				var annotations = value.Annotations.Where(a => !a.WasConsolidated).ToList();
 
 				foreach (var result in value.NestedResults)
 				{
-					JsonSerializer.Serialize(writer, result);
+					var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.SchemaLocation));
+					if (annotation != null)
+					{
+						annotations.Remove(annotation);
+
+						WriteAnnotation(writer, value, annotation);
+					}
+					else
+					{
+						JsonSerializer.Serialize(writer, result);
+					}
 				}
+
+				foreach (var annotation in annotations)
+				{
+					WriteAnnotation(writer, value, annotation);
+				}
+
 				writer.WriteEndArray();
 			}
+
+			writer.WriteEndObject();
+		}
+
+		private static void WriteAnnotation(Utf8JsonWriter writer, ValidationResults value, Annotation annotation)
+		{
+			writer.WriteStartObject();
+
+			writer.WriteBoolean("valid", value.IsValid);
+
+			writer.WritePropertyName("keywordLocation");
+			JsonSerializer.Serialize(writer, annotation.Source);
+
+			if (value.AbsoluteSchemaLocation != null)
+			{
+				writer.WritePropertyName("absoluteKeywordLocation");
+				JsonSerializer.Serialize(writer, value.BuildAbsoluteUri(annotation.Source));
+			}
+
+			writer.WritePropertyName("instanceLocation");
+			JsonSerializer.Serialize(writer, value.InstanceLocation);
+
+			writer.WritePropertyName("annotation");
+			JsonSerializer.Serialize(writer, annotation.Value);
 
 			writer.WriteEndObject();
 		}

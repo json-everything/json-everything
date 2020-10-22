@@ -101,6 +101,8 @@ namespace Json.Schema
 			}
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
+			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment, out var reference)) 
+				subContext.Reference = reference;
 			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
 				subContext.SchemaRoot = baseSchema;
 			schema.ValidateSubschema(subContext);

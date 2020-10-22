@@ -19,6 +19,8 @@ namespace Json.Schema
 		/// The pointer to the keyword that created the annotation.
 		/// </summary>
 		public JsonPointer Source { get; }
+		
+		internal bool WasConsolidated { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="Annotation"/>.

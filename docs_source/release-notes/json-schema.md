@@ -1,3 +1,7 @@
+# [1.3.1](https://github.com/gregsdennis/json-everything/pull/28)
+
+[#27](https://github.com/gregsdennis/json-everything/issues/27) Nodes in the basic and detailed output formats that match the overall outcome should be removed.  This also addresses several other bugs involving the output such as `absoluteKeywordLocation`.
+
 # [1.3.0](https://github.com/gregsdennis/json-everything/pull/25)
 
 [#15](https://github.com/gregsdennis/json-everything/issues/15) Easier navigation of the schema and its subschemas. Added `ISchemaContainer`, `ISchemaCollector`, and `IKeyedSchemaCollector` for the varying sets of subschemas that keywords can have.  Added `SchemaKeywordExtensions.GetSubschemas()` extension method.
