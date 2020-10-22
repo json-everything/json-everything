@@ -209,12 +209,12 @@ namespace Json.Schema
 					JsonSerializer.Serialize(writer, value.NestedResults);
 				}
 			}
-			else if (value.Annotations.Any() || value.NestedResults.Any())
+			else if (value.Annotations.Any(a => !a.WasConsolidated) || value.NestedResults.Any())
 			{
 				writer.WritePropertyName("annotations");
 				writer.WriteStartArray();
 
-				var annotations = value.Annotations.ToList();
+				var annotations = value.Annotations.Where(a => !a.WasConsolidated).ToList();
 
 				foreach (var result in value.NestedResults)
 				{

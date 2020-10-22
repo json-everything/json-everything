@@ -24,6 +24,7 @@ namespace Json.Schema
 		private Dictionary<string, Annotation> _annotations;
 		private List<ValidationContext> _nestedContexts;
 		private List<ValidationContext> _siblingContexts;
+		private bool _isConsolidating;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
@@ -158,7 +159,9 @@ namespace Json.Schema
 			if (!HasNestedContexts) return;
 			foreach (var consolidationAction in _consolidationActions)
 			{
+				_isConsolidating = true;
 				consolidationAction(NestedContexts, this);
+				_isConsolidating = false;
 			}
 		}
 
@@ -170,7 +173,7 @@ namespace Json.Schema
 		public void SetAnnotation(string owner, object value)
 		{
 			_annotations ??= new Dictionary<string, Annotation>();
-			_annotations[owner] = new Annotation(owner, value, SchemaLocation);
+			_annotations[owner] = new Annotation(owner, value, SchemaLocation) {WasConsolidated = _isConsolidating};
 		}
 
 		/// <summary>
