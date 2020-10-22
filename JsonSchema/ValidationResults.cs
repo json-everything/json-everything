@@ -17,6 +17,7 @@ namespace Json.Schema
 		private List<Annotation> _annotations;
 		private Uri _currentUri;
 		private Uri _absoluteUri;
+		private JsonPointer? _reference;
 		private bool _required;
 
 		/// <summary>
@@ -66,6 +67,7 @@ namespace Json.Schema
 				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
 				: new List<ValidationResults>();
 			_required = context.RequiredInResult;
+			_reference = context.Reference;
 		}
 
 		/// <summary>
@@ -133,6 +135,7 @@ namespace Json.Schema
 			_nestedResults = other._nestedResults;
 			_absoluteUri = other._absoluteUri;
 			_required = other._required;
+			_reference = other._reference;
 		}
 
 		internal Uri BuildAbsoluteUri(JsonPointer pointer)
@@ -142,7 +145,15 @@ namespace Json.Schema
 			                              s.Value != RecursiveRefKeyword.Name))
 				return null;
 
-			return new Uri(_currentUri, SchemaLocation.ToString());
+			var lastIndexOfRef = pointer.Segments
+				.Select((s, i) => (s, i))
+				.Last(s => s.s.Value == RefKeyword.Name || s.s.Value == RecursiveRefKeyword.Name).i;
+			var absoluteSegments = pointer.Segments.Skip(lastIndexOfRef + 1);
+
+			if (_reference != null) 
+				absoluteSegments = _reference.Value.Segments.Concat(absoluteSegments);
+
+			return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());
 		}
 
 		private Uri BuildAbsoluteUri()

@@ -98,6 +98,7 @@ namespace Json.Schema
 
 		internal ValidationContext ParentContext { get; set; }
 		internal bool RequiredInResult { get; set; }
+		internal JsonPointer? Reference { get; set; }
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).
@@ -139,7 +140,8 @@ namespace Json.Schema
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
 					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
 					CurrentAnchor = source.CurrentAnchor,
-					CurrentUri = newUri ?? source.CurrentUri
+					CurrentUri = newUri ?? source.CurrentUri,
+					Reference = source.Reference
 				};
 		}
 

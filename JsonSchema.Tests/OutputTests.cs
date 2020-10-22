@@ -8,7 +8,7 @@ namespace Json.Schema.Tests
 		private static readonly JsonSchema _schema =
 			new JsonSchemaBuilder()
 				.Id("https://test.com/schema")
-				.Definitions(
+				.Defs(
 					("integer", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
 					("minimum", new JsonSchemaBuilder().Minimum(5))
 				)
@@ -95,6 +95,16 @@ namespace Json.Schema.Tests
 				Assert.IsEmpty(node.NestedResults);
 				Assert.IsEmpty(node.Annotations);
 			}
+		}
+
+		[Test]
+		public void RelativeAndAbsoluteLocations()
+		{
+			var result = Validate("{\"refs\":8.8}", OutputFormat.Detailed);
+
+			result.AssertInvalid();
+			Assert.AreEqual("#/properties/refs/$ref/type", result.NestedResults[0].SchemaLocation.ToString());
+			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.NestedResults[0].AbsoluteSchemaLocation.ToString());
 		}
 
 		private static ValidationResults Validate(string json, OutputFormat format)
