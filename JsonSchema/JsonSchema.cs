@@ -190,7 +190,6 @@ namespace Json.Schema
 				newContext.ImportAnnotations(previousContext);
 				if (context.HasNestedContexts)
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
-				newContext.RequiredInResult = keyword.IsApplicator();
 				keyword.Validate(newContext);
 				overallResult &= newContext.IsValid;
 				if (!overallResult && context.ApplyOptimizations) break;
