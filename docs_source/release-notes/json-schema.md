@@ -1,4 +1,4 @@
-# [1.4.0](https://github.com/gregsdennis/json-everything/pull/???)
+# [1.4.0](https://github.com/gregsdennis/json-everything/pull/31)
 
 # [1.3.1](https://github.com/gregsdennis/json-everything/pull/28)
 
