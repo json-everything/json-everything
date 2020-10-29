@@ -18,7 +18,6 @@ namespace Json.Schema
 		private Uri _currentUri;
 		private Uri _absoluteUri;
 		private JsonPointer? _reference;
-		private bool _required;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
@@ -50,7 +49,7 @@ namespace Json.Schema
 		/// </summary>
 		public IReadOnlyList<Annotation> Annotations => _annotations;
 
-		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep) || _required;
+		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep);
 
 		internal ValidationResults(ValidationContext context)
 		{
@@ -66,7 +65,6 @@ namespace Json.Schema
 			_nestedResults = context.HasNestedContexts
 				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
 				: new List<ValidationResults>();
-			_required = context.RequiredInResult;
 			_reference = context.Reference;
 		}
 
@@ -76,7 +74,7 @@ namespace Json.Schema
 		public void ToDetailed()
 		{
 			if (!Annotations.Any() && Message == null && NestedResults.Count == 0) return;
-			if (!_required && NestedResults.Count == 1)
+			if (NestedResults.Count == 1)
 			{
 				NestedResults[0].ToDetailed();
 				CopyFrom(NestedResults[0]);
@@ -87,13 +85,13 @@ namespace Json.Schema
 			foreach (var result in NestedResults)
 			{
 				result.ToDetailed();
-				if (result.Keep)
+				if (result.Keep && result.IsValid == IsValid)
 					condensed.Add(result);
 			}
 
 			_nestedResults.Clear();
 
-			if (!_required && condensed.Count == 1)
+			if (condensed.Count == 1)
 				CopyFrom(condensed[0]);
 			else
 				_nestedResults.AddRange(condensed);
@@ -126,7 +124,7 @@ namespace Json.Schema
 
 		private void CopyFrom(ValidationResults other)
 		{
-			IsValid = other.IsValid;
+			//IsValid = other.IsValid;
 			_annotations = other._annotations;
 			Message = other.Message;
 			SchemaLocation = other.SchemaLocation;
@@ -134,7 +132,6 @@ namespace Json.Schema
 			InstanceLocation = other.InstanceLocation;
 			_nestedResults = other._nestedResults;
 			_absoluteUri = other._absoluteUri;
-			_required = other._required;
 			_reference = other._reference;
 		}
 

@@ -98,7 +98,6 @@ namespace Json.Schema
 		public JsonSchema CurrentAnchor { get; internal set; }
 
 		internal ValidationContext ParentContext { get; set; }
-		internal bool RequiredInResult { get; set; }
 		internal JsonPointer? Reference { get; set; }
 
 		/// <summary>
