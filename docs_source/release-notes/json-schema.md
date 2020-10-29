@@ -1,3 +1,5 @@
+# [1.4.0](https://github.com/gregsdennis/json-everything/pull/???)
+
 # [1.3.1](https://github.com/gregsdennis/json-everything/pull/28)
 
 [#27](https://github.com/gregsdennis/json-everything/issues/27) Nodes in the basic and detailed output formats that match the overall outcome should be removed.  This also addresses several other bugs involving the output such as `absoluteKeywordLocation`.
