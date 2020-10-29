@@ -106,9 +106,15 @@ namespace Json.Schema
 					SchemaRoot = this
 				};
 
-			var baseUri = RegisterSubschemasAndGetBaseUri(context.Options.SchemaRegistry, null);
+			var baseUri = RegisterSubschemasAndGetBaseUri(context.Options.SchemaRegistry, BaseUri ?? context.Options.DefaultBaseUri);
 			if (baseUri != null && baseUri.IsAbsoluteUri)
 				BaseUri = baseUri;
+
+			context.CurrentUri = baseUri == context.Options.DefaultBaseUri
+				? BaseUri ?? baseUri
+				: baseUri;
+
+			context.Options.SchemaRegistry.Register(context.CurrentUri, this);
 
 			ValidateSubschema(context);
 
@@ -169,7 +175,7 @@ namespace Json.Schema
 				keyword.RegisterSubschemas(registry, currentUri);
 			}
 
-			return idKeyword?.Id;
+			return currentUri;
 		}
 
 		/// <summary>

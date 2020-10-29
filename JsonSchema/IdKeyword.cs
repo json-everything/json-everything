@@ -44,7 +44,7 @@ namespace Json.Schema
 
 		internal Uri UpdateUri(Uri currentUri)
 		{
-			return currentUri == null ? Id : new Uri(currentUri, Id);
+			return currentUri == null || Id.IsAbsoluteUri ? Id : new Uri(currentUri, Id);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

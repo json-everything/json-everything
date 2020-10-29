@@ -21,4 +21,10 @@
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Files\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
