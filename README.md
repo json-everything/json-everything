@@ -51,7 +51,7 @@
 
 [Documentation](https://gregsdennis.github.io/json-everything)
 
-`json-everything` is your one-stop shop for extending the JSON functionality provided by .Net Core 3's `System.Text.Json` namespace, all provided in convenient .Net Standard 2.0 packages.
+`json-everything` is your one-stop shop for extending the JSON functionality provided by .Net Core 3's `System.Text.Json` namespace, all (well, most anyway) provided in convenient .Net Standard 2.0 packages.
 
 Currently supported:
 
