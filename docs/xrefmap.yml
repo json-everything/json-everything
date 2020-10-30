@@ -9523,6 +9523,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationOptions.Default
   nameWithType: ValidationOptions.Default
+- uid: Json.Schema.ValidationOptions.DefaultBaseUri
+  name: DefaultBaseUri
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_DefaultBaseUri
+  commentId: P:Json.Schema.ValidationOptions.DefaultBaseUri
+  fullName: Json.Schema.ValidationOptions.DefaultBaseUri
+  nameWithType: ValidationOptions.DefaultBaseUri
+- uid: Json.Schema.ValidationOptions.DefaultBaseUri*
+  name: DefaultBaseUri
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_DefaultBaseUri_
+  commentId: Overload:Json.Schema.ValidationOptions.DefaultBaseUri
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.DefaultBaseUri
+  nameWithType: ValidationOptions.DefaultBaseUri
 - uid: Json.Schema.ValidationOptions.OutputFormat
   name: OutputFormat
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_OutputFormat
