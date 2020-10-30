@@ -10,6 +10,8 @@ namespace Json.Schema
 	/// </summary>
 	public class ValidationOptions
 	{
+		private Uri _defaultBaseUri;
+
 		/// <summary>
 		/// The default settings.
 		/// </summary>
@@ -39,6 +41,14 @@ namespace Json.Schema
 		/// automatically check the global registry as well.
 		/// </summary>
 		public VocabularyRegistry VocabularyRegistry { get; } = new VocabularyRegistry();
+		/// <summary>
+		/// Specifies a default URI to be used when a schema is missing a
+		/// </summary>
+		public Uri DefaultBaseUri
+		{
+			get => _defaultBaseUri ??= new Uri("https://json-everything/base");
+			set => _defaultBaseUri = value;
+		}
 
 		internal static ValidationOptions From(ValidationOptions other)
 		{

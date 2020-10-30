@@ -3838,6 +3838,11 @@
             automatically check the global registry as well.
             </summary>
         </member>
+        <member name="P:Json.Schema.ValidationOptions.DefaultBaseUri">
+            <summary>
+            Specifies a default URI to be used when a schema is missing a
+            </summary>
+        </member>
         <member name="T:Json.Schema.ValidationResults">
             <summary>
             The results object for validations.

@@ -39,6 +39,7 @@ namespace Json.Schema
 		public IReadOnlyDictionary<string, JsonElement> OtherData { get; }
 
 		internal bool? BoolValue { get; }
+		internal Uri BaseUri { get; private set; }
 
 		private JsonSchema(bool value)
 		{
@@ -59,7 +60,9 @@ namespace Json.Schema
 		public static JsonSchema FromFile(string fileName)
 		{
 			var text = File.ReadAllText(fileName);
-			return FromText(text);
+			var schema = FromText(text);
+			schema.BaseUri = new Uri($"file:///{Path.GetFullPath(fileName)}");
+			return schema;
 		}
 
 		/// <summary>
@@ -103,7 +106,16 @@ namespace Json.Schema
 					SchemaRoot = this
 				};
 
-			RegisterSubschemas(context.Options.SchemaRegistry, null);
+			var baseUri = RegisterSubschemasAndGetBaseUri(context.Options.SchemaRegistry, BaseUri ?? context.Options.DefaultBaseUri);
+			if (baseUri != null && baseUri.IsAbsoluteUri)
+				BaseUri = baseUri;
+
+			context.CurrentUri = baseUri == context.Options.DefaultBaseUri
+				? BaseUri ?? baseUri
+				: baseUri;
+
+			context.Options.SchemaRegistry.Register(context.CurrentUri, this);
+
 			ValidateSubschema(context);
 
 			var results = new ValidationResults(context);
@@ -134,7 +146,12 @@ namespace Json.Schema
 		/// <param name="currentUri">The current URI.</param>
 		public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 		{
-			if (Keywords == null) return; // boolean cases
+			RegisterSubschemasAndGetBaseUri(registry, currentUri);
+		}
+
+		private Uri RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
+		{
+			if (Keywords == null) return null; // boolean cases
 
 			var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
 			if (idKeyword != null)
@@ -157,6 +174,8 @@ namespace Json.Schema
 			{
 				keyword.RegisterSubschemas(registry, currentUri);
 			}
+
+			return currentUri;
 		}
 
 		/// <summary>
@@ -190,7 +209,6 @@ namespace Json.Schema
 				newContext.ImportAnnotations(previousContext);
 				if (context.HasNestedContexts)
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
-				newContext.RequiredInResult = keyword.IsApplicator();
 				keyword.Validate(newContext);
 				overallResult &= newContext.IsValid;
 				if (!overallResult && context.ApplyOptimizations) break;

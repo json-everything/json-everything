@@ -87,24 +87,111 @@ namespace Json.Schema.Tests
 		public void Detailed_Failure()
 		{
 			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Detailed);
+			var expected = @"{
+  ""valid"": false,
+  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""instanceLocation"": ""#/fails"",
+  ""error"": ""All values fail against the false schema""
+}";
+			result.AssertInvalid(expected);
+		}
 
-			result.AssertInvalid();
-			Assert.IsNotEmpty(result.NestedResults);
-			foreach (var node in result.NestedResults)
-			{
-				Assert.IsEmpty(node.NestedResults);
-				Assert.IsEmpty(node.Annotations);
-			}
+		[Test]
+		public void Detailed_Multi_Success()
+		{
+			var result = Validate("{\"multi\":8}", OutputFormat.Detailed);
+			var expected = @"
+{
+  ""valid"": true,
+  ""keywordLocation"": ""#"",
+  ""instanceLocation"": ""#"",
+  ""annotations"": [
+    {
+      ""valid"": true,
+      ""keywordLocation"": ""#/properties"",
+      ""instanceLocation"": ""#"",
+      ""annotation"": [
+        ""multi""
+      ]
+    }
+  ]
+}";
+
+			result.AssertValid(expected);
+		}
+
+		[Test]
+		public void Detailed_Multi_Failure_Both()
+		{
+			var result = Validate("{\"multi\":3.5}", OutputFormat.Detailed);
+			var expected = @"{
+  ""valid"": false,
+  ""keywordLocation"": ""#/properties/multi/allOf"",
+  ""instanceLocation"": ""#/multi"",
+  ""errors"": [
+    {
+      ""valid"": false,
+      ""keywordLocation"": ""#/properties/multi/allOf/0/$ref/type"",
+      ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
+      ""instanceLocation"": ""#/multi"",
+      ""error"": ""Value is number but should be integer""
+    },
+    {
+      ""valid"": false,
+      ""keywordLocation"": ""#/properties/multi/allOf/1/$ref/minimum"",
+      ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/minimum/minimum"",
+      ""instanceLocation"": ""#/multi"",
+      ""error"": ""3.5 is less than or equal to 5""
+    }
+  ]
+}";
+
+			result.AssertInvalid(expected);
+		}
+
+		[Test]
+		public void Detailed_Multi_Failure_Integer()
+		{
+			var result = Validate("{\"fails\":8.5}", OutputFormat.Detailed);
+			var expected = @"{
+  ""valid"": false,
+  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""instanceLocation"": ""#/fails"",
+  ""error"": ""All values fail against the false schema""
+}";
+
+			result.AssertInvalid(expected);
+		}
+
+		[Test]
+		public void Detailed_Multi_Failure_Minimum()
+		{
+			var result = Validate("{\"fails\":3}", OutputFormat.Detailed);
+			var expected = @"{
+  ""valid"": false,
+  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""instanceLocation"": ""#/fails"",
+  ""error"": ""All values fail against the false schema""
+}";
+
+			result.AssertInvalid(expected);
 		}
 
 		[Test]
 		public void RelativeAndAbsoluteLocations()
 		{
 			var result = Validate("{\"refs\":8.8}", OutputFormat.Detailed);
+			var expected = @"{
+  ""valid"": false,
+  ""keywordLocation"": ""#/properties/refs/$ref/type"",
+  ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
+  ""instanceLocation"": ""#/refs"",
+  ""error"": ""Value is number but should be integer""
+}";
 
-			result.AssertInvalid();
-			Assert.AreEqual("#/properties/refs/$ref/type", result.NestedResults[0].SchemaLocation.ToString());
-			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.NestedResults[0].AbsoluteSchemaLocation.ToString());
+			result.AssertInvalid(expected);
+			Assert.AreEqual("#/properties/refs/$ref/type", result.SchemaLocation.ToString());
+			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.AbsoluteSchemaLocation.ToString());
 		}
 
 		private static ValidationResults Validate(string json, OutputFormat format)

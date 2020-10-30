@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -204,6 +205,71 @@ namespace Json.Schema.Tests
 			Console.WriteLine("Elem `{0}` got validation `{1}`", instance, val.IsValid);
 			if (isValid) val.AssertValid();
 			else val.AssertInvalid();
+		}
+
+		[Test]
+		public void Issue29_SchemaFromFileWithoutIdShouldInheritUriFromFilePath()
+		{
+			var schemaFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue29-schema-without-id.json")
+				.AdjustForPlatform();
+
+			var jsonStr = @"{
+  ""abc"": {
+    ""abc"": {
+        ""abc"": ""abc""
+    }
+  }
+}";
+			var schema = JsonSchema.FromFile(schemaFile);
+			var json = JsonDocument.Parse(jsonStr).RootElement;
+			var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+
+			validation.AssertValid();
+		}
+
+		[Test]
+		public void Issue29_SchemaFromFileWithIdShouldKeepUriFromId()
+		{
+			var schemaFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue29-schema-with-id.json")
+				.AdjustForPlatform();
+
+			var jsonStr = @"{
+  ""abc"": {
+    ""abc"": {
+        ""abc"": ""abc""
+    }
+  }
+}";
+			var schema = JsonSchema.FromFile(schemaFile);
+			var json = JsonDocument.Parse(jsonStr).RootElement;
+			var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+
+			validation.AssertValid();
+		}
+
+		[Test]
+		public void Issue29_SchemaWithOnlyFileNameIdShouldUseDefaultBaseUri()
+		{
+			var schemaStr = @"{
+  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+  ""$id"": ""mySchema.json"",
+  ""properties"": {
+      ""abc"": { ""$ref"": ""mySchema.json"" }
+  },
+  ""additionalProperties"": false
+}";
+			var jsonStr = @"{
+  ""abc"": {
+    ""abc"": {
+        ""abc"": ""abc""
+    }
+  }
+}";
+			var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr);
+			var json = JsonDocument.Parse(jsonStr).RootElement;
+			var validation = schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+
+			validation.AssertValid();
 		}
 	}
 }
