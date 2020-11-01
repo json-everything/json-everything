@@ -9575,6 +9575,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationOptions.ValidateAs
   nameWithType: ValidationOptions.ValidateAs
+- uid: Json.Schema.ValidationOptions.ValidateFormat
+  name: ValidateFormat
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_ValidateFormat
+  commentId: P:Json.Schema.ValidationOptions.ValidateFormat
+  fullName: Json.Schema.ValidationOptions.ValidateFormat
+  nameWithType: ValidationOptions.ValidateFormat
+- uid: Json.Schema.ValidationOptions.ValidateFormat*
+  name: ValidateFormat
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_ValidateFormat_
+  commentId: Overload:Json.Schema.ValidationOptions.ValidateFormat
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.ValidateFormat
+  nameWithType: ValidationOptions.ValidateFormat
 - uid: Json.Schema.ValidationOptions.ValidateMetaSchema
   name: ValidateMetaSchema
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_ValidateMetaSchema
