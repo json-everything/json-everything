@@ -9,12 +9,18 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Test()
 		{
-			var schema = JsonSchema.FromText(@"");
-			var instance = JsonDocument.Parse(@"").RootElement;
+			var schema = JsonSchema.FromText(@"{}");
+			var instance = JsonDocument.Parse(@"{}").RootElement;
 
-			var results = schema.Validate(instance);
+			var validationOptions = new ValidationOptions{OutputFormat = OutputFormat.Basic};
+			var results = schema.Validate(instance, validationOptions);
 
-			Console.WriteLine(JsonSerializer.Serialize(results));
+            var serializerOptions = new JsonSerializerOptions{WriteIndented = true};
+            Console.WriteLine(JsonSerializer.Serialize(schema, serializerOptions));
+            Console.WriteLine();
+            Console.WriteLine(JsonSerializer.Serialize(instance, serializerOptions));
+            Console.WriteLine();
+            Console.WriteLine(JsonSerializer.Serialize(results, serializerOptions));
 		}
 	}
 }

@@ -33,6 +33,20 @@
             <param name="source">The JSON document.</param>
             <returns>A result object containing the output JSON and a possible error message.</returns>
         </member>
+        <member name="M:Json.Patch.JsonPatch.Equals(Json.Patch.JsonPatch)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Patch.JsonPatch.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Patch.JsonPatch.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Patch.OperationType">
             <summary>
             Enumerates the valid JSON Patch operation types.
@@ -144,6 +158,20 @@
             <param name="path">The source path.</param>
             <param name="value">The value to match.</param>
             <returns>An `test` operation.</returns>
+        </member>
+        <member name="M:Json.Patch.PatchOperation.Equals(Json.Patch.PatchOperation)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Patch.PatchOperation.Equals(System.Object)">
+            <summary>Indicates whether this instance and a specified object are equal.</summary>
+            <param name="obj">The object to compare with the current instance.</param>
+            <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Patch.PatchOperation.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
         </member>
         <member name="T:Json.Patch.PatchResult">
             <summary>
