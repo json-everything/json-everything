@@ -37,14 +37,8 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			if (context.LocalInstance.ValueKind != JsonValueKind.String)
-			{
-				context.IsValid = true;
-				return;
-			}
-
 			context.SetAnnotation(Name, Value.Key);
-			context.IsValid = Value.Validate(context.LocalInstance);
+			context.IsValid = !context.Options.ValidateFormat || Value.Validate(context.LocalInstance);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

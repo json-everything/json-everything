@@ -49,6 +49,11 @@ namespace Json.Schema
 			get => _defaultBaseUri ??= new Uri("https://json-everything/base");
 			set => _defaultBaseUri = value;
 		}
+		/// <summary>
+		/// Specifies whether the `format` keyword should provide validation results
+		/// or just annotation.  Default is false, which just produces annotations.
+		/// </summary>
+		public bool ValidateFormat { get; set; }
 
 		internal static ValidationOptions From(ValidationOptions other)
 		{
