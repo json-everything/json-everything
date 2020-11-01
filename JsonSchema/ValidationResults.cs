@@ -53,7 +53,6 @@ namespace Json.Schema
 
 		internal ValidationResults(ValidationContext context)
 		{
-			// TODO: apply format stuff here, not in JsonSchema
 			IsValid = context.IsValid;
 			_annotations = context.IsValid
 				? context.Annotations.ToList()
@@ -102,15 +101,14 @@ namespace Json.Schema
 		/// </summary>
 		public void ToBasic()
 		{
+			ToDetailed();
 			var children = _GetAllChildren().ToList();
 			if (!children.Any()) return;
 
 			children.Remove(this);
+			children.ForEach(r => r._annotations.Clear());
 			_nestedResults.Clear();
-			_nestedResults.AddRange(children);
-
-			//_annotations.AddRange(_nestedResults.SelectMany(r => r.Annotations));
-			_nestedResults.ForEach(r => r._annotations.Clear());
+			_nestedResults.AddRange(children.Where(c => c.Keep));
 		}
 
 		/// <summary>

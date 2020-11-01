@@ -3843,6 +3843,12 @@
             Specifies a default URI to be used when a schema is missing a
             </summary>
         </member>
+        <member name="P:Json.Schema.ValidationOptions.ValidateFormat">
+            <summary>
+            Specifies whether the `format` keyword should provide validation results
+            or just annotation.  Default is false, which just produces annotations.
+            </summary>
+        </member>
         <member name="T:Json.Schema.ValidationResults">
             <summary>
             The results object for validations.

@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/gregsdennis/json-everything/pull/34)
+
+[#33](https://github.com/gregsdennis/json-everything/issues/33) Added `ValidationOptions.ValidateFormat` which allows configuration of whether to validate the `format` keyword.  Also fixes a bug where the `format` keyword was validated by default for draft 2019-09 which specifies that it should only generate annotations by default.  Because this library favors the latest draft, this is the default behavior for all drafts.
+
+As a further followup to #27 (below), basic output has been refined.
+
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/31)
 
 [#27](https://github.com/gregsdennis/json-everything/issues/27) (reopened) Better reduction of detailed output format which eliminates the notion that any nodes *must* be kept.

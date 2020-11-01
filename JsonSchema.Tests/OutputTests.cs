@@ -49,28 +49,37 @@ namespace Json.Schema.Tests
 		public void Basic_Success()
 		{
 			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Basic);
+			var expected = @"{
+  ""valid"": true,
+  ""keywordLocation"": ""#"",
+  ""instanceLocation"": ""#"",
+  ""annotations"": [
+    {
+      ""valid"": true,
+      ""keywordLocation"": ""#/properties"",
+      ""instanceLocation"": ""#"",
+      ""annotation"": [
+        ""passes""
+      ]
+    }
+  ]
+}";
 
-			result.AssertValid();
-			Assert.IsNotEmpty(result.NestedResults);
-			foreach (var node in result.NestedResults)
-			{
-				Assert.IsEmpty(node.NestedResults);
-				Assert.IsEmpty(node.Annotations);
-			}
+			result.AssertValid(expected);
 		}
 
 		[Test]
 		public void Basic_Failure()
 		{
 			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Basic);
+			var expected = @"{
+  ""valid"": false,
+  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""instanceLocation"": ""#/fails"",
+  ""error"": ""All values fail against the false schema""
+}";
 
-			result.AssertInvalid();
-			Assert.IsNotEmpty(result.NestedResults);
-			foreach (var node in result.NestedResults)
-			{
-				Assert.IsEmpty(node.NestedResults);
-				Assert.IsEmpty(node.Annotations);
-			}
+			result.AssertInvalid(expected);
 		}
 
 		[Test]
