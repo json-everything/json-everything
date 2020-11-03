@@ -61,7 +61,7 @@ namespace Json.Schema
 		{
 			var text = File.ReadAllText(fileName);
 			var schema = FromText(text);
-			schema.BaseUri = new Uri($"file:///{Path.GetFullPath(fileName)}");
+			schema.BaseUri = new Uri(Path.GetFullPath(fileName));
 			return schema;
 		}
 
