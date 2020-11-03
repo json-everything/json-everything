@@ -34,7 +34,7 @@
         <td>
             <a href="https://www.nuget.org/packages/JsonPatch.Net/">
                 <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPatch.Net.svg?svg=true"></img><br>
-                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPacth.Net.svg?svg=true"></img>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img>
             </a>
         </td>
         <td>
