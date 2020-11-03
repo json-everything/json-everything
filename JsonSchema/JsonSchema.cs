@@ -54,9 +54,10 @@ namespace Json.Schema
 		/// <summary>
 		/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
 		/// </summary>
-		/// <param name="fileName">The filename to load.</param>
+		/// <param name="fileName">The filename to load, URL-decoded.</param>
 		/// <returns>A new <see cref="JsonSchema"/>.</returns>
 		/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+		/// <remarks>The filename needs to not be URL-encoded as <see cref="System.Uri"/> attempts to encode it.</remarks>
 		public static JsonSchema FromFile(string fileName)
 		{
 			var text = File.ReadAllText(fileName);
