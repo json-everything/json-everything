@@ -29,26 +29,27 @@ JsonSchema schema = new JsonSchemaBuilder()
     .Properties(
         (
             "myProperty", new JsonSchemaBuilder()
-                .Type(SchemaValueType.String),
+                .Type(SchemaValueType.String)
                 .MinLength(10)
         )
     )
     .Required("myProperty");
 var emptyJson = JsonDocument.Parse("{}").RootElement;
-var booleanJson = JsonDocument.Parse("{\"myProperty\":false}");
-var stringJson = JsonDocument.Parse("{\"myProperty\":\"some string\"}");
-var shortJson = JsonDocument.Parse("{\"myProperty\":\"short\"}");
-var numberJson = JsonDocument.Parse("{\"otherProperty\":35.4}");
-var nonObject = JsonDocument.Parse("\"not an bject\"");
+var booleanJson = JsonDocument.Parse("{\"myProperty\":false}").RootElement;
+var stringJson = JsonDocument.Parse("{\"myProperty\":\"some string\"}").RootElement;
+var shortJson = JsonDocument.Parse("{\"myProperty\":\"short\"}").RootElement;
+var numberJson = JsonDocument.Parse("{\"otherProperty\":35.4}").RootElement;
+var nonObject = JsonDocument.Parse("\"not an object\"").RootElement;
 
 var emptyResults = schema.Validate(emptyJson);
 var booleanResults = schema.Validate(booleanJson);
 var stringResults = schema.Validate(stringJson);
+var shortResults = schema.Validate(shortJson);
 var numberResults = schema.Validate(numberJson);
-var nonObjectResults = schame.Validate(nonObject);
+var nonObjectResults = schema.Validate(nonObject);
 ```
 
-The various results objects are of type `SchemaValidationResults`.  More information about the results object can be found in the next section.
+The various results objects are of type `ValidationResults`.  More information about the results object can be found in the next section.
 
 In the above example, the following would result:
 
