@@ -92,25 +92,26 @@
     .Properties(
         (
             &quot;myProperty&quot;, new JsonSchemaBuilder()
-                .Type(SchemaValueType.String),
+                .Type(SchemaValueType.String)
                 .MinLength(10)
         )
     )
     .Required(&quot;myProperty&quot;);
 var emptyJson = JsonDocument.Parse(&quot;{}&quot;).RootElement;
-var booleanJson = JsonDocument.Parse(&quot;{\&quot;myProperty\&quot;:false}&quot;);
-var stringJson = JsonDocument.Parse(&quot;{\&quot;myProperty\&quot;:\&quot;some string\&quot;}&quot;);
-var shortJson = JsonDocument.Parse(&quot;{\&quot;myProperty\&quot;:\&quot;short\&quot;}&quot;);
-var numberJson = JsonDocument.Parse(&quot;{\&quot;otherProperty\&quot;:35.4}&quot;);
-var nonObject = JsonDocument.Parse(&quot;\&quot;not an bject\&quot;&quot;);
+var booleanJson = JsonDocument.Parse(&quot;{\&quot;myProperty\&quot;:false}&quot;).RootElement;
+var stringJson = JsonDocument.Parse(&quot;{\&quot;myProperty\&quot;:\&quot;some string\&quot;}&quot;).RootElement;
+var shortJson = JsonDocument.Parse(&quot;{\&quot;myProperty\&quot;:\&quot;short\&quot;}&quot;).RootElement;
+var numberJson = JsonDocument.Parse(&quot;{\&quot;otherProperty\&quot;:35.4}&quot;).RootElement;
+var nonObject = JsonDocument.Parse(&quot;\&quot;not an object\&quot;&quot;).RootElement;
 
 var emptyResults = schema.Validate(emptyJson);
 var booleanResults = schema.Validate(booleanJson);
 var stringResults = schema.Validate(stringJson);
+var shortResults = schema.Validate(shortJson);
 var numberResults = schema.Validate(numberJson);
-var nonObjectResults = schame.Validate(nonObject);
+var nonObjectResults = schema.Validate(nonObject);
 </code></pre>
-<p>The various results objects are of type <code>SchemaValidationResults</code>.  More information about the results object can be found in the next section.</p>
+<p>The various results objects are of type <code>ValidationResults</code>.  More information about the results object can be found in the next section.</p>
 <p>In the above example, the following would result:</p>
 <ul>
 <li><code>emptyJson</code> and <code>numberJson</code> failed because <code>&quot;myProperty&quot;</code> was not found.</li>
