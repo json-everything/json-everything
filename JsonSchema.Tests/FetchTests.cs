@@ -30,6 +30,28 @@ namespace Json.Schema.Tests
 			results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
 		}
 		[Test]
+		public void LocalRegistryFindsRefViaOptions()
+		{
+			var options = new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed,
+                Fetch = uri =>
+                {
+                    if (uri.AbsoluteUri == "http://my.schema/test1")
+                        return JsonSchema.FromText("{\"type\": \"string\"}");
+                    return null;
+                }
+			};
+			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+
+			using var json = JsonDocument.Parse("10");
+
+			var results = schema.Validate(json.RootElement, options);
+
+			results.AssertInvalid();
+			results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
+		}
+		[Test]
 		public void GlobalRegistryFindsRef()
 		{
 			var options = new ValidationOptions

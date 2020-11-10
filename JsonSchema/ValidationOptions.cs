@@ -37,6 +37,14 @@ namespace Json.Schema
 		/// </summary>
 		public SchemaRegistry SchemaRegistry { get; } = new SchemaRegistry();
 		/// <summary>
+		/// The fetch function to be used by the local schema registry.
+		/// </summary>
+		public Func<Uri, JsonSchema> Fetch
+        {
+            get => SchemaRegistry.Fetch;
+            set => SchemaRegistry.Fetch = value;
+        }
+		/// <summary>
 		/// The local vocabulary registry.  If a schema is not found here, it will
 		/// automatically check the global registry as well.
 		/// </summary>
