@@ -43,8 +43,8 @@ jobs:
       run: dotnet analyze-semver -a Json.Pointer/Json.Pointer/bin/Release/netstandard2.0/Json.Pointer.dll -o semver-report-pointer.md -c build/semver_config.json
     - name: Analyze schema
       run: dotnet analyze-semver -a Json.Schema/Json.Schema/bin/Release/netstandard2.0/Json.Schema.dll -o semver-report-schema.md -c build/semver_config.json
-    - uses: harupy/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          filename: template.md
+    # - uses: harupy/comment-on-pr@master
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       filename: template.md
