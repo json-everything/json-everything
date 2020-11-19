@@ -14,7 +14,7 @@ namespace JsonPatch.Tests.Suite
 	[TestFixture]
 	public class JsonPatchTestSuite
 	{
-		private const string _testFolder = @"..\..\..\..\ref-repos\json-patch-tests";
+		private const string _testFolder = @"../../../../ref-repos/json-patch-tests";
 		private static readonly JsonSerializerOptions _options;
 
 		// ReSharper disable once MemberCanBePrivate.Global

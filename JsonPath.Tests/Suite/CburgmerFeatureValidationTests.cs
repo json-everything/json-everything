@@ -20,7 +20,7 @@ namespace JsonPath.Tests.Suite
 	/// <remarks>This is from cburgmer's amazing reporting site: https://cburgmer.github.io/json-path-comparison/</remarks>
 	public class CburgmerFeatureValidationTests
 	{
-		private const string _regressionResultsFile = @"..\..\..\..\ref-repos\json-path-comparison\regression_suite\regression_suite.yaml";
+		private const string _regressionResultsFile = @"../../../../ref-repos/json-path-comparison/regression_suite/regression_suite.yaml";
 		private static readonly Regex _idPattern = new Regex(@"  - id: (?<value>.*)");
 		private static readonly Regex _selectorPattern = new Regex(@"    selector: (?<value>.*)");
 		private static readonly Regex _documentPattern = new Regex(@"    document: (?<value>.*)");

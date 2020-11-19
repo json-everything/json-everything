@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Resources;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace JsonPath.Tests.Suite
 {
 	public class ReferenceImplTests
 	{
-		private const string _testsFile = @"..\..\..\..\ref-repos\jsonpath-reference-implementation\tests\cts.json";
+		private const string _testsFile = @"../../../../ref-repos/jsonpath-reference-implementation/tests/cts.json";
 		private static readonly string[] _notSupported =
 			{
 				// expect these to be out of spec soon

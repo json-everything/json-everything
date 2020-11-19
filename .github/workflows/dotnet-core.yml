@@ -24,8 +24,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
+    - name: restore submodules
+      run: git submodule update --init && git submodule foreach git pull origin master
     - name: Test
       run: dotnet test --no-restore --verbosity normal
 
