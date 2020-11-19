@@ -1,0 +1,55 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: publish to nuget
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths-ignore:
+      - 'docs/**/*'
+
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+      # Publish
+      - name: publish more
+        id: publish_more
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: source/Json.More/Json.More.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+      - name: publish patch
+        id: publish_patch
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: source/Json.Patch/Json.Patch.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+      - name: publish path
+        id: publish_path
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: source/Json.Path/Json.Path.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+      - name: publish pointer
+        id: publish_pointer
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: source/Json.Pointer/Json.Pointer.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+      - name: publish schema
+        id: publish_schema
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: source/Json.Schema/Json.Schema.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true

@@ -1,0 +1,43 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - 'docs/**/*'
+  pull_request:
+    paths-ignore:
+      - 'docs/**/*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+
+    - name: Create local manifest file
+      run: dotnet new tool-manifest
+    - name: Install analyzer
+      run: dotnet tool install SemVerAnalyzer
+    - name: Analyze more
+      run: dotnet analyze-semver -a Json.More/Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json
+    - name: Analyze more
+      run: dotnet analyze-semver -a Json.Patch/Json.Patch/bin/Release/netstandard2.0/Json.Patch.dll -o semver-report-patch.md -c build/semver_config.json
+    - name: Analyze more
+      run: dotnet analyze-semver -a Json.Path/Json.Path/bin/Release/netstandard2.1/Json.Path.dll -o semver-report-path.md -c build/semver_config.json
+    - name: Analyze more
+      run: dotnet analyze-semver -a Json.Pointer/Json.Pointer/bin/Release/netstandard2.0/Json.Pointer.dll -o semver-report-pointer.md -c build/semver_config.json
+    - name: Analyze more
+      run: dotnet analyze-semver -a Json.Schema/Json.Schema/bin/Release/netstandard2.0/Json.Schema.dll -o semver-report-schema.md -c build/semver_config.json
