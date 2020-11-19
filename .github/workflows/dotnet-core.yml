@@ -36,7 +36,7 @@ jobs:
     - name: Analyze more
       run: dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json
     - name: Analyze patch
-      run: dotnet analyze-semver -a JsonPatch/bin/Release/netstandard2.0/JsonPatch.Net.dll -o semver-report-patch.md -c build/semver_config.json
+      run: dotnet analyze-semver -a JsonPatch/bin/Release/netstandard2.0/JsonPatch.dll -o semver-report-patch.md -c build/semver_config.json
     - name: Analyze path
       run: dotnet analyze-semver -a JsonPath/bin/Release/netstandard2.1/JsonPath.Net.dll -o semver-report-path.md -c build/semver_config.json
     - name: Analyze pointer
