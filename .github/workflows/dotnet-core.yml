@@ -20,6 +20,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+    - name: restore submodules
+      run: git submodule update --init
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -33,11 +35,16 @@ jobs:
       run: dotnet tool install SemVerAnalyzer
     - name: Analyze more
       run: dotnet analyze-semver -a Json.More/Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json
-    - name: Analyze more
+    - name: Analyze patch
       run: dotnet analyze-semver -a Json.Patch/Json.Patch/bin/Release/netstandard2.0/Json.Patch.dll -o semver-report-patch.md -c build/semver_config.json
-    - name: Analyze more
+    - name: Analyze path
       run: dotnet analyze-semver -a Json.Path/Json.Path/bin/Release/netstandard2.1/Json.Path.dll -o semver-report-path.md -c build/semver_config.json
-    - name: Analyze more
+    - name: Analyze pointer
       run: dotnet analyze-semver -a Json.Pointer/Json.Pointer/bin/Release/netstandard2.0/Json.Pointer.dll -o semver-report-pointer.md -c build/semver_config.json
-    - name: Analyze more
+    - name: Analyze schema
       run: dotnet analyze-semver -a Json.Schema/Json.Schema/bin/Release/netstandard2.0/Json.Schema.dll -o semver-report-schema.md -c build/semver_config.json
+    - uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: template.md
