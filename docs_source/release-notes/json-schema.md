@@ -1,3 +1,7 @@
+# [1.5.2](https://github.com/gregsdennis/json-everything/pull/40)
+
+Updated wording for `enum` error message.  This must remain generic and cannot include the expected values because the list could be long and the values could be quite large.
+
 # [1.5.1](https://github.com/gregsdennis/json-everything/pull/34)
 
 [#35](https://github.com/gregsdennis/json-everything/issues/35) `JsonSchema.FromFile()` handles file paths as URIs incorrectly in non-Windows systems. 

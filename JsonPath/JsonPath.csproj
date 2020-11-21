@@ -16,9 +16,6 @@
     <Version>0.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\projects\json-everything\JsonPath\JsonPath.Net.xml</DocumentationFile>
   </PropertyGroup>
 

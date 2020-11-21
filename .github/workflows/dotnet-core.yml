@@ -1,0 +1,162 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - 'docs/**/*'
+  pull_request:
+    paths-ignore:
+      - 'docs/**/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: restore submodules
+      run: git submodule update --init
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+
+    - name: Create local manifest file
+      if: github.event_name == 'pull_request'
+      run: dotnet new tool-manifest
+    - name: Install analyzer
+      if: github.event_name == 'pull_request'
+      run: dotnet tool install SemVerAnalyzer
+
+    - name: Analyze more
+      id: analyze-more
+      if: github.event_name == 'pull_request'
+      # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
+      run: |
+        dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json -p Json.More.Net
+        unset HAS_REPORT
+        unset REPORT
+        if [ -s semver-report-more.md ]
+        then
+          HAS_REPORT='true'
+          REPORT=$(<semver-report-more.md)
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::${REPORT}"
+        fi
+        echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-more.outputs.HAS_REPORT
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ${{ steps.analyze-more.outputs.REPORT }}
+
+    - name: Analyze patch
+      id: analyze-patch
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet analyze-semver -a JsonPatch/bin/Release/netstandard2.0/JsonPatch.dll -o semver-report-patch.md -c build/semver_config.json -p JsonPatch.Net
+        unset HAS_REPORT
+        unset REPORT
+        if [ -s semver-report-patch.md ]
+        then
+          HAS_REPORT='true'
+          REPORT=$(<semver-report-patch.md)
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::${REPORT}"
+        fi
+        echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-patch.outputs.HAS_REPORT
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ${{ steps.analyze-patch.outputs.REPORT }}
+
+    - name: Analyze path
+      id: analyze-path
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet analyze-semver -a JsonPath/bin/Release/netstandard2.1/JsonPath.Net.dll -o semver-report-path.md -c build/semver_config.json
+        unset HAS_REPORT
+        unset REPORT
+        if [ -s semver-report-path.md ]
+        then
+          HAS_REPORT='true'
+          REPORT=$(<semver-report-path.md)
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::${REPORT}"
+        fi
+        echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-path.outputs.HAS_REPORT
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ${{ steps.analyze-path.outputs.REPORT }}
+
+    - name: Analyze pointer
+      id: analyze-poitner
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet analyze-semver -a JsonPointer/bin/Release/netstandard2.0/JsonPointer.Net.dll -o semver-report-pointer.md -c build/semver_config.json
+        unset HAS_REPORT
+        unset REPORT
+        if [ -s semver-report-pointer.md ]
+        then
+          HAS_REPORT='true'
+          REPORT=$(<semver-report-pointer.md)
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::${REPORT}"
+        fi
+        echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-pointer.outputs.HAS_REPORT
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ${{ steps.analyze-pointer.outputs.REPORT }}
+  
+    - name: Analyze schema
+      id: analyze-schema
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -o semver-report-schema.md -c build/semver_config.json
+        unset HAS_REPORT
+        unset REPORT
+        if [ -s semver-report-schema.md ]
+        then
+          HAS_REPORT='true'
+          REPORT=$(<semver-report-schema.md)
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::${REPORT}"
+        fi
+        echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-schema.outputs.HAS_REPORT
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ${{ steps.analyze-schema.outputs.REPORT }}

@@ -13,16 +13,13 @@
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json-schema validation schema json</PackageTags>
-    <Version>1.5.1</Version>
-    <FileVersion>1.5.1.0</FileVersion>
+    <Version>1.5.2</Version>
+    <FileVersion>1.5.2.0</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>JsonSchema.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\projects\json-everything\JsonSchema\JsonSchema.Net.xml</DocumentationFile>
   </PropertyGroup>
 

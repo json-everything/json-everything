@@ -1487,9 +1487,10 @@
             <summary>
             Loads text from a file and deserializes a <see cref="T:Json.Schema.JsonSchema"/>.
             </summary>
-            <param name="fileName">The filename to load.</param>
+            <param name="fileName">The filename to load, URL-decoded.</param>
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
             <exception cref="T:System.Text.Json.JsonException">Could not deserialize a portion of the schema.</exception>
+            <remarks>The filename needs to not be URL-encoded as <see cref="T:System.Uri"/> attempts to encode it.</remarks>
         </member>
         <member name="M:Json.Schema.JsonSchema.FromText(System.String)">
             <summary>
