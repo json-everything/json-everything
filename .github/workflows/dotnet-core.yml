@@ -34,7 +34,7 @@ jobs:
     - name: Install analyzer
       run: dotnet tool install SemVerAnalyzer
     - name: Analyze more
-      run: dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json -p Json.More.Net
+      run: SEMVER_REPORT_MORE=$(dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -c build/semver_config.json -p Json.More.Net)
     - name: Analyze patch
       run: dotnet analyze-semver -a JsonPatch/bin/Release/netstandard2.0/JsonPatch.dll -o semver-report-patch.md -c build/semver_config.json -p JsonPatch.Net
     - name: Analyze path
@@ -42,9 +42,30 @@ jobs:
     - name: Analyze pointer
       run: dotnet analyze-semver -a JsonPointer/bin/Release/netstandard2.0/JsonPointer.Net.dll -o semver-report-pointer.md -c build/semver_config.json
     - name: Analyze schema
-      run: dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -o semver-report-schema.md -c build/semver_config.json
+      run: SEMVER_REPORT_SCHEMA=dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -c build/semver_config.json
+    - uses: unsplash/comment-on-pr@master
+        if: ${{ SEMVER_REPORT_MORE != "" }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ env.SEMVER_REPORT_MORE }}
     # - uses: harupy/comment-on-pr@master
     #     env:
     #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #     with:
-    #       filename: template.md
+    #       filename: semver-report-patch.md
+    # - uses: harupy/comment-on-pr@master
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       filename: semver-report-path.md
+    # - uses: harupy/comment-on-pr@master
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       filename: semver-report-pointer.md
+    - uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ env.SEMVER_REPORT_SCHEMA }}
