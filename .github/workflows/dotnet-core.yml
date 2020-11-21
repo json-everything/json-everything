@@ -35,21 +35,26 @@ jobs:
       id: analyze-more
       run: |
         dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json -p Json.More.Net
-        HAS_REPORT='false'
+        unset HAS_REPORT
         unset REPORT
         if [-s semver-report-more.md]
         then
+          echo "******** start of file *********"
+          echo "$(<semver-report-more.md)"
+          echo "********* end of file **********"
           HAS_REPORT='true'
-          REPORT=$(cat semver-report-more.md)
+          REPORT=$(<semver-report-more.md)
           echo ::set-output name=REPORT::${REPORT}
         fi
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-more.outputs.HAS_REPORT
+      run: echo "HAS_REPORT is true"
     - if: steps.analyze-more.outputs.HAS_REPORT
       uses: unsplash/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        msg: ${{ steps.analyze-more.outputs.REPORT }}
+        msg: "a literal"
 
   # package-check-patch:
   #   needs: build
@@ -110,12 +115,12 @@ jobs:
       id: analyze-schema
       run: |
         dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -o semver-report-schema.md -c build/semver_config.json
-        HAS_REPORT='false'
+        unset HAS_REPORT
         unset REPORT
         if [-s semver-report-schema.md]
         then
           HAS_REPORT='true'
-          REPORT=$(cat semver-report-schema.md)
+          REPORT=$(<semver-report-schema.md)
           echo ::set-output name=REPORT::${REPORT}
         fi
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
