@@ -132,9 +132,7 @@ jobs:
         msg: ${{ steps.analyze-schema.outputs.REPORT }}
     - if: steps.analyze-schema.outputs.HAS_REPORT
       name: 'Comment PR'
-      uses: actions/github-script@0.3.0
+      uses: thollander/actions-comment-pull-request@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: ${{ steps.analyze-schema.outputs.REPORT }} });
+        message: ${{ steps.analyze-schema.outputs.REPORT }}
