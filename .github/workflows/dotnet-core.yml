@@ -124,10 +124,12 @@ jobs:
         fi
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
     - if: steps.analyze-schema.outputs.HAS_REPORT
+      name: print report
+      run: echo "${{ steps.analyze-schema.outputs.REPORT }}"
+    - if: steps.analyze-schema.outputs.HAS_REPORT
       uses: unsplash/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         msg: |
-          |
           ${{ steps.analyze-schema.outputs.REPORT }}
