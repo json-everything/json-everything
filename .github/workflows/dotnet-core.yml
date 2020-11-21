@@ -128,4 +128,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        msg: ${{ steps.analyze-schema.outputs.REPORT }}
+        msg: |
+          ${{ steps.analyze-schema.outputs.REPORT }}
