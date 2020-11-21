@@ -39,15 +39,15 @@ jobs:
       id: analyzemore
       run: |
         dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json -p Json.More.Net
-        unset HAS_REPORT
+        HAS_REPORT='false'
         if [-s semver-report-more.md]; then HAS_REPORT='true'
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
     - uses: harupy/comment-on-pr@master
-        if: steps.analyzemore.outputs.HAS_REPORT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           filename: semver-report-more.md
+      if: steps.analyzemore.outputs.HAS_REPORT
 
   # package-check-patch:
   #   needs: build
@@ -120,8 +120,8 @@ jobs:
         if [-s semver-report-schema.md]; then HAS_REPORT='true'
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
     - uses: harupy/comment-on-pr@master
-        if: steps.analyzeschema.outputs.HAS_REPORT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           filename: semver-report-schema.md
+      if: steps.analyzeschema.outputs.HAS_REPORT
