@@ -39,22 +39,17 @@ jobs:
         unset REPORT
         if [-s semver-report-more.md]
         then
-          echo "******** start of file *********"
-          echo "$(<semver-report-more.md)"
-          echo "********* end of file **********"
           HAS_REPORT='true'
           REPORT=$(<semver-report-more.md)
           echo ::set-output name=REPORT::${REPORT}
         fi
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
     - if: steps.analyze-more.outputs.HAS_REPORT
-      run: echo "HAS_REPORT is true"
-    - if: steps.analyze-more.outputs.HAS_REPORT
       uses: unsplash/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        msg: "a literal"
+        msg: ${{ steps.analyze-more.outputs.REPORT }}
 
   # package-check-patch:
   #   needs: build
@@ -129,4 +124,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        msg: ${{ steps.analyze-more.outputs.REPORT }}
+        msg: ${{ steps.analyze-schema.outputs.REPORT }}
