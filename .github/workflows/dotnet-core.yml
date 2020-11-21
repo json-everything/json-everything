@@ -27,27 +27,23 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
 
-  package-check-more:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: Create local manifest file
       run: dotnet new tool-manifest
     - name: Install analyzer
       run: dotnet tool install SemVerAnalyzer
     - name: Analyze more
-      id: analyzemore
+      id: analyze-more
       run: |
         dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json -p Json.More.Net
         HAS_REPORT='false'
         if [-s semver-report-more.md]; then HAS_REPORT='true'
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
-    - uses: harupy/comment-on-pr@master
+    - if: steps.analyze-more.outputs.HAS_REPORT
+      uses: harupy/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         filename: semver-report-more.md
-      if: steps.analyzemore.outputs.HAS_REPORT
 
   # package-check-patch:
   #   needs: build
@@ -104,24 +100,16 @@ jobs:
   #       with:
   #         filename: semver-report-pointer.md
   
-  package-check-schema:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create local manifest file
-      run: dotnet new tool-manifest
-    - name: Install analyzer
-      run: dotnet tool install SemVerAnalyzer
     - name: Analyze schema
-      id: analyzeschema
+      id: analyze-schema
       run: |
         dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -c build/semver_config.json
         unset HAS_REPORT
         if [-s semver-report-schema.md]; then HAS_REPORT='true'
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
-    - uses: harupy/comment-on-pr@master
+    - if: steps.analyze-schema.outputs.HAS_REPORT
+      uses: harupy/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         filename: semver-report-schema.md
-      if: steps.analyzeschema.outputs.HAS_REPORT
