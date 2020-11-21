@@ -28,10 +28,13 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
 
     - name: Create local manifest file
+      if: github.event_name == 'pull_request'
       run: dotnet new tool-manifest
     - name: Install analyzer
+      if: github.event_name == 'pull_request'
       run: dotnet tool install SemVerAnalyzer
     - name: Analyze more
+      if: github.event_name == 'pull_request'
       id: analyze-more
       run: |
         dotnet analyze-semver -a Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c build/semver_config.json -p Json.More.Net
@@ -108,6 +111,7 @@ jobs:
   
     - name: Analyze schema
       id: analyze-schema
+      if: github.event_name == 'pull_request'
       run: |
         dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -o semver-report-schema.md -c build/semver_config.json
         unset HAS_REPORT
@@ -126,3 +130,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         msg: ${{ steps.analyze-schema.outputs.REPORT }}
+    - if: steps.analyze-schema.outputs.HAS_REPORT
+      name: 'Comment PR'
+      uses: actions/github-script@0.3.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+          github.issues.createComment({ issue_number, owner, repo, body: ${{ steps.analyze-schema.outputs.REPORT }} });
