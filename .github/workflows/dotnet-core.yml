@@ -44,7 +44,7 @@ jobs:
     - name: Analyze schema
       run: SEMVER_REPORT_SCHEMA=dotnet analyze-semver -a JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -c build/semver_config.json
     - uses: unsplash/comment-on-pr@master
-        if: ${{ SEMVER_REPORT_MORE != "" }}
+        if: ${{ env.SEMVER_REPORT_MORE != "" }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -65,6 +65,7 @@ jobs:
     #     with:
     #       filename: semver-report-pointer.md
     - uses: harupy/comment-on-pr@master
+        if: ${{ env.SEMVER_REPORT_SCHEMA != "" }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
