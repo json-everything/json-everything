@@ -120,7 +120,7 @@ jobs:
         fi
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
     - if: steps.analyze-schema.outputs.HAS_REPORT
-      uses: harupy/comment-on-pr@master
+      uses: unsplash/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
