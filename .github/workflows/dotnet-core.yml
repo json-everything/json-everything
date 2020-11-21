@@ -116,6 +116,7 @@ jobs:
         then
           HAS_REPORT='true'
           REPORT=$(<semver-report-schema.md)
+          echo $REPORT
           echo ::set-output name=REPORT::${REPORT}
         fi
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
