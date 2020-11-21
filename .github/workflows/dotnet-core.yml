@@ -54,7 +54,7 @@ jobs:
         if [-s semver-report-schema.md]; then HAS_REPORT='true'
         echo ::set-output name=HAS_REPORT::${HAS_REPORT}
     - uses: harupy/comment-on-pr@master
-        if: ${{ steps.analyzemore.outputs.HAS_REPORT }}
+        if: steps.analyzemore.outputs.HAS_REPORT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -75,7 +75,7 @@ jobs:
     #     with:
     #       filename: semver-report-pointer.md
     - uses: harupy/comment-on-pr@master
-        if: ${{ steps.analyzeschema.outputs.HAS_REPORT }}
+        if: steps.analyzeschema.outputs.HAS_REPORT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
