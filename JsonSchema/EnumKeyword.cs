@@ -52,7 +52,7 @@ namespace Json.Schema
 		{
 			context.IsValid = Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance);
 			if (!context.IsValid)
-				context.Message = "Expected value to match given value";
+				context.Message = "Expected value to match one of the values specified by the enum";
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
