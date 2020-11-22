@@ -22,7 +22,7 @@ namespace Json.Schema.Generation
 			var attribute = attributes.OfType<UniqueItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (!target.IsArray()) return;
+			if (!target.IsArray() || target == typeof(string)) return;
 
 			builder.UniqueItems(attribute.Value);
 		}

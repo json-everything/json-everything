@@ -26,10 +26,13 @@ namespace Json.Schema.Generation
 				var propAttributes = property.GetCustomAttributes().ToList();
 				var propBuilder = new JsonSchemaBuilder().FromType(property.PropertyType, propAttributes);
 
-				if (property.GetCustomAttribute<RequiredAttribute>() != null)
+				if (propAttributes.OfType<ObsoleteAttribute>().Any())
+					propBuilder.Deprecated(true);
+
+				if (propAttributes.OfType<RequiredAttribute>().Any())
 					required.Add(property.Name);
 
-				props.Add(property.Name, propBuilder.Build());
+				props.Add(property.Name, propBuilder);
 			}
 
 			builder.Properties(props);

@@ -7,11 +7,11 @@ namespace Json.Schema.Generation
 	[AttributeUsage(AttributeTargets.Property)]
 	public class MultipleOfAttribute : Attribute
 	{
-		public uint Value { get; }
+		public decimal Value { get; }
 
-		public MultipleOfAttribute(uint value)
+		public MultipleOfAttribute(double value)
 		{
-			Value = value;
+			Value = (decimal) value;
 		}
 	}
 

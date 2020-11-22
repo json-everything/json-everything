@@ -129,9 +129,11 @@ namespace Json.Schema.Generation.Tests
 			[ExclusiveMinimum(4)]
 			[Maximum(10)]
 			[ExclusiveMaximum(11)]
+			[MultipleOf(1.5)]
 			public int Integer { get; set; }
 
 			[MaxLength(10)]
+			[Pattern("^[a-z0-9_]$")]
 			public string String { get; set; }
 
 			[MinItems(5)]
@@ -139,6 +141,8 @@ namespace Json.Schema.Generation.Tests
 			public List<bool> ListOfBool { get; set; }
 
 			[MinLength(5)]
+			[UniqueItems(true)]
+			[Obsolete]
 			public List<string> ListOfString { get; set; }
 
 			// TODO: add caching (will need to override the builder extension to take a cache internally)
@@ -158,10 +162,12 @@ namespace Json.Schema.Generation.Tests
 						.ExclusiveMinimum(4)
 						.Maximum(10)
 						.ExclusiveMaximum(11)
+						.MultipleOf(1.5m)
 					),
 					("String", new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
 						.MaxLength(10)
+						.Pattern("^[a-z0-9_]$")
 					),
 					("ListOfBool", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
@@ -174,6 +180,8 @@ namespace Json.Schema.Generation.Tests
 						.Items(new JsonSchemaBuilder()
 							.Type(SchemaValueType.String)
 							.MinLength(5))
+						.UniqueItems(true)
+						.Deprecated(true)
 					)
 				)
 				.Required(nameof(GenerationTarget.Integer));
