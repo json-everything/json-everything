@@ -49,7 +49,8 @@ namespace Json.Schema.Generation.Tests
 		[Test]
 		public void ListOfStrings()
 		{
-			JsonSchema expected = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+			JsonSchema expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Array)
 				.Items(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<List<string>>();
@@ -79,6 +80,18 @@ namespace Json.Schema.Generation.Tests
 			JsonSchema expected = new JsonSchemaBuilder().Type(SchemaValueType.Array);
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<Array>();
+
+			Assert.AreEqual(expected, actual);
+		}
+
+		[Test]
+		public void StringDictionaryOfInt()
+		{
+			JsonSchema expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Object)
+				.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
+
+			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<string, int>>();
 
 			Assert.AreEqual(expected, actual);
 		}

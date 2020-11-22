@@ -13,7 +13,11 @@ namespace Json.Schema.Generation
 				new IntegerSchemaGenerator(),
 				new NumberSchemaGenerator(),
 				new StringSchemaGenerator(),
-				new ArraySchemaGenerator()
+				new ArraySchemaGenerator(),
+				new StringDictionarySchemaGenerator(),
+				new EnumDictionarySchemaDictionary(),
+				// this must always be last because it thinks it can do everything
+				new ObjectSchemaDictionary()
 			};
 
 		public static JsonSchemaBuilder FromType<T>(this JsonSchemaBuilder builder)
@@ -23,13 +27,8 @@ namespace Json.Schema.Generation
 
 		public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type)
 		{
-			var schema = TypeMap.Get(type);
-			if (schema != null) return schema;
-
-			foreach (var generator in _generators.Where(g => g.Handles(type)))
-			{
-				generator.AddConstraints(builder, type);
-			}
+			var generator = _generators.FirstOrDefault(g => g.Handles(type));
+			generator?.AddConstraints(builder, type);
 
 			return builder;
 		}
