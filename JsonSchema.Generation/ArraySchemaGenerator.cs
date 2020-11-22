@@ -8,14 +8,7 @@ namespace Json.Schema.Generation
 	{
 		public bool Handles(Type type)
 		{
-			if (type.IsArray || type == typeof(Array)) return true;
-			if (!type.IsGenericType) return false;
-
-			var generic = type.GetGenericTypeDefinition();
-			return generic == typeof(IEnumerable<>) ||
-			       generic == typeof(List<>) ||
-			       generic == typeof(Stack<>) ||
-			       generic == typeof(Queue<>);
+			return type.IsArray();
 		}
 
 		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)

@@ -13,6 +13,7 @@ namespace Json.Schema.Generation
 				new IntegerSchemaGenerator(),
 				new NumberSchemaGenerator(),
 				new StringSchemaGenerator(),
+				new EnumGenerator(),
 				new ArraySchemaGenerator(),
 				new StringDictionarySchemaGenerator(),
 				new EnumDictionarySchemaGenerator(),

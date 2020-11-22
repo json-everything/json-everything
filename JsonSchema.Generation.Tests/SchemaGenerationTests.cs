@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests
@@ -109,13 +111,33 @@ namespace Json.Schema.Generation.Tests
 			Assert.AreEqual(expected, actual);
 		}
 
+		[Test]
+		public void Enum()
+		{
+			JsonSchema expected = new JsonSchemaBuilder()
+				.Enum(System.Enum.GetNames(typeof(DayOfWeek)).Select(v => v.AsJsonElement()));
+
+			JsonSchema actual = new JsonSchemaBuilder().FromType<DayOfWeek>();
+
+			Assert.AreEqual(expected, actual);
+		}
+
 		class GenerationTarget
 		{
 			[Required]
+			[Minimum(5)]
+			[ExclusiveMinimum(4)]
+			[Maximum(10)]
+			[ExclusiveMaximum(11)]
 			public int Integer { get; set; }
+
 			[MaxLength(10)]
 			public string String { get; set; }
+
+			[MinItems(5)]
+			[MaxItems(10)]
 			public List<bool> ListOfBool { get; set; }
+
 			[MinLength(5)]
 			public List<string> ListOfString { get; set; }
 
@@ -130,7 +152,13 @@ namespace Json.Schema.Generation.Tests
 			JsonSchema expected = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
 				.Properties(
-					("Integer", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+					("Integer", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Integer)
+						.Minimum(5)
+						.ExclusiveMinimum(4)
+						.Maximum(10)
+						.ExclusiveMaximum(11)
+					),
 					("String", new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
 						.MaxLength(10)
@@ -138,6 +166,8 @@ namespace Json.Schema.Generation.Tests
 					("ListOfBool", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
 						.Items(new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+						.MinItems(5)
+						.MaxItems(10)
 					),
 					("ListOfString", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
