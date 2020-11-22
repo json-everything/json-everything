@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.Schema.Generation
 {
@@ -16,10 +17,12 @@ namespace Json.Schema.Generation
 
 	internal class MinLengthAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder objectBuilder, JsonSchemaBuilder propertyBuilder, PropertyInfo property)
+		public void AddConstraints(JsonSchemaBuilder propertyBuilder, IEnumerable<Attribute> attributes, Type target)
 		{
-			var attribute = property.GetCustomAttribute<MinLengthAttribute>();
+			var attribute = attributes.OfType<MinLengthAttribute>().FirstOrDefault();
 			if (attribute == null) return;
+
+			if (target != typeof(string)) return;
 
 			propertyBuilder.MinLength(attribute.Length);
 		}

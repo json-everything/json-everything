@@ -1,9 +1,10 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Json.Schema.Generation
 {
 	internal interface IAttributeHandler
 	{
-		void AddConstraints(JsonSchemaBuilder objectBuilder, JsonSchemaBuilder propertyBuilder, PropertyInfo property);
+		void AddConstraints(JsonSchemaBuilder propertyBuilder, IEnumerable<Attribute> attributes, Type target);
 	}
 }

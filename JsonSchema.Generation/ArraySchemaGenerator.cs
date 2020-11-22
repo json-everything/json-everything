@@ -18,7 +18,7 @@ namespace Json.Schema.Generation
 			       generic == typeof(Queue<>);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, Type type)
+		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
 		{
 			builder.Type(SchemaValueType.Array);
 
@@ -31,7 +31,8 @@ namespace Json.Schema.Generation
 
 			if (itemType == null) return;
 
-			builder.Items(new JsonSchemaBuilder().FromType(itemType));
+			builder.Items(new JsonSchemaBuilder().FromType(itemType, attributes));
+			builder.HandleAttributes(attributes, type);
 		}
 	}
 }

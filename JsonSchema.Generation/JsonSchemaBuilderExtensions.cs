@@ -27,8 +27,13 @@ namespace Json.Schema.Generation
 
 		public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type)
 		{
+			return FromType(builder, type, new List<Attribute>());
+		}
+
+		internal static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
+		{
 			var generator = _generators.FirstOrDefault(g => g.Handles(type));
-			generator?.AddConstraints(builder, type);
+			generator?.AddConstraints(builder, type, attributes);
 
 			return builder;
 		}

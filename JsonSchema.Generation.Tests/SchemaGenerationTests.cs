@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests
@@ -110,12 +111,13 @@ namespace Json.Schema.Generation.Tests
 
 		class GenerationTarget
 		{
+			[Required]
 			public int Integer { get; set; }
 			[MaxLength(10)]
 			public string String { get; set; }
 			public List<bool> ListOfBool { get; set; }
-			//[MinLength(5)]
-			//public List<string> ListOfString { get; set; }
+			[MinLength(5)]
+			public List<string> ListOfString { get; set; }
 
 			// TODO: add caching (will need to override the builder extension to take a cache internally)
 			// This is going to be interesting given we want to avoid duplication, but duplication
@@ -136,18 +138,19 @@ namespace Json.Schema.Generation.Tests
 					("ListOfBool", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
 						.Items(new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+					),
+					("ListOfString", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Array)
+						.Items(new JsonSchemaBuilder()
+							.Type(SchemaValueType.String)
+							.MinLength(5))
 					)
-					//,
-					//("ListOfString", new JsonSchemaBuilder()
-					//	.Type(SchemaValueType.Array)
-					//	.Items(new JsonSchemaBuilder()
-					//		.Type(SchemaValueType.String)
-					//		.MinLength(5))
-					//)
-				);
+				)
+				.Required(nameof(GenerationTarget.Integer));
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<GenerationTarget>();
 
+			Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions{WriteIndented = true}));
 			Assert.AreEqual(expected, actual);
 		}
 	}
