@@ -7,14 +7,14 @@ namespace Json.Schema.Generation
 	public static class JsonSchemaBuilderExtensions
 	{
 		private static readonly List<ISchemaGenerator> _generators =
-			typeof(ISchemaGenerator).Assembly
-				.DefinedTypes
-				.Where(t => typeof(ISchemaGenerator).IsAssignableFrom(t) &&
-				            !t.IsInterface &&
-				            !t.IsAbstract)
-				.Select(Activator.CreateInstance)
-				.Cast<ISchemaGenerator>()
-				.ToList();
+			new List<ISchemaGenerator>
+			{
+				new BooleanSchemaGenerator(),
+				new IntegerSchemaGenerator(),
+				new NumberSchemaGenerator(),
+				new StringSchemaGenerator(),
+				new ArraySchemaGenerator()
+			};
 
 		public static JsonSchemaBuilder FromType<T>(this JsonSchemaBuilder builder)
 		{
