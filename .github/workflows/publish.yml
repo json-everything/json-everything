@@ -25,6 +25,7 @@ jobs:
           PROJECT_FILE_PATH: Json.More/Json.More.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
+          TAG_FORMAT: more-v*
       - name: publish patch
         id: publish_patch
         uses: rohith/publish-nuget@v2
@@ -32,6 +33,7 @@ jobs:
           PROJECT_FILE_PATH: JsonPatch/JsonPatch.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
+          TAG_FORMAT: patch-v*
       - name: publish path
         id: publish_path
         uses: rohith/publish-nuget@v2
@@ -39,6 +41,7 @@ jobs:
           PROJECT_FILE_PATH: JsonPath/JsonPath.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
+          TAG_FORMAT: path-v*
       - name: publish pointer
         id: publish_pointer
         uses: rohith/publish-nuget@v2
@@ -46,6 +49,7 @@ jobs:
           PROJECT_FILE_PATH: JsonPointer/JsonPointer.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
+          TAG_FORMAT: pointer-v*
       - name: publish schema
         id: publish_schema
         uses: rohith/publish-nuget@v2
@@ -53,3 +57,4 @@ jobs:
           PROJECT_FILE_PATH: JsonSchema/JsonSchema.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
+          TAG_FORMAT: schema-v*
