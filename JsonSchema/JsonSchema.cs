@@ -287,7 +287,7 @@ namespace Json.Schema
 			if (BoolValue.HasValue) return BoolValue == other.BoolValue;
 			if (other.BoolValue.HasValue) return false;
 			if (Keywords.Count != other.Keywords.Count) return false;
-			if (OtherData.Count != other.OtherData.Count) return false;
+			if (OtherData?.Count != other.OtherData?.Count) return false;
 
 			if (Keywords != null)
 			{

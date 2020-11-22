@@ -1,3 +1,7 @@
+# [1.5.3](???)
+
+Fixed `NullReferenceException` when comparing two schemas.
+
 # [1.5.2](https://github.com/gregsdennis/json-everything/pull/40)
 
 Updated wording for `enum` error message.  This must remain generic and cannot include the expected values because the list could be long and the values could be quite large.
