@@ -17,14 +17,14 @@ namespace Json.Schema.Generation
 
 	internal class MaxLengthAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder propertyBuilder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
 		{
 			var attribute = attributes.OfType<MaxLengthAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
 			if (target != typeof(string)) return;
 
-			propertyBuilder.MaxLength(attribute.Length);
+			builder.MaxLength(attribute.Length);
 		}
 	}
 }

@@ -5,26 +5,26 @@ using System.Linq;
 namespace Json.Schema.Generation
 {
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MinimumAttribute : Attribute
+	public class UniqueItemsAttribute : Attribute
 	{
-		public uint Value { get; }
+		public bool Value { get; }
 
-		public MinimumAttribute(uint value)
+		public UniqueItemsAttribute(bool value)
 		{
 			Value = value;
 		}
 	}
 
-	internal class MinimumAttributeHandler : IAttributeHandler
+	internal class UniqueItemsAttributeHandler : IAttributeHandler
 	{
 		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
 		{
-			var attribute = attributes.OfType<MinimumAttribute>().FirstOrDefault();
+			var attribute = attributes.OfType<UniqueItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (!target.IsNumber()) return;
+			if (!target.IsArray()) return;
 
-			builder.Minimum(attribute.Value);
+			builder.UniqueItems(attribute.Value);
 		}
 	}
 }

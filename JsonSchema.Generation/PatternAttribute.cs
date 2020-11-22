@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Json.Schema.Generation
 {
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MinLengthAttribute : Attribute
+	public class PatternAttribute : Attribute
 	{
-		public uint Length { get; }
+		public string Value { get; }
 
-		public MinLengthAttribute(uint length)
+		public PatternAttribute([RegexPattern] string value)
 		{
-			Length = length;
+			Value = value;
 		}
 	}
 
-	internal class MinLengthAttributeHandler : IAttributeHandler
+	internal class PatternAttributeHandler : IAttributeHandler
 	{
 		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
 		{
-			var attribute = attributes.OfType<MinLengthAttribute>().FirstOrDefault();
+			var attribute = attributes.OfType<PatternAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
 			if (target != typeof(string)) return;
 
-			builder.MinLength(attribute.Length);
+			builder.Pattern(attribute.Value);
 		}
 	}
 }

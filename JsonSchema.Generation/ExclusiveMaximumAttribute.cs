@@ -17,14 +17,14 @@ namespace Json.Schema.Generation
 
 	internal class ExclusiveMaximumAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder propertyBuilder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
 		{
 			var attribute = attributes.OfType<ExclusiveMaximumAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
 			if (!target.IsNumber()) return;
 
-			propertyBuilder.ExclusiveMaximum(attribute.Value);
+			builder.ExclusiveMaximum(attribute.Value);
 		}
 	}
 }

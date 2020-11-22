@@ -17,14 +17,14 @@ namespace Json.Schema.Generation
 
 	internal class MaxItemsAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder propertyBuilder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
 		{
 			var attribute = attributes.OfType<MaxItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
 			if (!target.IsArray()) return;
 
-			propertyBuilder.MaxItems(attribute.Value);
+			builder.MaxItems(attribute.Value);
 		}
 	}
 }

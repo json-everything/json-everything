@@ -5,6 +5,6 @@ namespace Json.Schema.Generation
 {
 	internal interface IAttributeHandler
 	{
-		void AddConstraints(JsonSchemaBuilder propertyBuilder, IEnumerable<Attribute> attributes, Type target);
+		void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target);
 	}
 }
