@@ -15,9 +15,9 @@ namespace Json.Schema.Generation
 				new StringSchemaGenerator(),
 				new ArraySchemaGenerator(),
 				new StringDictionarySchemaGenerator(),
-				new EnumDictionarySchemaDictionary(),
+				new EnumDictionarySchemaGenerator(),
 				// this must always be last because it thinks it can do everything
-				new ObjectSchemaDictionary()
+				new ObjectSchemaGenerator()
 			};
 
 		public static JsonSchemaBuilder FromType<T>(this JsonSchemaBuilder builder)

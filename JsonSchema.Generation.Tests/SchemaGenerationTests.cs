@@ -95,5 +95,60 @@ namespace Json.Schema.Generation.Tests
 
 			Assert.AreEqual(expected, actual);
 		}
+
+		[Test]
+		public void EnumDictionaryOfInt()
+		{
+			JsonSchema expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Object)
+				.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
+
+			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<DayOfWeek, int>>();
+
+			Assert.AreEqual(expected, actual);
+		}
+
+		class GenerationTarget
+		{
+			public int Integer { get; set; }
+			[MaxLength(10)]
+			public string String { get; set; }
+			public List<bool> ListOfBool { get; set; }
+			//[MinLength(5)]
+			//public List<string> ListOfString { get; set; }
+
+			// TODO: add caching (will need to override the builder extension to take a cache internally)
+			// This is going to be interesting given we want to avoid duplication, but duplication
+			// isn't just based on type but on the attributes that the property has as well.
+		}
+
+		[Test]
+		public void GeneratorForObject()
+		{
+			JsonSchema expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("Integer", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+					("String", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+						.MaxLength(10)
+					),
+					("ListOfBool", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Array)
+						.Items(new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+					)
+					//,
+					//("ListOfString", new JsonSchemaBuilder()
+					//	.Type(SchemaValueType.Array)
+					//	.Items(new JsonSchemaBuilder()
+					//		.Type(SchemaValueType.String)
+					//		.MinLength(5))
+					//)
+				);
+
+			JsonSchema actual = new JsonSchemaBuilder().FromType<GenerationTarget>();
+
+			Assert.AreEqual(expected, actual);
+		}
 	}
 }
