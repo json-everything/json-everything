@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Json.More;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -11,11 +11,11 @@ namespace Json.Schema.Generation
 			return type.IsEnum;
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			var values = Enum.GetNames(context.Type);
+			var values = Enum.GetNames(context.Type).ToList();
 
-			builder.Enum(values.Select(v => v.AsJsonElement()));
+			context.Intents.Add(new EnumIntent(values));
 		}
 	}
 }

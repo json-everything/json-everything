@@ -1,4 +1,5 @@
 ﻿using System;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -11,10 +12,10 @@ namespace Json.Schema.Generation
 			       type == typeof(decimal);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			builder.Type(SchemaValueType.Number);
-			builder.HandleAttributes(context);
+			context.Intents.Add(new TypeIntent(SchemaValueType.Number));
+			//builder.Type(SchemaValueType.Number);
 		}
 	}
 }

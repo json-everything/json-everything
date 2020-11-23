@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -10,9 +11,9 @@ namespace Json.Schema.Generation
 			return type.IsArray();
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			builder.Type(SchemaValueType.Array);
+			context.Intents.Add(new TypeIntent(SchemaValueType.Array));
 
 			Type itemType = null;
 
@@ -24,7 +25,9 @@ namespace Json.Schema.Generation
 			if (itemType == null) return;
 
 			var itemContext = new SchemaGeneratorContext(itemType, context.Attributes);
-			builder.Items(new JsonSchemaBuilder().FromType(itemContext));
+			itemContext.GenerateIntents();
+
+			context.Intents.Add(new ItemsIntent(itemContext));
 		}
 	}
 }

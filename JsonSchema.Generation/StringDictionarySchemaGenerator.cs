@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -20,13 +21,15 @@ namespace Json.Schema.Generation
 			return keyType == typeof(string);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			builder.Type(SchemaValueType.Object);
+			context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 			var valueType = context.Type.GenericTypeArguments[1];
 			var valueContext = new SchemaGeneratorContext(valueType, context.Attributes);
-			builder.AdditionalProperties(JsonSchemaBuilderExtensions.FromType(new JsonSchemaBuilder(), valueContext));
+			valueContext.GenerateIntents();
+
+			context.Intents.Add(new AdditionalPropertiesIntent(valueContext));
 		}
 	}
 }

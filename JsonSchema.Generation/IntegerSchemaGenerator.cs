@@ -1,4 +1,5 @@
 ﻿using System;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -15,9 +16,9 @@ namespace Json.Schema.Generation
 				   type == typeof(ulong);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			builder.Type(SchemaValueType.Integer);
+			context.Intents.Add(new TypeIntent(SchemaValueType.Integer));
 		}
 	}
 }

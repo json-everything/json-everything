@@ -13,6 +13,7 @@
     <PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-generation.html</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

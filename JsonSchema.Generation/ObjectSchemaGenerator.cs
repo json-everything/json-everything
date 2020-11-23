@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -13,11 +14,11 @@ namespace Json.Schema.Generation
 			return true;
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			builder.Type(SchemaValueType.Object);
+			context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
-			var props = new Dictionary<string, JsonSchema>();
+			var props = new Dictionary<string, SchemaGeneratorContext>();
 			var required = new List<string>();
 			var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 				.Where(p => p.CanRead && p.CanWrite);
@@ -25,20 +26,20 @@ namespace Json.Schema.Generation
 			{
 				var propAttributes = property.GetCustomAttributes().ToList();
 				var propContext = new SchemaGeneratorContext(property.PropertyType, propAttributes);
-				var propBuilder = new JsonSchemaBuilder().FromType(propContext);
+				propContext.GenerateIntents();
+
+				props.Add(property.Name, propContext);
 
 				if (propAttributes.OfType<ObsoleteAttribute>().Any())
-					propBuilder.Deprecated(true);
+					propContext.Intents.Add(new DeprecatedIntent(true));
 
 				if (propAttributes.OfType<RequiredAttribute>().Any())
 					required.Add(property.Name);
-
-				props.Add(property.Name, propBuilder);
 			}
 
-			builder.Properties(props);
+			context.Intents.Add(new PropertiesIntent(props));
 			if (required.Any())
-				builder.Required(required);
+				context.Intents.Add(new RequiredIntent(required));
 		}
 	}
 }

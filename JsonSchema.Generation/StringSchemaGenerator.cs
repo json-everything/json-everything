@@ -1,4 +1,5 @@
 ﻿using System;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -9,9 +10,9 @@ namespace Json.Schema.Generation
 			return type == typeof(string);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
-			builder.Type(SchemaValueType.String);
+			context.Intents.Add(new TypeIntent(SchemaValueType.String));
 		}
 	}
 }
