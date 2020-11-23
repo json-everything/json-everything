@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Json.Schema.Generation
@@ -17,12 +16,12 @@ namespace Json.Schema.Generation
 
 	internal class MaxItemsAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
-			var attribute = attributes.OfType<MaxItemsAttribute>().FirstOrDefault();
+			var attribute = context.Attributes.OfType<MaxItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (!target.IsArray()) return;
+			if (!context.Type.IsArray()) return;
 
 			builder.MaxItems(attribute.Value);
 		}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Json.Schema.Generation
 {
@@ -16,10 +15,9 @@ namespace Json.Schema.Generation
 				   type == typeof(ulong);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
 			builder.Type(SchemaValueType.Integer);
-			builder.HandleAttributes(attributes, type);
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -18,12 +17,12 @@ namespace Json.Schema.Generation
 
 	internal class PatternAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
-			var attribute = attributes.OfType<PatternAttribute>().FirstOrDefault();
+			var attribute = context.Attributes.OfType<PatternAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (target != typeof(string)) return;
+			if (context.Type != typeof(string)) return;
 
 			builder.Pattern(attribute.Value);
 		}

@@ -13,18 +13,19 @@ namespace Json.Schema.Generation
 			return true;
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
 			builder.Type(SchemaValueType.Object);
 
 			var props = new Dictionary<string, JsonSchema>();
 			var required = new List<string>();
-			var propertiesToGenerate = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 				.Where(p => p.CanRead && p.CanWrite);
 			foreach (var property in propertiesToGenerate)
 			{
 				var propAttributes = property.GetCustomAttributes().ToList();
-				var propBuilder = new JsonSchemaBuilder().FromType(property.PropertyType, propAttributes);
+				var propContext = new SchemaGeneratorContext(property.PropertyType, propAttributes);
+				var propBuilder = new JsonSchemaBuilder().FromType(propContext);
 
 				if (propAttributes.OfType<ObsoleteAttribute>().Any())
 					propBuilder.Deprecated(true);
@@ -36,7 +37,6 @@ namespace Json.Schema.Generation
 			}
 
 			builder.Properties(props);
-			builder.HandleAttributes(attributes, type);
 			if (required.Any())
 				builder.Required(required);
 		}

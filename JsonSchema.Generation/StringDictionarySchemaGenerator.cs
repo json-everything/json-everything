@@ -20,13 +20,13 @@ namespace Json.Schema.Generation
 			return keyType == typeof(string);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
 			builder.Type(SchemaValueType.Object);
 
-			var valueType = type.GenericTypeArguments[1];
-			builder.AdditionalProperties(new JsonSchemaBuilder().FromType(valueType, attributes));
-			builder.HandleAttributes(attributes, type);
+			var valueType = context.Type.GenericTypeArguments[1];
+			var valueContext = new SchemaGeneratorContext(valueType, context.Attributes);
+			builder.AdditionalProperties(JsonSchemaBuilderExtensions.FromType(new JsonSchemaBuilder(), valueContext));
 		}
 	}
 }

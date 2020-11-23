@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Json.Schema.Generation
 {
@@ -10,10 +9,9 @@ namespace Json.Schema.Generation
 			return type == typeof(bool);
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
 			builder.Type(SchemaValueType.Boolean);
-			builder.HandleAttributes(attributes, type);
 		}
 	}
 }

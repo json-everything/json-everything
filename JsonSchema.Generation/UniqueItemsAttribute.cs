@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Json.Schema.Generation
@@ -17,12 +16,12 @@ namespace Json.Schema.Generation
 
 	internal class UniqueItemsAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
-			var attribute = attributes.OfType<UniqueItemsAttribute>().FirstOrDefault();
+			var attribute = context.Attributes.OfType<UniqueItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (!target.IsArray() || target == typeof(string)) return;
+			if (!context.Type.IsArray() || context.Type == typeof(string)) return;
 
 			builder.UniqueItems(attribute.Value);
 		}

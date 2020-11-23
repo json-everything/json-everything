@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Json.Schema.Generation
@@ -17,12 +16,12 @@ namespace Json.Schema.Generation
 
 	internal class MinimumAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder builder, IEnumerable<Attribute> attributes, Type target)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
-			var attribute = attributes.OfType<MinimumAttribute>().FirstOrDefault();
+			var attribute = context.Attributes.OfType<MinimumAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (!target.IsNumber()) return;
+			if (!context.Type.IsNumber()) return;
 
 			builder.Minimum(attribute.Value);
 		}

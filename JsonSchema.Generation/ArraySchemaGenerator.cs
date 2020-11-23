@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Json.Schema.Generation
@@ -11,21 +10,21 @@ namespace Json.Schema.Generation
 			return type.IsArray();
 		}
 
-		public void AddConstraints(JsonSchemaBuilder builder, Type type, List<Attribute> attributes)
+		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
 		{
 			builder.Type(SchemaValueType.Array);
 
 			Type itemType = null;
 
-			if (type.IsGenericType)
-				itemType = type.GetGenericArguments().First();
-			else if (type.IsArray)
-				itemType = type.GetElementType();
+			if (context.Type.IsGenericType)
+				itemType = context.Type.GetGenericArguments().First();
+			else if (context.Type.IsArray)
+				itemType = context.Type.GetElementType();
 
 			if (itemType == null) return;
 
-			builder.Items(new JsonSchemaBuilder().FromType(itemType, attributes));
-			builder.HandleAttributes(attributes, type);
+			var itemContext = new SchemaGeneratorContext(itemType, context.Attributes);
+			builder.Items(new JsonSchemaBuilder().FromType(itemContext));
 		}
 	}
 }
