@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Json.Schema.Generation
 {
@@ -33,6 +34,19 @@ namespace Json.Schema.Generation
 			return type.IsArray ||
 			       type == typeof(Array) ||
 			       typeof(IEnumerable).IsAssignableFrom(type);
+		}
+
+		public static int GetTypeBasedHashCode<T>(this IEnumerable<T> items)
+		{
+			unchecked
+			{
+				int hashCode = 0;
+				foreach (var item in items)
+				{
+					hashCode = (hashCode * 397) ^ item.GetHashCode();
+				}
+				return hashCode;
+			}
 		}
 	}
 }

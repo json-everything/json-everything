@@ -39,7 +39,7 @@ namespace Json.Schema.Generation.Intents
 			unchecked
 			{
 				var hashCode = typeof(AdditionalPropertiesIntent).GetHashCode();
-				hashCode = (hashCode * 397) ^ Context.Intents.GetCollectionHashCode();
+				hashCode = (hashCode * 397) ^ Context.Attributes.GetTypeBasedHashCode();
 				return hashCode;
 			}
 		}

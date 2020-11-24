@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
 {
@@ -15,7 +14,7 @@ namespace Json.Schema.Generation.Intents
 
 		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
 		{
-			return Properties.Values.Concat(Properties.Values.SelectMany(c => c.GetChildContexts()));
+			return Properties.Values;
 		}
 
 		public void Replace(int hashCode, SchemaGeneratorContext newContext)
@@ -46,7 +45,7 @@ namespace Json.Schema.Generation.Intents
 				foreach (var property in Properties)
 				{
 					hashCode = (hashCode * 397) ^ property.Key.GetHashCode();
-					hashCode = (hashCode * 397) ^ property.Value.Intents.GetCollectionHashCode();
+					hashCode = (hashCode * 397) ^ property.Value.Attributes.GetTypeBasedHashCode();
 				}
 				return hashCode;
 			}

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
 {
 	internal class DefsIntent : ISchemaKeywordIntent
 	{
-		public Dictionary<string, SchemaGeneratorContext> Properties { get; }
+		public Dictionary<string, SchemaGeneratorContext> Definitions { get; }
 
 		public DefsIntent(Dictionary<string, SchemaGeneratorContext> properties)
 		{
-			Properties = properties;
+			Definitions = properties;
 		}
 
 		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
@@ -24,7 +23,7 @@ namespace Json.Schema.Generation.Intents
 
 		public void Apply(JsonSchemaBuilder builder)
 		{
-			builder.Defs(Properties.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));
+			builder.Defs(Definitions.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));
 		}
 
 		public override bool Equals(object obj)
@@ -37,10 +36,10 @@ namespace Json.Schema.Generation.Intents
 			unchecked
 			{
 				var hashCode = GetType().GetHashCode();
-				foreach (var property in Properties)
+				foreach (var property in Definitions)
 				{
 					hashCode = (hashCode * 397) ^ property.Key.GetHashCode();
-					hashCode = (hashCode * 397) ^ property.Value.Intents.GetCollectionHashCode();
+					hashCode = (hashCode * 397) ^ property.Value.Attributes.GetTypeBasedHashCode();
 				}
 				return hashCode;
 			}

@@ -23,9 +23,7 @@ namespace Json.Schema.Generation
 				itemType = context.Type.GetElementType();
 
 			if (itemType == null) return;
-
-			var itemContext = new SchemaGeneratorContext(itemType, context.Attributes);
-			itemContext.GenerateIntents();
+			var itemContext = SchemaGenerationContextCache.Get(itemType, context.Attributes);
 
 			context.Intents.Add(new ItemsIntent(itemContext));
 		}

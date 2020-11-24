@@ -25,8 +25,7 @@ namespace Json.Schema.Generation
 			foreach (var property in propertiesToGenerate)
 			{
 				var propAttributes = property.GetCustomAttributes().ToList();
-				var propContext = new SchemaGeneratorContext(property.PropertyType, propAttributes);
-				propContext.GenerateIntents();
+				var propContext = SchemaGenerationContextCache.Get(property.PropertyType, propAttributes);
 
 				props.Add(property.Name, propContext);
 
