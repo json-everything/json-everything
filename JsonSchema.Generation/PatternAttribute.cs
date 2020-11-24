@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JetBrains.Annotations;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -17,14 +18,14 @@ namespace Json.Schema.Generation
 
 	internal class PatternAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<PatternAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
 			if (context.Type != typeof(string)) return;
 
-			builder.Pattern(attribute.Value);
+			context.Intents.Add(new PatternIntent(attribute.Value));
 		}
 	}
 }

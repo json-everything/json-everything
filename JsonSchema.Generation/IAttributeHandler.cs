@@ -2,6 +2,6 @@
 {
 	internal interface IAttributeHandler
 	{
-		void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context);
+		void AddConstraints(SchemaGeneratorContext context);
 	}
 }

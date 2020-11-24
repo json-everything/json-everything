@@ -14,11 +14,11 @@ namespace Json.Schema.Generation
 				.Cast<IAttributeHandler>()
 				.ToList();
 
-		public static void HandleAttributes(this JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public static void HandleAttributes(SchemaGeneratorContext context)
 		{
 			foreach (var handler in _attributeHandlers)
 			{
-				handler.AddConstraints(builder, context);
+				handler.AddConstraints(context);
 			}
 		}
 	}

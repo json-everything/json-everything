@@ -24,8 +24,6 @@ namespace Json.Schema.Generation
 				intent.Apply(builder);
 			}
 
-			builder.HandleAttributes(this);
-
 			return builder;
 		}
 
@@ -33,6 +31,8 @@ namespace Json.Schema.Generation
 		{
 			var generator = GeneratorRegistry.Get(Type);
 			generator?.AddConstraints(this);
+
+			AttributeHandler.HandleAttributes( this);
 		}
 	}
 }

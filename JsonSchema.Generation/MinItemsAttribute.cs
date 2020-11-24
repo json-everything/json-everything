@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
@@ -16,14 +17,14 @@ namespace Json.Schema.Generation
 
 	internal class MinItemsAttributeHandler : IAttributeHandler
 	{
-		public void AddConstraints(JsonSchemaBuilder builder, SchemaGeneratorContext context)
+		public void AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<MinItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
 			if (!context.Type.IsArray()) return;
 
-			builder.MinItems(attribute.Value);
+			context.Intents.Add(new MinItemsIntent(attribute.Value));
 		}
 	}
 }
