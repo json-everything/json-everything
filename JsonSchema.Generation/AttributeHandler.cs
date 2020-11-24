@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Json.Schema.Generation
 {
-	public static class AttributeHandler
+	internal static class AttributeHandler
 	{
 		private static readonly List<IAttributeHandler> _attributeHandlers =
 			typeof(IAttributeHandler).Assembly.DefinedTypes

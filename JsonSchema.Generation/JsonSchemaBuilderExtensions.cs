@@ -16,7 +16,7 @@ namespace Json.Schema.Generation
 
 			context.GenerateIntents();
 
-			// TODO: context.Optimize();
+			context.Optimize();
 
 			context.Apply(builder);
 

@@ -4,33 +4,27 @@ using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class PropertiesIntent : ISchemaKeywordIntent
+	internal class DefsIntent : ISchemaKeywordIntent
 	{
 		public Dictionary<string, SchemaGeneratorContext> Properties { get; }
 
-		public PropertiesIntent(Dictionary<string, SchemaGeneratorContext> properties)
+		public DefsIntent(Dictionary<string, SchemaGeneratorContext> properties)
 		{
 			Properties = properties;
 		}
 
 		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
 		{
-			return Properties.Values.Concat(Properties.Values.SelectMany(c => c.GetChildContexts()));
+			throw new System.NotImplementedException("Shouldn't be optimizing a def.");
 		}
 
 		public void Replace(int hashCode, SchemaGeneratorContext newContext)
 		{
-			foreach (var property in Properties.ToList())
-			{
-				var hc = property.Value.GetHashCode();
-				if (hc == hashCode)
-					Properties[property.Key] = newContext;
-			}
 		}
 
 		public void Apply(JsonSchemaBuilder builder)
 		{
-			builder.Properties(Properties.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));
+			builder.Defs(Properties.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));
 		}
 
 		public override bool Equals(object obj)

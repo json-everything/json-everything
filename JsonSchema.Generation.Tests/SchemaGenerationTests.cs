@@ -145,6 +145,12 @@ namespace Json.Schema.Generation.Tests
 			[Obsolete]
 			public List<string> ListOfString { get; set; }
 
+			[Maximum(100)]
+			public int Duplicated1 { get; set; }
+
+			[Maximum(100)]
+			public int Duplicated2 { get; set; }
+
 			// TODO: add caching (will need to override the builder extension to take a cache internally)
 			// This is going to be interesting given we want to avoid duplication, but duplication
 			// isn't just based on type but on the attributes that the property has as well.
@@ -182,9 +188,21 @@ namespace Json.Schema.Generation.Tests
 							.MinLength(5))
 						.UniqueItems(true)
 						.Deprecated(true)
+					),
+					("Duplicated1", new JsonSchemaBuilder()
+						.Ref("#/$defs/1150770360")
+					),
+					("Duplicated2", new JsonSchemaBuilder()
+						.Ref("#/$defs/1150770360")
 					)
 				)
-				.Required(nameof(GenerationTarget.Integer));
+				.Required(nameof(GenerationTarget.Integer))
+				.Defs(
+					("1150770360", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Integer)
+						.Maximum(100)
+					)
+				);
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<GenerationTarget>();
 

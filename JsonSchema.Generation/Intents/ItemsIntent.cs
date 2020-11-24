@@ -1,17 +1,48 @@
-﻿namespace Json.Schema.Generation.Intents
+﻿using System.Collections.Generic;
+using System.Linq;
+using Json.Pointer;
+
+namespace Json.Schema.Generation.Intents
 {
 	internal class ItemsIntent : ISchemaKeywordIntent
 	{
-		public SchemaGeneratorContext Context { get; set; }
+		public SchemaGeneratorContext Context { get; private set; }
 
 		public ItemsIntent(SchemaGeneratorContext context)
 		{
 			Context = context;
 		}
 
+		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
+		{
+			return new[] {Context}.Concat(Context.GetChildContexts());
+		}
+
+		public void Replace(int hashCode, SchemaGeneratorContext newContext)
+		{
+			var hc = Context.GetHashCode();
+			if (hc == hashCode)
+				Context = newContext;
+		}
+
 		public void Apply(JsonSchemaBuilder builder)
 		{
 			builder.Items(Context.Apply());
+		}
+
+		public override bool Equals(object obj)
+		{
+			return !ReferenceEquals(null, obj);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = GetType().GetHashCode();
+				hashCode = (hashCode * 397) ^ (Context?.Intents.GetCollectionHashCode() ?? 0);
+				return hashCode;
+			}
 		}
 	}
 }
