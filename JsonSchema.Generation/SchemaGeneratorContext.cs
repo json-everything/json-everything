@@ -61,9 +61,12 @@ namespace Json.Schema.Generation
 				if (def.Key == thisHash) continue;
 				defs[name] = def.Value;
 			}
-			var defsIntent = new DefsIntent(defs);
 
-			Intents.Add(defsIntent);
+			if (defs.Any())
+			{
+				var defsIntent = new DefsIntent(defs);
+				Intents.Add(defsIntent);
+			}
 		}
 
 		private string GetDefName(List<string> currentNames)
