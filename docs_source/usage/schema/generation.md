@@ -126,15 +126,15 @@ This class doesn't need to be complex.  Here's the implementation for the `Boole
 ```c#
 internal class BooleanSchemaGenerator : ISchemaGenerator
 {
-	public bool Handles(Type type)
-	{
-		return type == typeof(bool);
-	}
+    public bool Handles(Type type)
+    {
+        return type == typeof(bool);
+    }
 
-	public void AddConstraints(SchemaGeneratorContext context)
-	{
-		context.Intents.Add(new TypeIntent(SchemaValueType.Boolean));
-	}
+    public void AddConstraints(SchemaGeneratorContext context)
+    {
+        context.Intents.Add(new TypeIntent(SchemaValueType.Boolean));
+    }
 }
 ```
 
@@ -146,7 +146,7 @@ To explain _how_ it does, we need to discuss intents.
 
 The `JsonSchema` type and its keywords are immutable.  So even if we _could_ get to the keyword list inside the `JsonSchemaBuilder`, we wouldn't be able to edit the keywords to perform optimizations.
 
-Happily, this has led to a new type that mimicks keywords to hold their data until the keywords are ready to be built.  That new type is the keyword intent, manifested in this library by the `ISchemaKeywordIntent` interface.
+Happily, this has led to a new type that mimics keywords to hold their data until the keywords are ready to be built.  That new type is the keyword intent, manifested in this library by the `ISchemaKeywordIntent` interface.
 
 The intent is keyword-specific and holds the data needed to actually build the keyword.
 
@@ -227,13 +227,13 @@ There are two methods required by `IContextContainer`: `GetContexts()` and `Repl
 
 ***IMPORTANT** Don't dive into the context's `Intents` collection and get the contexts that those hold also.  The system will handle that.*
 
-`Replace()` replaces a context with a given hash code with a new context.  This the system creating `$ref` intents that point to the new `$defs` intent it's building and distributing them throughout the context tree.  Once all the `$ref`s are distributed, the system will add the `$defs` intent to the root context to be applied at the last step.
+`Replace()` replaces a context with a given hash code with a new context.  This is the system creating `$ref` intents that point to the new `$defs` intent it's building and distributing them throughout the context tree.  Once all the `$ref`s are distributed, the system will add the `$defs` intent to the root context to be applied at the last step.
 
 Generally intents for applicator keywords, which are keywords that have subschemas (`anyOf`, `allOf`, etc.), will need to implement this second interface.  In most cases, you can just copy this code.
 
 ### Attributes
 
-The final source for intents are attributes.  These are handled once the generator has completed adding the intents it needs to.
+The other source for intents are attributes.  These are handled once the generator has completed adding the intents it needs to.
 
 When processing an object, the properties are analyzed for the presence of any of the above attributes.  Each of the attributes can then add its intents to the context.
 

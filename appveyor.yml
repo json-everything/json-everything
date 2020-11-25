@@ -1,43 +1,36 @@
-# --------------------- MASTER BRANCH --------------------------
+branches:
+  only:
+    - master
+skip_commits:
+  files:
+  - docs/**/*
+image: Visual Studio 2019
+environment:
+  gh_access_token:
+    secure: jm9ZkMmKGxetJfX6wsjFYUYiLhsX1yC7185wYdFHLicXGUD+vm5ywPNfK3mWSPzk
 
-- branches:
-    only:
-      - master
-  skip_commits:
-    files:
-    - docs/**/*
-  image: Visual Studio 2019
-  environment:
-    gh_access_token:
-      secure: jm9ZkMmKGxetJfX6wsjFYUYiLhsX1yC7185wYdFHLicXGUD+vm5ywPNfK3mWSPzk
+build:
+  project: json-everything.sln
 
-  build:
-    project: json-everything.sln
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Release
 
-  # build Configuration, i.e. Debug, Release, etc.
-  configuration: Release
+before_build:
+- dotnet restore json-everything.sln
 
-  before_build:
-  - dotnet restore json-everything.sln
-  - git submodule update --init
-
-  artifacts:
-    - path: '**/*.nupkg'
-      name: Nuget Pkg
-
-  after_build:
-    # Switch branches to gh-pages, clean the folder, copy everything in from the Wyam output, and commit/push
-    # See http://www.appveyor.com/docs/how-to/git-push for more info
-   - git config --global credential.helper store
-    # EDIT your Git email and name
-   - git config --global user.email gregsdennis@yahoo.com
-   - git config --global user.name "Greg Dennis"
-   - ps: Add-Content "$HOME\.git-credentials" "https://$($env:gh_access_token):x-oauth-basic@github.com`n" -NoNewline
-    # EDIT the origin of your repository - have to reset it here because AppVeyor pulls from SSH, but GitHub won't accept SSH pushes
-   - git remote set-url origin https://github.com/gregsdennis/json-everything.git
-   - git checkout master
-   - choco install docfx
-   - docfx docs_source\docfx.json
-   - git add -A
-   - git diff-index --quiet HEAD || git commit -m "regenerated docs"
-   - git push -v
+after_build:
+  # Switch branches to gh-pages, clean the folder, copy everything in from the Wyam output, and commit/push
+  # See http://www.appveyor.com/docs/how-to/git-push for more info
+  - git config --global credential.helper store
+  # EDIT your Git email and name
+  - git config --global user.email gregsdennis@yahoo.com
+  - git config --global user.name "Greg Dennis"
+  - ps: Add-Content "$HOME\.git-credentials" "https://$($env:gh_access_token):x-oauth-basic@github.com`n" -NoNewline
+  # EDIT the origin of your repository - have to reset it here because AppVeyor pulls from SSH, but GitHub won't accept SSH pushes
+  - git remote set-url origin https://github.com/gregsdennis/json-everything.git
+  - git checkout master
+  - choco install docfx
+  - docfx docs_source\docfx.json
+  - git add -A
+  - git diff-index --quiet HEAD || git commit -m "regenerated docs"
+  - git push -v
