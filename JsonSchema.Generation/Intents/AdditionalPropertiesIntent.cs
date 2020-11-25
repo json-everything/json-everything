@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class AdditionalPropertiesIntent : ISchemaKeywordIntent
+	internal class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	{
 		public SchemaGeneratorContext Context { get; private set; }
 
@@ -12,7 +11,7 @@ namespace Json.Schema.Generation.Intents
 			Context = context;
 		}
 
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
+		public IEnumerable<SchemaGeneratorContext> GetContexts()
 		{
 			return new[] {Context};
 		}

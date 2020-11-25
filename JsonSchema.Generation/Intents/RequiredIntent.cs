@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
@@ -11,15 +10,6 @@ namespace Json.Schema.Generation.Intents
 		public RequiredIntent(List<string> requiredProperties)
 		{
 			RequiredProperties = requiredProperties;
-		}
-
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
-		{
-			return Enumerable.Empty<SchemaGeneratorContext>();
-		}
-
-		public void Replace(int hashCode, SchemaGeneratorContext newContext)
-		{
 		}
 
 		public void Apply(JsonSchemaBuilder builder)

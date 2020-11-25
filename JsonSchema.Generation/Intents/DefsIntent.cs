@@ -12,15 +12,6 @@ namespace Json.Schema.Generation.Intents
 			Definitions = properties;
 		}
 
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
-		{
-			throw new System.NotImplementedException("Shouldn't be optimizing a def.");
-		}
-
-		public void Replace(int hashCode, SchemaGeneratorContext newContext)
-		{
-		}
-
 		public void Apply(JsonSchemaBuilder builder)
 		{
 			builder.Defs(Definitions.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));

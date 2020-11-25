@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class PropertiesIntent : ISchemaKeywordIntent
+	internal class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	{
 		public Dictionary<string, SchemaGeneratorContext> Properties { get; }
 
@@ -12,7 +12,7 @@ namespace Json.Schema.Generation.Intents
 			Properties = properties;
 		}
 
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
+		public IEnumerable<SchemaGeneratorContext> GetContexts()
 		{
 			return Properties.Values;
 		}

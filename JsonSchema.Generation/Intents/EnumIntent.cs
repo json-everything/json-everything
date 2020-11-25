@@ -14,15 +14,6 @@ namespace Json.Schema.Generation.Intents
 			Names = names;
 		}
 
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
-		{
-			return Enumerable.Empty<SchemaGeneratorContext>();
-		}
-
-		public void Replace(int hashCode, SchemaGeneratorContext newContext)
-		{
-		}
-
 		public void Apply(JsonSchemaBuilder builder)
 		{
 			builder.Enum(Names.Select(n => n.AsJsonElement()));

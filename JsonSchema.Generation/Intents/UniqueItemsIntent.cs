@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Json.Schema.Generation.Intents
+﻿namespace Json.Schema.Generation.Intents
 {
 	internal class UniqueItemsIntent : ISchemaKeywordIntent
 	{
@@ -10,15 +7,6 @@ namespace Json.Schema.Generation.Intents
 		public UniqueItemsIntent(bool value)
 		{
 			Value = value;
-		}
-
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
-		{
-			return Enumerable.Empty<SchemaGeneratorContext>();
-		}
-
-		public void Replace(int hashCode, SchemaGeneratorContext newContext)
-		{
 		}
 
 		public void Apply(JsonSchemaBuilder builder)

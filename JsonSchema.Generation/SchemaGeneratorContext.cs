@@ -48,13 +48,14 @@ namespace Json.Schema.Generation
 
 			var currentNames = new List<string>();
 			var defs = new Dictionary<string, SchemaGeneratorContext>();
+			var contextContainers = Intents.OfType<IContextContainer>().ToList();
 			foreach (var def in defsByHashCode)
 			{
 				var name = def.Value.GetDefName(currentNames);
 				var refIntent = new RefIntent(new Uri(def.Key == thisHash ? "#" : $"#/$defs/{name}", UriKind.Relative));
 				var refContext = new SchemaGeneratorContext(def.Value.Type, null);
 				refContext.Intents.Add(refIntent);
-				foreach (var intent in Intents)
+				foreach (var intent in contextContainers)
 				{
 					intent.Replace(def.Key, refContext);
 				}
@@ -106,7 +107,7 @@ namespace Json.Schema.Generation
 					continue;
 				}
 
-				contextsToCheck.AddRange(context.Intents.SelectMany(i => i.GetChildContexts()));
+				contextsToCheck.AddRange(context.Intents.OfType<IContextContainer>().SelectMany(i => i.GetContexts()));
 				contextsReceived[hash] = new ContextCount(context);
 			}
 

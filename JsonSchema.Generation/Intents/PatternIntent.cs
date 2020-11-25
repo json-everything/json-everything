@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace Json.Schema.Generation.Intents
 {
@@ -11,15 +9,6 @@ namespace Json.Schema.Generation.Intents
 		public PatternIntent([RegexPattern] string value)
 		{
 			Value = value;
-		}
-
-		public IEnumerable<SchemaGeneratorContext> GetChildContexts()
-		{
-			return Enumerable.Empty<SchemaGeneratorContext>();
-		}
-
-		public void Replace(int hashCode, SchemaGeneratorContext newContext)
-		{
 		}
 
 		public void Apply(JsonSchemaBuilder builder)
