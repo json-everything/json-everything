@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies a `maxLength` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MaxLengthAttribute : Attribute
+	public class MaxLengthAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The maximum length.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Length = length;
 		}
-	}
 
-	internal class MaxLengthAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<MaxLengthAttribute>().FirstOrDefault();
 			if (attribute == null) return;

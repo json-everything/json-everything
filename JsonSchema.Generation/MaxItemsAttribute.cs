@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies an `maxItems` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MaxItemsAttribute : Attribute
+	public class MaxItemsAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The maximum number of items.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class MaxItemsAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<MaxItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;

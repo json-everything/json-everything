@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation
+namespace Json.Schema.Generation.Generators
 {
 	internal class ObjectSchemaGenerator : ISchemaGenerator
 	{

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation
+namespace Json.Schema.Generation.Generators
 {
 	internal class EnumDictionarySchemaGenerator : ISchemaGenerator
 	{

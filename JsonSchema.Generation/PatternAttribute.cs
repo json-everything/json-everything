@@ -9,7 +9,7 @@ namespace Json.Schema.Generation
 	/// Applies a `pattern` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class PatternAttribute : Attribute
+	public class PatternAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The regular expression pattern.
@@ -24,11 +24,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class PatternAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<PatternAttribute>().FirstOrDefault();
 			if (attribute == null) return;

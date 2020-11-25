@@ -1,4 +1,6 @@
-﻿namespace Json.Schema.Generation
+﻿using Json.Schema.Generation.Generators;
+
+namespace Json.Schema.Generation
 {
 	/// <summary>
 	/// Describes the intent to create a keyword.

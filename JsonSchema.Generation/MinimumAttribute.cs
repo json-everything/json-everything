@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies a `minimum` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MinimumAttribute : Attribute
+	public class MinimumAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The minimum.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class MinimumAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<MinimumAttribute>().FirstOrDefault();
 			if (attribute == null) return;

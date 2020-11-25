@@ -41,7 +41,7 @@
             Tracks the available generators.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.GeneratorRegistry.Register(Json.Schema.Generation.ISchemaGenerator)">
+        <member name="M:Json.Schema.Generation.GeneratorRegistry.Register(Json.Schema.Generation.Generators.ISchemaGenerator)">
             <summary>
             Registers a new generator.
             </summary>
@@ -50,6 +50,43 @@
             Registration is order dependent: last one wins.  If you have multiple generators which
             can handle a given type, the last one registered will be used.
             </remarks>
+        </member>
+        <member name="T:Json.Schema.Generation.Generators.ISchemaGenerator">
+             <summary>
+             Defines a generator.
+             </summary>
+             <remarks>
+            	Generators are the first stage of schema generation.  These will add keyword intents
+             to the context, which then are translated into keywords after optimization.
+            
+             Implementations MUST also override <see cref="M:System.Object.GetHashCode"/>
+             </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.Generators.ISchemaGenerator.Handles(System.Type)">
+            <summary>
+            Determines whether the generator can be used to generate a schema for this type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>`true` if the generator can be used; `false` otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Generators.ISchemaGenerator.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Processes the type and any attributes (present on the context), and adds
+            intents to the context.
+            </summary>
+            <param name="context">The generation context.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.IAttributeHandler">
+            <summary>
+            Defines requirements to handle converting an attribute to a keyword intent.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.IAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Processes the type and any attributes (present on the context), and adds
+            intents to the context.
+            </summary>
+            <param name="context">The generation context.</param>
         </member>
         <member name="T:Json.Schema.Generation.IContextContainer">
             <summary>
@@ -84,30 +121,701 @@
             contexts.  If any match, replace them with <paramref name="newContext"/>.
             </remarks>
         </member>
-        <member name="T:Json.Schema.Generation.ISchemaGenerator">
-             <summary>
-             Defines a generator.
-             </summary>
-             <remarks>
-            	Generators are the first stage of schema generation.  These will add keyword intents
-             to the context, which then are translated into keywords after optimization.
-            
-             Implementations MUST also override <see cref="M:System.Object.GetHashCode"/>
-             </remarks>
-        </member>
-        <member name="M:Json.Schema.Generation.ISchemaGenerator.Handles(System.Type)">
+        <member name="T:Json.Schema.Generation.Intents.AdditionalPropertiesIntent">
             <summary>
-            Determines whether the generator can be used to generate a schema for this type.
+            Provides intent to create an `additionalProperties` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Context">
+            <summary>
+            The context that represents the inner requirements.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.#ctor(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalPropertiesIntent"/> instance.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.GetContexts">
+            <summary>
+            Gets the contexts.
+            </summary>
+            <returns>
+            The <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/>s contained by this object.
+            </returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Replaces one context with another.
+            </summary>
+            <param name="hashCode">The hashcode of the context to replace.</param>
+            <param name="newContext">The new context.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.DefsIntent">
+            <summary>
+            Provides intent to create a `$defs` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.DefsIntent.Definitions">
+            <summary>
+            The contexts that represent the definitions.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DefsIntent.#ctor(System.Collections.Generic.Dictionary{System.String,Json.Schema.Generation.SchemaGeneratorContext})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.DefsIntent"/> instance.
+            </summary>
+            <param name="definitions">The contexts.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DefsIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DefsIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DefsIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.DeprecatedIntent">
+            <summary>
+            Provides intent to create a `deprecated` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.DeprecatedIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DeprecatedIntent.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.DeprecatedIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DeprecatedIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DeprecatedIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.EnumIntent">
+            <summary>
+            Provides intent to create an `enum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.EnumIntent.Names">
+            <summary>
+            The names defined by the enumeration.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.EnumIntent.#ctor(System.Collections.Generic.List{System.String})">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="names">The names defined by the enumeration.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.EnumIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.EnumIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.EnumIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.ExclusiveMaximumIntent">
+            <summary>
+            Provides intent to create an `exclusiveMaximum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.#ctor(System.Decimal)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ExclusiveMaximumIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.ExclusiveMinimumIntent">
+            <summary>
+            Provides intent to create an `exclusiveMinimum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.#ctor(System.Decimal)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ExclusiveMinimumIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.FormatIntent">
+            <summary>
+            Provides intent to create a `format` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.FormatIntent.Format">
+            <summary>
+            The format.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.FormatIntent.#ctor(Json.Schema.Format)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.FormatIntent"/> instance.
+            </summary>
+            <param name="format">The format.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.FormatIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.FormatIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.FormatIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.ItemsIntent">
+            <summary>
+            Provides intent to create an `items` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ItemsIntent.Context">
+            <summary>
+            The context that represents the inner requirements.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ItemsIntent.#ctor(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ItemsIntent"/> instance.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ItemsIntent.GetContexts">
+            <summary>
+            Gets the contexts.
+            </summary>
+            <returns>
+            The <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/>s contained by this object.
+            </returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ItemsIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Replaces one context with another.
+            </summary>
+            <param name="hashCode">The hashcode of the context to replace.</param>
+            <param name="newContext">The new context.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ItemsIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ItemsIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MaximumIntent">
+            <summary>
+            Provides intent to create a `maximum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MaximumIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaximumIntent.#ctor(System.Decimal)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MaximumIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaximumIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaximumIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MaxItemsIntent">
+            <summary>
+            Provides intent to create a `maxItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MaxItemsIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxItemsIntent.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MaxItemsIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxItemsIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxItemsIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MaxLengthIntent">
+            <summary>
+            Provides intent to create a `maxLength` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MaxLengthIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxLengthIntent.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MaxLengthIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxLengthIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxLengthIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MinimumIntent">
+            <summary>
+            Provides intent to create a `minimum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MinimumIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinimumIntent.#ctor(System.Decimal)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MinimumIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinimumIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinimumIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MinItemsIntent">
+            <summary>
+            Provides intent to create a `minItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MinItemsIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinItemsIntent.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MinItemsIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinItemsIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinItemsIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MinLengthIntent">
+            <summary>
+            Provides intent to create a `minLength` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MinLengthIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinLengthIntent.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MinLengthIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinLengthIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinLengthIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MultipleOfIntent">
+            <summary>
+            Provides intent to create a `multipleOf` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MultipleOfIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MultipleOfIntent.#ctor(System.Decimal)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MultipleOfIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MultipleOfIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MultipleOfIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.PatternIntent">
+            <summary>
+            Provides intent to create a `pattern` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.PatternIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PatternIntent.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.PatternIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PatternIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PatternIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PatternIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.PropertiesIntent">
+            <summary>
+            Provides intent to create an `additionalProperties` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.PropertiesIntent.Properties">
+            <summary>
+            The contexts that represent the properties.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PropertiesIntent.#ctor(System.Collections.Generic.Dictionary{System.String,Json.Schema.Generation.SchemaGeneratorContext})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.PropertiesIntent"/> instance.
+            </summary>
+            <param name="properties">The contexts.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PropertiesIntent.GetContexts">
+            <summary>
+            Gets the contexts.
+            </summary>
+            <returns>
+            The <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/>s contained by this object.
+            </returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PropertiesIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Replaces one context with another.
+            </summary>
+            <param name="hashCode">The hashcode of the context to replace.</param>
+            <param name="newContext">The new context.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PropertiesIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.PropertiesIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.RefIntent">
+            <summary>
+            Provides intent to create a `$ref` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.RefIntent.Reference">
+            <summary>
+            The reference.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RefIntent.#ctor(System.Uri)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.RefIntent"/> instance.
+            </summary>
+            <param name="reference">The reference.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RefIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RefIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RefIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.RequiredIntent">
+            <summary>
+            Provides intent to create a `required` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.RequiredIntent.RequiredProperties">
+            <summary>
+            The required property names.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RequiredIntent.#ctor(System.Collections.Generic.List{System.String})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.RequiredIntent"/> instance.
+            </summary>
+            <param name="requiredProperties">The required property names.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RequiredIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.RequiredIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.TypeIntent">
+            <summary>
+            Provides intent to create a `type` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.TypeIntent.Type">
+            <summary>
+            The type.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TypeIntent.#ctor(Json.Schema.SchemaValueType)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.TypeIntent"/> instance.
             </summary>
             <param name="type">The type.</param>
-            <returns>`true` if the generator can be used; `false` otherwise.</returns>
         </member>
-        <member name="M:Json.Schema.Generation.ISchemaGenerator.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)">
+        <member name="M:Json.Schema.Generation.Intents.TypeIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
-            Processes the type and any attributes (present on the context), and adds
-            intents to the context.
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
-            <param name="context">The generation context.</param>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TypeIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TypeIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.UniqueItemsIntent">
+            <summary>
+            Provides intent to create a `uniqueItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.UniqueItemsIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UniqueItemsIntent.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.UniqueItemsIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UniqueItemsIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UniqueItemsIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.Generation.ISchemaKeywordIntent">
              <summary>
@@ -121,7 +829,7 @@
              intent into an actual keyword on the <see cref="T:Json.Schema.JsonSchemaBuilder"/>
              using one of the fluent extension methods provided by
              <see cref="T:Json.Schema.JsonSchemaBuilderExtensions"/>.  Custom intents
-             will need to be applied from within custom <see cref="T:Json.Schema.Generation.ISchemaGenerator"/>
+             will need to be applied from within custom <see cref="T:Json.Schema.Generation.Generators.ISchemaGenerator"/>
              implementations.
             
              Implementations MUST also override <see cref="M:System.Object.GetHashCode"/>
@@ -344,6 +1052,39 @@
         <member name="M:Json.Schema.Generation.SchemaGeneratorContext.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.TypeExtensions">
+            <summary>
+            Provides informative methods for types.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsInteger(System.Type)">
+            <summary>
+            Determines whether the type is considered an integer.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if it represents an integer; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsFloatingPoint(System.Type)">
+            <summary>
+            Determines whether the type is a non-integer floating point number.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if it represents a floating-point number; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsNumber(System.Type)">
+            <summary>
+            Determines whether the type is a number.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if it represents a number; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsArray(System.Type)">
+            <summary>
+            Determines whether the type is a simple, one-dimensional, non-keyed collection.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if the type represents an array; false otherwise.</returns>
         </member>
         <member name="T:Json.Schema.Generation.UniqueItemsAttribute">
             <summary>

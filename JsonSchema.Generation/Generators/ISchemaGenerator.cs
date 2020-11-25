@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Json.Schema.Generation
+namespace Json.Schema.Generation.Generators
 {
 	/// <summary>
 	/// Defines a generator.

@@ -2,7 +2,7 @@
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation
+namespace Json.Schema.Generation.Generators
 {
 	internal class EnumGenerator : ISchemaGenerator
 	{

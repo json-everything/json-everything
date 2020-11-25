@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies a `uniqueItems` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class UniqueItemsAttribute : Attribute
+	public class UniqueItemsAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// Whether the items should be unique.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class UniqueItemsAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<UniqueItemsAttribute>().FirstOrDefault();
 			if (attribute == null) return;

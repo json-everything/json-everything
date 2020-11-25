@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies an `exclusiveMinimum` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class ExclusiveMinimumAttribute : Attribute
+	public class ExclusiveMinimumAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The exclusive minimum.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class ExclusiveMinimumAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<ExclusiveMinimumAttribute>().FirstOrDefault();
 			if (attribute == null) return;

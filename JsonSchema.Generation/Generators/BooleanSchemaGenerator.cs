@@ -1,7 +1,7 @@
 ﻿using System;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation
+namespace Json.Schema.Generation.Generators
 {
 	internal class BooleanSchemaGenerator : ISchemaGenerator
 	{
