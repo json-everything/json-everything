@@ -4,11 +4,21 @@ using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
+	/// <summary>
+	/// Applies a `uniqueItems` keyword.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
 	public class UniqueItemsAttribute : Attribute
 	{
+		/// <summary>
+		/// Whether the items should be unique.
+		/// </summary>
 		public bool Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="UniqueItemsAttribute"/> instance.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public UniqueItemsAttribute(bool value)
 		{
 			Value = value;

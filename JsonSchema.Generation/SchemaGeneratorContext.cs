@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,6 +7,9 @@ using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
 {
+	/// <summary>
+	/// Provides meta-data about the generation process.
+	/// </summary>
 	public class SchemaGeneratorContext
 	{
 		private class ContextCount
@@ -21,17 +24,26 @@ namespace Json.Schema.Generation
 			}
 		}
 
+		/// <summary>
+		/// The CLR type currently being processed.
+		/// </summary>
 		public Type Type { get; }
+		/// <summary>
+		/// The set of attributes.  Will be populated when an attribute has a property.
+		/// </summary>
 		public List<Attribute> Attributes { get; }
+		/// <summary>
+		/// The current set of keyword intents.
+		/// </summary>
 		public List<ISchemaKeywordIntent> Intents { get; } = new List<ISchemaKeywordIntent>();
 
-		public SchemaGeneratorContext(Type type, List<Attribute> attributes)
+		internal SchemaGeneratorContext(Type type, List<Attribute> attributes)
 		{
 			Type = type;
 			Attributes = attributes;
 		}
 
-		public void GenerateIntents()
+		internal void GenerateIntents()
 		{
 			var generator = GeneratorRegistry.Get(Type);
 			generator?.AddConstraints(this);
@@ -114,6 +126,11 @@ namespace Json.Schema.Generation
 			return contextsReceived;
 		}
 
+		/// <summary>
+		/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.
+		/// </summary>
+		/// <param name="builder">The schema builder.</param>
+		/// <returns>The schema builder (for fluent syntax support).</returns>
 		public JsonSchemaBuilder Apply(JsonSchemaBuilder builder = null)
 		{
 			builder ??= new JsonSchemaBuilder();
@@ -126,6 +143,9 @@ namespace Json.Schema.Generation
 			return builder;
 		}
 
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
@@ -137,6 +157,8 @@ namespace Json.Schema.Generation
 			       Intents.ContentsEqual(other.Intents);
 		}
 
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
 			unchecked

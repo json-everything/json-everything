@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Json.Schema.Generation
 {
+	/// <summary>
+	/// Tracks the available generators.
+	/// </summary>
 	public static class GeneratorRegistry
 	{
 		private static readonly List<ISchemaGenerator> _generators =
@@ -22,6 +25,14 @@ namespace Json.Schema.Generation
 				new ObjectSchemaGenerator()
 			};
 
+		/// <summary>
+		/// Registers a new generator.
+		/// </summary>
+		/// <param name="generator">The generator.</param>
+		/// <remarks>
+		/// Registration is order dependent: last one wins.  If you have multiple generators which
+		/// can handle a given type, the last one registered will be used.
+		/// </remarks>
 		public static void Register(ISchemaGenerator generator)
 		{
 			_generators.Insert(0, generator);
