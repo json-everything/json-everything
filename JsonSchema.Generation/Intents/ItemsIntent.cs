@@ -2,7 +2,7 @@
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class ItemsIntent : ISchemaKeywordIntent, IContextContainer
+	public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
 	{
 		public SchemaGeneratorContext Context { get; private set; }
 
@@ -38,7 +38,7 @@ namespace Json.Schema.Generation.Intents
 			unchecked
 			{
 				var hashCode = GetType().GetHashCode();
-				hashCode = (hashCode * 397) ^ Context.Attributes.GetTypeBasedHashCode();
+				hashCode = (hashCode * 397) ^ Context.GetHashCode();
 				return hashCode;
 			}
 		}

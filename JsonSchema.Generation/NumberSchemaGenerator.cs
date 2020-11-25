@@ -15,7 +15,6 @@ namespace Json.Schema.Generation
 		public void AddConstraints(SchemaGeneratorContext context)
 		{
 			context.Intents.Add(new TypeIntent(SchemaValueType.Number));
-			//builder.Type(SchemaValueType.Number);
 		}
 	}
 }

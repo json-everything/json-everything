@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation
 {
-	internal interface IAttributeHandler
+	public interface IAttributeHandler
 	{
 		void AddConstraints(SchemaGeneratorContext context);
 	}

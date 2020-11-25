@@ -5,7 +5,7 @@ using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class EnumIntent : ISchemaKeywordIntent
+	public class EnumIntent : ISchemaKeywordIntent
 	{
 		public List<string> Names { get; }
 

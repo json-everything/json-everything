@@ -2,7 +2,7 @@
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class PatternIntent : ISchemaKeywordIntent
+	public class PatternIntent : ISchemaKeywordIntent
 	{
 		public string Value { get; }
 

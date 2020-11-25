@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class ExclusiveMaximumIntent : ISchemaKeywordIntent
+	public class ExclusiveMaximumIntent : ISchemaKeywordIntent
 	{
 		public decimal Value { get; }
 

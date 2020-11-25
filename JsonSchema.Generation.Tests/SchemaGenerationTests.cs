@@ -205,6 +205,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<GenerationTarget>();
 
+			Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions{WriteIndented = true}));
 			Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions{WriteIndented = true}));
 			Assert.AreEqual(expected, actual);
 		}

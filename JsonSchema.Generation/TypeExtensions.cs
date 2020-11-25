@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Json.Schema.Generation
 {
-	internal static class TypeExtensions
+	public static class TypeExtensions
 	{
 		public static bool IsInteger(this Type type)
 		{
@@ -36,7 +36,7 @@ namespace Json.Schema.Generation
 			       typeof(IEnumerable).IsAssignableFrom(type);
 		}
 
-		public static int GetTypeBasedHashCode<T>(this IEnumerable<T> items)
+		internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
 		{
 			unchecked
 			{

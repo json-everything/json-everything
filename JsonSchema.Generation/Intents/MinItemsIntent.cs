@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class MinItemsIntent : ISchemaKeywordIntent
+	public class MinItemsIntent : ISchemaKeywordIntent
 	{
 		public uint Value { get; }
 

@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies a `maximum` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MaximumAttribute : Attribute
+	public class MaximumAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The maximum.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class MaximumAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<MaximumAttribute>().FirstOrDefault();
 			if (attribute == null) return;

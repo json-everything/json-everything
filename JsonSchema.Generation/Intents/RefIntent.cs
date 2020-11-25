@@ -2,7 +2,7 @@
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class RefIntent : ISchemaKeywordIntent
+	public class RefIntent : ISchemaKeywordIntent
 	{
 		public Uri Reference { get; }
 

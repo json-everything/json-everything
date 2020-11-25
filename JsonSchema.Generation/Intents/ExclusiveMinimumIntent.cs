@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class ExclusiveMinimumIntent : ISchemaKeywordIntent
+	public class ExclusiveMinimumIntent : ISchemaKeywordIntent
 	{
 		public decimal Value { get; }
 

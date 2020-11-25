@@ -62,7 +62,7 @@ namespace Json.Schema.Generation
 		/// </remarks>
 		public static SchemaGeneratorContext Get(Type type, List<Attribute> attributes)
 		{
-			var hash = attributes?.GetTypeBasedHashCode() ?? 0;
+			var hash = attributes?.GetAttributeSetHashCode() ?? 0;
 			var key = new Key(type, hash);
 			if (!Cache.TryGetValue(key, out var context))
 			{

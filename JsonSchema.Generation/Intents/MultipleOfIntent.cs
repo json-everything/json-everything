@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class MultipleOfIntent : ISchemaKeywordIntent
+	public class MultipleOfIntent : ISchemaKeywordIntent
 	{
 		public decimal Value { get; }
 

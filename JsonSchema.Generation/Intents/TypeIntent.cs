@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class TypeIntent : ISchemaKeywordIntent
+	public class TypeIntent : ISchemaKeywordIntent
 	{
 		public SchemaValueType Type { get; }
 

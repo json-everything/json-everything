@@ -8,7 +8,7 @@ namespace Json.Schema.Generation
 	/// Applies an `exclusiveMaximum` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class ExclusiveMaximumAttribute : Attribute
+	public class ExclusiveMaximumAttribute : Attribute, IAttributeHandler
 	{
 		/// <summary>
 		/// The exclusive maximum.
@@ -23,11 +23,8 @@ namespace Json.Schema.Generation
 		{
 			Value = value;
 		}
-	}
 
-	internal class ExclusiveMaximumAttributeHandler : IAttributeHandler
-	{
-		public void AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
 		{
 			var attribute = context.Attributes.OfType<ExclusiveMaximumAttribute>().FirstOrDefault();
 			if (attribute == null) return;

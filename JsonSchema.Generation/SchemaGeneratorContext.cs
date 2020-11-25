@@ -164,7 +164,7 @@ namespace Json.Schema.Generation
 			unchecked
 			{
 				var hashCode = Type.GetHashCode();
-				hashCode = (hashCode * 397) ^ Intents.GetCollectionHashCode();
+				hashCode = (hashCode * 397) ^ (Attributes?.GetAttributeSetHashCode() ?? 0);
 				return hashCode;
 			}
 		}

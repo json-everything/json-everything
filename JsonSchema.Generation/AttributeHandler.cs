@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Json.Schema.Generation
 {
 	internal static class AttributeHandler
 	{
-		private static readonly List<IAttributeHandler> _attributeHandlers =
-			typeof(IAttributeHandler).Assembly.DefinedTypes
-				.Where(t => typeof(IAttributeHandler).IsAssignableFrom(t) &&
-				            !t.IsInterface && !t.IsAbstract)
-				.Select(Activator.CreateInstance)
-				.Cast<IAttributeHandler>()
-				.ToList();
-
-		public static void HandleAttributes(SchemaGeneratorContext context)
+		internal static void HandleAttributes(SchemaGeneratorContext context)
 		{
-			foreach (var handler in _attributeHandlers)
+			foreach (var handler in context.Attributes.OfType<IAttributeHandler>())
 			{
 				handler.AddConstraints(context);
 			}

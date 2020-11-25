@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class DefsIntent : ISchemaKeywordIntent
+	public class DefsIntent : ISchemaKeywordIntent
 	{
 		public Dictionary<string, SchemaGeneratorContext> Definitions { get; }
 
@@ -30,7 +30,7 @@ namespace Json.Schema.Generation.Intents
 				foreach (var property in Definitions)
 				{
 					hashCode = (hashCode * 397) ^ property.Key.GetHashCode();
-					hashCode = (hashCode * 397) ^ property.Value.Attributes.GetTypeBasedHashCode();
+					hashCode = (hashCode * 397) ^ property.Value.GetHashCode();
 				}
 				return hashCode;
 			}

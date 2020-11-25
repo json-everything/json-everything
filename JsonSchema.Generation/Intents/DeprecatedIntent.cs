@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class DeprecatedIntent : ISchemaKeywordIntent
+	public class DeprecatedIntent : ISchemaKeywordIntent
 	{
 		public bool Deprecated { get; }
 

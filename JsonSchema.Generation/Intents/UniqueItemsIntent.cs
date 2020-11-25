@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	internal class UniqueItemsIntent : ISchemaKeywordIntent
+	public class UniqueItemsIntent : ISchemaKeywordIntent
 	{
 		public bool Value { get; }
 

@@ -1,17 +1,17 @@
 ﻿namespace Json.Schema.Generation.Intents
 {
-	public class MinLengthIntent : ISchemaKeywordIntent
+	public class FormatIntent : ISchemaKeywordIntent
 	{
-		public uint Value { get; }
+		public Format Format { get; }
 
-		public MinLengthIntent(uint value)
+		public FormatIntent(Format format)
 		{
-			Value = value;
+			Format = format;
 		}
 
 		public void Apply(JsonSchemaBuilder builder)
 		{
-			builder.MinLength(Value);
+			builder.Format(Format);
 		}
 
 		public override bool Equals(object obj)
@@ -24,7 +24,7 @@
 			unchecked
 			{
 				var hashCode = GetType().GetHashCode();
-				hashCode = (hashCode * 397) ^ Value.GetHashCode();
+				hashCode = (hashCode * 397) ^ Format.GetHashCode();
 				return hashCode;
 			}
 		}

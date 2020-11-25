@@ -3,7 +3,7 @@ using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents
 {
-	internal class RequiredIntent : ISchemaKeywordIntent
+	public class RequiredIntent : ISchemaKeywordIntent
 	{
 		public List<string> RequiredProperties { get; }
 
