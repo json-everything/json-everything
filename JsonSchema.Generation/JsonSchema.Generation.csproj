@@ -14,7 +14,9 @@
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-generation.html</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>C:\projects\json-everything\JsonSchema.Generation\JsonSchema.Net.Generation.xml</DocumentationFile>
