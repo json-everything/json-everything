@@ -22,6 +22,12 @@
         },
         {
           "files": [
+            "JsonSchema.Generation.csproj"
+          ],
+          "src":"../JsonSchema.Generation/"
+        },
+        {
+          "files": [
             "JsonPath.csproj"
           ],
           "src":"../JsonPath/"
