@@ -6,6 +6,7 @@ on:
       - master # Default release branch
     paths-ignore:
       - 'docs/**/*'
+      - 'docs_source/**/*'
 
 jobs:
   publish:

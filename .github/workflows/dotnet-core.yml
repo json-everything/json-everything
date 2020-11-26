@@ -5,9 +5,11 @@ on:
     branches: [ master ]
     paths-ignore:
       - 'docs/**/*'
+      - 'docs_source/**/*'
   pull_request:
     paths-ignore:
       - 'docs/**/*'
+      - 'docs_source/**/*'
 
 jobs:
   build:
