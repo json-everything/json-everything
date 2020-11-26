@@ -9,16 +9,7 @@ environment:
   gh_access_token:
     secure: jm9ZkMmKGxetJfX6wsjFYUYiLhsX1yC7185wYdFHLicXGUD+vm5ywPNfK3mWSPzk
 
-build:
-  project: json-everything.sln
-
-# build Configuration, i.e. Debug, Release, etc.
-configuration: Release
-
-before_build:
-- dotnet restore json-everything.sln
-
-after_build:
+build_script:
   # Switch branches to gh-pages, clean the folder, copy everything in from the Wyam output, and commit/push
   # See http://www.appveyor.com/docs/how-to/git-push for more info
   - git config --global credential.helper store
