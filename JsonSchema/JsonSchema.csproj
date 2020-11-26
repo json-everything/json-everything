@@ -20,7 +20,7 @@
     <AssemblyName>JsonSchema.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
-    <DocumentationFile>C:\projects\json-everything\JsonSchema\JsonSchema.Net.xml</DocumentationFile>
+    <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

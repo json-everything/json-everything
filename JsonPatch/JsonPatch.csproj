@@ -18,7 +18,7 @@
     <LangVersion>latest</LangVersion>
     <Version>1.0.1</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <DocumentationFile>C:\projects\json-everything\JsonPatch\JsonPatch.xml</DocumentationFile>
+    <DocumentationFile>JsonPatch.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

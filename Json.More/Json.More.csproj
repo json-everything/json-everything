@@ -15,7 +15,8 @@
     <LangVersion>latest</LangVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.2.1.0</FileVersion>
-    <DocumentationFile>C:\projects\json-everything\Json.More\Json.More.xml</DocumentationFile>
+    <DocumentationFile>Json.More.xml</DocumentationFile>
+    <PackageIcon>json-logo-256.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,10 @@
 
   <ItemGroup>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\Resources\json-logo-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

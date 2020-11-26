@@ -19,7 +19,7 @@
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-pointer.html</PackageReleaseNotes>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.1.1.0</FileVersion>
-    <DocumentationFile>C:\projects\json-everything\JsonPointer\JsonPointer.Net.xml</DocumentationFile>
+    <DocumentationFile>JsonPointer.Net.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

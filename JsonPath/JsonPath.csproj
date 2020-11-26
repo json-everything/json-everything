@@ -16,7 +16,7 @@
     <Version>0.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <DocumentationFile>C:\projects\json-everything\JsonPath\JsonPath.Net.xml</DocumentationFile>
+    <DocumentationFile>JsonPath.Net.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
