@@ -76,30 +76,11 @@
   <div class="markdown level0 summary"><p>Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.ValueType.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.ValueType.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Pointer.html">Json.Pointer</a></h6>
   <h6><strong>Assembly</strong>: JsonPointer.Net.dll</h6>
   <h5 id="Json_Pointer_RelativeJsonPointer_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
-public struct RelativeJsonPointer</code></pre>
+    <pre><code class="lang-csharp hljs">public struct RelativeJsonPointer</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -232,20 +213,19 @@ public struct RelativeJsonPointer</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_RelativeJsonPointer_Evaluate_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Pointer.RelativeJsonPointer.Evaluate(System.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_RelativeJsonPointer_Evaluate_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Pointer.RelativeJsonPointer.Evaluate(JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/RelativeJsonPointer.cs/#L159">View Source</a>
   </span>
   <a id="Json_Pointer_RelativeJsonPointer_Evaluate_" data-uid="Json.Pointer.RelativeJsonPointer.Evaluate*"></a>
-  <h4 id="Json_Pointer_RelativeJsonPointer_Evaluate_System_Text_Json_JsonElement_" data-uid="Json.Pointer.RelativeJsonPointer.Evaluate(System.Text.Json.JsonElement)">Evaluate(JsonElement)</h4>
-  <div class="markdown level1 summary"><p>Evaluates the relative pointer over a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <h4 id="Json_Pointer_RelativeJsonPointer_Evaluate_JsonElement_" data-uid="Json.Pointer.RelativeJsonPointer.Evaluate(JsonElement)">Evaluate(JsonElement)</h4>
+  <div class="markdown level1 summary"><p>Evaluates the relative pointer over a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452&quot;)]
-public JsonElement Evaluate(JsonElement element)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonElement Evaluate(JsonElement element)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -258,9 +238,9 @@ public JsonElement Evaluate(JsonElement element)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">element</span></td>
-        <td><p>The <span class="xref">System.Text.Json.JsonElement</span>.</p>
+        <td><p>The <see cref="!:JsonElement"></see>.</p>
 </td>
       </tr>
     </tbody>
@@ -275,24 +255,8 @@ public JsonElement Evaluate(JsonElement element)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><p>The sub-element at the relative pointer's location, or null if the path does not exist.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.NotSupportedException</span></td>
-        <td><p>This method is not yet supported.  Waiting for System.Text.Json to support upward navigation.  See <a href="https://github.com/dotnet/runtime/issues/40452">https://github.com/dotnet/runtime/issues/40452</a></p>
 </td>
       </tr>
     </tbody>
@@ -462,11 +426,6 @@ public JsonElement Evaluate(JsonElement element)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
-        <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> is null.</p>
-</td>
-      </tr>
-      <tr>
         <td><a class="xref" href="Json.Pointer.PointerParseException.html">PointerParseException</a></td>
         <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> does not contain a valid relative pointer.</p>
 </td>
@@ -505,8 +464,6 @@ public JsonElement Evaluate(JsonElement element)</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.ToString()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_RelativeJsonPointer_TryParse_System_String_Json_Pointer_RelativeJsonPointer__.md&amp;value=---%0Auid%3A%20Json.Pointer.RelativeJsonPointer.TryParse(System.String%2CJson.Pointer.RelativeJsonPointer%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -563,25 +520,9 @@ public JsonElement Evaluate(JsonElement element)</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
-        <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> is null.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>

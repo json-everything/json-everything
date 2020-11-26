@@ -73,7 +73,7 @@
   
   <h1 id="Json_More_Utf8JsonWriterExtensions" data-uid="Json.More.Utf8JsonWriterExtensions" class="text-break">Class Utf8JsonWriterExtensions
   </h1>
-  <div class="markdown level0 summary"><p>Provides extension functionality for <span class="xref">System.Text.Json.Utf8JsonWriter</span>.</p>
+  <div class="markdown level0 summary"><p>Provides extension functionality for <see cref="!:Utf8JsonWriter"></see>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -81,48 +81,24 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Utf8JsonWriterExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.More.html">Json.More</a></h6>
   <h6><strong>Assembly</strong>: Json.More.dll</h6>
   <h5 id="Json_More_Utf8JsonWriterExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class Utf8JsonWriterExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class Utf8JsonWriterExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_Utf8JsonWriterExtensions_WriteValue_System_Text_Json_Utf8JsonWriter_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.More.Utf8JsonWriterExtensions.WriteValue(System.Text.Json.Utf8JsonWriter%2CSystem.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_Utf8JsonWriterExtensions_WriteValue_Utf8JsonWriter_JsonElement_.md&amp;value=---%0Auid%3A%20Json.More.Utf8JsonWriterExtensions.WriteValue(Utf8JsonWriter%2CJsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/Utf8JsonWriterExtensions.cs/#L17">View Source</a>
   </span>
   <a id="Json_More_Utf8JsonWriterExtensions_WriteValue_" data-uid="Json.More.Utf8JsonWriterExtensions.WriteValue*"></a>
-  <h4 id="Json_More_Utf8JsonWriterExtensions_WriteValue_System_Text_Json_Utf8JsonWriter_System_Text_Json_JsonElement_" data-uid="Json.More.Utf8JsonWriterExtensions.WriteValue(System.Text.Json.Utf8JsonWriter,System.Text.Json.JsonElement)">WriteValue(Utf8JsonWriter, JsonElement)</h4>
-  <div class="markdown level1 summary"><p>Writes a <span class="xref">System.Text.Json.JsonElement</span> to the stream.</p>
+  <h4 id="Json_More_Utf8JsonWriterExtensions_WriteValue_Utf8JsonWriter_JsonElement_" data-uid="Json.More.Utf8JsonWriterExtensions.WriteValue(Utf8JsonWriter,JsonElement)">WriteValue(Utf8JsonWriter, JsonElement)</h4>
+  <div class="markdown level1 summary"><p>Writes a <see cref="!:JsonElement"></see> to the stream.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -140,31 +116,15 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.Utf8JsonWriter</span></td>
+        <td><span class="xref">Utf8JsonWriter</span></td>
         <td><span class="parametername">writer</span></td>
         <td><p>The JSON stream writer.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">element</span></td>
         <td><p>The element to write.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>The <span class="xref">System.Text.Json.JsonElement.ValueKind</span> is not valid.</p>
 </td>
       </tr>
     </tbody>

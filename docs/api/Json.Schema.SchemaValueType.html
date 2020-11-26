@@ -80,9 +80,7 @@
   <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
   <h5 id="Json_Schema_SchemaValueType_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Flags]
-[JsonConverter(typeof(EnumStringConverter&lt;SchemaValueType&gt;))]
-public enum SchemaValueType</code></pre>
+    <pre><code class="lang-csharp hljs">public enum SchemaValueType : int</code></pre>
   </div>
   <h5 id="Json_Schema_SchemaValueType_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>This is a flags-enabled enumeration, so values that support multiple
@@ -137,7 +135,7 @@ types can be bit-wise OR'd <code>|</code> together.</p>
   </thead></thead></table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;SchemaValueType&gt;(JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;SchemaValueType&gt;(JsonSerializerOptions)</a>
   </div>
 </article>
           </div>

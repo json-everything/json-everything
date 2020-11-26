@@ -86,36 +86,13 @@
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
     <div><a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a></div>
     <div><a class="xref" href="Json.Schema.ISchemaContainer.html">ISchemaContainer</a></div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.UnevaluatedPropertiesKeyword.html">UnevaluatedPropertiesKeyword</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Schema.UnevaluatedPropertiesKeyword.html">UnevaluatedPropertiesKeyword</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
   <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
   <h5 id="Json_Schema_UnevaluatedPropertiesKeyword_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[SchemaPriority(30)]
-[SchemaKeyword(&quot;unevaluatedProperties&quot;)]
-[SchemaDraft(Draft.Draft201909)]
-[Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/applicator&quot;)]
-[JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
-public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable&lt;UnevaluatedPropertiesKeyword&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class UnevaluatedPropertiesKeyword : object, IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable&lt;UnevaluatedPropertiesKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -287,8 +264,6 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_UnevaluatedPropertiesKeyword_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.UnevaluatedPropertiesKeyword.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -321,8 +296,6 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_UnevaluatedPropertiesKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.UnevaluatedPropertiesKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -361,13 +334,13 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.UnevaluatedPropertiesKeyword.Json%23Schema%23IRefResolvable%23RegisterSubschemas(Json.Schema.SchemaRegistry%2CSystem.Uri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.UnevaluatedPropertiesKeyword.Json%23Schema%23IRefResolvable%23RegisterSubschemas(Json.Schema.SchemaRegistry%2CUri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/UnevaluatedPropertiesKeyword.cs/#L105">View Source</a>
   </span>
   <a id="Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_" data-uid="Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas*"></a>
-  <h4 id="Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_" data-uid="Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)">IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)</h4>
+  <h4 id="Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_Uri_" data-uid="Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,Uri)">IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -390,7 +363,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Uri</span></td>
+        <td><span class="xref">Uri</span></td>
         <td><span class="parametername">currentUri</span></td>
         <td></td>
       </tr>
@@ -454,23 +427,11 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
       <a class="xref" href="Json.Schema.ISchemaContainer.html">ISchemaContainer</a>
   </div>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Keyword_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Keyword(IJsonSchemaKeyword)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Priority_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Priority(IJsonSchemaKeyword)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.IsApplicator(IJsonSchemaKeyword)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>

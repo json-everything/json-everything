@@ -81,35 +81,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">KeywordExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
   <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
   <h5 id="Json_Schema_KeywordExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class KeywordExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class KeywordExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
@@ -157,7 +133,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</td>
         <td><p>An <code>IEnumerable&amp;lt;JsonSchema&gt;</code>.</p>
 </td>
       </tr>
@@ -259,27 +235,6 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><p>The keyword string.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
-        <td><p><code data-dev-comment-type="paramref" class="paramref">keyword</code> is null.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.InvalidOperationException</span></td>
-        <td><p>The keyword does not carry the <a class="xref" href="Json.Schema.SchemaKeywordAttribute.html">SchemaKeywordAttribute</a>.</p>
 </td>
       </tr>
     </tbody>

@@ -84,49 +84,25 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.RequiredKeyword.html">RequiredKeyword</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Schema.RequiredKeyword.html">RequiredKeyword</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
   <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
   <h5 id="Json_Schema_RequiredKeyword_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[SchemaKeyword(&quot;required&quot;)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/validation&quot;)]
-[JsonConverter(typeof(RequiredKeywordJsonConverter))]
-public class RequiredKeyword : IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class RequiredKeyword : object, IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_RequiredKeyword__ctor_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Json.Schema.RequiredKeyword.%23ctor(System.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_RequiredKeyword__ctor_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Json.Schema.RequiredKeyword.%23ctor(IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/RequiredKeyword.cs/#L41">View Source</a>
   </span>
   <a id="Json_Schema_RequiredKeyword__ctor_" data-uid="Json.Schema.RequiredKeyword.#ctor*"></a>
-  <h4 id="Json_Schema_RequiredKeyword__ctor_System_Collections_Generic_IEnumerable_System_String__" data-uid="Json.Schema.RequiredKeyword.#ctor(System.Collections.Generic.IEnumerable{System.String})">RequiredKeyword(IEnumerable&lt;String&gt;)</h4>
+  <h4 id="Json_Schema_RequiredKeyword__ctor_IEnumerable_System_String__" data-uid="Json.Schema.RequiredKeyword.#ctor(IEnumerable{System.String})">RequiredKeyword(IEnumerable&lt;String&gt;)</h4>
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="Json.Schema.RequiredKeyword.html">RequiredKeyword</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -145,7 +121,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td><span class="parametername">values</span></td>
         <td><p>The required properties.</p>
 </td>
@@ -214,7 +190,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyList</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">IReadOnlyList</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -321,8 +297,6 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_RequiredKeyword_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.RequiredKeyword.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -355,8 +329,6 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_RequiredKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.RequiredKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -396,23 +368,11 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable&lt;RequiredKeyword
       <a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a>
   </div>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Keyword_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Keyword(IJsonSchemaKeyword)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Priority_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Priority(IJsonSchemaKeyword)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.IsApplicator(IJsonSchemaKeyword)</a>
-  </div>
-  <div>
-      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>
