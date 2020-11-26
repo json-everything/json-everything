@@ -65,4 +65,4 @@ jobs:
           PROJECT_FILE_PATH: JsonSchema.Generation/JsonSchema.Generation.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-          TAG_FORMAT: schema-v*
+          TAG_FORMAT: schema-gen-v*
