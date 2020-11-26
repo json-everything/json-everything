@@ -701,6 +701,546 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.ExclusiveMaximumAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.ExclusiveMaximumAttribute.html",
+          "hash": "guYcguLfLt/1xVAUWuxTXQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.ExclusiveMinimumAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.ExclusiveMinimumAttribute.html",
+          "hash": "ueDINEUbO+Q27i968D+tTw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.GeneratorRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.GeneratorRegistry.html",
+          "hash": "IWhhE/Osbc7zH4r4R02ITA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Generators.ISchemaGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Generators.ISchemaGenerator.html",
+          "hash": "DJjQBBVoBru9hpnrEGW/7Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Generators.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Generators.html",
+          "hash": "FE2ZiV8wfSWAPpG0z5OkhQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.IAttributeHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.IAttributeHandler.html",
+          "hash": "VEtnKXNRjTlXeysarwDO9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.IContextContainer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.IContextContainer.html",
+          "hash": "ChqbiqS7LB2ckmxBezZJcw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.ISchemaKeywordIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.ISchemaKeywordIntent.html",
+          "hash": "Dn8FD89Y2Or0RO5xDALgGw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.AdditionalPropertiesIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.AdditionalPropertiesIntent.html",
+          "hash": "WO75LKgOAgXvtJvtmoot1w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.DefsIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.DefsIntent.html",
+          "hash": "XBqUqPW5LjmF1QVw73YGaA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.DeprecatedIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.DeprecatedIntent.html",
+          "hash": "QELgodOyxcD0fYbN8SfWFQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.EnumIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.EnumIntent.html",
+          "hash": "ghqc+siIjN44CkLsDpLeow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.ExclusiveMaximumIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.ExclusiveMaximumIntent.html",
+          "hash": "umVatZY5D4HKRFK4KxnvYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.ExclusiveMinimumIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.ExclusiveMinimumIntent.html",
+          "hash": "Up67oG0VCGrSsxeDcXQ9EQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.FormatIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.FormatIntent.html",
+          "hash": "4bF2FoZPGyk7jP7TAr4KUQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.ItemsIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.ItemsIntent.html",
+          "hash": "bz2JPsySvRcqIsh0BbwIEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MaxItemsIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MaxItemsIntent.html",
+          "hash": "2m434T1hy95E6qOO54knrA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MaxLengthIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MaxLengthIntent.html",
+          "hash": "OYAby99R1lkeUY+vxJjPaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MaximumIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MaximumIntent.html",
+          "hash": "cxIxTHpwFf2n2g4k249T6A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MinItemsIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MinItemsIntent.html",
+          "hash": "vUN4Z49ERe9EzK0gH39f8w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MinLengthIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MinLengthIntent.html",
+          "hash": "+cvD7YcpZWr5K8GnPJ/oMg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MinimumIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MinimumIntent.html",
+          "hash": "cip/qKnB9g5co2fb/CpWoQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.MultipleOfIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.MultipleOfIntent.html",
+          "hash": "JhGPCtLJBxoHAtF67XJmBg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.PatternIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.PatternIntent.html",
+          "hash": "KLGohlt/bwCv1MG7j/AUsg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.PropertiesIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.PropertiesIntent.html",
+          "hash": "x3KeqO0W42HdAEHBhHZgpg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.RefIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.RefIntent.html",
+          "hash": "zYSdYf5ecTARkwWWQrsYDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.RequiredIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.RequiredIntent.html",
+          "hash": "kk+u05VzvaqRmgofORVa/Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.TypeIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.TypeIntent.html",
+          "hash": "u10o3cYTmA1XNSN53oQWIA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.UniqueItemsIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.UniqueItemsIntent.html",
+          "hash": "QzHHjX/ZR8WgKtpoF/gd+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.html",
+          "hash": "Ekf2iM4BVOOWqXlifIBWQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.JsonSchemaBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html",
+          "hash": "ePIhXtbG8RaBqMKN9D3RaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MaxItemsAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MaxItemsAttribute.html",
+          "hash": "4ceXlpQvNO2tiYvjNRgonA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MaxLengthAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MaxLengthAttribute.html",
+          "hash": "W1Qpd8ZBqsrHe/F3Bxf/7g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MaximumAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MaximumAttribute.html",
+          "hash": "x/3vMfFLkelopwJIZWYJWw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MinItemsAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MinItemsAttribute.html",
+          "hash": "9MIJvP5GVWIBA3PbISmJcA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MinLengthAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MinLengthAttribute.html",
+          "hash": "GaMuEV0ROOGw0sy8g2FOmA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MinimumAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MinimumAttribute.html",
+          "hash": "3wE0T5Nf2wwPMWEHJAqoaA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.MultipleOfAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.MultipleOfAttribute.html",
+          "hash": "nFDKlQpIczzsqI5xH+NwYA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.PatternAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.PatternAttribute.html",
+          "hash": "y2pjr+SnSkKcBtae8SuAJQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.RequiredAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.RequiredAttribute.html",
+          "hash": "GC5O2YfYjn7Vdw6aPj/OiA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.SchemaGenerationContextCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.SchemaGenerationContextCache.html",
+          "hash": "+CTPNgxHnsKUUYPz/+eP1A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.SchemaGeneratorContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.SchemaGeneratorContext.html",
+          "hash": "z5VmilA+mElU/qHotIm2WQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.TypeExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.TypeExtensions.html",
+          "hash": "a26ifLKR2XpsLiX2v6Jv2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.UniqueItemsAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.UniqueItemsAttribute.html",
+          "hash": "pEpAJV+eIROpFm46DeKcKg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.html",
+          "hash": "k3m9aZuTY5lA7/TaTf2VaA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.IJsonSchemaKeyword.yml",
       "output": {
         ".html": {
@@ -813,7 +1353,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.JsonSchemaBuilder.html",
-          "hash": "IGaB4CMC3usoiK8cKqX/Qw=="
+          "hash": "iKfhCmqq17/d+4pEsz43Gg=="
         }
       },
       "is_incremental": false,
@@ -1473,7 +2013,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "hPusbO84Wu636FircRuwKA=="
+          "hash": "c27aCLdw3DkFf9qerVAzsQ=="
         }
       },
       "is_incremental": false,
@@ -1597,11 +2137,23 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "release-notes/json-schema-generation.md",
+      "output": {
+        ".html": {
+          "relative_path": "release-notes/json-schema-generation.html",
+          "hash": "Z1Drs+Vohusg7iGhACdqGw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "release-notes/json-schema.md",
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "yrjxSrkYJZlCIu7h0KlhRA=="
+          "hash": "BDBxwDRMBvUJU7N+aXG5Gg=="
         }
       },
       "is_incremental": false,
@@ -1613,7 +2165,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/toc.html",
-          "hash": "IkqZD/2Vb4i9zBAhBzhr3Q=="
+          "hash": "3ZikrtiF7D41opFPVhjxXA=="
         }
       },
       "is_incremental": false,
@@ -1717,6 +2269,18 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "usage/schema/generation.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/schema/generation.html",
+          "hash": "S6+EU1wSfmUqmzo6Ulrllw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "usage/schema/keywords.md",
       "output": {
         ".html": {
@@ -1781,7 +2345,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "t56ojki/fXi730WnSVPVzg=="
+          "hash": "+nyGa1WhgQKhv3k0Y0p1YA=="
         }
       },
       "is_incremental": false,
@@ -1802,13 +2366,13 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 21,
+          "total_file_count": 23,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 120,
+          "total_file_count": 165,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Generating JSON Schema from .Net Types </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Generating JSON Schema from .Net Types ">
+    <meta name="generator" content="docfx 2.56.5.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="generating-json-schema-from-net-types">Generating JSON Schema from .Net Types</h1>
+
+<p>JsonSchema.Net.Generation is an extension package to <a href="https://www.nuget.org/packages/JsonSchema.Net/">JsonSchema.Net</a> that provides JSON Schema generation from .Net types.</p>
+<p>Using it is quite simple.  First you need a <code>JsonSchemaBulider</code>.  Then...</p>
+<pre><code class="lang-c#">var schema = schemaBuilder.FromType&lt;MyType&gt;().Build();
+</code></pre>
+<p>Done.</p>
+<p><em><strong>NOTE</strong> Ideally, this functionality should be used to create a starting point in authoring a schema.  The schemas output by this library should be reviewed by actual people prior to being put into a production system.</em></p>
+<h2 id="making-better-schemas">Making better schemas</h2>
+<p>The above will give you a basic schema that will include the <code>type</code> keyword, and maybe a listing of the properties.  But many times you have more detailed requirements of the data you're receiving.  For example,</p>
+<ul>
+<li>some properties may be required</li>
+<li>string properties may have length requirements</li>
+<li>numeric properties may have value range requirements</li>
+</ul>
+<p>All of these and more are supplied via a set of attributes that can be applied to properties.  The following attributes are included in this package:</p>
+<ul>
+<li>Numeric values
+<ul>
+<li><code>Minimum</code></li>
+<li><code>ExclusiveMinimum</code></li>
+<li><code>Maximum</code></li>
+<li><code>ExclusiveMaximum</code></li>
+<li><code>MultipleOf</code></li>
+</ul>
+</li>
+<li>Strings
+<ul>
+<li><code>MinLength</code></li>
+<li><code>MaxLength</code></li>
+<li><code>Pattern</code></li>
+</ul>
+</li>
+<li>Arrays
+<ul>
+<li><code>MinItems</code></li>
+<li><code>MaxItems</code></li>
+<li><code>UniqueItems</code></li>
+</ul>
+</li>
+<li>All
+<ul>
+<li><code>Required</code></li>
+<li><code>Obsolete</code> (translates to <code>deprecated</code>)</li>
+</ul>
+</li>
+</ul>
+<p>Simply add the attributes directly to the properties and the corresponding keywords will be added to the schema.</p>
+<p>For properties typed with generic collections, like <code>List&lt;T&gt;</code>, the schema will automatically generate an <code>items</code> keyword and an generate a schema for the indicated <code>T</code>.  If your <code>T</code> is a numeric value or a string, then you can also apply the relevant attributes and they'll be applied in the <code>items</code> subschema.</p>
+<p>For example, this object:</p>
+<pre><code class="lang-c#">class MyClass
+{
+    [UniqueItems(true)]
+    [Minimum(10)]
+    public List&lt;int&gt; MyList{ get; set; }
+}
+</code></pre>
+<p>will be translated to this schema:</p>
+<pre><code class="lang-json">{
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;MyList&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;integer&quot;,
+        &quot;minimum&quot;: 10
+      },
+      &quot;uniqueItems&quot;: true
+    }
+  }
+}
+</code></pre>
+<p>The <code>minimum</code> is applied to the <code>items</code> because that keyword is not relevant for an array.</p>
+<p><em><strong>NOTE</strong> This means that the generator will have trouble determining where to apply keywords to properties like <code>List&lt;List&lt;T&gt;&gt;</code> because the attributes could be relevant for both the outer and inner lists.</em></p>
+<p>The generator will handle most common types:</p>
+<ul>
+<li>numeric types (<code>int</code>, <code>decimal</code>, etc.)</li>
+<li><code>bool</code></li>
+<li><code>string</code></li>
+<li>enumerations (mapped to strings)</li>
+<li><code>Uri</code></li>
+<li><code>JsonPointer</code> (from <a href="https://www.nuget.org/packages/JsonPointer.Net/">JsonPointer.Net</a>)</li>
+<li><code>Guid</code></li>
+<li><code>DateTime</code></li>
+<li>collections (<code>IEnumerable&lt;T&gt;</code>)</li>
+<li>string-keyed dictionaries</li>
+<li>enumeration-keyed dictionaries (keys are mapped to strings)</li>
+<li>POCOs</li>
+</ul>
+<p>For POCOs, currently only read/write properties are converted.  Future versions of this library may also support read-only or write-only by adding the <code>readOnly</code> and <code>writeOnly</code> keywords, respectively.</p>
+<h3 id="additional-built-in-support">Additional built-in support</h3>
+<p>There are a couple advanced features that bear mentioning.</p>
+<ol>
+<li>The system does have some loop detection logic in order to support self-referencing or loop-referencing types.</li>
+<li>The system will collect common subschemas into a <code>$defs</code> keyword at the root.  Identification of a subschema is by its type and the collection of attributes it is processed with.  The locations with these common subschemas will be replaced by a <code>$ref</code> that points to the appropriate entry in <code>$defs</code>.</li>
+</ol>
+<h2 id="extending-support">Extending support</h2>
+<p>The above will work most of the time, but occasionally you may find that you need some additional support.  Happily, the library is configured for you to provide that support yourself.</p>
+<p>There are three areas that can be augmented in order to get the results you're after.</p>
+<ul>
+<li>Generators</li>
+<li>Intents</li>
+<li>Attributes</li>
+</ul>
+<p>These do not all need to be implemented.</p>
+<h3 id="generators">Generators</h3>
+<p>These are the first phase of generation.  When encountering a type, the system will find the first registered generator that can handle that type.  The generator then creates keyword intents (see <a href="#intents">Intents</a> below).  The supported types list above is merely a list of the built-in generators.</p>
+<p>To create a new generator, you'll need to implement the <code>ISchemaGenerator</code> interface and register it using the <code>GeneratorRegistry.Register()</code> static method.  This will insert your generator at the top of the list so that it has priority.</p>
+<p><em><strong>IMPORTANT</strong> This means that the order your generators are registered is important: last one wins.  So if you want one generator to have priority over another, register the higher priority one last.</em></p>
+<p>This class doesn't need to be complex.  Here's the implementation for the <code>BooleanSchemaGenerator</code>:</p>
+<pre><code class="lang-c#">internal class BooleanSchemaGenerator : ISchemaGenerator
+{
+    public bool Handles(Type type)
+    {
+        return type == typeof(bool);
+    }
+
+    public void AddConstraints(SchemaGeneratorContext context)
+    {
+        context.Intents.Add(new TypeIntent(SchemaValueType.Boolean));
+    }
+}
+</code></pre>
+<p>Very simple.  It says that it handles booleans and then it does.</p>
+<p>To explain <em>how</em> it does, we need to discuss intents.</p>
+<h3 id="intents">Intents</h3>
+<p>The <code>JsonSchema</code> type and its keywords are immutable.  So even if we <em>could</em> get to the keyword list inside the <code>JsonSchemaBuilder</code>, we wouldn't be able to edit the keywords to perform optimizations.</p>
+<p>Happily, this has led to a new type that mimics keywords to hold their data until the keywords are ready to be built.  That new type is the keyword intent, manifested in this library by the <code>ISchemaKeywordIntent</code> interface.</p>
+<p>The intent is keyword-specific and holds the data needed to actually build the keyword.</p>
+<p>Once the system has analyzed the type and collected all of the intents, it extracts any common subschemas into a <code>$defs</code> intent, then applies them to the builder that was provided at the beginning of the process.  This application of the intents generates the keywords.</p>
+<p>Most intents are pretty simple to implement.  Here's the <code>TypeIntent</code> from above:</p>
+<pre><code class="lang-c#">public class TypeIntent : ISchemaKeywordIntent
+{
+    public SchemaValueType Type { get; }
+
+    public TypeIntent(SchemaValueType type)
+    {
+        Type = type;
+    }
+
+    public void Apply(JsonSchemaBuilder builder) =&gt; builder.Type(Type);
+
+    public override bool Equals(object obj) =&gt; !ReferenceEquals(null, obj);
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = GetType().GetHashCode();
+            hashCode = (hashCode * 397) ^ Type.GetHashCode();
+            return hashCode;
+        }
+    }
+}
+</code></pre>
+<p>See?  The <code>Apply()</code> method just takes the builder, and adds a keyword with the data that it already collected.  Pretty easy.</p>
+<p>Note that the equality methods are overridden.  This is <em><strong>extremely</strong></em> important as it's a pivotal part of how the optimization works.  You <strong>must</strong> override these methods, and it is strongly advised that you do it just like this.</p>
+<p>This will work for most intents, but some keywords contain subschemas.  For these, we don't want to hold a subschema because, as mentioned before, they can't be edited.  Instead, we'll hold a context object that represents the subschema: its type, attribute set, and the intents required to build it.  For these intents, we <em>also</em> want to implement <code>IContextContainer</code>.  Here's the <code>ItemsIntent</code>:</p>
+<pre><code class="lang-c#">public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
+{
+    public SchemaGeneratorContext Context { get; private set; }
+
+    public ItemsIntent(SchemaGeneratorContext context)
+    {
+        Context = context;
+    }
+
+    public IEnumerable&lt;SchemaGeneratorContext&gt; GetContexts() =&gt; new[] {Context};
+
+    public void Replace(int hashCode, SchemaGeneratorContext newContext)
+    {
+        var hc = Context.GetHashCode();
+        if (hc == hashCode)
+            Context = newContext;
+    }
+
+    public void Apply(JsonSchemaBuilder builder) =&gt; builder.Items(Context.Apply());
+
+    public override bool Equals(object obj) =&gt; !ReferenceEquals(null, obj);
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = GetType().GetHashCode();
+            hashCode = (hashCode * 397) ^ Context.GetHashCode();
+            return hashCode;
+        }
+    }
+}
+</code></pre>
+<p>There are two methods required by <code>IContextContainer</code>: <code>GetContexts()</code> and <code>Replace()</code>.</p>
+<p><code>GetContexts()</code> gets the context objects <em>directly</em> held by this intent.</p>
+<p><em><strong>IMPORTANT</strong> Don't dive into the context's <code>Intents</code> collection and get the contexts that those hold also.  The system will handle that.</em></p>
+<p><code>Replace()</code> replaces a context with a given hash code with a new context.  This is the system creating <code>$ref</code> intents that point to the new <code>$defs</code> intent it's building and distributing them throughout the context tree.  Once all the <code>$ref</code>s are distributed, the system will add the <code>$defs</code> intent to the root context to be applied at the last step.</p>
+<p>Generally intents for applicator keywords, which are keywords that have subschemas (<code>anyOf</code>, <code>allOf</code>, etc.), will need to implement this second interface.  In most cases, you can just copy this code.</p>
+<h3 id="attributes">Attributes</h3>
+<p>The other source for intents are attributes.  These are handled once the generator has completed adding the intents it needs to.</p>
+<p>When processing an object, the properties are analyzed for the presence of any of the above attributes.  Each of the attributes can then add its intents to the context.</p>
+<p>To create your own attribute and have it processed by the system, you'll need to create a handler for it as well.</p>
+<p>The attribute itself is pretty simple.  It's just a class that inherits from <code>Attribute</code>, implements <code>IAttributeHandler</code>, and carries some data.  Here's <code>MaximumAttribute</code>:</p>
+<pre><code class="lang-c#">[AttributeUsage(AttributeTargets.Property)]
+public class MaximumAttribute : Attribute, IAttributeHandler
+{
+    public uint Value { get; }
+
+    public MaximumAttribute(uint value)
+    {
+        Value = value;
+    }
+
+    void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+    {
+        var attribute = context.Attributes.OfType&lt;MaximumAttribute&gt;().FirstOrDefault();
+        if (attribute == null) return;
+
+        if (!context.Type.IsNumber()) return;
+
+        context.Intents.Add(new MaximumIntent(attribute.Value));
+    }
+}
+</code></pre>
+<p>The <code>AddConstraints()</code> method works exactly the same as in the generator class.  A key difference here is that you will need to guard against unrelated types.  For instance, with <code>MaximumAttribute</code> above, it doesn't make sense to have <code>maximum</code> on a non-numeric type, so we check it before adding the intent.</p>
+<p><em><strong>NOTE</strong> <code>.IsNumber()</code> is an extension method on <code>Type</code> that determines if it's a numeric type.  There are a few more of these helper extensions as well.</em></p>
+<h2 id="thats-it">That's it</h2>
+<p>That should get you generating schemas for all of your types.  If you come up with ideas or implement your own extensions and think they'd be handy if they were built in, feel free to open up an issue or a pull request.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/usage/schema/generation.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>
