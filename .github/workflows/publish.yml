@@ -58,3 +58,11 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: schema-v*
+      - name: publish schema
+        id: publish_schema generation
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: JsonSchema.Generation/JsonSchema.Generation.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+          TAG_FORMAT: schema-v*
