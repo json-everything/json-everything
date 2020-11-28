@@ -87,6 +87,15 @@
   &quot;type&quot;: &quot;string&quot;
 }
 </code></pre>
+<blockquote>
+<p>Here's the schema build inline:</p>
+<pre><code class="lang-c#">var schema = new JsonSchemaBuilder()
+    .Id(&quot;http://localhost/my-schema&quot;)
+    .Type(SchemaValueType.Object)
+    .Properties((&quot;refProp&quot;, new JsonSchemaBuilder().Ref(&quot;http://localhost/random-string&quot;)))
+    .Build();
+</code></pre>
+</blockquote>
 <p>You must register <code>random-string</code> before you attempt to validate with <code>my-schema</code>.</p>
 <pre><code class="lang-c#">var randomString = JsonSchema.FromFile(&quot;random-string.json&quot;);
 SchemaRegistry.Global.Register(&quot;http://localhost/random-string&quot;, randomString);
