@@ -15,13 +15,21 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.1</Version>
+    <FileVersion>1.0.1.0</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-  </PropertyGroup>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
