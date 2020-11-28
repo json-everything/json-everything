@@ -1,3 +1,7 @@
+# [1.2.2](https://github.com/gregsdennis/json-everything/pull/45)
+
+Added deug symbols to package.  No functional change.
+
 # [1.2.1](???)
 
 `.ToJsonString()` now just calls the serializer.

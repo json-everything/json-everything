@@ -162,3 +162,28 @@ jobs:
       with:
         msg: |
           ${{ steps.analyze-schema.outputs.REPORT }}
+  
+    - name: Analyze schema generation
+      id: analyze-schema-generation
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet analyze-semver -a JsonSchema.Generation/bin/Release/netstandard2.0/JsonSchema.Net.Generation.dll -o semver-report-schema-gen.md -c build/semver_config.json
+        unset HAS_REPORT
+        unset REPORT
+        if [ -s semver-report-schema-gen.md ]
+        then
+          HAS_REPORT='true'
+          REPORT=$(<semver-report-schema-gen.md)
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::${REPORT}"
+        fi
+        echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+    - if: steps.analyze-schema-generation.outputs.HAS_REPORT
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ${{ steps.analyze-schema-generation.outputs.REPORT }}

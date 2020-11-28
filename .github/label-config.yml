@@ -4,6 +4,9 @@
 "pkg:schema":
   - JsonSchema/**/*
 
+"pkg:schema-generation":
+  - JsonPatch/**/*
+
 "pkg:pointer":
   - JsonPointer/**/*
 

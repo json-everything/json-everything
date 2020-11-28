@@ -25,6 +25,16 @@ For example, given these two schemas
 }
 ```
 
+> Here's the schema build inline:
+> 
+> ```c#
+> var schema = new JsonSchemaBuilder()
+>     .Id("http://localhost/my-schema")
+>     .Type(SchemaValueType.Object)
+>     .Properties(("refProp", new JsonSchemaBuilder().Ref("http://localhost/random-string")))
+>     .Build();
+> ```
+
 You must register `random-string` before you attempt to validate with `my-schema`.
 
 ```c#

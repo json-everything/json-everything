@@ -1,3 +1,9 @@
+# [1.1.2](https://github.com/gregsdennis/json-everything/pull/45)
+
+Added deug symbols to package.  No functional change.
+
+# 1.1.1 ???
+
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/7)
 
 Added `JsonPointerKind` enumeration.

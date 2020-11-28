@@ -7,6 +7,7 @@
 <table style="width:100%;">
     <tr style="text-align:center;">
         <td>JsonSchema.Net</td>
+        <td>JsonSchema.Net<br>.Generation</td>
         <td>JsonPointer.Net</td>
         <td>JsonPath.Net</td>
         <td>JsonPatch.Net</td>
@@ -17,6 +18,12 @@
             <a href="https://www.nuget.org/packages/JsonSchema.Net/">
                 <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img><br>
                 <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img>
+            </a>
+        </td>
+        <td>
+            <a href="https://www.nuget.org/packages/JsonSchema.Net.Generation/">
+                <img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.Generation.svg?svg=true"></img><br>
+                <img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img>
             </a>
         </td>
         <td>

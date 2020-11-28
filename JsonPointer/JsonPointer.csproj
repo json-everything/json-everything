@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Json.Pointer</RootNamespace>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <PackageId>JsonPointer.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Product>JsonPointer.Net</Product>
@@ -18,13 +18,18 @@
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-pointer.html</PackageReleaseNotes>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
-    <DocumentationFile>C:\projects\json-everything\JsonPointer\JsonPointer.Net.xml</DocumentationFile>
-  </PropertyGroup>
+    <FileVersion>1.1.2.0</FileVersion>
+    <DocumentationFile>JsonPointer.Net.xml</DocumentationFile>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="ZString" Version="2.2.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
