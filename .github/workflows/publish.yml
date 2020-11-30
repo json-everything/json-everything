@@ -67,3 +67,10 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: schema-gen-v*
+      - name: archive packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive-packages
+          path: |
+            **/*.nupkg
+            **/*.snupkg
