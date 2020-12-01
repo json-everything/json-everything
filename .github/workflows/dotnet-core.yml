@@ -28,7 +28,13 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal --logger:"junit;LogFileName=test-results.xml"
+    - name: Upload Unit Test Results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: Unit Test Results
+        path: '**/*/test-results.xml'
 
     - name: Create local manifest file
       if: github.event_name == 'pull_request'
@@ -187,3 +193,18 @@ jobs:
       with:
         msg: |
           ${{ steps.analyze-schema-generation.outputs.REPORT }}
+  test-results:
+    runs-on: ubuntu-latest
+    needs: build
+    if: success() || failure()
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.6
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: '**/*/test-results.xml'
