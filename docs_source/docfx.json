@@ -58,6 +58,8 @@
         "files": [
           "usage/**.md",
           "usage/**/toc.yml",
+          "examples/**.md",
+          "examples/**/toc.yml",
           "release-notes/**.md",
           "release-notes/**/toc.yml",
           "toc.yml",
