@@ -2144,7 +2144,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-more.html",
-          "hash": "1QYlO0JH0sGPceBKOQEqEw=="
+          "hash": "17i0FbJ/QEMxL0LPd67pEA=="
         }
       },
       "is_incremental": false,
@@ -2156,7 +2156,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-patch.html",
-          "hash": "jgovSPjtLLMkyrk5TaF67Q=="
+          "hash": "qFbIkOvTw8jW9b4tRCvXeA=="
         }
       },
       "is_incremental": false,
@@ -2180,7 +2180,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-pointer.html",
-          "hash": "Dc7oFWNYKpr5OfRQgOR13A=="
+          "hash": "ZoQY2HJ7q4iNnFQGT9OnxQ=="
         }
       },
       "is_incremental": false,
@@ -2204,7 +2204,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "c/2fbBIgYLxiXpLpDSz/gg=="
+          "hash": "bqimxxCsy8S8PzoYOfFrRg=="
         }
       },
       "is_incremental": false,
