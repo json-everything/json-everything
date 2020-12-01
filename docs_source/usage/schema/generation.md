@@ -111,7 +111,7 @@ There are three areas that can be augmented in order to get the results you're a
 - Intents
 - Attributes
 
-These do not all need to be implemented.
+These do not _all_ need to be implemented.
 
 ### Generators
 
@@ -237,7 +237,7 @@ The other source for intents are attributes.  These are handled once the generat
 
 When processing an object, the properties are analyzed for the presence of any of the above attributes.  Each of the attributes can then add its intents to the context.
 
-To create your own attribute and have it processed by the system, you'll need to create a handler for it as well.
+To create your own attribute and have it processed by the system, it'll need to implement `IAttributeHandler` as well.
 
 The attribute itself is pretty simple.  It's just a class that inherits from `Attribute`, implements `IAttributeHandler`, and carries some data.  Here's `MaximumAttribute`:
 
