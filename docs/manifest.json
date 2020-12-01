@@ -2020,6 +2020,57 @@
       "version": ""
     },
     {
+      "type": "Conceptual",
+      "source_relative_path": "examples/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/index.html",
+          "hash": "Ss0HN5yQQUOOQMubCWQe7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "examples/schema-gen.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/schema-gen.html",
+          "hash": "0dak9NJqj0+GkgrQkgFhYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "examples/schema-vocabs.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/schema-vocabs.html",
+          "hash": "km8nm6icoElXSPcFFEZYmw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "examples/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "examples/toc.html",
+          "hash": "4wgCPWcQmAvcb5oShJvLgA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Resource",
       "source_relative_path": "images/favicon.ico",
       "output": {
@@ -2189,7 +2240,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "sDw1GwVT+bALddVO073fqg=="
+          "hash": "6Bv1V+fn4NI3ymjkOp0izA=="
         }
       },
       "is_incremental": false,
@@ -2366,7 +2417,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 23,
+          "total_file_count": 26,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
