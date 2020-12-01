@@ -2,8 +2,9 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](http://isitmaintained.com/project/gregsdennis/json-everything "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](http://isitmaintained.com/project/gregsdennis/json-everything "Average time to resolve an issue")
 ![License](https://img.shields.io/github/license/gregsdennis/json-everything)
-
+<!-- ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/json-everything) -->
 <!-- [![AppVeyor tests](https://img.shields.io/appveyor/tests/gregsdennis/json-everything?svg=true)](https://ci.appveyor.com/project/gregsdennis/json-everything/branch/master) -->
+
 <table style="width:100%;">
     <tr style="text-align:center;">
         <td>JsonSchema.Net</td>
