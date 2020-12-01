@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - master # Default release branch
-    paths-ignore:
-      - 'docs/**/*'
-      - 'docs_source/**/*'
+    paths:
+      - Json.More/
+      - JsonPatch/
+      - JsonPath/
+      - JsonPointer/
+      - JsonSchema/
+      - JsonSchema.Generation/
 
 jobs:
   publish:
