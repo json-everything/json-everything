@@ -2,7 +2,9 @@
 
 Added deug symbols to package.  No functional change.
 
-# 1.1.1 ???
+# [1.1.1](https://github.com/gregsdennis/json-everything/pull/12)
+
+Updated reference to Json.More.Net.
 
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/7)
 
