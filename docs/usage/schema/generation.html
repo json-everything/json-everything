@@ -171,7 +171,7 @@
 <li>Intents</li>
 <li>Attributes</li>
 </ul>
-<p>These do not all need to be implemented.</p>
+<p>These do not <em>all</em> need to be implemented.</p>
 <h3 id="generators">Generators</h3>
 <p>These are the first phase of generation.  When encountering a type, the system will find the first registered generator that can handle that type.  The generator then creates keyword intents (see <a href="#intents">Intents</a> below).  The supported types list above is merely a list of the built-in generators.</p>
 <p>To create a new generator, you'll need to implement the <code>ISchemaGenerator</code> interface and register it using the <code>GeneratorRegistry.Register()</code> static method.  This will insert your generator at the top of the list so that it has priority.</p>
@@ -266,7 +266,7 @@
 <h3 id="attributes">Attributes</h3>
 <p>The other source for intents are attributes.  These are handled once the generator has completed adding the intents it needs to.</p>
 <p>When processing an object, the properties are analyzed for the presence of any of the above attributes.  Each of the attributes can then add its intents to the context.</p>
-<p>To create your own attribute and have it processed by the system, you'll need to create a handler for it as well.</p>
+<p>To create your own attribute and have it processed by the system, it'll need to implement <code>IAttributeHandler</code> as well.</p>
 <p>The attribute itself is pretty simple.  It's just a class that inherits from <code>Attribute</code>, implements <code>IAttributeHandler</code>, and carries some data.  Here's <code>MaximumAttribute</code>:</p>
 <pre><code class="lang-c#">[AttributeUsage(AttributeTargets.Property)]
 public class MaximumAttribute : Attribute, IAttributeHandler
