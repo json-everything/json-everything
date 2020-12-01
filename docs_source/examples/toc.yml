@@ -1,2 +1,5 @@
-- name: New Schema Generation Handler
+- name: Extending Schema Validation
+  href: schema-vocabs.md
+- name: Extending Schema Generation
   href: schema-gen.md
+  
