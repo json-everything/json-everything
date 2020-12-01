@@ -1,0 +1,35 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: publish JsonSchema.Net.Generation
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - JsonSchema.Generation/
+
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+      # Publish
+      - name: publish schema generation
+        id: publish_schema_generation
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: JsonSchema.Generation/JsonSchema.Generation.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+          TAG_FORMAT: schema-gen-v*
+      - name: archive packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive-packages
+          path: |
+            **/*.nupkg
+            **/*.snupkg

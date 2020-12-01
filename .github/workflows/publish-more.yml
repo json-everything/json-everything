@@ -1,0 +1,35 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: publish Json.More.Net
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - Json.More/
+
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+      # Publish
+      - name: publish more
+        id: publish_more
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: Json.More/Json.More.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+          TAG_FORMAT: more-v*
+      - name: archive packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive-packages
+          path: |
+            **/*.nupkg
+            **/*.snupkg
