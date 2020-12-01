@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Extending JSON Schema Validation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Extending JSON Schema Validation ">
+    <meta name="generator" content="docfx 2.56.5.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="extending-json-schema-validation">Extending JSON Schema Validation</h1>
+
+<p>These examples will show how to extend JSON Schema validation by creating a new keyword and incorporating it into a new vocabulary.</p>
+<p><em><strong>NOTE</strong> These examples are actually defined in one of the library's unit tests.</em></p>
+<p>For a more detailed explanation about the concepts behind vocabularies, please see the <a href="../usage/schema/keywords.html">Custom Keywords page</a>.</p>
+<h2 id="defining-a-keyword">Defining a Keyword</h2>
+<p>We want to define a new <code>maxDate</code> keyword that allows a schema to enforce a maximum date value to appear in an instance property.  We'll start with the keyword.</p>
+<pre><code class="lang-c#">// The SchemaKeyword attribute is how the deserializer knows to use this
+// class for the &quot;maxDate&quot; keyword.
+[SchemaKeyword(Name)]
+// Naturally, we want to be able to deserialize it.
+[JsonConverter(typeof(MaxDateJsonConverter))]
+class MaxDateKeyword : IJsonSchemaKeyword, IEquatable&lt;MaxDateKeyword&gt;
+{
+    // Define the keyword in one place.
+    internal const string Name = &quot;maxDate&quot;;
+
+    // Define whatever data the keyword needs.
+    public DateTime Date { get; }
+
+    public MaxDateKeyword(DateTime date)
+    {
+        Date = date;
+    }
+
+    // Implements IJsonSchemaKeyword
+    public void Validate(ValidationContext context)
+    {
+        // The value will come from the instance as a string,
+        var dateString = context.LocalInstance.GetString();
+        // but we want a date.
+        var date = DateTime.Parse(dateString);
+
+        // Check if the date is less than or equal to what we expect.
+        context.IsValid = date &lt;= Date;
+
+        // If not, add an error message.
+        if (!context.IsValid)
+            context.Message = $&quot;{date:O} must be on or before {Date:O}&quot;;
+    }
+
+    // Equality stuff
+    public bool Equals(MaxDateKeyword other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Date.Equals(other.Date);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as MaxDateKeyword);
+    }
+
+    public override int GetHashCode()
+    {
+        return Date.GetHashCode();
+    }
+}
+</code></pre>
+<p>We need to define that serializer, too.</p>
+<pre><code class="lang-c#">class MaxDateJsonConverter : JsonConverter&lt;MaxDateKeyword&gt;
+{
+    public override MaxDateKeyword Read(ref Utf8JsonReader reader,
+                                        Type typeToConvert,
+                                        JsonSerializerOptions options)
+    {
+        // Check to see if it's a string first.
+        if (reader.TokenType != JsonTokenType.String)
+            throw new JsonException(&quot;Expected string&quot;);
+
+        var dateString = reader.GetString();
+        // If the parse fails, then it's not in the right format,
+        // and we should throw an exception anyway.
+        var date = DateTime.Parse(dateString, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+
+        return new MaxDateKeyword(date);
+    }
+
+    public override void Write(Utf8JsonWriter writer,
+                               MaxDateKeyword value,
+                               JsonSerializerOptions options)
+    {
+        writer.WritePropertyName(MaxDateKeyword.Name);
+        writer.WriteStringValue(value.Date.ToString(&quot;yyyy'-'MM'-'dd'T'HH':'mm':'ssK&quot;));
+    }
+}
+</code></pre>
+<h2 id="registering-the-keyword">Registering the Keyword</h2>
+<p>Now that we have the keyword, we need to tell the system about it.</p>
+<pre><code class="lang-c#">SchemaKeywordRegistry.Register&lt;MaxDateKeyword&gt;();
+</code></pre>
+<p><em><strong>NOTE</strong> If you're building a dynamic system where you don't always want the keyword supported, it can be removed using the <code>SchemaKeywordRegistry.Unregister&lt;T&gt;()</code> static method.</em></p>
+<h2 id="defining-a-vocabulary">Defining a Vocabulary</h2>
+<p>Vocabularies are used within JSON Schema to ensure that the validator you're using supports your new keyword.  Because we have already created the keyword and registered it, we know it is supported.</p>
+<p>However, we might not be implementing <em>our</em> vocabulary.  This keyword is likely from a third party who has written a schema that declares a vocabulary that defines <code>maxDate</code>, and we're trying to support <em>that</em>.</p>
+<p>In accordance with the specification, JsonSchema<nsp>.Net will refuse to process any schema whose meta-schema declares a vocabulary it doesn't know about.  Because of this, it won't process the third-party schema unless we define the vocabulary on our end.<p>
+<pre><code class="lang-c#">static class ThirdPartyVocabularies
+{
+    // Define the vocabulary and list the keyword types it defines.
+    public static readonly Vocabulary DatesVocabulary =
+        new Vocabulary(&quot;http://mydates.com/vocabulary&quot;, typeof(MaxDateKeyword));
+
+    // Although not required a vocabulary may also define a meta-schema.
+    // It's a good idea to implement that as well.
+    public static readonly JsonSchema DatesMetaSchema =
+        new JsonSchemaBuilder()
+            .Id(&quot;http://mydates.com/schema&quot;)
+            .Schema(MetaSchemas.Draft201909Id)
+            .Vocabulary(
+                (Vocabularies.Core201909Id, true),
+                (&quot;http://mydates.com/vocabulary&quot;, true)
+            )
+            .Properties(
+                (MaxDateKeyword.Name, new JsonSchemaBuilder()
+                    .Type(SchemaValueType.String)
+                    .Format(Formats.DateTime)
+                )
+            );
+}
+</code></pre>
+<p>Then they need to be registered.  This is done on the schema validation options.</p>
+<pre><code class="lang-c#">options.SchemaRegistry.Register(new Uri(&quot;http://mydates.com/schema&quot;), DatesMetaSchema);
+options.VocabularyRegistry.Register(DatesVocabulary);
+</code></pre>
+</nsp></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/examples/schema-vocabs.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
