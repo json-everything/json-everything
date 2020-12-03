@@ -54,6 +54,8 @@ namespace Json.Schema
 		/// or just annotation.  Default is false, which just produces annotations.
 		/// </summary>
 		public bool ValidateFormat { get; set; }
+		
+		internal Draft ValidatingAs { get; private set; }
 
 		internal static ValidationOptions From(ValidationOptions other)
 		{
@@ -69,20 +71,21 @@ namespace Json.Schema
 
 		internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri metaSchemaId, SchemaRegistry registry)
 		{
-			Draft draft = Draft.Unspecified;
-			while (metaSchemaId != null && draft == Draft.Unspecified)
+			ValidatingAs = Draft.Unspecified;
+			while (metaSchemaId != null && ValidatingAs == Draft.Unspecified)
 			{
-				draft = metaSchemaId.OriginalString switch
+				ValidatingAs = metaSchemaId.OriginalString switch
 				{
 					MetaSchemas.Draft6IdValue => Draft.Draft6,
 					MetaSchemas.Draft7IdValue => Draft.Draft7,
 					MetaSchemas.Draft201909IdValue => Draft.Draft201909,
+					MetaSchemas.Draft202012IdValue => Draft.Draft202012,
 					_ => Draft.Unspecified
 				};
 				if (metaSchemaId == MetaSchemas.Draft6Id || metaSchemaId == MetaSchemas.Draft7Id)
-					return DisallowSiblingRef(keywords, draft);
-				if (metaSchemaId == MetaSchemas.Draft201909Id)
-					return AllowSiblingRef(keywords, draft);
+					return DisallowSiblingRef(keywords, ValidatingAs);
+				if (metaSchemaId == MetaSchemas.Draft201909Id || metaSchemaId == MetaSchemas.Draft202012Id)
+					return AllowSiblingRef(keywords, ValidatingAs);
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null) return ByOption(keywords);
 				metaSchemaId = metaSchema.Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
@@ -100,6 +103,7 @@ namespace Json.Schema
 					return DisallowSiblingRef(keywords, ValidateAs);
 				case Draft.Unspecified:
 				case Draft.Draft201909:
+				case Draft.Draft202012:
 				default:
 					return AllowSiblingRef(keywords, ValidateAs);
 			}

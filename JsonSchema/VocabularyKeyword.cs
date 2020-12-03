@@ -43,10 +43,11 @@ namespace Json.Schema
 			var overallResult = true;
 			var violations = new List<Uri>();
 			var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
-			switch (context.Options.ValidateAs)
+			switch (context.Options.ValidatingAs)
 			{
 				case Draft.Unspecified:
 				case Draft.Draft201909:
+				case Draft.Draft202012:
 					vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
 					break;
 			}

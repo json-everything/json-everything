@@ -61,6 +61,18 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Add an `$anchor` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="reference">The anchor reference.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Anchor(this JsonSchemaBuilder builder, string reference)
+		{
+			builder.Add(new AnchorKeyword(reference));
+			return builder;
+		}
+
+		/// <summary>
 		/// Add an `anyOf` keyword.
 		/// </summary>
 		/// <param name="builder">The builder.</param>
@@ -273,6 +285,30 @@ namespace Json.Schema
 		public static JsonSchemaBuilder Description(this JsonSchemaBuilder builder, string description)
 		{
 			builder.Add(new DescriptionKeyword(description));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add an `$dynamicAnchor` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="reference">The anchor reference.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder DynamicAnchor(this JsonSchemaBuilder builder, string reference)
+		{
+			builder.Add(new DynamicAnchorKeyword(reference));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add a `$dynamicRef` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="reference">The URI reference.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, Uri reference)
+		{
+			builder.Add(new DynamicRefKeyword(reference));
 			return builder;
 		}
 
@@ -633,6 +669,18 @@ namespace Json.Schema
 		public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (Regex pattern, JsonSchema schema)[] props)
 		{
 			builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => x.pattern, x => x.schema)));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add a `prefixItems` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="schemas">The schemas for `prefixItems`.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
+		{
+			builder.Add(new PrefixItemsKeyword(schemas));
 			return builder;
 		}
 

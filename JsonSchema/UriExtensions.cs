@@ -14,6 +14,7 @@ namespace Json.Schema
 		/// </returns>
 		/// <exception cref="ArgumentNullException"><paramref name="uri" /> is <c>null</c>.</exception>
 		/// <exception cref="InvalidOperationException"><paramref name="uri" /> has no parent, it refers to a root resource.</exception>
+		// Source: https://github.com/WebDAVSharp/WebDAVSharp.Server/blob/1d2086a502937936ebc6bfe19cfa15d855be1c31/WebDAVExtensions.cs
 		public static Uri GetParentUri(this Uri uri)
 		{
 			if (uri == null) throw new ArgumentNullException(nameof(uri));

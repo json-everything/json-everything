@@ -24,6 +24,7 @@ namespace Json.Schema
 		private Dictionary<string, Annotation> _annotations;
 		private List<ValidationContext> _nestedContexts;
 		private List<ValidationContext> _siblingContexts;
+		private Dictionary<string, JsonSchema> _dynamicAnchors;
 		private bool _isConsolidating;
 
 		/// <summary>
@@ -96,6 +97,10 @@ namespace Json.Schema
 		/// The current URI anchor.
 		/// </summary>
 		public JsonSchema CurrentAnchor { get; internal set; }
+		/// <summary>
+		/// Get the set of defined dynamic anchors.
+		/// </summary>
+		public Dictionary<string, JsonSchema> DynamicAnchors => _dynamicAnchors ??= new Dictionary<string, JsonSchema>();
 
 		internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
@@ -141,7 +146,8 @@ namespace Json.Schema
 					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
 					CurrentAnchor = source.CurrentAnchor,
 					CurrentUri = newUri ?? source.CurrentUri,
-					Reference = source.Reference
+					Reference = source.Reference,
+					_dynamicAnchors = source.DynamicAnchors
 				};
 		}
 
