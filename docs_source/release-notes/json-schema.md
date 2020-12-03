@@ -1,3 +1,7 @@
+# [1.6.0](???)
+
+Added support for Draft 2020-12.
+
 # [1.5.4](https://github.com/gregsdennis/json-everything/pull/45)
 
 Added deug symbols to package.  No functional change.
