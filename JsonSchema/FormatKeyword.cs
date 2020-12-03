@@ -11,7 +11,9 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Format201909Id)]
+	[Vocabulary(Vocabularies.Format202012Id)]
 	[JsonConverter(typeof(FormatKeywordJsonConverter))]
 	public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 	{

@@ -14,7 +14,9 @@ namespace Json.Schema
 	[SchemaPriority(30)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
+	[Vocabulary(Vocabularies.Applicator202012Id)]
 	[JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
 	public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
 	{

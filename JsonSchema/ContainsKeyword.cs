@@ -14,7 +14,9 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
+	[Vocabulary(Vocabularies.Applicator202012Id)]
 	[JsonConverter(typeof(ContainsKeywordJsonConverter))]
 	public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContainsKeyword>
 	{

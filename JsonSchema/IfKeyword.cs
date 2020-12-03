@@ -11,7 +11,9 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
+	[Vocabulary(Vocabularies.Applicator202012Id)]
 	[JsonConverter(typeof(IfKeywordJsonConverter))]
 	public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<IfKeyword>
 	{

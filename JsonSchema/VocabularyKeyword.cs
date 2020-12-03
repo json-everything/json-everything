@@ -12,7 +12,9 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(VocabularyKeywordJsonConverter))]
 	public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeyword>
 	{

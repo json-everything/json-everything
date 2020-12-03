@@ -11,7 +11,9 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue + 2)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(AnchorKeywordJsonConverter))]
 	public class AnchorKeyword : IJsonSchemaKeyword, IEquatable<AnchorKeyword>
 	{
