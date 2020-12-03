@@ -20,6 +20,10 @@
 		/// <summary>
 		/// JSON Schema Draft 2019-09.
 		/// </summary>
-		Draft201909
+		Draft201909,
+		/// <summary>
+		/// JSON Schema Draft 2020-12.
+		/// </summary>
+		Draft202012
 	}
 }
