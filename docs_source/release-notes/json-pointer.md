@@ -1,3 +1,7 @@
+# [1.2.0](???)
+
+Added support for array index manipulation in Relative JSON Pointer 2 (spec updated alongside JSON Schema Draft 2020-12).
+
 # [1.1.2](https://github.com/gregsdennis/json-everything/pull/45)
 
 Added deug symbols to package.  No functional change.
