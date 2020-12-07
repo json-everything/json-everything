@@ -35,6 +35,10 @@ namespace JsonPointer.Tests
 				yield return new TestCaseData("2/highly/nested/objects", 2, new[] {"highly", "nested", "objects"});
 				yield return new TestCaseData("0#", 0, new string[] { });
 				yield return new TestCaseData("1#", 1, new string[] { });
+				yield return new TestCaseData("1-1#", 1, new string[] { });
+				yield return new TestCaseData("1+1#", 1, new string[] { });
+				yield return new TestCaseData("1-1/path", 1, new string[] { });
+				yield return new TestCaseData("1+1/path", 1, new string[] { });
 			}
 		}
 		public static IEnumerable FailureCases

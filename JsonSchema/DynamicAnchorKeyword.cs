@@ -16,8 +16,15 @@ namespace Json.Schema
 	{
 		internal const string Name = "$dynamicAnchor";
 
+		/// <summary>
+		/// Gets the anchor value.
+		/// </summary>
 		public string Value { get; }
 
+		/// <summary>
+		/// Creates a new <see cref="DynamicAnchorKeyword"/>.
+		/// </summary>
+		/// <param name="value">The anchor value.</param>
 		public DynamicAnchorKeyword(string value)
 		{
 			Value = value;

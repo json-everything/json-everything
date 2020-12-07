@@ -88,7 +88,18 @@ namespace Json.Schema
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
-				for (int i = 0; i < context.LocalInstance.GetArrayLength(); i++)
+				int startIndex;
+				var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
+				if (annotation == null)
+					startIndex = 0;
+				else if (annotation is bool)
+				{
+					context.IsValid = true;
+					return;
+				}
+				else 
+					startIndex = (int)annotation;
+				for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 				{
 					var item = context.LocalInstance[i];
 					var subContext = ValidationContext.From(context,
