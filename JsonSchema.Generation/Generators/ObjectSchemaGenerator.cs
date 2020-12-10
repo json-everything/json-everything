@@ -26,15 +26,18 @@ namespace Json.Schema.Generation.Generators
 			foreach (var property in propertiesToGenerate)
 			{
 				var propAttributes = property.GetCustomAttributes().ToList();
-				var ignoreAttribute = context.Attributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
+				var ignoreAttribute = propAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
 				if (ignoreAttribute != null) continue;
 
 				var propContext = SchemaGenerationContextCache.Get(property.PropertyType, propAttributes);
 
 				var name = property.Name;
-				var nameAttribute = context.Attributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
+				var nameAttribute = propAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 				if (nameAttribute != null)
 					name = nameAttribute.Name;
+
+				if (propAttributes.OfType<ObsoleteAttribute>().Any())
+					propContext.Intents.Add(new DeprecatedIntent(true));
 
 				props.Add(name, propContext);
 

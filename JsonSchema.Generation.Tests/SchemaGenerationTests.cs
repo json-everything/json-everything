@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
 
@@ -152,6 +153,11 @@ namespace Json.Schema.Generation.Tests
 			public int Duplicated2 { get; set; }
 
 			public GenerationTarget Target { get; set; }
+
+			[JsonIgnore]
+			public int IgnoreThis { get; set; }
+			[JsonPropertyName("rename-this")]
+			public string RenameThis { get; set; }
 		}
 
 		[Test]
@@ -193,7 +199,8 @@ namespace Json.Schema.Generation.Tests
 					("Duplicated2", new JsonSchemaBuilder()
 						.Ref("#/$defs/integer")
 					),
-					("Target", JsonSchemaBuilder.RefRoot())
+					("Target", JsonSchemaBuilder.RefRoot()),
+					("rename-this", new JsonSchemaBuilder().Type(SchemaValueType.String))
 				)
 				.Required(nameof(GenerationTarget.Integer))
 				.Defs(
