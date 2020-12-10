@@ -5,7 +5,7 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - JsonPatch/*
+      - JsonPatch/**
 
 jobs:
   publish:
