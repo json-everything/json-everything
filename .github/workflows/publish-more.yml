@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish Json.More.Net
+name: Publish Json.More.Net
 on:
   push:
     branches:
       - master # Default release branch
     paths:
-      - Json.More/
+      - Json.More/*
 
 jobs:
   publish:

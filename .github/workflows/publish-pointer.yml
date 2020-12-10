@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish JsonPointer.Net
+name: Publish JsonPointer.Net
 on:
   push:
     branches:
       - master # Default release branch
     paths:
-      - JsonPointer/
+      - JsonPointer/*
 
 jobs:
   publish:

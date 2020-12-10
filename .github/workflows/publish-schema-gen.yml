@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish JsonSchema.Net.Generation
+name: Publish JsonSchema.Net.Generation
 on:
   push:
     branches:
       - master # Default release branch
     paths:
-      - JsonSchema.Generation/
+      - JsonSchema.Generation/*
 
 jobs:
   publish:

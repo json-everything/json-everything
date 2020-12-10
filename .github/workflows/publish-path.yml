@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish JsonPath.Net
+name: Publish JsonPath.Net
 on:
   push:
     branches:
       - master # Default release branch
     paths:
-      - JsonPath/
+      - JsonPath/*
 
 jobs:
   publish:
