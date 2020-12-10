@@ -5,7 +5,7 @@
   - JsonSchema/**/*
 
 "pkg:schema-generation":
-  - JsonPatch/**/*
+  - JsonSchema.Generation/**/*
 
 "pkg:pointer":
   - JsonPointer/**/*
