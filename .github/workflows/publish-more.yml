@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish Json.More.Net
+name: Publish Json.More.Net
 on:
   push:
     branches:

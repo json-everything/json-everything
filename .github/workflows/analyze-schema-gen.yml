@@ -1,0 +1,60 @@
+name: Analyze JsonSchema.Net
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**/*'
+      - 'docs_source/**/*'
+
+jobs:
+  publish:
+    needs: build
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+        # Set up
+      - name: Create local manifest file
+        if: github.event_name == 'pull_request'
+        run: dotnet new tool-manifest
+      - name: Install analyzer
+        if: github.event_name == 'pull_request'
+        run: dotnet tool install SemVerAnalyzer
+
+      - name: Analyze schema generation
+        id: analyze-schema-generation
+        if: github.event_name == 'pull_request'
+        # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
+        run: |
+          dotnet analyze-semver -a JsonSchema.Generation/bin/Release/netstandard2.0/JsonSchema.Net.Generation.dll -o semver-report-schema-gen.md -c build/semver_config.json
+          unset HAS_REPORT
+          unset REPORT
+          if [ -s semver-report-schema-gen.md ]
+          then
+            HAS_REPORT='true'
+            REPORT=$(<semver-report-schema-gen.md)
+            REPORT="${REPORT//'%'/'%25'}"
+            REPORT="${REPORT//$'\n'/'%0A'}"
+            REPORT="${REPORT//$'\r'/'%0D'}"
+            echo "::set-output name=REPORT::${REPORT}"
+          fi
+          echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+
+        # Report
+      - if: steps.analyze-schema-generation.outputs.HAS_REPORT
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: |
+            ${{ steps.analyze-schema-generation.outputs.REPORT }}

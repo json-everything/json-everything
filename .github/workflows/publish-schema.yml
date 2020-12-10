@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish JsonSchema.Net
+name: Publish JsonSchema.Net
 on:
   push:
     branches:

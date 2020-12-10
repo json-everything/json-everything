@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: publish JsonPatch.Net
+name: Publish JsonPatch.Net
 on:
   push:
     branches:
