@@ -5,12 +5,7 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - Json.More/
-      - JsonPatch/
-      - JsonPath/
-      - JsonPointer/
-      - JsonSchema/
-      - JsonSchema.Generation/
+      - JsonSchema/*
 
 jobs:
   publish:
