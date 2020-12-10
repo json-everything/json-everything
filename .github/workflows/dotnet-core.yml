@@ -93,8 +93,7 @@ jobs:
           if [ -s semver-report-more.md ]
           then
             HAS_REPORT='true'
-            REPORT=## Json.More.Net\n
-            REPORT=$REPORT\n$(<semver-report-more.md)
+            REPORT=$(<semver-report-more.md)
             REPORT="${REPORT//'%'/'%25'}"
             REPORT="${REPORT//$'\n'/'%0A'}"
             REPORT="${REPORT//$'\r'/'%0D'}"
@@ -146,8 +145,7 @@ jobs:
           if [ -s semver-report-patch.md ]
           then
             HAS_REPORT='true'
-            REPORT=## JsonPatch.Net\n
-            REPORT=$REPORT\n$(<semver-report-patch.md)
+            REPORT=$(<semver-report-patch.md)
             REPORT="${REPORT//'%'/'%25'}"
             REPORT="${REPORT//$'\n'/'%0A'}"
             REPORT="${REPORT//$'\r'/'%0D'}"
@@ -199,8 +197,7 @@ jobs:
           if [ -s semver-report-path.md ]
           then
             HAS_REPORT='true'
-            REPORT=## JsonPath.Net\n
-            REPORT=$REPORT\n$(<semver-report-path.md)
+            REPORT=$(<semver-report-path.md)
             REPORT="${REPORT//'%'/'%25'}"
             REPORT="${REPORT//$'\n'/'%0A'}"
             REPORT="${REPORT//$'\r'/'%0D'}"
@@ -252,8 +249,7 @@ jobs:
           if [ -s semver-report-pointer.md ]
           then
             HAS_REPORT='true'
-            REPORT=## JsonPointer.Net\n
-            REPORT=$REPORT\n$(<semver-report-pointer.md)
+            REPORT=$(<semver-report-pointer.md)
             REPORT="${REPORT//'%'/'%25'}"
             REPORT="${REPORT//$'\n'/'%0A'}"
             REPORT="${REPORT//$'\r'/'%0D'}"
@@ -305,8 +301,7 @@ jobs:
           if [ -s semver-report-schema.md ]
           then
             HAS_REPORT='true'
-            REPORT=## JsonSchema.Net\n
-            REPORT=$REPORT\n$(<semver-report-schema.md)
+            REPORT=$(<semver-report-schema.md)
             REPORT="${REPORT//'%'/'%25'}"
             REPORT="${REPORT//$'\n'/'%0A'}"
             REPORT="${REPORT//$'\r'/'%0D'}"
@@ -358,8 +353,7 @@ jobs:
           if [ -s semver-report-schema-gen.md ]
           then
             HAS_REPORT='true'
-            REPORT=## JsonSchema.Net.Generation\n
-            REPORT=$REPORT\n$(<semver-report-schema-gen.md)
+            REPORT=$(<semver-report-schema-gen.md)
             REPORT="${REPORT//'%'/'%25'}"
             REPORT="${REPORT//$'\n'/'%0A'}"
             REPORT="${REPORT//$'\r'/'%0D'}"
