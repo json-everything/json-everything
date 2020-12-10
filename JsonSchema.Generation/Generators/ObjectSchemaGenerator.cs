@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators
@@ -25,12 +26,20 @@ namespace Json.Schema.Generation.Generators
 			foreach (var property in propertiesToGenerate)
 			{
 				var propAttributes = property.GetCustomAttributes().ToList();
+				var ignoreAttribute = propAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
+				if (ignoreAttribute != null) continue;
+
 				var propContext = SchemaGenerationContextCache.Get(property.PropertyType, propAttributes);
 
-				props.Add(property.Name, propContext);
+				var name = property.Name;
+				var nameAttribute = propAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
+				if (nameAttribute != null)
+					name = nameAttribute.Name;
 
 				if (propAttributes.OfType<ObsoleteAttribute>().Any())
 					propContext.Intents.Add(new DeprecatedIntent(true));
+
+				props.Add(name, propContext);
 
 				if (propAttributes.OfType<RequiredAttribute>().Any())
 					required.Add(property.Name);
