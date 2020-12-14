@@ -291,6 +291,11 @@
             Gets the number of parent (root) steps to take.
             </summary>
         </member>
+        <member name="P:Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator">
+            <summary>
+            Gets the number of lateral steps to take.  Applicable only for arrays.
+            </summary>
+        </member>
         <member name="P:Json.Pointer.RelativeJsonPointer.Pointer">
             <summary>
             Gets the pointer to follow after taking <see cref="P:Json.Pointer.RelativeJsonPointer.ParentSteps"/> steps upward.
@@ -303,11 +308,28 @@
             <param name="parentSteps"></param>
             <returns>A Relative JSON Pointer.</returns>
         </member>
+        <member name="M:Json.Pointer.RelativeJsonPointer.IndexQuery(System.UInt32,System.Int32)">
+            <summary>
+            Creates an index query pointer.
+            </summary>
+            <param name="parentSteps"></param>
+            <param name="arrayIndexManipulator">The index manipulator.</param>
+            <returns>A Relative JSON Pointer.</returns>
+        </member>
         <member name="M:Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32,Json.Pointer.JsonPointer)">
             <summary>
             Creates a Relative JSON Pointer from a JSON Pointer and a number of parent steps.
             </summary>
             <param name="parentSteps">The number of parent steps.</param>
+            <param name="pointer">The JSON Pointer.</param>
+            <returns>A Relative JSON Pointer.</returns>
+        </member>
+        <member name="M:Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32,System.Int32,Json.Pointer.JsonPointer)">
+            <summary>
+            Creates a Relative JSON Pointer from a JSON Pointer and a number of parent steps.
+            </summary>
+            <param name="parentSteps">The number of parent steps.</param>
+            <param name="arrayIndexManipulator">The index manipulator.</param>
             <param name="pointer">The JSON Pointer.</param>
             <returns>A Relative JSON Pointer.</returns>
         </member>

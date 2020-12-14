@@ -5,29 +5,27 @@ using System.Text.Json.Serialization;
 namespace Json.Schema
 {
 	/// <summary>
-	/// Handles `contentMediaType`.
+	/// Handles `$dynamicAnchor`.
 	/// </summary>
+	[SchemaPriority(long.MinValue + 3)]
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft7)]
-	[SchemaDraft(Draft.Draft201909)]
 	[SchemaDraft(Draft.Draft202012)]
-	[Vocabulary(Vocabularies.Content201909Id)]
-	[Vocabulary(Vocabularies.Content202012Id)]
-	[JsonConverter(typeof(ContentMediaTypeKeywordJsonConverter))]
-	public class ContentMediaTypeKeyword : IJsonSchemaKeyword, IEquatable<ContentMediaTypeKeyword>
+	[Vocabulary(Vocabularies.Core202012Id)]
+	[JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]
+	public class DynamicAnchorKeyword : IJsonSchemaKeyword, IEquatable<DynamicAnchorKeyword>
 	{
-		internal const string Name = "contentMediaType";
+		internal const string Name = "$dynamicAnchor";
 
 		/// <summary>
-		/// The media type.
+		/// Gets the anchor value.
 		/// </summary>
 		public string Value { get; }
 
 		/// <summary>
-		/// Creates a new <see cref="ContentMediaTypeKeyword"/>.
+		/// Creates a new <see cref="DynamicAnchorKeyword"/>.
 		/// </summary>
-		/// <param name="value">The media type.</param>
-		public ContentMediaTypeKeyword(string value)
+		/// <param name="value">The anchor value.</param>
+		public DynamicAnchorKeyword(string value)
 		{
 			Value = value;
 		}
@@ -38,18 +36,17 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.SetAnnotation(Name, Value);
+			context.DynamicAnchors[Value] ??= context.LocalSchema;
+			context.SetAnnotation(Name, true);
 			context.IsValid = true;
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(ContentMediaTypeKeyword other)
+		public bool Equals(DynamicAnchorKeyword other)
 		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Value == other.Value;
+			return true;
 		}
 
 		/// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -57,31 +54,34 @@ namespace Json.Schema
 		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as ContentMediaTypeKeyword);
+			return Equals(obj as DynamicAnchorKeyword);
 		}
 
 		/// <summary>Serves as the default hash function.</summary>
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Value != null ? Value.GetHashCode() : 0);
+			// ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
+			return base.GetHashCode();
 		}
 	}
 
-	internal class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMediaTypeKeyword>
+	internal class DynamicAnchorKeywordJsonConverter : JsonConverter<DynamicAnchorKeyword>
 	{
-		public override ContentMediaTypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override DynamicAnchorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType != JsonTokenType.String)
 				throw new JsonException("Expected string");
 
-			var str = reader.GetString();
+			var uriString = reader.GetString();
+			if (!AnchorKeyword.AnchorPattern.IsMatch(uriString))
+				throw new JsonException("Expected anchor format");
 
-			return new ContentMediaTypeKeyword(str);
+			return new DynamicAnchorKeyword(uriString);
 		}
-		public override void Write(Utf8JsonWriter writer, ContentMediaTypeKeyword value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, DynamicAnchorKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteString(ContentMediaTypeKeyword.Name, value.Value);
+			writer.WriteBoolean(DynamicAnchorKeyword.Name, true);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,9 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(SchemaKeywordJsonConverter))]
 	public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	{
@@ -38,17 +41,21 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			if (!context.Options.ValidateMetaSchema)
-			{
-				context.IsValid = true;
-				return;
-			}
-
 			var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 			if (metaSchema == null)
 			{
 				context.Message = $"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation";
 				context.IsValid = false;
+				return;
+			}
+
+			var vocabularyKeyword = metaSchema.Keywords.OfType<VocabularyKeyword>().FirstOrDefault();
+			if (vocabularyKeyword != null) 
+				context.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
+
+			if (!context.Options.ValidateMetaSchema)
+			{
+				context.IsValid = true;
 				return;
 			}
 

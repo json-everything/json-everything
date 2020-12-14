@@ -15,7 +15,9 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Applicator201909Id)]
+ 	[Vocabulary(Vocabularies.Applicator202012Id)]
 	[JsonConverter(typeof(ItemsKeywordJsonConverter))]
 	public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
 	{
@@ -86,7 +88,18 @@ namespace Json.Schema
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
-				for (int i = 0; i < context.LocalInstance.GetArrayLength(); i++)
+				int startIndex;
+				var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
+				if (annotation == null)
+					startIndex = 0;
+				else if (annotation is bool)
+				{
+					context.IsValid = true;
+					return;
+				}
+				else 
+					startIndex = (int)annotation;
+				for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 				{
 					var item = context.LocalInstance[i];
 					var subContext = ValidationContext.From(context,
@@ -107,6 +120,12 @@ namespace Json.Schema
 			}
 			else // array
 			{
+				if (context.Options.ValidatingAs == Draft.Draft202012)
+				{
+					context.IsValid = false;
+					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
+					return;
+				}
 				var maxEvaluations = Math.Min(ArraySchemas.Count, context.LocalInstance.GetArrayLength());
 				for (int i = 0; i < maxEvaluations; i++)
 				{

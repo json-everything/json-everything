@@ -12,7 +12,9 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaPriority(long.MinValue)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Core201909Id)]
+	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(VocabularyKeywordJsonConverter))]
 	public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeyword>
 	{
@@ -41,10 +43,11 @@ namespace Json.Schema
 			var overallResult = true;
 			var violations = new List<Uri>();
 			var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
-			switch (context.Options.ValidateAs)
+			switch (context.Options.ValidatingAs)
 			{
 				case Draft.Unspecified:
 				case Draft.Draft201909:
+				case Draft.Draft202012:
 					vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
 					break;
 			}

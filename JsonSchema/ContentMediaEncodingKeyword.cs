@@ -10,7 +10,9 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Content201909Id)]
+	[Vocabulary(Vocabularies.Content202012Id)]
 	[JsonConverter(typeof(ContentMediaEncodingKeywordJsonConverter))]
 	public class ContentMediaEncodingKeyword : IJsonSchemaKeyword, IEquatable<ContentMediaEncodingKeyword>
 	{

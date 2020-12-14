@@ -9,7 +9,9 @@ namespace Json.Schema
 	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Metadata201909Id)]
+	[Vocabulary(Vocabularies.Metadata202012Id)]
 	[JsonConverter(typeof(ReadOnlyKeywordJsonConverter))]
 	public class ReadOnlyKeyword : IJsonSchemaKeyword, IEquatable<ReadOnlyKeyword>
 	{

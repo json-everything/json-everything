@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/gregsdennis/json-everything/pull/52)
+
+Added support for Draft 2020-12.
+
+- Meta-schema validation now always occurs superficially in that it validates that the meta-schema is known.  The `ValidationOptions.ValidateMetaSchema` option now only controls whether a full meta-schema validation of the schema will occur.  This should only affect clients validating schemas declaring custom meta-schemas with the `$schema` keyword.  Custom meta-schemas will now need to be loaded into the system manually or `SchemaRegistry.Fetch` will need to be set to retrieve it automatically.
+- Added all new vocabularies and meta-schemas.
+- New keywords:
+  - `$dynamicRef` - replaces/augments `$recursiveRef`
+  - `$dynamicAnchor` - replaces/augments `$recursivAnchor`
+  - `prefixItems` - replaces array-form `items`
+- Added `JsonSchemaBuilder` extension method for `$anchor` which should have been added for draft 2019-09 support.
+- `ValidationOptions.ValidateFormat` has been obsoleted and replaced by `ValidationOptions.RequireFormatValidation` with the same semantics and default.
+- `FormatKeyword` now responds to the presence of the format vocabularies in the meta-schema declared by the `$schema` keyword as well as the `ValidationOptions.RequireFormatValidation` option.  (Includes a bug fix for draft 2019-09 schemas that use a meta-schema that declare the format vocabulary with a value of `true`.)
+
 # [1.5.4](https://github.com/gregsdennis/json-everything/pull/45)
 
 Added deug symbols to package.  No functional change.

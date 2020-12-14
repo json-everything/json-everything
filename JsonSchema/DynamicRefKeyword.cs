@@ -6,15 +6,15 @@ using Json.Pointer;
 namespace Json.Schema
 {
 	/// <summary>
-	/// Handles `$recursiveRef`.
+	/// Handles `$dynamicRef`.
 	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
 	[Vocabulary(Vocabularies.Core201909Id)]
-	[JsonConverter(typeof(RecursiveRefKeywordJsonConverter))]
-	public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKeyword>
+	[JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
+	public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
 	{
-		internal const string Name = "$recursiveRef";
+		internal const string Name = "$dynamicRef";
 
 		/// <summary>
 		/// The URI reference.
@@ -22,10 +22,10 @@ namespace Json.Schema
 		public Uri Reference { get; }
 
 		/// <summary>
-		/// Creates a new <see cref="RecursiveRefKeyword"/>.
+		/// Creates a new <see cref="DynamicRefKeyword"/>.
 		/// </summary>
 		/// <param name="value"></param>
-		public RecursiveRefKeyword(Uri value)
+		public DynamicRefKeyword(Uri value)
 		{
 			Reference = value;
 		}
@@ -60,7 +60,9 @@ namespace Json.Schema
 			}
 			else
 			{
-				baseSchema = context.CurrentAnchor ?? context.SchemaRoot;
+				if (!string.IsNullOrEmpty(fragment))
+					context.DynamicAnchors.TryGetValue(fragment, out baseSchema);
+				baseSchema ??= context.SchemaRoot;
 				newUri = context.CurrentUri;
 			}
 
@@ -94,7 +96,7 @@ namespace Json.Schema
 			if (schema == null)
 			{
 				context.IsValid = false;
-				context.Message = $"Could not resolve RecursiveReference `{Reference}`";
+				context.Message = $"Could not resolve DynamicReference `{Reference}`";
 				return;
 			}
 
@@ -110,7 +112,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(RecursiveRefKeyword other)
+		public bool Equals(DynamicRefKeyword other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -122,7 +124,7 @@ namespace Json.Schema
 		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as RecursiveRefKeyword);
+			return Equals(obj as DynamicRefKeyword);
 		}
 
 		/// <summary>Serves as the default hash function.</summary>
@@ -133,18 +135,18 @@ namespace Json.Schema
 		}
 	}
 
-	internal class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
+	internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
 	{
-		public override RecursiveRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override DynamicRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			var uri = reader.GetString(); 
-			return new RecursiveRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
+			return new DynamicRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
 
 
 		}
-		public override void Write(Utf8JsonWriter writer, RecursiveRefKeyword value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(RecursiveRefKeyword.Name);
+			writer.WritePropertyName(DynamicRefKeyword.Name);
 			JsonSerializer.Serialize(writer, value.Reference, options);
 		}
 	}

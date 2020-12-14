@@ -8,8 +8,10 @@ namespace Json.Schema
 	/// Handles `deprecated`.
 	/// </summary>
 	[SchemaKeyword(Name)]
-	[Vocabulary(Vocabularies.Metadata201909Id)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
+	[Vocabulary(Vocabularies.Metadata201909Id)]
+	[Vocabulary(Vocabularies.Metadata202012Id)]
 	[JsonConverter(typeof(DeprecatedKeywordJsonConverter))]
 	public class DeprecatedKeyword : IJsonSchemaKeyword, IEquatable<DeprecatedKeyword>
 	{

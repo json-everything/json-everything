@@ -19,6 +19,7 @@ namespace Json.Schema.Tests.Suite
 			return GetTests("draft6")
 				.Concat(GetTests("draft7"))
 				.Concat(GetTests("draft2019-09"));
+				//.Concat(GetTests("draft2020-12"));
 		}
 
 		private static IEnumerable<TestCaseData> GetTests(string draftFolder)
@@ -41,8 +42,11 @@ namespace Json.Schema.Tests.Suite
 					options.ValidateAs = Draft.Draft7;
 					break;
 				case "draft2019-09":
+					options.ValidateAs = Draft.Draft201909;
+					break;
+				case "draft2020-12":
 					// will set this when implementing the next draft
-					//options.ValidateAs = Draft.Draft2019_09;
+					//options.ValidateAs = Draft.Draft202012;
 					break;
 			}
 

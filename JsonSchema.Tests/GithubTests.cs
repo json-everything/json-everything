@@ -155,7 +155,7 @@ namespace Json.Schema.Tests
 
 			var result = schema.Validate(instance.RootElement, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
 
-			result.AssertValid();
+			result.AssertInvalid();
 		}
 
 		[Test]

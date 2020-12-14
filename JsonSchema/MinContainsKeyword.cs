@@ -11,7 +11,9 @@ namespace Json.Schema
 	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Validation201909Id)]
+	[Vocabulary(Vocabularies.Validation202012Id)]
 	[JsonConverter(typeof(MinContainsKeywordJsonConverter))]
 	public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyword>
 	{

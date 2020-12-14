@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,11 +12,20 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft6)]
 	[SchemaDraft(Draft.Draft7)]
 	[SchemaDraft(Draft.Draft201909)]
+	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Format201909Id)]
+	[Vocabulary(Vocabularies.FormatAnnotation202012Id)]
+	[Vocabulary(Vocabularies.FormatAssertion202012Id)]
 	[JsonConverter(typeof(FormatKeywordJsonConverter))]
 	public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 	{
 		internal const string Name = "format";
+
+		private static readonly Uri[] _formatAssertionIds =
+		{
+			new Uri(Vocabularies.Format201909Id),
+			new Uri(Vocabularies.FormatAssertion202012Id)
+		};
 
 		/// <summary>
 		/// The format.
@@ -38,7 +48,24 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.SetAnnotation(Name, Value.Key);
-			context.IsValid = !context.Options.ValidateFormat || Value.Validate(context.LocalInstance);
+
+			var requireValidation = context.Options.RequireFormatValidation;
+			if (!requireValidation)
+			{
+				var vocabRequirements = context.MetaSchemaVocabs;
+				if (vocabRequirements != null)
+				{
+					foreach (var formatAssertionId in _formatAssertionIds)
+					{
+						if (!vocabRequirements.TryGetValue(formatAssertionId, out var formatAssertionRequirement)) continue;
+
+						requireValidation = formatAssertionRequirement;
+						break;
+					}
+				}
+			}
+
+			context.IsValid = !requireValidation || Value.Validate(context.LocalInstance);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

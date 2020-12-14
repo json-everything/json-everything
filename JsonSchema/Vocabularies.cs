@@ -6,58 +6,8 @@ namespace Json.Schema
 	/// <summary>
 	/// Declares the vocabularies of the supported drafts.
 	/// </summary>
-	public static class Vocabularies
+	public static partial class Vocabularies
 	{
-		/// <summary>
-		/// The Draft 2019-09 Core vocabulary ID.
-		/// </summary>
-		public const string Core201909Id = "https://json-schema.org/draft/2019-09/vocab/core";
-		/// <summary>
-		/// The Draft 2019-09 Applicator vocabulary ID.
-		/// </summary>
-		public const string Applicator201909Id = "https://json-schema.org/draft/2019-09/vocab/applicator";
-		/// <summary>
-		/// The Draft 2019-09 Validation vocabulary ID.
-		/// </summary>
-		public const string Validation201909Id = "https://json-schema.org/draft/2019-09/vocab/validation";
-		/// <summary>
-		/// The Draft 2019-09 Metadata vocabulary ID.
-		/// </summary>
-		public const string Metadata201909Id = "https://json-schema.org/draft/2019-09/vocab/meta-data";
-		/// <summary>
-		/// The Draft 2019-09 Format vocabulary ID.
-		/// </summary>
-		public const string Format201909Id = "https://json-schema.org/draft/2019-09/vocab/format";
-		/// <summary>
-		/// The Draft 2019-09 Content vocabulary ID.
-		/// </summary>
-		public const string Content201909Id = "https://json-schema.org/draft/2019-09/vocab/content";
-
-		/// <summary>
-		/// The Draft 2019-09 Core vocabulary.
-		/// </summary>
-		public static readonly Vocabulary Core201909;
-		/// <summary>
-		/// The Draft 2019-09 Applicator vocabulary.
-		/// </summary>
-		public static readonly Vocabulary Applicator201909;
-		/// <summary>
-		/// The Draft 2019-09 Validation vocabulary.
-		/// </summary>
-		public static readonly Vocabulary Validation201909;
-		/// <summary>
-		/// The Draft 2019-09 Metadata vocabulary.
-		/// </summary>
-		public static readonly Vocabulary Metadata201909;
-		/// <summary>
-		/// The Draft 2019-09 Format vocabulary.
-		/// </summary>
-		public static readonly Vocabulary Format201909;
-		/// <summary>
-		/// The Draft 2019-09 Content vocabulary.
-		/// </summary>
-		public static readonly Vocabulary Content201909;
-
 		static Vocabularies()
 		{
 			var keywords = typeof(IJsonSchemaKeyword)
@@ -72,6 +22,7 @@ namespace Json.Schema
 					Vocabularies = t.GetCustomAttributes<VocabularyAttribute>()
 				})
 				.ToList();
+
 			Core201909 = new Vocabulary(
 				Core201909Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Core201909Id))
@@ -95,6 +46,39 @@ namespace Json.Schema
 			Content201909 = new Vocabulary(
 				Content201909Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Content201909Id))
+					.Select(k => k.Type));
+
+			Core202012 = new Vocabulary(
+				Core202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Core202012Id))
+					.Select(k => k.Type));
+			Dynamic202012 = new Vocabulary(
+				Dynamic202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Dynamic202012Id))
+					.Select(k => k.Type));
+			Applicator202012 = new Vocabulary(
+				Applicator202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Applicator202012Id))
+					.Select(k => k.Type));
+			Validation202012 = new Vocabulary(
+				Validation202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Validation202012Id))
+					.Select(k => k.Type));
+			Metadata202012 = new Vocabulary(
+				Metadata202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Metadata202012Id))
+					.Select(k => k.Type));
+			FormatAnnotation202012 = new Vocabulary(
+				FormatAnnotation202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == FormatAnnotation202012Id))
+					.Select(k => k.Type));
+			FormatAssertion202012 = new Vocabulary(
+				FormatAssertion202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == FormatAssertion202012Id))
+					.Select(k => k.Type));
+			Content202012 = new Vocabulary(
+				Content202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Content202012Id))
 					.Select(k => k.Type));
 		}
 	}
