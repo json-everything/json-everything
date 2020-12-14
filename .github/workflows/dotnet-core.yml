@@ -70,9 +70,9 @@ jobs:
         path: artifacts
     - name: Get badge details
       run: |
-        TEST_RESULTS_FILE=`find . -name test-results.xml | head -1`
-        TEST_COUNT=`grep -Pio '(?<=tests=")\d+' "${TEST_RESULTS_FILE}" | awk '{ SUM += $1} END { print SUM }'`
-        echo "FAIL_COUNT=`grep -Pio '(?<=failures=")\d+' "${TEST_RESULTS_FILE}" | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
+        find . -name test-results.xml -exec cat '{}' >> all-results.xml \;
+        TEST_COUNT=`grep -Pio '(?<=tests=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`
+        echo "FAIL_COUNT=`grep -Pio '(?<=failures=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
         echo "PASS_COUNT=$((TEST_COUNT - FAIL_COUNT))" >> $GITHUB_ENV
         if [[ $FAIL_COUNT -eq 0 ]]
         then
