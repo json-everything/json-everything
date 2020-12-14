@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.5.4 </title>
+    <title>1.6.0 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.5.4 ">
+    <meta name="title" content="1.6.0 ">
     <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -67,8 +67,24 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="154"><a href="https://github.com/gregsdennis/json-everything/pull/45">1.5.4</a></h1>
+<h1 id="160"><a href="https://github.com/gregsdennis/json-everything/pull/52">1.6.0</a></h1>
 
+<p>Added support for Draft 2020-12.</p>
+<ul>
+<li>Meta-schema validation now always occurs superficially in that it validates that the meta-schema is known.  The <code>ValidationOptions.ValidateMetaSchema</code> option now only controls whether a full meta-schema validation of the schema will occur.  This should only affect clients validating schemas declaring custom meta-schemas with the <code>$schema</code> keyword.  Custom meta-schemas will now need to be loaded into the system manually or <code>SchemaRegistry.Fetch</code> will need to be set to retrieve it automatically.</li>
+<li>Added all new vocabularies and meta-schemas.</li>
+<li>New keywords:
+<ul>
+<li><code>$dynamicRef</code> - replaces/augments <code>$recursiveRef</code></li>
+<li><code>$dynamicAnchor</code> - replaces/augments <code>$recursivAnchor</code></li>
+<li><code>prefixItems</code> - replaces array-form <code>items</code></li>
+</ul>
+</li>
+<li>Added <code>JsonSchemaBuilder</code> extension method for <code>$anchor</code> which should have been added for draft 2019-09 support.</li>
+<li><code>ValidationOptions.ValidateFormat</code> has been obsoleted and replaced by <code>ValidationOptions.RequireFormatValidation</code> with the same semantics and default.</li>
+<li><code>FormatKeyword</code> now responds to the presence of the format vocabularies in the meta-schema declared by the <code>$schema</code> keyword as well as the <code>ValidationOptions.RequireFormatValidation</code> option.  (Includes a bug fix for draft 2019-09 schemas that use a meta-schema that declare the format vocabulary with a value of <code>true</code>.)</li>
+</ul>
+<h1 id="154"><a href="https://github.com/gregsdennis/json-everything/pull/45">1.5.4</a></h1>
 <p>Added deug symbols to package.  No functional change.</p>
 <h1 id="153"><a href="https://github.com/gregsdennis/json-everything/pull/41">1.5.3</a></h1>
 <p>Fixed <code>NullReferenceException</code> when comparing two schemas.</p>
