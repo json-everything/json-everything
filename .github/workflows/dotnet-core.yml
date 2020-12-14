@@ -86,7 +86,7 @@ jobs:
       with:
         auth: ${{ secrets.TEST_BADGE_KEY }}
         gistID: 28607f2d276032f4d9a7f2c807e44df7
-        filename: semver-analyzer-test-results-badge.json
+        filename: test-results-badge.json
         label: tests
         message: ${{ format('{0} passing | {1} failing', env.PASS_COUNT, env.FAIL_COUNT) }}
         color: ${{ env.BUILD_STATUS }}
