@@ -681,22 +681,6 @@ references:
   commentId: T:Json.Path.JsonPath
   fullName: Json.Path.JsonPath
   nameWithType: JsonPath
-- uid: Json.Path.JsonPath.Evaluate(JsonElement@)
-  name: Evaluate(JsonElement)
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_JsonElement__
-  commentId: M:Json.Path.JsonPath.Evaluate(JsonElement@)
-  name.vb: Evaluate(ByRef JsonElement)
-  fullName: Json.Path.JsonPath.Evaluate(JsonElement)
-  fullName.vb: Json.Path.JsonPath.Evaluate(ByRef JsonElement)
-  nameWithType: JsonPath.Evaluate(JsonElement)
-  nameWithType.vb: JsonPath.Evaluate(ByRef JsonElement)
-- uid: Json.Path.JsonPath.Evaluate*
-  name: Evaluate
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_
-  commentId: Overload:Json.Path.JsonPath.Evaluate
-  isSpec: "True"
-  fullName: Json.Path.JsonPath.Evaluate
-  nameWithType: JsonPath.Evaluate
 - uid: Json.Path.JsonPath.Parse(System.String)
   name: Parse(String)
   href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Parse_System_String_
@@ -710,35 +694,6 @@ references:
   isSpec: "True"
   fullName: Json.Path.JsonPath.Parse
   nameWithType: JsonPath.Parse
-- uid: Json.Path.JsonPath.ToString
-  name: ToString()
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_ToString
-  commentId: M:Json.Path.JsonPath.ToString
-  fullName: Json.Path.JsonPath.ToString()
-  nameWithType: JsonPath.ToString()
-- uid: Json.Path.JsonPath.ToString*
-  name: ToString
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_ToString_
-  commentId: Overload:Json.Path.JsonPath.ToString
-  isSpec: "True"
-  fullName: Json.Path.JsonPath.ToString
-  nameWithType: JsonPath.ToString
-- uid: Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@)
-  name: TryParse(String, out JsonPath)
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_TryParse_System_String_Json_Path_JsonPath__
-  commentId: M:Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@)
-  name.vb: TryParse(String, ByRef JsonPath)
-  fullName: Json.Path.JsonPath.TryParse(System.String, out Json.Path.JsonPath)
-  fullName.vb: Json.Path.JsonPath.TryParse(System.String, ByRef Json.Path.JsonPath)
-  nameWithType: JsonPath.TryParse(String, out JsonPath)
-  nameWithType.vb: JsonPath.TryParse(String, ByRef JsonPath)
-- uid: Json.Path.JsonPath.TryParse*
-  name: TryParse
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_TryParse_
-  commentId: Overload:Json.Path.JsonPath.TryParse
-  isSpec: "True"
-  fullName: Json.Path.JsonPath.TryParse
-  nameWithType: JsonPath.TryParse
 - uid: Json.Path.PathMatch
   name: PathMatch
   href: api/Json.Path.PathMatch.html
