@@ -1,0 +1,28 @@
+name: Build documentation site
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - docs_support/**
+
+jobs:
+  build-docs:
+    name: rebuild docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: nikeee/docfx-action@v1.0.0
+        name: Build Documentation
+        with:
+          args: docs_source/docfx.json
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "rebuilt documentation" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
