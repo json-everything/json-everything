@@ -5,6 +5,7 @@ on:
       - master
     paths:
       - docs_support/**
+      - .github/workflows/build-docs.yml
 
 jobs:
   build-docs:
