@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -40,17 +41,21 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			if (!context.Options.ValidateMetaSchema)
-			{
-				context.IsValid = true;
-				return;
-			}
-
 			var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 			if (metaSchema == null)
 			{
 				context.Message = $"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation";
 				context.IsValid = false;
+				return;
+			}
+
+			var vocabularyKeyword = metaSchema.Keywords.OfType<VocabularyKeyword>().FirstOrDefault();
+			if (vocabularyKeyword != null) 
+				context.SetAnnotation(Name, vocabularyKeyword.Vocabulary);
+
+			if (!context.Options.ValidateMetaSchema)
+			{
+				context.IsValid = true;
 				return;
 			}
 

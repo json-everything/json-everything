@@ -19,6 +19,10 @@ namespace Json.Schema
 		/// </summary>
 		public static readonly Uri Core202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/core");
 		/// <summary>
+		/// The Draft 2020-12 Dynamic meta-schema ID.
+		/// </summary>
+		public static readonly Uri Dynamic202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/dynamic");
+		/// <summary>
 		/// The Draft 2020-12 Applicator meta-schema ID.
 		/// </summary>
 		public static readonly Uri Applicator202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/applicator");
@@ -31,9 +35,13 @@ namespace Json.Schema
 		/// </summary>
 		public static readonly Uri Metadata202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/meta-data");
 		/// <summary>
-		/// The Draft 2020-12 Format meta-schema ID.
+		/// The Draft 2020-12 Format-Annotation meta-schema ID.
 		/// </summary>
-		public static readonly Uri Format202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/format");
+		public static readonly Uri FormatAnnotation202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/format-annotation");
+		/// <summary>
+		/// The Draft 2020-12 Format-Assertion meta-schema ID.
+		/// </summary>
+		public static readonly Uri FormatAssertion202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/format-assertion");
 		/// <summary>
 		/// The Draft 2020-12 Content meta-schema ID.
 		/// </summary>
@@ -48,20 +56,22 @@ namespace Json.Schema
 				.Id(Draft202012Id)
 				.Vocabulary(
 					(Vocabularies.Core202012Id, true),
+					(Vocabularies.Dynamic202012Id, true),
 					(Vocabularies.Applicator202012Id, true),
 					(Vocabularies.Validation202012Id, true),
 					(Vocabularies.Metadata202012Id, true),
-					(Vocabularies.Format202012Id, false),
+					(Vocabularies.FormatAnnotation202012Id, false),
 					(Vocabularies.Content202012Id, true)
 				)
 				.RecursiveAnchor()
 				.Title("Core and Validation specifications meta-schema")
 				.AllOf(
 					new JsonSchemaBuilder().Ref("meta/core"),
+					new JsonSchemaBuilder().Ref("meta/dynamic"),
 					new JsonSchemaBuilder().Ref("meta/applicator"),
 					new JsonSchemaBuilder().Ref("meta/validation"),
 					new JsonSchemaBuilder().Ref("meta/meta-data"),
-					new JsonSchemaBuilder().Ref("meta/format"),
+					new JsonSchemaBuilder().Ref("meta/format-annotation"),
 					new JsonSchemaBuilder().Ref("meta/content")
 				)
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
@@ -114,14 +124,6 @@ namespace Json.Schema
 						.Type(SchemaValueType.String)
 						.Format(Formats.UriReference)
 					),
-					(RecursiveRefKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Format(Formats.UriReference)
-					),
-					(RecursiveAnchorKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.Boolean)
-						.Default(false.AsJsonElement())
-					),
 					(VocabularyKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
 						.PropertyNames(new JsonSchemaBuilder()
@@ -139,6 +141,28 @@ namespace Json.Schema
 						.Type(SchemaValueType.Object)
 						.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
 						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					)
+				);
+
+		/// <summary>
+		/// The Draft 2020-12 Core meta-schema.
+		/// </summary>
+		public static readonly JsonSchema Dynamic202012 =
+			new JsonSchemaBuilder()
+				.Schema(Draft202012Id)
+				.Id(Dynamic202012Id)
+				.Vocabulary((Vocabularies.Dynamic202012Id, true))
+				.RecursiveAnchor()
+				.Title("Dynamic vocabulary meta-schema")
+				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+				.Properties(
+					(RecursiveRefKeyword.Name, new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+						.Format(Formats.UriReference)
+					),
+					(RecursiveAnchorKeyword.Name, new JsonSchemaBuilder()
+						.Type(SchemaValueType.Boolean)
+						.Default(false.AsJsonElement())
 					)
 				);
 
@@ -355,15 +379,32 @@ namespace Json.Schema
 				);
 
 		/// <summary>
-		/// The Draft 2020-12 Format meta-schema.
+		/// The Draft 2020-12 Format-Annotation meta-schema.
 		/// </summary>
-		public static readonly JsonSchema Format202012 =
+		public static readonly JsonSchema FormatAnnotation202012 =
 			new JsonSchemaBuilder()
 				.Schema(Draft202012Id)
-				.Id(Format202012Id)
-				.Vocabulary((Vocabularies.Format202012Id, true))
+				.Id(FormatAnnotation202012Id)
+				.Vocabulary((Vocabularies.FormatAnnotation202012Id, true))
 				.RecursiveAnchor()
-				.Title("Format vocabulary meta-schema")
+				.Title("Format-annotation vocabulary meta-schema")
+				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+				.Properties(
+					(FormatKeyword.Name, new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+					)
+				);
+
+		/// <summary>
+		/// The Draft 2020-12 Format-Assertion meta-schema.
+		/// </summary>
+		public static readonly JsonSchema FormatAssertion202012 =
+			new JsonSchemaBuilder()
+				.Schema(Draft202012Id)
+				.Id(FormatAssertion202012Id)
+				.Vocabulary((Vocabularies.FormatAssertion202012Id, true))
+				.RecursiveAnchor()
+				.Title("Format-assertion vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
 					(FormatKeyword.Name, new JsonSchemaBuilder()

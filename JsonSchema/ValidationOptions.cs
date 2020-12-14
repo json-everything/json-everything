@@ -49,11 +49,28 @@ namespace Json.Schema
 			get => _defaultBaseUri ??= new Uri("https://json-everything/base");
 			set => _defaultBaseUri = value;
 		}
+
 		/// <summary>
-		/// Specifies whether the `format` keyword should provide validation results
-		/// or just annotation.  Default is false, which just produces annotations.
+		/// Obsolete.  Use <see cref="RequireFormatValidation"/> instead with the same semantics.
 		/// </summary>
-		public bool ValidateFormat { get; set; }
+		[Obsolete("Use RequireFormatValidation instead.")]
+		public bool ValidateFormat
+		{
+			get => RequireFormatValidation;
+			set => RequireFormatValidation = value;
+		}
+
+		/// <summary>
+		/// Specifies whether the `format` keyword should ber required to provide
+		/// validation results.  Default is false, which just produces annotations
+		/// for drafts 2019-09 and prior or follows the behavior set forth by the
+		/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
+		/// a meta-schema declaring draft 2020-12.
+		/// </summary>
+		/// <remarks>
+		/// This property replaces the now obsolete <see cref="ValidateFormat"/>.
+		/// </remarks>
+		public bool RequireFormatValidation { get; set; }
 		
 		internal Draft ValidatingAs { get; private set; }
 

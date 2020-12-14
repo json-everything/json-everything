@@ -8,8 +8,6 @@ namespace Json.Schema
 	/// </summary>
 	public static partial class Vocabularies
 	{
-
-
 		static Vocabularies()
 		{
 			var keywords = typeof(IJsonSchemaKeyword)
@@ -54,6 +52,10 @@ namespace Json.Schema
 				Core202012Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Core202012Id))
 					.Select(k => k.Type));
+			Dynamic202012 = new Vocabulary(
+				Dynamic202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Dynamic202012Id))
+					.Select(k => k.Type));
 			Applicator202012 = new Vocabulary(
 				Applicator202012Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Applicator202012Id))
@@ -66,9 +68,13 @@ namespace Json.Schema
 				Metadata202012Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Metadata202012Id))
 					.Select(k => k.Type));
-			Format202012 = new Vocabulary(
-				Format202012Id,
-				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Format202012Id))
+			FormatAnnotation202012 = new Vocabulary(
+				FormatAnnotation202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == FormatAnnotation202012Id))
+					.Select(k => k.Type));
+			FormatAssertion202012 = new Vocabulary(
+				FormatAssertion202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == FormatAssertion202012Id))
 					.Select(k => k.Type));
 			Content202012 = new Vocabulary(
 				Content202012Id,

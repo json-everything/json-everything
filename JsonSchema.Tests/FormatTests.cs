@@ -13,7 +13,7 @@ namespace Json.Schema.Tests
 
 			var value = JsonDocument.Parse("\"100.2.54.3\"");
 
-			var result = schema.Validate(value.RootElement, new ValidationOptions{ValidateFormat = true});
+			var result = schema.Validate(value.RootElement, new ValidationOptions{RequireFormatValidation = true});
 
 			Assert.True(result.IsValid);
 		}
@@ -25,7 +25,7 @@ namespace Json.Schema.Tests
 
 			var value = JsonDocument.Parse("\"100.2.5444.3\"");
 
-			var result = schema.Validate(value.RootElement, new ValidationOptions {ValidateFormat = true});
+			var result = schema.Validate(value.RootElement, new ValidationOptions {RequireFormatValidation = true});
 
 			Assert.False(result.IsValid);
 		}

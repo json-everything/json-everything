@@ -803,6 +803,11 @@
             JSON Schema Draft 2019-09.
             </summary>
         </member>
+        <member name="F:Json.Schema.Draft.Draft202012">
+            <summary>
+            JSON Schema Draft 2020-12.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Duration">
             <summary>
             Represents an ISO 8601 ABNF duration value.
@@ -858,6 +863,78 @@
             <param name="source">The source string.</param>
             <param name="duration">The resulting duration.</param>
             <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+        </member>
+        <member name="T:Json.Schema.DynamicAnchorKeyword">
+            <summary>
+            Handles `$dynamicAnchor`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DynamicAnchorKeyword.Value">
+            <summary>
+            Gets the anchor value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DynamicAnchorKeyword.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.DynamicAnchorKeyword"/>.
+            </summary>
+            <param name="value">The anchor value.</param>
+        </member>
+        <member name="M:Json.Schema.DynamicAnchorKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.DynamicAnchorKeyword.Equals(Json.Schema.DynamicAnchorKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DynamicAnchorKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DynamicAnchorKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.DynamicRefKeyword">
+            <summary>
+            Handles `$dynamicRef`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DynamicRefKeyword.Reference">
+            <summary>
+            The URI reference.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DynamicRefKeyword.#ctor(System.Uri)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.DynamicRefKeyword"/>.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Json.Schema.DynamicRefKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.DynamicRefKeyword.Equals(Json.Schema.DynamicRefKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DynamicRefKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DynamicRefKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.ElseKeyword">
             <summary>
@@ -1620,6 +1697,14 @@
             <param name="schemas">The schemas for `allOf`.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Anchor(Json.Schema.JsonSchemaBuilder,System.String)">
+            <summary>
+            Add an `$anchor` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="reference">The anchor reference.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.AnyOf(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema[])">
             <summary>
             Add an `anyOf` keyword.
@@ -1762,6 +1847,22 @@
             </summary>
             <param name="builder">The builder.</param>
             <param name="description">The description.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor(Json.Schema.JsonSchemaBuilder,System.String)">
+            <summary>
+            Add an `$dynamicAnchor` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="reference">The anchor reference.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,System.Uri)">
+            <summary>
+            Add a `$dynamicRef` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="reference">The URI reference.</param>
             <returns>The builder.</returns>
         </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Else(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema)">
@@ -2002,6 +2103,14 @@
             </summary>
             <param name="builder">The builder.</param>
             <param name="props">The property schemas.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IEnumerable{Json.Schema.JsonSchema})">
+            <summary>
+            Add a `prefixItems` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="schemas">The schemas for `prefixItems`.</param>
             <returns>The builder.</returns>
         </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Properties(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IReadOnlyDictionary{System.String,Json.Schema.JsonSchema})">
@@ -2504,6 +2613,96 @@
             The Draft 2019-09 Content meta-schema.
             </summary>
         </member>
+        <member name="F:Json.Schema.MetaSchemas.Draft202012Id">
+            <summary>
+            The Draft 2020-12 meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Core202012Id">
+            <summary>
+            The Draft 2020-12 Core meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Dynamic202012Id">
+            <summary>
+            The Draft 2020-12 Dynamic meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Applicator202012Id">
+            <summary>
+            The Draft 2020-12 Applicator meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Validation202012Id">
+            <summary>
+            The Draft 2020-12 Validation meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Metadata202012Id">
+            <summary>
+            The Draft 2020-12 Metadata meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAnnotation202012Id">
+            <summary>
+            The Draft 2020-12 Format-Annotation meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAssertion202012Id">
+            <summary>
+            The Draft 2020-12 Format-Assertion meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Content202012Id">
+            <summary>
+            The Draft 2020-12 Content meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Draft202012">
+            <summary>
+            The Draft 2020-12 meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Core202012">
+            <summary>
+            The Draft 2020-12 Core meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Dynamic202012">
+            <summary>
+            The Draft 2020-12 Core meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Applicator202012">
+            <summary>
+            The Draft 2020-12 Applicator meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Validation202012">
+            <summary>
+            The Draft 2020-12 Validation meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Metadata202012">
+            <summary>
+            The Draft 2020-12 Metadata meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAnnotation202012">
+            <summary>
+            The Draft 2020-12 Format-Annotation meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAssertion202012">
+            <summary>
+            The Draft 2020-12 Format-Assertion meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.Content202012">
+            <summary>
+            The Draft 2020-12 Content meta-schema.
+            </summary>
+        </member>
         <member name="F:Json.Schema.MetaSchemas.Draft6Id">
             <summary>
             The Draft 6 Core meta-schema ID.
@@ -2933,6 +3132,52 @@
             </summary>
             <param name="element">The element to validate.</param>
             <returns>The result of the predicate.</returns>
+        </member>
+        <member name="T:Json.Schema.PrefixItemsKeyword">
+            <summary>
+            Handles `items`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.PrefixItemsKeyword.ArraySchemas">
+            <summary>
+            The collection of schemas for the "schema array" form.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.PrefixItemsKeyword.#ctor(Json.Schema.JsonSchema[])">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.PrefixItemsKeyword"/>.
+            </summary>
+            <param name="values">The collection of schemas for the "schema array" form.</param>
+            <remarks>
+            Using the `params` constructor to build an array-form `items` keyword with a single schema
+            will confuse the compiler.  To achieve this, you'll need to explicitly specify the array.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.PrefixItemsKeyword.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.JsonSchema})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.PrefixItemsKeyword"/>.
+            </summary>
+            <param name="values">The collection of schemas for the "schema array" form.</param>
+        </member>
+        <member name="M:Json.Schema.PrefixItemsKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.PrefixItemsKeyword.Equals(Json.Schema.PrefixItemsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PrefixItemsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PrefixItemsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
         </member>
         <member name="T:Json.Schema.PropertiesKeyword">
             <summary>
@@ -3749,6 +3994,11 @@
             The current URI anchor.
             </summary>
         </member>
+        <member name="P:Json.Schema.ValidationContext.DynamicAnchors">
+            <summary>
+            Get the set of defined dynamic anchors.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ValidationContext.ApplyOptimizations">
             <summary>
             Whether processing optimizations can be applied (output format = flag).
@@ -3846,9 +4096,20 @@
         </member>
         <member name="P:Json.Schema.ValidationOptions.ValidateFormat">
             <summary>
-            Specifies whether the `format` keyword should provide validation results
-            or just annotation.  Default is false, which just produces annotations.
+            Obsolete.  Use <see cref="P:Json.Schema.ValidationOptions.RequireFormatValidation"/> instead with the same semantics.
             </summary>
+        </member>
+        <member name="P:Json.Schema.ValidationOptions.RequireFormatValidation">
+            <summary>
+            Specifies whether the `format` keyword should ber required to provide
+            validation results.  Default is false, which just produces annotations
+            for drafts 2019-09 and prior or follows the behavior set forth by the
+            format-annotation vocabulary requirement in the `$vocabulary` keyword in
+            a meta-schema declaring draft 2020-12.
+            </summary>
+            <remarks>
+            This property replaces the now obsolete <see cref="P:Json.Schema.ValidationOptions.ValidateFormat"/>.
+            </remarks>
         </member>
         <member name="T:Json.Schema.ValidationResults">
             <summary>
@@ -3968,6 +4229,86 @@
         <member name="F:Json.Schema.Vocabularies.Content201909">
             <summary>
             The Draft 2019-09 Content vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Core202012Id">
+            <summary>
+            The Draft 2020-12 Core vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Dynamic202012Id">
+            <summary>
+            The Draft 2020-12 Dynamic vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Applicator202012Id">
+            <summary>
+            The Draft 2020-12 Applicator vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Validation202012Id">
+            <summary>
+            The Draft 2020-12 Validation vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Metadata202012Id">
+            <summary>
+            The Draft 2020-12 Metadata vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAnnotation202012Id">
+            <summary>
+            The Draft 2020-12 Format vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAssertion202012Id">
+            <summary>
+            The Draft 2020-12 Format vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Content202012Id">
+            <summary>
+            The Draft 2020-12 Content vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Core202012">
+            <summary>
+            The Draft 2020-12 Core vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Dynamic202012">
+            <summary>
+            The Draft 2020-12 Dynamic vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Applicator202012">
+            <summary>
+            The Draft 2020-12 Applicator vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Validation202012">
+            <summary>
+            The Draft 2020-12 Validation vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Metadata202012">
+            <summary>
+            The Draft 2020-12 Metadata vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAnnotation202012">
+            <summary>
+            The Draft 2020-12 Format-Annotation vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAssertion202012">
+            <summary>
+            The Draft 2020-12 Format-Assertion vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.Content202012">
+            <summary>
+            The Draft 2020-12 Content vocabulary.
             </summary>
         </member>
         <member name="T:Json.Schema.Vocabulary">
