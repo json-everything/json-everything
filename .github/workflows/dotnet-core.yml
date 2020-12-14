@@ -58,6 +58,39 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: '**/*/test-results.xml'
 
+  test-badge:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Extract Branch Name
+      run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Get badge details
+      run: |
+        TEST_RESULTS_FILE=`find . -name test-results.xml | head -1`
+        TEST_COUNT=`grep -Pio '(?<=tests=")\d+' "${TEST_RESULTS_FILE}" | awk '{ SUM += $1} END { print SUM }'`
+        echo "FAIL_COUNT=`grep -Pio '(?<=failures=")\d+' "${TEST_RESULTS_FILE}" | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
+        echo "PASS_COUNT=$((TEST_COUNT - FAIL_COUNT))" >> $GITHUB_ENV
+        if [[ $FAIL_COUNT -eq 0 ]]
+        then
+          echo "BUILD_STATUS=success" >> $GITHUB_ENV
+        else
+          echo "BUILD_STATUS=critical" >> $GITHUB_ENV
+        fi
+    - name: Create test results badge
+      if: env.BRANCH == 'master'
+      uses: schneegans/dynamic-badges-action@v1.0.0
+      with:
+        auth: ${{ secrets.TEST_BADGE_KEY }}
+        gistID: 28607f2d276032f4d9a7f2c807e44df7
+        filename: semver-analyzer-test-results-badge.json
+        label: tests
+        message: ${{ format('{0} passing | {1} failing', env.PASS_COUNT, env.FAIL_COUNT) }}
+        color: ${{ env.BUILD_STATUS }}
+
   analyze-more:
     needs: build
     name: Analyze Json.More.Net 
