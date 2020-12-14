@@ -104,6 +104,7 @@ namespace Json.Schema
 
 		internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
+		internal IReadOnlyDictionary<Uri, bool> MetaSchemaVocabs { get; set; }
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).

@@ -51,7 +51,7 @@ namespace Json.Schema
 
 			var vocabularyKeyword = metaSchema.Keywords.OfType<VocabularyKeyword>().FirstOrDefault();
 			if (vocabularyKeyword != null) 
-				context.SetAnnotation(Name, vocabularyKeyword.Vocabulary);
+				context.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
 
 			if (!context.Options.ValidateMetaSchema)
 			{

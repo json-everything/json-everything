@@ -52,7 +52,7 @@ namespace Json.Schema
 			var requireValidation = context.Options.RequireFormatValidation;
 			if (!requireValidation)
 			{
-				var vocabRequirements = (IReadOnlyDictionary<Uri, bool>) context.TryGetAnnotation(SchemaKeyword.Name);
+				var vocabRequirements = context.MetaSchemaVocabs;
 				if (vocabRequirements != null)
 				{
 					foreach (var formatAssertionId in _formatAssertionIds)
