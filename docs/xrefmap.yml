@@ -1296,6 +1296,19 @@ references:
   commentId: T:Json.Pointer.RelativeJsonPointer
   fullName: Json.Pointer.RelativeJsonPointer
   nameWithType: RelativeJsonPointer
+- uid: Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator
+  name: ArrayIndexManipulator
+  href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_ArrayIndexManipulator
+  commentId: P:Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator
+  fullName: Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator
+  nameWithType: RelativeJsonPointer.ArrayIndexManipulator
+- uid: Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator*
+  name: ArrayIndexManipulator
+  href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_ArrayIndexManipulator_
+  commentId: Overload:Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator
+  isSpec: "True"
+  fullName: Json.Pointer.RelativeJsonPointer.ArrayIndexManipulator
+  nameWithType: RelativeJsonPointer.ArrayIndexManipulator
 - uid: Json.Pointer.RelativeJsonPointer.Evaluate(JsonElement)
   name: Evaluate(JsonElement)
   href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_Evaluate_JsonElement_
@@ -1315,6 +1328,12 @@ references:
   commentId: M:Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32,Json.Pointer.JsonPointer)
   fullName: Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32, Json.Pointer.JsonPointer)
   nameWithType: RelativeJsonPointer.FromPointer(UInt32, JsonPointer)
+- uid: Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32,System.Int32,Json.Pointer.JsonPointer)
+  name: FromPointer(UInt32, Int32, JsonPointer)
+  href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_FromPointer_System_UInt32_System_Int32_Json_Pointer_JsonPointer_
+  commentId: M:Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32,System.Int32,Json.Pointer.JsonPointer)
+  fullName: Json.Pointer.RelativeJsonPointer.FromPointer(System.UInt32, System.Int32, Json.Pointer.JsonPointer)
+  nameWithType: RelativeJsonPointer.FromPointer(UInt32, Int32, JsonPointer)
 - uid: Json.Pointer.RelativeJsonPointer.FromPointer*
   name: FromPointer
   href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_FromPointer_
@@ -1328,6 +1347,12 @@ references:
   commentId: M:Json.Pointer.RelativeJsonPointer.IndexQuery(System.UInt32)
   fullName: Json.Pointer.RelativeJsonPointer.IndexQuery(System.UInt32)
   nameWithType: RelativeJsonPointer.IndexQuery(UInt32)
+- uid: Json.Pointer.RelativeJsonPointer.IndexQuery(System.UInt32,System.Int32)
+  name: IndexQuery(UInt32, Int32)
+  href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_IndexQuery_System_UInt32_System_Int32_
+  commentId: M:Json.Pointer.RelativeJsonPointer.IndexQuery(System.UInt32,System.Int32)
+  fullName: Json.Pointer.RelativeJsonPointer.IndexQuery(System.UInt32, System.Int32)
+  nameWithType: RelativeJsonPointer.IndexQuery(UInt32, Int32)
 - uid: Json.Pointer.RelativeJsonPointer.IndexQuery*
   name: IndexQuery
   href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_IndexQuery_
@@ -3400,6 +3425,12 @@ references:
   commentId: F:Json.Schema.Draft.Draft201909
   fullName: Json.Schema.Draft.Draft201909
   nameWithType: Draft.Draft201909
+- uid: Json.Schema.Draft.Draft202012
+  name: Draft202012
+  href: api/Json.Schema.Draft.html#Json_Schema_Draft_Draft202012
+  commentId: F:Json.Schema.Draft.Draft202012
+  fullName: Json.Schema.Draft.Draft202012
+  nameWithType: Draft.Draft202012
 - uid: Json.Schema.Draft.Draft6
   name: Draft6
   href: api/Json.Schema.Draft.html#Json_Schema_Draft_Draft6
@@ -3544,6 +3575,160 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Duration.Years
   nameWithType: Duration.Years
+- uid: Json.Schema.DynamicAnchorKeyword
+  name: DynamicAnchorKeyword
+  href: api/Json.Schema.DynamicAnchorKeyword.html
+  commentId: T:Json.Schema.DynamicAnchorKeyword
+  fullName: Json.Schema.DynamicAnchorKeyword
+  nameWithType: DynamicAnchorKeyword
+- uid: Json.Schema.DynamicAnchorKeyword.#ctor(System.String)
+  name: DynamicAnchorKeyword(String)
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword__ctor_System_String_
+  commentId: M:Json.Schema.DynamicAnchorKeyword.#ctor(System.String)
+  fullName: Json.Schema.DynamicAnchorKeyword.DynamicAnchorKeyword(System.String)
+  nameWithType: DynamicAnchorKeyword.DynamicAnchorKeyword(String)
+- uid: Json.Schema.DynamicAnchorKeyword.#ctor*
+  name: DynamicAnchorKeyword
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword__ctor_
+  commentId: Overload:Json.Schema.DynamicAnchorKeyword.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.DynamicAnchorKeyword.DynamicAnchorKeyword
+  nameWithType: DynamicAnchorKeyword.DynamicAnchorKeyword
+- uid: Json.Schema.DynamicAnchorKeyword.Equals(Json.Schema.DynamicAnchorKeyword)
+  name: Equals(DynamicAnchorKeyword)
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Equals_Json_Schema_DynamicAnchorKeyword_
+  commentId: M:Json.Schema.DynamicAnchorKeyword.Equals(Json.Schema.DynamicAnchorKeyword)
+  fullName: Json.Schema.DynamicAnchorKeyword.Equals(Json.Schema.DynamicAnchorKeyword)
+  nameWithType: DynamicAnchorKeyword.Equals(DynamicAnchorKeyword)
+- uid: Json.Schema.DynamicAnchorKeyword.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Equals_System_Object_
+  commentId: M:Json.Schema.DynamicAnchorKeyword.Equals(System.Object)
+  fullName: Json.Schema.DynamicAnchorKeyword.Equals(System.Object)
+  nameWithType: DynamicAnchorKeyword.Equals(Object)
+- uid: Json.Schema.DynamicAnchorKeyword.Equals*
+  name: Equals
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Equals_
+  commentId: Overload:Json.Schema.DynamicAnchorKeyword.Equals
+  isSpec: "True"
+  fullName: Json.Schema.DynamicAnchorKeyword.Equals
+  nameWithType: DynamicAnchorKeyword.Equals
+- uid: Json.Schema.DynamicAnchorKeyword.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_GetHashCode
+  commentId: M:Json.Schema.DynamicAnchorKeyword.GetHashCode
+  fullName: Json.Schema.DynamicAnchorKeyword.GetHashCode()
+  nameWithType: DynamicAnchorKeyword.GetHashCode()
+- uid: Json.Schema.DynamicAnchorKeyword.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_GetHashCode_
+  commentId: Overload:Json.Schema.DynamicAnchorKeyword.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.DynamicAnchorKeyword.GetHashCode
+  nameWithType: DynamicAnchorKeyword.GetHashCode
+- uid: Json.Schema.DynamicAnchorKeyword.Validate(Json.Schema.ValidationContext)
+  name: Validate(ValidationContext)
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Validate_Json_Schema_ValidationContext_
+  commentId: M:Json.Schema.DynamicAnchorKeyword.Validate(Json.Schema.ValidationContext)
+  fullName: Json.Schema.DynamicAnchorKeyword.Validate(Json.Schema.ValidationContext)
+  nameWithType: DynamicAnchorKeyword.Validate(ValidationContext)
+- uid: Json.Schema.DynamicAnchorKeyword.Validate*
+  name: Validate
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Validate_
+  commentId: Overload:Json.Schema.DynamicAnchorKeyword.Validate
+  isSpec: "True"
+  fullName: Json.Schema.DynamicAnchorKeyword.Validate
+  nameWithType: DynamicAnchorKeyword.Validate
+- uid: Json.Schema.DynamicAnchorKeyword.Value
+  name: Value
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Value
+  commentId: P:Json.Schema.DynamicAnchorKeyword.Value
+  fullName: Json.Schema.DynamicAnchorKeyword.Value
+  nameWithType: DynamicAnchorKeyword.Value
+- uid: Json.Schema.DynamicAnchorKeyword.Value*
+  name: Value
+  href: api/Json.Schema.DynamicAnchorKeyword.html#Json_Schema_DynamicAnchorKeyword_Value_
+  commentId: Overload:Json.Schema.DynamicAnchorKeyword.Value
+  isSpec: "True"
+  fullName: Json.Schema.DynamicAnchorKeyword.Value
+  nameWithType: DynamicAnchorKeyword.Value
+- uid: Json.Schema.DynamicRefKeyword
+  name: DynamicRefKeyword
+  href: api/Json.Schema.DynamicRefKeyword.html
+  commentId: T:Json.Schema.DynamicRefKeyword
+  fullName: Json.Schema.DynamicRefKeyword
+  nameWithType: DynamicRefKeyword
+- uid: Json.Schema.DynamicRefKeyword.#ctor(Uri)
+  name: DynamicRefKeyword(Uri)
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword__ctor_Uri_
+  commentId: M:Json.Schema.DynamicRefKeyword.#ctor(Uri)
+  fullName: Json.Schema.DynamicRefKeyword.DynamicRefKeyword(Uri)
+  nameWithType: DynamicRefKeyword.DynamicRefKeyword(Uri)
+- uid: Json.Schema.DynamicRefKeyword.#ctor*
+  name: DynamicRefKeyword
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword__ctor_
+  commentId: Overload:Json.Schema.DynamicRefKeyword.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.DynamicRefKeyword.DynamicRefKeyword
+  nameWithType: DynamicRefKeyword.DynamicRefKeyword
+- uid: Json.Schema.DynamicRefKeyword.Equals(Json.Schema.DynamicRefKeyword)
+  name: Equals(DynamicRefKeyword)
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Equals_Json_Schema_DynamicRefKeyword_
+  commentId: M:Json.Schema.DynamicRefKeyword.Equals(Json.Schema.DynamicRefKeyword)
+  fullName: Json.Schema.DynamicRefKeyword.Equals(Json.Schema.DynamicRefKeyword)
+  nameWithType: DynamicRefKeyword.Equals(DynamicRefKeyword)
+- uid: Json.Schema.DynamicRefKeyword.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Equals_System_Object_
+  commentId: M:Json.Schema.DynamicRefKeyword.Equals(System.Object)
+  fullName: Json.Schema.DynamicRefKeyword.Equals(System.Object)
+  nameWithType: DynamicRefKeyword.Equals(Object)
+- uid: Json.Schema.DynamicRefKeyword.Equals*
+  name: Equals
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Equals_
+  commentId: Overload:Json.Schema.DynamicRefKeyword.Equals
+  isSpec: "True"
+  fullName: Json.Schema.DynamicRefKeyword.Equals
+  nameWithType: DynamicRefKeyword.Equals
+- uid: Json.Schema.DynamicRefKeyword.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_GetHashCode
+  commentId: M:Json.Schema.DynamicRefKeyword.GetHashCode
+  fullName: Json.Schema.DynamicRefKeyword.GetHashCode()
+  nameWithType: DynamicRefKeyword.GetHashCode()
+- uid: Json.Schema.DynamicRefKeyword.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_GetHashCode_
+  commentId: Overload:Json.Schema.DynamicRefKeyword.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.DynamicRefKeyword.GetHashCode
+  nameWithType: DynamicRefKeyword.GetHashCode
+- uid: Json.Schema.DynamicRefKeyword.Reference
+  name: Reference
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Reference
+  commentId: P:Json.Schema.DynamicRefKeyword.Reference
+  fullName: Json.Schema.DynamicRefKeyword.Reference
+  nameWithType: DynamicRefKeyword.Reference
+- uid: Json.Schema.DynamicRefKeyword.Reference*
+  name: Reference
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Reference_
+  commentId: Overload:Json.Schema.DynamicRefKeyword.Reference
+  isSpec: "True"
+  fullName: Json.Schema.DynamicRefKeyword.Reference
+  nameWithType: DynamicRefKeyword.Reference
+- uid: Json.Schema.DynamicRefKeyword.Validate(Json.Schema.ValidationContext)
+  name: Validate(ValidationContext)
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Validate_Json_Schema_ValidationContext_
+  commentId: M:Json.Schema.DynamicRefKeyword.Validate(Json.Schema.ValidationContext)
+  fullName: Json.Schema.DynamicRefKeyword.Validate(Json.Schema.ValidationContext)
+  nameWithType: DynamicRefKeyword.Validate(ValidationContext)
+- uid: Json.Schema.DynamicRefKeyword.Validate*
+  name: Validate
+  href: api/Json.Schema.DynamicRefKeyword.html#Json_Schema_DynamicRefKeyword_Validate_
+  commentId: Overload:Json.Schema.DynamicRefKeyword.Validate
+  isSpec: "True"
+  fullName: Json.Schema.DynamicRefKeyword.Validate
+  nameWithType: DynamicRefKeyword.Validate
 - uid: Json.Schema.ElseKeyword
   name: ElseKeyword
   href: api/Json.Schema.ElseKeyword.html
@@ -7551,6 +7736,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.AllOf
   nameWithType: JsonSchemaBuilderExtensions.AllOf
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Anchor(Json.Schema.JsonSchemaBuilder,System.String)
+  name: Anchor(JsonSchemaBuilder, String)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Anchor_Json_Schema_JsonSchemaBuilder_System_String_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Anchor(Json.Schema.JsonSchemaBuilder,System.String)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Anchor(Json.Schema.JsonSchemaBuilder, System.String)
+  nameWithType: JsonSchemaBuilderExtensions.Anchor(JsonSchemaBuilder, String)
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Anchor*
+  name: Anchor
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Anchor_
+  commentId: Overload:Json.Schema.JsonSchemaBuilderExtensions.Anchor
+  isSpec: "True"
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Anchor
+  nameWithType: JsonSchemaBuilderExtensions.Anchor
 - uid: Json.Schema.JsonSchemaBuilderExtensions.AnyOf(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.Schema.JsonSchema})
   name: AnyOf(JsonSchemaBuilder, IEnumerable<JsonSchema>)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_AnyOf_Json_Schema_JsonSchemaBuilder_IEnumerable_Json_Schema_JsonSchema__
@@ -7779,6 +7977,32 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.Description
   nameWithType: JsonSchemaBuilderExtensions.Description
+- uid: Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor(Json.Schema.JsonSchemaBuilder,System.String)
+  name: DynamicAnchor(JsonSchemaBuilder, String)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DynamicAnchor_Json_Schema_JsonSchemaBuilder_System_String_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor(Json.Schema.JsonSchemaBuilder,System.String)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor(Json.Schema.JsonSchemaBuilder, System.String)
+  nameWithType: JsonSchemaBuilderExtensions.DynamicAnchor(JsonSchemaBuilder, String)
+- uid: Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor*
+  name: DynamicAnchor
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DynamicAnchor_
+  commentId: Overload:Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor
+  isSpec: "True"
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor
+  nameWithType: JsonSchemaBuilderExtensions.DynamicAnchor
+- uid: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,Uri)
+  name: DynamicRef(JsonSchemaBuilder, Uri)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DynamicRef_Json_Schema_JsonSchemaBuilder_Uri_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,Uri)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder, Uri)
+  nameWithType: JsonSchemaBuilderExtensions.DynamicRef(JsonSchemaBuilder, Uri)
+- uid: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef*
+  name: DynamicRef
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DynamicRef_
+  commentId: Overload:Json.Schema.JsonSchemaBuilderExtensions.DynamicRef
+  isSpec: "True"
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef
+  nameWithType: JsonSchemaBuilderExtensions.DynamicRef
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Else(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema)
   name: Else(JsonSchemaBuilder, JsonSchema)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Else_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema_
@@ -8151,6 +8375,22 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.PatternProperties
   nameWithType: JsonSchemaBuilderExtensions.PatternProperties
+- uid: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.Schema.JsonSchema})
+  name: PrefixItems(JsonSchemaBuilder, IEnumerable<JsonSchema>)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PrefixItems_Json_Schema_JsonSchemaBuilder_IEnumerable_Json_Schema_JsonSchema__
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.Schema.JsonSchema})
+  name.vb: PrefixItems(JsonSchemaBuilder, IEnumerable(Of JsonSchema))
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder, IEnumerable<Json.Schema.JsonSchema>)
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder, IEnumerable(Of Json.Schema.JsonSchema))
+  nameWithType: JsonSchemaBuilderExtensions.PrefixItems(JsonSchemaBuilder, IEnumerable<JsonSchema>)
+  nameWithType.vb: JsonSchemaBuilderExtensions.PrefixItems(JsonSchemaBuilder, IEnumerable(Of JsonSchema))
+- uid: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems*
+  name: PrefixItems
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PrefixItems_
+  commentId: Overload:Json.Schema.JsonSchemaBuilderExtensions.PrefixItems
+  isSpec: "True"
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems
+  nameWithType: JsonSchemaBuilderExtensions.PrefixItems
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Properties(Json.Schema.JsonSchemaBuilder,IReadOnlyDictionary{System.String,Json.Schema.JsonSchema})
   name: Properties(JsonSchemaBuilder, IReadOnlyDictionary<String, JsonSchema>)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Properties_Json_Schema_JsonSchemaBuilder_IReadOnlyDictionary_System_String_Json_Schema_JsonSchema__
@@ -8910,6 +9150,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Applicator201909Id
   fullName: Json.Schema.MetaSchemas.Applicator201909Id
   nameWithType: MetaSchemas.Applicator201909Id
+- uid: Json.Schema.MetaSchemas.Applicator202012
+  name: Applicator202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Applicator202012
+  commentId: F:Json.Schema.MetaSchemas.Applicator202012
+  fullName: Json.Schema.MetaSchemas.Applicator202012
+  nameWithType: MetaSchemas.Applicator202012
+- uid: Json.Schema.MetaSchemas.Applicator202012Id
+  name: Applicator202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Applicator202012Id
+  commentId: F:Json.Schema.MetaSchemas.Applicator202012Id
+  fullName: Json.Schema.MetaSchemas.Applicator202012Id
+  nameWithType: MetaSchemas.Applicator202012Id
 - uid: Json.Schema.MetaSchemas.Content201909
   name: Content201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Content201909
@@ -8922,6 +9174,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Content201909Id
   fullName: Json.Schema.MetaSchemas.Content201909Id
   nameWithType: MetaSchemas.Content201909Id
+- uid: Json.Schema.MetaSchemas.Content202012
+  name: Content202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Content202012
+  commentId: F:Json.Schema.MetaSchemas.Content202012
+  fullName: Json.Schema.MetaSchemas.Content202012
+  nameWithType: MetaSchemas.Content202012
+- uid: Json.Schema.MetaSchemas.Content202012Id
+  name: Content202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Content202012Id
+  commentId: F:Json.Schema.MetaSchemas.Content202012Id
+  fullName: Json.Schema.MetaSchemas.Content202012Id
+  nameWithType: MetaSchemas.Content202012Id
 - uid: Json.Schema.MetaSchemas.Core201909
   name: Core201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Core201909
@@ -8934,6 +9198,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Core201909Id
   fullName: Json.Schema.MetaSchemas.Core201909Id
   nameWithType: MetaSchemas.Core201909Id
+- uid: Json.Schema.MetaSchemas.Core202012
+  name: Core202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Core202012
+  commentId: F:Json.Schema.MetaSchemas.Core202012
+  fullName: Json.Schema.MetaSchemas.Core202012
+  nameWithType: MetaSchemas.Core202012
+- uid: Json.Schema.MetaSchemas.Core202012Id
+  name: Core202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Core202012Id
+  commentId: F:Json.Schema.MetaSchemas.Core202012Id
+  fullName: Json.Schema.MetaSchemas.Core202012Id
+  nameWithType: MetaSchemas.Core202012Id
 - uid: Json.Schema.MetaSchemas.Draft201909
   name: Draft201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Draft201909
@@ -8946,6 +9222,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Draft201909Id
   fullName: Json.Schema.MetaSchemas.Draft201909Id
   nameWithType: MetaSchemas.Draft201909Id
+- uid: Json.Schema.MetaSchemas.Draft202012
+  name: Draft202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Draft202012
+  commentId: F:Json.Schema.MetaSchemas.Draft202012
+  fullName: Json.Schema.MetaSchemas.Draft202012
+  nameWithType: MetaSchemas.Draft202012
+- uid: Json.Schema.MetaSchemas.Draft202012Id
+  name: Draft202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Draft202012Id
+  commentId: F:Json.Schema.MetaSchemas.Draft202012Id
+  fullName: Json.Schema.MetaSchemas.Draft202012Id
+  nameWithType: MetaSchemas.Draft202012Id
 - uid: Json.Schema.MetaSchemas.Draft6
   name: Draft6
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Draft6
@@ -8970,6 +9258,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Draft7Id
   fullName: Json.Schema.MetaSchemas.Draft7Id
   nameWithType: MetaSchemas.Draft7Id
+- uid: Json.Schema.MetaSchemas.Dynamic202012
+  name: Dynamic202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Dynamic202012
+  commentId: F:Json.Schema.MetaSchemas.Dynamic202012
+  fullName: Json.Schema.MetaSchemas.Dynamic202012
+  nameWithType: MetaSchemas.Dynamic202012
+- uid: Json.Schema.MetaSchemas.Dynamic202012Id
+  name: Dynamic202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Dynamic202012Id
+  commentId: F:Json.Schema.MetaSchemas.Dynamic202012Id
+  fullName: Json.Schema.MetaSchemas.Dynamic202012Id
+  nameWithType: MetaSchemas.Dynamic202012Id
 - uid: Json.Schema.MetaSchemas.Format201909
   name: Format201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Format201909
@@ -8982,6 +9282,30 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Format201909Id
   fullName: Json.Schema.MetaSchemas.Format201909Id
   nameWithType: MetaSchemas.Format201909Id
+- uid: Json.Schema.MetaSchemas.FormatAnnotation202012
+  name: FormatAnnotation202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_FormatAnnotation202012
+  commentId: F:Json.Schema.MetaSchemas.FormatAnnotation202012
+  fullName: Json.Schema.MetaSchemas.FormatAnnotation202012
+  nameWithType: MetaSchemas.FormatAnnotation202012
+- uid: Json.Schema.MetaSchemas.FormatAnnotation202012Id
+  name: FormatAnnotation202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_FormatAnnotation202012Id
+  commentId: F:Json.Schema.MetaSchemas.FormatAnnotation202012Id
+  fullName: Json.Schema.MetaSchemas.FormatAnnotation202012Id
+  nameWithType: MetaSchemas.FormatAnnotation202012Id
+- uid: Json.Schema.MetaSchemas.FormatAssertion202012
+  name: FormatAssertion202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_FormatAssertion202012
+  commentId: F:Json.Schema.MetaSchemas.FormatAssertion202012
+  fullName: Json.Schema.MetaSchemas.FormatAssertion202012
+  nameWithType: MetaSchemas.FormatAssertion202012
+- uid: Json.Schema.MetaSchemas.FormatAssertion202012Id
+  name: FormatAssertion202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_FormatAssertion202012Id
+  commentId: F:Json.Schema.MetaSchemas.FormatAssertion202012Id
+  fullName: Json.Schema.MetaSchemas.FormatAssertion202012Id
+  nameWithType: MetaSchemas.FormatAssertion202012Id
 - uid: Json.Schema.MetaSchemas.Metadata201909
   name: Metadata201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Metadata201909
@@ -8994,6 +9318,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Metadata201909Id
   fullName: Json.Schema.MetaSchemas.Metadata201909Id
   nameWithType: MetaSchemas.Metadata201909Id
+- uid: Json.Schema.MetaSchemas.Metadata202012
+  name: Metadata202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Metadata202012
+  commentId: F:Json.Schema.MetaSchemas.Metadata202012
+  fullName: Json.Schema.MetaSchemas.Metadata202012
+  nameWithType: MetaSchemas.Metadata202012
+- uid: Json.Schema.MetaSchemas.Metadata202012Id
+  name: Metadata202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Metadata202012Id
+  commentId: F:Json.Schema.MetaSchemas.Metadata202012Id
+  fullName: Json.Schema.MetaSchemas.Metadata202012Id
+  nameWithType: MetaSchemas.Metadata202012Id
 - uid: Json.Schema.MetaSchemas.Validation201909
   name: Validation201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Validation201909
@@ -9006,6 +9342,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Validation201909Id
   fullName: Json.Schema.MetaSchemas.Validation201909Id
   nameWithType: MetaSchemas.Validation201909Id
+- uid: Json.Schema.MetaSchemas.Validation202012
+  name: Validation202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Validation202012
+  commentId: F:Json.Schema.MetaSchemas.Validation202012
+  fullName: Json.Schema.MetaSchemas.Validation202012
+  nameWithType: MetaSchemas.Validation202012
+- uid: Json.Schema.MetaSchemas.Validation202012Id
+  name: Validation202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Validation202012Id
+  commentId: F:Json.Schema.MetaSchemas.Validation202012Id
+  fullName: Json.Schema.MetaSchemas.Validation202012Id
+  nameWithType: MetaSchemas.Validation202012Id
 - uid: Json.Schema.MinContainsKeyword
   name: MinContainsKeyword
   href: api/Json.Schema.MinContainsKeyword.html
@@ -9975,6 +10323,146 @@ references:
   isSpec: "True"
   fullName: Json.Schema.PredicateFormat.Validate
   nameWithType: PredicateFormat.Validate
+- uid: Json.Schema.PrefixItemsKeyword
+  name: PrefixItemsKeyword
+  href: api/Json.Schema.PrefixItemsKeyword.html
+  commentId: T:Json.Schema.PrefixItemsKeyword
+  fullName: Json.Schema.PrefixItemsKeyword
+  nameWithType: PrefixItemsKeyword
+- uid: Json.Schema.PrefixItemsKeyword.#ctor(IEnumerable{Json.Schema.JsonSchema})
+  name: PrefixItemsKeyword(IEnumerable<JsonSchema>)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword__ctor_IEnumerable_Json_Schema_JsonSchema__
+  commentId: M:Json.Schema.PrefixItemsKeyword.#ctor(IEnumerable{Json.Schema.JsonSchema})
+  name.vb: PrefixItemsKeyword(IEnumerable(Of JsonSchema))
+  fullName: Json.Schema.PrefixItemsKeyword.PrefixItemsKeyword(IEnumerable<Json.Schema.JsonSchema>)
+  fullName.vb: Json.Schema.PrefixItemsKeyword.PrefixItemsKeyword(IEnumerable(Of Json.Schema.JsonSchema))
+  nameWithType: PrefixItemsKeyword.PrefixItemsKeyword(IEnumerable<JsonSchema>)
+  nameWithType.vb: PrefixItemsKeyword.PrefixItemsKeyword(IEnumerable(Of JsonSchema))
+- uid: Json.Schema.PrefixItemsKeyword.#ctor(Json.Schema.JsonSchema[])
+  name: PrefixItemsKeyword(JsonSchema[])
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword__ctor_Json_Schema_JsonSchema___
+  commentId: M:Json.Schema.PrefixItemsKeyword.#ctor(Json.Schema.JsonSchema[])
+  name.vb: PrefixItemsKeyword(JsonSchema())
+  fullName: Json.Schema.PrefixItemsKeyword.PrefixItemsKeyword(Json.Schema.JsonSchema[])
+  fullName.vb: Json.Schema.PrefixItemsKeyword.PrefixItemsKeyword(Json.Schema.JsonSchema())
+  nameWithType: PrefixItemsKeyword.PrefixItemsKeyword(JsonSchema[])
+  nameWithType.vb: PrefixItemsKeyword.PrefixItemsKeyword(JsonSchema())
+- uid: Json.Schema.PrefixItemsKeyword.#ctor*
+  name: PrefixItemsKeyword
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword__ctor_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.PrefixItemsKeyword.PrefixItemsKeyword
+  nameWithType: PrefixItemsKeyword.PrefixItemsKeyword
+- uid: Json.Schema.PrefixItemsKeyword.ArraySchemas
+  name: ArraySchemas
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_ArraySchemas
+  commentId: P:Json.Schema.PrefixItemsKeyword.ArraySchemas
+  fullName: Json.Schema.PrefixItemsKeyword.ArraySchemas
+  nameWithType: PrefixItemsKeyword.ArraySchemas
+- uid: Json.Schema.PrefixItemsKeyword.ArraySchemas*
+  name: ArraySchemas
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_ArraySchemas_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.ArraySchemas
+  isSpec: "True"
+  fullName: Json.Schema.PrefixItemsKeyword.ArraySchemas
+  nameWithType: PrefixItemsKeyword.ArraySchemas
+- uid: Json.Schema.PrefixItemsKeyword.Equals(Json.Schema.PrefixItemsKeyword)
+  name: Equals(PrefixItemsKeyword)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Equals_Json_Schema_PrefixItemsKeyword_
+  commentId: M:Json.Schema.PrefixItemsKeyword.Equals(Json.Schema.PrefixItemsKeyword)
+  fullName: Json.Schema.PrefixItemsKeyword.Equals(Json.Schema.PrefixItemsKeyword)
+  nameWithType: PrefixItemsKeyword.Equals(PrefixItemsKeyword)
+- uid: Json.Schema.PrefixItemsKeyword.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Equals_System_Object_
+  commentId: M:Json.Schema.PrefixItemsKeyword.Equals(System.Object)
+  fullName: Json.Schema.PrefixItemsKeyword.Equals(System.Object)
+  nameWithType: PrefixItemsKeyword.Equals(Object)
+- uid: Json.Schema.PrefixItemsKeyword.Equals*
+  name: Equals
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Equals_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.Equals
+  isSpec: "True"
+  fullName: Json.Schema.PrefixItemsKeyword.Equals
+  nameWithType: PrefixItemsKeyword.Equals
+- uid: Json.Schema.PrefixItemsKeyword.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_GetHashCode
+  commentId: M:Json.Schema.PrefixItemsKeyword.GetHashCode
+  fullName: Json.Schema.PrefixItemsKeyword.GetHashCode()
+  nameWithType: PrefixItemsKeyword.GetHashCode()
+- uid: Json.Schema.PrefixItemsKeyword.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_GetHashCode_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.PrefixItemsKeyword.GetHashCode
+  nameWithType: PrefixItemsKeyword.GetHashCode
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,Uri)
+  name: IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_Json_Schema_SchemaRegistry_Uri_
+  commentId: M:Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#RegisterSubschemas(Json.Schema.SchemaRegistry,Uri)
+  name.vb: Json.Schema.IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas(Json.Schema.SchemaRegistry, Uri)
+  nameWithType: PrefixItemsKeyword.IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas(SchemaRegistry, Uri)
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#RegisterSubschemas*
+  name: IRefResolvable.RegisterSubschemas
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_RegisterSubschemas_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#RegisterSubschemas
+  isSpec: "True"
+  name.vb: Json.Schema.IRefResolvable.RegisterSubschemas
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
+  nameWithType: PrefixItemsKeyword.IRefResolvable.RegisterSubschemas
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
+  name: IRefResolvable.ResolvePointerSegment(String)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
+  commentId: M:Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
+  nameWithType: PrefixItemsKeyword.IRefResolvable.ResolvePointerSegment(String)
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
+  name: IRefResolvable.ResolvePointerSegment
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment
+  isSpec: "True"
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment
+  nameWithType: PrefixItemsKeyword.IRefResolvable.ResolvePointerSegment
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#ISchemaCollector#Schemas
+  name: ISchemaCollector.Schemas
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_ISchemaCollector_Schemas
+  commentId: P:Json.Schema.PrefixItemsKeyword.Json#Schema#ISchemaCollector#Schemas
+  name.vb: Json.Schema.ISchemaCollector.Schemas
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+  nameWithType: PrefixItemsKeyword.ISchemaCollector.Schemas
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#ISchemaCollector#Schemas*
+  name: ISchemaCollector.Schemas
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_ISchemaCollector_Schemas_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.Json#Schema#ISchemaCollector#Schemas
+  isSpec: "True"
+  name.vb: Json.Schema.ISchemaCollector.Schemas
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+  nameWithType: PrefixItemsKeyword.ISchemaCollector.Schemas
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.ISchemaCollector.Schemas
+- uid: Json.Schema.PrefixItemsKeyword.Validate(Json.Schema.ValidationContext)
+  name: Validate(ValidationContext)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Validate_Json_Schema_ValidationContext_
+  commentId: M:Json.Schema.PrefixItemsKeyword.Validate(Json.Schema.ValidationContext)
+  fullName: Json.Schema.PrefixItemsKeyword.Validate(Json.Schema.ValidationContext)
+  nameWithType: PrefixItemsKeyword.Validate(ValidationContext)
+- uid: Json.Schema.PrefixItemsKeyword.Validate*
+  name: Validate
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Validate_
+  commentId: Overload:Json.Schema.PrefixItemsKeyword.Validate
+  isSpec: "True"
+  fullName: Json.Schema.PrefixItemsKeyword.Validate
+  nameWithType: PrefixItemsKeyword.Validate
 - uid: Json.Schema.PropertiesKeyword
   name: PropertiesKeyword
   href: api/Json.Schema.PropertiesKeyword.html
@@ -11724,6 +12212,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.CurrentUri
   nameWithType: ValidationContext.CurrentUri
+- uid: Json.Schema.ValidationContext.DynamicAnchors
+  name: DynamicAnchors
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_DynamicAnchors
+  commentId: P:Json.Schema.ValidationContext.DynamicAnchors
+  fullName: Json.Schema.ValidationContext.DynamicAnchors
+  nameWithType: ValidationContext.DynamicAnchors
+- uid: Json.Schema.ValidationContext.DynamicAnchors*
+  name: DynamicAnchors
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_DynamicAnchors_
+  commentId: Overload:Json.Schema.ValidationContext.DynamicAnchors
+  isSpec: "True"
+  fullName: Json.Schema.ValidationContext.DynamicAnchors
+  nameWithType: ValidationContext.DynamicAnchors
 - uid: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,Uri)
   name: From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Uri)
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_Json_Schema_ValidationContext_System_Nullable_Json_Pointer_JsonPointer___System_Nullable_JsonElement___System_Nullable_Json_Pointer_JsonPointer___Uri_
@@ -12006,6 +12507,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationOptions.OutputFormat
   nameWithType: ValidationOptions.OutputFormat
+- uid: Json.Schema.ValidationOptions.RequireFormatValidation
+  name: RequireFormatValidation
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_RequireFormatValidation
+  commentId: P:Json.Schema.ValidationOptions.RequireFormatValidation
+  fullName: Json.Schema.ValidationOptions.RequireFormatValidation
+  nameWithType: ValidationOptions.RequireFormatValidation
+- uid: Json.Schema.ValidationOptions.RequireFormatValidation*
+  name: RequireFormatValidation
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_RequireFormatValidation_
+  commentId: Overload:Json.Schema.ValidationOptions.RequireFormatValidation
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.RequireFormatValidation
+  nameWithType: ValidationOptions.RequireFormatValidation
 - uid: Json.Schema.ValidationOptions.SchemaRegistry
   name: SchemaRegistry
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_SchemaRegistry
@@ -12225,6 +12739,18 @@ references:
   commentId: F:Json.Schema.Vocabularies.Applicator201909Id
   fullName: Json.Schema.Vocabularies.Applicator201909Id
   nameWithType: Vocabularies.Applicator201909Id
+- uid: Json.Schema.Vocabularies.Applicator202012
+  name: Applicator202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Applicator202012
+  commentId: F:Json.Schema.Vocabularies.Applicator202012
+  fullName: Json.Schema.Vocabularies.Applicator202012
+  nameWithType: Vocabularies.Applicator202012
+- uid: Json.Schema.Vocabularies.Applicator202012Id
+  name: Applicator202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Applicator202012Id
+  commentId: F:Json.Schema.Vocabularies.Applicator202012Id
+  fullName: Json.Schema.Vocabularies.Applicator202012Id
+  nameWithType: Vocabularies.Applicator202012Id
 - uid: Json.Schema.Vocabularies.Content201909
   name: Content201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Content201909
@@ -12237,6 +12763,18 @@ references:
   commentId: F:Json.Schema.Vocabularies.Content201909Id
   fullName: Json.Schema.Vocabularies.Content201909Id
   nameWithType: Vocabularies.Content201909Id
+- uid: Json.Schema.Vocabularies.Content202012
+  name: Content202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Content202012
+  commentId: F:Json.Schema.Vocabularies.Content202012
+  fullName: Json.Schema.Vocabularies.Content202012
+  nameWithType: Vocabularies.Content202012
+- uid: Json.Schema.Vocabularies.Content202012Id
+  name: Content202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Content202012Id
+  commentId: F:Json.Schema.Vocabularies.Content202012Id
+  fullName: Json.Schema.Vocabularies.Content202012Id
+  nameWithType: Vocabularies.Content202012Id
 - uid: Json.Schema.Vocabularies.Core201909
   name: Core201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Core201909
@@ -12249,6 +12787,30 @@ references:
   commentId: F:Json.Schema.Vocabularies.Core201909Id
   fullName: Json.Schema.Vocabularies.Core201909Id
   nameWithType: Vocabularies.Core201909Id
+- uid: Json.Schema.Vocabularies.Core202012
+  name: Core202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Core202012
+  commentId: F:Json.Schema.Vocabularies.Core202012
+  fullName: Json.Schema.Vocabularies.Core202012
+  nameWithType: Vocabularies.Core202012
+- uid: Json.Schema.Vocabularies.Core202012Id
+  name: Core202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Core202012Id
+  commentId: F:Json.Schema.Vocabularies.Core202012Id
+  fullName: Json.Schema.Vocabularies.Core202012Id
+  nameWithType: Vocabularies.Core202012Id
+- uid: Json.Schema.Vocabularies.Dynamic202012
+  name: Dynamic202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Dynamic202012
+  commentId: F:Json.Schema.Vocabularies.Dynamic202012
+  fullName: Json.Schema.Vocabularies.Dynamic202012
+  nameWithType: Vocabularies.Dynamic202012
+- uid: Json.Schema.Vocabularies.Dynamic202012Id
+  name: Dynamic202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Dynamic202012Id
+  commentId: F:Json.Schema.Vocabularies.Dynamic202012Id
+  fullName: Json.Schema.Vocabularies.Dynamic202012Id
+  nameWithType: Vocabularies.Dynamic202012Id
 - uid: Json.Schema.Vocabularies.Format201909
   name: Format201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Format201909
@@ -12261,6 +12823,30 @@ references:
   commentId: F:Json.Schema.Vocabularies.Format201909Id
   fullName: Json.Schema.Vocabularies.Format201909Id
   nameWithType: Vocabularies.Format201909Id
+- uid: Json.Schema.Vocabularies.FormatAnnotation202012
+  name: FormatAnnotation202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_FormatAnnotation202012
+  commentId: F:Json.Schema.Vocabularies.FormatAnnotation202012
+  fullName: Json.Schema.Vocabularies.FormatAnnotation202012
+  nameWithType: Vocabularies.FormatAnnotation202012
+- uid: Json.Schema.Vocabularies.FormatAnnotation202012Id
+  name: FormatAnnotation202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_FormatAnnotation202012Id
+  commentId: F:Json.Schema.Vocabularies.FormatAnnotation202012Id
+  fullName: Json.Schema.Vocabularies.FormatAnnotation202012Id
+  nameWithType: Vocabularies.FormatAnnotation202012Id
+- uid: Json.Schema.Vocabularies.FormatAssertion202012
+  name: FormatAssertion202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_FormatAssertion202012
+  commentId: F:Json.Schema.Vocabularies.FormatAssertion202012
+  fullName: Json.Schema.Vocabularies.FormatAssertion202012
+  nameWithType: Vocabularies.FormatAssertion202012
+- uid: Json.Schema.Vocabularies.FormatAssertion202012Id
+  name: FormatAssertion202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_FormatAssertion202012Id
+  commentId: F:Json.Schema.Vocabularies.FormatAssertion202012Id
+  fullName: Json.Schema.Vocabularies.FormatAssertion202012Id
+  nameWithType: Vocabularies.FormatAssertion202012Id
 - uid: Json.Schema.Vocabularies.Metadata201909
   name: Metadata201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Metadata201909
@@ -12273,6 +12859,18 @@ references:
   commentId: F:Json.Schema.Vocabularies.Metadata201909Id
   fullName: Json.Schema.Vocabularies.Metadata201909Id
   nameWithType: Vocabularies.Metadata201909Id
+- uid: Json.Schema.Vocabularies.Metadata202012
+  name: Metadata202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Metadata202012
+  commentId: F:Json.Schema.Vocabularies.Metadata202012
+  fullName: Json.Schema.Vocabularies.Metadata202012
+  nameWithType: Vocabularies.Metadata202012
+- uid: Json.Schema.Vocabularies.Metadata202012Id
+  name: Metadata202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Metadata202012Id
+  commentId: F:Json.Schema.Vocabularies.Metadata202012Id
+  fullName: Json.Schema.Vocabularies.Metadata202012Id
+  nameWithType: Vocabularies.Metadata202012Id
 - uid: Json.Schema.Vocabularies.Validation201909
   name: Validation201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Validation201909
@@ -12285,6 +12883,18 @@ references:
   commentId: F:Json.Schema.Vocabularies.Validation201909Id
   fullName: Json.Schema.Vocabularies.Validation201909Id
   nameWithType: Vocabularies.Validation201909Id
+- uid: Json.Schema.Vocabularies.Validation202012
+  name: Validation202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Validation202012
+  commentId: F:Json.Schema.Vocabularies.Validation202012
+  fullName: Json.Schema.Vocabularies.Validation202012
+  nameWithType: Vocabularies.Validation202012
+- uid: Json.Schema.Vocabularies.Validation202012Id
+  name: Validation202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Validation202012Id
+  commentId: F:Json.Schema.Vocabularies.Validation202012Id
+  fullName: Json.Schema.Vocabularies.Validation202012Id
+  nameWithType: Vocabularies.Validation202012Id
 - uid: Json.Schema.Vocabulary
   name: Vocabulary
   href: api/Json.Schema.Vocabulary.html
