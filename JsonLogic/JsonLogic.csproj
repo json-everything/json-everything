@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Json.Logic</RootNamespace>
     <AssemblyName>JsonLogic.Net</AssemblyName>
     <Authors>Greg Dennis</Authors>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Json.More\Json.More.csproj" />
+    <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
   </ItemGroup>
 
 </Project>
