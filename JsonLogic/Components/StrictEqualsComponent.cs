@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic
+namespace Json.Logic.Components
 {
-	internal class LooseEqualsComponent : ILogicComponent
+	internal class StrictEqualsComponent : ILogicComponent
 	{
 		private readonly ILogicComponent _a;
 		private readonly ILogicComponent _b;
 
-		public LooseEqualsComponent(ILogicComponent a, ILogicComponent b)
+		public StrictEqualsComponent(ILogicComponent a, ILogicComponent b)
 		{
 			_a = a;
 			_b = b;

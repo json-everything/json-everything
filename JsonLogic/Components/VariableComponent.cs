@@ -3,7 +3,7 @@ using System.Text.Json;
 using Json.More;
 using Json.Path;
 
-namespace Json.Logic
+namespace Json.Logic.Components
 {
 	internal class VariableComponent : ILogicComponent
 	{
