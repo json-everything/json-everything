@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic
+namespace Json.Logic.Components
 {
 	internal class OrComponent : ILogicComponent
 	{
@@ -16,8 +16,8 @@ namespace Json.Logic
 
 		public JsonElement Apply(JsonElement data)
 		{
-			return (_a.Apply(data).ValueKind == JsonValueKind.True ||
-			        _b.Apply(data).ValueKind == JsonValueKind.True).AsJsonElement();
+			return (_a.Apply(data).IsTruthy() ||
+			        _b.Apply(data).IsTruthy()).AsJsonElement();
 		}
 	}
 }

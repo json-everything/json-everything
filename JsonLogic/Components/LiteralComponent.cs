@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic
+namespace Json.Logic.Components
 {
 	internal class LiteralComponent : ILogicComponent
 	{

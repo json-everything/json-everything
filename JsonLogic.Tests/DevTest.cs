@@ -9,7 +9,7 @@ namespace Json.Logic.Tests
 		public void Check()
 		{
 			var rule = And(
-				LooseEquals(
+				StrictEquals(
 					Literal(5),
 					Literal(10)),
 				Literal(true)
