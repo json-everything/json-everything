@@ -13,7 +13,7 @@ namespace Json.Logic.Tests
 			var rule = new VariableComponent(JsonPath.Parse("$.foo"));
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
-			Assert.IsTrue(5.AsJsonElement().IsEquivalentTo(rule.Apply(data)));
+			JsonAssert.AreEquivalent(5, rule.Apply(data));
 		}
 
 		[Test]
@@ -31,7 +31,7 @@ namespace Json.Logic.Tests
 			var rule = new VariableComponent(JsonPath.Parse("$.foo"), new LiteralComponent(11));
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
-			Assert.IsTrue(5.AsJsonElement().IsEquivalentTo(rule.Apply(data)));
+			JsonAssert.AreEquivalent(5, rule.Apply(data));
 		}
 
 		[Test]
@@ -40,7 +40,7 @@ namespace Json.Logic.Tests
 			var rule = new VariableComponent(JsonPath.Parse("$.baz"), new LiteralComponent(11));
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
-			Assert.IsTrue(11.AsJsonElement().IsEquivalentTo(rule.Apply(data)));
+			JsonAssert.AreEquivalent(11, rule.Apply(data));
 		}
 	}
 }

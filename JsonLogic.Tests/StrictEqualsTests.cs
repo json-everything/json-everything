@@ -11,7 +11,7 @@ namespace Json.Logic.Tests
 		{
 			var rule = new StrictEqualsComponent(new LiteralComponent(1), new LiteralComponent(2));
 
-			Assert.AreEqual(JsonValueKind.False, rule.Apply().ValueKind);
+			JsonAssert.IsFalse(rule.Apply());
 		}
 
 		[Test]
@@ -19,7 +19,7 @@ namespace Json.Logic.Tests
 		{
 			var rule = new StrictEqualsComponent(new LiteralComponent(1), new LiteralComponent(1));
 
-			Assert.AreEqual(JsonValueKind.True, rule.Apply().ValueKind);
+			JsonAssert.IsTrue(rule.Apply());
 		}
 	}
 }
