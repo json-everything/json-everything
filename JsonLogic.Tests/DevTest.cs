@@ -1,4 +1,5 @@
 using NUnit.Framework;
+
 using static Json.Logic.JsonLogic;
 
 namespace Json.Logic.Tests

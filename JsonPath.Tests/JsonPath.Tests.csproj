@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>JsonPath.Tests</RootNamespace>
+    <RootNamespace>Json.Path.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

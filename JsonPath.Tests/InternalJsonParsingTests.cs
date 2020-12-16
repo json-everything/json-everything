@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Json.Path;
 using NUnit.Framework;
 
-namespace JsonPath.Tests
+namespace Json.Path.Tests
 {
 	public class InternalJsonParsingTests
 	{

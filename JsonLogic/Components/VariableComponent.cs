@@ -19,7 +19,7 @@ namespace Json.Logic.Components
 		public JsonElement Apply(JsonElement data)
 		{
 			var pathEval = _path.Evaluate(data).Matches;
-			if (pathEval != null)
+			if (pathEval != null && pathEval.Count != 0)
 			{
 				if (pathEval.Count == 1) return pathEval[0].Value;
 

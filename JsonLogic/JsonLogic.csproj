@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Json.Logic</RootNamespace>
-    <AssemblyName>JsonLogic.Net</AssemblyName>
+    <AssemblyName>JsonLogic</AssemblyName>
     <Authors>Greg Dennis</Authors>
     <Description>JsonLogic built on the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
