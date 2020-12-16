@@ -3,7 +3,7 @@ using System.Text.Json;
 using Json.More;
 using NUnit.Framework;
 
-namespace JsonPath.Tests
+namespace Json.Path.Tests
 {
 	public class ParsedGoessnerTests
 	{

@@ -1,4 +1,4 @@
-﻿namespace JsonPath.Tests.Suite
+﻿namespace Json.Path.Tests.Suite
 {
 	public class CburgmerTestCase
 	{

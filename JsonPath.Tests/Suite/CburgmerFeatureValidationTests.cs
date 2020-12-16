@@ -8,10 +8,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
-using Json.Path;
 using NUnit.Framework;
 
-namespace JsonPath.Tests.Suite
+namespace Json.Path.Tests.Suite
 {
 	/// <summary>
 	/// These are a set of tests that GitHub user cburgmer uses to check all JSON Path implementations
