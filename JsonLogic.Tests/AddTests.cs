@@ -13,7 +13,7 @@ namespace Json.Logic.Tests
 			var rule = new AddComponent(new LiteralComponent(4), new LiteralComponent(5));
 
 			var actual = rule.Apply();
-			Assert.IsTrue(9.AsJsonElement().IsEquivalentTo(actual));
+			JsonAssert.AreEquivalent(9, actual);
 		}
 
 		[Test]
@@ -30,7 +30,7 @@ namespace Json.Logic.Tests
 			var rule = new AddComponent(new LiteralComponent(3.14));
 
 			var actual = rule.Apply();
-			Assert.IsTrue((3.14).AsJsonElement().IsEquivalentTo(actual));
+			JsonAssert.AreEquivalent(3.14, actual);
 		}
 
 		[Test]
@@ -39,7 +39,7 @@ namespace Json.Logic.Tests
 			var rule = new AddComponent(new LiteralComponent("3.14"));
 
 			var actual = rule.Apply();
-			Assert.IsTrue((3.14).AsJsonElement().IsEquivalentTo(actual));
+			JsonAssert.AreEquivalent(3.14, actual);
 		}
 
 		[Test]
