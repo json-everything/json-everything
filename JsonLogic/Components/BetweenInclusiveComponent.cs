@@ -3,13 +3,13 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class BetweenComponent : ILogicComponent
+	internal class BetweenInclusiveComponent : ILogicComponent
 	{
 		private readonly ILogicComponent _low;
 		private readonly ILogicComponent _value;
 		private readonly ILogicComponent _high;
 
-		public BetweenComponent(ILogicComponent low, ILogicComponent value, ILogicComponent high)
+		public BetweenInclusiveComponent(ILogicComponent low, ILogicComponent value, ILogicComponent high)
 		{
 			_low = low;
 			_value = value;
@@ -30,7 +30,7 @@ namespace Json.Logic.Components
 				throw new JsonLogicException("Upper bound must be a number.");
 
 			var val = value.GetDecimal();
-			return (low.GetDecimal() < val && val < high.GetDecimal()).AsJsonElement();
+			return (low.GetDecimal() <= val && val <= high.GetDecimal()).AsJsonElement();
 		}
 	}
 }
