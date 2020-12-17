@@ -19,7 +19,7 @@ namespace Json.Logic.Components
 
 		public LiteralComponent(string value)
 		{
-			_value = value.AsJsonElement();
+			_value = value?.AsJsonElement() ?? JsonDocument.Parse("null").RootElement;
 		}
 
 		public LiteralComponent(bool value)
