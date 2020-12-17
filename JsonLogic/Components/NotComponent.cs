@@ -16,10 +16,7 @@ namespace Json.Logic.Components
 		{
 			var value = _value.Apply(data);
 
-			if (value.ValueKind == JsonValueKind.Object)
-				throw new JsonLogicException("Objects have no truthy-ness");
-
-			return (!_value.Apply(data).IsTruthy()).AsJsonElement();
+			return (!value.IsTruthy()).AsJsonElement();
 		}
 	}
 }

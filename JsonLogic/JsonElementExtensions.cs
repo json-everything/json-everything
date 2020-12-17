@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 
@@ -17,7 +16,7 @@ namespace Json.Logic
 				JsonValueKind.True => true,
 				JsonValueKind.False => false,
 				JsonValueKind.Null => false,
-				_ => throw new ArgumentOutOfRangeException()
+				_ => throw new JsonLogicException($"Cannot determine truthiness of `{element.ValueKind}`.")
 			};
 		}
 

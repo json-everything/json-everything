@@ -13,15 +13,16 @@ namespace Json.Logic.Components
 			_a = a;
 			_b = b;
 		}
+
 		public JsonElement Apply(JsonElement data)
 		{
 			var a = _a.Apply(data);
 			var b = _b.Apply(data);
 
-			if (a.ValueKind == JsonValueKind.Number && b.ValueKind == JsonValueKind.Number)
-				return (a.GetDecimal() > b.GetDecimal()).AsJsonElement();
+			if (a.ValueKind != JsonValueKind.Number || b.ValueKind != JsonValueKind.Number)
+				throw new JsonLogicException($"Cannot compare {a.ValueKind} and {b.ValueKind}.");
 
-			throw new JsonLogicException($"Cannot compare types {a.ValueKind} and {b.ValueKind}.");
+			return (a.GetDecimal() > b.GetDecimal()).AsJsonElement();
 		}
 	}
 }
