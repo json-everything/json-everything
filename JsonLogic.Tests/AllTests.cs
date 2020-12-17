@@ -13,8 +13,7 @@ namespace Json.Logic.Tests
 			var rule = new AllComponent(new LiteralComponent(JsonDocument.Parse("[1,2,3]").RootElement),
 				new MoreThanComponent(new VariableComponent(JsonPath.Parse("$")), new LiteralComponent(0)));
 
-			var actual = rule.Apply();
-			JsonAssert.IsTrue(actual);
+			JsonAssert.IsTrue(rule.Apply());
 		}
 
 		[Test]
@@ -23,8 +22,7 @@ namespace Json.Logic.Tests
 			var rule = new AllComponent(new LiteralComponent(JsonDocument.Parse("[1,-2,3]").RootElement),
 				new MoreThanComponent(new VariableComponent(JsonPath.Parse("$")), new LiteralComponent(0)));
 
-			var actual = rule.Apply();
-			JsonAssert.IsFalse(actual);
+			JsonAssert.IsFalse(rule.Apply());
 		}
 	}
 }
