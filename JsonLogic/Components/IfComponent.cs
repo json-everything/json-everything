@@ -4,6 +4,7 @@ using System.Text.Json;
 
 namespace Json.Logic.Components
 {
+	[Operator("if")]
 	internal class IfComponent : LogicComponent
 	{
 		private readonly LogicComponent _condition;

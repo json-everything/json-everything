@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Logic.Components;
 
 namespace Json.Logic
 {
@@ -14,10 +17,52 @@ namespace Json.Logic
 	{
 		public override LogicComponent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			if (reader.TokenType != JsonTokenType.StartObject)
+				return new LiteralComponent(JsonDocument.ParseValue(ref reader).RootElement);
+
+			var data = JsonSerializer.Deserialize<Dictionary<string, ArgumentCollection>>(ref reader, options);
+			
+			if (data.Count != 1)
+				throw new JsonException("Rules must contain exactly one operator key with an array of arguments.");
+
+			var ruleInfo = data.First();
+			
+			var ruleType = RuleRegistry.GetRule(ruleInfo.Key);
+
+			return (LogicComponent) Activator.CreateInstance(ruleType, ruleInfo.Value.Cast<object>().ToArray());
 		}
 
 		public override void Write(Utf8JsonWriter writer, LogicComponent value, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	[JsonConverter(typeof(ArgumentCollectionConverter))]
+	internal class ArgumentCollection : List<LogicComponent>
+	{
+		public ArgumentCollection(LogicComponent single)
+		{
+			Add(single);
+		}
+
+		public ArgumentCollection(IEnumerable<LogicComponent> components)
+			: base(components)
+		{
+		}
+	}
+	
+	internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
+	{
+		public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.StartArray)
+				return new ArgumentCollection(JsonSerializer.Deserialize<List<LogicComponent>>(ref reader, options));
+			
+			return new ArgumentCollection(JsonSerializer.Deserialize<LogicComponent>(ref reader, options));
+		}
+
+		public override void Write(Utf8JsonWriter writer, ArgumentCollection value, JsonSerializerOptions options)
 		{
 			throw new NotImplementedException();
 		}

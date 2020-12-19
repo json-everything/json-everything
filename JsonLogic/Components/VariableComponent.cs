@@ -5,6 +5,7 @@ using Json.Path;
 
 namespace Json.Logic.Components
 {
+	[Operator("var")]
 	internal class VariableComponent : LogicComponent
 	{
 		private readonly JsonPath _path;

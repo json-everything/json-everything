@@ -4,6 +4,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("none")]
 	internal class NoneComponent : LogicComponent
 	{
 		private readonly LogicComponent _input;
