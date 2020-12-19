@@ -101,6 +101,18 @@
             <param name="isUriEncoded">Whether the pointer should be URL-encoded.</param>
             <returns>The JSON Pointer.</returns>
         </member>
+        <member name="M:Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Generates a JSON Pointer from a lambda expression.
+            </summary>
+            <typeparam name="T">The type of the object.</typeparam>
+            <param name="expression">The lambda expression which gives the pointer path.</param>
+            <returns>The JSON Pointer.</returns>
+            <exception cref="T:System.NotSupportedException">
+            Thrown when the lambda expression contains a node that is not a property access or
+            <see cref="T:System.Int32"/>-valued indexer.
+            </exception>
+        </member>
         <member name="M:Json.Pointer.JsonPointer.Combine(Json.Pointer.JsonPointer)">
             <summary>
             Concatenates a pointer onto the current pointer.

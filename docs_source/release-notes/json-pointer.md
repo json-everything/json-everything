@@ -1,3 +1,7 @@
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/???)
+
+Added support pointer creation using lambda expressions, e.g. `x => x.foo[5].bar` to create `/foo/5/bar`.
+
 # [1.2.0](https://github.com/gregsdennis/json-everything/pull/52)
 
 Added support for array index manipulation in Relative JSON Pointer 2 (spec updated alongside JSON Schema Draft 2020-12).
