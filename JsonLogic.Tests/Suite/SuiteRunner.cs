@@ -21,7 +21,7 @@ namespace Json.Logic.Tests.Suite
 				var content = await response.Content.ReadAsStringAsync();
 				var testSuite = JsonSerializer.Deserialize<TestSuite>(content);
 
-				return testSuite.Tests.Select(t => new TestCaseData(t){TestName = $"{t.Logic}  |  {t.Data.ToJsonString()}"});
+				return testSuite.Tests.Select(t => new TestCaseData(t){TestName = $"{t.Logic}  |  {t.Data.ToJsonString()}  |  {t.Expected.ToJsonString()}"});
 			}).Result;
 		}
 
@@ -29,7 +29,13 @@ namespace Json.Logic.Tests.Suite
 		public void Run(Test test)
 		{
 			var rule = JsonSerializer.Deserialize<LogicComponent>(test.Logic);
-			
+
+			if (rule == null)
+			{
+				Assert.AreEqual(JsonValueKind.Null, test.Expected.ValueKind);
+				return;
+			}
+
 			JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
 		}
 	}

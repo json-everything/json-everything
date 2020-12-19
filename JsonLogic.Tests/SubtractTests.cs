@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubtractNumbersReturnsSum()
 		{
-			var rule = new SubtractComponent(new LiteralComponent(4), new LiteralComponent(5));
+			var rule = new SubtractComponent(4, 5);
 
 			var actual = rule.Apply();
 			JsonAssert.AreEquivalent(-1, actual);
@@ -17,7 +17,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubtractNonNumberThrowsError()
 		{
-			var rule = new SubtractComponent(new LiteralComponent("test"), new LiteralComponent(5));
+			var rule = new SubtractComponent("test", 5);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

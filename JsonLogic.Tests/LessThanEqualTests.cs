@@ -10,7 +10,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanTwoNumbersReturnsTrue()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(1), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(1, 2);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -18,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void EqualTwoNumbersReturnsTrue()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(2), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(2, 2);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -26,7 +26,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanEqualTwoNumbersReturnsFalse()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(3), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(3, 2);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -34,7 +34,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanEqualStringThrowsError()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent("foo"), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent("foo", 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -42,7 +42,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanEqualBooleanThrowsError()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(false), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(false, 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -50,7 +50,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanEqualArrayThrowsError()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(new JsonElement[]{}.AsJsonElement()), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(new JsonElement[]{}.AsJsonElement(), 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -58,7 +58,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanEqualObjectThrowsError()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(JsonDocument.Parse("{}").RootElement), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(JsonDocument.Parse("{}").RootElement, 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -66,7 +66,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanEqualNullThrowsError()
 		{
-			var rule = new LessThanEqualComponent(new LiteralComponent(null), new LiteralComponent(2));
+			var rule = new LessThanEqualComponent(null, 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

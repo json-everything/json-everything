@@ -9,7 +9,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void EmptyArrayIsFalse()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(JsonDocument.Parse("[]").RootElement));
+			var rule = new BooleanCastComponent(JsonDocument.Parse("[]").RootElement);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -17,7 +17,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void NonEmptyArrayIsTrue()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(JsonDocument.Parse("[1]").RootElement));
+			var rule = new BooleanCastComponent(JsonDocument.Parse("[1]").RootElement);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -25,7 +25,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void EmptyStringIsFalse()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(""));
+			var rule = new BooleanCastComponent("");
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -33,7 +33,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void NonEmptyStringIsTrue()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent("foo"));
+			var rule = new BooleanCastComponent("foo");
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -41,7 +41,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void ZeroIsFalse()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(0));
+			var rule = new BooleanCastComponent(0);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -49,7 +49,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void NonZeroIsTrue()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(1));
+			var rule = new BooleanCastComponent(1);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -57,7 +57,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void FalseIsFalse()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(false));
+			var rule = new BooleanCastComponent(false);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -65,7 +65,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void TrueIsTrue()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(true));
+			var rule = new BooleanCastComponent(true);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -73,7 +73,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void NullIsFalse()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(JsonDocument.Parse("null").RootElement));
+			var rule = new BooleanCastComponent(JsonDocument.Parse("null").RootElement);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -81,7 +81,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void ObjectThrowsError()
 		{
-			var rule = new BooleanCastComponent(new LiteralComponent(JsonDocument.Parse("{}").RootElement));
+			var rule = new BooleanCastComponent(JsonDocument.Parse("{}").RootElement);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void IfStandardReturnsTrueResult()
 		{
-			var rule = new IfComponent(new LiteralComponent(true), new LiteralComponent(1), new LiteralComponent(2));
+			var rule = new IfComponent(true, 1, 2);
 			
 			JsonAssert.AreEquivalent(1, rule.Apply());
 		}
@@ -16,7 +16,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void IfStandardReturnsFalseResult()
 		{
-			var rule = new IfComponent(new LiteralComponent(false), new LiteralComponent(1), new LiteralComponent(2));
+			var rule = new IfComponent(false, 1, 2);
 			
 			JsonAssert.AreEquivalent(2, rule.Apply());
 		}
@@ -24,9 +24,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void IfStandardReturnsSecondTrueResult()
 		{
-			var rule = new IfComponent(new LiteralComponent(false), new LiteralComponent(1),
-				new LiteralComponent(true), new LiteralComponent(2),
-				new LiteralComponent(3));
+			var rule = new IfComponent(false, 1, true, 2, 3);
 			
 			JsonAssert.AreEquivalent(2, rule.Apply());
 		}
@@ -34,9 +32,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void IfStandardReturnsSecondFalseResult()
 		{
-			var rule = new IfComponent(new LiteralComponent(false), new LiteralComponent(1),
-				new LiteralComponent(false), new LiteralComponent(2),
-				new LiteralComponent(3));
+			var rule = new IfComponent(false, 1, false, 2, 3);
 			
 			JsonAssert.AreEquivalent(3, rule.Apply());
 		}
