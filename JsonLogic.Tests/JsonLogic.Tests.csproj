@@ -18,4 +18,10 @@
     <ProjectReference Include="..\JsonLogic\JsonLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Files\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
