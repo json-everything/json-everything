@@ -18,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void CatStringAndNullConcatsValues()
 		{
-			var rule = new CatComponent("foo", null);
+			var rule = new CatComponent("foo", LiteralComponent.Null);
 			
 			JsonAssert.AreEquivalent("foo", rule.Apply());
 		}

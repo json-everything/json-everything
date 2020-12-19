@@ -8,6 +8,8 @@ namespace Json.Logic.Components
 	{
 		private readonly JsonElement _value;
 
+		public static readonly LiteralComponent Null = new LiteralComponent(null);
+
 		public LiteralComponent(JsonElement value)
 		{
 			_value = value.Clone();
