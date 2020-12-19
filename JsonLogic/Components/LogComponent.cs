@@ -2,9 +2,9 @@
 
 namespace Json.Logic.Components
 {
-	internal class LogComponent : ILogicComponent
+	internal class LogComponent : LogicComponent
 	{
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			throw new System.NotImplementedException();
 		}

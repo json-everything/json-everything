@@ -3,16 +3,16 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class NotComponent : ILogicComponent
+	internal class NotComponent : LogicComponent
 	{
-		private readonly ILogicComponent _value;
+		private readonly LogicComponent _value;
 
-		public NotComponent(ILogicComponent value)
+		public NotComponent(LogicComponent value)
 		{
 			_value = value;
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var value = _value.Apply(data);
 

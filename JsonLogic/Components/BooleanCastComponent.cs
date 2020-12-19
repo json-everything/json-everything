@@ -3,16 +3,16 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class BooleanCastComponent : ILogicComponent
+	internal class BooleanCastComponent : LogicComponent
 	{
-		private readonly ILogicComponent _value;
+		private readonly LogicComponent _value;
 
-		public BooleanCastComponent(ILogicComponent value)
+		public BooleanCastComponent(LogicComponent value)
 		{
 			_value = value;
 		}
 		
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var value = _value.Apply(data);
 

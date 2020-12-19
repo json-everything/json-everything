@@ -3,20 +3,20 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class BetweenInclusiveComponent : ILogicComponent
+	internal class BetweenInclusiveComponent : LogicComponent
 	{
-		private readonly ILogicComponent _low;
-		private readonly ILogicComponent _value;
-		private readonly ILogicComponent _high;
+		private readonly LogicComponent _low;
+		private readonly LogicComponent _value;
+		private readonly LogicComponent _high;
 
-		public BetweenInclusiveComponent(ILogicComponent low, ILogicComponent value, ILogicComponent high)
+		public BetweenInclusiveComponent(LogicComponent low, LogicComponent value, LogicComponent high)
 		{
 			_low = low;
 			_value = value;
 			_high = high;
 		}
 	
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var low = _low.Apply(data);
 			var value = _value.Apply(data);

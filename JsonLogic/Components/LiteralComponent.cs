@@ -3,7 +3,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class LiteralComponent : ILogicComponent
+	internal class LiteralComponent : LogicComponent
 	{
 		private readonly JsonElement _value;
 
@@ -47,7 +47,7 @@ namespace Json.Logic.Components
 			_value = value.AsJsonElement();
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			return _value;
 		}

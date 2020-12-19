@@ -3,18 +3,18 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class StrictEqualsComponent : ILogicComponent
+	internal class StrictEqualsComponent : LogicComponent
 	{
-		private readonly ILogicComponent _a;
-		private readonly ILogicComponent _b;
+		private readonly LogicComponent _a;
+		private readonly LogicComponent _b;
 
-		public StrictEqualsComponent(ILogicComponent a, ILogicComponent b)
+		public StrictEqualsComponent(LogicComponent a, LogicComponent b)
 		{
 			_a = a;
 			_b = b;
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			return _a.Apply(data).IsEquivalentTo(_b.Apply(data)).AsJsonElement();
 		}

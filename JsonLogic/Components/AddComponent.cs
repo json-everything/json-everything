@@ -3,22 +3,22 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class AddComponent : ILogicComponent
+	internal class AddComponent : LogicComponent
 	{
-		private readonly ILogicComponent _a;
-		private readonly ILogicComponent _b;
+		private readonly LogicComponent _a;
+		private readonly LogicComponent _b;
 
-		public AddComponent(ILogicComponent a)
+		public AddComponent(LogicComponent a)
 		{
 			_a = a;
 		}
-		public AddComponent(ILogicComponent a, ILogicComponent b)
+		public AddComponent(LogicComponent a, LogicComponent b)
 		{
 			_a = a;
 			_b = b;
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var a = _a.Apply(data);
 
