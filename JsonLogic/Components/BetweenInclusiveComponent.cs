@@ -3,6 +3,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("between_ex")]
 	internal class BetweenInclusiveComponent : LogicComponent
 	{
 		private readonly LogicComponent _low;

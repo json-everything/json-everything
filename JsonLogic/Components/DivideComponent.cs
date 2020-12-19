@@ -3,6 +3,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("/")]
 	internal class DivideComponent : LogicComponent
 	{
 		private readonly LogicComponent _a;

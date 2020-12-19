@@ -3,6 +3,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("!!")]
 	internal class BooleanCastComponent : LogicComponent
 	{
 		private readonly LogicComponent _value;

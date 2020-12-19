@@ -4,6 +4,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("substr")]
 	internal class SubstrComponent : LogicComponent
 	{
 		private readonly LogicComponent _input;

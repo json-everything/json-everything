@@ -3,6 +3,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("or")]
 	internal class OrComponent : LogicComponent
 	{
 		private readonly LogicComponent _a;

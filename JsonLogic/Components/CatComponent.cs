@@ -5,6 +5,7 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
+	[Operator("cat")]
 	internal class CatComponent : LogicComponent
 	{
 		private readonly LogicComponent _a;

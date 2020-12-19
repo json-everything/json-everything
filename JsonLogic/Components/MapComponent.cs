@@ -2,6 +2,7 @@
 
 namespace Json.Logic.Components
 {
+	[Operator("map")]
 	internal class MapComponent : LogicComponent
 	{
 		public override JsonElement Apply(JsonElement data)
