@@ -3,18 +3,18 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class MoreThanComponent : ILogicComponent
+	internal class MoreThanComponent : LogicComponent
 	{
-		private readonly ILogicComponent _a;
-		private readonly ILogicComponent _b;
+		private readonly LogicComponent _a;
+		private readonly LogicComponent _b;
 
-		public MoreThanComponent(ILogicComponent a, ILogicComponent b)
+		public MoreThanComponent(LogicComponent a, LogicComponent b)
 		{
 			_a = a;
 			_b = b;
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var a = _a.Apply(data);
 			var b = _b.Apply(data);

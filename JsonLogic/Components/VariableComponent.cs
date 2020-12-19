@@ -5,18 +5,18 @@ using Json.Path;
 
 namespace Json.Logic.Components
 {
-	internal class VariableComponent : ILogicComponent
+	internal class VariableComponent : LogicComponent
 	{
 		private readonly JsonPath _path;
-		private readonly ILogicComponent _defaultValue;
+		private readonly LogicComponent _defaultValue;
 
-		public VariableComponent(JsonPath path, ILogicComponent defaultValue = null)
+		public VariableComponent(JsonPath path, LogicComponent defaultValue = null)
 		{
 			_path = path;
 			_defaultValue = defaultValue;
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var pathEval = _path.Evaluate(data).Matches;
 			if (pathEval != null && pathEval.Count != 0)

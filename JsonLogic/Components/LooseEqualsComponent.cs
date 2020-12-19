@@ -2,9 +2,9 @@
 
 namespace Json.Logic.Components
 {
-	internal class LooseEqualsComponent : ILogicComponent
+	internal class LooseEqualsComponent : LogicComponent
 	{
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			throw new System.NotImplementedException();
 		}

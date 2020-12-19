@@ -4,25 +4,25 @@ using Json.More;
 
 namespace Json.Logic.Components
 {
-	internal class SubstrComponent : ILogicComponent
+	internal class SubstrComponent : LogicComponent
 	{
-		private readonly ILogicComponent _input;
-		private readonly ILogicComponent _start;
-		private readonly ILogicComponent _count;
+		private readonly LogicComponent _input;
+		private readonly LogicComponent _start;
+		private readonly LogicComponent _count;
 
-		public SubstrComponent(ILogicComponent input, ILogicComponent start)
+		public SubstrComponent(LogicComponent input, LogicComponent start)
 		{
 			_input = input;
 			_start = start;
 		}
-		public SubstrComponent(ILogicComponent input, ILogicComponent start, ILogicComponent count)
+		public SubstrComponent(LogicComponent input, LogicComponent start, LogicComponent count)
 		{
 			_input = input;
 			_start = start;
 			_count = count;
 		}
 
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var input = _input.Apply(data);
 			var start = _start.Apply(data);

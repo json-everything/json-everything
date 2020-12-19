@@ -4,24 +4,24 @@ using System.Text.Json;
 
 namespace Json.Logic.Components
 {
-	internal class IfComponent : ILogicComponent
+	internal class IfComponent : LogicComponent
 	{
-		private readonly ILogicComponent _condition;
-		private readonly ILogicComponent _trueResult;
-		private readonly List<ILogicComponent> _falseResult;
+		private readonly LogicComponent _condition;
+		private readonly LogicComponent _trueResult;
+		private readonly List<LogicComponent> _falseResult;
 
-		public IfComponent(ILogicComponent condition, ILogicComponent trueResult, ILogicComponent falseResult, params ILogicComponent[] additional)
+		public IfComponent(LogicComponent condition, LogicComponent trueResult, LogicComponent falseResult, params LogicComponent[] additional)
 		{
 			if (additional.Length % 2 != 0)
 				throw new ArgumentException("Additional arguments must come in pairs", nameof(additional));
 			
 			_condition = condition;
 			_trueResult = trueResult;
-			_falseResult = new List<ILogicComponent>{falseResult};
+			_falseResult = new List<LogicComponent>{falseResult};
 			_falseResult.AddRange(additional);
 		}
 	
-		public JsonElement Apply(JsonElement data)
+		public override JsonElement Apply(JsonElement data)
 		{
 			var currentCondition = _condition;
 			var currentTrueResult = _trueResult;
