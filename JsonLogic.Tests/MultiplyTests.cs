@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MultiplyNumbersReturnsSum()
 		{
-			var rule = new MultiplyComponent(new LiteralComponent(4), new LiteralComponent(5));
+			var rule = new MultiplyComponent(4, 5);
 
 			var actual = rule.Apply();
 			JsonAssert.AreEquivalent(20, actual);
@@ -17,7 +17,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MultiplyNonNumberThrowsError()
 		{
-			var rule = new MultiplyComponent(new LiteralComponent("test"), new LiteralComponent(5));
+			var rule = new MultiplyComponent("test", 5);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

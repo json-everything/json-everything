@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using Json.Logic.Components;
-using Json.Path;
 
 namespace Json.Logic
 {
@@ -19,7 +18,6 @@ namespace Json.Logic
 		public static LogicComponent Literal(double value) => new LiteralComponent(value);
 		public static LogicComponent Literal(string value) => new LiteralComponent(value);
 		public static LogicComponent Literal(bool value) => new LiteralComponent(value);
-		public static LogicComponent Variable(JsonPath path, LogicComponent defaultValue) => new VariableComponent(path, defaultValue);
-		public static LogicComponent Variable(string path, LogicComponent defaultValue) => new VariableComponent(JsonPath.Parse(path), defaultValue);
+		public static LogicComponent Variable(string path, LogicComponent defaultValue) => new VariableComponent(Literal(path), defaultValue);
 	}
 }

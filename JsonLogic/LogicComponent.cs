@@ -11,6 +11,15 @@ namespace Json.Logic
 	public abstract class LogicComponent
 	{
 		public abstract JsonElement Apply(JsonElement data);
+
+		public static implicit operator LogicComponent(JsonElement value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(int value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(string value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(bool value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(long value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(decimal value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(float value) => new LiteralComponent(value);
+		public static implicit operator LogicComponent(double value) => new LiteralComponent(value);
 	}
 
 	public class LogicComponentConverter : JsonConverter<LogicComponent>

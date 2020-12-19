@@ -10,7 +10,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InTwoStringsSecondContainsFirstReturnsTrue()
 		{
-			var rule = new InComponent(new LiteralComponent("foo"), new LiteralComponent("food"));
+			var rule = new InComponent("foo", "food");
 			
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -18,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InTwoStringsNoMatchReturnsFalse()
 		{
-			var rule = new InComponent(new LiteralComponent("foo"), new LiteralComponent("bar"));
+			var rule = new InComponent("foo", "bar");
 			
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -26,7 +26,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsNumberReturnsTrue()
 		{
-			var rule = new InComponent(new LiteralComponent(4), new LiteralComponent("foo4bar"));
+			var rule = new InComponent(4, "foo4bar");
 			
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -34,7 +34,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsBooleanReturnsTrue()
 		{
-			var rule = new InComponent(new LiteralComponent(true), new LiteralComponent("footruebar"));
+			var rule = new InComponent(true, "footruebar");
 			
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -42,7 +42,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsNullReturnsFalse()
 		{
-			var rule = new InComponent(new LiteralComponent(true), new LiteralComponent("foo"));
+			var rule = new InComponent(true, "foo");
 			
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -50,7 +50,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsObjectThrowsError()
 		{
-			var rule = new InComponent(new LiteralComponent(JsonDocument.Parse("{}").RootElement), new LiteralComponent("foo"));
+			var rule = new InComponent(JsonDocument.Parse("{}").RootElement, "foo");
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -59,7 +59,7 @@ namespace Json.Logic.Tests
 		public void InArrayContainsFirstReturnsTrue()
 		{
 			var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
-			var rule = new InComponent(new LiteralComponent(2), new LiteralComponent(array));
+			var rule = new InComponent(2, array);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -68,7 +68,7 @@ namespace Json.Logic.Tests
 		public void InArrayDoesNotContainFirstReturnsFalse()
 		{
 			var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
-			var rule = new InComponent(new LiteralComponent(5), new LiteralComponent(array));
+			var rule = new InComponent(5, array);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -76,7 +76,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InObjectThrowsError()
 		{
-			var rule = new InComponent(new LiteralComponent(1), new LiteralComponent(JsonDocument.Parse("{}").RootElement));
+			var rule = new InComponent(1, JsonDocument.Parse("{}").RootElement);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -84,7 +84,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InNullThrowsError()
 		{
-			var rule = new InComponent(new LiteralComponent(1), new LiteralComponent(null));
+			var rule = new InComponent(1, null);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -92,7 +92,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InBooleanThrowsError()
 		{
-			var rule = new InComponent(new LiteralComponent(1), new LiteralComponent(false));
+			var rule = new InComponent(1, false);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -100,7 +100,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InNumberThrowsError()
 		{
-			var rule = new InComponent(new LiteralComponent(1), new LiteralComponent(4));
+			var rule = new InComponent(1, 4);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

@@ -8,10 +8,10 @@ namespace Json.Logic.Components
 	[Operator("var")]
 	internal class VariableComponent : LogicComponent
 	{
-		private readonly JsonPath _path;
+		private readonly LogicComponent _path;
 		private readonly LogicComponent _defaultValue;
 
-		public VariableComponent(JsonPath path, LogicComponent defaultValue = null)
+		public VariableComponent(LogicComponent path, LogicComponent defaultValue = null)
 		{
 			_path = path;
 			_defaultValue = defaultValue;
@@ -19,7 +19,12 @@ namespace Json.Logic.Components
 
 		public override JsonElement Apply(JsonElement data)
 		{
-			var pathEval = _path.Evaluate(data).Matches;
+			var path = _path.Apply(data);
+			if (path.ValueKind != JsonValueKind.String)
+				throw new JsonLogicException("Path must be a string.");
+			
+			var jsonPath = JsonPath.Parse($"$.{path.GetString()}");
+			var pathEval = jsonPath.Evaluate(data).Matches;
 			if (pathEval != null && pathEval.Count != 0)
 			{
 				if (pathEval.Count == 1) return pathEval[0].Value;

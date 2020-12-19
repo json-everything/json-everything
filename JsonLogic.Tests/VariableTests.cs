@@ -1,6 +1,5 @@
 using Json.Logic.Components;
 using Json.More;
-using Json.Path;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests
@@ -10,7 +9,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void VariableWithValidPathAndNoDefaultFetchesData()
 		{
-			var rule = new VariableComponent(JsonPath.Parse("$.foo"));
+			var rule = new VariableComponent("foo");
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
 			JsonAssert.AreEquivalent(5, rule.Apply(data));
@@ -19,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void VariableWithInvalidPathAndNoDefaultThrowsError()
 		{
-			var rule = new VariableComponent(JsonPath.Parse("$.baz"));
+			var rule = new VariableComponent("baz");
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply(data));
@@ -28,7 +27,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void VariableWithValidPathAndDefaultFetchesData()
 		{
-			var rule = new VariableComponent(JsonPath.Parse("$.foo"), new LiteralComponent(11));
+			var rule = new VariableComponent("foo", 11);
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
 			JsonAssert.AreEquivalent(5, rule.Apply(data));
@@ -37,7 +36,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void VariableWithInvalidPathAndDefaultReturnsDefault()
 		{
-			var rule = new VariableComponent(JsonPath.Parse("$.baz"), new LiteralComponent(11));
+			var rule = new VariableComponent("baz", 11);
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
 			JsonAssert.AreEquivalent(11, rule.Apply(data));

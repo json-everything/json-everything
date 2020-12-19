@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void ModNumbersReturnsSum()
 		{
-			var rule = new ModComponent(new LiteralComponent(4), new LiteralComponent(5));
+			var rule = new ModComponent(4, 5);
 
 			var actual = rule.Apply();
 			JsonAssert.AreEquivalent(4, actual);
@@ -17,7 +17,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void ModNonNumberThrowsError()
 		{
-			var rule = new ModComponent(new LiteralComponent("test"), new LiteralComponent(5));
+			var rule = new ModComponent("test", 5);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -25,7 +25,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void ModByZeroThrowsError()
 		{
-			var rule = new ModComponent(new LiteralComponent(4), new LiteralComponent(0));
+			var rule = new ModComponent(4, 0);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

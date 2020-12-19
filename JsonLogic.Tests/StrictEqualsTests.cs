@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void NotEqualReturnsFalse()
 		{
-			var rule = new StrictEqualsComponent(new LiteralComponent(1), new LiteralComponent(2));
+			var rule = new StrictEqualsComponent(1, 2);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -16,9 +16,17 @@ namespace Json.Logic.Tests
 		[Test]
 		public void EqualsReturnsTrue()
 		{
-			var rule = new StrictEqualsComponent(new LiteralComponent(1), new LiteralComponent(1));
+			var rule = new StrictEqualsComponent(1, 1);
 
 			JsonAssert.IsTrue(rule.Apply());
+		}
+
+		[Test]
+		public void LooseEqualsReturnsFalse()
+		{
+			var rule = new StrictEqualsComponent(1, "1");
+
+			JsonAssert.IsFalse(rule.Apply());
 		}
 	}
 }

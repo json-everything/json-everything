@@ -10,7 +10,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void CatTwoStringsConcatsValues()
 		{
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent("bar"));
+			var rule = new CatComponent("foo", "bar");
 			
 			JsonAssert.AreEquivalent("foobar", rule.Apply());
 		}
@@ -18,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void CatStringAndNullConcatsValues()
 		{
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent(null));
+			var rule = new CatComponent("foo", null);
 			
 			JsonAssert.AreEquivalent("foo", rule.Apply());
 		}
@@ -26,7 +26,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void CatStringAndNumberConcatsValues()
 		{
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent(1));
+			var rule = new CatComponent("foo", 1);
 			
 			JsonAssert.AreEquivalent("foo1", rule.Apply());
 		}
@@ -34,7 +34,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void CatStringAndBooleanConcatsValues()
 		{
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent(true));
+			var rule = new CatComponent("foo", true);
 			
 			JsonAssert.AreEquivalent("footrue", rule.Apply());
 		}
@@ -43,7 +43,7 @@ namespace Json.Logic.Tests
 		public void CatStringAndArrayConcatsValues()
 		{
 			var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent(array));
+			var rule = new CatComponent("foo", array);
 			
 			JsonAssert.AreEquivalent("foo1,2,3", rule.Apply());
 		}
@@ -53,7 +53,7 @@ namespace Json.Logic.Tests
 		{
 			var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
 			var nestedArray = new[]{1.AsJsonElement(),array,3.AsJsonElement()}.AsJsonElement();
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent(nestedArray));
+			var rule = new CatComponent("foo", nestedArray);
 
 			JsonAssert.AreEquivalent("foo1,1,2,3,3", rule.Apply());
 		}
@@ -61,7 +61,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void CatStringAndObjectConcatsValues()
 		{
-			var rule = new CatComponent(new LiteralComponent("foo"), new LiteralComponent(JsonDocument.Parse("{}").RootElement));
+			var rule = new CatComponent("foo", JsonDocument.Parse("{}").RootElement);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
