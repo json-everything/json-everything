@@ -11,7 +11,8 @@ namespace Json.Logic
 			typeof(LogicComponent).Assembly
 				.GetTypes()
 				.Where(t => typeof(LogicComponent).IsAssignableFrom(t) && !t.IsAbstract)
-				.ToDictionary(t => t.GetCustomAttribute<OperatorAttribute>().Name);
+				.SelectMany(t => t.GetCustomAttributes<OperatorAttribute>().Select(a => new {Name = a.Name, Type = t}))
+				.ToDictionary(t => t.Name, t => t.Type);
 
 		public static Type GetRule(string identifier)
 		{
@@ -19,6 +20,7 @@ namespace Json.Logic
 		}
 	}
 
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public class OperatorAttribute : Attribute
 	{
 		public string Name { get; }

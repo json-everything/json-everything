@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
 
 namespace Json.Logic.Tests.Suite
 {
@@ -22,7 +22,7 @@ namespace Json.Logic.Tests.Suite
 			if (element.ValueKind != JsonValueKind.Array) return null;
 			
 			var items = element.EnumerateArray().ToList();
-			var logic = items[0].ToJsonString();
+			var logic = JsonSerializer.Serialize(items[0], new JsonSerializerOptions {Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping});
 			var data = items[1];
 			var expected = items[2];
 			

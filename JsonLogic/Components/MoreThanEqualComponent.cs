@@ -20,10 +20,13 @@ namespace Json.Logic.Components
 			var a = _a.Apply(data);
 			var b = _b.Apply(data);
 
-			if (a.ValueKind != JsonValueKind.Number || b.ValueKind != JsonValueKind.Number)
+			var numberA = a.Numberify();
+			var numberB = b.Numberify();
+
+			if (numberA == null || numberB == null)
 				throw new JsonLogicException($"Cannot compare {a.ValueKind} and {b.ValueKind}.");
 
-			return (a.GetDecimal() >= b.GetDecimal()).AsJsonElement();
+			return (numberA >= numberB).AsJsonElement();
 		}
 	}
 }
