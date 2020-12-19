@@ -56,6 +56,14 @@ var pointer = JsonPointer.Parse("/objects/and/3/arrays");
 var result = pointer.Evaluate(element); // contains a JsonElement with a "found me" value.
 ```
 
+You can also create pointers from objects using lambda expressions:
+
+```C#
+var pointer = JsonPointer.Create(x => x.objects.and[3].arrays);
+```
+
+This yields the same pointe as the example above.
+
 ## Relative JSON Pointers
 
 [JSON Hyperschema](https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/) relies on a variation of JSON Pointers called [Relative JSON Pointers](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html) that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.
