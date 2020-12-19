@@ -33,5 +33,17 @@ namespace Json.Logic
 				_ => null
 			};
 		}
+
+		public static decimal? Numberify(this JsonElement element)
+		{
+			return element.ValueKind switch
+			{
+				JsonValueKind.String => decimal.TryParse(element.GetString(), out var d) ? d : (decimal?) null,
+				JsonValueKind.Number => element.GetDecimal(),
+				JsonValueKind.True => 1,
+				JsonValueKind.False => 0,
+				_ => null
+			};
+		}
 	}
 }

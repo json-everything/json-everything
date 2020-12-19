@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 using Json.More;
 
 namespace Json.Logic.Components
@@ -6,41 +7,31 @@ namespace Json.Logic.Components
 	[Operator("+")]
 	internal class AddComponent : LogicComponent
 	{
-		private readonly LogicComponent _a;
-		private readonly LogicComponent _b;
+		private readonly List<LogicComponent> _items;
 
-		public AddComponent(LogicComponent a)
+		public AddComponent(LogicComponent a, params LogicComponent[] more)
 		{
-			_a = a;
-		}
-		public AddComponent(LogicComponent a, LogicComponent b)
-		{
-			_a = a;
-			_b = b;
+			_items = new List<LogicComponent> { a };
+			_items.AddRange(more);
 		}
 
 		public override JsonElement Apply(JsonElement data)
 		{
-			var a = _a.Apply(data);
+			decimal result = 0;
 
-			if (_b != null)
+			foreach (var item in _items)
 			{
-				var b = _b.Apply(data);
+				var value = item.Apply(data);
 
-				if (a.ValueKind == JsonValueKind.Number && b.ValueKind == JsonValueKind.Number)
-					return (a.GetDecimal() + b.GetDecimal()).AsJsonElement();
+				var number = value.Numberify();
 
-				throw new JsonLogicException($"Cannot add types {a.ValueKind} and {b.ValueKind}.");
+				if (number == null)
+					throw new JsonLogicException($"Cannot add {value.ValueKind}.");
+
+				result += number.Value;
 			}
 
-			return a.ValueKind switch
-			{
-				JsonValueKind.String => decimal.TryParse(a.GetString(), out var d)
-					? d.AsJsonElement()
-					: throw new JsonLogicException($"Cannot cast {a.ToJsonString()} to number."),
-				JsonValueKind.Number => a,
-				_ => throw new JsonLogicException($"Cannot cast {a.ValueKind} to number.")
-			};
+			return result.AsJsonElement();
 		}
 	}
 }

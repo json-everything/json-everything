@@ -20,16 +20,16 @@ namespace Json.Logic.Components
 			var a = _a.Apply(data);
 			var b = _b.Apply(data);
 
-			if (a.ValueKind == JsonValueKind.Number && b.ValueKind == JsonValueKind.Number)
-			{
-				var bValue = b.GetDecimal();
-				if (bValue == 0)
-					throw new JsonLogicException("Cannot divide by zero");
+			var numberA = a.Numberify();
+			var numberB = b.Numberify();
 
-				return (a.GetDecimal() % b.GetDecimal()).AsJsonElement();
-			}
+			if (numberA == null || numberB == null)
+				throw new JsonLogicException($"Cannot divide types {a.ValueKind} and {b.ValueKind}.");
 
-			throw new JsonLogicException($"Cannot divide types {a.ValueKind} and {b.ValueKind}.");
+			if (numberB == 0)
+				throw new JsonLogicException("Cannot divide by zero");
+
+			return (numberA.Value % numberB.Value).AsJsonElement();
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using Json.More;
 
 namespace Json.Logic.Components
@@ -6,24 +8,42 @@ namespace Json.Logic.Components
 	[Operator("-")]
 	internal class SubtractComponent : LogicComponent
 	{
-		private readonly LogicComponent _a;
-		private readonly LogicComponent _b;
+		private readonly List<LogicComponent> _items;
 
-		public SubtractComponent(LogicComponent a, LogicComponent b)
+		public SubtractComponent(LogicComponent a, params LogicComponent[] more)
 		{
-			_a = a;
-			_b = b;
+			_items = new List<LogicComponent> { a };
+			_items.AddRange(more);
 		}
 
 		public override JsonElement Apply(JsonElement data)
 		{
-			var a = _a.Apply(data);
-			var b = _b.Apply(data);
+			if (_items.Count == 0) return 0.AsJsonElement();
 
-			if (a.ValueKind == JsonValueKind.Number && b.ValueKind == JsonValueKind.Number)
-				return (a.GetDecimal() - b.GetDecimal()).AsJsonElement();
+			var value = _items[0].Apply(data);
+			var number = value.Numberify();
 
-			throw new JsonLogicException($"Cannot subtract types {a.ValueKind} and {b.ValueKind}.");
+			if (number == null)
+				throw new JsonLogicException($"Cannot subtract {value.ValueKind}.");
+
+			var result = number.Value;
+
+			if (_items.Count == 1)
+				return (-result).AsJsonElement();
+			
+			foreach (var item in _items.Skip(1))
+			{
+				value = item.Apply(data);
+
+				number = value.Numberify();
+
+				if (number == null)
+					throw new JsonLogicException($"Cannot subtract {value.ValueKind}.");
+
+				result -= number.Value;
+			}
+
+			return result.AsJsonElement();
 		}
 	}
 }

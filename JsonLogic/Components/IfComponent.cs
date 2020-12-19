@@ -5,6 +5,7 @@ using System.Text.Json;
 namespace Json.Logic.Components
 {
 	[Operator("if")]
+	[Operator("?:")]
 	internal class IfComponent : LogicComponent
 	{
 		private readonly LogicComponent _condition;
