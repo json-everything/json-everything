@@ -220,20 +220,21 @@ namespace Json.Pointer
 			{
 				if (body.NodeType == ExpressionType.Convert && body is UnaryExpression unary)
 					body = unary.Operand;
-				
+
 				if (body is MemberExpression me)
 				{
 					segments.Insert(0, PointerSegment.Create(me.Member.Name));
 					body = me.Expression;
 				}
 				else if (body is MethodCallExpression mce &&
-				         mce.Method.Name.StartsWith("get_") &&
-				         mce.Arguments.Count == 1 &&
-				         mce.Arguments[0].Type == typeof(int))
+						 mce.Method.Name.StartsWith("get_") &&
+						 mce.Arguments.Count == 1 &&
+						 mce.Arguments[0].Type == typeof(int))
 				{
 					segments.Insert(0, PointerSegment.Create(mce.Arguments[0].ToString()));
 					body = mce.Object;
 				}
+				else if (body is ParameterExpression) break; // this is the param of the expression itself.
 				else throw new NotSupportedException($"Expression nodes of type {body.NodeType} are not currently supported.");
 			}
 
