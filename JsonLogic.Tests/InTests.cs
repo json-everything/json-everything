@@ -84,7 +84,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InNullThrowsError()
 		{
-			var rule = new InComponent(1, null);
+			var rule = new InComponent(1, LiteralComponent.Null);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

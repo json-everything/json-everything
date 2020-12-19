@@ -66,7 +66,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LessThanNullThrowsError()
 		{
-			var rule = new LessThanComponent(null, 2);
+			var rule = new LessThanComponent(LiteralComponent.Null, 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

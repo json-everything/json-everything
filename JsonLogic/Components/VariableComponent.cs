@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using Json.More;
 using Json.Path;
 
@@ -22,8 +23,9 @@ namespace Json.Logic.Components
 			var path = _path.Apply(data);
 			if (path.ValueKind != JsonValueKind.String)
 				throw new JsonLogicException("Path must be a string.");
-			
-			var jsonPath = JsonPath.Parse($"$.{path.GetString()}");
+
+			var pathString = path.GetString();
+			var jsonPath = JsonPath.Parse(pathString == string.Empty ? "$" : $"$.{pathString}");
 			var pathEval = jsonPath.Evaluate(data).Matches;
 			if (pathEval != null && pathEval.Count != 0)
 			{
