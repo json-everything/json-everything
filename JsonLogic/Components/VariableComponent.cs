@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Text.Json;
-using System.Threading;
+﻿using System.Text.Json;
 using Json.More;
-using Json.Path;
+using Json.Pointer;
 
 namespace Json.Logic.Components
 {
@@ -12,7 +10,11 @@ namespace Json.Logic.Components
 		private readonly LogicComponent _path;
 		private readonly LogicComponent _defaultValue;
 
-		public VariableComponent(LogicComponent path, LogicComponent defaultValue = null)
+		public VariableComponent(LogicComponent path)
+		{
+			_path = path;
+		}
+		public VariableComponent(LogicComponent path, LogicComponent defaultValue)
 		{
 			_path = path;
 			_defaultValue = defaultValue;
@@ -21,21 +23,12 @@ namespace Json.Logic.Components
 		public override JsonElement Apply(JsonElement data)
 		{
 			var path = _path.Apply(data);
-			if (path.ValueKind != JsonValueKind.String)
-				throw new JsonLogicException("Path must be a string.");
+			var pathString = path.Stringify();
+			var pointer = JsonPointer.Parse(pathString == string.Empty ? "" : $"/{pathString.Replace('.', '/')}");
+			var pathEval = pointer.Evaluate(data);
+			if (pathEval != null) return pathEval.Value;
 
-			var pathString = path.GetString();
-			var jsonPath = JsonPath.Parse(pathString == string.Empty ? "$" : $"$.{pathString}");
-			var pathEval = jsonPath.Evaluate(data).Matches;
-			if (pathEval != null && pathEval.Count != 0)
-			{
-				if (pathEval.Count == 1) return pathEval[0].Value;
-
-				return pathEval.Select(m => m.Value).AsJsonElement();
-			}
-
-			return _defaultValue?.Apply(data) ??
-			       throw new JsonLogicException($"Could not find value at `{_path}` in provided data and no default was provided.");
+			return _defaultValue?.Apply(data) ?? ((string) null).AsJsonElement();
 		}
 	}
 }
