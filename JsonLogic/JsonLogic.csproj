@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
+    <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
   </ItemGroup>
 
 </Project>

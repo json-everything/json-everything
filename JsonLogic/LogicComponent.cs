@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Logic.Components;
+using Json.More;
 
 namespace Json.Logic
 {
@@ -38,7 +39,12 @@ namespace Json.Logic
 			
 			var ruleType = RuleRegistry.GetRule(ruleInfo.Key);
 
-			return (LogicComponent) Activator.CreateInstance(ruleType, ruleInfo.Value.Cast<object>().ToArray());
+			var value = ruleInfo.Value ?? new ArgumentCollection((LogicComponent) null);
+
+			return (LogicComponent) Activator.CreateInstance(ruleType,
+				value.Cast<object>()
+					.Select(o => o ?? new LiteralComponent(null))
+					.ToArray());
 		}
 
 		public override void Write(Utf8JsonWriter writer, LogicComponent value, JsonSerializerOptions options)

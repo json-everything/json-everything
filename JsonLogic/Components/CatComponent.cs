@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using Json.More;
 
@@ -8,27 +7,28 @@ namespace Json.Logic.Components
 	[Operator("cat")]
 	internal class CatComponent : LogicComponent
 	{
-		private readonly LogicComponent _a;
-		private readonly LogicComponent _b;
+		private readonly List<LogicComponent> _items;
 
-		public CatComponent(LogicComponent a, LogicComponent b)
+		public CatComponent(LogicComponent a, params LogicComponent[] more)
 		{
-			_a = a;
-			_b = b;
+			_items = new List<LogicComponent> { a };
+			_items.AddRange(more);
 		}
-		
+
 		public override JsonElement Apply(JsonElement data)
 		{
-			var a = _a.Apply(data);
-			var b = _b.Apply(data);
+			var result = string.Empty;
 
-			var stringA = a.Stringify();
-			var stringB = b.Stringify();
+			foreach (var item in _items)
+			{
+				var value = item.Apply(data);
 
-			if (stringA == null || stringB == null)
-				throw new JsonLogicException($"Cannot concatenate types {a.ValueKind} and {b.ValueKind}.");
+				var str = value.Stringify();
 
-			return (stringA + stringB).AsJsonElement();
+				result += str ?? throw new JsonLogicException($"Cannot concatenate {value.ValueKind}.");
+			}
+
+			return result.AsJsonElement();
 		}
 	}
 }

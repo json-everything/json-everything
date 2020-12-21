@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Logic.Components
 {
@@ -8,40 +9,51 @@ namespace Json.Logic.Components
 	[Operator("?:")]
 	internal class IfComponent : LogicComponent
 	{
-		private readonly LogicComponent _condition;
-		private readonly LogicComponent _trueResult;
-		private readonly List<LogicComponent> _falseResult;
+		private readonly List<LogicComponent> _components;
 
-		public IfComponent(LogicComponent condition, LogicComponent trueResult, LogicComponent falseResult, params LogicComponent[] additional)
+		public IfComponent(params LogicComponent[] components)
 		{
-			if (additional.Length % 2 != 0)
-				throw new ArgumentException("Additional arguments must come in pairs", nameof(additional));
-			
-			_condition = condition;
-			_trueResult = trueResult;
-			_falseResult = new List<LogicComponent>{falseResult};
-			_falseResult.AddRange(additional);
+			_components = new List<LogicComponent>(components);
 		}
 	
 		public override JsonElement Apply(JsonElement data)
 		{
-			var currentCondition = _condition;
-			var currentTrueResult = _trueResult;
-			var elseIndex = 0;
-
-			while (currentCondition != null)
+			bool condition;
+			switch (_components.Count)
 			{
-				var condition = currentCondition.Apply(data).IsTruthy();
+				case 0:
+					return ((string) null).AsJsonElement();
+				case 1:
+					return _components[0].Apply(data);
+				case 2:
+					condition = _components[0].Apply(data).IsTruthy();
+					var thenResult = _components[1];
 
-				if (condition)
-					return currentTrueResult.Apply(data);
+					return condition
+						? thenResult.Apply(data)
+						: ((string) null).AsJsonElement();
+				default:
+					var currentCondition = _components[0];
+					var currentTrueResult = _components[1];
+					var elseIndex = 2;
 
-				currentCondition = _falseResult[elseIndex++];
+					while (currentCondition != null)
+					{
+						condition = currentCondition.Apply(data).IsTruthy();
 
-				if (elseIndex >= _falseResult.Count)
-					return currentCondition.Apply(data);
-				
-				currentTrueResult = _falseResult[elseIndex++];
+						if (condition)
+							return currentTrueResult.Apply(data);
+
+						if (elseIndex == _components.Count) return ((string) null).AsJsonElement();
+
+						currentCondition = _components[elseIndex++];
+
+						if (elseIndex >= _components.Count)
+							return currentCondition.Apply(data);
+
+						currentTrueResult = _components[elseIndex++];
+					}
+					break;
 			}
 
 			throw new NotImplementedException("Something went wrong. This shouldn't happen.");

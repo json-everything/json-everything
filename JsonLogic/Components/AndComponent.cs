@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using Json.More;
 
 namespace Json.Logic.Components
@@ -6,19 +8,25 @@ namespace Json.Logic.Components
 	[Operator("and")]
 	internal class AndComponent : LogicComponent
 	{
-		private readonly LogicComponent _a;
-		private readonly LogicComponent _b;
+		private readonly List<LogicComponent> _items;
 
-		public AndComponent(LogicComponent a, LogicComponent b)
+		public AndComponent(LogicComponent a, params LogicComponent[] more)
 		{
-			_a = a;
-			_b = b;
+			_items = new List<LogicComponent> { a };
+			_items.AddRange(more);
 		}
 
 		public override JsonElement Apply(JsonElement data)
 		{
-			return (_a.Apply(data).IsTruthy() &&
-			        _b.Apply(data).IsTruthy()).AsJsonElement();
+			var items = _items.Select(i => i.Apply(data));
+			var first = false.AsJsonElement();
+			foreach (var x in items)
+			{
+				first = x;
+				if (!x.IsTruthy()) break;
+			}
+
+			return first;
 		}
 	}
 }
