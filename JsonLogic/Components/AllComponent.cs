@@ -24,8 +24,9 @@ namespace Json.Logic.Components
 				throw new JsonLogicException("Input must evaluate to an array.");
 
 			var inputData = input.EnumerateArray();
-			return inputData.Select(value => _rule.Apply(value))
-				.All(result => result.IsTruthy())
+			var results = inputData.Select(value => _rule.Apply(value)).ToList();
+			return (results.Any() &&
+				   results.All(result => result.IsTruthy()))
 				.AsJsonElement();
 		}
 	}

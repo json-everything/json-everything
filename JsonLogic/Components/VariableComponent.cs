@@ -10,6 +10,9 @@ namespace Json.Logic.Components
 		private readonly LogicComponent _path;
 		private readonly LogicComponent _defaultValue;
 
+		public VariableComponent()
+		{
+		}
 		public VariableComponent(LogicComponent path)
 		{
 			_path = path;
@@ -22,6 +25,8 @@ namespace Json.Logic.Components
 
 		public override JsonElement Apply(JsonElement data)
 		{
+			if (_path == null) return data;
+			
 			var path = _path.Apply(data);
 			var pathString = path.Stringify();
 			var pointer = JsonPointer.Parse(pathString == string.Empty ? "" : $"/{pathString.Replace('.', '/')}");
