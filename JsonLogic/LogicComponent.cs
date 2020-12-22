@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Logic.Components;
-using Json.More;
 
 namespace Json.Logic
 {

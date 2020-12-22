@@ -24,7 +24,7 @@ namespace Json.Logic.Components
 			if (components.ValueKind != JsonValueKind.Array)
 				throw new JsonLogicException("Expected array of required paths.");
 			
-			var expected = components.EnumerateArray().ToList();
+			var expected = components.EnumerateArray().SelectMany(e => e.Flatten()).ToList();
 			if (expected.Any(e => e.ValueKind != JsonValueKind.String))
 				throw new JsonLogicException("Expected array of required paths.");
 
@@ -38,8 +38,9 @@ namespace Json.Logic.Components
 			var missing = paths.Where(p => p.Value == null)
 				.Select(k => k.Path.AsJsonElement())
 				.ToList();
+			var found = paths.Count(p => p.Value != null);
 
-			if (expected.Count - missing.Count > requiredCount)
+			if (found < requiredCount)
 				return missing.AsJsonElement();
 
 			return new JsonElement[0].AsJsonElement();

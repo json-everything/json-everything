@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Json.More;
 using Json.Pointer;
@@ -17,7 +18,8 @@ namespace Json.Logic.Components
 
 		public override JsonElement Apply(JsonElement data)
 		{
-			var expected = _components.Select(c => c.Apply(data)).Where(e => e.ValueKind == JsonValueKind.String);
+			var expected = _components.SelectMany(c => c.Apply(data).Flatten())
+				.Where(e => e.ValueKind == JsonValueKind.String);
 
 			if (data.ValueKind != JsonValueKind.Object)
 				return expected.AsJsonElement();
