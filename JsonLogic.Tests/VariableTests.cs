@@ -21,7 +21,7 @@ namespace Json.Logic.Tests
 			var rule = new VariableComponent("baz");
 			var data = new {foo = 5, bar = 10}.ToJsonDocument().RootElement;
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply(data));
+			JsonAssert.AreEquivalent(null, rule.Apply(data));
 		}
 
 		[Test]

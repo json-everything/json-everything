@@ -71,7 +71,7 @@ namespace Json.Logic.Tests
 		{
 			var rule = new AddComponent(true);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
+			JsonAssert.AreEquivalent(1, rule.Apply());
 		}
 
 		[Test]
@@ -79,7 +79,7 @@ namespace Json.Logic.Tests
 		{
 			var rule = new AddComponent(false);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
+			JsonAssert.AreEquivalent(0, rule.Apply());
 		}
 
 		[Test]

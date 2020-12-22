@@ -44,9 +44,9 @@ namespace Json.Logic.Tests
 		{
 			var rule = new LessThanEqualComponent(false, 2);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
+			JsonAssert.IsTrue(rule.Apply());
 		}
-		
+
 		[Test]
 		public void LessThanEqualArrayThrowsError()
 		{
