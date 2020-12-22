@@ -1,4 +1,4 @@
-using Json.Logic.Components;
+using Json.Logic.Rules;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests
@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void NotEqualReturnsFalse()
 		{
-			var rule = new StrictEqualsComponent(1, 2);
+			var rule = new StrictEqualsRule(1, 2);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -16,7 +16,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void EqualsReturnsTrue()
 		{
-			var rule = new StrictEqualsComponent(1, 1);
+			var rule = new StrictEqualsRule(1, 1);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -24,7 +24,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void LooseEqualsReturnsFalse()
 		{
-			var rule = new StrictEqualsComponent(1, "1");
+			var rule = new StrictEqualsRule(1, "1");
 
 			JsonAssert.IsFalse(rule.Apply());
 		}

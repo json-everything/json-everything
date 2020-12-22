@@ -1,4 +1,4 @@
-using Json.Logic.Components;
+using Json.Logic.Rules;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests
@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrStartNoCount()
 		{
-			var rule = new SubstrComponent("foobar", 3);
+			var rule = new SubstrRule("foobar", 3);
 			
 			JsonAssert.AreEquivalent("bar", rule.Apply());
 		}
@@ -16,7 +16,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrStartBeyondLengthNoCount()
 		{
-			var rule = new SubstrComponent("foobar", 10);
+			var rule = new SubstrRule("foobar", 10);
 
 			JsonAssert.AreEquivalent(string.Empty, rule.Apply());
 		}
@@ -24,7 +24,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrNegativeStartNoCount()
 		{
-			var rule = new SubstrComponent("foobar", -2);
+			var rule = new SubstrRule("foobar", -2);
 			
 			JsonAssert.AreEquivalent("ar", rule.Apply());
 		}
@@ -32,7 +32,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrNegativeStartBeyondLengthNoCount()
 		{
-			var rule = new SubstrComponent("foobar", -10);
+			var rule = new SubstrRule("foobar", -10);
 
 			JsonAssert.AreEquivalent("foobar", rule.Apply());
 		}
@@ -40,7 +40,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrStartCount()
 		{
-			var rule = new SubstrComponent("foobar", 3, 2);
+			var rule = new SubstrRule("foobar", 3, 2);
 			
 			JsonAssert.AreEquivalent("ba", rule.Apply());
 		}
@@ -48,7 +48,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrStartCountBeyondLength()
 		{
-			var rule = new SubstrComponent("foobar", 3, 5);
+			var rule = new SubstrRule("foobar", 3, 5);
 
 			JsonAssert.AreEquivalent("bar", rule.Apply());
 		}
@@ -56,7 +56,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrStartNegativeCount()
 		{
-			var rule = new SubstrComponent("foobar", 2, -1);
+			var rule = new SubstrRule("foobar", 2, -1);
 			
 			JsonAssert.AreEquivalent("oba", rule.Apply());
 		}
@@ -64,7 +64,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SubstrStartNegativeCountBeyondLength()
 		{
-			var rule = new SubstrComponent("foobar", 2, -10);
+			var rule = new SubstrRule("foobar", 2, -10);
 
 			JsonAssert.AreEquivalent(string.Empty, rule.Apply());
 		}

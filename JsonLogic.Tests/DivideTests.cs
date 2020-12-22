@@ -1,4 +1,4 @@
-using Json.Logic.Components;
+using Json.Logic.Rules;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests
@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void DivideNumbersReturnsSum()
 		{
-			var rule = new DivideComponent(4, 5);
+			var rule = new DivideRule(4, 5);
 
 			var actual = rule.Apply();
 			JsonAssert.AreEquivalent(.8, actual);
@@ -17,7 +17,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void DivideNonNumberThrowsError()
 		{
-			var rule = new DivideComponent("test", 5);
+			var rule = new DivideRule("test", 5);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -25,7 +25,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void DivideByZeroThrowsError()
 		{
-			var rule = new DivideComponent(4, 0);
+			var rule = new DivideRule(4, 0);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

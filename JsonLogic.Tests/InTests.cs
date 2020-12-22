@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Json.Logic.Components;
+using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InTwoStringsSecondContainsFirstReturnsTrue()
 		{
-			var rule = new InComponent("foo", "food");
+			var rule = new InRule("foo", "food");
 			
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -18,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InTwoStringsNoMatchReturnsFalse()
 		{
-			var rule = new InComponent("foo", "bar");
+			var rule = new InRule("foo", "bar");
 			
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -26,7 +26,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsNumberReturnsTrue()
 		{
-			var rule = new InComponent(4, "foo4bar");
+			var rule = new InRule(4, "foo4bar");
 			
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -34,7 +34,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsBooleanReturnsTrue()
 		{
-			var rule = new InComponent(true, "footruebar");
+			var rule = new InRule(true, "footruebar");
 			
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -42,7 +42,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsNullReturnsFalse()
 		{
-			var rule = new InComponent(true, "foo");
+			var rule = new InRule(true, "foo");
 			
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -50,7 +50,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InStringContainsObjectThrowsError()
 		{
-			var rule = new InComponent(JsonDocument.Parse("{}").RootElement, "foo");
+			var rule = new InRule(JsonDocument.Parse("{}").RootElement, "foo");
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -59,7 +59,7 @@ namespace Json.Logic.Tests
 		public void InArrayContainsFirstReturnsTrue()
 		{
 			var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
-			var rule = new InComponent(2, array);
+			var rule = new InRule(2, array);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -68,7 +68,7 @@ namespace Json.Logic.Tests
 		public void InArrayDoesNotContainFirstReturnsFalse()
 		{
 			var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
-			var rule = new InComponent(5, array);
+			var rule = new InRule(5, array);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -76,7 +76,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InObjectThrowsError()
 		{
-			var rule = new InComponent(1, JsonDocument.Parse("{}").RootElement);
+			var rule = new InRule(1, JsonDocument.Parse("{}").RootElement);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -84,7 +84,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InNullThrowsError()
 		{
-			var rule = new InComponent(1, LiteralComponent.Null);
+			var rule = new InRule(1, LiteralRule.Null);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -92,7 +92,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InBooleanThrowsError()
 		{
-			var rule = new InComponent(1, false);
+			var rule = new InRule(1, false);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -100,7 +100,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void InNumberThrowsError()
 		{
-			var rule = new InComponent(1, 4);
+			var rule = new InRule(1, 4);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

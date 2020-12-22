@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Json.Logic.Components;
+using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MoreThanTwoNumbersReturnsTrue()
 		{
-			var rule = new MoreThanComponent(2, 1);
+			var rule = new MoreThanRule(2, 1);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -18,7 +18,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void EqualTwoNumbersReturnsFalse()
 		{
-			var rule = new MoreThanComponent(1, 1);
+			var rule = new MoreThanRule(1, 1);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -26,7 +26,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MoreThanTwoNumbersReturnsFalse()
 		{
-			var rule = new MoreThanComponent(1, 2);
+			var rule = new MoreThanRule(1, 2);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -34,7 +34,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MoreThanStringThrowsError()
 		{
-			var rule = new MoreThanComponent("foo", 2);
+			var rule = new MoreThanRule("foo", 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -42,15 +42,15 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MoreThanBooleanThrowsError()
 		{
-			var rule = new MoreThanComponent(false, 2);
+			var rule = new MoreThanRule(false, 2);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
+			JsonAssert.IsFalse(rule.Apply());
 		}
-		
+
 		[Test]
 		public void MoreThanArrayThrowsError()
 		{
-			var rule = new MoreThanComponent(new JsonElement[]{}.AsJsonElement(), 2);
+			var rule = new MoreThanRule(new JsonElement[]{}.AsJsonElement(), 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -58,7 +58,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MoreThanObjectThrowsError()
 		{
-			var rule = new MoreThanComponent(JsonDocument.Parse("{}").RootElement, 2);
+			var rule = new MoreThanRule(JsonDocument.Parse("{}").RootElement, 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -66,7 +66,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void MoreThanNullThrowsError()
 		{
-			var rule = new MoreThanComponent(LiteralComponent.Null, 2);
+			var rule = new MoreThanRule(LiteralRule.Null, 2);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}

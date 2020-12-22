@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Json.Logic.Components;
+using Json.Logic.Rules;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests
@@ -9,8 +9,8 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SomeMatchCondition()
 		{
-			var rule = new SomeComponent(JsonDocument.Parse("[1,2,3]").RootElement,
-				new StrictEqualsComponent(new VariableComponent(""), 2));
+			var rule = new SomeRule(JsonDocument.Parse("[1,2,3]").RootElement,
+				new StrictEqualsRule(new VariableRule(""), 2));
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -18,8 +18,8 @@ namespace Json.Logic.Tests
 		[Test]
 		public void SomeDoNotMatchCondition()
 		{
-			var rule = new SomeComponent(JsonDocument.Parse("[1,2,3]").RootElement,
-				new StrictEqualsComponent(new VariableComponent(""), 0));
+			var rule = new SomeRule(JsonDocument.Parse("[1,2,3]").RootElement,
+				new StrictEqualsRule(new VariableRule(""), 0));
 
 			JsonAssert.IsFalse(rule.Apply());
 		}

@@ -46,7 +46,7 @@ namespace Json.Logic.Tests.Suite
 		[TestCaseSource(nameof(Suite))]
 		public void Run(Test test)
 		{
-			var rule = JsonSerializer.Deserialize<LogicComponent>(test.Logic);
+			var rule = JsonSerializer.Deserialize<Rule>(test.Logic);
 
 			if (rule == null)
 			{

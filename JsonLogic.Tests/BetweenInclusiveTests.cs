@@ -1,4 +1,4 @@
-﻿using Json.Logic.Components;
+﻿using Json.Logic.Rules;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests
@@ -8,7 +8,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenValueInRangeReturnsTrue()
 		{
-			var rule = new BetweenInclusiveComponent(1, 2, 3);
+			var rule = new BetweenInclusiveRule(1, 2, 3);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -16,7 +16,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenValueAtLowEndReturnsTrue()
 		{
-			var rule = new BetweenInclusiveComponent(1, 1, 3);
+			var rule = new BetweenInclusiveRule(1, 1, 3);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -24,7 +24,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenValueUnderLowEndReturnsFalse()
 		{
-			var rule = new BetweenInclusiveComponent(1, 0, 3);
+			var rule = new BetweenInclusiveRule(1, 0, 3);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -32,7 +32,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenValueAtHighEndReturnsTrue()
 		{
-			var rule = new BetweenInclusiveComponent(1, 3, 3);
+			var rule = new BetweenInclusiveRule(1, 3, 3);
 
 			JsonAssert.IsTrue(rule.Apply());
 		}
@@ -40,7 +40,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenValueOverHighEndReturnsFalse()
 		{
-			var rule = new BetweenInclusiveComponent(1, 4, 3);
+			var rule = new BetweenInclusiveRule(1, 4, 3);
 
 			JsonAssert.IsFalse(rule.Apply());
 		}
@@ -48,7 +48,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenLowEndNotNumberThrowsError()
 		{
-			var rule = new BetweenInclusiveComponent(false, 4, 3);
+			var rule = new BetweenInclusiveRule(false, 4, 3);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -56,7 +56,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenValueNotNumberThrowsError()
 		{
-			var rule = new BetweenInclusiveComponent(1, false, 3);
+			var rule = new BetweenInclusiveRule(1, false, 3);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
@@ -64,7 +64,7 @@ namespace Json.Logic.Tests
 		[Test]
 		public void BetweenHighEndNotNumberThrowsError()
 		{
-			var rule = new BetweenInclusiveComponent(1, 2, false);
+			var rule = new BetweenInclusiveRule(1, 2, false);
 
 			Assert.Throws<JsonLogicException>(() => rule.Apply());
 		}
