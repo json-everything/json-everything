@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Json.Logic</RootNamespace>
+    <AssemblyName>JsonLogic</AssemblyName>
+    <Authors>Greg Dennis</Authors>
+    <Description>JsonLogic built on the System.Text.Json namespace.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <PackageIcon>json-logo-256.png</PackageIcon>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageTags>json logic json-logic jsonlogic</PackageTags>
+    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-logic.html</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\Resources\json-logo-256.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+  </ItemGroup>
+
+</Project>

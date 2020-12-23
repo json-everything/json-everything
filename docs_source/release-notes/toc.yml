@@ -8,5 +8,5 @@
   href: json-schema-generation.md
 - name: JsonPath.Net
   href: json-path.md
-- name: JsonPatch.Net
-  href: json-patch.md
+- name: JsonLogic.Net
+  href: json-logic.md

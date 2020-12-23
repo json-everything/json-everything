@@ -158,9 +158,9 @@ namespace Json.Path
 
 		private static bool IsValidForPropertyName(char ch)
 		{
-			return ch.In('a'..'z') ||
-			       ch.In('A'..'Z') ||
-			       ch.In('0'..'9') ||
+			return ch.In('a'..('z' + 1)) ||
+			       ch.In('A'..('Z' + 1)) ||
+			       ch.In('0'..('9' + 1)) ||
 			       ch.In('_') ||
 			       ch.In(0x80..0x10FFFF);
 		}

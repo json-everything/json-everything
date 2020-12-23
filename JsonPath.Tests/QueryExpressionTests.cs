@@ -1,12 +1,9 @@
-﻿using System.Configuration;
-using System.IO;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Json.More;
 using Json.Path.QueryExpressions;
 using NUnit.Framework;
 
-namespace JsonPath.Tests
+namespace Json.Path.Tests
 {
 	public class QueryExpressionTests
 	{

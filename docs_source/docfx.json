@@ -37,6 +37,12 @@
             "JsonPatch.csproj"
           ],
           "src":"../JsonPatch/"
+        },
+        {
+          "files": [
+            "JsonLogic.csproj"
+          ],
+          "src":"../JsonLogic/"
         }
       ],
       "dest": "api",

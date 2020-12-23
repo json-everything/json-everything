@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JsonPath.Tests.Suite
+namespace Json.Path.Tests.Suite
 {
 	public class ReferenceImplTestSuite
 	{

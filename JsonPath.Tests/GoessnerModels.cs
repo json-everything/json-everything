@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JsonPath.Tests
+namespace Json.Path.Tests
 {
 	public class Repository
 	{

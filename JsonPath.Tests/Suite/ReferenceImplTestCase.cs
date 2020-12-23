@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
 
-namespace JsonPath.Tests.Suite
+namespace Json.Path.Tests.Suite
 {
 	public class ReferenceImplTestCase
 	{
