@@ -9,3 +9,5 @@
   href: json-path.md
 - name: JSON Patch
   href: json-patch.md
+- name: JSON Logic
+  href: json-logic.md
