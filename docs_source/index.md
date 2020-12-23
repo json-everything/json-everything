@@ -6,27 +6,36 @@ The libraries contained here are built for speed and designed for usability.
 
 ## The Libraries
 
-Currently there are four libraries output by this project:
+Currently there are seven libraries output by this project:
 
-### Json.More.Net
+### Json.More<nsp>.Net
 
 Json.More.Net provides some core functionality that one would expect to be in `System.Text.Json` but isn't.  These include simple value conversion and equality comparisons involving their object model.
 
-### JsonPointer.Net
+### JsonPointer<nsp>.Net
+
 JsonPointer.Net provides an implementation of JSON Pointer ([RFC 6901](https://tools.ietf.org/html/rfc6901)) and a variant called [Relative JSON Pointer](), which is an important component in JSON HyperSchema.
 
 ***NOTE** Relative JSON Pointer requires the ability to navigate up toward the root of the JSON structure, which is [not supported yet](https://github.com/dotnet/runtime/issues/40452).  While this library can model and validate relative pointers, it cannot evaluate them until this functionality is available.*
 
-### JsonSchema.Net
+### JsonSchema<nsp>.Net
 
-JsonSchema.Net provides [JSON Schema](https://json-schema.org) support for drafts 6 and after.  It is 100% compliant and passes all required and most optional tests of the [JSON Schema Test Suite](https://github.com/json-schema-org/JSON-Schema-Test-Suite).
+JsonSchema.Net provides [JSON Schema](https://json-schema.org) support for drafts 6, 7, 2019-09, and 2020-12.  It is 100% compliant and passes all required and most optional tests of the [JSON Schema Test Suite](https://github.com/json-schema-org/JSON-Schema-Test-Suite).
 
 ***NOTE** The remaining optional tests involve ECMA Regular Expressions, big-num support, and some string formats.*
 
-### JsonPath.Net
+### JsonSchema.Net.Generation
+
+Builds on top of JsonSchema<nsp>.Net to provide schema generation from .Net types.
+
+### JsonPath<nsp>.Net
 
 JsonPath.Net provides JSON querying using the JSON Path querying language inspired by XPath and [conceptualized by Matt Goessner](https://goessner.net/articles/JsonPath/).  An [RFC](https://github.com/jsonpath-standard/internet-draft) is currently being developed for JSON Path.  This library will update as the upcoming spec evolves.
 
-### JsonPatch.Net
+### JsonPatch<nsp>.Net
 
 JsonPatch.Net provides [JSON Patch](https://tools.ietf.org/html/rfc6902) support which can be used to modify JSON documents.
+
+### JsonLogic
+
+JsonLogic is a .Net implementation of the [JsonLogic concept](https://jsonlogic.com) by [Jeremy Wadhams](https://github.com/jwadhams).
