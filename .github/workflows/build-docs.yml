@@ -4,8 +4,9 @@ on:
     branches:
       - master
     paths:
-      - docs_support/**
+      - docs_source/**
       - .github/workflows/build-docs.yml
+  workflow_dispatch:
 
 jobs:
   build-docs:
