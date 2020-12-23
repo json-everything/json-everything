@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: Publish JsonLogics
+name: Publish JsonLogic
 on:
   push:
     branches:

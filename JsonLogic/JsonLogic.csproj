@@ -5,6 +5,7 @@
     <RootNamespace>Json.Logic</RootNamespace>
     <AssemblyName>JsonLogic</AssemblyName>
     <Authors>Greg Dennis</Authors>
+    <Company>Greg Dennis</Company>
     <Description>JsonLogic built on the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
@@ -13,10 +14,19 @@
     <PackageTags>json logic json-logic jsonlogic</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-logic.html</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <DocumentationFile>JsonLogic.xml</DocumentationFile>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
