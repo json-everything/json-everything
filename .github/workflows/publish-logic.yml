@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: Publish JsonPatch.Net
+name: Publish JsonLogics
 on:
   push:
     branches:
       - master # Default release branch
     paths:
-      - JsonPatch/**
+      - JsonLogic/**
   workflow_dispatch:
 
 jobs:
@@ -19,14 +19,14 @@ jobs:
         with:
           dotnet-version: 3.1.301
       # Publish
-      - name: publish patch
-        id: publish_patch
+      - name: publish logic
+        id: publish_logic
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: JsonPatch/JsonPatch.csproj
+          PROJECT_FILE_PATH: JsonLogic/JsonLogic.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-          TAG_FORMAT: patch-v*
+          TAG_FORMAT: more-v*
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:

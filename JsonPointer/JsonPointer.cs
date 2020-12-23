@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Cysharp.Text;
@@ -201,6 +202,45 @@ namespace Json.Pointer
 				};
 		}
 
+		/// <summary>
+		/// Generates a JSON Pointer from a lambda expression.
+		/// </summary>
+		/// <typeparam name="T">The type of the object.</typeparam>
+		/// <param name="expression">The lambda expression which gives the pointer path.</param>
+		/// <returns>The JSON Pointer.</returns>
+		/// <exception cref="NotSupportedException">
+		/// Thrown when the lambda expression contains a node that is not a property access or
+		/// <see cref="int"/>-valued indexer.
+		/// </exception>
+		public static JsonPointer Create<T>(Expression<Func<T, object>> expression)
+		{
+			var body = expression.Body;
+			var segments = new List<PointerSegment>();
+			while (body != null)
+			{
+				if (body.NodeType == ExpressionType.Convert && body is UnaryExpression unary)
+					body = unary.Operand;
+
+				if (body is MemberExpression me)
+				{
+					segments.Insert(0, PointerSegment.Create(me.Member.Name));
+					body = me.Expression;
+				}
+				else if (body is MethodCallExpression mce &&
+						 mce.Method.Name.StartsWith("get_") &&
+						 mce.Arguments.Count == 1 &&
+						 mce.Arguments[0].Type == typeof(int))
+				{
+					segments.Insert(0, PointerSegment.Create(mce.Arguments[0].ToString()));
+					body = mce.Object;
+				}
+				else if (body is ParameterExpression) break; // this is the param of the expression itself.
+				else throw new NotSupportedException($"Expression nodes of type {body.NodeType} are not currently supported.");
+			}
+
+			return Create(segments, false);
+		}
+		
 		/// <summary>
 		/// Concatenates a pointer onto the current pointer.
 		/// </summary>
