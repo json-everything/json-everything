@@ -1,6 +1,350 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: Json.Logic
+  name: Json.Logic
+  href: api/Json.Logic.html
+  commentId: N:Json.Logic
+  fullName: Json.Logic
+  nameWithType: Json.Logic
+- uid: Json.Logic.JsonLogic
+  name: JsonLogic
+  href: api/Json.Logic.JsonLogic.html
+  commentId: T:Json.Logic.JsonLogic
+  fullName: Json.Logic.JsonLogic
+  nameWithType: JsonLogic
+- uid: Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule)
+  name: And(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_And_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.And(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.And(Rule, Rule)
+- uid: Json.Logic.JsonLogic.And*
+  name: And
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_And_
+  commentId: Overload:Json.Logic.JsonLogic.And
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.And
+  nameWithType: JsonLogic.And
+- uid: Json.Logic.JsonLogic.Literal(JsonElement)
+  name: Literal(JsonElement)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_JsonElement_
+  commentId: M:Json.Logic.JsonLogic.Literal(JsonElement)
+  fullName: Json.Logic.JsonLogic.Literal(JsonElement)
+  nameWithType: JsonLogic.Literal(JsonElement)
+- uid: Json.Logic.JsonLogic.Literal(System.Boolean)
+  name: Literal(Boolean)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_Boolean_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.Boolean)
+  fullName: Json.Logic.JsonLogic.Literal(System.Boolean)
+  nameWithType: JsonLogic.Literal(Boolean)
+- uid: Json.Logic.JsonLogic.Literal(System.Decimal)
+  name: Literal(Decimal)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_Decimal_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.Decimal)
+  fullName: Json.Logic.JsonLogic.Literal(System.Decimal)
+  nameWithType: JsonLogic.Literal(Decimal)
+- uid: Json.Logic.JsonLogic.Literal(System.Double)
+  name: Literal(Double)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_Double_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.Double)
+  fullName: Json.Logic.JsonLogic.Literal(System.Double)
+  nameWithType: JsonLogic.Literal(Double)
+- uid: Json.Logic.JsonLogic.Literal(System.Int32)
+  name: Literal(Int32)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_Int32_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.Int32)
+  fullName: Json.Logic.JsonLogic.Literal(System.Int32)
+  nameWithType: JsonLogic.Literal(Int32)
+- uid: Json.Logic.JsonLogic.Literal(System.Int64)
+  name: Literal(Int64)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_Int64_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.Int64)
+  fullName: Json.Logic.JsonLogic.Literal(System.Int64)
+  nameWithType: JsonLogic.Literal(Int64)
+- uid: Json.Logic.JsonLogic.Literal(System.Single)
+  name: Literal(Single)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_Single_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.Single)
+  fullName: Json.Logic.JsonLogic.Literal(System.Single)
+  nameWithType: JsonLogic.Literal(Single)
+- uid: Json.Logic.JsonLogic.Literal(System.String)
+  name: Literal(String)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_System_String_
+  commentId: M:Json.Logic.JsonLogic.Literal(System.String)
+  fullName: Json.Logic.JsonLogic.Literal(System.String)
+  nameWithType: JsonLogic.Literal(String)
+- uid: Json.Logic.JsonLogic.Literal*
+  name: Literal
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_
+  commentId: Overload:Json.Logic.JsonLogic.Literal
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Literal
+  nameWithType: JsonLogic.Literal
+- uid: Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule)
+  name: Or(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Or_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Or(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Or(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Or*
+  name: Or
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Or_
+  commentId: Overload:Json.Logic.JsonLogic.Or
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Or
+  nameWithType: JsonLogic.Or
+- uid: Json.Logic.JsonLogic.StrictEquals(Json.Logic.Rule,Json.Logic.Rule)
+  name: StrictEquals(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_StrictEquals_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.StrictEquals(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.StrictEquals(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.StrictEquals(Rule, Rule)
+- uid: Json.Logic.JsonLogic.StrictEquals*
+  name: StrictEquals
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_StrictEquals_
+  commentId: Overload:Json.Logic.JsonLogic.StrictEquals
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.StrictEquals
+  nameWithType: JsonLogic.StrictEquals
+- uid: Json.Logic.JsonLogic.Variable(System.String,Json.Logic.Rule)
+  name: Variable(String, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Variable_System_String_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Variable(System.String,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Variable(System.String, Json.Logic.Rule)
+  nameWithType: JsonLogic.Variable(String, Rule)
+- uid: Json.Logic.JsonLogic.Variable*
+  name: Variable
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Variable_
+  commentId: Overload:Json.Logic.JsonLogic.Variable
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Variable
+  nameWithType: JsonLogic.Variable
+- uid: Json.Logic.JsonLogicException
+  name: JsonLogicException
+  href: api/Json.Logic.JsonLogicException.html
+  commentId: T:Json.Logic.JsonLogicException
+  fullName: Json.Logic.JsonLogicException
+  nameWithType: JsonLogicException
+- uid: Json.Logic.JsonLogicException.#ctor(System.String)
+  name: JsonLogicException(String)
+  href: api/Json.Logic.JsonLogicException.html#Json_Logic_JsonLogicException__ctor_System_String_
+  commentId: M:Json.Logic.JsonLogicException.#ctor(System.String)
+  fullName: Json.Logic.JsonLogicException.JsonLogicException(System.String)
+  nameWithType: JsonLogicException.JsonLogicException(String)
+- uid: Json.Logic.JsonLogicException.#ctor*
+  name: JsonLogicException
+  href: api/Json.Logic.JsonLogicException.html#Json_Logic_JsonLogicException__ctor_
+  commentId: Overload:Json.Logic.JsonLogicException.#ctor
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogicException.JsonLogicException
+  nameWithType: JsonLogicException.JsonLogicException
+- uid: Json.Logic.LogicComponentConverter
+  name: LogicComponentConverter
+  href: api/Json.Logic.LogicComponentConverter.html
+  commentId: T:Json.Logic.LogicComponentConverter
+  fullName: Json.Logic.LogicComponentConverter
+  nameWithType: LogicComponentConverter
+- uid: Json.Logic.LogicComponentConverter.Read(Utf8JsonReader@,Type,JsonSerializerOptions)
+  name: Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
+  href: api/Json.Logic.LogicComponentConverter.html#Json_Logic_LogicComponentConverter_Read_Utf8JsonReader__Type_JsonSerializerOptions_
+  commentId: M:Json.Logic.LogicComponentConverter.Read(Utf8JsonReader@,Type,JsonSerializerOptions)
+  name.vb: Read(ByRef Utf8JsonReader, Type, JsonSerializerOptions)
+  fullName: Json.Logic.LogicComponentConverter.Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
+  fullName.vb: Json.Logic.LogicComponentConverter.Read(ByRef Utf8JsonReader, Type, JsonSerializerOptions)
+  nameWithType: LogicComponentConverter.Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
+  nameWithType.vb: LogicComponentConverter.Read(ByRef Utf8JsonReader, Type, JsonSerializerOptions)
+- uid: Json.Logic.LogicComponentConverter.Read*
+  name: Read
+  href: api/Json.Logic.LogicComponentConverter.html#Json_Logic_LogicComponentConverter_Read_
+  commentId: Overload:Json.Logic.LogicComponentConverter.Read
+  isSpec: "True"
+  fullName: Json.Logic.LogicComponentConverter.Read
+  nameWithType: LogicComponentConverter.Read
+- uid: Json.Logic.LogicComponentConverter.Write(Utf8JsonWriter,Json.Logic.Rule,JsonSerializerOptions)
+  name: Write(Utf8JsonWriter, Rule, JsonSerializerOptions)
+  href: api/Json.Logic.LogicComponentConverter.html#Json_Logic_LogicComponentConverter_Write_Utf8JsonWriter_Json_Logic_Rule_JsonSerializerOptions_
+  commentId: M:Json.Logic.LogicComponentConverter.Write(Utf8JsonWriter,Json.Logic.Rule,JsonSerializerOptions)
+  fullName: Json.Logic.LogicComponentConverter.Write(Utf8JsonWriter, Json.Logic.Rule, JsonSerializerOptions)
+  nameWithType: LogicComponentConverter.Write(Utf8JsonWriter, Rule, JsonSerializerOptions)
+- uid: Json.Logic.LogicComponentConverter.Write*
+  name: Write
+  href: api/Json.Logic.LogicComponentConverter.html#Json_Logic_LogicComponentConverter_Write_
+  commentId: Overload:Json.Logic.LogicComponentConverter.Write
+  isSpec: "True"
+  fullName: Json.Logic.LogicComponentConverter.Write
+  nameWithType: LogicComponentConverter.Write
+- uid: Json.Logic.OperatorAttribute
+  name: OperatorAttribute
+  href: api/Json.Logic.OperatorAttribute.html
+  commentId: T:Json.Logic.OperatorAttribute
+  fullName: Json.Logic.OperatorAttribute
+  nameWithType: OperatorAttribute
+- uid: Json.Logic.OperatorAttribute.#ctor(System.String)
+  name: OperatorAttribute(String)
+  href: api/Json.Logic.OperatorAttribute.html#Json_Logic_OperatorAttribute__ctor_System_String_
+  commentId: M:Json.Logic.OperatorAttribute.#ctor(System.String)
+  fullName: Json.Logic.OperatorAttribute.OperatorAttribute(System.String)
+  nameWithType: OperatorAttribute.OperatorAttribute(String)
+- uid: Json.Logic.OperatorAttribute.#ctor*
+  name: OperatorAttribute
+  href: api/Json.Logic.OperatorAttribute.html#Json_Logic_OperatorAttribute__ctor_
+  commentId: Overload:Json.Logic.OperatorAttribute.#ctor
+  isSpec: "True"
+  fullName: Json.Logic.OperatorAttribute.OperatorAttribute
+  nameWithType: OperatorAttribute.OperatorAttribute
+- uid: Json.Logic.OperatorAttribute.Name
+  name: Name
+  href: api/Json.Logic.OperatorAttribute.html#Json_Logic_OperatorAttribute_Name
+  commentId: P:Json.Logic.OperatorAttribute.Name
+  fullName: Json.Logic.OperatorAttribute.Name
+  nameWithType: OperatorAttribute.Name
+- uid: Json.Logic.OperatorAttribute.Name*
+  name: Name
+  href: api/Json.Logic.OperatorAttribute.html#Json_Logic_OperatorAttribute_Name_
+  commentId: Overload:Json.Logic.OperatorAttribute.Name
+  isSpec: "True"
+  fullName: Json.Logic.OperatorAttribute.Name
+  nameWithType: OperatorAttribute.Name
+- uid: Json.Logic.Rule
+  name: Rule
+  href: api/Json.Logic.Rule.html
+  commentId: T:Json.Logic.Rule
+  fullName: Json.Logic.Rule
+  nameWithType: Rule
+- uid: Json.Logic.Rule.Apply(JsonElement)
+  name: Apply(JsonElement)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_Apply_JsonElement_
+  commentId: M:Json.Logic.Rule.Apply(JsonElement)
+  fullName: Json.Logic.Rule.Apply(JsonElement)
+  nameWithType: Rule.Apply(JsonElement)
+- uid: Json.Logic.Rule.Apply*
+  name: Apply
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_Apply_
+  commentId: Overload:Json.Logic.Rule.Apply
+  isSpec: "True"
+  fullName: Json.Logic.Rule.Apply
+  nameWithType: Rule.Apply
+- uid: Json.Logic.Rule.op_Implicit(JsonElement)~Json.Logic.Rule
+  name: Implicit(JsonElement to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_JsonElement__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(JsonElement)~Json.Logic.Rule
+  name.vb: Widening(JsonElement to Rule)
+  fullName: Json.Logic.Rule.Implicit(JsonElement to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(JsonElement to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(JsonElement to Rule)
+  nameWithType.vb: Rule.Widening(JsonElement to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Boolean)~Json.Logic.Rule
+  name: Implicit(Boolean to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Boolean__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Boolean)~Json.Logic.Rule
+  name.vb: Widening(Boolean to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Boolean to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Boolean to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Boolean to Rule)
+  nameWithType.vb: Rule.Widening(Boolean to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Decimal)~Json.Logic.Rule
+  name: Implicit(Decimal to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Decimal__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Decimal)~Json.Logic.Rule
+  name.vb: Widening(Decimal to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Decimal to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Decimal to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Decimal to Rule)
+  nameWithType.vb: Rule.Widening(Decimal to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Double)~Json.Logic.Rule
+  name: Implicit(Double to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Double__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Double)~Json.Logic.Rule
+  name.vb: Widening(Double to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Double to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Double to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Double to Rule)
+  nameWithType.vb: Rule.Widening(Double to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Int32)~Json.Logic.Rule
+  name: Implicit(Int32 to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Int32__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Int32)~Json.Logic.Rule
+  name.vb: Widening(Int32 to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Int32 to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Int32 to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Int32 to Rule)
+  nameWithType.vb: Rule.Widening(Int32 to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Int64)~Json.Logic.Rule
+  name: Implicit(Int64 to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Int64__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Int64)~Json.Logic.Rule
+  name.vb: Widening(Int64 to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Int64 to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Int64 to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Int64 to Rule)
+  nameWithType.vb: Rule.Widening(Int64 to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Single)~Json.Logic.Rule
+  name: Implicit(Single to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Single__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Single)~Json.Logic.Rule
+  name.vb: Widening(Single to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Single to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Single to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Single to Rule)
+  nameWithType.vb: Rule.Widening(Single to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.String)~Json.Logic.Rule
+  name: Implicit(String to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_String__Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.String)~Json.Logic.Rule
+  name.vb: Widening(String to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.String to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.String to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(String to Rule)
+  nameWithType.vb: Rule.Widening(String to Rule)
+- uid: Json.Logic.Rule.op_Implicit*
+  name: Implicit
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_
+  commentId: Overload:Json.Logic.Rule.op_Implicit
+  isSpec: "True"
+  name.vb: Widening
+  fullName: Json.Logic.Rule.Implicit
+  fullName.vb: Json.Logic.Rule.Widening
+  nameWithType: Rule.Implicit
+  nameWithType.vb: Rule.Widening
+- uid: Json.Logic.RuleExtensions
+  name: RuleExtensions
+  href: api/Json.Logic.RuleExtensions.html
+  commentId: T:Json.Logic.RuleExtensions
+  fullName: Json.Logic.RuleExtensions
+  nameWithType: RuleExtensions
+- uid: Json.Logic.RuleExtensions.Apply(Json.Logic.Rule)
+  name: Apply(Rule)
+  href: api/Json.Logic.RuleExtensions.html#Json_Logic_RuleExtensions_Apply_Json_Logic_Rule_
+  commentId: M:Json.Logic.RuleExtensions.Apply(Json.Logic.Rule)
+  fullName: Json.Logic.RuleExtensions.Apply(Json.Logic.Rule)
+  nameWithType: RuleExtensions.Apply(Rule)
+- uid: Json.Logic.RuleExtensions.Apply*
+  name: Apply
+  href: api/Json.Logic.RuleExtensions.html#Json_Logic_RuleExtensions_Apply_
+  commentId: Overload:Json.Logic.RuleExtensions.Apply
+  isSpec: "True"
+  fullName: Json.Logic.RuleExtensions.Apply
+  nameWithType: RuleExtensions.Apply
+- uid: Json.Logic.RuleRegistry
+  name: RuleRegistry
+  href: api/Json.Logic.RuleRegistry.html
+  commentId: T:Json.Logic.RuleRegistry
+  fullName: Json.Logic.RuleRegistry
+  nameWithType: RuleRegistry
+- uid: Json.Logic.RuleRegistry.GetRule(System.String)
+  name: GetRule(String)
+  href: api/Json.Logic.RuleRegistry.html#Json_Logic_RuleRegistry_GetRule_System_String_
+  commentId: M:Json.Logic.RuleRegistry.GetRule(System.String)
+  fullName: Json.Logic.RuleRegistry.GetRule(System.String)
+  nameWithType: RuleRegistry.GetRule(String)
+- uid: Json.Logic.RuleRegistry.GetRule*
+  name: GetRule
+  href: api/Json.Logic.RuleRegistry.html#Json_Logic_RuleRegistry_GetRule_
+  commentId: Overload:Json.Logic.RuleRegistry.GetRule
+  isSpec: "True"
+  fullName: Json.Logic.RuleRegistry.GetRule
+  nameWithType: RuleRegistry.GetRule
 - uid: Json.More
   name: Json.More
   href: api/Json.More.html
@@ -881,6 +1225,15 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.JsonPointer.Create
   nameWithType: JsonPointer.Create
+- uid: Json.Pointer.JsonPointer.Create``1(Expression{Func{``0,System.Object}})
+  name: Create<T>(Expression<Func<T, Object>>)
+  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Create__1_Expression_Func___0_System_Object___
+  commentId: M:Json.Pointer.JsonPointer.Create``1(Expression{Func{``0,System.Object}})
+  name.vb: Create(Of T)(Expression(Of Func(Of T, Object)))
+  fullName: Json.Pointer.JsonPointer.Create<T>(Expression<Func<T, System.Object>>)
+  fullName.vb: Json.Pointer.JsonPointer.Create(Of T)(Expression(Of Func(Of T, System.Object)))
+  nameWithType: JsonPointer.Create<T>(Expression<Func<T, Object>>)
+  nameWithType.vb: JsonPointer.Create(Of T)(Expression(Of Func(Of T, Object)))
 - uid: Json.Pointer.JsonPointer.Empty
   name: Empty
   href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Empty
