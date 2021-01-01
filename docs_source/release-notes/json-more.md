@@ -1,3 +1,7 @@
+# [1.2.3](https://github.com/gregsdennis/json-everything/pull/61)
+
+Signed the DLL for strong name compatibility.
+
 # [1.2.2](https://github.com/gregsdennis/json-everything/pull/45)
 
 Added deug symbols to package.  No functional change.
