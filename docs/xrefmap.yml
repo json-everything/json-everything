@@ -13,12 +13,44 @@ references:
   commentId: T:Json.Logic.JsonLogic
   fullName: Json.Logic.JsonLogic
   nameWithType: JsonLogic
-- uid: Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule)
-  name: And(Rule, Rule)
-  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_And_Json_Logic_Rule_Json_Logic_Rule_
-  commentId: M:Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule)
-  fullName: Json.Logic.JsonLogic.And(Json.Logic.Rule, Json.Logic.Rule)
-  nameWithType: JsonLogic.And(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Add(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Add(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Add_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Add(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Add(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Add(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Add(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Add(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Add(Rule, Rule())
+- uid: Json.Logic.JsonLogic.Add*
+  name: Add
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Add_
+  commentId: Overload:Json.Logic.JsonLogic.Add
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Add
+  nameWithType: JsonLogic.Add
+- uid: Json.Logic.JsonLogic.All(Json.Logic.Rule,Json.Logic.Rule)
+  name: All(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_All_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.All(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.All(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.All(Rule, Rule)
+- uid: Json.Logic.JsonLogic.All*
+  name: All
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_All_
+  commentId: Overload:Json.Logic.JsonLogic.All
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.All
+  nameWithType: JsonLogic.All
+- uid: Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule[])
+  name: And(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_And_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: And(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.And(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.And(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.And(Rule, Rule[])
+  nameWithType.vb: JsonLogic.And(Rule, Rule())
 - uid: Json.Logic.JsonLogic.And*
   name: And
   href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_And_
@@ -26,6 +58,142 @@ references:
   isSpec: "True"
   fullName: Json.Logic.JsonLogic.And
   nameWithType: JsonLogic.And
+- uid: Json.Logic.JsonLogic.BetweenExclusive(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  name: BetweenExclusive(Rule, Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_BetweenExclusive_Json_Logic_Rule_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.BetweenExclusive(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.BetweenExclusive(Json.Logic.Rule, Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.BetweenExclusive(Rule, Rule, Rule)
+- uid: Json.Logic.JsonLogic.BetweenExclusive*
+  name: BetweenExclusive
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_BetweenExclusive_
+  commentId: Overload:Json.Logic.JsonLogic.BetweenExclusive
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.BetweenExclusive
+  nameWithType: JsonLogic.BetweenExclusive
+- uid: Json.Logic.JsonLogic.BetweenInclusive(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  name: BetweenInclusive(Rule, Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_BetweenInclusive_Json_Logic_Rule_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.BetweenInclusive(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.BetweenInclusive(Json.Logic.Rule, Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.BetweenInclusive(Rule, Rule, Rule)
+- uid: Json.Logic.JsonLogic.BetweenInclusive*
+  name: BetweenInclusive
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_BetweenInclusive_
+  commentId: Overload:Json.Logic.JsonLogic.BetweenInclusive
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.BetweenInclusive
+  nameWithType: JsonLogic.BetweenInclusive
+- uid: Json.Logic.JsonLogic.BoolCast(Json.Logic.Rule)
+  name: BoolCast(Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_BoolCast_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.BoolCast(Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.BoolCast(Json.Logic.Rule)
+  nameWithType: JsonLogic.BoolCast(Rule)
+- uid: Json.Logic.JsonLogic.BoolCast*
+  name: BoolCast
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_BoolCast_
+  commentId: Overload:Json.Logic.JsonLogic.BoolCast
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.BoolCast
+  nameWithType: JsonLogic.BoolCast
+- uid: Json.Logic.JsonLogic.Cat(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Cat(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Cat_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Cat(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Cat(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Cat(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Cat(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Cat(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Cat(Rule, Rule())
+- uid: Json.Logic.JsonLogic.Cat*
+  name: Cat
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Cat_
+  commentId: Overload:Json.Logic.JsonLogic.Cat
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Cat
+  nameWithType: JsonLogic.Cat
+- uid: Json.Logic.JsonLogic.Divide(Json.Logic.Rule,Json.Logic.Rule)
+  name: Divide(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Divide_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Divide(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Divide(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Divide(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Divide*
+  name: Divide
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Divide_
+  commentId: Overload:Json.Logic.JsonLogic.Divide
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Divide
+  nameWithType: JsonLogic.Divide
+- uid: Json.Logic.JsonLogic.Filter(Json.Logic.Rule,Json.Logic.Rule)
+  name: Filter(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Filter_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Filter(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Filter(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Filter(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Filter*
+  name: Filter
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Filter_
+  commentId: Overload:Json.Logic.JsonLogic.Filter
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Filter
+  nameWithType: JsonLogic.Filter
+- uid: Json.Logic.JsonLogic.If(Json.Logic.Rule[])
+  name: If(Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_If_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.If(Json.Logic.Rule[])
+  name.vb: If(Rule())
+  fullName: Json.Logic.JsonLogic.If(Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.If(Json.Logic.Rule())
+  nameWithType: JsonLogic.If(Rule[])
+  nameWithType.vb: JsonLogic.If(Rule())
+- uid: Json.Logic.JsonLogic.If*
+  name: If
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_If_
+  commentId: Overload:Json.Logic.JsonLogic.If
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.If
+  nameWithType: JsonLogic.If
+- uid: Json.Logic.JsonLogic.In(Json.Logic.Rule,Json.Logic.Rule)
+  name: In(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_In_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.In(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.In(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.In(Rule, Rule)
+- uid: Json.Logic.JsonLogic.In*
+  name: In
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_In_
+  commentId: Overload:Json.Logic.JsonLogic.In
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.In
+  nameWithType: JsonLogic.In
+- uid: Json.Logic.JsonLogic.LessThan(Json.Logic.Rule,Json.Logic.Rule)
+  name: LessThan(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LessThan_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.LessThan(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.LessThan(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.LessThan(Rule, Rule)
+- uid: Json.Logic.JsonLogic.LessThan*
+  name: LessThan
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LessThan_
+  commentId: Overload:Json.Logic.JsonLogic.LessThan
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.LessThan
+  nameWithType: JsonLogic.LessThan
+- uid: Json.Logic.JsonLogic.LessThanOrEqual(Json.Logic.Rule,Json.Logic.Rule)
+  name: LessThanOrEqual(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LessThanOrEqual_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.LessThanOrEqual(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.LessThanOrEqual(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.LessThanOrEqual(Rule, Rule)
+- uid: Json.Logic.JsonLogic.LessThanOrEqual*
+  name: LessThanOrEqual
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LessThanOrEqual_
+  commentId: Overload:Json.Logic.JsonLogic.LessThanOrEqual
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.LessThanOrEqual
+  nameWithType: JsonLogic.LessThanOrEqual
 - uid: Json.Logic.JsonLogic.Literal(JsonElement)
   name: Literal(JsonElement)
   href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Literal_JsonElement_
@@ -81,12 +249,225 @@ references:
   isSpec: "True"
   fullName: Json.Logic.JsonLogic.Literal
   nameWithType: JsonLogic.Literal
-- uid: Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule)
-  name: Or(Rule, Rule)
-  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Or_Json_Logic_Rule_Json_Logic_Rule_
-  commentId: M:Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule)
-  fullName: Json.Logic.JsonLogic.Or(Json.Logic.Rule, Json.Logic.Rule)
-  nameWithType: JsonLogic.Or(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Log(Json.Logic.Rule)
+  name: Log(Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Log_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Log(Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Log(Json.Logic.Rule)
+  nameWithType: JsonLogic.Log(Rule)
+- uid: Json.Logic.JsonLogic.Log*
+  name: Log
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Log_
+  commentId: Overload:Json.Logic.JsonLogic.Log
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Log
+  nameWithType: JsonLogic.Log
+- uid: Json.Logic.JsonLogic.LooseEquals(Json.Logic.Rule,Json.Logic.Rule)
+  name: LooseEquals(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LooseEquals_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.LooseEquals(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.LooseEquals(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.LooseEquals(Rule, Rule)
+- uid: Json.Logic.JsonLogic.LooseEquals*
+  name: LooseEquals
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LooseEquals_
+  commentId: Overload:Json.Logic.JsonLogic.LooseEquals
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.LooseEquals
+  nameWithType: JsonLogic.LooseEquals
+- uid: Json.Logic.JsonLogic.LooseNotEquals(Json.Logic.Rule,Json.Logic.Rule)
+  name: LooseNotEquals(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LooseNotEquals_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.LooseNotEquals(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.LooseNotEquals(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.LooseNotEquals(Rule, Rule)
+- uid: Json.Logic.JsonLogic.LooseNotEquals*
+  name: LooseNotEquals
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_LooseNotEquals_
+  commentId: Overload:Json.Logic.JsonLogic.LooseNotEquals
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.LooseNotEquals
+  nameWithType: JsonLogic.LooseNotEquals
+- uid: Json.Logic.JsonLogic.Map(Json.Logic.Rule,Json.Logic.Rule)
+  name: Map(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Map_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Map(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Map(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Map(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Map*
+  name: Map
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Map_
+  commentId: Overload:Json.Logic.JsonLogic.Map
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Map
+  nameWithType: JsonLogic.Map
+- uid: Json.Logic.JsonLogic.Max(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Max(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Max_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Max(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Max(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Max(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Max(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Max(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Max(Rule, Rule())
+- uid: Json.Logic.JsonLogic.Max*
+  name: Max
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Max_
+  commentId: Overload:Json.Logic.JsonLogic.Max
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Max
+  nameWithType: JsonLogic.Max
+- uid: Json.Logic.JsonLogic.Merge(Json.Logic.Rule[])
+  name: Merge(Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Merge_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Merge(Json.Logic.Rule[])
+  name.vb: Merge(Rule())
+  fullName: Json.Logic.JsonLogic.Merge(Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Merge(Json.Logic.Rule())
+  nameWithType: JsonLogic.Merge(Rule[])
+  nameWithType.vb: JsonLogic.Merge(Rule())
+- uid: Json.Logic.JsonLogic.Merge*
+  name: Merge
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Merge_
+  commentId: Overload:Json.Logic.JsonLogic.Merge
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Merge
+  nameWithType: JsonLogic.Merge
+- uid: Json.Logic.JsonLogic.Min(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Min(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Min_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Min(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Min(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Min(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Min(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Min(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Min(Rule, Rule())
+- uid: Json.Logic.JsonLogic.Min*
+  name: Min
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Min_
+  commentId: Overload:Json.Logic.JsonLogic.Min
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Min
+  nameWithType: JsonLogic.Min
+- uid: Json.Logic.JsonLogic.Missing(Json.Logic.Rule[])
+  name: Missing(Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Missing_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Missing(Json.Logic.Rule[])
+  name.vb: Missing(Rule())
+  fullName: Json.Logic.JsonLogic.Missing(Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Missing(Json.Logic.Rule())
+  nameWithType: JsonLogic.Missing(Rule[])
+  nameWithType.vb: JsonLogic.Missing(Rule())
+- uid: Json.Logic.JsonLogic.Missing*
+  name: Missing
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Missing_
+  commentId: Overload:Json.Logic.JsonLogic.Missing
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Missing
+  nameWithType: JsonLogic.Missing
+- uid: Json.Logic.JsonLogic.MissingSome(Json.Logic.Rule,Json.Logic.Rule)
+  name: MissingSome(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_MissingSome_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.MissingSome(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.MissingSome(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.MissingSome(Rule, Rule)
+- uid: Json.Logic.JsonLogic.MissingSome*
+  name: MissingSome
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_MissingSome_
+  commentId: Overload:Json.Logic.JsonLogic.MissingSome
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.MissingSome
+  nameWithType: JsonLogic.MissingSome
+- uid: Json.Logic.JsonLogic.Modulus(Json.Logic.Rule,Json.Logic.Rule)
+  name: Modulus(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Modulus_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Modulus(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Modulus(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Modulus(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Modulus*
+  name: Modulus
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Modulus_
+  commentId: Overload:Json.Logic.JsonLogic.Modulus
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Modulus
+  nameWithType: JsonLogic.Modulus
+- uid: Json.Logic.JsonLogic.MoreThan(Json.Logic.Rule,Json.Logic.Rule)
+  name: MoreThan(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_MoreThan_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.MoreThan(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.MoreThan(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.MoreThan(Rule, Rule)
+- uid: Json.Logic.JsonLogic.MoreThan*
+  name: MoreThan
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_MoreThan_
+  commentId: Overload:Json.Logic.JsonLogic.MoreThan
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.MoreThan
+  nameWithType: JsonLogic.MoreThan
+- uid: Json.Logic.JsonLogic.MoreThanOrEqual(Json.Logic.Rule,Json.Logic.Rule)
+  name: MoreThanOrEqual(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_MoreThanOrEqual_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.MoreThanOrEqual(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.MoreThanOrEqual(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.MoreThanOrEqual(Rule, Rule)
+- uid: Json.Logic.JsonLogic.MoreThanOrEqual*
+  name: MoreThanOrEqual
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_MoreThanOrEqual_
+  commentId: Overload:Json.Logic.JsonLogic.MoreThanOrEqual
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.MoreThanOrEqual
+  nameWithType: JsonLogic.MoreThanOrEqual
+- uid: Json.Logic.JsonLogic.Multiply(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Multiply(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Multiply_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Multiply(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Multiply(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Multiply(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Multiply(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Multiply(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Multiply(Rule, Rule())
+- uid: Json.Logic.JsonLogic.Multiply*
+  name: Multiply
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Multiply_
+  commentId: Overload:Json.Logic.JsonLogic.Multiply
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Multiply
+  nameWithType: JsonLogic.Multiply
+- uid: Json.Logic.JsonLogic.None(Json.Logic.Rule,Json.Logic.Rule)
+  name: None(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_None_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.None(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.None(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.None(Rule, Rule)
+- uid: Json.Logic.JsonLogic.None*
+  name: None
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_None_
+  commentId: Overload:Json.Logic.JsonLogic.None
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.None
+  nameWithType: JsonLogic.None
+- uid: Json.Logic.JsonLogic.Not(Json.Logic.Rule)
+  name: Not(Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Not_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Not(Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Not(Json.Logic.Rule)
+  nameWithType: JsonLogic.Not(Rule)
+- uid: Json.Logic.JsonLogic.Not*
+  name: Not
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Not_
+  commentId: Overload:Json.Logic.JsonLogic.Not
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Not
+  nameWithType: JsonLogic.Not
+- uid: Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Or(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Or_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Or(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Or(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Or(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Or(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Or(Rule, Rule())
 - uid: Json.Logic.JsonLogic.Or*
   name: Or
   href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Or_
@@ -94,6 +475,32 @@ references:
   isSpec: "True"
   fullName: Json.Logic.JsonLogic.Or
   nameWithType: JsonLogic.Or
+- uid: Json.Logic.JsonLogic.Reduce(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  name: Reduce(Rule, Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Reduce_Json_Logic_Rule_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Reduce(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Reduce(Json.Logic.Rule, Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Reduce(Rule, Rule, Rule)
+- uid: Json.Logic.JsonLogic.Reduce*
+  name: Reduce
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Reduce_
+  commentId: Overload:Json.Logic.JsonLogic.Reduce
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Reduce
+  nameWithType: JsonLogic.Reduce
+- uid: Json.Logic.JsonLogic.Some(Json.Logic.Rule,Json.Logic.Rule)
+  name: Some(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Some_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Some(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Some(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Some(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Some*
+  name: Some
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Some_
+  commentId: Overload:Json.Logic.JsonLogic.Some
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Some
+  nameWithType: JsonLogic.Some
 - uid: Json.Logic.JsonLogic.StrictEquals(Json.Logic.Rule,Json.Logic.Rule)
   name: StrictEquals(Rule, Rule)
   href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_StrictEquals_Json_Logic_Rule_Json_Logic_Rule_
@@ -107,6 +514,60 @@ references:
   isSpec: "True"
   fullName: Json.Logic.JsonLogic.StrictEquals
   nameWithType: JsonLogic.StrictEquals
+- uid: Json.Logic.JsonLogic.StrictNotEquals(Json.Logic.Rule,Json.Logic.Rule)
+  name: StrictNotEquals(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_StrictNotEquals_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.StrictNotEquals(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.StrictNotEquals(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.StrictNotEquals(Rule, Rule)
+- uid: Json.Logic.JsonLogic.StrictNotEquals*
+  name: StrictNotEquals
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_StrictNotEquals_
+  commentId: Overload:Json.Logic.JsonLogic.StrictNotEquals
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.StrictNotEquals
+  nameWithType: JsonLogic.StrictNotEquals
+- uid: Json.Logic.JsonLogic.Substr(Json.Logic.Rule,Json.Logic.Rule)
+  name: Substr(Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Substr_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Substr(Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Substr(Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Substr(Rule, Rule)
+- uid: Json.Logic.JsonLogic.Substr(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  name: Substr(Rule, Rule, Rule)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Substr_Json_Logic_Rule_Json_Logic_Rule_Json_Logic_Rule_
+  commentId: M:Json.Logic.JsonLogic.Substr(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)
+  fullName: Json.Logic.JsonLogic.Substr(Json.Logic.Rule, Json.Logic.Rule, Json.Logic.Rule)
+  nameWithType: JsonLogic.Substr(Rule, Rule, Rule)
+- uid: Json.Logic.JsonLogic.Substr*
+  name: Substr
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Substr_
+  commentId: Overload:Json.Logic.JsonLogic.Substr
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Substr
+  nameWithType: JsonLogic.Substr
+- uid: Json.Logic.JsonLogic.Subtract(Json.Logic.Rule,Json.Logic.Rule[])
+  name: Subtract(Rule, Rule[])
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Subtract_Json_Logic_Rule_Json_Logic_Rule___
+  commentId: M:Json.Logic.JsonLogic.Subtract(Json.Logic.Rule,Json.Logic.Rule[])
+  name.vb: Subtract(Rule, Rule())
+  fullName: Json.Logic.JsonLogic.Subtract(Json.Logic.Rule, Json.Logic.Rule[])
+  fullName.vb: Json.Logic.JsonLogic.Subtract(Json.Logic.Rule, Json.Logic.Rule())
+  nameWithType: JsonLogic.Subtract(Rule, Rule[])
+  nameWithType.vb: JsonLogic.Subtract(Rule, Rule())
+- uid: Json.Logic.JsonLogic.Subtract*
+  name: Subtract
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Subtract_
+  commentId: Overload:Json.Logic.JsonLogic.Subtract
+  isSpec: "True"
+  fullName: Json.Logic.JsonLogic.Subtract
+  nameWithType: JsonLogic.Subtract
+- uid: Json.Logic.JsonLogic.Variable(System.String)
+  name: Variable(String)
+  href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Variable_System_String_
+  commentId: M:Json.Logic.JsonLogic.Variable(System.String)
+  fullName: Json.Logic.JsonLogic.Variable(System.String)
+  nameWithType: JsonLogic.Variable(String)
 - uid: Json.Logic.JsonLogic.Variable(System.String,Json.Logic.Rule)
   name: Variable(String, Rule)
   href: api/Json.Logic.JsonLogic.html#Json_Logic_JsonLogic_Variable_System_String_Json_Logic_Rule_
@@ -1025,6 +1486,22 @@ references:
   commentId: T:Json.Path.JsonPath
   fullName: Json.Path.JsonPath
   nameWithType: JsonPath
+- uid: Json.Path.JsonPath.Evaluate(JsonElement@)
+  name: Evaluate(JsonElement)
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_JsonElement__
+  commentId: M:Json.Path.JsonPath.Evaluate(JsonElement@)
+  name.vb: Evaluate(ByRef JsonElement)
+  fullName: Json.Path.JsonPath.Evaluate(JsonElement)
+  fullName.vb: Json.Path.JsonPath.Evaluate(ByRef JsonElement)
+  nameWithType: JsonPath.Evaluate(JsonElement)
+  nameWithType.vb: JsonPath.Evaluate(ByRef JsonElement)
+- uid: Json.Path.JsonPath.Evaluate*
+  name: Evaluate
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_
+  commentId: Overload:Json.Path.JsonPath.Evaluate
+  isSpec: "True"
+  fullName: Json.Path.JsonPath.Evaluate
+  nameWithType: JsonPath.Evaluate
 - uid: Json.Path.JsonPath.Parse(System.String)
   name: Parse(String)
   href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Parse_System_String_
@@ -1038,6 +1515,35 @@ references:
   isSpec: "True"
   fullName: Json.Path.JsonPath.Parse
   nameWithType: JsonPath.Parse
+- uid: Json.Path.JsonPath.ToString
+  name: ToString()
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_ToString
+  commentId: M:Json.Path.JsonPath.ToString
+  fullName: Json.Path.JsonPath.ToString()
+  nameWithType: JsonPath.ToString()
+- uid: Json.Path.JsonPath.ToString*
+  name: ToString
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_ToString_
+  commentId: Overload:Json.Path.JsonPath.ToString
+  isSpec: "True"
+  fullName: Json.Path.JsonPath.ToString
+  nameWithType: JsonPath.ToString
+- uid: Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@)
+  name: TryParse(String, out JsonPath)
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_TryParse_System_String_Json_Path_JsonPath__
+  commentId: M:Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@)
+  name.vb: TryParse(String, ByRef JsonPath)
+  fullName: Json.Path.JsonPath.TryParse(System.String, out Json.Path.JsonPath)
+  fullName.vb: Json.Path.JsonPath.TryParse(System.String, ByRef Json.Path.JsonPath)
+  nameWithType: JsonPath.TryParse(String, out JsonPath)
+  nameWithType.vb: JsonPath.TryParse(String, ByRef JsonPath)
+- uid: Json.Path.JsonPath.TryParse*
+  name: TryParse
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_TryParse_
+  commentId: Overload:Json.Path.JsonPath.TryParse
+  isSpec: "True"
+  fullName: Json.Path.JsonPath.TryParse
+  nameWithType: JsonPath.TryParse
 - uid: Json.Path.PathMatch
   name: PathMatch
   href: api/Json.Path.PathMatch.html

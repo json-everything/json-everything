@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.6.0 </title>
+    <title>1.6.1 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.6.0 ">
-    <meta name="generator" content="docfx 2.45.1.0">
+    <meta name="title" content="1.6.1 ">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -67,8 +67,10 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="160"><a href="https://github.com/gregsdennis/json-everything/pull/52">1.6.0</a></h1>
+<h1 id="161"><a href="https://github.com/gregsdennis/json-everything/pull/61">1.6.1</a></h1>
 
+<p>Signed the DLL for strong name compatibility.</p>
+<h1 id="160"><a href="https://github.com/gregsdennis/json-everything/pull/52">1.6.0</a></h1>
 <p>Added support for Draft 2020-12.</p>
 <ul>
 <li>Meta-schema validation now always occurs superficially in that it validates that the meta-schema is known.  The <code>ValidationOptions.ValidateMetaSchema</code> option now only controls whether a full meta-schema validation of the schema will occur.  This should only affect clients validating schemas declaring custom meta-schemas with the <code>$schema</code> keyword.  Custom meta-schemas will now need to be loaded into the system manually or <code>SchemaRegistry.Fetch</code> will need to be set to retrieve it automatically.</li>
@@ -133,7 +135,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>
