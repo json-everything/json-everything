@@ -1,4 +1,6 @@
-- name: Extending Schema Validation
+- name: Enum serialization by name
+  href: more-enums.md
+- name: Extending schema validation
   href: schema-vocabs.md
-- name: Extending Schema Generation
+- name: Extending schema generation
   href: schema-gen.md

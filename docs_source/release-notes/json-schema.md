@@ -1,3 +1,7 @@
+# [1.6.1](https://github.com/gregsdennis/json-everything/pull/61)
+
+Signed the DLL for strong name compatibility.
+
 # [1.6.0](https://github.com/gregsdennis/json-everything/pull/52)
 
 Added support for Draft 2020-12.

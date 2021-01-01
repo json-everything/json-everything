@@ -1,3 +1,7 @@
+# [1.0.4](https://github.com/gregsdennis/json-everything/pull/61)
+
+Signed the DLL for strong name compatibility.
+
 # [1.0.3](https://github.com/gregsdennis/json-everything/commit/4b6c5900f4bfb45119a3dc5c3ce60b7d7a2e8c9e)
 
 Bump for publish.  No functional change.
