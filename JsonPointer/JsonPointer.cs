@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Cysharp.Text;
 
 namespace Json.Pointer
 {
@@ -332,7 +332,7 @@ namespace Json.Pointer
 
 		private string _BuildSource()
 		{
-			var builder = ZString.CreateStringBuilder();
+			var builder = new StringBuilder();
 			if (IsUriEncoded)
 				builder.Append('#');
 

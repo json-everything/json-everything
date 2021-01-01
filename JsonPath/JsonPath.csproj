@@ -13,8 +13,8 @@
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageTags>json-path jsonpath query json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
-    <Version>0.1.3</Version>
-    <FileVersion>0.1.3.0</FileVersion>
+    <Version>0.1.4</Version>
+    <FileVersion>0.1.4.0</FileVersion>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DocumentationFile>JsonPath.Net.xml</DocumentationFile>
@@ -22,6 +22,8 @@
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <SignAssembly>true</SignAssembly>
+	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
    </PropertyGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Json.More.Net</PackageId>
     <Authors>Greg Dennis</Authors>
-    <Version>1.2.2</Version>
+    <Version>1.2.3</Version>
     <Description>Provides extended functionality for the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
@@ -14,18 +14,20 @@
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-more.html</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.2.2.0</FileVersion>
+    <FileVersion>1.2.3.0</FileVersion>
     <DocumentationFile>Json.More.xml</DocumentationFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
 	  <IncludeSymbols>true</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
    </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
