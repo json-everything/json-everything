@@ -1,3 +1,7 @@
+# [1.3.1](https://github.com/gregsdennis/json-everything/pull/61)
+
+Signed the DLL for strong name compatibility.
+
 # [1.3.0](https://github.com/gregsdennis/json-everything/pull/???)
 
 Added support pointer creation using lambda expressions, e.g. `x => x.foo[5].bar` to create `/foo/5/bar`.
