@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Cysharp.Text;
 using Json.More;
 
 namespace Json.Schema
@@ -68,7 +67,7 @@ namespace Json.Schema
 			if (!context.IsValid)
 			{
 				context.IsValid = false;
-				var pairs = ZString.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
+				var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
 				context.Message = $"Found duplicates at the following index pairs: {pairs}";
 			}
 		}

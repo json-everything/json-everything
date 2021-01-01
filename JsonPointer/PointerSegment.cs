@@ -1,5 +1,5 @@
 ﻿using System;
-using Cysharp.Text;
+using System.Text;
 
 namespace Json.Pointer
 {
@@ -89,7 +89,7 @@ namespace Json.Pointer
 
 		private static string _Encode(string value, bool uriFormatted)
 		{
-			var builder = ZString.CreateStringBuilder();
+			var builder = new StringBuilder();
 			var chars = value.AsSpan();
 			foreach (var ch in chars)
 			{
@@ -130,7 +130,7 @@ namespace Json.Pointer
 
 		private static string _Decode(string source, bool uriFormatted)
 		{
-			var builder = ZString.CreateStringBuilder();
+			var builder = new StringBuilder();
 			var span = source.AsSpan();
 			for (int i = 0; i < span.Length; i++)
 			{

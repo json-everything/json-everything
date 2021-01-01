@@ -6,6 +6,8 @@
     <IsPackable>false</IsPackable>
 
     <RootNamespace>Json.Path.Tests</RootNamespace>
+	  <SignAssembly>true</SignAssembly>
+	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
