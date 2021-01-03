@@ -2,6 +2,7 @@
   href: usage/
 - name: Examples
   href: examples/
+  homepage: examples/index.md
 - name: Api Documentation
   href: api/
   homepage: api/index.md

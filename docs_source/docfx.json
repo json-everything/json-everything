@@ -93,16 +93,19 @@
     ],
     "dest": "../docs",
     "globalMetadataFiles": [],
+    "globalMetadata":{
+      "_enableSearch": "true"
+    },
     "fileMetadataFiles": [],
     "template": [
       "default",
-      "templates/darkfx"
+      "templates/material"
     ],
-    "postProcessors": [],
+    "postProcessors": ["ExtractSearchIndex"],
     "markdownEngineName": "markdig",
     "noLangKeyword": false,
     "keepFileLink": false,
-    "cleanupCacheHistory": false,
+    "cleanupCacheHistory": false, 
     "disableGitFeatures": false
   }
 }
