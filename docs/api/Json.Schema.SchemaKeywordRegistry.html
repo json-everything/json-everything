@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SchemaKeywordRegistry
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SchemaKeywordRegistry
+   ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Json.Schema.SchemaKeywordRegistry">
+  
+  
+  <h1 id="Json_Schema_SchemaKeywordRegistry" data-uid="Json.Schema.SchemaKeywordRegistry" class="text-break">Class SchemaKeywordRegistry
+  </h1>
+  <div class="markdown level0 summary"><p>Manages which keywords are known by the system.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">SchemaKeywordRegistry</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
+  <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
+  <h5 id="Json_Schema_SchemaKeywordRegistry_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class SchemaKeywordRegistry : object</code></pre>
+  </div>
+  <h5 id="Json_Schema_SchemaKeywordRegistry_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Because the deserialization process relies on keywords being registered,
+this class cannot be an instance class like the other registries in this
+library.  Therefore keywords are registered for all schemas.</p>
+</div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_GetImplementationType_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.GetImplementationType(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L74">View Source</a>
+  </span>
+  <a id="Json_Schema_SchemaKeywordRegistry_GetImplementationType_" data-uid="Json.Schema.SchemaKeywordRegistry.GetImplementationType*"></a>
+  <h4 id="Json_Schema_SchemaKeywordRegistry_GetImplementationType_System_String_" data-uid="Json.Schema.SchemaKeywordRegistry.GetImplementationType(System.String)">GetImplementationType(String)</h4>
+  <div class="markdown level1 summary"><p>Gets the implementation for a given keyword name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Type GetImplementationType(string keyword)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">keyword</span></td>
+        <td><p>The keyword name.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Type</span></td>
+        <td><p>The keyword type, if registered; otherwise null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_Register__1.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.Register%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L45">View Source</a>
+  </span>
+  <a id="Json_Schema_SchemaKeywordRegistry_Register_" data-uid="Json.Schema.SchemaKeywordRegistry.Register*"></a>
+  <h4 id="Json_Schema_SchemaKeywordRegistry_Register__1" data-uid="Json.Schema.SchemaKeywordRegistry.Register``1">Register&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Registers a new keyword type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Register&lt;T&gt;()
+    where T : IJsonSchemaKeyword, IEquatable&lt;T&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The keyword type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_RegisterNullValue__1___0_.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.RegisterNullValue%60%601(%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L90">View Source</a>
+  </span>
+  <a id="Json_Schema_SchemaKeywordRegistry_RegisterNullValue_" data-uid="Json.Schema.SchemaKeywordRegistry.RegisterNullValue*"></a>
+  <h4 id="Json_Schema_SchemaKeywordRegistry_RegisterNullValue__1___0_" data-uid="Json.Schema.SchemaKeywordRegistry.RegisterNullValue``1(``0)">RegisterNullValue&lt;T&gt;(T)</h4>
+  <div class="markdown level1 summary"><p>Registers a null-value for a keyword.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterNullValue&lt;T&gt;(T nullKeyword)
+    where T : IJsonSchemaKeyword</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">nullKeyword</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Json_Schema_SchemaKeywordRegistry_RegisterNullValue__1___0__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is important for keywords that accept null, like <code>default</code> and <code>const</code>.  Without
+this step, the serializer will skip keywords that have nulls.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry_Unregister__1.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry.Unregister%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L59">View Source</a>
+  </span>
+  <a id="Json_Schema_SchemaKeywordRegistry_Unregister_" data-uid="Json.Schema.SchemaKeywordRegistry.Unregister*"></a>
+  <h4 id="Json_Schema_SchemaKeywordRegistry_Unregister__1" data-uid="Json.Schema.SchemaKeywordRegistry.Unregister``1">Unregister&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Unregisters a keyword type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Unregister&lt;T&gt;()
+    where T : IJsonSchemaKeyword</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The keyword type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_SchemaKeywordRegistry.md&amp;value=---%0Auid%3A%20Json.Schema.SchemaKeywordRegistry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/SchemaKeywordRegistry.cs/#L17" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

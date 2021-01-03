@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>1.6.1 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="1.6.1 ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="161"><a href="https://github.com/gregsdennis/json-everything/pull/61">1.6.1</a></h1>
+
+<p>Signed the DLL for strong name compatibility.</p>
+<h1 id="160"><a href="https://github.com/gregsdennis/json-everything/pull/52">1.6.0</a></h1>
+<p>Added support for Draft 2020-12.</p>
+<ul>
+<li>Meta-schema validation now always occurs superficially in that it validates that the meta-schema is known.  The <code>ValidationOptions.ValidateMetaSchema</code> option now only controls whether a full meta-schema validation of the schema will occur.  This should only affect clients validating schemas declaring custom meta-schemas with the <code>$schema</code> keyword.  Custom meta-schemas will now need to be loaded into the system manually or <code>SchemaRegistry.Fetch</code> will need to be set to retrieve it automatically.</li>
+<li>Added all new vocabularies and meta-schemas.</li>
+<li>New keywords:
+<ul>
+<li><code>$dynamicRef</code> - replaces/augments <code>$recursiveRef</code></li>
+<li><code>$dynamicAnchor</code> - replaces/augments <code>$recursivAnchor</code></li>
+<li><code>prefixItems</code> - replaces array-form <code>items</code></li>
+</ul>
+</li>
+<li>Added <code>JsonSchemaBuilder</code> extension method for <code>$anchor</code> which should have been added for draft 2019-09 support.</li>
+<li><code>ValidationOptions.ValidateFormat</code> has been obsoleted and replaced by <code>ValidationOptions.RequireFormatValidation</code> with the same semantics and default.</li>
+<li><code>FormatKeyword</code> now responds to the presence of the format vocabularies in the meta-schema declared by the <code>$schema</code> keyword as well as the <code>ValidationOptions.RequireFormatValidation</code> option.  (Includes a bug fix for draft 2019-09 schemas that use a meta-schema that declare the format vocabulary with a value of <code>true</code>.)</li>
+</ul>
+<h1 id="154"><a href="https://github.com/gregsdennis/json-everything/pull/45">1.5.4</a></h1>
+<p>Added deug symbols to package.  No functional change.</p>
+<h1 id="153"><a href="https://github.com/gregsdennis/json-everything/pull/41">1.5.3</a></h1>
+<p>Fixed <code>NullReferenceException</code> when comparing two schemas.</p>
+<h1 id="152"><a href="https://github.com/gregsdennis/json-everything/pull/40">1.5.2</a></h1>
+<p>Updated wording for <code>enum</code> error message.  This must remain generic and cannot include the expected values because the list could be long and the values could be quite large.</p>
+<h1 id="151"><a href="https://github.com/gregsdennis/json-everything/pull/34">1.5.1</a></h1>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/35">#35</a> <code>JsonSchema.FromFile()</code> handles file paths as URIs incorrectly in non-Windows systems.</p>
+<h1 id="150"><a href="https://github.com/gregsdennis/json-everything/pull/34">1.5.0</a></h1>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/33">#33</a> Added <code>ValidationOptions.ValidateFormat</code> which allows configuration of whether to validate the <code>format</code> keyword.  Also fixes a bug where the <code>format</code> keyword was validated by default for draft 2019-09 which specifies that it should only generate annotations by default.  Because this library favors the latest draft, this is the default behavior for all drafts.</p>
+<p>As a further followup to #27 (below), basic output has been refined.</p>
+<h1 id="140"><a href="https://github.com/gregsdennis/json-everything/pull/31">1.4.0</a></h1>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/27">#27</a> (reopened) Better reduction of detailed output format which eliminates the notion that any nodes <em>must</em> be kept.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/29">#29</a> Relative <code>$id</code> keyword at root of schema was not supported.  Added <code>ValidationOptions.DefaultBaseUri</code> to be used when no other absolute URI is defined by the <code>$id</code> keyword.  Also now supports assuming the base URI from the file name.</p>
+<h1 id="131"><a href="https://github.com/gregsdennis/json-everything/pull/28">1.3.1</a></h1>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/27">#27</a> Nodes in the basic and detailed output formats that match the overall outcome should be removed.  This also addresses several other bugs involving the output such as <code>absoluteKeywordLocation</code>.</p>
+<h1 id="130"><a href="https://github.com/gregsdennis/json-everything/pull/25">1.3.0</a></h1>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/15">#15</a> Easier navigation of the schema and its subschemas. Added <code>ISchemaContainer</code>, <code>ISchemaCollector</code>, and <code>IKeyedSchemaCollector</code> for the varying sets of subschemas that keywords can have.  Added <code>SchemaKeywordExtensions.GetSubschemas()</code> extension method.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/19">#19</a> Keyword filtering doesn't consider declared draft or <code>ValidationOptions.ValidateAs</code>.</p>
+<h1 id="120"><a href="https://github.com/gregsdennis/json-everything/pull/17">1.2.0</a></h1>
+<p>(<a href="https://github.com/json-schema-org/json-schema-org.github.io/pull/358">json-schema<nsp>.org #358</nsp></a>) Published draft 06 meta-schema doesn't match the copy in the spec repo.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/16">#16</a> <code>JsonSchema</code> equality checking.  Along with this, added <code>IEquatable&lt;T&gt;</code> to <code>SchemaKeywordRegistry.Register&lt;T&gt;()</code>.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/18">#18</a> <code>properties</code> keyword is processed with same priority as <code>additionalProperties</code> making keyword order important, but it shouldn't be.</p>
+<p>Added <code>EnumerableExtensions.ContentsEqual()</code>.</p>
+<h1 id="110"><a href="https://github.com/gregsdennis/json-everything/pull/11">1.1.0</a></h1>
+<p>Added <code>SchemaRegistry.Fetch</code> property to enable automatic downloading of referenced schemas.</p>
+<h1 id="103"><a href="https://github.com/gregsdennis/json-everything/pull/11">1.0.3</a></h1>
+<p><a href="https://github.com/gregsdennis/json-everything/pull/11">#9</a> <code>if</code>/<code>then</code>/<code>else</code> are processed in serialized order instead of processing <code>if</code> first.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/pull/10">#10</a> Bug fix around deserialization of <code>readonly</code> keyword.</p>
+<h1 id="102"><a href="https://github.com/gregsdennis/json-everything/pull/7">1.0.2</a></h1>
+<p>Updated format <code>json-pointer</code> to require plain pointers.  URI-encoded pointers are invalid.</p>
+<h1 id="101"><a href="https://github.com/gregsdennis/json-everything/pull/6">1.0.1</a></h1>
+<p>Updated validation of formats <code>hostname</code>, <code>iri</code>, <code>uri</code>, <code>regex</code>, and <code>time</code>.</p>
+<p>Fixed issue resolving references (<code>$ref</code> &amp; <code>$recursiveRef</code>) to miscellaneous (non-keyword) schema data.</p>
+<h1 id="100">1.0.0</h1>
+<p>Initial release.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/release-notes/json-schema.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

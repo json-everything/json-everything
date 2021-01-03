@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>JsonPath.Net </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="JsonPath.Net ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="jsonpathnet">JsonPath<nsp>.Net</nsp></h1>
+
+<p>JSON Path is a query language for JSON documents inspired by what XPath provides for XML documents.  It was <a href="https://goessner.net/articles/JsonPath/">originally proposed</a> by Matt Goessner, and now a <a href="https://github.com/jsonpath-standard/internet-draft">specification</a> is in progress.</p>
+<h2 id="syntax">Syntax</h2>
+<p>A path consists of a series of selectors, chained one after another.  Each selector takes in a collection of JSON nodes and produces a collection of JSON nodes based on their function.</p>
+<ul>
+<li><code>$</code> - This is the root selector.  A path must always begin with it.  It returns the root document.  It can also be used in query expressions, which we'll come to later.</li>
+<li><code>.</code> - This is a property-name selector.  The property names that you can use with this must only contain alphanumeric or underscore <code>_</code> characters.  Otherwise you'll need to use the property-name indexer (see below).  This selector also provides a recursive-descent function when immediately followed by another selector.  (More on recursive descents below.)  The property name can be replaced with an asterisk <code>*</code> to indicate that all properties should be returned.</li>
+<li><code>[]</code> - This is an indexing selector.  It can contain multiple indices, separated by commas.  Indices come in several flavors:
+<ul>
+<li>Simple integer - The basic integer index that we're all familiar with.  Negative numbers will start counting from the end of an array.  If the value is out of the range of the array, no nodes will be returned.</li>
+<li><a href="https://stackoverflow.com/a/509295/878701">Slice</a> - This allows selection of a range of nodes from an array.</li>
+<li>Property name - This allows property selection of objects by matching the full name.  This is required when a property key doesn't match the requirements of the <code>.</code> selector from above.  Keys can be single- or double-quoted and special characters must be encoded as is required by JSON.</li>
+<li><code>*</code> literal - This is a wildcard that simply returns all values from within the object or array.</li>
+<li>Container query - This is an expression that evaluates to a single integer index and operates on the node being passed to the selector.  It is denoted by parentheses surrounding the expression <code>(...)</code>.</li>
+<li>Item query - This is an expression that evaluates to a boolean and operates on the child nodes of the node being passed to the selector.  It is denoted by a question mark followed by parentheses surrounding the expresssion <code>?(...)</code>.</li>
+</ul>
+</li>
+</ul>
+<h3 id="query-expressions">Query Expressions</h3>
+<p>Both container queries and item queries take an expression.  This expression uses a single variable, which is some JSON node as described above.  The node is denoted by <code>@</code> and any valid JSON Path can follow it.</p>
+<p>For example, an item query expression may be <code>?(@.price&lt;10)</code>.  This expression will find all items in either an object or an array that contains a <code>price</code> property with a value less than 10.</p>
+<p>Additionally, the <code>$</code> selector may be used to reference back to the root node, even inside an expression.  This allows queries like <code>?(@.price&lt;$.maxPrice)</code> where we want to find all of the items of the current container that contain a <code>price</code> value that is less than the value in the root node's <code>maxPrice</code> property.</p>
+<p>Exressions support the following operations:</p>
+<ul>
+<li>Arithmetic
+<ul>
+<li><code>+</code></li>
+<li><code>-</code></li>
+<li><code>*</code></li>
+<li><code>/</code></li>
+<li><code>%</code> (modulus)</li>
+</ul>
+</li>
+<li>Comparison
+<ul>
+<li><code>==</code></li>
+<li><code>!=</code></li>
+<li><code>&lt;</code></li>
+<li><code>&lt;=</code></li>
+<li><code>&gt;</code></li>
+<li><code>&gt;=</code></li>
+</ul>
+</li>
+<li>Boolean logic
+<ul>
+<li><code>&amp;&amp;</code></li>
+<li><code>||</code></li>
+</ul>
+</li>
+</ul>
+<p>*<strong>NOTE</strong> There is an <a href="https://github.com/jsonpath-standard/internet-draft/issues/17">open issue</a> regarding expression support on the specification GitHub repository.</p>
+<h3 id="recursive-descents">Recursive Descents</h3>
+<p>When the <code>.</code> selector is immediately followed by another selector (<code>.</code> or <code>[]</code>), the initial <code>.</code> indicates a recursive descent selector.  This will return <em>all</em> nodes recursively.  So for <code>{ &quot;a&quot;: [ 1, 2, 3 ] }</code> it will return all of the following:</p>
+<ul>
+<li><code>{ &quot;a&quot;: [ 1, 2, 3 ] }</code></li>
+<li><code>[ 1, 2, 3 ]</code></li>
+<li><code>1</code></li>
+<li><code>2</code></li>
+<li><code>3</code></li>
+</ul>
+<h3 id="special-considerations">Special Considerations</h3>
+<p>There is also support for a special-case <code>.length</code> property, which will return the number of items within an object or array.  It is valid on both the base path as well as paths found in expressions.</p>
+<p>If you find that you need the value of a <code>length</code> property, you'll need to use the indexer syntax <code>[&quot;length&quot;]</code>.</p>
+<p>This allows expressions such as the container expression <code>(@.length-1)</code> which is equivalent to the integer index <code>-1</code> and returns the last value in an array.</p>
+<h2 id="in-code">In Code</h2>
+<p>To obtain an instance of a JSON Path, you'll need to parse it from a string.</p>
+<pre><code class="lang-c#">var path = JsonPath.Parse(&quot;$.prop[0:6:2]&quot;);
+</code></pre>
+<p>or</p>
+<pre><code class="lang-c#">var success = JsonPath.TryParse(&quot;$.prop[0:6:2]&quot;, out JsonPath path);
+</code></pre>
+<p>This will create a <code>JsonPath</code> instance that will select the <code>prop</code> property of an object, then items, 0, 2, and 4 of an array that resides there.</p>
+<p>Once your path is created, you can start evaluating instances.</p>
+<pre><code class="lang-c#">var instance = JsonDocument.Parse(&quot;{\&quot;prop\&quot;:[0,1,2,3]}&quot;);
+
+var results = path.Evaluate(instance);
+</code></pre>
+<p>This will return a results object that contains an array of matches or an error.</p>
+<p>The match object contains both the value that was found and the location in the instance <em>where</em> it was found.</p>
+<h2 id="adherence-to-the-proposed-specification">Adherence to the Proposed Specification</h2>
+<p>As the specification is still under authorship, there are features present in traditional JSON Path that haven't been properly described yet.  For these features, this library has been configured to mimic the consensus behaviors of other libraries as determined by the <a href="https://cburgmer.github.io/json-path-comparison/">JSON Path Comparison</a> project.</p>
+<p>This library will strive to priorities the specification over the comparison consensus where any conflict exists.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/usage/json-path.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
