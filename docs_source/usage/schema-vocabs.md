@@ -95,6 +95,6 @@ To tell JsonSchema<nsp>.Net about a vocabulary, you need to create a `Vocabulary
 
 The `Vocabulary` class is quite simple.  It defines the vocabulary's ID and lists the keywords which it supports.
 
-The keywords must be registered separately.  The process is described on the [keywords page](keywords.md).
+The keywords must be registered separately.  The process is described on the [keywords page](schema-keywords.md).
 
 It's not always necessary to have a meta-schema for your vocabulary.  However, if you want to enable `ValidationOptions.ValidateMetaschema`, you will need to register it.

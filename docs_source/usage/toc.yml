@@ -3,8 +3,20 @@
 - name: JSON Pointer
   href: json-pointer.md
 - name: JSON Schema
-  href: schema/toc.yml
-  homepage: schema/overview.md
+  href: schema-overview.md
+  items:
+  - name: Building a Schema
+    href: schema-building.md
+  - name: Validation
+    href: schema-validation.md
+  - name: Managing References
+    href: schema-references.md
+  - name: Custom Keywords
+    href: schema-keywords.md
+  - name: Vocabularies
+    href: schema-vocabs.md
+  - name: Generation
+    href: schema-generation.md
 - name: JSON Path
   href: json-path.md
 - name: JSON Patch

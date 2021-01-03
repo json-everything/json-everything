@@ -1,6 +1,12 @@
-- name: Enum serialization by name
-  href: more-enums.md
-- name: Extending schema validation
-  href: schema-vocabs.md
-- name: Extending schema generation
-  href: schema-gen.md
+- name: Json.More.Net
+  items:
+  - name: Enum serialization by name
+    href: more-enums.md
+- name: JsonSchema.Net
+  items:
+  - name: Extending schema validation
+    href: schema-vocabs.md
+- name: JsonSchema.Net.Generation
+  items:
+  - name: Extending schema generation
+    href: schema-gen.md

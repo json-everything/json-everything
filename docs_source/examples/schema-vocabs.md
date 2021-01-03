@@ -4,7 +4,7 @@ These examples will show how to extend JSON Schema validation by creating a new 
 
 ***NOTE** These examples are actually defined in one of the library's unit tests.*
 
-For a more detailed explanation about the concepts behind vocabularies, please see the [Custom Keywords page](../usage/schema/keywords.md).
+For a more detailed explanation about the concepts behind vocabularies, please see the [Custom Keywords page](../usage/schema-keywords.md).
 
 ## Defining a Keyword
 

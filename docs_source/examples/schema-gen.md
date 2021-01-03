@@ -2,7 +2,7 @@
 
 This example shows the requirements to implement various components of the JSON Schema generation system.
 
-For a more detailed explanation about the concepts behind these examples, please see the [Schema Generation page](../usage/schema/generation.md).
+For a more detailed explanation about the concepts behind these examples, please see the [Schema Generation page](../usage/schema-generation.md).
 
 ## Generator
 
@@ -26,7 +26,7 @@ class DateTimeSchemaGenerator : ISchemaGenerator
 
 ## Intent
 
-This example shows how to implement a custom `ISchemaKeywordIntent` for a hypothetical [`maxDate` keyword](schema-new-keyword.md#defining-a-keyword).
+This example shows how to implement a custom `ISchemaKeywordIntent` for a hypothetical [`maxDate` keyword](schema-vocabs.md#defining-a-keyword).
 
 ```c#
 public class MaxDateIntent : ISchemaKeywordIntent
