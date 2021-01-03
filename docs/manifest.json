@@ -2185,15 +2185,12 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "examples/schema-gen.md",
       "output": {
         ".html": {
           "relative_path": "examples/schema-gen.html",
-          "hash": "bYpRdSUkoFuj25apIE/DMw=="
+          "hash": "ZZ9H8ri8PzT73wTerbEhcQ=="
         }
       },
       "is_incremental": false,
@@ -2205,7 +2202,7 @@
       "output": {
         ".html": {
           "relative_path": "examples/schema-vocabs.html",
-          "hash": "sLH8HX9SQcyi2NlSaGicQg=="
+          "hash": "C2OPwtxKIjRcfRdrXfRDuw=="
         }
       },
       "is_incremental": false,
@@ -2217,7 +2214,7 @@
       "output": {
         ".html": {
           "relative_path": "examples/toc.html",
-          "hash": "MurfDpSDW+6ELLRKF6c8BQ=="
+          "hash": "7kDp2/VH7atwoHE1kCplmg=="
         }
       },
       "is_incremental": false,
@@ -2485,11 +2482,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/building.md",
+      "source_relative_path": "usage/schema-building.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/building.html",
-          "hash": "uXWgRAKQrR/74fHRTD7dUw=="
+          "relative_path": "usage/schema-building.html",
+          "hash": "oVeUqeX/6dd5p81SEN8IVA=="
         }
       },
       "is_incremental": false,
@@ -2497,11 +2494,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/generation.md",
+      "source_relative_path": "usage/schema-generation.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/generation.html",
-          "hash": "y3wDn+YLIEDBCRHDWMfl9A=="
+          "relative_path": "usage/schema-generation.html",
+          "hash": "RPF+Pr8RC75ikHwoSF0n/g=="
         }
       },
       "is_incremental": false,
@@ -2509,11 +2506,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/keywords.md",
+      "source_relative_path": "usage/schema-keywords.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/keywords.html",
-          "hash": "MfDkdvfElfnfvnP4HTKUYw=="
+          "relative_path": "usage/schema-keywords.html",
+          "hash": "oGueGtD0svhf7IsCWLjdHg=="
         }
       },
       "is_incremental": false,
@@ -2521,11 +2518,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/overview.md",
+      "source_relative_path": "usage/schema-overview.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/overview.html",
-          "hash": "I0bt/ii2NQ3qHr0SXzp9Qw=="
+          "relative_path": "usage/schema-overview.html",
+          "hash": "Oh4DlCi0zvxV3yq74dxgKw=="
         }
       },
       "is_incremental": false,
@@ -2533,11 +2530,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/references.md",
+      "source_relative_path": "usage/schema-references.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/references.html",
-          "hash": "cvhu2zL76gPN4spLJYHQvw=="
+          "relative_path": "usage/schema-references.html",
+          "hash": "8VHXE7tUwcC3uQz2X+akcw=="
         }
       },
       "is_incremental": false,
@@ -2545,11 +2542,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/validation.md",
+      "source_relative_path": "usage/schema-validation.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/validation.html",
-          "hash": "hGSRhgS/xoWgDpg1pssiTw=="
+          "relative_path": "usage/schema-validation.html",
+          "hash": "dFAsVfVybwkG/ZpBiRGbPA=="
         }
       },
       "is_incremental": false,
@@ -2557,11 +2554,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/schema/vocabs.md",
+      "source_relative_path": "usage/schema-vocabs.md",
       "output": {
         ".html": {
-          "relative_path": "usage/schema/vocabs.html",
-          "hash": "P/A51IWrsXTvOPF8/RrKAg=="
+          "relative_path": "usage/schema-vocabs.html",
+          "hash": "ChMqlK/67eO/CFJ4WJAW5w=="
         }
       },
       "is_incremental": false,
@@ -2573,7 +2570,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "pjQA1pajIzlH3brKec84HA=="
+          "hash": "djCMiYgOY2Sg+Fl5aMgSGw=="
         }
       },
       "is_incremental": false,

@@ -80,7 +80,7 @@
 <h1 id="extending-json-schema-generation">Extending JSON Schema Generation</h1>
 
 <p>This example shows the requirements to implement various components of the JSON Schema generation system.</p>
-<p>For a more detailed explanation about the concepts behind these examples, please see the <a href="../usage/schema/generation.html">Schema Generation page</a>.</p>
+<p>For a more detailed explanation about the concepts behind these examples, please see the <a href="../usage/schema-generation.html">Schema Generation page</a>.</p>
 <h2 id="generator">Generator</h2>
 <p>For this example, we will be implementing a custom generator that handles the <code>TimeSpan</code> type by creating a schema that expects a <code>duration</code>-formatted string.</p>
 <pre><code class="lang-c#">class DateTimeSchemaGenerator : ISchemaGenerator
@@ -98,7 +98,7 @@
 }
 </code></pre>
 <h2 id="intent">Intent</h2>
-<p>This example shows how to implement a custom <code>ISchemaKeywordIntent</code> for a hypothetical <a href="schema-new-keyword.md#defining-a-keyword"><code>maxDate</code> keyword</a>.</p>
+<p>This example shows how to implement a custom <code>ISchemaKeywordIntent</code> for a hypothetical <a href="schema-vocabs.html#defining-a-keyword"><code>maxDate</code> keyword</a>.</p>
 <pre><code class="lang-c#">public class MaxDateIntent : ISchemaKeywordIntent
 {
     // Define the data needed by the keyword.
