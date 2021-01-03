@@ -25,6 +25,7 @@ Currently supported:
 - [JSON Pointer (RFC 6901)](https://tools.ietf.org/html/rfc6901)
 - [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - [JSON Schema (drafts 6 and higher)](https://json-schema.org)
+  - Generation of schemas from .Net types supported in an additional library
 - [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)
 - [JSON Patch (RFC 6902)](https://tools.ietf.org/html/rfc6902)
 - [JsonLogic](https://jsonlogic.com) (.Net Standard 2.1)
