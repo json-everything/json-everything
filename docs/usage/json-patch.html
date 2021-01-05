@@ -77,7 +77,7 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="jsonpatchnet">JsonPatch.Net</h1>
+<h1 id="jsonpatchnet">JsonPatch<nsp>.Net</nsp></h1>
 
 <p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> is a language for modifying JSON documents.  Like JSON Schema, it is also expressed in JSON.</p>
 <h2 id="syntax">Syntax</h2>
@@ -99,7 +99,7 @@
 <li><code>value</code> specifies an explicit value.</li>
 </ul>
 <h2 id="applying-patches">Applying Patches</h2>
-<p>In JsonPatch.Net, a <code>JsonPatch</code> object can be deserialized directly from the JSON document string.</p>
+<p>In JsonPatch<nsp>.Net, a <code>JsonPatch</code> object can be deserialized directly from the JSON document string.<p>
 <pre><code class="lang-c#">var patch = JsonSerializer.Deserialize&lt;JsonPatch&gt;(patchString);
 </code></pre>
 <p><code>JsonPatch</code> operates on <code>JsonElement</code> values.  To apply the patch, parse the document and pass the root element into the <code>.Apply()</code> method.</p>
@@ -113,7 +113,7 @@ var result = patch.Apply(doc.RootElement);
                           PatchOperation.Test(&quot;/foo/biz&quot;, false.AsJsonElement()));
 </code></pre>
 <p>That's it.</p>
-</article>
+</nsp></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
