@@ -77,4 +77,4 @@ enum SnowConeColors
 }
 ```
 
-In this case, when we want to serialize `Orange | Green`, we'll actually get `"green,orange"`.
+In this case, when we want to serialize the enum value `Orange | Green`, we'll get `"green,orange"` in the serialization.

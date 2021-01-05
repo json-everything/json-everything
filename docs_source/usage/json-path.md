@@ -95,4 +95,4 @@ The match object contains both the value that was found and the location in the 
 
 As the specification is still under authorship, there are features present in traditional JSON Path that haven't been properly described yet.  For these features, this library has been configured to mimic the consensus behaviors of other libraries as determined by the [JSON Path Comparison](https://cburgmer.github.io/json-path-comparison/) project.
 
-This library will strive to priorities the specification over the comparison consensus where any conflict exists.
+This library will strive to prioritize the specification over the comparison consensus where any conflict exists.

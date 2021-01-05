@@ -1,4 +1,4 @@
-# JsonPatch.Net
+# JsonPatch<nsp>.Net
 
 [JSON Patch](https://tools.ietf.org/html/rfc6902) is a language for modifying JSON documents.  Like JSON Schema, it is also expressed in JSON.
 
@@ -24,7 +24,7 @@ The arguments vary among them, though all must contain at least an `op` and a `p
 
 ## Applying Patches
 
-In JsonPatch.Net, a `JsonPatch` object can be deserialized directly from the JSON document string.
+In JsonPatch<nsp>.Net, a `JsonPatch` object can be deserialized directly from the JSON document string.
 
 ```c#
 var patch = JsonSerializer.Deserialize<JsonPatch>(patchString);

@@ -1,6 +1,6 @@
 # JsonLogic
 
-> Not Json<nsp>_Something_<nsp>.Net, sadly.  "JsonLogic<nsp>.Net" was already registered on Nuget.  It breaks the pattern, I know.  _C'est la vie_.
+*(Not Json<nsp>_Something_<nsp>.Net, sadly.  "JsonLogic<nsp>.Net" was already registered on Nuget.  It breaks the pattern, I know.  _C'est la vie_.)*
 
 [JsonLogic](https://jsonlogic.com) is a mechanism that can be used to apply logical transformations to JSON values and that is also itself expressed in JSON.
 
