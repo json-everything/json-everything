@@ -1,14 +1,14 @@
 ---
-name: Feature request
-about: Something isn't supported but should be.
-
+name: New Feature
+about: JSON can do something these libraries don't support.
+labels: feature
 ---
 
-**Can this library make doing something simpler?**
-A clear and concise description of what the feature is. Ex. I'd like to be able to [...]
+**Describe the functionality that isn't covered by this suite**
+<!-- A clear and concise description of what the feature is. -->
 
 **Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+<!-- A clear and concise description of any alternative solutions or features you've considered, including even similar functionality found in implementations in other languages & frameworks that you'd like to do in .Net. -->
 
 **Additional context**
-Add any other context or screenshots about the feature request here.
+<!-- Any other information that you think may help. -->

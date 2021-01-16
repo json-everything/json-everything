@@ -1,24 +1,23 @@
 ---
 name: Bug report
-about: Something isn't doing what you expect it should.
+about: A library isn't doing what you expect it should.
+labels: bug
 ---
 
+**Environment**
+- Nuget Package: <!-- [e.g. JsonSchema.Net] -->
+- Nuget Version: <!-- [e.g. 1.2.3] -->
+- OS: <!-- [e.g. Linux] -->
+- .Net Target: <!-- [e.g. Fwk 4.8, Core 3.x]  -->
+
 **Describe the bug**
-A clear and concise description of what the bug is.
+<!-- A clear and concise description of what the bug is. -->
 
 **To Reproduce**
-Please add test code or steps to reproduce the behavior.
+<!-- Please add test code or steps to reproduce the behavior. -->
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
-- .Net Target (Fwk 4.8, Core 3.x, etc.) 
- - Nuget Version [e.g. 22]
+<!-- A clear and concise description of what you expected to happen. -->
 
 **Additional context**
-Add any other context about the problem here.
+<!-- Any other information that you think may help identify the cause of the problem. -->
