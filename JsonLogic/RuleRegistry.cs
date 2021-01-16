@@ -26,26 +26,26 @@ namespace Json.Logic
 		{
 			return _rules.TryGetValue(identifier, out var t) ? t : null;
 		}
-	}
-
-	/// <summary>
-	/// Decorates <see cref="Rule"/> implementations to identify a rule.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class OperatorAttribute : Attribute
-	{
-		/// <summary>
-		/// The identifier.
-		/// </summary>
-		public string Name { get; }
 
 		/// <summary>
-		/// Creates a new <see cref="OperatorAttribute"/> instance.
+		/// Registers a new rule type.
 		/// </summary>
-		/// <param name="name">The identifier.</param>
-		public OperatorAttribute(string name)
+		/// <typeparam name="T">The type of the rule to add.</typeparam>
+		/// <remarks>
+		/// Rules must contain a parameterless constructor.
+		///
+		/// Decorate your rule type with one or more <see cref="OperatorAttribute"/>s to
+		/// define its identifier.
+		/// </remarks>
+		public static void AddRule<T>()
+			where T : Rule, new()
 		{
-			Name = name;
+			var type = typeof(T);
+			var operators = type.GetCustomAttributes<OperatorAttribute>().Select(a => a.Name);
+			foreach (var name in operators)
+			{
+				_rules[name] = type;
+			}
 		}
 	}
 }
