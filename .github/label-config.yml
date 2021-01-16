@@ -15,3 +15,6 @@
 
 "pkg:patch":
   - JsonPatch/**/*
+
+"documentation":
+  - docs_source/**/*
