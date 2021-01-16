@@ -8,7 +8,7 @@ Fixed issue with parsing property path segments that end in `z`, `Z`, and `9` (e
 
 # [0.1.2](https://github.com/gregsdennis/json-everything/pull/45)
 
-Added deug symbols to package.  No functional change.
+Added debug symbols to package.  No functional change.
 
 # [0.1.1](https://github.com/gregsdennis/json-everything/pull/13)
 
