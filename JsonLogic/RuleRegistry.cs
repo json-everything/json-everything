@@ -36,6 +36,9 @@ namespace Json.Logic
 		///
 		/// Decorate your rule type with one or more <see cref="OperatorAttribute"/>s to
 		/// define its identifier.
+		///
+		/// Registering a rule with an identifier that already exists will overwrite the
+		/// existing registration.
 		/// </remarks>
 		public static void AddRule<T>()
 			where T : Rule, new()

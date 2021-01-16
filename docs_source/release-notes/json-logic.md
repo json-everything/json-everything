@@ -1,3 +1,7 @@
+# [1.2.0](https://github.com/gregsdennis/json-everything/pull/64)
+
+Added the ability to define and register custom rules.
+
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/62)
 
 Prematurely released library.  It would parse and process fine, but the factory methods for building inline logic were incomplete.  Also added XML comments for everything.
