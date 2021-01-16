@@ -2306,7 +2306,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-more.html",
-          "hash": "tdzBVp2K82yRvY/Q6chBTg=="
+          "hash": "UNDAWAC4x5fQ7iVkK0bsww=="
         }
       },
       "is_incremental": false,
@@ -2318,7 +2318,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-patch.html",
-          "hash": "bvcRG9YgbvOPd8rDuah6Sw=="
+          "hash": "G+ZxoB2D6M7gHSRsahTWSg=="
         }
       },
       "is_incremental": false,
@@ -2330,7 +2330,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-path.html",
-          "hash": "Sl0f1nHFE8cR5MQkRy9pvQ=="
+          "hash": "+uc/9/2uFpNwaYo7qnoS+g=="
         }
       },
       "is_incremental": false,
@@ -2342,7 +2342,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-pointer.html",
-          "hash": "ZYWHygSWXHP+/R2MGNtVuA=="
+          "hash": "OxWSHcp1SgSefNVKly8G7Q=="
         }
       },
       "is_incremental": false,
@@ -2354,7 +2354,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "ystCk2uaZTLj9i0i1nx9AQ=="
+          "hash": "vc3md9eszbNAPbOWJlS/Yw=="
         }
       },
       "is_incremental": false,
@@ -2366,7 +2366,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "fE8RpzNx6rQFCmaD/VC0Hw=="
+          "hash": "4w6oH8awA20VUqXezGcfGg=="
         }
       },
       "is_incremental": false,
