@@ -75,14 +75,19 @@ var obj = new Dictionary<string, JsonElement>{
 }
 ```
 
-### Making conversions easier when calling methods
+### Making methods that require `JsonElement` easier to call
 
-The `JsonElementProxy` class allows the client to define methods that expect a `JsonElement` to be called with native types by defining implicit casts from those types into the `JsonElementProxy`.
+The `JsonElementProxy` class allows the client to define methods that expect a `JsonElement` to be called with native types by defining implicit casts from those types into the `JsonElementProxy` and then also an implicit cast from the proxy into `JsonElement`.
 
 Suppose you have this method:
 
 ```c#
-void SomeMethod(JsonElement element) { ... }
+void SomeMethod(JsonElement element)
+{
+    ...
+    DoSomething(element);
+    ...
+}
 ```
 
 The only way to call this is by passing a `JsonElement` directly.  If you want to call it with a `string` or `int`, you have to resort to converting it with the `.AsJsonElement()` extension method:
@@ -97,7 +102,9 @@ This gets noisy pretty quickly.  But now we can define an overload that takes a 
 ```c#
 void SomeMethod(JsonElementProxy element)
 {
-    SomeMethod((JsonElement) element);
+    ...
+    DoSomething(element); // still only accepts JsonElement; doesn't need an overload
+    ...
 }
 ```
 
@@ -107,6 +114,8 @@ to allow callers to just use the raw value:
 myObject.SomeMethod(1);
 myObject.SomeMethod("string");
 ```
+
+To achieve this without `JsonElementProxy`, you could also create overloads for `short`, `int`, `long`, `float`, `double`, `decimal`, `string`, and `bool`.
 
 ## JSON model serialization
 

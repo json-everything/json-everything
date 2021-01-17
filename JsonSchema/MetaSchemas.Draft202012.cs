@@ -79,7 +79,7 @@ namespace Json.Schema
 					(DefinitionsKeyword.Name, new JsonSchemaBuilder()
 						.Comment("\"definitions\" has been replaced by \"$defs\".")
 						.Type(SchemaValueType.Object)
-						.AdditionalProperties(new JsonSchemaBuilder().DynamicRef(new Uri("#meta")))
+						.AdditionalProperties(new JsonSchemaBuilder().DynamicRef("#meta"))
 						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 						.Deprecated(true)
 					),
@@ -88,7 +88,7 @@ namespace Json.Schema
 						.Type(SchemaValueType.Object)
 						.AdditionalProperties(new JsonSchemaBuilder()
 							.AnyOf(
-								new JsonSchemaBuilder().DynamicRef(new Uri("#meta")),
+								new JsonSchemaBuilder().DynamicRef("#meta"),
 								new JsonSchemaBuilder().Ref("meta/validation#/$defs/stringArray")
 							)
 						)
@@ -333,14 +333,14 @@ namespace Json.Schema
 					),
 					(UniqueItemsKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Boolean)
-						.Default(false.AsJsonElement())
+						.Default(false)
 					),
 					(MaxContainsKeyword.Name, new JsonSchemaBuilder()
 						.Ref("#/$defs/nonNegativeInteger")
 					),
 					(MinContainsKeyword.Name, new JsonSchemaBuilder()
 						.Ref("#/$defs/nonNegativeInteger")
-						.Default(1.AsJsonElement())
+						.Default(1)
 					),
 					(MaxPropertiesKeyword.Name, new JsonSchemaBuilder()
 						.Ref("#/$defs/nonNegativeInteger")
@@ -365,17 +365,17 @@ namespace Json.Schema
 					),
 					("nonNegativeIntegerDefault0", new JsonSchemaBuilder()
 						.Ref("#/$defs/nonNegativeInteger")
-						.Default(0.AsJsonElement())
+						.Default(0)
 					),
 					("simpleTypes", new JsonSchemaBuilder()
 						.Enum(
-							"array".AsJsonElement(),
-							"boolean".AsJsonElement(),
-							"integer".AsJsonElement(),
-							"null".AsJsonElement(),
-							"number".AsJsonElement(),
-							"object".AsJsonElement(),
-							"string".AsJsonElement()
+							"array",
+							"boolean",
+							"integer",
+							"null",
+							"number",
+							"object",
+							"string"
 						)
 					),
 					("stringArray", new JsonSchemaBuilder()
@@ -407,15 +407,15 @@ namespace Json.Schema
 					(DefaultKeyword.Name, true),
 					(DeprecatedKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Boolean)
-						.Default(false.AsJsonElement())
+						.Default(false)
 					),
 					(ReadOnlyKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Boolean)
-						.Default(false.AsJsonElement())
+						.Default(false)
 					),
 					(WriteOnlyKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Boolean)
-						.Default(false.AsJsonElement())
+						.Default(false)
 					),
 					(ExamplesKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
