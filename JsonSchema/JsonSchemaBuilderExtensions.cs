@@ -313,6 +313,18 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Add a `$dynamicRef` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="reference">The URI reference.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, string reference)
+		{
+			builder.Add(new DynamicRefKeyword(new Uri(reference)));
+			return builder;
+		}
+
+		/// <summary>
 		/// Add an `else` keyword.
 		/// </summary>
 		/// <param name="builder">The builder.</param>

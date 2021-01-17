@@ -19,9 +19,9 @@ namespace Json.Schema
 		/// </summary>
 		public static readonly Uri Core202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/core");
 		/// <summary>
-		/// The Draft 2020-12 Dynamic meta-schema ID.
+		/// The Draft 2020-12 Unevaluated meta-schema ID.
 		/// </summary>
-		public static readonly Uri Dynamic202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/dynamic");
+		public static readonly Uri Unevaluated202012Id = new Uri("https://json-schema.org/draft/2020-12/meta/unevaluated");
 		/// <summary>
 		/// The Draft 2020-12 Applicator meta-schema ID.
 		/// </summary>
@@ -56,18 +56,17 @@ namespace Json.Schema
 				.Id(Draft202012Id)
 				.Vocabulary(
 					(Vocabularies.Core202012Id, true),
-					(Vocabularies.Dynamic202012Id, true),
 					(Vocabularies.Applicator202012Id, true),
+					(Vocabularies.Unevaluated202012Id, true),
 					(Vocabularies.Validation202012Id, true),
 					(Vocabularies.Metadata202012Id, true),
 					(Vocabularies.FormatAnnotation202012Id, false),
 					(Vocabularies.Content202012Id, true)
 				)
-				.RecursiveAnchor()
+				.DynamicAnchor("meta")
 				.Title("Core and Validation specifications meta-schema")
 				.AllOf(
 					new JsonSchemaBuilder().Ref("meta/core"),
-					new JsonSchemaBuilder().Ref("meta/dynamic"),
 					new JsonSchemaBuilder().Ref("meta/applicator"),
 					new JsonSchemaBuilder().Ref("meta/validation"),
 					new JsonSchemaBuilder().Ref("meta/meta-data"),
@@ -75,22 +74,35 @@ namespace Json.Schema
 					new JsonSchemaBuilder().Ref("meta/content")
 				)
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+				.Comment("This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.")
 				.Properties(
 					(DefinitionsKeyword.Name, new JsonSchemaBuilder()
-						.Comment("While no longer an official keyword as it is replaced by $defs, this keyword is retained in the meta-schema to prevent incompatible extensions as it remains in common use.")
+						.Comment("\"definitions\" has been replaced by \"$defs\".")
 						.Type(SchemaValueType.Object)
-						.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
+						.AdditionalProperties(new JsonSchemaBuilder().DynamicRef(new Uri("#meta")))
 						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+						.Deprecated(true)
 					),
 					(DependenciesKeyword.Name, new JsonSchemaBuilder()
-						.Comment("\"dependencies\" is no longer a keyword, but schema authors should avoid redefining it to facilitate a smooth transition to \"dependentSchemas\" and \"dependentRequired\"")
+						.Comment("\"dependencies\" has been split and replaced by \"dependentSchemas\" and \"dependentRequired\" in order to serve their differing semantics.")
 						.Type(SchemaValueType.Object)
 						.AdditionalProperties(new JsonSchemaBuilder()
 							.AnyOf(
-								JsonSchemaBuilder.RecursiveRefRoot(),
+								new JsonSchemaBuilder().DynamicRef(new Uri("#meta")),
 								new JsonSchemaBuilder().Ref("meta/validation#/$defs/stringArray")
 							)
 						)
+						.Deprecated(true)
+					),
+					(RecursiveAnchorKeyword.Name, new JsonSchemaBuilder()
+						.Comment("\"$recursiveAnchor\" has been replaced by \"$dynamicAnchor\".")
+						.Ref("meta/core#/$defs/anchorString")
+						.Deprecated(true)
+					),
+					(RecursiveRefKeyword.Name, new JsonSchemaBuilder()
+						.Comment("\"$recursiveRef\" has been replaced by \"$dynamicRef\".")
+						.Ref("meta/core#/$defs/uriReferenceString")
+						.Deprecated(true)
 					)
 				);
 
@@ -102,33 +114,34 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(Core202012Id)
 				.Vocabulary((Vocabularies.Core202012Id, true))
-				.RecursiveAnchor()
+				.DynamicAnchor("meta")
 				.Title("Core vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
 					(IdKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Format(Formats.UriReference)
+						.Ref("#/$defs/uriReferenceString")
 						.Comment("Non-empty fragments not allowed.")
 						.Pattern("^[^#]*#?$")
 					),
 					(SchemaKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Format(Formats.Uri)
-					),
-					(AnchorKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Pattern(AnchorKeyword.AnchorPattern)
+						.Ref("#/$defs/uriReferenceString")
 					),
 					(RefKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Format(Formats.UriReference)
+						.Ref("#/$defs/uriReferenceString")
+					),
+					(AnchorKeyword.Name, new JsonSchemaBuilder()
+						.Ref("#/$defs/anchorString")
+					),
+					(DynamicRefKeyword.Name, new JsonSchemaBuilder()
+						.Ref("#/$defs/uriReferenceString")
+					),
+					(DynamicAnchorKeyword.Name, new JsonSchemaBuilder()
+						.Ref("#/$defs/anchorString")
 					),
 					(VocabularyKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
 						.PropertyNames(new JsonSchemaBuilder()
-							.Type(SchemaValueType.String)
-							.Format(Formats.Uri)
+							.Ref("#/$defs/uriString")
 						)
 						.AdditionalProperties(new JsonSchemaBuilder()
 							.Type(SchemaValueType.Boolean)
@@ -139,30 +152,39 @@ namespace Json.Schema
 					),
 					(DefsKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
-						.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
+						.AdditionalProperties(new JsonSchemaBuilder().DynamicRef("#meta"))
 						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 					)
+				)
+				.Defs(
+					("anchorString", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+						.Pattern("^[A-Za-z_][-A-Za-z0-9._]*$")),
+					("uriString", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+						.Format(Formats.Uri)),
+					("uriReferenceString", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+						.Format(Formats.UriReference))
 				);
 
 		/// <summary>
-		/// The Draft 2020-12 Core meta-schema.
+		/// The Draft 2020-12 Unevaluated meta-schema.
 		/// </summary>
-		public static readonly JsonSchema Dynamic202012 =
+		public static readonly JsonSchema Unevaluated202012 =
 			new JsonSchemaBuilder()
 				.Schema(Draft202012Id)
-				.Id(Dynamic202012Id)
-				.Vocabulary((Vocabularies.Dynamic202012Id, true))
-				.RecursiveAnchor()
-				.Title("Dynamic vocabulary meta-schema")
+				.Id(Unevaluated202012Id)
+				.Vocabulary((Vocabularies.Unevaluated202012Id, true))
+				.DynamicAnchor("meta")
+				.Title("Unevaluated applicator vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
-					(RecursiveRefKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Format(Formats.UriReference)
+					(UnevaluatedItemsKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
 					),
-					(RecursiveAnchorKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.Boolean)
-						.Default(false.AsJsonElement())
+					(UnevaluatedPropertiesKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
 					)
 				);
 
@@ -174,28 +196,34 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(Applicator202012Id)
 				.Vocabulary((Vocabularies.Applicator202012Id, true))
-				.RecursiveAnchor()
+				.DynamicAnchor("meta")
 				.Title("Applicator vocabulary meta-schema")
 				.Properties(
-					(AdditionalItemsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(UnevaluatedItemsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(ItemsKeyword.Name, new JsonSchemaBuilder()
-						.AnyOf(
-							JsonSchemaBuilder.RefRoot(),
-							new JsonSchemaBuilder().Ref("#/defs/schemaArray")
-						)
+					(PrefixItemsKeyword.Name, new JsonSchemaBuilder()
+						.Ref("#/$defs/schemaArray")
 					),
-					(ContainsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(AdditionalPropertiesKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(UnevaluatedPropertiesKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
+					(ItemsKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					),
+					(ContainsKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					),
+					(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					),
 					(PropertiesKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
-						.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
+						.AdditionalProperties(new JsonSchemaBuilder()
+							.DynamicRef("#meta")
+						)
 						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 					),
 					(PatternPropertiesKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
-						.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
+						.AdditionalProperties(new JsonSchemaBuilder()
+							.DynamicRef("#meta")
+						)
 						.PropertyNames(new JsonSchemaBuilder()
 							.Format(Formats.Regex)
 						)
@@ -203,12 +231,24 @@ namespace Json.Schema
 					),
 					(DependentSchemasKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
-						.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
+						.AdditionalProperties(new JsonSchemaBuilder()
+							.DynamicRef("#meta")
+						)
+						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
 					),
-					(PropertyNamesKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(IfKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(ThenKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
-					(ElseKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
+					(PropertyNamesKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+						.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					),
+					(IfKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					),
+					(ThenKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					),
+					(ElseKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					),
 					(AllOfKeyword.Name, new JsonSchemaBuilder()
 						.Ref("#/$defs/schemaArray")
 					),
@@ -218,13 +258,17 @@ namespace Json.Schema
 					(OneOfKeyword.Name, new JsonSchemaBuilder()
 						.Ref("#/$defs/schemaArray")
 					),
-					(NotKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot())
+					(NotKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					)
 				)
 				.Defs(
 					("schemaArray", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
 						.MinItems(1)
-						.Items(JsonSchemaBuilder.RecursiveRefRoot())
+						.Items(new JsonSchemaBuilder()
+							.DynamicRef("#meta")
+						)
 					)
 				);
 
@@ -236,10 +280,25 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(Validation202012Id)
 				.Vocabulary((Vocabularies.Validation202012Id, true))
-				.RecursiveAnchor()
+				.DynamicAnchor("meta")
 				.Title("Validation vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
+					(TypeKeyword.Name, new JsonSchemaBuilder()
+						.AnyOf(
+							new JsonSchemaBuilder().Ref("#/$defs/simpleTypes"),
+							new JsonSchemaBuilder()
+								.Type(SchemaValueType.Array)
+								.Items(new JsonSchemaBuilder().Ref("#/$defs/simpleTypes"))
+								.MinItems(1)
+								.UniqueItems(true)
+						)
+					),
+					(ConstKeyword.Name, true),
+					(EnumKeyword.Name, new JsonSchemaBuilder()
+						.Type(SchemaValueType.Array)
+						.Items(true)
+					),
 					(MultipleOfKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Number)
 						.ExclusiveMinimum(0)
@@ -297,21 +356,6 @@ namespace Json.Schema
 						.AdditionalProperties(new JsonSchemaBuilder()
 							.Ref("#/$defs/stringArray")
 						)
-					),
-					(ConstKeyword.Name, true),
-					(EnumKeyword.Name, new JsonSchemaBuilder()
-						.Type(SchemaValueType.Array)
-						.Items(true)
-					),
-					(TypeKeyword.Name, new JsonSchemaBuilder()
-						.AnyOf(
-							new JsonSchemaBuilder().Ref("#/$defs/simpleTypes"),
-							new JsonSchemaBuilder()
-								.Type(SchemaValueType.Array)
-								.Items(new JsonSchemaBuilder().Ref("#/$defs/simpleTypes"))
-								.MinItems(1)
-								.UniqueItems(true)
-						)
 					)
 				)
 				.Defs(
@@ -350,7 +394,7 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(Metadata202012Id)
 				.Vocabulary((Vocabularies.Metadata202012Id, true))
-				.RecursiveAnchor()
+				.DynamicAnchor("meta")
 				.Title("Meta-data vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
@@ -375,6 +419,7 @@ namespace Json.Schema
 					),
 					(ExamplesKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
+						.Items(true)
 					)
 				);
 
@@ -386,8 +431,8 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(FormatAnnotation202012Id)
 				.Vocabulary((Vocabularies.FormatAnnotation202012Id, true))
-				.RecursiveAnchor()
-				.Title("Format-annotation vocabulary meta-schema")
+				.DynamicAnchor("meta")
+				.Title("Format vocabulary meta-schema for annotation results")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
 					(FormatKeyword.Name, new JsonSchemaBuilder()
@@ -403,8 +448,8 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(FormatAssertion202012Id)
 				.Vocabulary((Vocabularies.FormatAssertion202012Id, true))
-				.RecursiveAnchor()
-				.Title("Format-assertion vocabulary meta-schema")
+				.DynamicAnchor("meta")
+				.Title("Format vocabulary meta-schema for assertion results")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
 					(FormatKeyword.Name, new JsonSchemaBuilder()
@@ -420,7 +465,7 @@ namespace Json.Schema
 				.Schema(Draft202012Id)
 				.Id(Content202012Id)
 				.Vocabulary((Vocabularies.Content202012Id, true))
-				.RecursiveAnchor()
+				.DynamicAnchor("meta")
 				.Title("Content vocabulary meta-schema")
 				.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 				.Properties(
@@ -430,7 +475,9 @@ namespace Json.Schema
 					(ContentMediaEncodingKeyword.Name, new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
 					),
-					(ContentSchemaKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot())
+					(ContentSchemaKeyword.Name, new JsonSchemaBuilder()
+						.DynamicRef("#meta")
+					)
 				);
 	}
 }
