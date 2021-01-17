@@ -1,3 +1,36 @@
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/65)
+
+Added `JsonElementProxy`.  This class allows the client to define methods that expect a `JsonElement` to be called with native types by defining implicit casts from those types into the `JsonElementProxy`.
+
+Suppose you have this method:
+
+```c#
+void SomeMethod(JsonElement element) { ... }
+```
+
+The only way to call this is by passing a `JsonElement` directly.  If you want to call it with a `string` or `int`, you have to resort to converting it with the `.AsJsonElement()` extension method:
+
+```c#
+myObject.SomeMethod(1.AsJsonElement());
+myObject.SomeMethod("string".AsJsonElement());
+```
+
+This gets noisy pretty quickly.  But now we can define an overload that takes a `JsonElementProxy` argument instead:
+
+```c#
+void SomeMethod(JsonElementProxy element)
+{
+    SomeMethod((JsonElement) element);
+}
+```
+
+to allow callers to just use the raw value:
+
+```c#
+myObject.SomeMethod(1);
+myObject.SomeMethod("string");
+```
+
 # [1.2.3](https://github.com/gregsdennis/json-everything/pull/61)
 
 Signed the DLL for strong name compatibility.
