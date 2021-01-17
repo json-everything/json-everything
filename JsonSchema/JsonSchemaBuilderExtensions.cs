@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using Json.More;
 
 namespace Json.Schema
 {
@@ -121,6 +122,18 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Add a `const` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="element">The constant value.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Const(this JsonSchemaBuilder builder, JsonElementProxy element)
+		{
+			builder.Add(new ConstKeyword(element));
+			return builder;
+		}
+
+		/// <summary>
 		/// Add an `contains` keyword.
 		/// </summary>
 		/// <param name="builder">The builder.</param>
@@ -139,6 +152,18 @@ namespace Json.Schema
 		/// <param name="element">The value.</param>
 		/// <returns>The builder.</returns>
 		public static JsonSchemaBuilder Default(this JsonSchemaBuilder builder, JsonElement element)
+		{
+			builder.Add(new DefaultKeyword(element));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add a `default` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="element">The value.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Default(this JsonSchemaBuilder builder, JsonElementProxy element)
 		{
 			builder.Add(new DefaultKeyword(element));
 			return builder;
@@ -313,6 +338,18 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Add a `$dynamicRef` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="reference">The URI reference.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, string reference)
+		{
+			builder.Add(new DynamicRefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
+			return builder;
+		}
+
+		/// <summary>
 		/// Add an `else` keyword.
 		/// </summary>
 		/// <param name="builder">The builder.</param>
@@ -342,9 +379,45 @@ namespace Json.Schema
 		/// <param name="builder">The builder.</param>
 		/// <param name="elements">The values for the enum.</param>
 		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonElementProxy> elements)
+		{
+			builder.Add(new EnumKeyword(elements.Select(p => (JsonElement) p)));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add an `enum` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="elements">The values for the enum.</param>
+		/// <returns>The builder.</returns>
 		public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonElement[] elements)
 		{
 			builder.Add(new EnumKeyword(elements));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add an `enum` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="elements">The values for the enum.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonElementProxy[] elements)
+		{
+			builder.Add(new EnumKeyword(elements.Select(p => (JsonElement) p)));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add an `examples` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="elements">The example values.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonElement> elements)
+		{
+			builder.Add(new ExamplesKeyword(elements));
 			return builder;
 		}
 
@@ -357,6 +430,30 @@ namespace Json.Schema
 		public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonElement[] elements)
 		{
 			builder.Add(new ExamplesKeyword(elements));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add an `examples` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="elements">The example values.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonElementProxy> elements)
+		{
+			builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement) p)));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add an `examples` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="elements">The example values.</param>
+		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonElementProxy[] elements)
+		{
+			builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement) p)));
 			return builder;
 		}
 

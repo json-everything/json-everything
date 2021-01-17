@@ -1,3 +1,18 @@
+# [1.7.0](https://github.com/gregsdennis/json-everything/pull/65)
+
+- Updated hard-coded 2020-12 meta-schemas to match the published documents.
+- Added the following `JsonSchemaBuilder` extension method overloads:
+  - `.DynamicRef(string)`
+  - `.Const(JsonElementProxy)`
+  - `.Default(JsonElementProxy)`
+  - `.Enum(IEnumerable<JsonElementProxy>)`
+  - `.Enum(params JsonElementProxy[])`
+  - `.Examples(IEnumerable<JsonElement>)`
+  - `.Examples(IEnumerable<JsonElementProxy>)`
+  - `.Examples(params JsonElementProxy[])`
+  
+(See [Json.More.Net v1.3.0](json-more.md) for more information on `JsonElementProxy`.)
+
 # [1.6.1](https://github.com/gregsdennis/json-everything/pull/61)
 
 Signed the DLL for strong name compatibility.

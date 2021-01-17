@@ -7,9 +7,9 @@
 		/// </summary>
 		public const string Core202012Id = "https://json-schema.org/draft/2020-12/vocab/core";
 		/// <summary>
-		/// The Draft 2020-12 Dynamic vocabulary ID.
+		/// The Draft 2020-12 Unevaluated vocabulary ID.
 		/// </summary>
-		public const string Dynamic202012Id = "https://json-schema.org/draft/2020-12/vocab/dynamic";
+		public const string Unevaluated202012Id = "https://json-schema.org/draft/2020-12/vocab/unevaluated";
 		/// <summary>
 		/// The Draft 2020-12 Applicator vocabulary ID.
 		/// </summary>
@@ -40,9 +40,9 @@
 		/// </summary>
 		public static readonly Vocabulary Core202012;
 		/// <summary>
-		/// The Draft 2020-12 Dynamic vocabulary.
+		/// The Draft 2020-12 Unevaluated vocabulary.
 		/// </summary>
-		public static readonly Vocabulary Dynamic202012;
+		public static readonly Vocabulary Unevaluated202012;
 		/// <summary>
 		/// The Draft 2020-12 Applicator vocabulary.
 		/// </summary>

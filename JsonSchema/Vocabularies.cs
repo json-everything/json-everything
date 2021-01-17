@@ -52,9 +52,9 @@ namespace Json.Schema
 				Core202012Id,
 				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Core202012Id))
 					.Select(k => k.Type));
-			Dynamic202012 = new Vocabulary(
-				Dynamic202012Id,
-				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Dynamic202012Id))
+			Unevaluated202012 = new Vocabulary(
+				Unevaluated202012Id,
+				keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Unevaluated202012Id))
 					.Select(k => k.Type));
 			Applicator202012 = new Vocabulary(
 				Applicator202012Id,
