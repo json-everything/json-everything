@@ -1102,6 +1102,103 @@ references:
   isSpec: "True"
   fullName: Json.More.JsonElementExtensions.ToJsonString
   nameWithType: JsonElementExtensions.ToJsonString
+- uid: Json.More.JsonElementProxy
+  name: JsonElementProxy
+  href: api/Json.More.JsonElementProxy.html
+  commentId: T:Json.More.JsonElementProxy
+  fullName: Json.More.JsonElementProxy
+  nameWithType: JsonElementProxy
+- uid: Json.More.JsonElementProxy.op_Implicit(Json.More.JsonElementProxy)~JsonElement
+  name: Implicit(JsonElementProxy to JsonElement)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_Json_More_JsonElementProxy__JsonElement
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(Json.More.JsonElementProxy)~JsonElement
+  name.vb: Widening(JsonElementProxy to JsonElement)
+  fullName: Json.More.JsonElementProxy.Implicit(Json.More.JsonElementProxy to JsonElement)
+  fullName.vb: Json.More.JsonElementProxy.Widening(Json.More.JsonElementProxy to JsonElement)
+  nameWithType: JsonElementProxy.Implicit(JsonElementProxy to JsonElement)
+  nameWithType.vb: JsonElementProxy.Widening(JsonElementProxy to JsonElement)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Boolean)~Json.More.JsonElementProxy
+  name: Implicit(Boolean to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Boolean__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Boolean)~Json.More.JsonElementProxy
+  name.vb: Widening(Boolean to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Boolean to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Boolean to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Boolean to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Boolean to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Decimal)~Json.More.JsonElementProxy
+  name: Implicit(Decimal to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Decimal__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Decimal)~Json.More.JsonElementProxy
+  name.vb: Widening(Decimal to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Decimal to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Decimal to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Decimal to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Decimal to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Double)~Json.More.JsonElementProxy
+  name: Implicit(Double to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Double__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Double)~Json.More.JsonElementProxy
+  name.vb: Widening(Double to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Double to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Double to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Double to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Double to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Int16)~Json.More.JsonElementProxy
+  name: Implicit(Int16 to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Int16__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Int16)~Json.More.JsonElementProxy
+  name.vb: Widening(Int16 to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Int16 to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Int16 to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Int16 to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Int16 to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Int32)~Json.More.JsonElementProxy
+  name: Implicit(Int32 to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Int32__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Int32)~Json.More.JsonElementProxy
+  name.vb: Widening(Int32 to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Int32 to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Int32 to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Int32 to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Int32 to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Int64)~Json.More.JsonElementProxy
+  name: Implicit(Int64 to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Int64__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Int64)~Json.More.JsonElementProxy
+  name.vb: Widening(Int64 to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Int64 to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Int64 to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Int64 to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Int64 to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.Single)~Json.More.JsonElementProxy
+  name: Implicit(Single to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_Single__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.Single)~Json.More.JsonElementProxy
+  name.vb: Widening(Single to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.Single to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.Single to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(Single to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(Single to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit(System.String)~Json.More.JsonElementProxy
+  name: Implicit(String to JsonElementProxy)
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_System_String__Json_More_JsonElementProxy
+  commentId: M:Json.More.JsonElementProxy.op_Implicit(System.String)~Json.More.JsonElementProxy
+  name.vb: Widening(String to JsonElementProxy)
+  fullName: Json.More.JsonElementProxy.Implicit(System.String to Json.More.JsonElementProxy)
+  fullName.vb: Json.More.JsonElementProxy.Widening(System.String to Json.More.JsonElementProxy)
+  nameWithType: JsonElementProxy.Implicit(String to JsonElementProxy)
+  nameWithType.vb: JsonElementProxy.Widening(String to JsonElementProxy)
+- uid: Json.More.JsonElementProxy.op_Implicit*
+  name: Implicit
+  href: api/Json.More.JsonElementProxy.html#Json_More_JsonElementProxy_op_Implicit_
+  commentId: Overload:Json.More.JsonElementProxy.op_Implicit
+  isSpec: "True"
+  name.vb: Widening
+  fullName: Json.More.JsonElementProxy.Implicit
+  fullName.vb: Json.More.JsonElementProxy.Widening
+  nameWithType: JsonElementProxy.Implicit
+  nameWithType.vb: JsonElementProxy.Widening
 - uid: Json.More.Utf8JsonWriterExtensions
   name: Utf8JsonWriterExtensions
   href: api/Json.More.Utf8JsonWriterExtensions.html
@@ -8617,6 +8714,12 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.Comment
   nameWithType: JsonSchemaBuilderExtensions.Comment
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Const(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy)
+  name: Const(JsonSchemaBuilder, JsonElementProxy)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Const_Json_Schema_JsonSchemaBuilder_Json_More_JsonElementProxy_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Const(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Const(Json.Schema.JsonSchemaBuilder, Json.More.JsonElementProxy)
+  nameWithType: JsonSchemaBuilderExtensions.Const(JsonSchemaBuilder, JsonElementProxy)
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Const(Json.Schema.JsonSchemaBuilder,JsonElement)
   name: Const(JsonSchemaBuilder, JsonElement)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Const_Json_Schema_JsonSchemaBuilder_JsonElement_
@@ -8643,6 +8746,12 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.Contains
   nameWithType: JsonSchemaBuilderExtensions.Contains
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Default(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy)
+  name: Default(JsonSchemaBuilder, JsonElementProxy)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Default_Json_Schema_JsonSchemaBuilder_Json_More_JsonElementProxy_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Default(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Default(Json.Schema.JsonSchemaBuilder, Json.More.JsonElementProxy)
+  nameWithType: JsonSchemaBuilderExtensions.Default(JsonSchemaBuilder, JsonElementProxy)
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Default(Json.Schema.JsonSchemaBuilder,JsonElement)
   name: Default(JsonSchemaBuilder, JsonElement)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Default_Json_Schema_JsonSchemaBuilder_JsonElement_
@@ -8820,6 +8929,12 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.DynamicAnchor
   nameWithType: JsonSchemaBuilderExtensions.DynamicAnchor
+- uid: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,System.String)
+  name: DynamicRef(JsonSchemaBuilder, String)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DynamicRef_Json_Schema_JsonSchemaBuilder_System_String_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,System.String)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder, System.String)
+  nameWithType: JsonSchemaBuilderExtensions.DynamicRef(JsonSchemaBuilder, String)
 - uid: Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,Uri)
   name: DynamicRef(JsonSchemaBuilder, Uri)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_DynamicRef_Json_Schema_JsonSchemaBuilder_Uri_
@@ -8846,6 +8961,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.Else
   nameWithType: JsonSchemaBuilderExtensions.Else
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.More.JsonElementProxy})
+  name: Enum(JsonSchemaBuilder, IEnumerable<JsonElementProxy>)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Enum_Json_Schema_JsonSchemaBuilder_IEnumerable_Json_More_JsonElementProxy__
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.More.JsonElementProxy})
+  name.vb: Enum(JsonSchemaBuilder, IEnumerable(Of JsonElementProxy))
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder, IEnumerable<Json.More.JsonElementProxy>)
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder, IEnumerable(Of Json.More.JsonElementProxy))
+  nameWithType: JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, IEnumerable<JsonElementProxy>)
+  nameWithType.vb: JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, IEnumerable(Of JsonElementProxy))
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,IEnumerable{JsonElement})
   name: Enum(JsonSchemaBuilder, IEnumerable<JsonElement>)
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Enum_Json_Schema_JsonSchemaBuilder_IEnumerable_JsonElement__
@@ -8855,6 +8979,15 @@ references:
   fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder, IEnumerable(Of JsonElement))
   nameWithType: JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, IEnumerable<JsonElement>)
   nameWithType.vb: JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, IEnumerable(Of JsonElement))
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy[])
+  name: Enum(JsonSchemaBuilder, JsonElementProxy[])
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Enum_Json_Schema_JsonSchemaBuilder_Json_More_JsonElementProxy___
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy[])
+  name.vb: Enum(JsonSchemaBuilder, JsonElementProxy())
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder, Json.More.JsonElementProxy[])
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder, Json.More.JsonElementProxy())
+  nameWithType: JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, JsonElementProxy[])
+  nameWithType.vb: JsonSchemaBuilderExtensions.Enum(JsonSchemaBuilder, JsonElementProxy())
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,JsonElement[])
   name: Enum(JsonSchemaBuilder, JsonElement[])
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Enum_Json_Schema_JsonSchemaBuilder_JsonElement___
@@ -8871,6 +9004,33 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.Enum
   nameWithType: JsonSchemaBuilderExtensions.Enum
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.More.JsonElementProxy})
+  name: Examples(JsonSchemaBuilder, IEnumerable<JsonElementProxy>)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Examples_Json_Schema_JsonSchemaBuilder_IEnumerable_Json_More_JsonElementProxy__
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,IEnumerable{Json.More.JsonElementProxy})
+  name.vb: Examples(JsonSchemaBuilder, IEnumerable(Of JsonElementProxy))
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder, IEnumerable<Json.More.JsonElementProxy>)
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder, IEnumerable(Of Json.More.JsonElementProxy))
+  nameWithType: JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, IEnumerable<JsonElementProxy>)
+  nameWithType.vb: JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, IEnumerable(Of JsonElementProxy))
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,IEnumerable{JsonElement})
+  name: Examples(JsonSchemaBuilder, IEnumerable<JsonElement>)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Examples_Json_Schema_JsonSchemaBuilder_IEnumerable_JsonElement__
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,IEnumerable{JsonElement})
+  name.vb: Examples(JsonSchemaBuilder, IEnumerable(Of JsonElement))
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder, IEnumerable<JsonElement>)
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder, IEnumerable(Of JsonElement))
+  nameWithType: JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, IEnumerable<JsonElement>)
+  nameWithType.vb: JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, IEnumerable(Of JsonElement))
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy[])
+  name: Examples(JsonSchemaBuilder, JsonElementProxy[])
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Examples_Json_Schema_JsonSchemaBuilder_Json_More_JsonElementProxy___
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy[])
+  name.vb: Examples(JsonSchemaBuilder, JsonElementProxy())
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder, Json.More.JsonElementProxy[])
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder, Json.More.JsonElementProxy())
+  nameWithType: JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, JsonElementProxy[])
+  nameWithType.vb: JsonSchemaBuilderExtensions.Examples(JsonSchemaBuilder, JsonElementProxy())
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,JsonElement[])
   name: Examples(JsonSchemaBuilder, JsonElement[])
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Examples_Json_Schema_JsonSchemaBuilder_JsonElement___
@@ -10088,18 +10248,6 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Draft7Id
   fullName: Json.Schema.MetaSchemas.Draft7Id
   nameWithType: MetaSchemas.Draft7Id
-- uid: Json.Schema.MetaSchemas.Dynamic202012
-  name: Dynamic202012
-  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Dynamic202012
-  commentId: F:Json.Schema.MetaSchemas.Dynamic202012
-  fullName: Json.Schema.MetaSchemas.Dynamic202012
-  nameWithType: MetaSchemas.Dynamic202012
-- uid: Json.Schema.MetaSchemas.Dynamic202012Id
-  name: Dynamic202012Id
-  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Dynamic202012Id
-  commentId: F:Json.Schema.MetaSchemas.Dynamic202012Id
-  fullName: Json.Schema.MetaSchemas.Dynamic202012Id
-  nameWithType: MetaSchemas.Dynamic202012Id
 - uid: Json.Schema.MetaSchemas.Format201909
   name: Format201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Format201909
@@ -10160,6 +10308,18 @@ references:
   commentId: F:Json.Schema.MetaSchemas.Metadata202012Id
   fullName: Json.Schema.MetaSchemas.Metadata202012Id
   nameWithType: MetaSchemas.Metadata202012Id
+- uid: Json.Schema.MetaSchemas.Unevaluated202012
+  name: Unevaluated202012
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Unevaluated202012
+  commentId: F:Json.Schema.MetaSchemas.Unevaluated202012
+  fullName: Json.Schema.MetaSchemas.Unevaluated202012
+  nameWithType: MetaSchemas.Unevaluated202012
+- uid: Json.Schema.MetaSchemas.Unevaluated202012Id
+  name: Unevaluated202012Id
+  href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Unevaluated202012Id
+  commentId: F:Json.Schema.MetaSchemas.Unevaluated202012Id
+  fullName: Json.Schema.MetaSchemas.Unevaluated202012Id
+  nameWithType: MetaSchemas.Unevaluated202012Id
 - uid: Json.Schema.MetaSchemas.Validation201909
   name: Validation201909
   href: api/Json.Schema.MetaSchemas.html#Json_Schema_MetaSchemas_Validation201909
@@ -13629,18 +13789,6 @@ references:
   commentId: F:Json.Schema.Vocabularies.Core202012Id
   fullName: Json.Schema.Vocabularies.Core202012Id
   nameWithType: Vocabularies.Core202012Id
-- uid: Json.Schema.Vocabularies.Dynamic202012
-  name: Dynamic202012
-  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Dynamic202012
-  commentId: F:Json.Schema.Vocabularies.Dynamic202012
-  fullName: Json.Schema.Vocabularies.Dynamic202012
-  nameWithType: Vocabularies.Dynamic202012
-- uid: Json.Schema.Vocabularies.Dynamic202012Id
-  name: Dynamic202012Id
-  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Dynamic202012Id
-  commentId: F:Json.Schema.Vocabularies.Dynamic202012Id
-  fullName: Json.Schema.Vocabularies.Dynamic202012Id
-  nameWithType: Vocabularies.Dynamic202012Id
 - uid: Json.Schema.Vocabularies.Format201909
   name: Format201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Format201909
@@ -13701,6 +13849,18 @@ references:
   commentId: F:Json.Schema.Vocabularies.Metadata202012Id
   fullName: Json.Schema.Vocabularies.Metadata202012Id
   nameWithType: Vocabularies.Metadata202012Id
+- uid: Json.Schema.Vocabularies.Unevaluated202012
+  name: Unevaluated202012
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Unevaluated202012
+  commentId: F:Json.Schema.Vocabularies.Unevaluated202012
+  fullName: Json.Schema.Vocabularies.Unevaluated202012
+  nameWithType: Vocabularies.Unevaluated202012
+- uid: Json.Schema.Vocabularies.Unevaluated202012Id
+  name: Unevaluated202012Id
+  href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Unevaluated202012Id
+  commentId: F:Json.Schema.Vocabularies.Unevaluated202012Id
+  fullName: Json.Schema.Vocabularies.Unevaluated202012Id
+  nameWithType: Vocabularies.Unevaluated202012Id
 - uid: Json.Schema.Vocabularies.Validation201909
   name: Validation201909
   href: api/Json.Schema.Vocabularies.html#Json_Schema_Vocabularies_Validation201909

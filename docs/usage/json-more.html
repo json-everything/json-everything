@@ -113,6 +113,7 @@ public enum MyFlagsEnum
 </code></pre>
 <p>To use this converter, apply the <code>[JsonConverter(typeof(EnumStringConverter&lt;T&gt;))]</code> to either the enum or an enum-valued property.</p>
 <h2 id="data-conversions">Data conversions</h2>
+<h3 id="asjsonelement-extension"><code>.AsJsonElement()</code> extension</h3>
 <p>Sometimes you just want a <code>JsonElement</code> that represents a simple value, like a string, boolean, or number.  This library exposes several overloads of the <code>.AsJsonElement()</code> extension that can do this for you.</p>
 <p>Supported types are:</p>
 <ul>
@@ -130,6 +131,33 @@ public enum MyFlagsEnum
     [&quot;myInt&quot;] = 6.AsJsonElement()
 }
 </code></pre>
+<h3 id="making-methods-that-require-jsonelement-easier-to-call">Making methods that require <code>JsonElement</code> easier to call</h3>
+<p>The <code>JsonElementProxy</code> class allows the client to define methods that expect a <code>JsonElement</code> to be called with native types by defining implicit casts from those types into the <code>JsonElementProxy</code> and then also an implicit cast from the proxy into <code>JsonElement</code>.</p>
+<p>Suppose you have this method:</p>
+<pre><code class="lang-c#">void SomeMethod(JsonElement element)
+{
+    ...
+    DoSomething(element);
+    ...
+}
+</code></pre>
+<p>The only way to call this is by passing a <code>JsonElement</code> directly.  If you want to call it with a <code>string</code> or <code>int</code>, you have to resort to converting it with the <code>.AsJsonElement()</code> extension method:</p>
+<pre><code class="lang-c#">myObject.SomeMethod(1.AsJsonElement());
+myObject.SomeMethod(&quot;string&quot;.AsJsonElement());
+</code></pre>
+<p>This gets noisy pretty quickly.  But now we can define an overload that takes a <code>JsonElementProxy</code> argument instead:</p>
+<pre><code class="lang-c#">void SomeMethod(JsonElementProxy element)
+{
+    ...
+    DoSomething(element); // still only accepts JsonElement; doesn't need an overload
+    ...
+}
+</code></pre>
+<p>to allow callers to just use the raw value:</p>
+<pre><code class="lang-c#">myObject.SomeMethod(1);
+myObject.SomeMethod(&quot;string&quot;);
+</code></pre>
+<p>To achieve this without <code>JsonElementProxy</code>, you could also create overloads for <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>decimal</code>, <code>string</code>, and <code>bool</code>.</p>
 <h2 id="json-model-serialization">JSON model serialization</h2>
 <p>The .Net team did a great job of supporting fast serialization, but for whatever reason they didn't implement serializing their data model.  The <code>Utf8JsonWriterExtensions</code> class fills that gap.</p>
 <p>This provides an extension method that writes a <code>JsonElement</code> to the stream.</p>

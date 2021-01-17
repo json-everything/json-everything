@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.2.3 </title>
+    <title>1.3.0 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.2.3 ">
+    <meta name="title" content="1.3.0 ">
     <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -77,8 +77,27 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="123"><a href="https://github.com/gregsdennis/json-everything/pull/61">1.2.3</a></h1>
+<h1 id="130"><a href="https://github.com/gregsdennis/json-everything/pull/65">1.3.0</a></h1>
 
+<p>Added <code>JsonElementProxy</code>.  This class allows the client to define methods that expect a <code>JsonElement</code> to be called with native types by defining implicit casts from those types into the <code>JsonElementProxy</code>.</p>
+<p>Suppose you have this method:</p>
+<pre><code class="lang-c#">void SomeMethod(JsonElement element) { ... }
+</code></pre>
+<p>The only way to call this is by passing a <code>JsonElement</code> directly.  If you want to call it with a <code>string</code> or <code>int</code>, you have to resort to converting it with the <code>.AsJsonElement()</code> extension method:</p>
+<pre><code class="lang-c#">myObject.SomeMethod(1.AsJsonElement());
+myObject.SomeMethod(&quot;string&quot;.AsJsonElement());
+</code></pre>
+<p>This gets noisy pretty quickly.  But now we can define an overload that takes a <code>JsonElementProxy</code> argument instead:</p>
+<pre><code class="lang-c#">void SomeMethod(JsonElementProxy element)
+{
+    SomeMethod((JsonElement) element);
+}
+</code></pre>
+<p>to allow callers to just use the raw value:</p>
+<pre><code class="lang-c#">myObject.SomeMethod(1);
+myObject.SomeMethod(&quot;string&quot;);
+</code></pre>
+<h1 id="123"><a href="https://github.com/gregsdennis/json-everything/pull/61">1.2.3</a></h1>
 <p>Signed the DLL for strong name compatibility.</p>
 <h1 id="122"><a href="https://github.com/gregsdennis/json-everything/pull/45">1.2.2</a></h1>
 <p>Added debug symbols to package.  No functional change.</p>
