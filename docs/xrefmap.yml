@@ -793,6 +793,22 @@ references:
   commentId: T:Json.Logic.RuleRegistry
   fullName: Json.Logic.RuleRegistry
   nameWithType: RuleRegistry
+- uid: Json.Logic.RuleRegistry.AddRule*
+  name: AddRule
+  href: api/Json.Logic.RuleRegistry.html#Json_Logic_RuleRegistry_AddRule_
+  commentId: Overload:Json.Logic.RuleRegistry.AddRule
+  isSpec: "True"
+  fullName: Json.Logic.RuleRegistry.AddRule
+  nameWithType: RuleRegistry.AddRule
+- uid: Json.Logic.RuleRegistry.AddRule``1
+  name: AddRule<T>()
+  href: api/Json.Logic.RuleRegistry.html#Json_Logic_RuleRegistry_AddRule__1
+  commentId: M:Json.Logic.RuleRegistry.AddRule``1
+  name.vb: AddRule(Of T)()
+  fullName: Json.Logic.RuleRegistry.AddRule<T>()
+  fullName.vb: Json.Logic.RuleRegistry.AddRule(Of T)()
+  nameWithType: RuleRegistry.AddRule<T>()
+  nameWithType.vb: RuleRegistry.AddRule(Of T)()
 - uid: Json.Logic.RuleRegistry.GetRule(System.String)
   name: GetRule(String)
   href: api/Json.Logic.RuleRegistry.html#Json_Logic_RuleRegistry_GetRule_System_String_

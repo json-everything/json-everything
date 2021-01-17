@@ -42,7 +42,7 @@
   "api/Json.Logic.RuleRegistry.html": {
     "href": "api/Json.Logic.RuleRegistry.html",
     "title": "Class RuleRegistry",
-    "keywords": "Class RuleRegistry Catalogs all of the known rules. Inheritance System.Object RuleRegistry Namespace : Json.Logic Assembly : JsonLogic.dll Syntax public static class RuleRegistry : object Methods | Improve this Doc View Source GetRule(String) Gets a Rule implementation for a given identifier string. Declaration public static Type GetRule(string identifier) Parameters Type Name Description System.String identifier The identifier. Returns Type Description Type The of the rule."
+    "keywords": "Class RuleRegistry Catalogs all of the known rules. Inheritance System.Object RuleRegistry Namespace : Json.Logic Assembly : JsonLogic.dll Syntax public static class RuleRegistry : object Methods | Improve this Doc View Source AddRule<T>() Registers a new rule type. Declaration public static void AddRule<T>() where T : Rule, new() Type Parameters Name Description T The type of the rule to add. Remarks Rules must contain a parameterless constructor. Decorate your rule type with one or more OperatorAttribute s to define its identifier. Registering a rule with an identifier that already exists will overwrite the existing registration. | Improve this Doc View Source GetRule(String) Gets a Rule implementation for a given identifier string. Declaration public static Type GetRule(string identifier) Parameters Type Name Description System.String identifier The identifier. Returns Type Description Type The of the rule."
   },
   "api/Json.More.EnumStringConverter-1.html": {
     "href": "api/Json.More.EnumStringConverter-1.html",
@@ -921,8 +921,8 @@
   },
   "release-notes/json-logic.html": {
     "href": "release-notes/json-logic.html",
-    "title": "1.1.0",
-    "keywords": "1.1.0 Prematurely released library. It would parse and process fine, but the factory methods for building inline logic were incomplete. Also added XML comments for everything. 1.0.1 Signed the DLL for strong name compatibility. 1.0.0 Initial release."
+    "title": "1.2.0",
+    "keywords": "1.2.0 Added the ability to define and register custom rules. 1.1.0 Prematurely released library. It would parse and process fine, but the factory methods for building inline logic were incomplete. Also added XML comments for everything. 1.0.1 Signed the DLL for strong name compatibility. 1.0.0 Initial release."
   },
   "release-notes/json-more.html": {
     "href": "release-notes/json-more.html",
