@@ -345,7 +345,7 @@ namespace Json.Schema
 		/// <returns>The builder.</returns>
 		public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, string reference)
 		{
-			builder.Add(new DynamicRefKeyword(new Uri(reference)));
+			builder.Add(new DynamicRefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
 			return builder;
 		}
 
