@@ -3,6 +3,6 @@
 		"ruleOverrides": { }
 	},
 	"nuget": {
-		"repositoryUrl": "https://www.nuget.org/api/v2/package/"
+		"repositoryUrl": "https://api.nuget.org/"
 	}
 }
