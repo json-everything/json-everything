@@ -44,9 +44,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation", "Js
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.Tests", "JsonSchema.Generation.Tests\JsonSchema.Generation.Tests.csproj", "{42E4E81F-82FA-469B-AF01-019D19BD5838}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonLogic", "JsonLogic\JsonLogic.csproj", "{F59C47CA-A1C2-496A-B76D-73A7DA91D837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic", "JsonLogic\JsonLogic.csproj", "{F59C47CA-A1C2-496A-B76D-73A7DA91D837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonLogic.Tests", "JsonLogic.Tests\JsonLogic.Tests.csproj", "{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic.Tests", "JsonLogic.Tests\JsonLogic.Tests.csproj", "{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2020-12", "schema2020-12", "{D8603D94-7FF1-4C79-BF33-69999FEC4592}"
+	ProjectSection(SolutionItems) = preProject
+		Meta-Schemas\2020-12\applicator.json = Meta-Schemas\2020-12\applicator.json
+		Meta-Schemas\2020-12\content.json = Meta-Schemas\2020-12\content.json
+		Meta-Schemas\2020-12\core.json = Meta-Schemas\2020-12\core.json
+		Meta-Schemas\2020-12\format-annotation.json = Meta-Schemas\2020-12\format-annotation.json
+		Meta-Schemas\2020-12\format-assertion.json = Meta-Schemas\2020-12\format-assertion.json
+		Meta-Schemas\2020-12\meta-data.json = Meta-Schemas\2020-12\meta-data.json
+		Meta-Schemas\2020-12\schema.json = Meta-Schemas\2020-12\schema.json
+		Meta-Schemas\2020-12\unevaluated.json = Meta-Schemas\2020-12\unevaluated.json
+		Meta-Schemas\2020-12\validation.json = Meta-Schemas\2020-12\validation.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +129,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1E5D622A-CB2F-40A2-B277-06F58B1ADB63} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
+		{D8603D94-7FF1-4C79-BF33-69999FEC4592} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
