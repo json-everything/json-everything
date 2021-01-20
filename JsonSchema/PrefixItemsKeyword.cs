@@ -14,7 +14,7 @@ namespace Json.Schema
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft202012)]
  	[Vocabulary(Vocabularies.Applicator202012Id)]
-	[JsonConverter(typeof(ItemsKeywordJsonConverter))]
+	[JsonConverter(typeof(PrefixItemsKeywordJsonConverter))]
 	public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<PrefixItemsKeyword>
 	{
 		internal const string Name = "prefixItems";
