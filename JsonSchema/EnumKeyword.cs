@@ -99,7 +99,7 @@ namespace Json.Schema
 		}
 		public override void Write(Utf8JsonWriter writer, EnumKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(ExamplesKeyword.Name);
+			writer.WritePropertyName(EnumKeyword.Name);
 			writer.WriteStartArray();
 			foreach (var element in value.Values)
 			{
