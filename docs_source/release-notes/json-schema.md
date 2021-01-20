@@ -1,6 +1,6 @@
 # [1.7.1](https://github.com/gregsdennis/json-everything/pull/68)
 
-Fixes [#67](https://github.com/gregsdennis/json-everything/issues/67) - `enum` keyword serializes as `examples` due to a copy-paste error.  Credit to [dannyheard7](https://github.com/dannyheard7) for finding and fixing.
+Fixes [#67](https://github.com/gregsdennis/json-everything/issues/67) - `enum` keyword serializes as `examples` due to a copy-paste error.  Credit to [dannyheard7](https://github.com/dannyheard7) for finding and fixing.  Also fixed several other related serialization issues.
 
 # [1.7.0](https://github.com/gregsdennis/json-everything/pull/65)
 
