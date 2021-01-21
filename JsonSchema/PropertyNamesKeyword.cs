@@ -133,7 +133,7 @@ namespace Json.Schema
 		}
 		public override void Write(Utf8JsonWriter writer, PropertyNamesKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(AdditionalPropertiesKeyword.Name);
+			writer.WritePropertyName(PropertyNamesKeyword.Name);
 			JsonSerializer.Serialize(writer, value.Schema, options);
 		}
 	}

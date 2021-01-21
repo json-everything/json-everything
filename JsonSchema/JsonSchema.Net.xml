@@ -1737,6 +1737,14 @@
             <param name="element">The constant value.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Const(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy)">
+            <summary>
+            Add a `const` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="element">The constant value.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Contains(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema)">
             <summary>
             Add an `contains` keyword.
@@ -1746,6 +1754,14 @@
             <returns>The builder.</returns>
         </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Default(Json.Schema.JsonSchemaBuilder,System.Text.Json.JsonElement)">
+            <summary>
+            Add a `default` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="element">The value.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Default(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy)">
             <summary>
             Add a `default` keyword.
             </summary>
@@ -1865,6 +1881,14 @@
             <param name="reference">The URI reference.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.DynamicRef(Json.Schema.JsonSchemaBuilder,System.String)">
+            <summary>
+            Add a `$dynamicRef` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="reference">The URI reference.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Else(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema)">
             <summary>
             Add an `else` keyword.
@@ -1881,6 +1905,14 @@
             <param name="elements">The values for the enum.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IEnumerable{Json.More.JsonElementProxy})">
+            <summary>
+            Add an `enum` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="elements">The values for the enum.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,System.Text.Json.JsonElement[])">
             <summary>
             Add an `enum` keyword.
@@ -1889,7 +1921,39 @@
             <param name="elements">The values for the enum.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Enum(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy[])">
+            <summary>
+            Add an `enum` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="elements">The values for the enum.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IEnumerable{System.Text.Json.JsonElement})">
+            <summary>
+            Add an `examples` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="elements">The example values.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,System.Text.Json.JsonElement[])">
+            <summary>
+            Add an `examples` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="elements">The example values.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IEnumerable{Json.More.JsonElementProxy})">
+            <summary>
+            Add an `examples` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="elements">The example values.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.Examples(Json.Schema.JsonSchemaBuilder,Json.More.JsonElementProxy[])">
             <summary>
             Add an `examples` keyword.
             </summary>
@@ -2623,9 +2687,9 @@
             The Draft 2020-12 Core meta-schema ID.
             </summary>
         </member>
-        <member name="F:Json.Schema.MetaSchemas.Dynamic202012Id">
+        <member name="F:Json.Schema.MetaSchemas.Unevaluated202012Id">
             <summary>
-            The Draft 2020-12 Dynamic meta-schema ID.
+            The Draft 2020-12 Unevaluated meta-schema ID.
             </summary>
         </member>
         <member name="F:Json.Schema.MetaSchemas.Applicator202012Id">
@@ -2668,9 +2732,9 @@
             The Draft 2020-12 Core meta-schema.
             </summary>
         </member>
-        <member name="F:Json.Schema.MetaSchemas.Dynamic202012">
+        <member name="F:Json.Schema.MetaSchemas.Unevaluated202012">
             <summary>
-            The Draft 2020-12 Core meta-schema.
+            The Draft 2020-12 Unevaluated meta-schema.
             </summary>
         </member>
         <member name="F:Json.Schema.MetaSchemas.Applicator202012">
@@ -4236,9 +4300,9 @@
             The Draft 2020-12 Core vocabulary ID.
             </summary>
         </member>
-        <member name="F:Json.Schema.Vocabularies.Dynamic202012Id">
+        <member name="F:Json.Schema.Vocabularies.Unevaluated202012Id">
             <summary>
-            The Draft 2020-12 Dynamic vocabulary ID.
+            The Draft 2020-12 Unevaluated vocabulary ID.
             </summary>
         </member>
         <member name="F:Json.Schema.Vocabularies.Applicator202012Id">
@@ -4276,9 +4340,9 @@
             The Draft 2020-12 Core vocabulary.
             </summary>
         </member>
-        <member name="F:Json.Schema.Vocabularies.Dynamic202012">
+        <member name="F:Json.Schema.Vocabularies.Unevaluated202012">
             <summary>
-            The Draft 2020-12 Dynamic vocabulary.
+            The Draft 2020-12 Unevaluated vocabulary.
             </summary>
         </member>
         <member name="F:Json.Schema.Vocabularies.Applicator202012">

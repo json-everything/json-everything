@@ -81,7 +81,7 @@ namespace Json.Schema
 		}
 		public override void Write(Utf8JsonWriter writer, DynamicAnchorKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteBoolean(DynamicAnchorKeyword.Name, true);
+			writer.WriteString(DynamicAnchorKeyword.Name, value.Value);
 		}
 	}
 }
