@@ -49,11 +49,11 @@ If a URI reference cannot be resolved, the implementation MUST refuse to process
 
 ## 4. A Short Example
 
-The following defines a schema to validate an object instance with a `foo` property that must contain an integer value less than or equal to the instance's `minValue` property.
+The following defines a schema to validate an object instance with a `foo` property that must contain an integer value less than or equal to the value in the instance's `minValue` property.
 
 ```json
 {
-  "$schema": "https://gregsdennis.github.io/vocabs-data#",
+  "$schema": "https://gregsdennis.github.io/json-everything/meta/data",
   "type": "object",
   "properties": {
     "foo": {
