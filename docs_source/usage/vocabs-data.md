@@ -45,7 +45,20 @@ External documents can be referenced using an absolute URI base identifier along
 
 Implementations SHOULD be able to download external JSON documents, but MAY provide means to pre-load and cache such documents against the identifiers by which they will be referenced.
 
-If a URI reference cannot be resolved, the implementation MUST refuse to process the schema; otherwise the full value at the specified location is returned.  Unlike `$ref`, which requires that the dereferenced value must be a valid schema, the value dereferenced by `data` may be any JSON value.
+If a URI reference cannot be resolved, validation MUST fail; otherwise the full value at the specified location is returned.  Unlike `$ref`, which requires that the dereferenced value must be a valid schema, the value dereferenced by `data` may be any JSON value.
+
+If the resolved value is not valid for the associated keyword, validation MUST fail.
+
+### 3.5 Errors
+
+The output formatting specified by the JSON Schema Core specification can only indicate that something failed at the `data` node, but there is no provision for providing further detail.
+
+In summary, two validation failure states are specified by this document:
+
+- a URI reference cannot be resolved, and
+- a URI reference can be resolved but the returned value is invalid for the associated keyword.
+
+To make debugging `data` simpler, implementations SHOULD provide an error message indicating what the failure was and for which key it occurred.
 
 ## 4. A Short Example
 
@@ -72,7 +85,7 @@ The following defines a schema to validate an object instance with a `foo` prope
 }
 ```
 
-The `data` property declares that its parent subschema should also contain a `minimum` keyword whose value should be the value in the `minValue` property of the instance.
+The `data` property declares that its parent subschema should validate a `minimum` keyword whose value is the value in the `minValue` property of the instance.
 
 Note also the use of `dependentRequired` to ensure that when `foo` is present in the instance, `minValue` is also present.  While this not explicitly required of schema authors, this type of insurance mechanism is recommended.
 
