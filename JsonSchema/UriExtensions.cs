@@ -3,7 +3,10 @@ using System.Linq;
 
 namespace Json.Schema
 {
-	internal static class UriExtensions
+	/// <summary>
+	/// Provides extensions on the <see cref="Uri"/> type.
+	/// </summary>
+	public static class UriExtensions
 	{
 		/// <summary>
 		/// Gets the Uri to the parent object.
