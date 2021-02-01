@@ -61,6 +61,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2020-12", "schema2020
 		Meta-Schemas\2020-12\validation.json = Meta-Schemas\2020-12\validation.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchema.Data", "JsonSchema.Data\JsonSchema.Data.csproj", "{435FA9F1-496D-454C-85EA-A98029C54A10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{435FA9F1-496D-454C-85EA-A98029C54A10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{435FA9F1-496D-454C-85EA-A98029C54A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{435FA9F1-496D-454C-85EA-A98029C54A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{435FA9F1-496D-454C-85EA-A98029C54A10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
