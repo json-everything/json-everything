@@ -223,6 +223,66 @@
             <returns>A <see cref="T:System.Text.Json.JsonElement"/> representing the value.</returns>
             <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
         </member>
+        <member name="T:Json.More.JsonElementProxy">
+            <summary>
+            Acts as an intermediary that allows an "implicit casting"-like behavior between
+            native JSON types and <see cref="T:System.Text.Json.JsonElement"/>.
+            </summary>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Int32)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `int` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Int64)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `long` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Int16)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `short` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Single)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `float` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Double)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `double` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Decimal)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `decimal` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.String)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `string` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(System.Boolean)~Json.More.JsonElementProxy">
+            <summary>
+            Converts an `bool` to a <see cref="T:Json.More.JsonElementProxy"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.More.JsonElementProxy.op_Implicit(Json.More.JsonElementProxy)~System.Text.Json.JsonElement">
+            <summary>
+            Converts a <see cref="T:Json.More.JsonElementProxy"/> to a <see cref="T:System.Text.Json.JsonElement"/>.
+            </summary>
+            <param name="proxy">The proxy.</param>
+        </member>
         <member name="T:Json.More.Utf8JsonWriterExtensions">
             <summary>
             Provides extension functionality for <see cref="T:System.Text.Json.Utf8JsonWriter"/>.

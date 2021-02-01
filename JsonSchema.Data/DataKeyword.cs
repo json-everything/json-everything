@@ -16,7 +16,7 @@ namespace Json.Schema.Data
 	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.DataId)]
 	[JsonConverter(typeof(DataKeywordJsonConverter))]
-	public class DataKeyword : IJsonSchemaKeyword
+	public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	{
 		internal const string Name = "data";
 		internal static readonly Regex AnchorPattern = new Regex("^[A-Za-z][-A-Za-z0-9.:_]*$");
@@ -131,6 +131,31 @@ namespace Json.Schema.Data
 				default:
 					throw new Exception($"URI scheme '{uri.Scheme}' is not supported.  Only HTTP(S) and local file system URIs are allowed.");
 			}
+		}
+
+		public bool Equals(DataKeyword other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			if (References.Count != other.References.Count) return false;
+			var byKey = References.Join(other.References,
+					td => td.Key,
+					od => od.Key,
+					(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
+				.ToList();
+			if (byKey.Count != References.Count) return false;
+
+			return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as DataKeyword);
+		}
+
+		public override int GetHashCode()
+		{
+			return (References != null ? References.GetHashCode() : 0);
 		}
 	}
 

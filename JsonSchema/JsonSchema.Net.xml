@@ -3950,6 +3950,11 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.UriExtensions">
+            <summary>
+            Provides extensions on the <see cref="T:System.Uri"/> type.
+            </summary>
+        </member>
         <member name="M:Json.Schema.UriExtensions.GetParentUri(System.Uri)">
             <summary>
             Gets the Uri to the parent object.
