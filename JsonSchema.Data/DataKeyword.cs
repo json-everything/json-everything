@@ -19,7 +19,6 @@ namespace Json.Schema.Data
 	public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	{
 		internal const string Name = "data";
-		internal static readonly Regex AnchorPattern = new Regex("^[A-Za-z][-A-Za-z0-9.:_]*$");
 
 		private static Func<Uri, string> _get;
 
@@ -46,9 +45,20 @@ namespace Json.Schema.Data
 
 				data.Add(reference.Key, resolved.Value);
 			}
-				
+
 			var json = JsonSerializer.Serialize(data);
-			var subschema = JsonSerializer.Deserialize<JsonSchema>(json);
+			JsonSchema subschema;
+			try
+			{
+				subschema = JsonSerializer.Deserialize<JsonSchema>(json);
+			}
+			catch (JsonException e)
+			{
+				context.IsValid = false;
+				context.Message = e.Message;
+				return;
+			}
+
 			subschema.ValidateSubschema(context);
 		}
 
