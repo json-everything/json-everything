@@ -13,7 +13,7 @@
 		<PackageTags>json-schema validation schema json data schema-data</PackageTags>
 		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-data.html</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<!--<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>-->
+		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
 		<Version>1.0.0</Version>
 		<FileVersion>1.0.0.0</FileVersion>

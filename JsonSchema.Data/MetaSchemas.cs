@@ -5,10 +5,19 @@ using Json.More;
 
 namespace Json.Schema.Data
 {
+	/// <summary>
+	/// Defines a meta-schema for the 
+	/// </summary>
 	public static class MetaSchemas
 	{
+		/// <summary>
+		/// The data vocabulary meta-schema ID.
+		/// </summary>
 		public static readonly Uri DataId = new Uri("https://gregsdennis.github.io/json-everything/meta/data");
 
+		/// <summary>
+		/// The data vocabulary meta-schema.
+		/// </summary>
 		public static readonly JsonSchema Data =
 			new JsonSchemaBuilder()
 				.Id(DataId)

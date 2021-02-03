@@ -29,10 +29,7 @@ namespace Json.Schema.Data.Tests
 		[OneTimeSetUp]
 		public void Setup()
 		{ 
-			VocabularyRegistry.Global.Register(Vocabularies.Data);
-			SchemaKeywordRegistry.Register<DataKeyword>();
-			SchemaRegistry.Global.Register(MetaSchemas.DataId, MetaSchemas.Data);
-
+			Vocabularies.Register();
 
 			ValidationOptions.Default.OutputFormat = OutputFormat.Detailed;
 		}

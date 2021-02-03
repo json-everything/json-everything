@@ -5,11 +5,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using Json.Pointer;
 
 namespace Json.Schema.Data
 {
+	/// <summary>
+	/// Represents the `data` keyword.
+	/// </summary>
 	[SchemaKeyword(Name)]
 	[SchemaPriority(int.MinValue)]
 	[SchemaDraft(Draft.Draft201909)]
@@ -22,19 +24,37 @@ namespace Json.Schema.Data
 
 		private static Func<Uri, string> _get;
 
+		/// <summary>
+		/// Gets or sets a method to download external references.
+		/// </summary>
+		/// <remarks>
+		/// The default method simply attempts to download the resource.  There is no
+		/// caching involved.
+		/// </remarks>
 		public static Func<Uri, string> Get
 		{
 			get => _get;
 			set => _get = value ?? SimpleDownload;
 		}
 
+		/// <summary>
+		/// The collection of keywords and references.
+		/// </summary>
 		public IReadOnlyDictionary<string, Uri> References { get; }
 
+		/// <summary>
+		/// Creates an instance of the <see cref="DataKeyword"/> class.
+		/// </summary>
+		/// <param name="references">The collection of keywords and references.</param>
 		public DataKeyword(IReadOnlyDictionary<string, Uri> references)
 		{
 			References = references;
 		}
 
+		/// <summary>
+		/// Provides validation for the keyword.
+		/// </summary>
+		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
 			var data = new Dictionary<string, JsonElement>();
@@ -143,6 +163,9 @@ namespace Json.Schema.Data
 			}
 		}
 
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 		public bool Equals(DataKeyword other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -158,11 +181,16 @@ namespace Json.Schema.Data
 			return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 		}
 
+		/// <summary>Determines whether the specified object is equal to the current object.</summary>
+		/// <param name="obj">The object to compare with the current object.</param>
+		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as DataKeyword);
 		}
 
+		/// <summary>Serves as the default hash function.</summary>
+		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
 			return (References != null ? References.GetHashCode() : 0);
