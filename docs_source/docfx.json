@@ -76,7 +76,8 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "usage/meta/*.json"
         ]
       }
     ],

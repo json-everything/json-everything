@@ -17,6 +17,10 @@
     href: schema-vocabs.md
   - name: Generation
     href: schema-generation.md
+  - name: Custom Vocabularies
+    items:
+    - name: Data Access
+      href: vocabs-data.md
 - name: JSON Path
   href: json-path.md
 - name: JSON Patch

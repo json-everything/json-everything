@@ -4,5 +4,511 @@
         <name>JsonLogic</name>
     </assembly>
     <members>
+        <member name="T:Json.Logic.JsonLogic">
+            <summary>
+            Provides factory methods to create operations.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.And(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates an `and` rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>An `and` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Or(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates an `or` rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>An `or` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Not(Json.Logic.Rule)">
+            <summary>
+            Creates a `!` ("not") rule.
+            </summary>
+            <param name="value">The rule to negate.</param>
+            <returns>A `!` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.BoolCast(Json.Logic.Rule)">
+            <summary>
+            Creates a `!!` ("boolean cast") rule.
+            </summary>
+            <param name="value">The rule to negate.</param>
+            <returns>A `!!` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.If(Json.Logic.Rule[])">
+            <summary>
+            Creates an `if` rule.
+            </summary>
+            <param name="components">The rule chain to process.</param>
+            <returns>An `if` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Add(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates a `+` ("add") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>A `+` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Subtract(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates a `-` ("subtract") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>A `-` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Multiply(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates a `*` ("multiply") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>A `*` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Divide(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `/` ("divide") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="b"></param>
+            <returns>A `/` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Modulus(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `%` ("modulus") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="b"></param>
+            <returns>A `%` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Max(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates a `max` rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>A `max` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Min(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates a `min` rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>A `min` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.StrictEquals(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `===` ("strict equal") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="b">The second rule.</param>
+            <returns>A `===` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.StrictNotEquals(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `!==` ("strict not equal") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="b">The second rule.</param>
+            <returns>A `!==` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.LooseEquals(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `==` ("loose equal") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="b">The second rule.</param>
+            <returns>A `==` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.LooseNotEquals(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `!=` ("loose not equal") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="b">The second rule.</param>
+            <returns>A `!=` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.LessThan(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `&lt;` ("less than") rule.
+            </summary>
+            <param name="a">The lower limit rule.</param>
+            <param name="b">The upper limit rule.</param>
+            <returns>A `&lt;` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.BetweenExclusive(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a three-argument `&lt;` ("exclusive between") rule.
+            </summary>
+            <param name="a">The lower limit rule.</param>
+            <param name="b">The rule.</param>
+            <param name="c">The upper limit rule.</param>
+            <returns>A `&lt;` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.LessThanOrEqual(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `&lt;=` ("less than or equal") rule.
+            </summary>
+            <param name="a">The lower limit rule.</param>
+            <param name="b">The upper limit rule.</param>
+            <returns>A `&lt;=` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.BetweenInclusive(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a three-argument `&lt;=` ("inclusive between") rule.
+            </summary>
+            <param name="a">The lower limit rule.</param>
+            <param name="b">The second rule.</param>
+            <param name="c">The upper limit rule.</param>
+            <returns>A `&lt;=` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.MoreThan(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `&gt;` ("more than") rule.
+            </summary>
+            <param name="a">The upper limit rule.</param>
+            <param name="b">The lower limit rule.</param>
+            <returns>A `&gt;` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.MoreThanOrEqual(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `&gt;=` ("more than or equal") rule.
+            </summary>
+            <param name="a">The upper limit rule.</param>
+            <param name="b">The lower limit rule.</param>
+            <returns>A `&gt;` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Cat(Json.Logic.Rule,Json.Logic.Rule[])">
+            <summary>
+            Creates a `cat` ("concatenation") rule.
+            </summary>
+            <param name="a">The first rule.</param>
+            <param name="more">Subsequent rules.</param>
+            <returns>A `cat` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Substr(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `substr` ("concatenation") rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="start">The start rule.</param>
+            <returns>A `substr` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Substr(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `substr` ("concatenation") rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="start">The start rule.</param>
+            <param name="count">The count rule.</param>
+            <returns>A `substr` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.All(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates an `all` rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="rule">The predicate to test by.</param>
+            <returns>An `all` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Some(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `some` ("any") rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="rule">The predicate to test by.</param>
+            <returns>A `some` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.None(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `none` rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="rule">The predicate to test by.</param>
+            <returns>A `none` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Missing(Json.Logic.Rule[])">
+            <summary>
+            Creates a `missing` rule.
+            </summary>
+            <param name="components">The missing components.</param>
+            <returns>A `missing` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.MissingSome(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `missing-some` rule.
+            </summary>
+            <param name="requiredCount">The required count.</param>
+            <param name="components">The missing components.</param>
+            <returns>A `missing_some` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.In(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `none` rule.
+            </summary>
+            <param name="test">The predicate to test by.</param>
+            <param name="input">The input rule.</param>
+            <returns>A `none` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Map(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `map` rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="rule">The predicate to test by.</param>
+            <returns>A `map` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Reduce(Json.Logic.Rule,Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `reduce` rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="rule">The predicate to test by.</param>
+            <param name="initial">The initial rule.</param>
+            <returns>A `reduce` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Filter(Json.Logic.Rule,Json.Logic.Rule)">
+            <summary>
+            Creates a `filter` rule.
+            </summary>
+            <param name="input">The input rule.</param>
+            <param name="rule">The predicate to test by.</param>
+            <returns>A `filter` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Merge(Json.Logic.Rule[])">
+            <summary>
+            Creates a `merge` rule.
+            </summary>
+            <param name="items">The items to merge.</param>
+            <returns>A `merge` rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Text.Json.JsonElement)">
+            <summary>
+            Creates a rule that stands in for a literal JSON value.
+            </summary>
+            <param name="value">The JSON value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Int32)">
+            <summary>
+            Creates a rule that stands in for an `int`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Int64)">
+            <summary>
+            Creates a rule that stands in for a `long`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Decimal)">
+            <summary>
+            Creates a rule that stands in for a `decimal`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Single)">
+            <summary>
+            Creates a rule that stands in for a `float`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Double)">
+            <summary>
+            Creates a rule that stands in for a `double`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.String)">
+            <summary>
+            Creates a rule that stands in for a `string`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Literal(System.Boolean)">
+            <summary>
+            Creates a rule that stands in for a `bool`.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A literal rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Variable(System.String)">
+            <summary>
+            Creates a `var` rule that accesses data.
+            </summary>
+            <param name="path"></param>
+            <returns>A variable rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Variable(System.String,Json.Logic.Rule)">
+            <summary>
+            Creates a `var` rule that accesses data.
+            </summary>
+            <param name="path">The dot-delimited path.</param>
+            <param name="defaultValue">A default value to use if the path is not found.</param>
+            <returns>A variable rule.</returns>
+        </member>
+        <member name="M:Json.Logic.JsonLogic.Log(Json.Logic.Rule)">
+            <summary>
+            Functions as a no-op.  Processes the rule, then logs and returns the output.
+            </summary>
+            <param name="log">The rule to log.</param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.JsonLogicException">
+            <summary>
+            Thrown when a rule cannot be processed or deserialized.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.JsonLogicException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Logic.JsonLogicException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="T:Json.Logic.OperatorAttribute">
+            <summary>
+            Decorates <see cref="T:Json.Logic.Rule"/> implementations to identify a rule.
+            </summary>
+        </member>
+        <member name="P:Json.Logic.OperatorAttribute.Name">
+            <summary>
+            The identifier.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.OperatorAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Logic.OperatorAttribute"/> instance.
+            </summary>
+            <param name="name">The identifier.</param>
+        </member>
+        <member name="T:Json.Logic.Rule">
+            <summary>
+            Provides a base class for rules.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rule.Apply(System.Text.Json.JsonElement)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Text.Json.JsonElement)~Json.Logic.Rule">
+            <summary>
+            Casts a JSON value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Int32)~Json.Logic.Rule">
+            <summary>
+            Casts an `int` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.String)~Json.Logic.Rule">
+            <summary>
+            Casts a `string` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.  Can also be used to create a `null` JSON literal.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Boolean)~Json.Logic.Rule">
+            <summary>
+            Casts a `bool` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Int64)~Json.Logic.Rule">
+            <summary>
+            Casts a `long` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Decimal)~Json.Logic.Rule">
+            <summary>
+            Casts a `decimal` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Single)~Json.Logic.Rule">
+            <summary>
+            Casts a `float` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Logic.Rule.op_Implicit(System.Double)~Json.Logic.Rule">
+            <summary>
+            Casts a `double` value to a <see cref="T:Json.Logic.Rules.LiteralRule"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Logic.LogicComponentConverter">
+            <summary>
+            Provides serialization for all <see cref="T:Json.Logic.Rule"/> derivatives.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.LogicComponentConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Logic.Rule"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Logic.LogicComponentConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Logic.Rule,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+        </member>
+        <member name="T:Json.Logic.RuleExtensions">
+            <summary>
+            Calls <see cref="M:Json.Logic.Rule.Apply(System.Text.Json.JsonElement)"/> with no data.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.RuleExtensions.Apply(Json.Logic.Rule)">
+            <summary>
+            Calls <see cref="M:Json.Logic.Rule.Apply(System.Text.Json.JsonElement)"/> with no data.
+            </summary>
+            <param name="rule">The rule.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="T:Json.Logic.RuleRegistry">
+            <summary>
+            Catalogs all of the known rules.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.RuleRegistry.GetRule(System.String)">
+            <summary>
+            Gets a <see cref="T:Json.Logic.Rule"/> implementation for a given identifier string.
+            </summary>
+            <param name="identifier">The identifier.</param>
+            <returns>The <see cref="T:System.Type"/> of the rule.</returns>
+        </member>
+        <member name="M:Json.Logic.RuleRegistry.AddRule``1">
+             <summary>
+             Registers a new rule type.
+             </summary>
+             <typeparam name="T">The type of the rule to add.</typeparam>
+             <remarks>
+             Rules must contain a parameterless constructor.
+            
+             Decorate your rule type with one or more <see cref="T:Json.Logic.OperatorAttribute"/>s to
+             define its identifier.
+            
+             Registering a rule with an identifier that already exists will overwrite the
+             existing registration.
+             </remarks>
+        </member>
     </members>
 </doc>
