@@ -7,6 +7,9 @@
 "pkg:schema-generation":
   - JsonSchema.Generation/**/*
 
+"pkg:schema-data":
+  - JsonSchema.Data/**/*
+
 "pkg:pointer":
   - JsonPointer/**/*
 
