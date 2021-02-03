@@ -2018,6 +2018,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.UriExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.UriExtensions.html",
+          "hash": "oRr2jHGF8OZGY5cIO29lcA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.ValidationContext.ContextConsolidator.yml",
       "output": {
         ".html": {
@@ -2142,7 +2154,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.html",
-          "hash": "pS5FQy2ZEuxLR3gGyxVSdw=="
+          "hash": "ZcjQ7gfdyXb74GV9lPWZbQ=="
         }
       },
       "is_incremental": false,
@@ -2166,7 +2178,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "+HixCVQc5+y+G2l5RHF+Cg=="
+          "hash": "5jRJAFJeOidMeD/2zI9g+w=="
         }
       },
       "is_incremental": false,
@@ -2362,11 +2374,23 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "release-notes/json-schema-data.md",
+      "output": {
+        ".html": {
+          "relative_path": "release-notes/json-schema-data.html",
+          "hash": "MUQDMniuADrxZL5GfG7Aiw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "release-notes/json-schema-generation.md",
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "vc3md9eszbNAPbOWJlS/Yw=="
+          "hash": "STxJIjhu5cHdlRPjDmV/QA=="
         }
       },
       "is_incremental": false,
@@ -2378,7 +2402,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "l98EB1Y0cWWjB5GIGephwQ=="
+          "hash": "YCbycODTzRZBnp+BLdMDWA=="
         }
       },
       "is_incremental": false,
@@ -2390,7 +2414,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/toc.html",
-          "hash": "HaOGC0k+T03twF+9Rs+wig=="
+          "hash": "mjRFeXXAxGa+WxCU9KhD2w=="
         }
       },
       "is_incremental": false,
@@ -2493,6 +2517,17 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "usage/meta/data.json",
+      "output": {
+        "resource": {
+          "relative_path": "usage/meta/data.json"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "usage/schema-building.md",
       "output": {
@@ -2582,7 +2617,19 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "djCMiYgOY2Sg+Fl5aMgSGw=="
+          "hash": "LVdFLfrFW8zXc8ULMEHL5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/vocabs-data.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/vocabs-data.html",
+          "hash": "0MD6DJ+bcayovmFk1ycg6w=="
         }
       },
       "is_incremental": false,
@@ -2603,13 +2650,13 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 29,
+          "total_file_count": 31,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 177,
+          "total_file_count": 178,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

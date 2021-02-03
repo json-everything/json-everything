@@ -13125,6 +13125,25 @@ references:
   isSpec: "True"
   fullName: Json.Schema.UniqueItemsKeyword.Value
   nameWithType: UniqueItemsKeyword.Value
+- uid: Json.Schema.UriExtensions
+  name: UriExtensions
+  href: api/Json.Schema.UriExtensions.html
+  commentId: T:Json.Schema.UriExtensions
+  fullName: Json.Schema.UriExtensions
+  nameWithType: UriExtensions
+- uid: Json.Schema.UriExtensions.GetParentUri(Uri)
+  name: GetParentUri(Uri)
+  href: api/Json.Schema.UriExtensions.html#Json_Schema_UriExtensions_GetParentUri_Uri_
+  commentId: M:Json.Schema.UriExtensions.GetParentUri(Uri)
+  fullName: Json.Schema.UriExtensions.GetParentUri(Uri)
+  nameWithType: UriExtensions.GetParentUri(Uri)
+- uid: Json.Schema.UriExtensions.GetParentUri*
+  name: GetParentUri
+  href: api/Json.Schema.UriExtensions.html#Json_Schema_UriExtensions_GetParentUri_
+  commentId: Overload:Json.Schema.UriExtensions.GetParentUri
+  isSpec: "True"
+  fullName: Json.Schema.UriExtensions.GetParentUri
+  nameWithType: UriExtensions.GetParentUri
 - uid: Json.Schema.ValidationContext
   name: ValidationContext
   href: api/Json.Schema.ValidationContext.html
