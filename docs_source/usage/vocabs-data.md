@@ -53,12 +53,14 @@ If the resolved value is not valid for the associated keyword, validation MUST f
 
 The output formatting specified by the JSON Schema Core specification can only indicate that something failed at the `data` node, but there is no provision for providing further detail.
 
-In summary, two validation failure states are specified by this document:
+In summary, the `data` keyword can generate two validation failure states as specified by this document:
 
 - a URI reference cannot be resolved, and
 - a URI reference can be resolved but the returned value is invalid for the associated keyword.
 
 To make debugging `data` simpler, implementations SHOULD provide an error message indicating what the failure was and for which key it occurred.
+
+If both of these succeed, the validation output of the resulting subschema is reported into the overall schema output as if the subschema were actually a child of the `data` keyword.
 
 ## 4. A Short Example
 
