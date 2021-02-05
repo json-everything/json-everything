@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonSchema
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -94,32 +94,13 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a></div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
   <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
   <h5 id="Json_Schema_JsonSchema_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SchemaJsonConverter))]
-public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class JsonSchema : object, IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -241,7 +222,7 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a>&gt;</td>
+        <td><span class="xref">IReadOnlyCollection</span>&lt;<a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -272,7 +253,7 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Text.Json.JsonElement</span>&gt;</td>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">JsonElement</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -379,8 +360,6 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_FromFile_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.FromFile(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -432,33 +411,17 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
     </tbody>
   </table>
   <h5 id="Json_Schema_JsonSchema_FromFile_System_String__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>The filename needs to not be URL-encoded as <span class="xref">System.Uri</span> attempts to encode it.</p>
+  <div class="markdown level1 remarks"><p>The filename needs to not be URL-encoded as <see cref="!:System.Uri"></see> attempts to encode it.</p>
 </div>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Text.Json.JsonException</span></td>
-        <td><p>Could not deserialize a portion of the schema.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_FromStream_System_IO_Stream_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.FromStream(System.IO.Stream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_FromStream_Stream_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.FromStream(Stream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/JsonSchema.cs/#L85">View Source</a>
   </span>
   <a id="Json_Schema_JsonSchema_FromStream_" data-uid="Json.Schema.JsonSchema.FromStream*"></a>
-  <h4 id="Json_Schema_JsonSchema_FromStream_System_IO_Stream_" data-uid="Json.Schema.JsonSchema.FromStream(System.IO.Stream)">FromStream(Stream)</h4>
+  <h4 id="Json_Schema_JsonSchema_FromStream_Stream_" data-uid="Json.Schema.JsonSchema.FromStream(Stream)">FromStream(Stream)</h4>
   <div class="markdown level1 summary"><p>Deserializes a <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a> from a stream.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -477,7 +440,7 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.IO.Stream</span></td>
+        <td><span class="xref">Stream</span></td>
         <td><span class="parametername">source</span></td>
         <td><p>A stream.</p>
 </td>
@@ -494,7 +457,7 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.ValueTask</span>&lt;<a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</td>
+        <td><span class="xref">ValueTask</span>&lt;<a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>&gt;</td>
         <td><p>A new <a class="xref" href="Json.Schema.JsonSchema.html">JsonSchema</a>.</p>
 </td>
       </tr>
@@ -550,22 +513,6 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Text.Json.JsonException</span></td>
-        <td><p>Could not deserialize a portion of the schema.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -598,17 +545,15 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.RegisterSubschemas(Json.Schema.SchemaRegistry%2CSystem.Uri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_RegisterSubschemas_Json_Schema_SchemaRegistry_Uri_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.RegisterSubschemas(Json.Schema.SchemaRegistry%2CUri)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/JsonSchema.cs/#L148">View Source</a>
   </span>
   <a id="Json_Schema_JsonSchema_RegisterSubschemas_" data-uid="Json.Schema.JsonSchema.RegisterSubschemas*"></a>
-  <h4 id="Json_Schema_JsonSchema_RegisterSubschemas_Json_Schema_SchemaRegistry_System_Uri_" data-uid="Json.Schema.JsonSchema.RegisterSubschemas(Json.Schema.SchemaRegistry,System.Uri)">RegisterSubschemas(SchemaRegistry, Uri)</h4>
+  <h4 id="Json_Schema_JsonSchema_RegisterSubschemas_Json_Schema_SchemaRegistry_Uri_" data-uid="Json.Schema.JsonSchema.RegisterSubschemas(Json.Schema.SchemaRegistry,Uri)">RegisterSubschemas(SchemaRegistry, Uri)</h4>
   <div class="markdown level1 summary"><p>Registers a subschema.  To be called from <a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a> keywords.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -633,7 +578,7 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Uri</span></td>
+        <td><span class="xref">Uri</span></td>
         <td><span class="parametername">currentUri</span></td>
         <td><p>The current URI.</p>
 </td>
@@ -642,13 +587,13 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_Validate_System_Text_Json_JsonElement_Json_Schema_ValidationOptions_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.Validate(System.Text.Json.JsonElement%2CJson.Schema.ValidationOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_JsonSchema_Validate_JsonElement_Json_Schema_ValidationOptions_.md&amp;value=---%0Auid%3A%20Json.Schema.JsonSchema.Validate(JsonElement%2CJson.Schema.ValidationOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/JsonSchema.cs/#L96">View Source</a>
   </span>
   <a id="Json_Schema_JsonSchema_Validate_" data-uid="Json.Schema.JsonSchema.Validate*"></a>
-  <h4 id="Json_Schema_JsonSchema_Validate_System_Text_Json_JsonElement_Json_Schema_ValidationOptions_" data-uid="Json.Schema.JsonSchema.Validate(System.Text.Json.JsonElement,Json.Schema.ValidationOptions)">Validate(JsonElement, ValidationOptions)</h4>
+  <h4 id="Json_Schema_JsonSchema_Validate_JsonElement_Json_Schema_ValidationOptions_" data-uid="Json.Schema.JsonSchema.Validate(JsonElement,Json.Schema.ValidationOptions)">Validate(JsonElement, ValidationOptions)</h4>
   <div class="markdown level1 summary"><p>Validates an instance against this schema.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -667,7 +612,7 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">root</span></td>
         <td><p>The root instance.</p>
 </td>
@@ -835,11 +780,11 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
       <a class="xref" href="Json.Schema.IRefResolvable.html">IRefResolvable</a>
   </div>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>
@@ -857,7 +802,8 @@ public class JsonSchema : IRefResolvable, IEquatable&lt;JsonSchema&gt;</code></p
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

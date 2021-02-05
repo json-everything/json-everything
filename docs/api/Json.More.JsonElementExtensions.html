@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonElementExtensions
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -83,7 +83,7 @@
   
   <h1 id="Json_More_JsonElementExtensions" data-uid="Json.More.JsonElementExtensions" class="text-break">Class JsonElementExtensions
   </h1>
-  <div class="markdown level0 summary"><p>Provides extension functionality for <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level0 summary"><p>Provides extension functionality for <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -91,38 +91,120 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">JsonElementExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.More.html">Json.More</a></h6>
   <h6><strong>Assembly</strong>: Json.More.dll</h6>
   <h5 id="Json_More_JsonElementExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class JsonElementExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class JsonElementExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_AsJsonElement_IDictionary_System_String_JsonElement__.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.AsJsonElement(IDictionary%7BSystem.String%2CJsonElement%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonElementExtensions.cs/#L182">View Source</a>
+  </span>
+  <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
+  <h4 id="Json_More_JsonElementExtensions_AsJsonElement_IDictionary_System_String_JsonElement__" data-uid="Json.More.JsonElementExtensions.AsJsonElement(IDictionary{System.String,JsonElement})">AsJsonElement(IDictionary&lt;String, JsonElement&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Int64"></see> to a <see cref="!:JsonElement"></see>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JsonElement AsJsonElement(this IDictionary&lt;string, JsonElement&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">JsonElement</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>The value to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Json_More_JsonElementExtensions_AsJsonElement_IDictionary_System_String_JsonElement___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a workaround for lack of native support in the System.Text.Json namespace.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_AsJsonElement_IEnumerable_JsonElement__.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.AsJsonElement(IEnumerable%7BJsonElement%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonElementExtensions.cs/#L170">View Source</a>
+  </span>
+  <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
+  <h4 id="Json_More_JsonElementExtensions_AsJsonElement_IEnumerable_JsonElement__" data-uid="Json.More.JsonElementExtensions.AsJsonElement(IEnumerable{JsonElement})">AsJsonElement(IEnumerable&lt;JsonElement&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Int64"></see> to a <see cref="!:JsonElement"></see>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JsonElement AsJsonElement(this IEnumerable&lt;JsonElement&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<span class="xref">JsonElement</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>The array of values to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Json_More_JsonElementExtensions_AsJsonElement_IEnumerable_JsonElement___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a workaround for lack of native support in the System.Text.Json namespace.</p>
+</div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_AsJsonElement_System_Boolean_.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.AsJsonElement(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -132,7 +214,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Boolean_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Boolean)">AsJsonElement(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Boolean</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Boolean"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -167,119 +249,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 id="Json_More_JsonElementExtensions_AsJsonElement_System_Boolean__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>This is a workaround for lack of native support in the System.Text.Json namespace.</p>
-</div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_AsJsonElement_System_Collections_Generic_IDictionary_System_String_System_Text_Json_JsonElement__.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.AsJsonElement(System.Collections.Generic.IDictionary%7BSystem.String%2CSystem.Text.Json.JsonElement%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonElementExtensions.cs/#L182">View Source</a>
-  </span>
-  <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
-  <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Collections_Generic_IDictionary_System_String_System_Text_Json_JsonElement__" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Collections.Generic.IDictionary{System.String,System.Text.Json.JsonElement})">AsJsonElement(IDictionary&lt;String, JsonElement&gt;)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Int64</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static JsonElement AsJsonElement(this IDictionary&lt;string, JsonElement&gt; values)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Text.Json.JsonElement</span>&gt;</td>
-        <td><span class="parametername">values</span></td>
-        <td><p>The value to convert.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="Json_More_JsonElementExtensions_AsJsonElement_System_Collections_Generic_IDictionary_System_String_System_Text_Json_JsonElement___remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>This is a workaround for lack of native support in the System.Text.Json namespace.</p>
-</div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_AsJsonElement_System_Collections_Generic_IEnumerable_System_Text_Json_JsonElement__.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.AsJsonElement(System.Collections.Generic.IEnumerable%7BSystem.Text.Json.JsonElement%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonElementExtensions.cs/#L170">View Source</a>
-  </span>
-  <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
-  <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Collections_Generic_IEnumerable_System_Text_Json_JsonElement__" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Collections.Generic.IEnumerable{System.Text.Json.JsonElement})">AsJsonElement(IEnumerable&lt;JsonElement&gt;)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Int64</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static JsonElement AsJsonElement(this IEnumerable&lt;JsonElement&gt; values)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Text.Json.JsonElement</span>&gt;</td>
-        <td><span class="parametername">values</span></td>
-        <td><p>The array of values to convert.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="Json_More_JsonElementExtensions_AsJsonElement_System_Collections_Generic_IEnumerable_System_Text_Json_JsonElement___remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>This is a workaround for lack of native support in the System.Text.Json namespace.</p>
 </div>
   <span class="small pull-right mobile-hide">
@@ -291,7 +267,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Decimal_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Decimal)">AsJsonElement(Decimal)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Int64</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Int64"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -326,8 +302,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -344,7 +320,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Double_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Double)">AsJsonElement(Double)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Double</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Double"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -379,8 +355,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -397,7 +373,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Int16_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Int16)">AsJsonElement(Int16)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Int16</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Int16"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -432,8 +408,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -450,7 +426,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Int32_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Int32)">AsJsonElement(Int32)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Int32</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Int32"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -485,8 +461,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -503,7 +479,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Int64_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Int64)">AsJsonElement(Int64)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Int64</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Int64"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -538,8 +514,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -556,7 +532,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_Single_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.Single)">AsJsonElement(Single)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.Single</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.Single"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -591,8 +567,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -609,7 +585,7 @@
   </span>
   <a id="Json_More_JsonElementExtensions_AsJsonElement_" data-uid="Json.More.JsonElementExtensions.AsJsonElement*"></a>
   <h4 id="Json_More_JsonElementExtensions_AsJsonElement_System_String_" data-uid="Json.More.JsonElementExtensions.AsJsonElement(System.String)">AsJsonElement(String)</h4>
-  <div class="markdown level1 summary"><p>Converts a <span class="xref">System.String</span> to a <span class="xref">System.Text.Json.JsonElement</span>.</p>
+  <div class="markdown level1 summary"><p>Converts a <see cref="!:System.String"></see> to a <see cref="!:JsonElement"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -644,8 +620,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonElement</span> representing the value.</p>
+        <td><span class="xref">JsonElement</span></td>
+        <td><p>A <see cref="!:JsonElement"></see> representing the value.</p>
 </td>
       </tr>
     </tbody>
@@ -655,13 +631,13 @@
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_IsEquivalentTo_System_Text_Json_JsonElement_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.IsEquivalentTo(System.Text.Json.JsonElement%2CSystem.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_IsEquivalentTo_JsonElement_JsonElement_.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.IsEquivalentTo(JsonElement%2CJsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonElementExtensions.cs/#L20">View Source</a>
   </span>
   <a id="Json_More_JsonElementExtensions_IsEquivalentTo_" data-uid="Json.More.JsonElementExtensions.IsEquivalentTo*"></a>
-  <h4 id="Json_More_JsonElementExtensions_IsEquivalentTo_System_Text_Json_JsonElement_System_Text_Json_JsonElement_" data-uid="Json.More.JsonElementExtensions.IsEquivalentTo(System.Text.Json.JsonElement,System.Text.Json.JsonElement)">IsEquivalentTo(JsonElement, JsonElement)</h4>
+  <h4 id="Json_More_JsonElementExtensions_IsEquivalentTo_JsonElement_JsonElement_" data-uid="Json.More.JsonElementExtensions.IsEquivalentTo(JsonElement,JsonElement)">IsEquivalentTo(JsonElement, JsonElement)</h4>
   <div class="markdown level1 summary"><p>Determines JSON-compatible equivalence.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -680,13 +656,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">a</span></td>
         <td><p>The first element.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">b</span></td>
         <td><p>The second element.</p>
 </td>
@@ -709,31 +685,15 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>The <span class="xref">System.Text.Json.JsonElement.ValueKind</span> is not valid.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_ToJsonString_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonElementExtensions_ToJsonString_JsonElement_.md&amp;value=---%0Auid%3A%20Json.More.JsonElementExtensions.ToJsonString(JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonElementExtensions.cs/#L63">View Source</a>
   </span>
   <a id="Json_More_JsonElementExtensions_ToJsonString_" data-uid="Json.More.JsonElementExtensions.ToJsonString*"></a>
-  <h4 id="Json_More_JsonElementExtensions_ToJsonString_System_Text_Json_JsonElement_" data-uid="Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)">ToJsonString(JsonElement)</h4>
+  <h4 id="Json_More_JsonElementExtensions_ToJsonString_JsonElement_" data-uid="Json.More.JsonElementExtensions.ToJsonString(JsonElement)">ToJsonString(JsonElement)</h4>
   <div class="markdown level1 summary"><p>Just a shortcut for calling <code>JsonSerializer.Serialize()</code> because <code>.ToString()</code> doesn't do what you might expect.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -752,7 +712,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">element</span></td>
         <td><p>The value to convert.</p>
 </td>
@@ -775,7 +735,7 @@
       </tr>
     </tbody>
   </table>
-  <h5 id="Json_More_JsonElementExtensions_ToJsonString_System_Text_Json_JsonElement__remarks">Remarks</h5>
+  <h5 id="Json_More_JsonElementExtensions_ToJsonString_JsonElement__remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>See <a href="https://github.com/dotnet/runtime/issues/42502">https://github.com/dotnet/runtime/issues/42502</a></p>
 </div>
 </article>
@@ -794,7 +754,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

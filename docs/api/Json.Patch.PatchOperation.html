@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct PatchOperation
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -88,29 +88,13 @@
   <div class="markdown level0 conceptual"></div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Patch.PatchOperation.html">PatchOperation</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.ValueType.ToString()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Patch.PatchOperation.html">PatchOperation</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Patch.html">Json.Patch</a></h6>
   <h6><strong>Assembly</strong>: JsonPatch.dll</h6>
   <h5 id="Json_Patch_PatchOperation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(PatchOperationJsonConverter))]
-public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -233,7 +217,7 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -242,13 +226,13 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Add_Json_Pointer_JsonPointer_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer%2CSystem.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Add_Json_Pointer_JsonPointer_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer%2CJsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPatch/PatchOperation.cs/#L49">View Source</a>
   </span>
   <a id="Json_Patch_PatchOperation_Add_" data-uid="Json.Patch.PatchOperation.Add*"></a>
-  <h4 id="Json_Patch_PatchOperation_Add_Json_Pointer_JsonPointer_System_Text_Json_JsonElement_" data-uid="Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer,System.Text.Json.JsonElement)">Add(JsonPointer, JsonElement)</h4>
+  <h4 id="Json_Patch_PatchOperation_Add_Json_Pointer_JsonPointer_JsonElement_" data-uid="Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer,JsonElement)">Add(JsonPointer, JsonElement)</h4>
   <div class="markdown level1 summary"><p>Creates an <code>add</code> operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -273,7 +257,7 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">value</span></td>
         <td><p>The value to add.</p>
 </td>
@@ -452,8 +436,6 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -486,8 +468,6 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Move_Json_Pointer_JsonPointer_Json_Pointer_JsonPointer_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Move(Json.Pointer.JsonPointer%2CJson.Pointer.JsonPointer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -596,13 +576,13 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Replace_Json_Pointer_JsonPointer_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer%2CSystem.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Replace_Json_Pointer_JsonPointer_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer%2CJsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPatch/PatchOperation.cs/#L70">View Source</a>
   </span>
   <a id="Json_Patch_PatchOperation_Replace_" data-uid="Json.Patch.PatchOperation.Replace*"></a>
-  <h4 id="Json_Patch_PatchOperation_Replace_Json_Pointer_JsonPointer_System_Text_Json_JsonElement_" data-uid="Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer,System.Text.Json.JsonElement)">Replace(JsonPointer, JsonElement)</h4>
+  <h4 id="Json_Patch_PatchOperation_Replace_Json_Pointer_JsonPointer_JsonElement_" data-uid="Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer,JsonElement)">Replace(JsonPointer, JsonElement)</h4>
   <div class="markdown level1 summary"><p>Creates an <code>replace</code> operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -627,7 +607,7 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">value</span></td>
         <td><p>The value to add.</p>
 </td>
@@ -652,13 +632,13 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Test_Json_Pointer_JsonPointer_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer%2CSystem.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Patch_PatchOperation_Test_Json_Pointer_JsonPointer_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer%2CJsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPatch/PatchOperation.cs/#L103">View Source</a>
   </span>
   <a id="Json_Patch_PatchOperation_Test_" data-uid="Json.Patch.PatchOperation.Test*"></a>
-  <h4 id="Json_Patch_PatchOperation_Test_Json_Pointer_JsonPointer_System_Text_Json_JsonElement_" data-uid="Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer,System.Text.Json.JsonElement)">Test(JsonPointer, JsonElement)</h4>
+  <h4 id="Json_Patch_PatchOperation_Test_Json_Pointer_JsonPointer_JsonElement_" data-uid="Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer,JsonElement)">Test(JsonPointer, JsonElement)</h4>
   <div class="markdown level1 summary"><p>Creates an <code>test</code> operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -683,7 +663,7 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonElement</span></td>
+        <td><span class="xref">JsonElement</span></td>
         <td><span class="parametername">value</span></td>
         <td><p>The value to match.</p>
 </td>
@@ -708,11 +688,11 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>
@@ -730,7 +710,8 @@ public struct PatchOperation : IEquatable&lt;PatchOperation&gt;</code></pre>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>
