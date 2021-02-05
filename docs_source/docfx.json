@@ -62,6 +62,7 @@
       },
       {
         "files": [
+          "meta/**",
           "usage/**.md",
           "usage/**/toc.yml",
           "examples/**.md",
@@ -76,8 +77,7 @@
     "resource": [
       {
         "files": [
-          "images/**",
-          "usage/meta/*.json"
+          "images/**"
         ]
       }
     ],
