@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class UniqueItemsKeyword
    ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list">Search Results for <span></span></div>
+          <div class="search-list"></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+          <ul id="pagination"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -94,13 +94,39 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a></div>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Schema.UniqueItemsKeyword.html">UniqueItemsKeyword</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Schema.UniqueItemsKeyword.html">UniqueItemsKeyword</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.html">Json.Schema</a></h6>
   <h6><strong>Assembly</strong>: JsonSchema.Net.dll</h6>
   <h5 id="Json_Schema_UniqueItemsKeyword_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class UniqueItemsKeyword : object, IJsonSchemaKeyword, IEquatable&lt;UniqueItemsKeyword&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">[SchemaKeyword(&quot;uniqueItems&quot;)]
+[SchemaDraft(Draft.Draft6)]
+[SchemaDraft(Draft.Draft7)]
+[SchemaDraft(Draft.Draft201909)]
+[SchemaDraft(Draft.Draft202012)]
+[Vocabulary(&quot;https://json-schema.org/draft/2019-09/vocab/validation&quot;)]
+[Vocabulary(&quot;https://json-schema.org/draft/2020-12/vocab/validation&quot;)]
+[JsonConverter(typeof(UniqueItemsKeywordJsonConverter))]
+public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable&lt;UniqueItemsKeyword&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -273,6 +299,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_UniqueItemsKeyword_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Schema.UniqueItemsKeyword.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -305,6 +333,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_UniqueItemsKeyword_Validate_Json_Schema_ValidationContext_.md&amp;value=---%0Auid%3A%20Json.Schema.UniqueItemsKeyword.Validate(Json.Schema.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -344,11 +374,23 @@
       <a class="xref" href="Json.Schema.IJsonSchemaKeyword.html">IJsonSchemaKeyword</a>
   </div>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Keyword_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Keyword(IJsonSchemaKeyword)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_Priority_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.Priority(IJsonSchemaKeyword)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_IsApplicator_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.IsApplicator(IJsonSchemaKeyword)</a>
+  </div>
+  <div>
+      <a class="xref" href="Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_GetSubschemas_Json_Schema_IJsonSchemaKeyword_">KeywordExtensions.GetSubschemas(IJsonSchemaKeyword)</a>
   </div>
 </article>
           </div>
@@ -366,8 +408,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
               </nav>
             </div>
           </div>

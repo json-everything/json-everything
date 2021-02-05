@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct PointerSegment
    ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list">Search Results for <span></span></div>
+          <div class="search-list"></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+          <ul id="pagination"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -88,7 +88,22 @@
   <div class="markdown level0 conceptual"></div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Pointer.PointerSegment.html">PointerSegment</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Pointer.PointerSegment.html">PointerSegment</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.ValueType.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Pointer.html">Json.Pointer</a></h6>
   <h6><strong>Assembly</strong>: JsonPointer.Net.dll</h6>
@@ -320,6 +335,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -352,6 +369,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_Parse_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.Parse(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -417,6 +436,11 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentNullException</span></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> is null.</p>
+</td>
+      </tr>
       <tr>
         <td><a class="xref" href="Json.Pointer.PointerParseException.html">PointerParseException</a></td>
         <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> contains an invalid escape sequence or an invalid URI-encoded sequence or ends with <code>~</code>.</p>
@@ -602,11 +626,11 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>
@@ -624,8 +648,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
               </nav>
             </div>
           </div>

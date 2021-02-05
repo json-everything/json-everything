@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct JsonPointer
    ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list">Search Results for <span></span></div>
+          <div class="search-list"></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+          <ul id="pagination"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -88,13 +88,26 @@
   <div class="markdown level0 conceptual"></div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Pointer.JsonPointer.html">JsonPointer</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Pointer.JsonPointer.html">JsonPointer</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Pointer.html">Json.Pointer</a></h6>
   <h6><strong>Assembly</strong>: JsonPointer.Net.dll</h6>
   <h5 id="Json_Pointer_JsonPointer_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct JsonPointer : IEquatable&lt;JsonPointer&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonPointerJsonConverter))]
+public struct JsonPointer : IEquatable&lt;JsonPointer&gt;</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -388,13 +401,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Create_IEnumerable_Json_Pointer_PointerSegment__System_Boolean_.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Create(IEnumerable%7BJson.Pointer.PointerSegment%7D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Create_System_Collections_Generic_IEnumerable_Json_Pointer_PointerSegment__System_Boolean_.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Create(System.Collections.Generic.IEnumerable%7BJson.Pointer.PointerSegment%7D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/JsonPointer.cs/#L196">View Source</a>
   </span>
   <a id="Json_Pointer_JsonPointer_Create_" data-uid="Json.Pointer.JsonPointer.Create*"></a>
-  <h4 id="Json_Pointer_JsonPointer_Create_IEnumerable_Json_Pointer_PointerSegment__System_Boolean_" data-uid="Json.Pointer.JsonPointer.Create(IEnumerable{Json.Pointer.PointerSegment},System.Boolean)">Create(IEnumerable&lt;PointerSegment&gt;, Boolean)</h4>
+  <h4 id="Json_Pointer_JsonPointer_Create_System_Collections_Generic_IEnumerable_Json_Pointer_PointerSegment__System_Boolean_" data-uid="Json.Pointer.JsonPointer.Create(System.Collections.Generic.IEnumerable{Json.Pointer.PointerSegment},System.Boolean)">Create(IEnumerable&lt;PointerSegment&gt;, Boolean)</h4>
   <div class="markdown level1 summary"><p>Creates a new JSON Pointer from a collection of segments.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -413,7 +426,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Json.Pointer.PointerSegment.html">PointerSegment</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Json.Pointer.PointerSegment.html">PointerSegment</a>&gt;</td>
         <td><span class="parametername">segments</span></td>
         <td><p>A collection of segments.</p>
 </td>
@@ -444,13 +457,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Create__1_Expression_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Create%60%601(Expression%7BFunc%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Create__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Create%60%601(System.Linq.Expressions.Expression%7BSystem.Func%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/JsonPointer.cs/#L215">View Source</a>
   </span>
   <a id="Json_Pointer_JsonPointer_Create_" data-uid="Json.Pointer.JsonPointer.Create*"></a>
-  <h4 id="Json_Pointer_JsonPointer_Create__1_Expression_Func___0_System_Object___" data-uid="Json.Pointer.JsonPointer.Create``1(Expression{Func{``0,System.Object}})">Create&lt;T&gt;(Expression&lt;Func&lt;T, Object&gt;&gt;)</h4>
+  <h4 id="Json_Pointer_JsonPointer_Create__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___" data-uid="Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">Create&lt;T&gt;(Expression&lt;Func&lt;T, Object&gt;&gt;)</h4>
   <div class="markdown level1 summary"><p>Generates a JSON Pointer from a lambda expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -469,7 +482,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Expression</span>&lt;<span class="xref">Func</span>&lt;T, <span class="xref">System.Object</span>&gt;&gt;</td>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;T, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">expression</span></td>
         <td><p>The lambda expression which gives the pointer path.</p>
 </td>
@@ -504,6 +517,23 @@
       <tr>
         <td><span class="parametername">T</span></td>
         <td><p>The type of the object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.NotSupportedException</span></td>
+        <td><p>Thrown when the lambda expression contains a node that is not a property access or
+<span class="xref">System.Int32</span>-valued indexer.</p>
 </td>
       </tr>
     </tbody>
@@ -608,16 +638,18 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Evaluate_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Evaluate(JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Evaluate_System_Text_Json_JsonElement_.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Evaluate(System.Text.Json.JsonElement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/JsonPointer.cs/#L285">View Source</a>
   </span>
   <a id="Json_Pointer_JsonPointer_Evaluate_" data-uid="Json.Pointer.JsonPointer.Evaluate*"></a>
-  <h4 id="Json_Pointer_JsonPointer_Evaluate_JsonElement_" data-uid="Json.Pointer.JsonPointer.Evaluate(JsonElement)">Evaluate(JsonElement)</h4>
-  <div class="markdown level1 summary"><p>Evaluates the pointer over a <see cref="!:JsonElement"></see>.</p>
+  <h4 id="Json_Pointer_JsonPointer_Evaluate_System_Text_Json_JsonElement_" data-uid="Json.Pointer.JsonPointer.Evaluate(System.Text.Json.JsonElement)">Evaluate(JsonElement)</h4>
+  <div class="markdown level1 summary"><p>Evaluates the pointer over a <span class="xref">System.Text.Json.JsonElement</span>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -635,9 +667,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonElement</span></td>
+        <td><span class="xref">System.Text.Json.JsonElement</span></td>
         <td><span class="parametername">root</span></td>
-        <td><p>The <see cref="!:JsonElement"></see>.</p>
+        <td><p>The <span class="xref">System.Text.Json.JsonElement</span>.</p>
 </td>
       </tr>
     </tbody>
@@ -652,7 +684,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;</td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Text.Json.JsonElement</span>&gt;</td>
         <td><p>The sub-element at the pointer's location, or null if the path does not exist.</p>
 </td>
       </tr>
@@ -690,6 +722,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_Parse_System_String_Json_Pointer_JsonPointerKind_.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.Parse(System.String%2CJson.Pointer.JsonPointerKind)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -756,6 +790,11 @@
     </thead>
     <tbody>
       <tr>
+        <td><span class="xref">System.ArgumentNullException</span></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> is null.</p>
+</td>
+      </tr>
+      <tr>
         <td><a class="xref" href="Json.Pointer.PointerParseException.html">PointerParseException</a></td>
         <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> does not contain a valid pointer or contains a pointer of the wrong kind.</p>
 </td>
@@ -794,6 +833,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.ToString()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_JsonPointer_TryParse_System_String_Json_Pointer_JsonPointer__Json_Pointer_JsonPointerKind_.md&amp;value=---%0Auid%3A%20Json.Pointer.JsonPointer.TryParse(System.String%2CJson.Pointer.JsonPointer%40%2CJson.Pointer.JsonPointerKind)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -852,6 +893,22 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><pre><code>true</code></pre> if the parse was successful; <pre><code>false</code></pre> otherwise.
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentNullException</span></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> is null.</p>
 </td>
       </tr>
     </tbody>
@@ -972,11 +1029,11 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
   </div>
 </article>
           </div>
@@ -994,8 +1051,7 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
               </nav>
             </div>
           </div>
