@@ -4,6 +4,29 @@
         <name>JsonSchema.Net.Generation</name>
     </assembly>
     <members>
+        <member name="T:Json.Schema.Generation.AttributeHandler">
+            <summary>
+            Adds attribute-related schema elements.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.AttributeHandler.AddHandler``1">
+            <summary>
+            Adds a handler for a custom attribute that cannot be made to implement <see cref="T:Json.Schema.Generation.IAttributeHandler"/>.
+            </summary>
+            <typeparam name="T">The handler type.</typeparam>
+        </member>
+        <member name="M:Json.Schema.Generation.AttributeHandler.AddHandler(Json.Schema.Generation.IAttributeHandler)">
+            <summary>
+            Adds a handler for a custom attribute that cannot be made to implement <see cref="T:Json.Schema.Generation.IAttributeHandler"/>.
+            </summary>
+            <param name="handler">The handler.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.AttributeHandler.RemoveHandler``1">
+            <summary>
+            Removes a handler type.
+            </summary>
+            <typeparam name="T">The handler type.</typeparam>
+        </member>
         <member name="T:Json.Schema.Generation.ExclusiveMaximumAttribute">
             <summary>
             Applies an `exclusiveMaximum` keyword.
@@ -167,6 +190,34 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.AnyOfIntent">
+            <summary>
+            Provides intent to create a `anyOf` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.AnyOfIntent.Subschemas">
+            <summary>
+            Gets the subschemas to include.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AnyOfIntent.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}})">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Schema.Generation.Intents.AnyOfIntent"/> class.
+            </summary>
+            <param name="subschemas">The subschemas to include.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AnyOfIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}[])">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Schema.Generation.Intents.AnyOfIntent"/> class.
+            </summary>
+            <param name="subschemas">The subschemas to include.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AnyOfIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
         <member name="T:Json.Schema.Generation.Intents.DefsIntent">
             <summary>
             Provides intent to create a `$defs` keyword.
@@ -239,7 +290,13 @@
             The names defined by the enumeration.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.Intents.EnumIntent.#ctor(System.Collections.Generic.List{System.String})">
+        <member name="M:Json.Schema.Generation.Intents.EnumIntent.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="names">The names defined by the enumeration.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.EnumIntent.#ctor(System.String[])">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -841,6 +898,18 @@
             </summary>
             <param name="builder">The builder.</param>
         </member>
+        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
+            <summary>
+            Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Processes the type and any attributes (present on the context), and adds
+            intents to the context.
+            </summary>
+            <param name="context">The generation context.</param>
+        </member>
         <member name="T:Json.Schema.Generation.JsonSchemaBuilderExtensions">
             <summary>
             Provides extension methods for schema generation.
@@ -1032,6 +1101,78 @@
             The set of attributes.  Will be populated when an attribute has a property.
             </summary>
         </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorContext.Intents">
+            <summary>
+            The current set of keyword intents.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGeneratorContext.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The schema builder.</param>
+            <returns>The schema builder (for fluent syntax support).</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGeneratorContext.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.TypeExtensions">
+            <summary>
+            Provides informative methods for types.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsInteger(System.Type)">
+            <summary>
+            Determines whether the type is considered an integer.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if it represents an integer; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsFloatingPoint(System.Type)">
+            <summary>
+            Determines whether the type is a non-integer floating point number.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if it represents a floating-point number; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsNumber(System.Type)">
+            <summary>
+            Determines whether the type is a number.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if it represents a number; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsArray(System.Type)">
+            <summary>
+            Determines whether the type is a simple, one-dimensional, non-keyed collection.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>true if the type represents an array; false otherwise.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.UniqueItemsAttribute">
+            <summary>
+            Applies a `uniqueItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.UniqueItemsAttribute.Value">
+            <summary>
+            Whether the items should be unique.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.UniqueItemsAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.UniqueItemsAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+    </members>
+</doc>
         <member name="P:Json.Schema.Generation.SchemaGeneratorContext.Intents">
             <summary>
             The current set of keyword intents.

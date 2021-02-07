@@ -167,6 +167,17 @@ namespace Json.Schema.Generation.Tests
 			public int IgnoreThis { get; set; }
 			[JsonPropertyName("rename-this")]
 			public string RenameThis { get; set; }
+
+			public float StrictNumber { get; set; }
+
+			[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+			public float StringyNumber { get; set; }
+
+			[JsonNumberHandling(JsonNumberHandling.AllowNamedFloatingPointLiterals)]
+			public float NotANumber { get; set; }
+
+			[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals)]
+			public float StringyNotANumber { get; set; }
 		}
 
 		[Test]
@@ -210,7 +221,19 @@ namespace Json.Schema.Generation.Tests
 						.Ref("#/$defs/integer")
 					),
 					("Target", JsonSchemaBuilder.RefRoot()),
-					("rename-this", new JsonSchemaBuilder().Type(SchemaValueType.String))
+					("rename-this", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+					("StrictNumber", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
+					("StringyNumber", new JsonSchemaBuilder().Type(SchemaValueType.String | SchemaValueType.Number)),
+					("NotANumber", new JsonSchemaBuilder()
+						.AnyOf(new JsonSchemaBuilder().Type(SchemaValueType.Number),
+							new JsonSchemaBuilder().Enum("NaN", "Infinity", "-Infinity")
+						)
+					),
+					("StringyNotANumber", new JsonSchemaBuilder()
+						.AnyOf(new JsonSchemaBuilder().Type(SchemaValueType.String | SchemaValueType.Number),
+							new JsonSchemaBuilder().Enum("NaN", "Infinity", "-Infinity")
+						)
+					)
 				)
 				.Required(nameof(GenerationTarget.Integer))
 				.Defs(

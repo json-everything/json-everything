@@ -19,9 +19,18 @@ namespace Json.Schema.Generation.Intents
 		/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.
 		/// </summary>
 		/// <param name="names">The names defined by the enumeration.</param>
-		public EnumIntent(List<string> names)
+		public EnumIntent(IEnumerable<string> names)
 		{
-			Names = names;
+			Names = names.ToList();
+		}
+
+		/// <summary>
+		/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.
+		/// </summary>
+		/// <param name="names">The names defined by the enumeration.</param>
+		public EnumIntent(params string[] names)
+		{
+			Names = names.ToList();
 		}
 
 		/// <summary>
