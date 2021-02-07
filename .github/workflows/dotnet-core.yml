@@ -21,7 +21,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Install dependencies
         run: dotnet restore
@@ -100,7 +100,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -152,7 +152,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -204,7 +204,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -256,7 +256,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -308,7 +308,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -360,7 +360,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -412,7 +412,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -464,7 +464,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.x
+          dotnet-version: 5.0.100
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
