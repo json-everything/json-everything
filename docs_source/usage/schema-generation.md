@@ -268,6 +268,8 @@ The `AddConstraints()` method works exactly the same as in the generator class. 
 
 ***NOTE** `.IsNumber()` is an extension method on `Type` that determines if it's a numeric type.  There are a few more of these helper extensions as well.*
 
+The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method.
+
 ## That's it
 
 That should get you generating schemas for all of your types.  If you come up with ideas or implement your own extensions and think they'd be handy if they were built in, feel free to open up an issue or a pull request.
