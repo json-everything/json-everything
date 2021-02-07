@@ -9,6 +9,15 @@
             Represents the `data` keyword.
             </summary>
         </member>
+        <member name="P:Json.Schema.Data.DataKeyword.Get">
+            <summary>
+            Gets or sets a method to download external references.
+            </summary>
+            <remarks>
+            The default method simply attempts to download the resource.  There is no
+            caching involved.
+            </remarks>
+        </member>
         <member name="P:Json.Schema.Data.DataKeyword.References">
             <summary>
             The collection of keywords and references.

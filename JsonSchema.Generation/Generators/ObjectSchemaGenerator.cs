@@ -23,29 +23,40 @@ namespace Json.Schema.Generation.Generators
 			var required = new List<string>();
 			var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 				.Where(p => p.CanRead && p.CanWrite);
-			foreach (var property in propertiesToGenerate)
+			var fieldsToGenerate = context.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+			var hiddenPropertiesToGenerate = context.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+				.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
+			var hiddenFieldsToGenerate = context.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+				.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
+			var membersToGenerate = propertiesToGenerate.Cast<MemberInfo>()
+				.Concat(fieldsToGenerate)
+				.Concat(hiddenPropertiesToGenerate)
+				.Concat(hiddenFieldsToGenerate)
+				.OrderBy(m => m.Name);
+
+			foreach (var member in membersToGenerate)
 			{
-				var propAttributes = property.GetCustomAttributes().ToList();
-				var ignoreAttribute = propAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
+				var memberAttributes = member.GetCustomAttributes().ToList();
+				var ignoreAttribute = memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
 				if (ignoreAttribute != null) continue;
 
-				var propContext = SchemaGenerationContextCache.Get(property.PropertyType, propAttributes);
+				var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes);
 
-				var name = property.Name;
-				var nameAttribute = propAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
+				var name = member.Name;
+				var nameAttribute = memberAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 				if (nameAttribute != null)
 					name = nameAttribute.Name;
 
-				if (propAttributes.OfType<ObsoleteAttribute>().Any())
-					propContext.Intents.Add(new DeprecatedIntent(true));
+				if (memberAttributes.OfType<ObsoleteAttribute>().Any())
+					memberContext.Intents.Add(new DeprecatedIntent(true));
 
-				props.Add(name, propContext);
+				props.Add(name, memberContext);
 
-				if (propAttributes.OfType<RequiredAttribute>().Any())
-					required.Add(property.Name);
+				if (memberAttributes.OfType<RequiredAttribute>().Any())
+					required.Add(member.Name);
 			}
 
-			context.Intents.Add(new PropertiesIntent(props));
+			context.Intents.Add(new PropertiesIntent(props)); 
 			if (required.Any())
 				context.Intents.Add(new RequiredIntent(required));
 		}
