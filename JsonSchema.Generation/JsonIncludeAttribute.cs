@@ -3,7 +3,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace Json.Schema.Generation.Generators
+namespace Json.Schema.Generation
 {
     /// <summary>
     /// Indicates that the property or field should be included for serialization and deserialization.
