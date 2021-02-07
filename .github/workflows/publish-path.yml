@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.2
+          dotnet-version: 5.x
       # Publish
       - name: publish path
         id: publish_path
