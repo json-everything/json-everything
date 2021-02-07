@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Json.Schema.Generation
 {
@@ -71,5 +72,13 @@ namespace Json.Schema.Generation
 				return hashCode;
 			}
 		}
+
+		internal static Type GetMemberType(this MemberInfo info) =>
+			info switch
+			{
+				FieldInfo fieldInfo => fieldInfo.FieldType,
+				PropertyInfo propertyInfo => propertyInfo.PropertyType,
+				_ => throw new NotSupportedException($"Cannot get type of {info.GetType()}")
+			};
 	}
 }
