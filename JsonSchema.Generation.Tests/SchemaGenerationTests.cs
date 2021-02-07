@@ -124,10 +124,15 @@ namespace Json.Schema.Generation.Tests
 			Assert.AreEqual(expected, actual);
 		}
 
-		class GenerationTarget
+		// ReSharper disable once ClassNeverInstantiated.Local
+		private class GenerationTarget
 		{
 			[JsonInclude]
+#pragma warning disable 169
 			private int _value;
+
+			private int _notIncluded;
+#pragma warning restore 169
 
 			[Required]
 			[Minimum(5)]

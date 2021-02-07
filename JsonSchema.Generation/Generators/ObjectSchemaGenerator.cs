@@ -9,7 +9,6 @@ namespace Json.Schema.Generation.Generators
 {
 	internal class ObjectSchemaGenerator : ISchemaGenerator
 	{
-
 		public bool Handles(Type type)
 		{
 			return true;
