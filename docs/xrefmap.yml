@@ -5410,6 +5410,50 @@ references:
   commentId: N:Json.Schema.Generation
   fullName: Json.Schema.Generation
   nameWithType: Json.Schema.Generation
+- uid: Json.Schema.Generation.AttributeHandler
+  name: AttributeHandler
+  href: api/Json.Schema.Generation.AttributeHandler.html
+  commentId: T:Json.Schema.Generation.AttributeHandler
+  fullName: Json.Schema.Generation.AttributeHandler
+  nameWithType: AttributeHandler
+- uid: Json.Schema.Generation.AttributeHandler.AddHandler(Json.Schema.Generation.IAttributeHandler)
+  name: AddHandler(IAttributeHandler)
+  href: api/Json.Schema.Generation.AttributeHandler.html#Json_Schema_Generation_AttributeHandler_AddHandler_Json_Schema_Generation_IAttributeHandler_
+  commentId: M:Json.Schema.Generation.AttributeHandler.AddHandler(Json.Schema.Generation.IAttributeHandler)
+  fullName: Json.Schema.Generation.AttributeHandler.AddHandler(Json.Schema.Generation.IAttributeHandler)
+  nameWithType: AttributeHandler.AddHandler(IAttributeHandler)
+- uid: Json.Schema.Generation.AttributeHandler.AddHandler*
+  name: AddHandler
+  href: api/Json.Schema.Generation.AttributeHandler.html#Json_Schema_Generation_AttributeHandler_AddHandler_
+  commentId: Overload:Json.Schema.Generation.AttributeHandler.AddHandler
+  isSpec: "True"
+  fullName: Json.Schema.Generation.AttributeHandler.AddHandler
+  nameWithType: AttributeHandler.AddHandler
+- uid: Json.Schema.Generation.AttributeHandler.AddHandler``1
+  name: AddHandler<T>()
+  href: api/Json.Schema.Generation.AttributeHandler.html#Json_Schema_Generation_AttributeHandler_AddHandler__1
+  commentId: M:Json.Schema.Generation.AttributeHandler.AddHandler``1
+  name.vb: AddHandler(Of T)()
+  fullName: Json.Schema.Generation.AttributeHandler.AddHandler<T>()
+  fullName.vb: Json.Schema.Generation.AttributeHandler.AddHandler(Of T)()
+  nameWithType: AttributeHandler.AddHandler<T>()
+  nameWithType.vb: AttributeHandler.AddHandler(Of T)()
+- uid: Json.Schema.Generation.AttributeHandler.RemoveHandler*
+  name: RemoveHandler
+  href: api/Json.Schema.Generation.AttributeHandler.html#Json_Schema_Generation_AttributeHandler_RemoveHandler_
+  commentId: Overload:Json.Schema.Generation.AttributeHandler.RemoveHandler
+  isSpec: "True"
+  fullName: Json.Schema.Generation.AttributeHandler.RemoveHandler
+  nameWithType: AttributeHandler.RemoveHandler
+- uid: Json.Schema.Generation.AttributeHandler.RemoveHandler``1
+  name: RemoveHandler<T>()
+  href: api/Json.Schema.Generation.AttributeHandler.html#Json_Schema_Generation_AttributeHandler_RemoveHandler__1
+  commentId: M:Json.Schema.Generation.AttributeHandler.RemoveHandler``1
+  name.vb: RemoveHandler(Of T)()
+  fullName: Json.Schema.Generation.AttributeHandler.RemoveHandler<T>()
+  fullName.vb: Json.Schema.Generation.AttributeHandler.RemoveHandler(Of T)()
+  nameWithType: AttributeHandler.RemoveHandler<T>()
+  nameWithType.vb: AttributeHandler.RemoveHandler(Of T)()
 - uid: Json.Schema.Generation.ExclusiveMaximumAttribute
   name: ExclusiveMaximumAttribute
   href: api/Json.Schema.Generation.ExclusiveMaximumAttribute.html
@@ -5719,6 +5763,63 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Replace
   nameWithType: AdditionalPropertiesIntent.Replace
+- uid: Json.Schema.Generation.Intents.AnyOfIntent
+  name: AnyOfIntent
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html
+  commentId: T:Json.Schema.Generation.Intents.AnyOfIntent
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent
+  nameWithType: AnyOfIntent
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.#ctor(IEnumerable{IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}})
+  name: AnyOfIntent(IEnumerable<IEnumerable<ISchemaKeywordIntent>>)
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent__ctor_IEnumerable_IEnumerable_Json_Schema_Generation_ISchemaKeywordIntent___
+  commentId: M:Json.Schema.Generation.Intents.AnyOfIntent.#ctor(IEnumerable{IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}})
+  name.vb: AnyOfIntent(IEnumerable(Of IEnumerable(Of ISchemaKeywordIntent)))
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.AnyOfIntent(IEnumerable<IEnumerable<Json.Schema.Generation.ISchemaKeywordIntent>>)
+  fullName.vb: Json.Schema.Generation.Intents.AnyOfIntent.AnyOfIntent(IEnumerable(Of IEnumerable(Of Json.Schema.Generation.ISchemaKeywordIntent)))
+  nameWithType: AnyOfIntent.AnyOfIntent(IEnumerable<IEnumerable<ISchemaKeywordIntent>>)
+  nameWithType.vb: AnyOfIntent.AnyOfIntent(IEnumerable(Of IEnumerable(Of ISchemaKeywordIntent)))
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.#ctor(IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}[])
+  name: AnyOfIntent(IEnumerable<ISchemaKeywordIntent>[])
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent__ctor_IEnumerable_Json_Schema_Generation_ISchemaKeywordIntent____
+  commentId: M:Json.Schema.Generation.Intents.AnyOfIntent.#ctor(IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}[])
+  name.vb: AnyOfIntent(IEnumerable(Of ISchemaKeywordIntent)())
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.AnyOfIntent(IEnumerable<Json.Schema.Generation.ISchemaKeywordIntent>[])
+  fullName.vb: Json.Schema.Generation.Intents.AnyOfIntent.AnyOfIntent(IEnumerable(Of Json.Schema.Generation.ISchemaKeywordIntent)())
+  nameWithType: AnyOfIntent.AnyOfIntent(IEnumerable<ISchemaKeywordIntent>[])
+  nameWithType.vb: AnyOfIntent.AnyOfIntent(IEnumerable(Of ISchemaKeywordIntent)())
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.#ctor*
+  name: AnyOfIntent
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent__ctor_
+  commentId: Overload:Json.Schema.Generation.Intents.AnyOfIntent.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.AnyOfIntent
+  nameWithType: AnyOfIntent.AnyOfIntent
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  name: Apply(JsonSchemaBuilder)
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Apply_Json_Schema_JsonSchemaBuilder_
+  commentId: M:Json.Schema.Generation.Intents.AnyOfIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  nameWithType: AnyOfIntent.Apply(JsonSchemaBuilder)
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.Apply*
+  name: Apply
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Apply_
+  commentId: Overload:Json.Schema.Generation.Intents.AnyOfIntent.Apply
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.Apply
+  nameWithType: AnyOfIntent.Apply
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.Subschemas
+  name: Subschemas
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Subschemas
+  commentId: P:Json.Schema.Generation.Intents.AnyOfIntent.Subschemas
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.Subschemas
+  nameWithType: AnyOfIntent.Subschemas
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.Subschemas*
+  name: Subschemas
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Subschemas_
+  commentId: Overload:Json.Schema.Generation.Intents.AnyOfIntent.Subschemas
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.Subschemas
+  nameWithType: AnyOfIntent.Subschemas
 - uid: Json.Schema.Generation.Intents.DefsIntent
   name: DefsIntent
   href: api/Json.Schema.Generation.Intents.DefsIntent.html
@@ -5870,15 +5971,24 @@ references:
   commentId: T:Json.Schema.Generation.Intents.EnumIntent
   fullName: Json.Schema.Generation.Intents.EnumIntent
   nameWithType: EnumIntent
-- uid: Json.Schema.Generation.Intents.EnumIntent.#ctor(List{System.String})
-  name: EnumIntent(List<String>)
-  href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent__ctor_List_System_String__
-  commentId: M:Json.Schema.Generation.Intents.EnumIntent.#ctor(List{System.String})
-  name.vb: EnumIntent(List(Of String))
-  fullName: Json.Schema.Generation.Intents.EnumIntent.EnumIntent(List<System.String>)
-  fullName.vb: Json.Schema.Generation.Intents.EnumIntent.EnumIntent(List(Of System.String))
-  nameWithType: EnumIntent.EnumIntent(List<String>)
-  nameWithType.vb: EnumIntent.EnumIntent(List(Of String))
+- uid: Json.Schema.Generation.Intents.EnumIntent.#ctor(IEnumerable{System.String})
+  name: EnumIntent(IEnumerable<String>)
+  href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent__ctor_IEnumerable_System_String__
+  commentId: M:Json.Schema.Generation.Intents.EnumIntent.#ctor(IEnumerable{System.String})
+  name.vb: EnumIntent(IEnumerable(Of String))
+  fullName: Json.Schema.Generation.Intents.EnumIntent.EnumIntent(IEnumerable<System.String>)
+  fullName.vb: Json.Schema.Generation.Intents.EnumIntent.EnumIntent(IEnumerable(Of System.String))
+  nameWithType: EnumIntent.EnumIntent(IEnumerable<String>)
+  nameWithType.vb: EnumIntent.EnumIntent(IEnumerable(Of String))
+- uid: Json.Schema.Generation.Intents.EnumIntent.#ctor(System.String[])
+  name: EnumIntent(String[])
+  href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent__ctor_System_String___
+  commentId: M:Json.Schema.Generation.Intents.EnumIntent.#ctor(System.String[])
+  name.vb: EnumIntent(String())
+  fullName: Json.Schema.Generation.Intents.EnumIntent.EnumIntent(System.String[])
+  fullName.vb: Json.Schema.Generation.Intents.EnumIntent.EnumIntent(System.String())
+  nameWithType: EnumIntent.EnumIntent(String[])
+  nameWithType.vb: EnumIntent.EnumIntent(String())
 - uid: Json.Schema.Generation.Intents.EnumIntent.#ctor*
   name: EnumIntent
   href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent__ctor_
@@ -7222,6 +7332,106 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.ISchemaKeywordIntent.Apply
   nameWithType: ISchemaKeywordIntent.Apply
+- uid: Json.Schema.Generation.JsonIncludeAttribute
+  name: JsonIncludeAttribute
+  href: api/Json.Schema.Generation.JsonIncludeAttribute.html
+  commentId: T:Json.Schema.Generation.JsonIncludeAttribute
+  fullName: Json.Schema.Generation.JsonIncludeAttribute
+  nameWithType: JsonIncludeAttribute
+- uid: Json.Schema.Generation.JsonIncludeAttribute.#ctor
+  name: JsonIncludeAttribute()
+  href: api/Json.Schema.Generation.JsonIncludeAttribute.html#Json_Schema_Generation_JsonIncludeAttribute__ctor
+  commentId: M:Json.Schema.Generation.JsonIncludeAttribute.#ctor
+  fullName: Json.Schema.Generation.JsonIncludeAttribute.JsonIncludeAttribute()
+  nameWithType: JsonIncludeAttribute.JsonIncludeAttribute()
+- uid: Json.Schema.Generation.JsonIncludeAttribute.#ctor*
+  name: JsonIncludeAttribute
+  href: api/Json.Schema.Generation.JsonIncludeAttribute.html#Json_Schema_Generation_JsonIncludeAttribute__ctor_
+  commentId: Overload:Json.Schema.Generation.JsonIncludeAttribute.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.JsonIncludeAttribute.JsonIncludeAttribute
+  nameWithType: JsonIncludeAttribute.JsonIncludeAttribute
+- uid: Json.Schema.Generation.JsonNumberHandling
+  name: JsonNumberHandling
+  href: api/Json.Schema.Generation.JsonNumberHandling.html
+  commentId: T:Json.Schema.Generation.JsonNumberHandling
+  fullName: Json.Schema.Generation.JsonNumberHandling
+  nameWithType: JsonNumberHandling
+- uid: Json.Schema.Generation.JsonNumberHandling.AllowNamedFloatingPointLiterals
+  name: AllowNamedFloatingPointLiterals
+  href: api/Json.Schema.Generation.JsonNumberHandling.html#Json_Schema_Generation_JsonNumberHandling_AllowNamedFloatingPointLiterals
+  commentId: F:Json.Schema.Generation.JsonNumberHandling.AllowNamedFloatingPointLiterals
+  fullName: Json.Schema.Generation.JsonNumberHandling.AllowNamedFloatingPointLiterals
+  nameWithType: JsonNumberHandling.AllowNamedFloatingPointLiterals
+- uid: Json.Schema.Generation.JsonNumberHandling.AllowReadingFromString
+  name: AllowReadingFromString
+  href: api/Json.Schema.Generation.JsonNumberHandling.html#Json_Schema_Generation_JsonNumberHandling_AllowReadingFromString
+  commentId: F:Json.Schema.Generation.JsonNumberHandling.AllowReadingFromString
+  fullName: Json.Schema.Generation.JsonNumberHandling.AllowReadingFromString
+  nameWithType: JsonNumberHandling.AllowReadingFromString
+- uid: Json.Schema.Generation.JsonNumberHandling.Strict
+  name: Strict
+  href: api/Json.Schema.Generation.JsonNumberHandling.html#Json_Schema_Generation_JsonNumberHandling_Strict
+  commentId: F:Json.Schema.Generation.JsonNumberHandling.Strict
+  fullName: Json.Schema.Generation.JsonNumberHandling.Strict
+  nameWithType: JsonNumberHandling.Strict
+- uid: Json.Schema.Generation.JsonNumberHandling.WriteAsString
+  name: WriteAsString
+  href: api/Json.Schema.Generation.JsonNumberHandling.html#Json_Schema_Generation_JsonNumberHandling_WriteAsString
+  commentId: F:Json.Schema.Generation.JsonNumberHandling.WriteAsString
+  fullName: Json.Schema.Generation.JsonNumberHandling.WriteAsString
+  nameWithType: JsonNumberHandling.WriteAsString
+- uid: Json.Schema.Generation.JsonNumberHandlingAttribute
+  name: JsonNumberHandlingAttribute
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttribute.html
+  commentId: T:Json.Schema.Generation.JsonNumberHandlingAttribute
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttribute
+  nameWithType: JsonNumberHandlingAttribute
+- uid: Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor(Json.Schema.Generation.JsonNumberHandling)
+  name: JsonNumberHandlingAttribute(JsonNumberHandling)
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttribute.html#Json_Schema_Generation_JsonNumberHandlingAttribute__ctor_Json_Schema_Generation_JsonNumberHandling_
+  commentId: M:Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor(Json.Schema.Generation.JsonNumberHandling)
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttribute.JsonNumberHandlingAttribute(Json.Schema.Generation.JsonNumberHandling)
+  nameWithType: JsonNumberHandlingAttribute.JsonNumberHandlingAttribute(JsonNumberHandling)
+- uid: Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor*
+  name: JsonNumberHandlingAttribute
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttribute.html#Json_Schema_Generation_JsonNumberHandlingAttribute__ctor_
+  commentId: Overload:Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttribute.JsonNumberHandlingAttribute
+  nameWithType: JsonNumberHandlingAttribute.JsonNumberHandlingAttribute
+- uid: Json.Schema.Generation.JsonNumberHandlingAttribute.Handling
+  name: Handling
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttribute.html#Json_Schema_Generation_JsonNumberHandlingAttribute_Handling
+  commentId: P:Json.Schema.Generation.JsonNumberHandlingAttribute.Handling
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttribute.Handling
+  nameWithType: JsonNumberHandlingAttribute.Handling
+- uid: Json.Schema.Generation.JsonNumberHandlingAttribute.Handling*
+  name: Handling
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttribute.html#Json_Schema_Generation_JsonNumberHandlingAttribute_Handling_
+  commentId: Overload:Json.Schema.Generation.JsonNumberHandlingAttribute.Handling
+  isSpec: "True"
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttribute.Handling
+  nameWithType: JsonNumberHandlingAttribute.Handling
+- uid: Json.Schema.Generation.JsonNumberHandlingAttributeHandler
+  name: JsonNumberHandlingAttributeHandler
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttributeHandler.html
+  commentId: T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttributeHandler
+  nameWithType: JsonNumberHandlingAttributeHandler
+- uid: Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name: AddConstraints(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttributeHandler.html#Json_Schema_Generation_JsonNumberHandlingAttributeHandler_AddConstraints_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: JsonNumberHandlingAttributeHandler.AddConstraints(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints*
+  name: AddConstraints
+  href: api/Json.Schema.Generation.JsonNumberHandlingAttributeHandler.html#Json_Schema_Generation_JsonNumberHandlingAttributeHandler_AddConstraints_
+  commentId: Overload:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints
+  isSpec: "True"
+  fullName: Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints
+  nameWithType: JsonNumberHandlingAttributeHandler.AddConstraints
 - uid: Json.Schema.Generation.JsonSchemaBuilderExtensions
   name: JsonSchemaBuilderExtensions
   href: api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html

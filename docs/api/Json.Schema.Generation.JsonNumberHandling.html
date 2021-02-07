@@ -5,9 +5,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.2.0 </title>
+    <title>Enum JsonNumberHandling
+   </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.2.0 ">
+    <meta name="title" content="Enum JsonNumberHandling
+   ">
     <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -76,19 +78,59 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
-<h1 id="120"><a href="https://github.com/gregsdennis/json-everything/pull/74">1.2.0</a></h1>
-
-<p>Added support for .Net 5 and remaining in-built JSON serialization attributes: <code>JsonInclude</code> &amp; <code>JsonNumberHandling</code>.</p>
-<p>Exposed static class <code>AttributeHandler</code> and added methods to allow for handlers of predefined attributes.  This mechanism should only be used for attributes that cannot also be made to implement <code>IAttributeHandler</code>.  Attributes which also implement this interface are implicitly handled.</p>
-<h1 id="111"><a href="https://github.com/gregsdennis/json-everything/pull/61">1.1.1</a></h1>
-<p>Signed the DLL for strong name compatibility.</p>
-<h1 id="110"><a href="https://github.com/gregsdennis/json-everything/pull/49">1.1.0</a></h1>
-<p>Added support for in-built JSON serialization attributes (Standard 2.0 &amp; Core 3.x): <code>JsonPropertyName</code> &amp; <code>JsonIgnore</code>.</p>
-<h1 id="101"><a href="https://github.com/gregsdennis/json-everything/pull/45">1.0.1</a></h1>
-<p>Added debug symbols to package.  No functional change.</p>
-<h1 id="100"><a href="https://github.com/gregsdennis/json-everything/pull/41">1.0.0</a></h1>
-<p>Initial release.</p>
+            <article class="content wrap" id="_content" data-uid="Json.Schema.Generation.JsonNumberHandling">
+  
+  
+  <h1 id="Json_Schema_Generation_JsonNumberHandling" data-uid="Json.Schema.Generation.JsonNumberHandling" class="text-break">Enum JsonNumberHandling
+  </h1>
+  <div class="markdown level0 summary"><p>Determines how <see cref="!:JsonSerializer"></see> handles numbers when serializing and deserializing.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.Generation.html">Json.Schema.Generation</a></h6>
+  <h6><strong>Assembly</strong>: JsonSchema.Net.Generation.dll</h6>
+  <h5 id="Json_Schema_Generation_JsonNumberHandling_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public enum JsonNumberHandling : int</code></pre>
+  </div>
+  <h3 id="fields">Fields
+  </h3>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    <thead>
+    <tbody>
+      <tr>
+        <td id="Json_Schema_Generation_JsonNumberHandling_AllowNamedFloatingPointLiterals">AllowNamedFloatingPointLiterals</td>
+        <td><p>The &quot;NaN&quot;, &quot;Infinity&quot;, and &quot;-Infinity&quot; <see cref="!:JsonTokenType.String"></see> tokens can be read as
+floating-point constants, and the <see cref="!:System.Single"></see> and <see cref="!:System.Double"></see> values for these
+constants will be written as their corresponding JSON string representations.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Json_Schema_Generation_JsonNumberHandling_AllowReadingFromString">AllowReadingFromString</td>
+        <td><p>Numbers can be read from <see cref="!:JsonTokenType.String"></see> tokens.
+Does not prevent numbers from being read from <see cref="!:JsonTokenType.Number"></see> token.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Json_Schema_Generation_JsonNumberHandling_Strict">Strict</td>
+        <td><p>Numbers will only be read from <see cref="!:JsonTokenType.Number"></see> tokens and will only be written as JSON numbers (without quotes).</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Json_Schema_Generation_JsonNumberHandling_WriteAsString">WriteAsString</td>
+        <td><p>Numbers will be written as JSON strings (with quotes), not as JSON numbers.</p>
+</td>
+      </tr>
+    </tbody>
+  </thead></thead></table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;JsonNumberHandling&gt;(JsonSerializerOptions)</a>
+  </div>
 </article>
           </div>
           
@@ -97,7 +139,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/release-notes/json-schema-generation.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_Generation_JsonNumberHandling.md&amp;value=---%0Auid%3A%20Json.Schema.Generation.JsonNumberHandling%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema.Generation/JsonNumberHandling.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

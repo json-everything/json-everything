@@ -301,6 +301,7 @@ public class MaximumAttribute : Attribute, IAttributeHandler
 </code></pre>
 <p>The <code>AddConstraints()</code> method works exactly the same as in the generator class.  A key difference here is that you will need to guard against unrelated types.  For instance, with <code>MaximumAttribute</code> above, it doesn't make sense to have <code>maximum</code> on a non-numeric type, so we check it before adding the intent.</p>
 <p><em><strong>NOTE</strong> <code>.IsNumber()</code> is an extension method on <code>Type</code> that determines if it's a numeric type.  There are a few more of these helper extensions as well.</em></p>
+<p>The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement <code>IAttributeHandler</code>.  For these cases, just implement the handler class, and then add it using one of the <code>AttributeHandler.AddHandler()</code> static methods.  A handler can be removed using the <code>AttributeHandler.RemoveHandler&lt;T&gt;()</code> static method.</p>
 <h2 id="thats-it">That's it</h2>
 <p>That should get you generating schemas for all of your types.  If you come up with ideas or implement your own extensions and think they'd be handy if they were built in, feel free to open up an issue or a pull request.</p>
 </article>
