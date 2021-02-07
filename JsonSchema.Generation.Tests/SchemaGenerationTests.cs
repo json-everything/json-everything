@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Schema.Generation.Generators;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests
@@ -125,6 +126,9 @@ namespace Json.Schema.Generation.Tests
 
 		class GenerationTarget
 		{
+			[JsonInclude]
+			private int _value;
+
 			[Required]
 			[Minimum(5)]
 			[ExclusiveMinimum(4)]
@@ -166,6 +170,7 @@ namespace Json.Schema.Generation.Tests
 			JsonSchema expected = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
 				.Properties(
+					("_value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
 					("Integer", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Integer)
 						.Minimum(5)
