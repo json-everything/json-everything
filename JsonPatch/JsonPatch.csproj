@@ -26,9 +26,11 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 	  <SignAssembly>true</SignAssembly>
 	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\docs_source\release-notes\json-patch.md" Link="json-patch.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -41,7 +43,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

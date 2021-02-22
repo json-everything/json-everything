@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
 
 namespace Json.Patch
 {
@@ -12,8 +11,8 @@ namespace Json.Patch
 	{
 		private readonly JsonElement _raw;
 		
-		public Dictionary<string, EditableJsonElement> Object { get; }
-		public List<EditableJsonElement> Array { get; }
+		public Dictionary<string, EditableJsonElement>? Object { get; }
+		public List<EditableJsonElement>? Array { get; }
 
 		public EditableJsonElement(JsonElement raw)
 		{
