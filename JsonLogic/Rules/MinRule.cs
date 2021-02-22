@@ -23,7 +23,7 @@ namespace Json.Logic.Rules
 			if (nulls.Any())
 				throw new JsonLogicException($"Cannot find min with {nulls.First().ValueKind}.");
 
-			return items.Min(i => i.Value.Value).AsJsonElement();
+			return items.Min(i => i.Value!.Value).AsJsonElement();
 		}
 	}
 }

@@ -1,3 +1,7 @@
+# [1.2.1](https://github.com/gregsdennis/json-everything/pull/??)
+
+Added support for nullable reference types.
+
 # [1.2.0](https://github.com/gregsdennis/json-everything/pull/64)
 
 Added the ability to define and register custom rules.

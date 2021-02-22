@@ -34,7 +34,7 @@ namespace Json.Logic
 		/// Casts a `string` value to a <see cref="LiteralRule"/>.  Can also be used to create a `null` JSON literal.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public static implicit operator Rule(string value) => new LiteralRule(value);
+		public static implicit operator Rule(string? value) => new LiteralRule(value);
 		/// <summary>
 		/// Casts a `bool` value to a <see cref="LiteralRule"/>.
 		/// </summary>
@@ -86,7 +86,7 @@ namespace Json.Logic
 			
 			var ruleType = RuleRegistry.GetRule(ruleInfo.Key);
 
-			var value = ruleInfo.Value ?? new ArgumentCollection((Rule) null);
+			var value = ruleInfo.Value ?? new ArgumentCollection((Rule?) null);
 
 			return (Rule) Activator.CreateInstance(ruleType,
 				value.Cast<object>()
@@ -107,9 +107,9 @@ namespace Json.Logic
 	[JsonConverter(typeof(ArgumentCollectionConverter))]
 	internal class ArgumentCollection : List<Rule>
 	{
-		public ArgumentCollection(Rule single)
+		public ArgumentCollection(Rule? single)
 		{
-			Add(single);
+			Add(single!);
 		}
 
 		public ArgumentCollection(IEnumerable<Rule> components)

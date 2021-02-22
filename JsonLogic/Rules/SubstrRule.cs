@@ -9,7 +9,7 @@ namespace Json.Logic.Rules
 	{
 		private readonly Rule _input;
 		private readonly Rule _start;
-		private readonly Rule _count;
+		private readonly Rule? _count;
 
 		public SubstrRule(Rule input, Rule start)
 		{

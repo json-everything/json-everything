@@ -150,12 +150,12 @@ namespace Json.More
 		}
 
 		/// <summary>
-		/// Converts a <see cref="string"/> to a <see cref="JsonElement"/>.
+		/// Converts a <see cref="string"/> to a <see cref="JsonElement"/>.  Can also be used to get a `null` element.
 		/// </summary>
 		/// <param name="value">The value to convert.</param>
 		/// <returns>A <see cref="JsonElement"/> representing the value.</returns>
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
-		public static JsonElement AsJsonElement(this string value)
+		public static JsonElement AsJsonElement(this string? value)
 		{
 			var doc = JsonDocument.Parse(JsonSerializer.Serialize(value));
 			return doc.RootElement;

@@ -22,7 +22,7 @@ namespace Json.Logic
 		/// </summary>
 		/// <param name="identifier">The identifier.</param>
 		/// <returns>The <see cref="Type"/> of the rule.</returns>
-		public static Type GetRule(string identifier)
+		public static Type? GetRule(string identifier)
 		{
 			return _rules.TryGetValue(identifier, out var t) ? t : null;
 		}
