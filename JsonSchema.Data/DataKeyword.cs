@@ -22,7 +22,7 @@ namespace Json.Schema.Data
 	{
 		internal const string Name = "data";
 
-		private static Func<Uri, string> _get;
+		private static Func<Uri, string>? _get;
 
 		/// <summary>
 		/// Gets or sets a method to download external references.
@@ -33,8 +33,8 @@ namespace Json.Schema.Data
 		/// </remarks>
 		public static Func<Uri, string> Get
 		{
-			get => _get;
-			set => _get = value ?? SimpleDownload;
+			get => _get ??= SimpleDownload;
+			set => _get = value;
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace Json.Schema.Data
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DataKeyword other)
+		public bool Equals(DataKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -193,7 +193,7 @@ namespace Json.Schema.Data
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (References != null ? References.GetHashCode() : 0);
+			return References.GetHashCode();
 		}
 	}
 
