@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 
@@ -10,7 +11,7 @@ namespace Json.Path
 	/// </summary>
 	public class JsonPath
 	{
-		private delegate bool TryParseMethod(ReadOnlySpan<char> span, ref int i, out IIndexExpression index);
+		private delegate bool TryParseMethod(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index);
 
 		private static readonly List<TryParseMethod> _parseMethods =
 			new List<TryParseMethod>
@@ -74,14 +75,14 @@ namespace Json.Path
 		/// <param name="source">The source string.</param>
 		/// <param name="path">The resulting path.</param>
 		/// <returns><code>true</code> if successful; otherwise <code>false</code>.</returns>
-		public static bool TryParse(string source, out JsonPath path)
+		public static bool TryParse(string source, out JsonPath? path)
 		{
 			var i = 0;
 			var span = source.AsSpan();
 			return TryParse(span, ref i, false, out path);
 		}
 
-		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, bool allowTrailingContent, out JsonPath path)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, bool allowTrailingContent, out JsonPath? path)
 		{
 			var nodes = new List<IPathNode>();
 			while (i < span.Length)
@@ -165,7 +166,7 @@ namespace Json.Path
 			       ch.In(0x80..0x10FFFF);
 		}
 
-		private static IPathNode AddIndex(ReadOnlySpan<char> span, ref int i)
+		private static IPathNode? AddIndex(ReadOnlySpan<char> span, ref int i)
 		{
 			var slice = span.Slice(i);
 			// replace this with an actual index parser that returns null to handle spaces
@@ -184,7 +185,7 @@ namespace Json.Path
 				span.ConsumeWhitespace(ref i);
 				if (!ParseIndex(span, ref i, out var index)) return null;
 
-				indices.Add(index);
+				indices.Add(index!);
 
 				span.ConsumeWhitespace(ref i);
 				if (i >= span.Length) break;
@@ -198,7 +199,7 @@ namespace Json.Path
 			return new IndexNode(indices);
 		}
 
-		private static bool ParseIndex(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		private static bool ParseIndex(ReadOnlySpan<char> span, ref int i, out IIndexExpression? index)
 		{
 			foreach (var tryParse in _parseMethods)
 			{

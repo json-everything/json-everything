@@ -7,9 +7,9 @@ namespace Json.Path
 {
 	internal class PropertyNode : PathNodeBase
 	{
-		private readonly string _name;
+		private readonly string? _name;
 
-		public PropertyNode(string name)
+		public PropertyNode(string? name)
 		{
 			_name = name;
 		}

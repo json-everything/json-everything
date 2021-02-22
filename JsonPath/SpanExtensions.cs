@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using Json.Path.QueryExpressions;
 
@@ -43,7 +41,7 @@ namespace Json.Path
 		}
 
 		// expects the full expression, including the ()
-		public static bool TryParseExpression(this ReadOnlySpan<char> span, ref int i, out QueryExpressionNode expression)
+		public static bool TryParseExpression(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode? expression)
 		{
 			var index = i;
 			if (span[index] != '(')
@@ -68,7 +66,7 @@ namespace Json.Path
 					return false;
 				}
 
-				QueryExpressionNode right;
+				QueryExpressionNode? right;
 				if (span[index] == '(')
 				{
 					if (!span.TryParseExpression(ref index, out right))
@@ -82,7 +80,7 @@ namespace Json.Path
 					expression = null;
 					return false;
 				}
-				followingNodes.Add((op, right));
+				followingNodes.Add((op!, right!));
 			}
 
 			if (!followingNodes.Any())
@@ -93,7 +91,7 @@ namespace Json.Path
 			}
 
 			var current = new Stack<QueryExpressionNode>();
-			QueryExpressionNode root = null;
+			QueryExpressionNode? root = null;
 			foreach (var (op, node) in followingNodes)
 			{
 				if (root == null)

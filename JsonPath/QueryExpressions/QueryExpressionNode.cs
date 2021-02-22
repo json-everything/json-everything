@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Json.More;
 
 namespace Json.Path.QueryExpressions
 {
+	// TODO: this can be done better. use interface and multiple implementation types: path, value, and operation
 	internal class QueryExpressionNode
 	{
 		private readonly JsonPath _path;
@@ -60,7 +62,7 @@ namespace Json.Path.QueryExpressions
 			Right = new QueryExpressionNode(Right, op, newRight);
 		}
 
-		public static bool TryParseSingleValue(ReadOnlySpan<char> span, ref int i, out QueryExpressionNode node)
+		public static bool TryParseSingleValue(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode node)
 		{
 			if (JsonPath.TryParse(span, ref i, true, out var path))
 			{

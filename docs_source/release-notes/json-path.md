@@ -1,3 +1,7 @@
+# [0.1.5](https://github.com/gregsdennis/json-everything/pull/??)
+
+Added support for nullable reference types.
+
 # [0.1.4](https://github.com/gregsdennis/json-everything/pull/61)
 
 Signed the DLL for strong name compatibility.

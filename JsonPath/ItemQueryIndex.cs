@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using Json.Path.QueryExpressions;
@@ -10,7 +11,7 @@ namespace Json.Path
 	{
 		private readonly QueryExpressionNode _expression;
 
-		public ItemQueryIndex(QueryExpressionNode expression)
+		private ItemQueryIndex(QueryExpressionNode expression)
 		{
 			_expression = expression;
 		}
@@ -43,7 +44,7 @@ namespace Json.Path
 			return result.GetBoolean();
 		}
 
-		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)
 		{
 			if (span[i] != '?' || span[i+1] != '(')
 			{
