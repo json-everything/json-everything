@@ -16,7 +16,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="value">A JSON Pointer segment.</param>
 		/// <returns>Another <see cref="IRefResolvable"/> or null.</returns>
-		IRefResolvable ResolvePointerSegment(string value);
+		IRefResolvable? ResolvePointerSegment(string? value);
 		/// <summary>
 		/// Passes registration of any subschemas back to <see cref="JsonSchema.RegisterSubschemas(SchemaRegistry,Uri)"/>.
 		/// </summary>

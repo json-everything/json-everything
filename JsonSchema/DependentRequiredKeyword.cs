@@ -36,7 +36,7 @@ namespace Json.Schema
 		/// <param name="values">The collection of "required"-type dependencies.</param>
 		public DependentRequiredKeyword(IReadOnlyDictionary<string, IReadOnlyList<string>> values)
 		{
-			Requirements = values;
+			Requirements = values ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DependentRequiredKeyword other)
+		public bool Equals(DependentRequiredKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;

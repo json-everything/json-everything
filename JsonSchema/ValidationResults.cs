@@ -16,7 +16,7 @@ namespace Json.Schema
 		private List<ValidationResults> _nestedResults;
 		private List<Annotation> _annotations;
 		private Uri _currentUri;
-		private Uri _absoluteUri;
+		private Uri? _absoluteUri;
 		private JsonPointer? _reference;
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The error message, if any.
 		/// </summary>
-		public string Message { get; private set; }
+		public string? Message { get; private set; }
 		/// <summary>
 		/// The schema location that generated this node.
 		/// </summary>
@@ -39,7 +39,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The absolute schema location.  Only available if the schema had an absolute URI ID.
 		/// </summary>
-		public Uri AbsoluteSchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
+		public Uri? AbsoluteSchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
 		/// <summary>
 		/// The collection of nested results.
 		/// </summary>
@@ -59,7 +59,7 @@ namespace Json.Schema
 				: new List<Annotation>();
 			Message = context.Message;
 			SchemaLocation = context.SchemaLocation;
-			_currentUri = context.CurrentUri;
+			_currentUri = context.CurrentUri!;
 			InstanceLocation = context.InstanceLocation;
 			_nestedResults = context.HasNestedContexts
 				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
@@ -133,7 +133,7 @@ namespace Json.Schema
 			_reference = other._reference;
 		}
 
-		internal Uri BuildAbsoluteUri(JsonPointer pointer)
+		internal Uri? BuildAbsoluteUri(JsonPointer pointer)
 		{
 			if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
 			if (pointer.Segments.All(s => s.Value != RefKeyword.Name &&
@@ -151,7 +151,7 @@ namespace Json.Schema
 			return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());
 		}
 
-		private Uri BuildAbsoluteUri()
+		private Uri? BuildAbsoluteUri()
 		{
 			return BuildAbsoluteUri(SchemaLocation);
 		}

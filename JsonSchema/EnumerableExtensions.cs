@@ -15,10 +15,10 @@ namespace Json.Schema
 		/// <param name="other">The second collection.</param>
 		/// <typeparam name="T">The element type.</typeparam>
 		/// <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
-		public static bool ContentsEqual<T>(this IReadOnlyList<T> collection, IReadOnlyList<T> other)
+		public static bool ContentsEqual<T>(this IReadOnlyList<T>? collection, IReadOnlyList<T>? other)
 		{
 			if (collection == null && other == null) return true;
-			if (collection == null) return false;
+			if (collection == null || other == null) return false;
 
 			if (collection.Count != other.Count) return false;
 
@@ -42,10 +42,10 @@ namespace Json.Schema
 		/// <param name="comparer">A custom equality comparer.</param>
 		/// <typeparam name="T">The element type.</typeparam>
 		/// <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
-		public static bool ContentsEqual<T>(this IReadOnlyList<T> collection, IReadOnlyList<T> other, IEqualityComparer<T> comparer)
+		public static bool ContentsEqual<T>(this IReadOnlyList<T>? collection, IReadOnlyList<T>? other, IEqualityComparer<T> comparer)
 		{
 			if (collection == null && other == null) return true;
-			if (collection == null) return false;
+			if (collection == null || other == null) return false;
 
 			if (collection.Count != other.Count) return false;
 

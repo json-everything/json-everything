@@ -21,10 +21,10 @@ namespace Json.Schema
 
 		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
 
-		private Dictionary<string, Annotation> _annotations;
-		private List<ValidationContext> _nestedContexts;
-		private List<ValidationContext> _siblingContexts;
-		private Dictionary<string, JsonSchema> _dynamicAnchors;
+		private Dictionary<string, Annotation>? _annotations;
+		private List<ValidationContext>? _nestedContexts;
+		private List<ValidationContext>? _siblingContexts;
+		private Dictionary<string, JsonSchema>? _dynamicAnchors;
 		private bool _isConsolidating;
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Json.Schema
 		/// <summary>
 		/// Gets or sets error message.
 		/// </summary>
-		public string Message { get; set; }
+		public string? Message { get; set; }
 
 		/// <summary>
 		/// The collection of annotations collected during the validation pass.
@@ -64,7 +64,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The option set for the validation.
 		/// </summary>
-		public ValidationOptions Options { get; internal set; }
+		public ValidationOptions Options { get; private set; }
 		/// <summary>
 		/// The root schema.
 		/// </summary>
@@ -92,11 +92,11 @@ namespace Json.Schema
 		/// <summary>
 		/// The current URI, based on `$id` and `$anchor` keywords present in the schema.
 		/// </summary>
-		public Uri CurrentUri { get; internal set; }
+		public Uri? CurrentUri { get; internal set; }
 		/// <summary>
 		/// The current URI anchor.
 		/// </summary>
-		public JsonSchema CurrentAnchor { get; internal set; }
+		public JsonSchema? CurrentAnchor { get; internal set; }
 		/// <summary>
 		/// Get the set of defined dynamic anchors.
 		/// </summary>
@@ -104,7 +104,7 @@ namespace Json.Schema
 
 		internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
-		internal IReadOnlyDictionary<Uri, bool> MetaSchemaVocabs { get; set; }
+		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).
@@ -119,7 +119,12 @@ namespace Json.Schema
 		/// </summary>
 		public bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count != 0;
 
-		internal ValidationContext() { }
+#pragma warning disable 8618
+		internal ValidationContext(ValidationOptions options)
+		{
+			Options = options;
+		}
+#pragma warning restore 8618
 
 		/// <summary>
 		/// Creates a new context from an existing one.  Use this for subschema validations.
@@ -134,11 +139,10 @@ namespace Json.Schema
 		                                     in JsonPointer? instanceLocation = null,
 		                                     in JsonElement? instance = null,
 		                                     in JsonPointer? subschemaLocation = null,
-		                                     Uri newUri = null)
+		                                     Uri? newUri = null)
 		{
-			return new ValidationContext
+			return new ValidationContext(source.Options)
 				{
-					Options = source.Options,
 					InstanceRoot = source.InstanceRoot,
 					SchemaRoot = source.SchemaRoot,
 					SchemaLocation = subschemaLocation ?? source.SchemaLocation,
@@ -152,7 +156,7 @@ namespace Json.Schema
 				};
 		}
 
-		internal void ImportAnnotations(ValidationContext context)
+		internal void ImportAnnotations(ValidationContext? context)
 		{
 			_annotations = context?._annotations;
 		}
@@ -187,7 +191,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="key">The annotation key.</param>
 		/// <returns>The annotation or null.</returns>
-		public object TryGetAnnotation(string key)
+		public object? TryGetAnnotation(string key)
 		{
 			if (_annotations == null) return null;
 			return _annotations.TryGetValue(key, out var annotation) ? annotation.Value : null;

@@ -10,16 +10,17 @@ namespace Json.Schema
 	{
 		private class Registration
 		{
-			private Dictionary<string, JsonSchema> _anchors;
-			public JsonSchema Root { get; set; }
+			private Dictionary<string, JsonSchema>? _anchors;
+
+			public JsonSchema Root { get; set; } = null!;
 
 			public Dictionary<string, JsonSchema> Anchors => _anchors ??= new Dictionary<string, JsonSchema>();
 		}
 
 		private static readonly Uri _empty = new Uri("http://everything.json/");
 
-		private Dictionary<Uri, Registration> _registered;
-		private Func<Uri, JsonSchema> _fetch;
+		private Dictionary<Uri, Registration>? _registered;
+		private Func<Uri, JsonSchema?>? _fetch;
 
 		/// <summary>
 		/// The global registry.
@@ -29,9 +30,9 @@ namespace Json.Schema
 		/// <summary>
 		/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
 		/// </summary>
-		public Func<Uri, JsonSchema> Fetch
+		public Func<Uri, JsonSchema?> Fetch
 		{
-			get => _fetch ??= uri => null;
+			get => _fetch ??= _ => null;
 			set => _fetch = value;
 		}
 
@@ -60,7 +61,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="uri">The URI ID of the schema..</param>
 		/// <param name="schema">The schema.</param>
-		public void Register(Uri uri, JsonSchema schema)
+		public void Register(Uri? uri, JsonSchema schema)
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			uri = MakeAbsolute(uri);
@@ -76,7 +77,7 @@ namespace Json.Schema
 		/// <param name="uri">The URI ID of the schema.</param>
 		/// <param name="anchor">The anchor name.</param>
 		/// <param name="schema">The schema.</param>
-		public void RegisterAnchor(Uri uri, string anchor, JsonSchema schema)
+		public void RegisterAnchor(Uri? uri, string anchor, JsonSchema schema)
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			uri = MakeAbsolute(uri);
@@ -97,18 +98,18 @@ namespace Json.Schema
 		/// </returns>
 		// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 		// tl;dr - URI equality doesn't consider fragments
-		public JsonSchema Get(Uri uri, string anchor = null)
+		public JsonSchema? Get(Uri? uri, string? anchor = null)
 		{
-			Registration registration = null;
+			Registration? registration = null;
 			uri = MakeAbsolute(uri);
 			// check local
 			if (_registered != null)
 				registration = CheckRegistry(_registered, uri);
 			// if not found, check global
 			if (registration == null && !ReferenceEquals(Global, this))
-				registration = CheckRegistry(Global._registered, uri);
+				registration = CheckRegistry(Global._registered!, uri);
 
-			JsonSchema schema;
+			JsonSchema? schema;
 			if (registration == null)
 			{
 				schema = Fetch(uri) ?? Global.Fetch(uri);
@@ -116,18 +117,18 @@ namespace Json.Schema
 
 				Register(uri, schema);
 				schema.RegisterSubschemas(this, uri);
-				registration = CheckRegistry(_registered, uri);
+				registration = CheckRegistry(_registered!, uri);
 			}
-			if (string.IsNullOrEmpty(anchor)) return registration.Root;
-			return registration.Anchors.TryGetValue(anchor, out schema) ? schema : null;
+			if (string.IsNullOrEmpty(anchor)) return registration!.Root;
+			return registration!.Anchors.TryGetValue(anchor!, out schema) ? schema : null;
 		}
 
-		private static Registration CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
+		private static Registration? CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
 		{
 			return lookup.TryGetValue(uri, out var registration) ? registration : null;
 		}
 
-		private static Uri MakeAbsolute(Uri uri)
+		private static Uri MakeAbsolute(Uri? uri)
 		{
 			if (uri == null) return _empty;
 

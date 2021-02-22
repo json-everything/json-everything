@@ -8,7 +8,7 @@ namespace Json.Schema
 	/// </summary>
 	public class VocabularyRegistry
 	{
-		private ConcurrentDictionary<Uri, Vocabulary> _vocabularies;
+		private ConcurrentDictionary<Uri, Vocabulary>? _vocabularies;
 
 		/// <summary>
 		/// The global registry.
@@ -50,7 +50,7 @@ namespace Json.Schema
 			if (_vocabularies != null && _vocabularies.ContainsKey(vocabularyId)) return true;
 
 			if (!ReferenceEquals(this, Global))
-				return Global._vocabularies.ContainsKey(vocabularyId);
+				return Global.IsKnown(vocabularyId);
 
 			return false;
 		}

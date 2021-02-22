@@ -34,7 +34,7 @@ namespace Json.Schema
 		/// <param name="values">The collection of schema definitions.</param>
 		public DefsKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
-			Definitions = values;
+			Definitions = values ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -47,9 +47,9 @@ namespace Json.Schema
 			context.Ignore = true;
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			return Definitions.TryGetValue(value, out var schema) ? schema : null;
+			return value != null && Definitions.TryGetValue(value, out var schema) ? schema : null;
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
@@ -63,7 +63,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DefsKeyword other)
+		public bool Equals(DefsKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -90,7 +90,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Definitions?.GetCollectionHashCode() ?? 0;
+			return Definitions.GetCollectionHashCode();
 		}
 	}
 

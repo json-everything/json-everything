@@ -26,16 +26,16 @@ namespace Json.Schema
 		/// <summary>
 		/// The schema for the "single schema" form.
 		/// </summary>
-		public JsonSchema SingleSchema { get; }
+		public JsonSchema? SingleSchema { get; }
 
-		JsonSchema ISchemaContainer.Schema => SingleSchema;
+		JsonSchema ISchemaContainer.Schema => SingleSchema!;
 
 		/// <summary>
 		/// The collection of schemas for the "schema array" form.
 		/// </summary>
-		public IReadOnlyList<JsonSchema> ArraySchemas { get; }
+		public IReadOnlyList<JsonSchema>? ArraySchemas { get; }
 
-		IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas;
+		IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas!;
 
 		static ItemsKeyword()
 		{
@@ -47,7 +47,7 @@ namespace Json.Schema
 		/// <param name="value">The schema for the "single schema" form.</param>
 		public ItemsKeyword(JsonSchema value)
 		{
-			SingleSchema = value;
+			SingleSchema = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace Json.Schema
 					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
 					return;
 				}
-				var maxEvaluations = Math.Min(ArraySchemas.Count, context.LocalInstance.GetArrayLength());
+				var maxEvaluations = Math.Min(ArraySchemas!.Count, context.LocalInstance.GetArrayLength());
 				for (int i = 0; i < maxEvaluations; i++)
 				{
 					var schema = ArraySchemas[i];
@@ -171,12 +171,12 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, value);
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
 			if (value == null) return SingleSchema;
 
 			if (!int.TryParse(value, out var index)) return null;
-			if (index < 0 || ArraySchemas.Count <= index) return null;
+			if (index < 0 || ArraySchemas!.Count <= index) return null;
 
 			return ArraySchemas[index];
 		}
@@ -187,7 +187,7 @@ namespace Json.Schema
 				SingleSchema.RegisterSubschemas(registry, currentUri);
 			else
 			{
-				foreach (var schema in ArraySchemas)
+				foreach (var schema in ArraySchemas!)
 				{
 					schema.RegisterSubschemas(registry, currentUri);
 				}
@@ -197,7 +197,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(ItemsKeyword other)
+		public bool Equals(ItemsKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -258,7 +258,7 @@ namespace Json.Schema
 			else
 			{
 				writer.WriteStartArray();
-				foreach (var schema in value.ArraySchemas)
+				foreach (var schema in value.ArraySchemas!)
 				{
 					JsonSerializer.Serialize(writer, schema, options);
 				}

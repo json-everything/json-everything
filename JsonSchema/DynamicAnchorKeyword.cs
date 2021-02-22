@@ -27,7 +27,7 @@ namespace Json.Schema
 		/// <param name="value">The anchor value.</param>
 		public DynamicAnchorKeyword(string value)
 		{
-			Value = value;
+			Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DynamicAnchorKeyword other)
+		public bool Equals(DynamicAnchorKeyword? other)
 		{
 			return true;
 		}

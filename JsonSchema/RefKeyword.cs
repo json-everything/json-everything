@@ -44,8 +44,8 @@ namespace Json.Schema
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
-			Uri newUri;
-			JsonSchema baseSchema = null;
+			Uri? newUri;
+			JsonSchema? baseSchema = null;
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
@@ -68,7 +68,7 @@ namespace Json.Schema
 				newUri = context.CurrentUri;
 			}
 
-			JsonSchema schema;
+			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment))
 				schema = context.Options.SchemaRegistry.Get(newUri, fragment);
 			else
@@ -103,10 +103,10 @@ namespace Json.Schema
 			}
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
-			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment, out var reference)) 
+			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference)) 
 				subContext.Reference = reference;
 			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
-				subContext.SchemaRoot = baseSchema;
+				subContext.SchemaRoot = baseSchema!;
 			schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
 			context.ConsolidateAnnotations();
@@ -116,7 +116,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(RefKeyword other)
+		public bool Equals(RefKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -135,7 +135,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Reference != null ? Reference.GetHashCode() : 0);
+			return Reference.GetHashCode();
 		}
 	}
 

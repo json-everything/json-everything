@@ -76,9 +76,9 @@ namespace Json.Schema
 		{
 			return keyword switch
 			{
-				ISchemaContainer container => new[] {container.Schema},
-				ISchemaCollector collector => collector.Schemas,
-				IKeyedSchemaCollector collector => collector.Schemas.Values,
+				ISchemaContainer container => container.Schema == null ? Enumerable.Empty<JsonSchema>() : new[] {container.Schema},
+				ISchemaCollector collector => collector.Schemas ?? Enumerable.Empty<JsonSchema>(),
+				IKeyedSchemaCollector collector => collector.Schemas.Values ?? Enumerable.Empty<JsonSchema>(),
 				_ => Enumerable.Empty<JsonSchema>()
 			};
 		}

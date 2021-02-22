@@ -33,7 +33,7 @@ namespace Json.Schema
 		/// <param name="values">The collection of "schema"-type dependencies.</param>
 		public DependentSchemasKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 		{
-			Schemas = values;
+			Schemas = values ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -72,9 +72,9 @@ namespace Json.Schema
 				context.Message = $"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}";
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			return Schemas.TryGetValue(value, out var schema) ? schema : null;
+			return value != null && Schemas.TryGetValue(value, out var schema) ? schema : null;
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
@@ -88,7 +88,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DependentSchemasKeyword other)
+		public bool Equals(DependentSchemasKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
