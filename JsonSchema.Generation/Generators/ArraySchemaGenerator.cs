@@ -15,7 +15,7 @@ namespace Json.Schema.Generation.Generators
 		{
 			context.Intents.Add(new TypeIntent(SchemaValueType.Array));
 
-			Type itemType = null;
+			Type? itemType = null;
 
 			if (context.Type.IsGenericType)
 				itemType = context.Type.GetGenericArguments().First();

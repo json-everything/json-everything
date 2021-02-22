@@ -27,7 +27,7 @@ namespace Json.Schema.Generation
 
 			if (attribute.Handling.HasFlag(JsonNumberHandling.AllowReadingFromString))
 			{
-				context.Intents.Remove(typeIntent);
+				context.Intents.Remove(typeIntent!);
 				context.Intents.Add(new TypeIntent(existingType | SchemaValueType.String));
 			}
 

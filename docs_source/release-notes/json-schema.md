@@ -1,4 +1,8 @@
-# [1.7.1](https://github.com/gregsdennis/json-everything/pull/72)
+# [1.8.1](https://github.com/gregsdennis/json-everything/pull/??)
+
+Added support for nullable reference types.
+
+# [1.8.0](https://github.com/gregsdennis/json-everything/pull/72)
 
 Exposed `UriExtensions` to help support new keywords that manipulate URIs.
 

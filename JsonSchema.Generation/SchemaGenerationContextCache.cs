@@ -24,11 +24,11 @@ namespace Json.Schema.Generation
 				return Type == other.Type && Hash == other.Hash;
 			}
 
-			public override bool Equals(object obj)
+			public override bool Equals(object? obj)
 			{
 				if (ReferenceEquals(null, obj)) return false;
 				if (ReferenceEquals(this, obj)) return true;
-				if (obj.GetType() != this.GetType()) return false;
+				if (obj.GetType() != GetType()) return false;
 				return Equals((Key) obj);
 			}
 
@@ -42,7 +42,7 @@ namespace Json.Schema.Generation
 		}
 
 		[ThreadStatic]
-		private static Dictionary<Key, SchemaGeneratorContext> _cache;
+		private static Dictionary<Key, SchemaGeneratorContext>? _cache;
 
 		private static Dictionary<Key, SchemaGeneratorContext> Cache => _cache ??= new Dictionary<Key, SchemaGeneratorContext>();
 
@@ -60,14 +60,14 @@ namespace Json.Schema.Generation
 		/// <remarks>
 		/// Use this in your generator if it needs to create keywords with subschemas.
 		/// </remarks>
-		public static SchemaGeneratorContext Get(Type type, List<Attribute> attributes)
+		public static SchemaGeneratorContext Get(Type type, List<Attribute>? attributes)
 		{
 			var hash = attributes?.GetAttributeSetHashCode() ?? 0;
 			var key = new Key(type, hash);
 			if (!Cache.TryGetValue(key, out var context))
 			{
-				context = new SchemaGeneratorContext(type, attributes);
-				_cache[key] = context;
+				context = new SchemaGeneratorContext(type, attributes!);
+				Cache[key] = context;
 				context.GenerateIntents();
 			}
 

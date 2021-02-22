@@ -33,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\docs_source\release-notes\json-schema.md" Link="json-schema.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

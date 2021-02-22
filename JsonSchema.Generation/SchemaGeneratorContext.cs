@@ -64,7 +64,7 @@ namespace Json.Schema.Generation
 			{
 				var name = def.Value.GetDefName(currentNames);
 				var refIntent = new RefIntent(new Uri(def.Key == thisHash ? "#" : $"#/$defs/{name}", UriKind.Relative));
-				var refContext = new SchemaGeneratorContext(def.Value.Type, null);
+				var refContext = new SchemaGeneratorContext(def.Value.Type, null!);
 				refContext.Intents.Add(refIntent);
 				foreach (var intent in contextContainers)
 				{
@@ -130,7 +130,7 @@ namespace Json.Schema.Generation
 		/// </summary>
 		/// <param name="builder">The schema builder.</param>
 		/// <returns>The schema builder (for fluent syntax support).</returns>
-		public JsonSchemaBuilder Apply(JsonSchemaBuilder builder = null)
+		public JsonSchemaBuilder Apply(JsonSchemaBuilder? builder = null)
 		{
 			builder ??= new JsonSchemaBuilder();
 
@@ -145,7 +145,7 @@ namespace Json.Schema.Generation
 		/// <summary>Determines whether the specified object is equal to the current object.</summary>
 		/// <param name="obj">The object to compare with the current object.</param>
 		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
@@ -153,7 +153,7 @@ namespace Json.Schema.Generation
 
 			var other = (SchemaGeneratorContext) obj;
 			return Type == other.Type &&
-			       Intents.ContentsEqual(other.Intents);
+				   Intents.ContentsEqual(other.Intents);
 		}
 
 		/// <summary>Serves as the default hash function.</summary>
