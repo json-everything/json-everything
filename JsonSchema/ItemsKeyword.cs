@@ -231,7 +231,7 @@ namespace Json.Schema
 			unchecked
 			{
 				var hashCode = SingleSchema?.GetHashCode() ?? 0;
-				hashCode = (hashCode * 397) ^ (ArraySchemas?.GetCollectionHashCode() ?? 0);
+				hashCode = (hashCode * 397) ^ (ArraySchemas?.GetUnorderedCollectionHashCode() ?? 0);
 				return hashCode;
 			}
 		}

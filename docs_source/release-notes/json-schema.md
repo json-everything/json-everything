@@ -1,10 +1,10 @@
-# [1.9.0](https://github.com/gregsdennis/json-everything/pull/??)
+# [1.9.0](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.
 
-Fixed various evaluation bugs around `$recursiveAnchor`.
+Fixed various evaluation bugs around the various keywords involved with references.
 
-
+Fixed `content*` keywords so that they only validate if the instance is a string.
 
 # [1.8.0](https://github.com/gregsdennis/json-everything/pull/72)
 

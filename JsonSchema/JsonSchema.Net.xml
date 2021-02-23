@@ -996,6 +996,39 @@
             <typeparam name="T">The element type.</typeparam>
             <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
         </member>
+        <member name="M:Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(System.Collections.Generic.IDictionary{System.String,``0})">
+            <summary>
+            Gets a string-dictionary-oriented hash code by combining the hash codes of its elements.
+            </summary>
+            <typeparam name="T">The type of element.</typeparam>
+            <param name="collection">The collection of elements.</param>
+            <returns>A singular integer value that represents the collection.</returns>
+            <remarks>
+            This can be used to correctly compare the contents of string dictionaries where
+            key ordering is not important.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(System.Collections.Generic.IReadOnlyDictionary{System.String,``0})">
+            <summary>
+            Gets a string-dictionary-oriented hash code by combining the hash codes of its elements.
+            </summary>
+            <typeparam name="T">The type of element.</typeparam>
+            <param name="collection">The collection of elements.</param>
+            <returns>A singular integer value that represents the collection.</returns>
+            <remarks>
+            This can be used to correctly compare the contents of string dictionaries where
+            key ordering is not important.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Gets a collection-oriented hash code by combining the hash codes of its elements.
+            </summary>
+            <typeparam name="T">The type of element.</typeparam>
+            <param name="collection">The collection of elements.</param>
+            <returns>A singular integer value that represents the collection.</returns>
+            <remarks>This can be used to correctly compare the contents of collections.</remarks>
+        </member>
         <member name="T:Json.Schema.EnumKeyword">
             <summary>
             Handles `enum`.

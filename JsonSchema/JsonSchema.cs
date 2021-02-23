@@ -328,8 +328,8 @@ namespace Json.Schema
 		{
 			unchecked
 			{
-				var hashCode = Keywords?.GetCollectionHashCode() ?? 0;
-				hashCode = (hashCode * 397) ^ (OtherData?.GetCollectionHashCode() ?? 0);
+				var hashCode = Keywords?.GetUnorderedCollectionHashCode() ?? 0;
+				hashCode = (hashCode * 397) ^ (OtherData?.GetStringDictionaryHashCode() ?? 0);
 				hashCode = (hashCode * 397) ^ BoolValue.GetHashCode();
 				return hashCode;
 			}

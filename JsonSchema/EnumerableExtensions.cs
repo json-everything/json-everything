@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Json.Schema
 {
@@ -59,6 +61,81 @@ namespace Json.Schema
 				return false;
 
 			return !otherCopy.Any();
+		}
+
+		/// <summary>
+		/// Gets a string-dictionary-oriented hash code by combining the hash codes of its elements.
+		/// </summary>
+		/// <typeparam name="T">The type of element.</typeparam>
+		/// <param name="collection">The collection of elements.</param>
+		/// <returns>A singular integer value that represents the collection.</returns>
+		/// <remarks>
+		/// This can be used to correctly compare the contents of string dictionaries where
+		/// key ordering is not important.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int GetStringDictionaryHashCode<T>(this IDictionary<string, T> collection)
+		{
+			static int GetHashCode(KeyValuePair<string, T> kvp)
+			{
+				unchecked
+				{
+					var hashCode = kvp.Key.GetHashCode();
+					hashCode = (hashCode * 397) ^ kvp.Value?.GetHashCode() ?? 0;
+					return hashCode;
+				}
+			}
+
+			return collection.OrderBy(s => s.Key, StringComparer.InvariantCulture)
+				.Aggregate(0, (current, obj) => unchecked(current * 397) ^ GetHashCode(obj));
+		}
+
+		/// <summary>
+		/// Gets a string-dictionary-oriented hash code by combining the hash codes of its elements.
+		/// </summary>
+		/// <typeparam name="T">The type of element.</typeparam>
+		/// <param name="collection">The collection of elements.</param>
+		/// <returns>A singular integer value that represents the collection.</returns>
+		/// <remarks>
+		/// This can be used to correctly compare the contents of string dictionaries where
+		/// key ordering is not important.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int GetStringDictionaryHashCode<T>(this IReadOnlyDictionary<string, T> collection)
+		{
+			static int GetHashCode(KeyValuePair<string, T> kvp)
+			{
+				unchecked
+				{
+					var hashCode = kvp.Key.GetHashCode();
+					hashCode = (hashCode * 397) ^ kvp.Value?.GetHashCode() ?? 0;
+					return hashCode;
+				}
+			}
+
+			return collection.OrderBy(s => s.Key, StringComparer.InvariantCulture)
+				.Aggregate(0, (current, obj) => unchecked(current * 397) ^ GetHashCode(obj));
+		}
+
+		/// <summary>
+		/// Gets a collection-oriented hash code by combining the hash codes of its elements.
+		/// </summary>
+		/// <typeparam name="T">The type of element.</typeparam>
+		/// <param name="collection">The collection of elements.</param>
+		/// <returns>A singular integer value that represents the collection.</returns>
+		/// <remarks>This can be used to correctly compare the contents of collections.</remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int GetUnorderedCollectionHashCode<T>(this IEnumerable<T> collection)
+		{
+			int result = 0;
+			unchecked
+			{
+				foreach (var kvp in collection)
+				{
+					result += kvp?.GetHashCode() ?? 0;
+				}
+			}
+			return result;
 		}
 	}
 }
