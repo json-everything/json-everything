@@ -38,6 +38,12 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			if (context.LocalInstance.ValueKind != JsonValueKind.String)
+			{
+				context.IsValid = true;
+				return;
+			}
+
 			context.SetAnnotation(Name, Value);
 			context.IsValid = true;
 		}

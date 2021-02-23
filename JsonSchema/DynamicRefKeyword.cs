@@ -62,8 +62,8 @@ namespace Json.Schema
 			{
 				if (!string.IsNullOrEmpty(fragment))
 					context.DynamicAnchors.TryGetValue(fragment!, out baseSchema);
-				baseSchema ??= context.SchemaRoot;
 				newUri = context.CurrentUri;
+				baseSchema = context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;

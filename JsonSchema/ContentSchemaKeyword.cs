@@ -39,11 +39,17 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			if (context.LocalInstance.ValueKind != JsonValueKind.String)
+			{
+				context.IsValid = true;
+				return;
+			}
+
 			var subContext = ValidationContext.From(context,
 				subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
 			Schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
-			context.IsValid = !subContext.IsValid;
+			context.IsValid = subContext.IsValid;
 			context.ConsolidateAnnotations();
 		}
 
