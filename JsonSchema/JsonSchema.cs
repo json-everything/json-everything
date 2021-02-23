@@ -205,7 +205,6 @@ namespace Json.Schema
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
-				newContext.CurrentAnchor ??= previousContext?.CurrentAnchor;
 				newContext.ParentContext = context;
 				newContext.LocalSchema = this;
 				newContext.ImportAnnotations(previousContext);

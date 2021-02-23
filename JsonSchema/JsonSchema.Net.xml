@@ -3356,6 +3356,22 @@
             Handles `$recursiveAnchor`.
             </summary>
         </member>
+        <member name="P:Json.Schema.RecursiveAnchorKeyword.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.RecursiveAnchorKeyword.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.RecursiveAnchorKeyword"/> defaulting the value to `true`.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.RecursiveAnchorKeyword.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.RecursiveAnchorKeyword"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
         <member name="M:Json.Schema.RecursiveAnchorKeyword.Validate(Json.Schema.ValidationContext)">
             <summary>
             Provides validation for the keyword.
@@ -3390,7 +3406,7 @@
             <summary>
             Creates a new <see cref="T:Json.Schema.RecursiveRefKeyword"/>.
             </summary>
-            <param name="value"></param>
+            <param name="value">The URI.</param>
         </member>
         <member name="M:Json.Schema.RecursiveRefKeyword.Validate(Json.Schema.ValidationContext)">
             <summary>

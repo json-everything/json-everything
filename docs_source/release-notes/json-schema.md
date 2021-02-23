@@ -1,6 +1,8 @@
-# [1.8.1](https://github.com/gregsdennis/json-everything/pull/??)
+# [1.9.0](https://github.com/gregsdennis/json-everything/pull/??)
 
 Added support for nullable reference types.
+
+Fixed `$recursiveAnchor` keyword to allow any bool.  Previous versions mistakenly assumed that only `true` was valid.
 
 # [1.8.0](https://github.com/gregsdennis/json-everything/pull/72)
 

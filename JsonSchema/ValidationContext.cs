@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -25,6 +26,7 @@ namespace Json.Schema
 		private List<ValidationContext>? _nestedContexts;
 		private List<ValidationContext>? _siblingContexts;
 		private Dictionary<string, JsonSchema>? _dynamicAnchors;
+		private JsonSchema? _currentAnchorBackup;
 		private bool _isConsolidating;
 
 		/// <summary>
@@ -102,6 +104,7 @@ namespace Json.Schema
 		/// </summary>
 		public Dictionary<string, JsonSchema> DynamicAnchors => _dynamicAnchors ??= new Dictionary<string, JsonSchema>();
 
+		internal bool UriChanged { get; set; }
 		internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
 		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
@@ -149,16 +152,23 @@ namespace Json.Schema
 					LocalSchema = source.LocalSchema,
 					InstanceLocation = instanceLocation ?? source.InstanceLocation,
 					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
+					_currentAnchorBackup = source.CurrentAnchor,
 					CurrentAnchor = source.CurrentAnchor,
 					CurrentUri = newUri ?? source.CurrentUri,
 					Reference = source.Reference,
-					_dynamicAnchors = source.DynamicAnchors
+					_dynamicAnchors = source.DynamicAnchors,
+					UriChanged = source.UriChanged
 				};
 		}
 
 		internal void ImportAnnotations(ValidationContext? context)
 		{
 			_annotations = context?._annotations;
+		}
+
+		internal void ValidateAnchor()
+		{
+			CurrentAnchor = _currentAnchorBackup;
 		}
 
 		/// <summary>

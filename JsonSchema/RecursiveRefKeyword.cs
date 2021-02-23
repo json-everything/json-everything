@@ -24,7 +24,7 @@ namespace Json.Schema
 		/// <summary>
 		/// Creates a new <see cref="RecursiveRefKeyword"/>.
 		/// </summary>
-		/// <param name="value"></param>
+		/// <param name="value">The URI.</param>
 		public RecursiveRefKeyword(Uri value)
 		{
 			Reference = value ?? throw new ArgumentNullException(nameof(value));
@@ -60,8 +60,8 @@ namespace Json.Schema
 			}
 			else
 			{
-				baseSchema = context.CurrentAnchor ?? context.SchemaRoot;
 				newUri = context.CurrentUri;
+				baseSchema = context.CurrentAnchor ?? context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;

@@ -40,7 +40,11 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.ParentContext.CurrentUri = UpdateUri(context.CurrentUri);
+			var newUri = UpdateUri(context.CurrentUri);
+			context.ParentContext.UriChanged = context.ParentContext.CurrentUri != newUri;
+			if (context.ParentContext.UriChanged) 
+				context.ParentContext.CurrentAnchor = null;
+			context.ParentContext.CurrentUri = newUri;
 			context.IsValid = true;
 		}
 
