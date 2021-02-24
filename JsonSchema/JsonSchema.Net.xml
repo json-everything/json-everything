@@ -2242,11 +2242,12 @@
             <param name="value">Whether the instance is read-only.</param>
             <returns>The builder.</returns>
         </member>
-        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder)">
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder,System.Boolean)">
             <summary>
             Add a `$recursiveAnchor` keyword.
             </summary>
             <param name="builder">The builder.</param>
+            <param name="value">The value.</param>
             <returns>The builder.</returns>
             <remarks>
             Per Draft 2019-09, the value must always be <code>true</code>.  This is implied for this method.

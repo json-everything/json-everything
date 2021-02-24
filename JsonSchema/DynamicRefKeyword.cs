@@ -60,15 +60,15 @@ namespace Json.Schema
 			}
 			else
 			{
-				if (!string.IsNullOrEmpty(fragment))
-					context.DynamicAnchors.TryGetValue(fragment!, out baseSchema);
 				newUri = context.CurrentUri;
-				baseSchema = context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
+				if (fragment != null && context.DynamicAnchors.TryGetValue(fragment, out var dynamicSchema))
+					baseSchema = dynamicSchema;
+				baseSchema ??= context.Options.SchemaRegistry.Get(newUri, fragment) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-				schema = context.Options.SchemaRegistry.Get(newUri, fragment);
+				schema = baseSchema ?? context.Options.SchemaRegistry.Get(newUri, fragment);
 			else
 			{
 				if (baseSchema == null)

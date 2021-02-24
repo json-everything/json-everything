@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Humanizer;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests.Suite
@@ -115,7 +116,7 @@ namespace Json.Schema.Tests.Suite
 			};
 			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 			Console.WriteLine();
-			Console.WriteLine(test.Data);
+			Console.WriteLine(test.Data.ToJsonString());
 			Console.WriteLine();
 			result.ToDetailed();
 			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
@@ -125,7 +126,8 @@ namespace Json.Schema.Tests.Suite
 			Assert.AreEqual(test.Valid, result.IsValid);
 		}
 
-		[TestCaseSource(nameof(TestCases))]
+		//[TestCaseSource(nameof(TestCases))]
+		// This is for local runs only.
 		public void Benchmark(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
 		{
 			if (!InstanceIsDeserializable(test.Data))

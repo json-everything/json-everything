@@ -1,3 +1,10 @@
+# [1.9.1](https://github.com/gregsdennis/json-everything/pull/77)
+
+Fixes found by the release of the 2020-12 test suite.
+
+- `$dynamicAnchor` and `$dynamicRef` behavior.
+- make `items` and `unevaluatedItems` respect annotations from `prefixItems`.
+
 # [1.9.0](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.

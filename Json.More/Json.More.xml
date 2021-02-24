@@ -134,12 +134,18 @@
             <exception cref="T:System.ArgumentOutOfRangeException">The <see cref="P:System.Text.Json.JsonElement.ValueKind"/> is not valid.</exception>
         </member>
         <member name="M:Json.More.JsonElementExtensions.GetEquivalenceHashCode(System.Text.Json.JsonElement,System.Int32)">
-            <summary>
+             <summary>
+             Generate a consistent JSON-value-based hash code for the element.
+             </summary>
+             <param name="element">The element.</param>
+             <param name="maxHashDepth">Maximum depth to calculate.  Default is -1 which utilizes the entire structure without limitation.</param>
+             <returns>The hash code.</returns>
+             <remarks>
+             See the following for discussion on why the default implementation is insufficient:
             
-            </summary>
-            <param name="element"></param>
-            <param name="maxHashDepth"></param>
-            <returns></returns>
+             - https://github.com/gregsdennis/json-everything/issues/76
+             - https://github.com/dotnet/runtime/issues/33388
+             </remarks>
         </member>
         <member name="M:Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)">
             <summary>
