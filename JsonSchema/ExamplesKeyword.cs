@@ -78,7 +78,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Values.GetUnorderedCollectionHashCode(JsonElementExtensions.GetConsistentHashCode);
+			return Values.GetUnorderedCollectionHashCode(element => element.GetEquivalenceHashCode());
 		}
 	}
 

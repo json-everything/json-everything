@@ -52,6 +52,71 @@ namespace Json.More
 			}
 		}
 
+		// source: https://stackoverflow.com/a/60592310/878701, modified for netstandard2.0
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="element"></param>
+		/// <param name="maxHashDepth"></param>
+		/// <returns></returns>
+		public static int GetEquivalenceHashCode(this JsonElement element, int maxHashDepth = -1)
+		{
+			void Add(ref int current, object? newValue)
+			{
+				unchecked
+				{
+					current = current * 397 ^ (newValue?.GetHashCode() ?? 0);
+				}
+			}
+
+			void ComputeHashCode(JsonElement obj, ref int current, int depth)
+			{
+				Add(ref current, obj.ValueKind);
+
+				switch (obj.ValueKind)
+				{
+					case JsonValueKind.Null:
+					case JsonValueKind.True:
+					case JsonValueKind.False:
+					case JsonValueKind.Undefined:
+						break;
+
+					case JsonValueKind.Number:
+						Add(ref current, obj.GetRawText());
+						break;
+
+					case JsonValueKind.String:
+						Add(ref current, obj.GetString());
+						break;
+
+					case JsonValueKind.Array:
+						if (depth != maxHashDepth)
+							foreach (var item in obj.EnumerateArray())
+								ComputeHashCode(item, ref current, depth + 1);
+						else
+							Add(ref current, obj.GetArrayLength());
+						break;
+
+					case JsonValueKind.Object:
+						foreach (var property in obj.EnumerateObject().OrderBy(p => p.Name, StringComparer.Ordinal))
+						{
+							Add(ref current, property.Name);
+							if (depth != maxHashDepth)
+								ComputeHashCode(property.Value, ref current, depth + 1);
+						}
+						break;
+
+					default:
+						throw new JsonException($"Unknown JsonValueKind {obj.ValueKind}");
+				}
+			}
+
+			var hash = 0;
+			ComputeHashCode(element, ref hash, 0);
+			return hash;
+
+		}
+
 		/// <summary>
 		/// Just a shortcut for calling `JsonSerializer.Serialize()` because `.ToString()` doesn't do what you might expect.
 		/// </summary>
