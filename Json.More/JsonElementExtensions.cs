@@ -54,14 +54,20 @@ namespace Json.More
 
 		// source: https://stackoverflow.com/a/60592310/878701, modified for netstandard2.0
 		/// <summary>
-		/// 
+		/// Generate a consistent JSON-value-based hash code for the element.
 		/// </summary>
-		/// <param name="element"></param>
-		/// <param name="maxHashDepth"></param>
-		/// <returns></returns>
+		/// <param name="element">The element.</param>
+		/// <param name="maxHashDepth">Maximum depth to calculate.  Default is -1 which utilizes the entire structure without limitation.</param>
+		/// <returns>The hash code.</returns>
+		/// <remarks>
+		/// See the following for discussion on why the default implementation is insufficient:
+		///
+		/// - https://github.com/gregsdennis/json-everything/issues/76
+		/// - https://github.com/dotnet/runtime/issues/33388
+		/// </remarks>
 		public static int GetEquivalenceHashCode(this JsonElement element, int maxHashDepth = -1)
 		{
-			void Add(ref int current, object? newValue)
+			static void Add(ref int current, object? newValue)
 			{
 				unchecked
 				{

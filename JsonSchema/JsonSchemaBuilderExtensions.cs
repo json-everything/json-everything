@@ -833,13 +833,14 @@ namespace Json.Schema
 		/// Add a `$recursiveAnchor` keyword.
 		/// </summary>
 		/// <param name="builder">The builder.</param>
+		/// <param name="value">The value.</param>
 		/// <returns>The builder.</returns>
 		/// <remarks>
 		/// Per Draft 2019-09, the value must always be <code>true</code>.  This is implied for this method.
 		/// </remarks>
-		public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder)
+		public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder, bool value = true)
 		{
-			builder.Add(new RecursiveAnchorKeyword());
+			builder.Add(new RecursiveAnchorKeyword(true));
 			return builder;
 		}
 
