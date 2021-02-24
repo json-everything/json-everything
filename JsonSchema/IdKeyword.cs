@@ -42,8 +42,11 @@ namespace Json.Schema
 		{
 			var newUri = UpdateUri(context.CurrentUri);
 			context.ParentContext.UriChanged = context.ParentContext.CurrentUri != newUri;
-			if (context.ParentContext.UriChanged) 
+			if (context.ParentContext.UriChanged)
+			{
 				context.ParentContext.CurrentAnchor = null;
+				context.ParentContext.DynamicAnchors.Clear();
+			}
 			context.ParentContext.CurrentUri = newUri;
 			context.IsValid = true;
 		}

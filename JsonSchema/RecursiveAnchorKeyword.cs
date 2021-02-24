@@ -50,7 +50,7 @@ namespace Json.Schema
 			if (Value)
 			{
 				context.ParentContext.CurrentAnchor ??= context.LocalSchema;
-				context.SetAnnotation(Name, true);
+				context.SetAnnotation(Name, Value);
 			}
 
 			context.IsValid = true;

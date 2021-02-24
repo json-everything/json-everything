@@ -69,7 +69,7 @@ namespace Json.Schema
 			}
 
 			JsonSchema? schema;
-			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment))
+			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
 				schema = context.Options.SchemaRegistry.Get(newUri, fragment);
 			else
 			{

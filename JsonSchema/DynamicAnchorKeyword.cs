@@ -36,8 +36,11 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.DynamicAnchors[Value] ??= context.LocalSchema;
-			context.SetAnnotation(Name, true);
+			context.ParentContext.ValidateDynamicAnchor(Value);
+
+			if (!context.ParentContext.DynamicAnchors.ContainsKey(Value))
+				context.ParentContext.DynamicAnchors[Value] = context.LocalSchema;
+			context.SetAnnotation(Name, Value);
 			context.IsValid = true;
 		}
 
