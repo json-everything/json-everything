@@ -54,7 +54,17 @@ namespace Json.Schema
 
 			var overallResult = true;
 			int startIndex = 0;
-			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
+			var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
+			if (annotation != null)
+			{
+				if (annotation is bool) // is only ever true or a number
+				{
+					context.IsValid = true;
+					return;
+				}
+				startIndex = (int) annotation;
+			}
+			annotation = context.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation != null)
 			{
 				if (annotation is bool) // is only ever true or a number
