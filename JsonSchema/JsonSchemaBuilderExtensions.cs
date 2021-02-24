@@ -840,7 +840,7 @@ namespace Json.Schema
 		/// </remarks>
 		public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder, bool value = true)
 		{
-			builder.Add(new RecursiveAnchorKeyword(true));
+			builder.Add(new RecursiveAnchorKeyword(value));
 			return builder;
 		}
 
