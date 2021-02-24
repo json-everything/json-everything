@@ -53,6 +53,7 @@ namespace Json.More
 		}
 
 		// source: https://stackoverflow.com/a/60592310/878701, modified for netstandard2.0
+		// license: https://creativecommons.org/licenses/by-sa/4.0/
 		/// <summary>
 		/// Generate a consistent JSON-value-based hash code for the element.
 		/// </summary>
