@@ -20,7 +20,7 @@ namespace Json.Logic.Rules
 			_value = value.AsJsonElement();
 		}
 
-		public LiteralRule(string value)
+		public LiteralRule(string? value)
 		{
 			_value = value?.AsJsonElement() ?? JsonDocument.Parse("null").RootElement;
 		}

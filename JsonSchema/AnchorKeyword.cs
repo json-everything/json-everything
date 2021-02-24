@@ -31,7 +31,7 @@ namespace Json.Schema
 		/// <param name="anchor">The anchor value.</param>
 		public AnchorKeyword(string anchor)
 		{
-			Anchor = anchor;
+			Anchor = anchor ?? throw new ArgumentNullException(nameof(anchor));
 		}
 
 		/// <summary>
@@ -46,7 +46,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(AnchorKeyword other)
+		public bool Equals(AnchorKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -65,7 +65,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Anchor != null ? Anchor.GetHashCode() : 0);
+			return Anchor.GetHashCode();
 		}
 	}
 

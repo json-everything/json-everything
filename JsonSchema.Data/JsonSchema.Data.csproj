@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -15,8 +15,8 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.0</Version>
-		<FileVersion>1.0.0.0</FileVersion>
+		<Version>1.0.1</Version>
+		<FileVersion>1.0.1.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -24,6 +24,7 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -35,6 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Include="..\docs_source\release-notes\json-schema-data.md" Link="json-schema-data.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

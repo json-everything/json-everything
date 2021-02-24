@@ -18,7 +18,7 @@
 		/// <summary>
 		/// Registers the all components required to use the data vocabulary.
 		/// </summary>
-		public static void Register(VocabularyRegistry vocabRegistry = null, SchemaRegistry schemaRegistry = null)
+		public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
 		{
 			vocabRegistry ??= VocabularyRegistry.Global;
 			schemaRegistry ??= SchemaRegistry.Global;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Json.Path
@@ -8,7 +9,7 @@ namespace Json.Path
 	{
 		private readonly Index _index;
 
-		public SimpleIndex(Index index)
+		private SimpleIndex(Index index)
 		{
 			_index = index;
 		}
@@ -20,7 +21,7 @@ namespace Json.Path
 			return new[] {end};
 		}
 
-		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)
 		{
 			if (!span.TryGetInt(ref i, out var value))
 			{

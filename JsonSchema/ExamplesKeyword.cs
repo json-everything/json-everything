@@ -34,7 +34,7 @@ namespace Json.Schema
 		/// <param name="values">The collection of example values.</param>
 		public ExamplesKeyword(params JsonElement[] values)
 		{
-			Values = values.Select(e => e.Clone()).ToList();
+			Values = values?.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace Json.Schema
 		/// <param name="values">The collection of example values.</param>
 		public ExamplesKeyword(IEnumerable<JsonElement> values)
 		{
-			Values = values.Select(e => e.Clone()).ToList();
+			Values = values?.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(ExamplesKeyword other)
+		public bool Equals(ExamplesKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -78,7 +78,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Values?.GetCollectionHashCode() ?? 0;
+			return Values.GetUnorderedCollectionHashCode(element => element.GetEquivalenceHashCode());
 		}
 	}
 

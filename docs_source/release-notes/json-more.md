@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/gregsdennis/json-everything/pull/???)
+
+Added support for nullable reference types.
+
+Related to [#76](https://github.com/gregsdennis/json-everything/issues/76), added `.GetEquivalenceHashCode()` extension for `JsonElement`.  Credit to [@amosonn](https://github.com/amosonn) for pointing me to a good hash code method in the wild.
+
 # [1.3.0](https://github.com/gregsdennis/json-everything/pull/65)
 
 Added `JsonElementProxy`.  This class allows the client to define methods that expect a `JsonElement` to be called with native types by defining implicit casts from those types into the `JsonElementProxy`.

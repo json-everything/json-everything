@@ -25,7 +25,8 @@ namespace Json.Schema
 		public IReadOnlyDictionary<string, SchemaOrPropertyList> Requirements { get; }
 
 		IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas =>
-			Requirements.Where(x => x.Value.Schema != null).ToDictionary(x => x.Key, x => x.Value.Schema);
+			Requirements.Where(x => x.Value.Schema != null)
+				.ToDictionary(x => x.Key, x => x.Value.Schema!);
 
 		static DependenciesKeyword()
 		{
@@ -73,7 +74,7 @@ namespace Json.Schema
 				else
 				{
 					var missingDependencies = new List<string>();
-					foreach (var dependency in requirements.Requirements)
+					foreach (var dependency in requirements.Requirements!)
 					{
 						if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
 
@@ -109,9 +110,9 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, allDependencies);
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			if (!Requirements.TryGetValue(value, out var entry)) return null;
+			if (value == null || !Requirements.TryGetValue(value, out var entry)) return null;
 
 			return entry.Schema;
 		}
@@ -127,7 +128,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DependenciesKeyword other)
+		public bool Equals(DependenciesKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -154,16 +155,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Requirements.Aggregate(0, (current, obj) =>
-			{
-				unchecked
-				{
-					var hashCode = current;
-					hashCode = (hashCode * 397) ^ (obj.Key?.GetHashCode() ?? 0);
-					hashCode = (hashCode * 397) ^ (obj.Value != null ? obj.Value.GetHashCode() : 0);
-					return hashCode;
-				}
-			});
+			return Requirements.GetStringDictionaryHashCode();
 		}
 	}
 
@@ -199,11 +191,11 @@ namespace Json.Schema
 		/// <summary>
 		/// The schema dependency.
 		/// </summary>
-		public JsonSchema Schema { get; }
+		public JsonSchema? Schema { get; }
 		/// <summary>
 		/// The property dependency.
 		/// </summary>
-		public List<string> Requirements { get; }
+		public List<string>? Requirements { get; }
 
 		/// <summary>
 		/// Creates a schema dependency.
@@ -226,7 +218,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(SchemaOrPropertyList other)
+		public bool Equals(SchemaOrPropertyList? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;

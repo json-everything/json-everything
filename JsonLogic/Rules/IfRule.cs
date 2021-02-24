@@ -22,7 +22,7 @@ namespace Json.Logic.Rules
 			switch (_components.Count)
 			{
 				case 0:
-					return ((string) null).AsJsonElement();
+					return ((string?) null).AsJsonElement();
 				case 1:
 					return _components[0].Apply(data);
 				case 2:
@@ -31,7 +31,7 @@ namespace Json.Logic.Rules
 
 					return condition
 						? thenResult.Apply(data)
-						: ((string) null).AsJsonElement();
+						: ((string?) null).AsJsonElement();
 				default:
 					var currentCondition = _components[0];
 					var currentTrueResult = _components[1];
@@ -44,7 +44,7 @@ namespace Json.Logic.Rules
 						if (condition)
 							return currentTrueResult.Apply(data);
 
-						if (elseIndex == _components.Count) return ((string) null).AsJsonElement();
+						if (elseIndex == _components.Count) return ((string?) null).AsJsonElement();
 
 						currentCondition = _components[elseIndex++];
 

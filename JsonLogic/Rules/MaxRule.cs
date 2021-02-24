@@ -23,7 +23,7 @@ namespace Json.Logic.Rules
 			if (nulls.Any())
 				throw new JsonLogicException($"Cannot find max with {nulls.First().ValueKind}.");
 
-			return items.Max(i => i.Value.Value).AsJsonElement();
+			return items.Max(i => i.Value!.Value).AsJsonElement();
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace Json.More
 		/// <param name="value">The value to convert.</param>
 		/// <param name="options">(optional) JSON serialization options.</param>
 		/// <returns>A <see cref="JsonDocument"/> representing the vale.</returns>
-		public static JsonDocument ToJsonDocument<T>(this T value, JsonSerializerOptions options = null)
+		public static JsonDocument ToJsonDocument<T>(this T value, JsonSerializerOptions? options = null)
 		{
 			return JsonDocument.Parse(JsonSerializer.Serialize(value, options));
 		}

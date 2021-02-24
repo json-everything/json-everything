@@ -71,7 +71,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="keyword">The keyword name.</param>
 		/// <returns>The keyword type, if registered; otherwise null.</returns>
-		public static Type GetImplementationType(string keyword)
+		public static Type? GetImplementationType(string keyword)
 		{
 			return _keywords.TryGetValue(keyword, out var implementationType)
 				? implementationType
@@ -93,7 +93,7 @@ namespace Json.Schema
 			_nullKeywords[typeof(T)] = nullKeyword;
 		}
 
-		internal static IJsonSchemaKeyword GetNullValuedKeyword(Type keywordType)
+		internal static IJsonSchemaKeyword? GetNullValuedKeyword(Type keywordType)
 		{
 			return _nullKeywords.TryGetValue(keywordType, out var instance) ? instance : null;
 		}

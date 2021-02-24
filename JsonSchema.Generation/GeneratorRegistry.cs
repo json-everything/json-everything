@@ -39,7 +39,7 @@ namespace Json.Schema.Generation
 			_generators.Insert(0, generator);
 		}
 
-		internal static ISchemaGenerator Get(Type type)
+		internal static ISchemaGenerator? Get(Type type)
 		{
 			return _generators.FirstOrDefault(g => g.Handles(type));
 		}

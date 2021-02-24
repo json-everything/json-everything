@@ -32,20 +32,20 @@ namespace Json.Schema
 		/// <summary>
 		/// Gets the keywords contained in the schema.
 		/// </summary>
-		public IReadOnlyCollection<IJsonSchemaKeyword> Keywords { get; }
+		public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
 		/// <summary>
 		/// Gets other non-keyword (or unknown keyword) properties in the schema.
 		/// </summary>
-		public IReadOnlyDictionary<string, JsonElement> OtherData { get; }
+		public IReadOnlyDictionary<string, JsonElement>? OtherData { get; }
 
 		internal bool? BoolValue { get; }
-		internal Uri BaseUri { get; private set; }
+		internal Uri? BaseUri { get; private set; }
 
 		private JsonSchema(bool value)
 		{
 			BoolValue = value;
 		}
-		internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords, IReadOnlyDictionary<string, JsonElement> otherData)
+		internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords, IReadOnlyDictionary<string, JsonElement>? otherData)
 		{
 			Keywords = keywords.ToArray();
 			OtherData = otherData;
@@ -93,13 +93,12 @@ namespace Json.Schema
 		/// <param name="root">The root instance.</param>
 		/// <param name="options">The options to use for this validation.</param>
 		/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-		public ValidationResults Validate(JsonElement root, ValidationOptions options = null)
+		public ValidationResults Validate(JsonElement root, ValidationOptions? options = null)
 		{
 			options ??= ValidationOptions.Default;
 
-			var context = new ValidationContext
+			var context = new ValidationContext(options)
 				{
-					Options = options ?? ValidationOptions.Default,
 					LocalInstance = root,
 					InstanceLocation = JsonPointer.UrlEmpty,
 					InstanceRoot = root,
@@ -150,7 +149,7 @@ namespace Json.Schema
 			RegisterSubschemasAndGetBaseUri(registry, currentUri);
 		}
 
-		private Uri RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
+		private Uri? RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
 		{
 			if (Keywords == null) return null; // boolean cases
 
@@ -160,7 +159,9 @@ namespace Json.Schema
 				currentUri = idKeyword.UpdateUri(currentUri);
 				var parts = idKeyword.Id.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
 				var fragment = parts.Length > 1 ? parts[1] : null;
+#pragma warning disable 8602
 				if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
+#pragma warning restore 8602
 					registry.Register(currentUri, this);
 				else
 					registry.RegisterAnchor(currentUri, fragment, this);
@@ -194,17 +195,16 @@ namespace Json.Schema
 				return;
 			}
 
-			var metaSchemaUri = Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-			var keywords = context.Options.FilterKeywords(Keywords, metaSchemaUri, context.Options.SchemaRegistry);
+			var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+			var keywords = context.Options.FilterKeywords(Keywords!, metaSchemaUri, context.Options.SchemaRegistry);
 
-			ValidationContext newContext = null;
+			ValidationContext? newContext = null;
 			var overallResult = true;
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
-				newContext.CurrentAnchor ??= previousContext?.CurrentAnchor;
 				newContext.ParentContext = context;
 				newContext.LocalSchema = this;
 				newContext.ImportAnnotations(previousContext);
@@ -222,9 +222,9 @@ namespace Json.Schema
 				context.ImportAnnotations(newContext);
 		}
 
-		internal (JsonSchema, Uri) FindSubschema(JsonPointer pointer, Uri currentUri)
+		internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)
 		{
-			IRefResolvable resolvable = this;
+			IRefResolvable? resolvable = this;
 			for (var i = 0; i < pointer.Segments.Length; i++)
 			{
 				var segment = pointer.Segments[i];
@@ -261,9 +261,9 @@ namespace Json.Schema
 			return (resolvable as JsonSchema, currentUri);
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			var keyword = Keywords.FirstOrDefault(k => k.Keyword() == value);
+			var keyword = Keywords?.FirstOrDefault(k => k.Keyword() == value);
 			return keyword as IRefResolvable;
 		}
 
@@ -279,14 +279,14 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(JsonSchema other)
+		public bool Equals(JsonSchema? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 
 			if (BoolValue.HasValue) return BoolValue == other.BoolValue;
 			if (other.BoolValue.HasValue) return false;
-			if (Keywords.Count != other.Keywords.Count) return false;
+			if (Keywords!.Count != other.Keywords!.Count) return false;
 			if (OtherData?.Count != other.OtherData?.Count) return false;
 
 			if (Keywords != null)
@@ -302,7 +302,7 @@ namespace Json.Schema
 
 			if (OtherData != null)
 			{
-				var byKey = OtherData.Join(other.OtherData,
+				var byKey = OtherData.Join(other.OtherData!,
 						td => td.Key,
 						od => od.Key,
 						(td, od) => new {ThisData = td.Value, OtherData = od.Value})
@@ -328,8 +328,8 @@ namespace Json.Schema
 		{
 			unchecked
 			{
-				var hashCode = Keywords?.GetCollectionHashCode() ?? 0;
-				hashCode = (hashCode * 397) ^ (OtherData?.GetCollectionHashCode() ?? 0);
+				var hashCode = Keywords?.GetUnorderedCollectionHashCode() ?? 0;
+				hashCode = (hashCode * 397) ^ (OtherData?.GetStringDictionaryHashCode() ?? 0);
 				hashCode = (hashCode * 397) ^ BoolValue.GetHashCode();
 				return hashCode;
 			}
@@ -371,17 +371,11 @@ namespace Json.Schema
 
 						IJsonSchemaKeyword implementation;
 						if (reader.TokenType == JsonTokenType.Null)
-						{
-							implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType);
-							if (implementation == null)
-								throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
-						}
+							implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
+							                 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 						else
-						{
-							implementation = (IJsonSchemaKeyword)JsonSerializer.Deserialize(ref reader, keywordType, options);
-							if (implementation == null)
-								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
-						}
+							implementation = (IJsonSchemaKeyword) JsonSerializer.Deserialize(ref reader, keywordType, options) ??
+							                 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
 						keywords.Add(implementation);
 						break;
 					case JsonTokenType.EndObject:
@@ -409,7 +403,7 @@ namespace Json.Schema
 			}
 
 			writer.WriteStartObject();
-			foreach (var keyword in value.Keywords)
+			foreach (var keyword in value.Keywords!)
 			{
 				JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
 			}

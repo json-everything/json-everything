@@ -13,8 +13,8 @@
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageTags>json-path jsonpath query json</PackageTags>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
-    <Version>0.1.4</Version>
-    <FileVersion>0.1.4.0</FileVersion>
+    <Version>0.1.5</Version>
+    <FileVersion>0.1.5.0</FileVersion>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DocumentationFile>JsonPath.Net.xml</DocumentationFile>
@@ -24,9 +24,11 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 	  <SignAssembly>true</SignAssembly>
 	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<Nullable>enable</Nullable>
    </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\docs_source\release-notes\json-path.md" Link="json-path.md" />
     <None Include="..\LICENSE" Link="LICENSE">
       <PackagePath></PackagePath>
       <Pack>True</Pack>
@@ -38,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

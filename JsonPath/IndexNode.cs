@@ -7,9 +7,9 @@ namespace Json.Path
 {
 	internal class IndexNode : PathNodeBase
 	{
-		private readonly List<IIndexExpression> _ranges;
+		private readonly List<IIndexExpression>? _ranges;
 
-		public IndexNode(IEnumerable<IIndexExpression> ranges)
+		public IndexNode(IEnumerable<IIndexExpression>? ranges)
 		{
 			_ranges = ranges?.ToList();
 		}

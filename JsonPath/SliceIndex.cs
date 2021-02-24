@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -11,7 +12,7 @@ namespace Json.Path
 		private readonly Range _range;
 		private readonly int _step;
 
-		public SliceIndex(Range range, int step = 1)
+		private SliceIndex(Range range, int step = 1)
 		{
 			_range = range;
 			_step = step;
@@ -42,7 +43,7 @@ namespace Json.Path
 				.Select(x => x.index);
 		}
 
-		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)
 		{
 			Index start = Index.Start, end = Index.End;
 			if (span.TryGetInt(ref i, out var v)) 

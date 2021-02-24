@@ -1,3 +1,7 @@
+# [1.2.1](https://github.com/gregsdennis/json-everything/pull/??)
+
+Added support for nullable reference types.
+
 # [1.2.0](https://github.com/gregsdennis/json-everything/pull/74)
 
 Added support for .Net 5 and remaining in-built JSON serialization attributes: `JsonInclude` & `JsonNumberHandling`.

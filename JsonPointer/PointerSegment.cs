@@ -28,7 +28,7 @@ namespace Json.Pointer
 		/// <returns>A JSON Pointer segment.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 		/// <exception cref="PointerParseException"><paramref name="source"/> contains an invalid escape sequence or an invalid URI-encoded sequence or ends with `~`.</exception>
-		public static PointerSegment Parse(string source, bool uriFormatted)
+		public static PointerSegment Parse(string? source, bool uriFormatted)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 
@@ -46,7 +46,7 @@ namespace Json.Pointer
 		/// <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
 		/// <param name="segment">The resulting segments.</param>
 		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
-		public static bool TryParse(string source, bool uriFormatted, out PointerSegment segment)
+		public static bool TryParse(string? source, bool uriFormatted, out PointerSegment segment)
 		{
 			if (source == null)
 			{
@@ -194,7 +194,7 @@ namespace Json.Pointer
 		/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
 		public override int GetHashCode()
 		{
-			return (Value != null ? StringComparer.InvariantCulture.GetHashCode(Value) : 0);
+			return Value == null ? 0 : StringComparer.InvariantCulture.GetHashCode(Value);
 		}
 
 		/// <summary>

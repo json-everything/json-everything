@@ -38,7 +38,7 @@ namespace Json.Schema
 		/// <param name="value">The format.</param>
 		public FormatKeyword(Format value)
 		{
-			Value = value;
+			Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(FormatKeyword other)
+		public bool Equals(FormatKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -90,7 +90,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Value?.GetHashCode() ?? 0;
+			return Value.GetHashCode();
 		}
 	}
 

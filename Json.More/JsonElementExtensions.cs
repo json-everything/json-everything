@@ -52,6 +52,78 @@ namespace Json.More
 			}
 		}
 
+		// source: https://stackoverflow.com/a/60592310/878701, modified for netstandard2.0
+		// license: https://creativecommons.org/licenses/by-sa/4.0/
+		/// <summary>
+		/// Generate a consistent JSON-value-based hash code for the element.
+		/// </summary>
+		/// <param name="element">The element.</param>
+		/// <param name="maxHashDepth">Maximum depth to calculate.  Default is -1 which utilizes the entire structure without limitation.</param>
+		/// <returns>The hash code.</returns>
+		/// <remarks>
+		/// See the following for discussion on why the default implementation is insufficient:
+		///
+		/// - https://github.com/gregsdennis/json-everything/issues/76
+		/// - https://github.com/dotnet/runtime/issues/33388
+		/// </remarks>
+		public static int GetEquivalenceHashCode(this JsonElement element, int maxHashDepth = -1)
+		{
+			static void Add(ref int current, object? newValue)
+			{
+				unchecked
+				{
+					current = current * 397 ^ (newValue?.GetHashCode() ?? 0);
+				}
+			}
+
+			void ComputeHashCode(JsonElement obj, ref int current, int depth)
+			{
+				Add(ref current, obj.ValueKind);
+
+				switch (obj.ValueKind)
+				{
+					case JsonValueKind.Null:
+					case JsonValueKind.True:
+					case JsonValueKind.False:
+					case JsonValueKind.Undefined:
+						break;
+
+					case JsonValueKind.Number:
+						Add(ref current, obj.GetRawText());
+						break;
+
+					case JsonValueKind.String:
+						Add(ref current, obj.GetString());
+						break;
+
+					case JsonValueKind.Array:
+						if (depth != maxHashDepth)
+							foreach (var item in obj.EnumerateArray())
+								ComputeHashCode(item, ref current, depth + 1);
+						else
+							Add(ref current, obj.GetArrayLength());
+						break;
+
+					case JsonValueKind.Object:
+						foreach (var property in obj.EnumerateObject().OrderBy(p => p.Name, StringComparer.Ordinal))
+						{
+							Add(ref current, property.Name);
+							if (depth != maxHashDepth)
+								ComputeHashCode(property.Value, ref current, depth + 1);
+						}
+						break;
+
+					default:
+						throw new JsonException($"Unknown JsonValueKind {obj.ValueKind}");
+				}
+			}
+
+			var hash = 0;
+			ComputeHashCode(element, ref hash, 0);
+			return hash;
+
+		}
+
 		/// <summary>
 		/// Just a shortcut for calling `JsonSerializer.Serialize()` because `.ToString()` doesn't do what you might expect.
 		/// </summary>
@@ -150,12 +222,12 @@ namespace Json.More
 		}
 
 		/// <summary>
-		/// Converts a <see cref="string"/> to a <see cref="JsonElement"/>.
+		/// Converts a <see cref="string"/> to a <see cref="JsonElement"/>.  Can also be used to get a `null` element.
 		/// </summary>
 		/// <param name="value">The value to convert.</param>
 		/// <returns>A <see cref="JsonElement"/> representing the value.</returns>
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
-		public static JsonElement AsJsonElement(this string value)
+		public static JsonElement AsJsonElement(this string? value)
 		{
 			var doc = JsonDocument.Parse(JsonSerializer.Serialize(value));
 			return doc.RootElement;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -21,7 +22,7 @@ namespace Json.Path
 			return new[] {_name};
 		}
 
-		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, out IIndexExpression index)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)
 		{
 			if (span[i] != '\'' && span[i] != '"')
 			{

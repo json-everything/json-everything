@@ -10,11 +10,11 @@ namespace Json.Path
 		/// <summary>
 		/// The list of matches.
 		/// </summary>
-		public IReadOnlyList<PathMatch> Matches { get; }
+		public IReadOnlyList<PathMatch>? Matches { get; }
 		/// <summary>
 		/// An error, if any, that occurred during evaluation.
 		/// </summary>
-		public string Error { get; }
+		public string? Error { get; }
 
 		internal PathResult(IReadOnlyList<PathMatch> matches)
 		{

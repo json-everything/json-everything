@@ -10,7 +10,7 @@ namespace Json.Schema
 	/// </summary>
 	public class ValidationOptions
 	{
-		private Uri _defaultBaseUri;
+		private Uri? _defaultBaseUri;
 
 		/// <summary>
 		/// The default settings.
@@ -86,7 +86,7 @@ namespace Json.Schema
 			return options;
 		}
 
-		internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri metaSchemaId, SchemaRegistry registry)
+		internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri? metaSchemaId, SchemaRegistry registry)
 		{
 			ValidatingAs = Draft.Unspecified;
 			while (metaSchemaId != null && ValidatingAs == Draft.Unspecified)
@@ -105,7 +105,7 @@ namespace Json.Schema
 					return AllowSiblingRef(keywords, ValidatingAs);
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null) return ByOption(keywords);
-				metaSchemaId = metaSchema.Keywords.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+				metaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
 			}
 
 			return ByOption(keywords);

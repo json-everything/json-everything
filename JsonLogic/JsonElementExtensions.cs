@@ -22,7 +22,7 @@ namespace Json.Logic
 			};
 		}
 
-		public static string Stringify(this JsonElement element)
+		public static string? Stringify(this JsonElement element)
 		{
 			return element.ValueKind switch
 			{
@@ -58,7 +58,7 @@ namespace Json.Logic
 		// Ported from: https://github.com/marvindv/jsonlogic_rs/blob/b2ad93af575f19c6b220a6a54d599e104e72a630/src/operators/logic.rs#L33
 		public static bool LooseEquals(this JsonElement a, JsonElement b)
 		{
-			string CoerceArrayToString(JsonElement array) => string.Join(",", array.EnumerateArray().Select(e => e.ToJsonString()));
+			static string CoerceArrayToString(JsonElement array) => string.Join(",", array.EnumerateArray().Select(e => e.ToJsonString()));
 
 			return (a.ValueKind, b.ValueKind) switch
 			{

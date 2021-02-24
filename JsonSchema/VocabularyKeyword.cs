@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -31,7 +32,7 @@ namespace Json.Schema
 		/// <param name="values">The collection of vocabulary requirements.</param>
 		public VocabularyKeyword(IReadOnlyDictionary<Uri, bool> values)
 		{
-			Vocabulary = values;
+			Vocabulary = values ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -68,7 +69,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(VocabularyKeyword other)
+		public bool Equals(VocabularyKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -94,7 +95,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Vocabulary?.GetHashCode() ?? 0;
+			return Vocabulary.GetCollectionHashCode();
 		}
 	}
 

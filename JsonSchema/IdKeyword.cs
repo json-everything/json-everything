@@ -31,7 +31,7 @@ namespace Json.Schema
 		/// <param name="id">The ID.</param>
 		public IdKeyword(Uri id)
 		{
-			Id = id;
+			Id = id ?? throw new ArgumentNullException(nameof(id));
 		}
 
 		/// <summary>
@@ -40,11 +40,15 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.ParentContext.CurrentUri = UpdateUri(context.CurrentUri);
+			var newUri = UpdateUri(context.CurrentUri);
+			context.ParentContext.UriChanged = context.ParentContext.CurrentUri != newUri;
+			if (context.ParentContext.UriChanged) 
+				context.ParentContext.CurrentAnchor = null;
+			context.ParentContext.CurrentUri = newUri;
 			context.IsValid = true;
 		}
 
-		internal Uri UpdateUri(Uri currentUri)
+		internal Uri UpdateUri(Uri? currentUri)
 		{
 			return currentUri == null || Id.IsAbsoluteUri ? Id : new Uri(currentUri, Id);
 		}
@@ -52,7 +56,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(IdKeyword other)
+		public bool Equals(IdKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -71,7 +75,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Id != null ? Id.GetHashCode() : 0);
+			return Id.GetHashCode();
 		}
 	}
 

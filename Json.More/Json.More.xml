@@ -133,6 +133,14 @@
             <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">The <see cref="P:System.Text.Json.JsonElement.ValueKind"/> is not valid.</exception>
         </member>
+        <member name="M:Json.More.JsonElementExtensions.GetEquivalenceHashCode(System.Text.Json.JsonElement,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="element"></param>
+            <param name="maxHashDepth"></param>
+            <returns></returns>
+        </member>
         <member name="M:Json.More.JsonElementExtensions.ToJsonString(System.Text.Json.JsonElement)">
             <summary>
             Just a shortcut for calling `JsonSerializer.Serialize()` because `.ToString()` doesn't do what you might expect.
@@ -201,7 +209,7 @@
         </member>
         <member name="M:Json.More.JsonElementExtensions.AsJsonElement(System.String)">
             <summary>
-            Converts a <see cref="T:System.String"/> to a <see cref="T:System.Text.Json.JsonElement"/>.
+            Converts a <see cref="T:System.String"/> to a <see cref="T:System.Text.Json.JsonElement"/>.  Can also be used to get a `null` element.
             </summary>
             <param name="value">The value to convert.</param>
             <returns>A <see cref="T:System.Text.Json.JsonElement"/> representing the value.</returns>

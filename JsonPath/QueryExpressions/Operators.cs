@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Json.Path.QueryExpressions
 {
@@ -23,7 +24,7 @@ namespace Json.Path.QueryExpressions
 		public static readonly IQueryExpressionOperator And = new AndOperator();
 		public static readonly IQueryExpressionOperator Or = new OrOperator();
 
-		public static bool TryParse(ReadOnlySpan<char> span, ref int i, out IQueryExpressionOperator op)
+		public static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IQueryExpressionOperator? op)
 		{ 
 			op = null;
 			switch (span[i])

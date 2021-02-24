@@ -86,6 +86,7 @@ namespace Json.Schema.Tests
 
 			Assert.AreEqual(aSchema, bSchema);
 		}
+
 		public static IEnumerable<TestCaseData> NotEqualCases
 		{
 			get

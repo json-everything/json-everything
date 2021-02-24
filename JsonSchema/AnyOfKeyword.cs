@@ -35,7 +35,7 @@ namespace Json.Schema
 		/// <param name="values">The set of schemas.</param>
 		public AnyOfKeyword(params JsonSchema[] values)
 		{
-			Schemas = values.ToList();
+			Schemas = values?.ToList() ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace Json.Schema
 		/// <param name="values">The set of schemas.</param>
 		public AnyOfKeyword(IEnumerable<JsonSchema> values)
 		{
-			Schemas = values.ToList();
+			Schemas = values?.ToList() ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace Json.Schema
 			context.IsValid = overallResult;
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
 			if (!int.TryParse(value, out var index)) return null;
 			if (index < 0 || Schemas.Count <= index) return null;
@@ -87,7 +87,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(AnyOfKeyword other)
+		public bool Equals(AnyOfKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -106,7 +106,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Schemas != null ? Schemas.GetHashCode() : 0);
+			return Schemas.GetUnorderedCollectionHashCode();
 		}
 	}
 

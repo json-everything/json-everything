@@ -218,6 +218,15 @@
             </summary>
             <param name="builder">The builder.</param>
         </member>
+        <member name="M:Json.Schema.Generation.Intents.AnyOfIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.Generation.Intents.DefsIntent">
             <summary>
             Provides intent to create a `$defs` keyword.

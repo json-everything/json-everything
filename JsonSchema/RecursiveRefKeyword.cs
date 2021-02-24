@@ -24,10 +24,10 @@ namespace Json.Schema
 		/// <summary>
 		/// Creates a new <see cref="RecursiveRefKeyword"/>.
 		/// </summary>
-		/// <param name="value"></param>
+		/// <param name="value">The URI.</param>
 		public RecursiveRefKeyword(Uri value)
 		{
-			Reference = value;
+			Reference = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>
@@ -40,8 +40,8 @@ namespace Json.Schema
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
-			Uri newUri;
-			JsonSchema baseSchema = null;
+			Uri? newUri;
+			JsonSchema? baseSchema = null;
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
@@ -60,12 +60,12 @@ namespace Json.Schema
 			}
 			else
 			{
-				baseSchema = context.CurrentAnchor ?? context.SchemaRoot;
 				newUri = context.CurrentUri;
+				baseSchema = context.CurrentAnchor ?? context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
-			JsonSchema schema;
-			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment))
+			JsonSchema? schema;
+			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
 				schema = context.Options.SchemaRegistry.Get(newUri, fragment);
 			else
 			{
@@ -100,7 +100,7 @@ namespace Json.Schema
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
 			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
-				subContext.SchemaRoot = baseSchema;
+				subContext.SchemaRoot = baseSchema!;
 			schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
 			context.ConsolidateAnnotations();
@@ -110,7 +110,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(RecursiveRefKeyword other)
+		public bool Equals(RecursiveRefKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -129,7 +129,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Reference != null ? Reference.GetHashCode() : 0);
+			return Reference.GetHashCode();
 		}
 	}
 

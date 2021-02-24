@@ -83,7 +83,7 @@ namespace Json.Patch
 			context.Message = $"Path `{operation.Path}` is not present in the instance.";
 		}
 
-		private static string RemoveSource(EditableJsonElement fromParent, string lastSegment, JsonPointer path)
+		private static string? RemoveSource(EditableJsonElement fromParent, string lastSegment, JsonPointer path)
 		{
 			if (fromParent.Object != null)
 			{

@@ -42,7 +42,7 @@ namespace Json.Schema
 		/// <param name="values">The pattern-keyed schemas.</param>
 		public PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values)
 		{
-			Patterns = values;
+			Patterns = values ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace Json.Schema
 			context.IsValid = overallResult;
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
 			return Patterns.TryGetValue(new Regex(value), out var schema) ? schema : null;
 		}
@@ -119,7 +119,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(PatternPropertiesKeyword other)
+		public bool Equals(PatternPropertiesKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -146,7 +146,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Patterns?.GetCollectionHashCode() ?? 0;
+			return ((IKeyedSchemaCollector) this).Schemas.GetStringDictionaryHashCode();
 		}
 	}
 

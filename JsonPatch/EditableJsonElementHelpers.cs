@@ -5,7 +5,7 @@ namespace Json.Patch
 {
 	internal static class EditableJsonElementHelpers
 	{
-		public static string FindParentOfTarget(ref EditableJsonElement current, JsonPointer path)
+		public static string? FindParentOfTarget(ref EditableJsonElement current, JsonPointer path)
 		{
 			foreach (var segment in path.Segments.Take(path.Segments.Length - 1))
 			{
@@ -33,7 +33,7 @@ namespace Json.Patch
 
 			return null;
 		}
-		public static string FindTarget(ref EditableJsonElement current, JsonPointer path)
+		public static string? FindTarget(ref EditableJsonElement current, JsonPointer path)
 		{
 			foreach (var segment in path.Segments)
 			{

@@ -8,7 +8,7 @@ namespace Json.Logic.Rules
 	{
 		private readonly Rule _a;
 		private readonly Rule _b;
-		private readonly Rule _c;
+		private readonly Rule? _c;
 
 		public LessThanRule(Rule a, Rule b)
 		{

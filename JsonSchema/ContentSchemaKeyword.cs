@@ -30,7 +30,7 @@ namespace Json.Schema
 		/// <param name="value">The schema against which to validate the content.</param>
 		public ContentSchemaKeyword(JsonSchema value)
 		{
-			Schema = value;
+			Schema = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>
@@ -39,15 +39,21 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			if (context.LocalInstance.ValueKind != JsonValueKind.String)
+			{
+				context.IsValid = true;
+				return;
+			}
+
 			var subContext = ValidationContext.From(context,
 				subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
 			Schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
-			context.IsValid = !subContext.IsValid;
+			context.IsValid = subContext.IsValid;
 			context.ConsolidateAnnotations();
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
 			return value == null ? Schema : null;
 		}
@@ -60,7 +66,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(ContentSchemaKeyword other)
+		public bool Equals(ContentSchemaKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -79,7 +85,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Schema != null ? Schema.GetHashCode() : 0;
+			return Schema.GetHashCode();
 		}
 	}
 

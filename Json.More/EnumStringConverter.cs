@@ -33,11 +33,31 @@ namespace Json.More
 	public class EnumStringConverter<T> : JsonConverter<T>
 		where T : Enum
 	{
-		private static Dictionary<string, T> _readValues;
-		private static Dictionary<T, string> _writeValues;
-		private static Func<T, T, T> _aggregator;
+		private static Dictionary<string, T>? _readValues;
+		private static Dictionary<T, string>? _writeValues;
+		private static Func<T, T, T>? _aggregator;
 		// ReSharper disable once StaticMemberInGenericType
 		private static readonly object _lock = new object();
+
+		private static Dictionary<string, T> ReadValues
+		{
+			get
+			{
+				EnsureMap();
+				return _readValues!;
+			}
+		}
+
+		private static Dictionary<T, string> WriteValues
+		{
+			get
+			{
+				EnsureMap();
+				return _writeValues!;
+			}
+		}
+
+		private static Func<T, T, T> Aggregator => _aggregator ??= BuildAggregator();
 
 		/// <summary>Reads and converts the JSON to type <typeparamref name="T" />.</summary>
 		/// <param name="reader">The reader.</param>
@@ -60,7 +80,7 @@ namespace Json.More
 					{
 						str = reader.GetString();
 
-						if (!_readValues.TryGetValue(str, out var immediate))
+						if (!ReadValues.TryGetValue(str, out var immediate))
 							throw new JsonException($"Could not find appropriate value for {str} in type {typeToConvert.Name}");
 
 						values.Add(immediate);
@@ -68,14 +88,14 @@ namespace Json.More
 					}
 					reader.Read(); // waste the end array
 
-					return ToCombined(values);
+					return values.Aggregate(Aggregator);
 				}
 				throw new JsonException("Expected string");
 			}
 
 			str = reader.GetString();
 
-			return _readValues.TryGetValue(str, out var value)
+			return ReadValues.TryGetValue(str, out var value)
 				? value
 				: throw new JsonException($"Could not find appropriate value for {str} in type {typeToConvert.Name}");
 		}
@@ -88,43 +108,38 @@ namespace Json.More
 		{
 			EnsureMap();
 
-			if (typeof(T).GetCustomAttribute<FlagsAttribute>() != null && !_writeValues.ContainsKey(value))
+			if (typeof(T).GetCustomAttribute<FlagsAttribute>() != null && !WriteValues.ContainsKey(value))
 			{
 				writer.WriteStartArray();
-				foreach (var name in _writeValues.Keys)
+				foreach (var name in WriteValues.Keys)
 				{
 					if (value.HasFlag(name))
-						writer.WriteStringValue(_writeValues[name]);
+						writer.WriteStringValue(WriteValues[name]);
 				}
 				writer.WriteEndArray();
 				return;
 			}
 
-			writer.WriteStringValue(_writeValues[value]);
+			writer.WriteStringValue(WriteValues[value]);
 		}
 
-		private static T ToCombined(IEnumerable<T> list)
+		private static Func<T, T, T> BuildAggregator()
 		{
-			if (_aggregator == null)
-			{
-				var underlyingType = Enum.GetUnderlyingType(typeof(T));
-				var currentParameter = Expression.Parameter(typeof(T), "current");
-				var nextParameter = Expression.Parameter(typeof(T), "next");
+			var underlyingType = Enum.GetUnderlyingType(typeof(T));
+			var currentParameter = Expression.Parameter(typeof(T), "current");
+			var nextParameter = Expression.Parameter(typeof(T), "next");
 
-				_aggregator = Expression.Lambda<Func<T, T, T>>(
-					Expression.Convert(
-						Expression.Or(
-							Expression.Convert(currentParameter, underlyingType),
-							Expression.Convert(nextParameter, underlyingType)
-						),
-						typeof(T)
+			return Expression.Lambda<Func<T, T, T>>(
+				Expression.Convert(
+					Expression.Or(
+						Expression.Convert(currentParameter, underlyingType),
+						Expression.Convert(nextParameter, underlyingType)
 					),
-					currentParameter,
-					nextParameter
-				).Compile();
-			}
-
-			return list.Aggregate(_aggregator);
+					typeof(T)
+				),
+				currentParameter,
+				nextParameter
+			).Compile();
 		}
 
 		private static void EnsureMap()

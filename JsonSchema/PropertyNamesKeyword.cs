@@ -41,7 +41,7 @@ namespace Json.Schema
 		/// <param name="value">The schema to match.</param>
 		public PropertyNamesKeyword(JsonSchema value)
 		{
-			Schema = value;
+			Schema = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Json.Schema
 				destContext.SetAnnotation(Name, allPropertyNames);
 		}
 
-		IRefResolvable IRefResolvable.ResolvePointerSegment(string value)
+		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
 			return value == null ? Schema : null;
 		}
@@ -100,7 +100,7 @@ namespace Json.Schema
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(PropertyNamesKeyword other)
+		public bool Equals(PropertyNamesKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -119,7 +119,7 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return Schema != null ? Schema.GetHashCode() : 0;
+			return Schema.GetHashCode();
 		}
 	}
 

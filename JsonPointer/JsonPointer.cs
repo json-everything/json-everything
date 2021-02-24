@@ -21,7 +21,7 @@ namespace Json.Pointer
 			new JsonPointer
 				{
 					_source = string.Empty,
-					Segments = new PointerSegment[0]
+					_segments = new PointerSegment[0]
 			};
 		/// <summary>
 		/// The empty pointer in URL-style.
@@ -31,19 +31,21 @@ namespace Json.Pointer
 				{
 					_source = "#",
 					Kind = JsonPointerKind.UriEncoded,
-					Segments = new PointerSegment[0]
+					_segments = new PointerSegment[0]
 				};
 
-		private string _source;
+		private string? _source;
+		private PointerSegment[]? _segments;
 
 		/// <summary>
 		/// Gets the source string for the pointer.
 		/// </summary>
 		public string Source => _source ??= _BuildSource();
+
 		/// <summary>
 		/// Gets the collection of pointer segments.
 		/// </summary>
-		public PointerSegment[] Segments { get; private set; }
+		public PointerSegment[] Segments => _segments!;
 		/// <summary>
 		/// Gets whether the pointer is URL-encoded.
 		/// </summary>
@@ -102,7 +104,7 @@ namespace Json.Pointer
 			return new JsonPointer
 				{
 					_source = source,
-					Segments = segments,
+					_segments = segments,
 					Kind = isUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
@@ -181,7 +183,7 @@ namespace Json.Pointer
 			pointer = new JsonPointer
 				{
 					_source = source,
-					Segments = segments,
+					_segments = segments,
 					Kind = isUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 			return true;
@@ -197,7 +199,7 @@ namespace Json.Pointer
 		{
 			return new JsonPointer
 				{
-					Segments = segments.ToArray(),
+					_segments = segments.ToArray(),
 					Kind = isUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
@@ -254,7 +256,7 @@ namespace Json.Pointer
 
 			return new JsonPointer
 				{
-					Segments = segments,
+					_segments = segments,
 					Kind = IsUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
@@ -272,7 +274,7 @@ namespace Json.Pointer
 
 			return new JsonPointer
 				{
-					Segments = segments,
+					_segments = segments,
 					Kind = IsUriEncoded ? JsonPointerKind.UriEncoded : JsonPointerKind.Plain
 				};
 		}
@@ -336,7 +338,7 @@ namespace Json.Pointer
 			if (IsUriEncoded)
 				builder.Append('#');
 
-			if (Segments != null)
+			if (_segments != null)
 			{
 				foreach (var segment in Segments)
 				{

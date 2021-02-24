@@ -14,7 +14,7 @@ namespace Json.Patch
 		/// <summary>
 		/// Gets any error that occurred.
 		/// </summary>
-		public string Error { get; }
+		public string? Error { get; }
 		/// <summary>
 		/// Gets the last operation that was attempted.
 		/// </summary>

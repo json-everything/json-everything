@@ -18,8 +18,8 @@ namespace Json.Schema.Tests.Suite
 		{
 			return GetTests("draft6")
 				.Concat(GetTests("draft7"))
-				.Concat(GetTests("draft2019-09"));
-				//.Concat(GetTests("draft2020-12"));
+				.Concat(GetTests("draft2019-09"))
+				.Concat(GetTests("draft2020-12"));
 		}
 
 		private static IEnumerable<TestCaseData> GetTests(string draftFolder)

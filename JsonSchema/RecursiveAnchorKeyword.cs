@@ -17,20 +17,49 @@ namespace Json.Schema
 		internal const string Name = "$recursiveAnchor";
 
 		/// <summary>
+		/// Gets the value.
+		/// </summary>
+		public bool Value { get; }
+
+		/// <summary>
+		/// Creates a new <see cref="RecursiveAnchorKeyword"/> defaulting the value to `true`.
+		/// </summary>
+		[Obsolete("This constructor is deprecated. Use the constructor that takes a bool argument instead.")]
+		public RecursiveAnchorKeyword()
+			: this(true)
+		{
+		}
+		/// <summary>
+		/// Creates a new <see cref="RecursiveAnchorKeyword"/>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		public RecursiveAnchorKeyword(bool value)
+		{
+			Value = value;
+		}
+
+		/// <summary>
 		/// Provides validation for the keyword.
 		/// </summary>
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.CurrentAnchor ??= context.LocalSchema;
-			context.SetAnnotation(Name, true);
+			if (!context.UriChanged || Value)
+				context.ParentContext.ValidateAnchor();
+
+			if (Value)
+			{
+				context.ParentContext.CurrentAnchor ??= context.LocalSchema;
+				context.SetAnnotation(Name, true);
+			}
+
 			context.IsValid = true;
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(RecursiveAnchorKeyword other)
+		public bool Equals(RecursiveAnchorKeyword? other)
 		{
 			return true;
 		}
@@ -56,16 +85,16 @@ namespace Json.Schema
 	{
 		public override RecursiveAnchorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.True)
-				throw new JsonException("Expected true");
+			if (reader.TokenType != JsonTokenType.True && reader.TokenType != JsonTokenType.False)
+				throw new JsonException("Expected boolean");
 
-			reader.GetBoolean();
+			var value = reader.GetBoolean();
 
-			return new RecursiveAnchorKeyword();
+			return new RecursiveAnchorKeyword(value);
 		}
 		public override void Write(Utf8JsonWriter writer, RecursiveAnchorKeyword value, JsonSerializerOptions options)
 		{
-			writer.WriteBoolean(RecursiveAnchorKeyword.Name, true);
+			writer.WriteBoolean(RecursiveAnchorKeyword.Name, value.Value);
 		}
 	}
 }
