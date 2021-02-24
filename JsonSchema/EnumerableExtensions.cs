@@ -130,9 +130,25 @@ namespace Json.Schema
 			int result = 0;
 			unchecked
 			{
-				foreach (var kvp in collection)
+				foreach (var item in collection)
 				{
-					result += kvp?.GetHashCode() ?? 0;
+					result += item?.GetHashCode() ?? 0;
+				}
+			}
+			return result;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static int GetUnorderedCollectionHashCode<T>(this IEnumerable<T> collection, Func<T, int> getHashCode)
+		{
+			int result = 0;
+			unchecked
+			{
+				foreach (var item in collection)
+				{
+					if (item == null) continue;
+
+					result += getHashCode(item);
 				}
 			}
 			return result;

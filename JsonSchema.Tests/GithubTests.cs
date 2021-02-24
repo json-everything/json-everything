@@ -338,5 +338,40 @@ namespace Json.Schema.Tests
 			Assert.IsTrue(schema1.Equals(schema4));
 			Assert.AreEqual(schema1.GetHashCode(), schema4.GetHashCode());
 		}
+
+		[Test]
+		public void Issue76_GetHashCodeIsNotConsistent_WhitespaceInObjectValue()
+		{
+			var schema1Str = @"
+{
+  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+  ""required"": [
+    ""a"",
+    ""b""
+  ],
+  ""properties"": {
+    ""a"": { ""const"": { ""left"": ""right"" } },
+    ""b"": { ""const"": ""b"" }
+  }
+}";
+
+			var schema2Str = @"
+{
+  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+  ""required"": [
+    ""b"",
+    ""a""
+  ],
+  ""properties"": {
+    ""a"": { ""const"": {""left"":""right""} },
+    ""b"": { ""const"": ""b"" }
+  }
+}";
+			var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str);
+			var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str);
+
+			Assert.IsTrue(schema1.Equals(schema2));
+			Assert.AreEqual(schema1.GetHashCode(), schema2.GetHashCode());
+		}
 	}
 }
