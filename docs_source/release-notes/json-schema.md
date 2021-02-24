@@ -8,6 +8,8 @@ Fixed `content*` keywords so that they only validate if the instance is a string
 
 Fixed [#76](https://github.com/gregsdennis/json-everything/issues/76) - `.GetHashCode()` is inconsistent for schemas and keywords.  Credit to [@amosonn](https://github.com/amosonn) for pointing me to a good hash code method in the wild.
 
+`RecursiveRef` parameterless constructor marked obsolete in favor of new constructor which takes a boolean value.  Schema builder extension also updated to include a parameter which defaults to `true` to maintain current behavior.
+
 # [1.8.0](https://github.com/gregsdennis/json-everything/pull/72)
 
 Exposed `UriExtensions` to help support new keywords that manipulate URIs.
