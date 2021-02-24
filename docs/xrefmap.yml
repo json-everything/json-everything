@@ -740,6 +740,15 @@ references:
   fullName.vb: Json.Logic.Rule.Widening(System.Int64 to Json.Logic.Rule)
   nameWithType: Rule.Implicit(Int64 to Rule)
   nameWithType.vb: Rule.Widening(Int64 to Rule)
+- uid: Json.Logic.Rule.op_Implicit(System.Nullable{System.String})~Json.Logic.Rule
+  name: Implicit(Nullable<String> to Rule)
+  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Nullable_System_String___Json_Logic_Rule
+  commentId: M:Json.Logic.Rule.op_Implicit(System.Nullable{System.String})~Json.Logic.Rule
+  name.vb: Widening(Nullable(Of String) to Rule)
+  fullName: Json.Logic.Rule.Implicit(System.Nullable<System.String> to Json.Logic.Rule)
+  fullName.vb: Json.Logic.Rule.Widening(System.Nullable(Of System.String) to Json.Logic.Rule)
+  nameWithType: Rule.Implicit(Nullable<String> to Rule)
+  nameWithType.vb: Rule.Widening(Nullable(Of String) to Rule)
 - uid: Json.Logic.Rule.op_Implicit(System.Single)~Json.Logic.Rule
   name: Implicit(Single to Rule)
   href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_Single__Json_Logic_Rule
@@ -749,15 +758,6 @@ references:
   fullName.vb: Json.Logic.Rule.Widening(System.Single to Json.Logic.Rule)
   nameWithType: Rule.Implicit(Single to Rule)
   nameWithType.vb: Rule.Widening(Single to Rule)
-- uid: Json.Logic.Rule.op_Implicit(System.String)~Json.Logic.Rule
-  name: Implicit(String to Rule)
-  href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_System_String__Json_Logic_Rule
-  commentId: M:Json.Logic.Rule.op_Implicit(System.String)~Json.Logic.Rule
-  name.vb: Widening(String to Rule)
-  fullName: Json.Logic.Rule.Implicit(System.String to Json.Logic.Rule)
-  fullName.vb: Json.Logic.Rule.Widening(System.String to Json.Logic.Rule)
-  nameWithType: Rule.Implicit(String to Rule)
-  nameWithType.vb: Rule.Widening(String to Rule)
 - uid: Json.Logic.Rule.op_Implicit*
   name: Implicit
   href: api/Json.Logic.Rule.html#Json_Logic_Rule_op_Implicit_
@@ -943,15 +943,15 @@ references:
   isSpec: "True"
   fullName: Json.More.JsonDocumentExtensions.ToJsonDocument
   nameWithType: JsonDocumentExtensions.ToJsonDocument
-- uid: Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,JsonSerializerOptions)
-  name: ToJsonDocument<T>(T, JsonSerializerOptions)
-  href: api/Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_JsonSerializerOptions_
-  commentId: M:Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,JsonSerializerOptions)
-  name.vb: ToJsonDocument(Of T)(T, JsonSerializerOptions)
-  fullName: Json.More.JsonDocumentExtensions.ToJsonDocument<T>(T, JsonSerializerOptions)
-  fullName.vb: Json.More.JsonDocumentExtensions.ToJsonDocument(Of T)(T, JsonSerializerOptions)
-  nameWithType: JsonDocumentExtensions.ToJsonDocument<T>(T, JsonSerializerOptions)
-  nameWithType.vb: JsonDocumentExtensions.ToJsonDocument(Of T)(T, JsonSerializerOptions)
+- uid: Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Nullable{JsonSerializerOptions})
+  name: ToJsonDocument<T>(T, Nullable<JsonSerializerOptions>)
+  href: api/Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Nullable_JsonSerializerOptions__
+  commentId: M:Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Nullable{JsonSerializerOptions})
+  name.vb: ToJsonDocument(Of T)(T, Nullable(Of JsonSerializerOptions))
+  fullName: Json.More.JsonDocumentExtensions.ToJsonDocument<T>(T, System.Nullable<JsonSerializerOptions>)
+  fullName.vb: Json.More.JsonDocumentExtensions.ToJsonDocument(Of T)(T, System.Nullable(Of JsonSerializerOptions))
+  nameWithType: JsonDocumentExtensions.ToJsonDocument<T>(T, Nullable<JsonSerializerOptions>)
+  nameWithType.vb: JsonDocumentExtensions.ToJsonDocument(Of T)(T, Nullable(Of JsonSerializerOptions))
 - uid: Json.More.JsonElementEqualityComparer
   name: JsonElementEqualityComparer
   href: api/Json.More.JsonElementEqualityComparer.html
@@ -1057,18 +1057,21 @@ references:
   commentId: M:Json.More.JsonElementExtensions.AsJsonElement(System.Int64)
   fullName: Json.More.JsonElementExtensions.AsJsonElement(System.Int64)
   nameWithType: JsonElementExtensions.AsJsonElement(Int64)
+- uid: Json.More.JsonElementExtensions.AsJsonElement(System.Nullable{System.String})
+  name: AsJsonElement(Nullable<String>)
+  href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_AsJsonElement_System_Nullable_System_String__
+  commentId: M:Json.More.JsonElementExtensions.AsJsonElement(System.Nullable{System.String})
+  name.vb: AsJsonElement(Nullable(Of String))
+  fullName: Json.More.JsonElementExtensions.AsJsonElement(System.Nullable<System.String>)
+  fullName.vb: Json.More.JsonElementExtensions.AsJsonElement(System.Nullable(Of System.String))
+  nameWithType: JsonElementExtensions.AsJsonElement(Nullable<String>)
+  nameWithType.vb: JsonElementExtensions.AsJsonElement(Nullable(Of String))
 - uid: Json.More.JsonElementExtensions.AsJsonElement(System.Single)
   name: AsJsonElement(Single)
   href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_AsJsonElement_System_Single_
   commentId: M:Json.More.JsonElementExtensions.AsJsonElement(System.Single)
   fullName: Json.More.JsonElementExtensions.AsJsonElement(System.Single)
   nameWithType: JsonElementExtensions.AsJsonElement(Single)
-- uid: Json.More.JsonElementExtensions.AsJsonElement(System.String)
-  name: AsJsonElement(String)
-  href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_AsJsonElement_System_String_
-  commentId: M:Json.More.JsonElementExtensions.AsJsonElement(System.String)
-  fullName: Json.More.JsonElementExtensions.AsJsonElement(System.String)
-  nameWithType: JsonElementExtensions.AsJsonElement(String)
 - uid: Json.More.JsonElementExtensions.AsJsonElement*
   name: AsJsonElement
   href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_AsJsonElement_
@@ -1076,6 +1079,19 @@ references:
   isSpec: "True"
   fullName: Json.More.JsonElementExtensions.AsJsonElement
   nameWithType: JsonElementExtensions.AsJsonElement
+- uid: Json.More.JsonElementExtensions.GetEquivalenceHashCode(JsonElement,System.Int32)
+  name: GetEquivalenceHashCode(JsonElement, Int32)
+  href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_GetEquivalenceHashCode_JsonElement_System_Int32_
+  commentId: M:Json.More.JsonElementExtensions.GetEquivalenceHashCode(JsonElement,System.Int32)
+  fullName: Json.More.JsonElementExtensions.GetEquivalenceHashCode(JsonElement, System.Int32)
+  nameWithType: JsonElementExtensions.GetEquivalenceHashCode(JsonElement, Int32)
+- uid: Json.More.JsonElementExtensions.GetEquivalenceHashCode*
+  name: GetEquivalenceHashCode
+  href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_GetEquivalenceHashCode_
+  commentId: Overload:Json.More.JsonElementExtensions.GetEquivalenceHashCode
+  isSpec: "True"
+  fullName: Json.More.JsonElementExtensions.GetEquivalenceHashCode
+  nameWithType: JsonElementExtensions.GetEquivalenceHashCode
 - uid: Json.More.JsonElementExtensions.IsEquivalentTo(JsonElement,JsonElement)
   name: IsEquivalentTo(JsonElement, JsonElement)
   href: api/Json.More.JsonElementExtensions.html#Json_More_JsonElementExtensions_IsEquivalentTo_JsonElement_JsonElement_
@@ -2162,12 +2178,15 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.PointerSegment.Inequality
   nameWithType: PointerSegment.Inequality
-- uid: Json.Pointer.PointerSegment.Parse(System.String,System.Boolean)
-  name: Parse(String, Boolean)
-  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_Parse_System_String_System_Boolean_
-  commentId: M:Json.Pointer.PointerSegment.Parse(System.String,System.Boolean)
-  fullName: Json.Pointer.PointerSegment.Parse(System.String, System.Boolean)
-  nameWithType: PointerSegment.Parse(String, Boolean)
+- uid: Json.Pointer.PointerSegment.Parse(System.Nullable{System.String},System.Boolean)
+  name: Parse(Nullable<String>, Boolean)
+  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_Parse_System_Nullable_System_String__System_Boolean_
+  commentId: M:Json.Pointer.PointerSegment.Parse(System.Nullable{System.String},System.Boolean)
+  name.vb: Parse(Nullable(Of String), Boolean)
+  fullName: Json.Pointer.PointerSegment.Parse(System.Nullable<System.String>, System.Boolean)
+  fullName.vb: Json.Pointer.PointerSegment.Parse(System.Nullable(Of System.String), System.Boolean)
+  nameWithType: PointerSegment.Parse(Nullable<String>, Boolean)
+  nameWithType.vb: PointerSegment.Parse(Nullable(Of String), Boolean)
 - uid: Json.Pointer.PointerSegment.Parse*
   name: Parse
   href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_Parse_
@@ -2188,15 +2207,15 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.PointerSegment.Source
   nameWithType: PointerSegment.Source
-- uid: Json.Pointer.PointerSegment.TryParse(System.String,System.Boolean,Json.Pointer.PointerSegment@)
-  name: TryParse(String, Boolean, out PointerSegment)
-  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_TryParse_System_String_System_Boolean_Json_Pointer_PointerSegment__
-  commentId: M:Json.Pointer.PointerSegment.TryParse(System.String,System.Boolean,Json.Pointer.PointerSegment@)
-  name.vb: TryParse(String, Boolean, ByRef PointerSegment)
-  fullName: Json.Pointer.PointerSegment.TryParse(System.String, System.Boolean, out Json.Pointer.PointerSegment)
-  fullName.vb: Json.Pointer.PointerSegment.TryParse(System.String, System.Boolean, ByRef Json.Pointer.PointerSegment)
-  nameWithType: PointerSegment.TryParse(String, Boolean, out PointerSegment)
-  nameWithType.vb: PointerSegment.TryParse(String, Boolean, ByRef PointerSegment)
+- uid: Json.Pointer.PointerSegment.TryParse(System.Nullable{System.String},System.Boolean,Json.Pointer.PointerSegment@)
+  name: TryParse(Nullable<String>, Boolean, out PointerSegment)
+  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_TryParse_System_Nullable_System_String__System_Boolean_Json_Pointer_PointerSegment__
+  commentId: M:Json.Pointer.PointerSegment.TryParse(System.Nullable{System.String},System.Boolean,Json.Pointer.PointerSegment@)
+  name.vb: TryParse(Nullable(Of String), Boolean, ByRef PointerSegment)
+  fullName: Json.Pointer.PointerSegment.TryParse(System.Nullable<System.String>, System.Boolean, out Json.Pointer.PointerSegment)
+  fullName.vb: Json.Pointer.PointerSegment.TryParse(System.Nullable(Of System.String), System.Boolean, ByRef Json.Pointer.PointerSegment)
+  nameWithType: PointerSegment.TryParse(Nullable<String>, Boolean, out PointerSegment)
+  nameWithType.vb: PointerSegment.TryParse(Nullable(Of String), Boolean, ByRef PointerSegment)
 - uid: Json.Pointer.PointerSegment.TryParse*
   name: TryParse
   href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_TryParse_
@@ -2448,14 +2467,15 @@ references:
   fullName: Json.Schema.AdditionalItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: AdditionalItemsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: AdditionalItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.AdditionalItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.AdditionalItemsKeyword.html#Json_Schema_AdditionalItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.AdditionalItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.AdditionalItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: AdditionalItemsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: AdditionalItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.AdditionalItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.AdditionalItemsKeyword.html#Json_Schema_AdditionalItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.AdditionalItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.AdditionalItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.AdditionalItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: AdditionalItemsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: AdditionalItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.AdditionalItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.AdditionalItemsKeyword.html#Json_Schema_AdditionalItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -2559,14 +2579,15 @@ references:
   fullName: Json.Schema.AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: AdditionalPropertiesKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.AdditionalPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.AdditionalPropertiesKeyword.html#Json_Schema_AdditionalPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.AdditionalPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: AdditionalPropertiesKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.AdditionalPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.AdditionalPropertiesKeyword.html#Json_Schema_AdditionalPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.AdditionalPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: AdditionalPropertiesKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: AdditionalPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.AdditionalPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.AdditionalPropertiesKeyword.html#Json_Schema_AdditionalPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -2682,14 +2703,15 @@ references:
   fullName: Json.Schema.AllOfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: AllOfKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: AllOfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.AllOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.AllOfKeyword.html#Json_Schema_AllOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.AllOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.AllOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: AllOfKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: AllOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.AllOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.AllOfKeyword.html#Json_Schema_AllOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.AllOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.AllOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.AllOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: AllOfKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: AllOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.AllOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.AllOfKeyword.html#Json_Schema_AllOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -2943,14 +2965,15 @@ references:
   fullName: Json.Schema.AnyOfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: AnyOfKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: AnyOfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.AnyOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.AnyOfKeyword.html#Json_Schema_AnyOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.AnyOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.AnyOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: AnyOfKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: AnyOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.AnyOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.AnyOfKeyword.html#Json_Schema_AnyOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.AnyOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.AnyOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.AnyOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: AnyOfKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: AnyOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.AnyOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.AnyOfKeyword.html#Json_Schema_AnyOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -3214,14 +3237,15 @@ references:
   fullName: Json.Schema.ContainsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: ContainsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: ContainsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.ContainsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.ContainsKeyword.html#Json_Schema_ContainsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.ContainsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.ContainsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: ContainsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: ContainsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.ContainsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.ContainsKeyword.html#Json_Schema_ContainsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.ContainsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.ContainsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.ContainsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: ContainsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: ContainsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.ContainsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.ContainsKeyword.html#Json_Schema_ContainsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -3479,14 +3503,15 @@ references:
   fullName: Json.Schema.ContentSchemaKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: ContentSchemaKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: ContentSchemaKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.ContentSchemaKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.ContentSchemaKeyword.html#Json_Schema_ContentSchemaKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.ContentSchemaKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.ContentSchemaKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: ContentSchemaKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: ContentSchemaKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.ContentSchemaKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.ContentSchemaKeyword.html#Json_Schema_ContentSchemaKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.ContentSchemaKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.ContentSchemaKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.ContentSchemaKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: ContentSchemaKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: ContentSchemaKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.ContentSchemaKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.ContentSchemaKeyword.html#Json_Schema_ContentSchemaKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -3700,14 +3725,15 @@ references:
   fullName: Json.Schema.DefinitionsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: DefinitionsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: DefinitionsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.DefinitionsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.DefinitionsKeyword.html#Json_Schema_DefinitionsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.DefinitionsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.DefinitionsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: DefinitionsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: DefinitionsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.DefinitionsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.DefinitionsKeyword.html#Json_Schema_DefinitionsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.DefinitionsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.DefinitionsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.DefinitionsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: DefinitionsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: DefinitionsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.DefinitionsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.DefinitionsKeyword.html#Json_Schema_DefinitionsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -3831,14 +3857,15 @@ references:
   fullName: Json.Schema.DefsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: DefsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: DefsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.DefsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.DefsKeyword.html#Json_Schema_DefsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.DefsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.DefsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: DefsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: DefsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.DefsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.DefsKeyword.html#Json_Schema_DefsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.DefsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.DefsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.DefsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: DefsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: DefsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.DefsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.DefsKeyword.html#Json_Schema_DefsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -3949,14 +3976,15 @@ references:
   fullName: Json.Schema.DependenciesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: DependenciesKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: DependenciesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.DependenciesKeyword.html#Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.DependenciesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: DependenciesKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: DependenciesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.DependenciesKeyword.html#Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.DependenciesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.DependenciesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: DependenciesKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: DependenciesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.DependenciesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.DependenciesKeyword.html#Json_Schema_DependenciesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -4143,14 +4171,15 @@ references:
   fullName: Json.Schema.DependentSchemasKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: DependentSchemasKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: DependentSchemasKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.DependentSchemasKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.DependentSchemasKeyword.html#Json_Schema_DependentSchemasKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.DependentSchemasKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.DependentSchemasKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: DependentSchemasKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: DependentSchemasKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.DependentSchemasKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.DependentSchemasKeyword.html#Json_Schema_DependentSchemasKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.DependentSchemasKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.DependentSchemasKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.DependentSchemasKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: DependentSchemasKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: DependentSchemasKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.DependentSchemasKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.DependentSchemasKeyword.html#Json_Schema_DependentSchemasKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -4724,14 +4753,15 @@ references:
   fullName: Json.Schema.ElseKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: ElseKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: ElseKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.ElseKeyword.html#Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.ElseKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: ElseKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: ElseKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.ElseKeyword.html#Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.ElseKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.ElseKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: ElseKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: ElseKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.ElseKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.ElseKeyword.html#Json_Schema_ElseKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -4780,24 +4810,65 @@ references:
   isSpec: "True"
   fullName: Json.Schema.EnumerableExtensions.ContentsEqual
   nameWithType: EnumerableExtensions.ContentsEqual
-- uid: Json.Schema.EnumerableExtensions.ContentsEqual``1(IReadOnlyList{``0},IReadOnlyList{``0})
-  name: ContentsEqual<T>(IReadOnlyList<T>, IReadOnlyList<T>)
-  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_ContentsEqual__1_IReadOnlyList___0__IReadOnlyList___0__
-  commentId: M:Json.Schema.EnumerableExtensions.ContentsEqual``1(IReadOnlyList{``0},IReadOnlyList{``0})
-  name.vb: ContentsEqual(Of T)(IReadOnlyList(Of T), IReadOnlyList(Of T))
-  fullName: Json.Schema.EnumerableExtensions.ContentsEqual<T>(IReadOnlyList<T>, IReadOnlyList<T>)
-  fullName.vb: Json.Schema.EnumerableExtensions.ContentsEqual(Of T)(IReadOnlyList(Of T), IReadOnlyList(Of T))
-  nameWithType: EnumerableExtensions.ContentsEqual<T>(IReadOnlyList<T>, IReadOnlyList<T>)
-  nameWithType.vb: EnumerableExtensions.ContentsEqual(Of T)(IReadOnlyList(Of T), IReadOnlyList(Of T))
-- uid: Json.Schema.EnumerableExtensions.ContentsEqual``1(IReadOnlyList{``0},IReadOnlyList{``0},IEqualityComparer{``0})
-  name: ContentsEqual<T>(IReadOnlyList<T>, IReadOnlyList<T>, IEqualityComparer<T>)
-  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_ContentsEqual__1_IReadOnlyList___0__IReadOnlyList___0__IEqualityComparer___0__
-  commentId: M:Json.Schema.EnumerableExtensions.ContentsEqual``1(IReadOnlyList{``0},IReadOnlyList{``0},IEqualityComparer{``0})
-  name.vb: ContentsEqual(Of T)(IReadOnlyList(Of T), IReadOnlyList(Of T), IEqualityComparer(Of T))
-  fullName: Json.Schema.EnumerableExtensions.ContentsEqual<T>(IReadOnlyList<T>, IReadOnlyList<T>, IEqualityComparer<T>)
-  fullName.vb: Json.Schema.EnumerableExtensions.ContentsEqual(Of T)(IReadOnlyList(Of T), IReadOnlyList(Of T), IEqualityComparer(Of T))
-  nameWithType: EnumerableExtensions.ContentsEqual<T>(IReadOnlyList<T>, IReadOnlyList<T>, IEqualityComparer<T>)
-  nameWithType.vb: EnumerableExtensions.ContentsEqual(Of T)(IReadOnlyList(Of T), IReadOnlyList(Of T), IEqualityComparer(Of T))
+- uid: Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Nullable{IReadOnlyList{``0}},System.Nullable{IReadOnlyList{``0}})
+  name: ContentsEqual<T>(Nullable<IReadOnlyList<T>>, Nullable<IReadOnlyList<T>>)
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_ContentsEqual__1_System_Nullable_IReadOnlyList___0___System_Nullable_IReadOnlyList___0___
+  commentId: M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Nullable{IReadOnlyList{``0}},System.Nullable{IReadOnlyList{``0}})
+  name.vb: ContentsEqual(Of T)(Nullable(Of IReadOnlyList(Of T)), Nullable(Of IReadOnlyList(Of T)))
+  fullName: Json.Schema.EnumerableExtensions.ContentsEqual<T>(System.Nullable<IReadOnlyList<T>>, System.Nullable<IReadOnlyList<T>>)
+  fullName.vb: Json.Schema.EnumerableExtensions.ContentsEqual(Of T)(System.Nullable(Of IReadOnlyList(Of T)), System.Nullable(Of IReadOnlyList(Of T)))
+  nameWithType: EnumerableExtensions.ContentsEqual<T>(Nullable<IReadOnlyList<T>>, Nullable<IReadOnlyList<T>>)
+  nameWithType.vb: EnumerableExtensions.ContentsEqual(Of T)(Nullable(Of IReadOnlyList(Of T)), Nullable(Of IReadOnlyList(Of T)))
+- uid: Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Nullable{IReadOnlyList{``0}},System.Nullable{IReadOnlyList{``0}},IEqualityComparer{``0})
+  name: ContentsEqual<T>(Nullable<IReadOnlyList<T>>, Nullable<IReadOnlyList<T>>, IEqualityComparer<T>)
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_ContentsEqual__1_System_Nullable_IReadOnlyList___0___System_Nullable_IReadOnlyList___0___IEqualityComparer___0__
+  commentId: M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Nullable{IReadOnlyList{``0}},System.Nullable{IReadOnlyList{``0}},IEqualityComparer{``0})
+  name.vb: ContentsEqual(Of T)(Nullable(Of IReadOnlyList(Of T)), Nullable(Of IReadOnlyList(Of T)), IEqualityComparer(Of T))
+  fullName: Json.Schema.EnumerableExtensions.ContentsEqual<T>(System.Nullable<IReadOnlyList<T>>, System.Nullable<IReadOnlyList<T>>, IEqualityComparer<T>)
+  fullName.vb: Json.Schema.EnumerableExtensions.ContentsEqual(Of T)(System.Nullable(Of IReadOnlyList(Of T)), System.Nullable(Of IReadOnlyList(Of T)), IEqualityComparer(Of T))
+  nameWithType: EnumerableExtensions.ContentsEqual<T>(Nullable<IReadOnlyList<T>>, Nullable<IReadOnlyList<T>>, IEqualityComparer<T>)
+  nameWithType.vb: EnumerableExtensions.ContentsEqual(Of T)(Nullable(Of IReadOnlyList(Of T)), Nullable(Of IReadOnlyList(Of T)), IEqualityComparer(Of T))
+- uid: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode*
+  name: GetStringDictionaryHashCode
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_GetStringDictionaryHashCode_
+  commentId: Overload:Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode
+  isSpec: "True"
+  fullName: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode
+  nameWithType: EnumerableExtensions.GetStringDictionaryHashCode
+- uid: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(IDictionary{System.String,``0})
+  name: GetStringDictionaryHashCode<T>(IDictionary<String, T>)
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_GetStringDictionaryHashCode__1_IDictionary_System_String___0__
+  commentId: M:Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(IDictionary{System.String,``0})
+  name.vb: GetStringDictionaryHashCode(Of T)(IDictionary(Of String, T))
+  fullName: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode<T>(IDictionary<System.String, T>)
+  fullName.vb: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode(Of T)(IDictionary(Of System.String, T))
+  nameWithType: EnumerableExtensions.GetStringDictionaryHashCode<T>(IDictionary<String, T>)
+  nameWithType.vb: EnumerableExtensions.GetStringDictionaryHashCode(Of T)(IDictionary(Of String, T))
+- uid: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(IReadOnlyDictionary{System.String,``0})
+  name: GetStringDictionaryHashCode<T>(IReadOnlyDictionary<String, T>)
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_GetStringDictionaryHashCode__1_IReadOnlyDictionary_System_String___0__
+  commentId: M:Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(IReadOnlyDictionary{System.String,``0})
+  name.vb: GetStringDictionaryHashCode(Of T)(IReadOnlyDictionary(Of String, T))
+  fullName: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode<T>(IReadOnlyDictionary<System.String, T>)
+  fullName.vb: Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode(Of T)(IReadOnlyDictionary(Of System.String, T))
+  nameWithType: EnumerableExtensions.GetStringDictionaryHashCode<T>(IReadOnlyDictionary<String, T>)
+  nameWithType.vb: EnumerableExtensions.GetStringDictionaryHashCode(Of T)(IReadOnlyDictionary(Of String, T))
+- uid: Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode*
+  name: GetUnorderedCollectionHashCode
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_GetUnorderedCollectionHashCode_
+  commentId: Overload:Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode
+  isSpec: "True"
+  fullName: Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode
+  nameWithType: EnumerableExtensions.GetUnorderedCollectionHashCode
+- uid: Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode``1(IEnumerable{``0})
+  name: GetUnorderedCollectionHashCode<T>(IEnumerable<T>)
+  href: api/Json.Schema.EnumerableExtensions.html#Json_Schema_EnumerableExtensions_GetUnorderedCollectionHashCode__1_IEnumerable___0__
+  commentId: M:Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode``1(IEnumerable{``0})
+  name.vb: GetUnorderedCollectionHashCode(Of T)(IEnumerable(Of T))
+  fullName: Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode<T>(IEnumerable<T>)
+  fullName.vb: Json.Schema.EnumerableExtensions.GetUnorderedCollectionHashCode(Of T)(IEnumerable(Of T))
+  nameWithType: EnumerableExtensions.GetUnorderedCollectionHashCode<T>(IEnumerable<T>)
+  nameWithType.vb: EnumerableExtensions.GetUnorderedCollectionHashCode(Of T)(IEnumerable(Of T))
 - uid: Json.Schema.EnumKeyword
   name: EnumKeyword
   href: api/Json.Schema.EnumKeyword.html
@@ -5711,12 +5782,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Context
   nameWithType: AdditionalPropertiesIntent.Context
-- uid: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.AdditionalPropertiesIntent.html#Json_Schema_Generation_Intents_AdditionalPropertiesIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Object)
-  nameWithType: AdditionalPropertiesIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.AdditionalPropertiesIntent.html#Json_Schema_Generation_Intents_AdditionalPropertiesIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: AdditionalPropertiesIntent.Equals(Nullable<Object>)
+  nameWithType.vb: AdditionalPropertiesIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.AdditionalPropertiesIntent.html#Json_Schema_Generation_Intents_AdditionalPropertiesIntent_Equals_
@@ -5807,6 +5881,35 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.AnyOfIntent.Apply
   nameWithType: AnyOfIntent.Apply
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.AnyOfIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.AnyOfIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: AnyOfIntent.Equals(Nullable<Object>)
+  nameWithType.vb: AnyOfIntent.Equals(Nullable(Of Object))
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.Equals*
+  name: Equals
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Equals_
+  commentId: Overload:Json.Schema.Generation.Intents.AnyOfIntent.Equals
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.Equals
+  nameWithType: AnyOfIntent.Equals
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_GetHashCode
+  commentId: M:Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode()
+  nameWithType: AnyOfIntent.GetHashCode()
+- uid: Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_GetHashCode_
+  commentId: Overload:Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.AnyOfIntent.GetHashCode
+  nameWithType: AnyOfIntent.GetHashCode
 - uid: Json.Schema.Generation.Intents.AnyOfIntent.Subschemas
   name: Subschemas
   href: api/Json.Schema.Generation.Intents.AnyOfIntent.html#Json_Schema_Generation_Intents_AnyOfIntent_Subschemas
@@ -5868,12 +5971,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.DefsIntent.Definitions
   nameWithType: DefsIntent.Definitions
-- uid: Json.Schema.Generation.Intents.DefsIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.DefsIntent.html#Json_Schema_Generation_Intents_DefsIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.DefsIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.DefsIntent.Equals(System.Object)
-  nameWithType: DefsIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.DefsIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.DefsIntent.html#Json_Schema_Generation_Intents_DefsIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.DefsIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.DefsIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.DefsIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: DefsIntent.Equals(Nullable<Object>)
+  nameWithType.vb: DefsIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.DefsIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.DefsIntent.html#Json_Schema_Generation_Intents_DefsIntent_Equals_
@@ -5926,12 +6032,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.DeprecatedIntent.Apply
   nameWithType: DeprecatedIntent.Apply
-- uid: Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.DeprecatedIntent.html#Json_Schema_Generation_Intents_DeprecatedIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Object)
-  nameWithType: DeprecatedIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.DeprecatedIntent.html#Json_Schema_Generation_Intents_DeprecatedIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.DeprecatedIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: DeprecatedIntent.Equals(Nullable<Object>)
+  nameWithType.vb: DeprecatedIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.DeprecatedIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.DeprecatedIntent.html#Json_Schema_Generation_Intents_DeprecatedIntent_Equals_
@@ -6009,12 +6118,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.EnumIntent.Apply
   nameWithType: EnumIntent.Apply
-- uid: Json.Schema.Generation.Intents.EnumIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.EnumIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.EnumIntent.Equals(System.Object)
-  nameWithType: EnumIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.EnumIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.EnumIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.EnumIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.EnumIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: EnumIntent.Equals(Nullable<Object>)
+  nameWithType.vb: EnumIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.EnumIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.EnumIntent.html#Json_Schema_Generation_Intents_EnumIntent_Equals_
@@ -6080,12 +6192,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Apply
   nameWithType: ExclusiveMaximumIntent.Apply
-- uid: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.ExclusiveMaximumIntent.html#Json_Schema_Generation_Intents_ExclusiveMaximumIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Object)
-  nameWithType: ExclusiveMaximumIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.ExclusiveMaximumIntent.html#Json_Schema_Generation_Intents_ExclusiveMaximumIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: ExclusiveMaximumIntent.Equals(Nullable<Object>)
+  nameWithType.vb: ExclusiveMaximumIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.ExclusiveMaximumIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.ExclusiveMaximumIntent.html#Json_Schema_Generation_Intents_ExclusiveMaximumIntent_Equals_
@@ -6151,12 +6266,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Apply
   nameWithType: ExclusiveMinimumIntent.Apply
-- uid: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.ExclusiveMinimumIntent.html#Json_Schema_Generation_Intents_ExclusiveMinimumIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Object)
-  nameWithType: ExclusiveMinimumIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.ExclusiveMinimumIntent.html#Json_Schema_Generation_Intents_ExclusiveMinimumIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: ExclusiveMinimumIntent.Equals(Nullable<Object>)
+  nameWithType.vb: ExclusiveMinimumIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.ExclusiveMinimumIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.ExclusiveMinimumIntent.html#Json_Schema_Generation_Intents_ExclusiveMinimumIntent_Equals_
@@ -6222,12 +6340,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.FormatIntent.Apply
   nameWithType: FormatIntent.Apply
-- uid: Json.Schema.Generation.Intents.FormatIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.FormatIntent.html#Json_Schema_Generation_Intents_FormatIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.FormatIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.FormatIntent.Equals(System.Object)
-  nameWithType: FormatIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.FormatIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.FormatIntent.html#Json_Schema_Generation_Intents_FormatIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.FormatIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.FormatIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.FormatIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: FormatIntent.Equals(Nullable<Object>)
+  nameWithType.vb: FormatIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.FormatIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.FormatIntent.html#Json_Schema_Generation_Intents_FormatIntent_Equals_
@@ -6306,12 +6427,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.ItemsIntent.Context
   nameWithType: ItemsIntent.Context
-- uid: Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.ItemsIntent.html#Json_Schema_Generation_Intents_ItemsIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Object)
-  nameWithType: ItemsIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.ItemsIntent.html#Json_Schema_Generation_Intents_ItemsIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.ItemsIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: ItemsIntent.Equals(Nullable<Object>)
+  nameWithType.vb: ItemsIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.ItemsIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.ItemsIntent.html#Json_Schema_Generation_Intents_ItemsIntent_Equals_
@@ -6390,12 +6514,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MaximumIntent.Apply
   nameWithType: MaximumIntent.Apply
-- uid: Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MaximumIntent.html#Json_Schema_Generation_Intents_MaximumIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Object)
-  nameWithType: MaximumIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MaximumIntent.html#Json_Schema_Generation_Intents_MaximumIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MaximumIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MaximumIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MaximumIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MaximumIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MaximumIntent.html#Json_Schema_Generation_Intents_MaximumIntent_Equals_
@@ -6461,12 +6588,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MaxItemsIntent.Apply
   nameWithType: MaxItemsIntent.Apply
-- uid: Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MaxItemsIntent.html#Json_Schema_Generation_Intents_MaxItemsIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Object)
-  nameWithType: MaxItemsIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MaxItemsIntent.html#Json_Schema_Generation_Intents_MaxItemsIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MaxItemsIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MaxItemsIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MaxItemsIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MaxItemsIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MaxItemsIntent.html#Json_Schema_Generation_Intents_MaxItemsIntent_Equals_
@@ -6532,12 +6662,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MaxLengthIntent.Apply
   nameWithType: MaxLengthIntent.Apply
-- uid: Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MaxLengthIntent.html#Json_Schema_Generation_Intents_MaxLengthIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Object)
-  nameWithType: MaxLengthIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MaxLengthIntent.html#Json_Schema_Generation_Intents_MaxLengthIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MaxLengthIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MaxLengthIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MaxLengthIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MaxLengthIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MaxLengthIntent.html#Json_Schema_Generation_Intents_MaxLengthIntent_Equals_
@@ -6603,12 +6736,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MinimumIntent.Apply
   nameWithType: MinimumIntent.Apply
-- uid: Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MinimumIntent.html#Json_Schema_Generation_Intents_MinimumIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Object)
-  nameWithType: MinimumIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MinimumIntent.html#Json_Schema_Generation_Intents_MinimumIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MinimumIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MinimumIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MinimumIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MinimumIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MinimumIntent.html#Json_Schema_Generation_Intents_MinimumIntent_Equals_
@@ -6674,12 +6810,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MinItemsIntent.Apply
   nameWithType: MinItemsIntent.Apply
-- uid: Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MinItemsIntent.html#Json_Schema_Generation_Intents_MinItemsIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Object)
-  nameWithType: MinItemsIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MinItemsIntent.html#Json_Schema_Generation_Intents_MinItemsIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MinItemsIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MinItemsIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MinItemsIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MinItemsIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MinItemsIntent.html#Json_Schema_Generation_Intents_MinItemsIntent_Equals_
@@ -6745,12 +6884,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MinLengthIntent.Apply
   nameWithType: MinLengthIntent.Apply
-- uid: Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MinLengthIntent.html#Json_Schema_Generation_Intents_MinLengthIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Object)
-  nameWithType: MinLengthIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MinLengthIntent.html#Json_Schema_Generation_Intents_MinLengthIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MinLengthIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MinLengthIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MinLengthIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MinLengthIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MinLengthIntent.html#Json_Schema_Generation_Intents_MinLengthIntent_Equals_
@@ -6816,12 +6958,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.MultipleOfIntent.Apply
   nameWithType: MultipleOfIntent.Apply
-- uid: Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.MultipleOfIntent.html#Json_Schema_Generation_Intents_MultipleOfIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Object)
-  nameWithType: MultipleOfIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.MultipleOfIntent.html#Json_Schema_Generation_Intents_MultipleOfIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.MultipleOfIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: MultipleOfIntent.Equals(Nullable<Object>)
+  nameWithType.vb: MultipleOfIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.MultipleOfIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.MultipleOfIntent.html#Json_Schema_Generation_Intents_MultipleOfIntent_Equals_
@@ -6887,12 +7032,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.PatternIntent.Apply
   nameWithType: PatternIntent.Apply
-- uid: Json.Schema.Generation.Intents.PatternIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.PatternIntent.html#Json_Schema_Generation_Intents_PatternIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.PatternIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.PatternIntent.Equals(System.Object)
-  nameWithType: PatternIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.PatternIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.PatternIntent.html#Json_Schema_Generation_Intents_PatternIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.PatternIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.PatternIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.PatternIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: PatternIntent.Equals(Nullable<Object>)
+  nameWithType.vb: PatternIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.PatternIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.PatternIntent.html#Json_Schema_Generation_Intents_PatternIntent_Equals_
@@ -6961,12 +7109,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.PropertiesIntent.Apply
   nameWithType: PropertiesIntent.Apply
-- uid: Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.PropertiesIntent.html#Json_Schema_Generation_Intents_PropertiesIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Object)
-  nameWithType: PropertiesIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.PropertiesIntent.html#Json_Schema_Generation_Intents_PropertiesIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.PropertiesIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: PropertiesIntent.Equals(Nullable<Object>)
+  nameWithType.vb: PropertiesIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.PropertiesIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.PropertiesIntent.html#Json_Schema_Generation_Intents_PropertiesIntent_Equals_
@@ -7058,12 +7209,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.RefIntent.Apply
   nameWithType: RefIntent.Apply
-- uid: Json.Schema.Generation.Intents.RefIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.RefIntent.html#Json_Schema_Generation_Intents_RefIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.RefIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.RefIntent.Equals(System.Object)
-  nameWithType: RefIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.RefIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.RefIntent.html#Json_Schema_Generation_Intents_RefIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.RefIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.RefIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.RefIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: RefIntent.Equals(Nullable<Object>)
+  nameWithType.vb: RefIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.RefIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.RefIntent.html#Json_Schema_Generation_Intents_RefIntent_Equals_
@@ -7132,12 +7286,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.RequiredIntent.Apply
   nameWithType: RequiredIntent.Apply
-- uid: Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.RequiredIntent.html#Json_Schema_Generation_Intents_RequiredIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Object)
-  nameWithType: RequiredIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.RequiredIntent.html#Json_Schema_Generation_Intents_RequiredIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.RequiredIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: RequiredIntent.Equals(Nullable<Object>)
+  nameWithType.vb: RequiredIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.RequiredIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.RequiredIntent.html#Json_Schema_Generation_Intents_RequiredIntent_Equals_
@@ -7203,12 +7360,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.TypeIntent.Apply
   nameWithType: TypeIntent.Apply
-- uid: Json.Schema.Generation.Intents.TypeIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.TypeIntent.html#Json_Schema_Generation_Intents_TypeIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.TypeIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.TypeIntent.Equals(System.Object)
-  nameWithType: TypeIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.TypeIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.TypeIntent.html#Json_Schema_Generation_Intents_TypeIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.TypeIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.TypeIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.TypeIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: TypeIntent.Equals(Nullable<Object>)
+  nameWithType.vb: TypeIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.TypeIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.TypeIntent.html#Json_Schema_Generation_Intents_TypeIntent_Equals_
@@ -7274,12 +7434,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.UniqueItemsIntent.Apply
   nameWithType: UniqueItemsIntent.Apply
-- uid: Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.Intents.UniqueItemsIntent.html#Json_Schema_Generation_Intents_UniqueItemsIntent_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Object)
-  fullName: Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Object)
-  nameWithType: UniqueItemsIntent.Equals(Object)
+- uid: Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.UniqueItemsIntent.html#Json_Schema_Generation_Intents_UniqueItemsIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.UniqueItemsIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: UniqueItemsIntent.Equals(Nullable<Object>)
+  nameWithType.vb: UniqueItemsIntent.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.Intents.UniqueItemsIntent.Equals*
   name: Equals
   href: api/Json.Schema.Generation.Intents.UniqueItemsIntent.html#Json_Schema_Generation_Intents_UniqueItemsIntent_Equals_
@@ -7864,15 +8027,15 @@ references:
   commentId: T:Json.Schema.Generation.SchemaGenerationContextCache
   fullName: Json.Schema.Generation.SchemaGenerationContextCache
   nameWithType: SchemaGenerationContextCache
-- uid: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type,List{Attribute})
-  name: Get(Type, List<Attribute>)
-  href: api/Json.Schema.Generation.SchemaGenerationContextCache.html#Json_Schema_Generation_SchemaGenerationContextCache_Get_Type_List_Attribute__
-  commentId: M:Json.Schema.Generation.SchemaGenerationContextCache.Get(Type,List{Attribute})
-  name.vb: Get(Type, List(Of Attribute))
-  fullName: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, List<Attribute>)
-  fullName.vb: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, List(Of Attribute))
-  nameWithType: SchemaGenerationContextCache.Get(Type, List<Attribute>)
-  nameWithType.vb: SchemaGenerationContextCache.Get(Type, List(Of Attribute))
+- uid: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type,System.Nullable{List{Attribute}})
+  name: Get(Type, Nullable<List<Attribute>>)
+  href: api/Json.Schema.Generation.SchemaGenerationContextCache.html#Json_Schema_Generation_SchemaGenerationContextCache_Get_Type_System_Nullable_List_Attribute___
+  commentId: M:Json.Schema.Generation.SchemaGenerationContextCache.Get(Type,System.Nullable{List{Attribute}})
+  name.vb: Get(Type, Nullable(Of List(Of Attribute)))
+  fullName: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, System.Nullable<List<Attribute>>)
+  fullName.vb: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, System.Nullable(Of List(Of Attribute)))
+  nameWithType: SchemaGenerationContextCache.Get(Type, Nullable<List<Attribute>>)
+  nameWithType.vb: SchemaGenerationContextCache.Get(Type, Nullable(Of List(Of Attribute)))
 - uid: Json.Schema.Generation.SchemaGenerationContextCache.Get*
   name: Get
   href: api/Json.Schema.Generation.SchemaGenerationContextCache.html#Json_Schema_Generation_SchemaGenerationContextCache_Get_
@@ -7912,12 +8075,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.SchemaGeneratorContext.Attributes
   nameWithType: SchemaGeneratorContext.Attributes
-- uid: Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Json.Schema.Generation.SchemaGeneratorContext.html#Json_Schema_Generation_SchemaGeneratorContext_Equals_System_Object_
-  commentId: M:Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Object)
-  fullName: Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Object)
-  nameWithType: SchemaGeneratorContext.Equals(Object)
+- uid: Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.SchemaGeneratorContext.html#Json_Schema_Generation_SchemaGeneratorContext_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Nullable(Of System.Object))
+  nameWithType: SchemaGeneratorContext.Equals(Nullable<Object>)
+  nameWithType.vb: SchemaGeneratorContext.Equals(Nullable(Of Object))
 - uid: Json.Schema.Generation.SchemaGeneratorContext.Equals*
   name: Equals
   href: api/Json.Schema.Generation.SchemaGeneratorContext.html#Json_Schema_Generation_SchemaGeneratorContext_Equals_
@@ -8216,14 +8382,15 @@ references:
   fullName: Json.Schema.IfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: IfKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: IfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.IfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.IfKeyword.html#Json_Schema_IfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.IfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.IfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: IfKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: IfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.IfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.IfKeyword.html#Json_Schema_IfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.IfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.IfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.IfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: IfKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: IfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.IfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.IfKeyword.html#Json_Schema_IfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -8316,12 +8483,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  name: ResolvePointerSegment(String)
-  href: api/Json.Schema.IRefResolvable.html#Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  fullName: Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable{System.String})
+  name: ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.IRefResolvable.html#Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.IRefResolvable.ResolvePointerSegment*
   name: ResolvePointerSegment
   href: api/Json.Schema.IRefResolvable.html#Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -8466,14 +8636,15 @@ references:
   fullName: Json.Schema.ItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: ItemsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: ItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.ItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.ItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: ItemsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.ItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.ItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: ItemsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: ItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.ItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.ItemsKeyword.html#Json_Schema_ItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -8632,14 +8803,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchema.GetHashCode
   nameWithType: JsonSchema.GetHashCode
-- uid: Json.Schema.JsonSchema.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.JsonSchema.html#Json_Schema_JsonSchema_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.JsonSchema.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.JsonSchema.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: JsonSchema.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: JsonSchema.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.JsonSchema.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.JsonSchema.html#Json_Schema_JsonSchema_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.JsonSchema.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.JsonSchema.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.JsonSchema.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: JsonSchema.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: JsonSchema.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.JsonSchema.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.JsonSchema.html#Json_Schema_JsonSchema_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -9642,12 +9814,12 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilderExtensions.ReadOnly
   nameWithType: JsonSchemaBuilderExtensions.ReadOnly
-- uid: Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder)
-  name: RecursiveAnchor(JsonSchemaBuilder)
-  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_RecursiveAnchor_Json_Schema_JsonSchemaBuilder_
-  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder)
-  fullName: Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder)
-  nameWithType: JsonSchemaBuilderExtensions.RecursiveAnchor(JsonSchemaBuilder)
+- uid: Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder,System.Boolean)
+  name: RecursiveAnchor(JsonSchemaBuilder, Boolean)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_RecursiveAnchor_Json_Schema_JsonSchemaBuilder_System_Boolean_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder,System.Boolean)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor(Json.Schema.JsonSchemaBuilder, System.Boolean)
+  nameWithType: JsonSchemaBuilderExtensions.RecursiveAnchor(JsonSchemaBuilder, Boolean)
 - uid: Json.Schema.JsonSchemaBuilderExtensions.RecursiveAnchor*
   name: RecursiveAnchor
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_RecursiveAnchor_
@@ -11084,14 +11256,15 @@ references:
   fullName: Json.Schema.NotKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: NotKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: NotKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.NotKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.NotKeyword.html#Json_Schema_NotKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.NotKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.NotKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: NotKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: NotKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.NotKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.NotKeyword.html#Json_Schema_NotKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.NotKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.NotKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.NotKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: NotKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: NotKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.NotKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.NotKeyword.html#Json_Schema_NotKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -11207,14 +11380,15 @@ references:
   fullName: Json.Schema.OneOfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: OneOfKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: OneOfKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.OneOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.OneOfKeyword.html#Json_Schema_OneOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.OneOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.OneOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: OneOfKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: OneOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.OneOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.OneOfKeyword.html#Json_Schema_OneOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.OneOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.OneOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.OneOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: OneOfKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: OneOfKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.OneOfKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.OneOfKeyword.html#Json_Schema_OneOfKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -11445,14 +11619,15 @@ references:
   fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: PatternPropertiesKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: PatternPropertiesKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: PatternPropertiesKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: PatternPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -11616,14 +11791,15 @@ references:
   fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: PrefixItemsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: PrefixItemsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: PrefixItemsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: PrefixItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.PrefixItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.PrefixItemsKeyword.html#Json_Schema_PrefixItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -11751,14 +11927,15 @@ references:
   fullName: Json.Schema.PropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: PropertiesKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: PropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.PropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.PropertiesKeyword.html#Json_Schema_PropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.PropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.PropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: PropertiesKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: PropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.PropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.PropertiesKeyword.html#Json_Schema_PropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.PropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.PropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.PropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: PropertiesKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: PropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.PropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.PropertiesKeyword.html#Json_Schema_PropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -11862,14 +12039,15 @@ references:
   fullName: Json.Schema.PropertyNamesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: PropertyNamesKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: PropertyNamesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.PropertyNamesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.PropertyNamesKeyword.html#Json_Schema_PropertyNamesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.PropertyNamesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.PropertyNamesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: PropertyNamesKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: PropertyNamesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.PropertyNamesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.PropertyNamesKeyword.html#Json_Schema_PropertyNamesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.PropertyNamesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.PropertyNamesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.PropertyNamesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: PropertyNamesKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: PropertyNamesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.PropertyNamesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.PropertyNamesKeyword.html#Json_Schema_PropertyNamesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -11988,6 +12166,25 @@ references:
   commentId: T:Json.Schema.RecursiveAnchorKeyword
   fullName: Json.Schema.RecursiveAnchorKeyword
   nameWithType: RecursiveAnchorKeyword
+- uid: Json.Schema.RecursiveAnchorKeyword.#ctor
+  name: RecursiveAnchorKeyword()
+  href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword__ctor
+  commentId: M:Json.Schema.RecursiveAnchorKeyword.#ctor
+  fullName: Json.Schema.RecursiveAnchorKeyword.RecursiveAnchorKeyword()
+  nameWithType: RecursiveAnchorKeyword.RecursiveAnchorKeyword()
+- uid: Json.Schema.RecursiveAnchorKeyword.#ctor(System.Boolean)
+  name: RecursiveAnchorKeyword(Boolean)
+  href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword__ctor_System_Boolean_
+  commentId: M:Json.Schema.RecursiveAnchorKeyword.#ctor(System.Boolean)
+  fullName: Json.Schema.RecursiveAnchorKeyword.RecursiveAnchorKeyword(System.Boolean)
+  nameWithType: RecursiveAnchorKeyword.RecursiveAnchorKeyword(Boolean)
+- uid: Json.Schema.RecursiveAnchorKeyword.#ctor*
+  name: RecursiveAnchorKeyword
+  href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword__ctor_
+  commentId: Overload:Json.Schema.RecursiveAnchorKeyword.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.RecursiveAnchorKeyword.RecursiveAnchorKeyword
+  nameWithType: RecursiveAnchorKeyword.RecursiveAnchorKeyword
 - uid: Json.Schema.RecursiveAnchorKeyword.Equals(Json.Schema.RecursiveAnchorKeyword)
   name: Equals(RecursiveAnchorKeyword)
   href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword_Equals_Json_Schema_RecursiveAnchorKeyword_
@@ -12033,6 +12230,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.RecursiveAnchorKeyword.Validate
   nameWithType: RecursiveAnchorKeyword.Validate
+- uid: Json.Schema.RecursiveAnchorKeyword.Value
+  name: Value
+  href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword_Value
+  commentId: P:Json.Schema.RecursiveAnchorKeyword.Value
+  fullName: Json.Schema.RecursiveAnchorKeyword.Value
+  nameWithType: RecursiveAnchorKeyword.Value
+- uid: Json.Schema.RecursiveAnchorKeyword.Value*
+  name: Value
+  href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword_Value_
+  commentId: Overload:Json.Schema.RecursiveAnchorKeyword.Value
+  isSpec: "True"
+  fullName: Json.Schema.RecursiveAnchorKeyword.Value
+  nameWithType: RecursiveAnchorKeyword.Value
 - uid: Json.Schema.RecursiveRefKeyword
   name: RecursiveRefKeyword
   href: api/Json.Schema.RecursiveRefKeyword.html
@@ -12653,12 +12863,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.SchemaRegistry.Fetch
   nameWithType: SchemaRegistry.Fetch
-- uid: Json.Schema.SchemaRegistry.Get(Uri,System.String)
-  name: Get(Uri, String)
-  href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_Get_Uri_System_String_
-  commentId: M:Json.Schema.SchemaRegistry.Get(Uri,System.String)
-  fullName: Json.Schema.SchemaRegistry.Get(Uri, System.String)
-  nameWithType: SchemaRegistry.Get(Uri, String)
+- uid: Json.Schema.SchemaRegistry.Get(System.Nullable{Uri},System.Nullable{System.String})
+  name: Get(Nullable<Uri>, Nullable<String>)
+  href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_Get_System_Nullable_Uri__System_Nullable_System_String__
+  commentId: M:Json.Schema.SchemaRegistry.Get(System.Nullable{Uri},System.Nullable{System.String})
+  name.vb: Get(Nullable(Of Uri), Nullable(Of String))
+  fullName: Json.Schema.SchemaRegistry.Get(System.Nullable<Uri>, System.Nullable<System.String>)
+  fullName.vb: Json.Schema.SchemaRegistry.Get(System.Nullable(Of Uri), System.Nullable(Of System.String))
+  nameWithType: SchemaRegistry.Get(Nullable<Uri>, Nullable<String>)
+  nameWithType.vb: SchemaRegistry.Get(Nullable(Of Uri), Nullable(Of String))
 - uid: Json.Schema.SchemaRegistry.Get*
   name: Get
   href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_Get_
@@ -12679,12 +12892,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.SchemaRegistry.Global
   nameWithType: SchemaRegistry.Global
-- uid: Json.Schema.SchemaRegistry.Register(Uri,Json.Schema.JsonSchema)
-  name: Register(Uri, JsonSchema)
-  href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_Register_Uri_Json_Schema_JsonSchema_
-  commentId: M:Json.Schema.SchemaRegistry.Register(Uri,Json.Schema.JsonSchema)
-  fullName: Json.Schema.SchemaRegistry.Register(Uri, Json.Schema.JsonSchema)
-  nameWithType: SchemaRegistry.Register(Uri, JsonSchema)
+- uid: Json.Schema.SchemaRegistry.Register(System.Nullable{Uri},Json.Schema.JsonSchema)
+  name: Register(Nullable<Uri>, JsonSchema)
+  href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_Register_System_Nullable_Uri__Json_Schema_JsonSchema_
+  commentId: M:Json.Schema.SchemaRegistry.Register(System.Nullable{Uri},Json.Schema.JsonSchema)
+  name.vb: Register(Nullable(Of Uri), JsonSchema)
+  fullName: Json.Schema.SchemaRegistry.Register(System.Nullable<Uri>, Json.Schema.JsonSchema)
+  fullName.vb: Json.Schema.SchemaRegistry.Register(System.Nullable(Of Uri), Json.Schema.JsonSchema)
+  nameWithType: SchemaRegistry.Register(Nullable<Uri>, JsonSchema)
+  nameWithType.vb: SchemaRegistry.Register(Nullable(Of Uri), JsonSchema)
 - uid: Json.Schema.SchemaRegistry.Register*
   name: Register
   href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_Register_
@@ -12692,12 +12908,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.SchemaRegistry.Register
   nameWithType: SchemaRegistry.Register
-- uid: Json.Schema.SchemaRegistry.RegisterAnchor(Uri,System.String,Json.Schema.JsonSchema)
-  name: RegisterAnchor(Uri, String, JsonSchema)
-  href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_RegisterAnchor_Uri_System_String_Json_Schema_JsonSchema_
-  commentId: M:Json.Schema.SchemaRegistry.RegisterAnchor(Uri,System.String,Json.Schema.JsonSchema)
-  fullName: Json.Schema.SchemaRegistry.RegisterAnchor(Uri, System.String, Json.Schema.JsonSchema)
-  nameWithType: SchemaRegistry.RegisterAnchor(Uri, String, JsonSchema)
+- uid: Json.Schema.SchemaRegistry.RegisterAnchor(System.Nullable{Uri},System.String,Json.Schema.JsonSchema)
+  name: RegisterAnchor(Nullable<Uri>, String, JsonSchema)
+  href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_RegisterAnchor_System_Nullable_Uri__System_String_Json_Schema_JsonSchema_
+  commentId: M:Json.Schema.SchemaRegistry.RegisterAnchor(System.Nullable{Uri},System.String,Json.Schema.JsonSchema)
+  name.vb: RegisterAnchor(Nullable(Of Uri), String, JsonSchema)
+  fullName: Json.Schema.SchemaRegistry.RegisterAnchor(System.Nullable<Uri>, System.String, Json.Schema.JsonSchema)
+  fullName.vb: Json.Schema.SchemaRegistry.RegisterAnchor(System.Nullable(Of Uri), System.String, Json.Schema.JsonSchema)
+  nameWithType: SchemaRegistry.RegisterAnchor(Nullable<Uri>, String, JsonSchema)
+  nameWithType.vb: SchemaRegistry.RegisterAnchor(Nullable(Of Uri), String, JsonSchema)
 - uid: Json.Schema.SchemaRegistry.RegisterAnchor*
   name: RegisterAnchor
   href: api/Json.Schema.SchemaRegistry.html#Json_Schema_SchemaRegistry_RegisterAnchor_
@@ -12821,14 +13040,15 @@ references:
   fullName: Json.Schema.ThenKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: ThenKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: ThenKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.ThenKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.ThenKeyword.html#Json_Schema_ThenKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.ThenKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.ThenKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: ThenKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: ThenKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.ThenKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.ThenKeyword.html#Json_Schema_ThenKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.ThenKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.ThenKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.ThenKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: ThenKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: ThenKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.ThenKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.ThenKeyword.html#Json_Schema_ThenKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -13104,14 +13324,15 @@ references:
   fullName: Json.Schema.UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: UnevaluatedItemsKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.UnevaluatedItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.UnevaluatedItemsKeyword.html#Json_Schema_UnevaluatedItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.UnevaluatedItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: UnevaluatedItemsKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.UnevaluatedItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.UnevaluatedItemsKeyword.html#Json_Schema_UnevaluatedItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.UnevaluatedItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: UnevaluatedItemsKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: UnevaluatedItemsKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.UnevaluatedItemsKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.UnevaluatedItemsKeyword.html#Json_Schema_UnevaluatedItemsKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -13215,14 +13436,15 @@ references:
   fullName: Json.Schema.UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
   nameWithType: UnevaluatedPropertiesKeyword.IRefResolvable.RegisterSubschemas
   nameWithType.vb: UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.RegisterSubschemas
-- uid: Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name: IRefResolvable.ResolvePointerSegment(String)
-  href: api/Json.Schema.UnevaluatedPropertiesKeyword.html#Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_String_
-  commentId: M:Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.String)
-  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(String)
-  fullName: Json.Schema.UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.String)
-  nameWithType: UnevaluatedPropertiesKeyword.IRefResolvable.ResolvePointerSegment(String)
-  nameWithType.vb: UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(String)
+- uid: Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name: IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  href: api/Json.Schema.UnevaluatedPropertiesKeyword.html#Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_System_Nullable_System_String__
+  commentId: M:Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment(System.Nullable{System.String})
+  name.vb: Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
+  fullName: Json.Schema.UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(System.Nullable(Of System.String))
+  nameWithType: UnevaluatedPropertiesKeyword.IRefResolvable.ResolvePointerSegment(Nullable<String>)
+  nameWithType.vb: UnevaluatedPropertiesKeyword.Json.Schema.IRefResolvable.ResolvePointerSegment(Nullable(Of String))
 - uid: Json.Schema.UnevaluatedPropertiesKeyword.Json#Schema#IRefResolvable#ResolvePointerSegment*
   name: IRefResolvable.ResolvePointerSegment
   href: api/Json.Schema.UnevaluatedPropertiesKeyword.html#Json_Schema_UnevaluatedPropertiesKeyword_Json_Schema_IRefResolvable_ResolvePointerSegment_
@@ -13444,15 +13666,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.DynamicAnchors
   nameWithType: ValidationContext.DynamicAnchors
-- uid: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,Uri)
-  name: From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Uri)
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_Json_Schema_ValidationContext_System_Nullable_Json_Pointer_JsonPointer___System_Nullable_JsonElement___System_Nullable_Json_Pointer_JsonPointer___Uri_
-  commentId: M:Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,Uri)
-  name.vb: From(ValidationContext, ByRef Nullable(Of JsonPointer), ByRef Nullable(Of JsonElement), ByRef Nullable(Of JsonPointer), Uri)
-  fullName: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, System.Nullable<Json.Pointer.JsonPointer>, System.Nullable<JsonElement>, System.Nullable<Json.Pointer.JsonPointer>, Uri)
-  fullName.vb: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, ByRef System.Nullable(Of Json.Pointer.JsonPointer), ByRef System.Nullable(Of JsonElement), ByRef System.Nullable(Of Json.Pointer.JsonPointer), Uri)
-  nameWithType: ValidationContext.From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Uri)
-  nameWithType.vb: ValidationContext.From(ValidationContext, ByRef Nullable(Of JsonPointer), ByRef Nullable(Of JsonElement), ByRef Nullable(Of JsonPointer), Uri)
+- uid: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{Uri})
+  name: From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Nullable<Uri>)
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_Json_Schema_ValidationContext_System_Nullable_Json_Pointer_JsonPointer___System_Nullable_JsonElement___System_Nullable_Json_Pointer_JsonPointer___System_Nullable_Uri__
+  commentId: M:Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{Uri})
+  name.vb: From(ValidationContext, ByRef Nullable(Of JsonPointer), ByRef Nullable(Of JsonElement), ByRef Nullable(Of JsonPointer), Nullable(Of Uri))
+  fullName: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, System.Nullable<Json.Pointer.JsonPointer>, System.Nullable<JsonElement>, System.Nullable<Json.Pointer.JsonPointer>, System.Nullable<Uri>)
+  fullName.vb: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, ByRef System.Nullable(Of Json.Pointer.JsonPointer), ByRef System.Nullable(Of JsonElement), ByRef System.Nullable(Of Json.Pointer.JsonPointer), System.Nullable(Of Uri))
+  nameWithType: ValidationContext.From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Nullable<Uri>)
+  nameWithType.vb: ValidationContext.From(ValidationContext, ByRef Nullable(Of JsonPointer), ByRef Nullable(Of JsonElement), ByRef Nullable(Of JsonPointer), Nullable(Of Uri))
 - uid: Json.Schema.ValidationContext.From*
   name: From
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_
