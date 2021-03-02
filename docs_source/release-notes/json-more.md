@@ -1,3 +1,7 @@
+# [1.4.1](https://github.com/gregsdennis/json-everything/pull/???)
+
+`JsonElementEqualityComparer` now uses `.GetEquivalenceHashCode()`.
+
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/???)
 
 Added support for nullable reference types.

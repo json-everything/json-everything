@@ -34,7 +34,7 @@ namespace Json.More
 		/// <exception cref="T:System.ArgumentNullException">The type of <paramref name="obj">obj</paramref> is a reference type and <paramref name="obj">obj</paramref> is null.</exception>
 		public int GetHashCode(JsonElement obj)
 		{
-			return obj.GetHashCode();
+			return obj.GetEquivalenceHashCode();
 		}
 	}
 }
