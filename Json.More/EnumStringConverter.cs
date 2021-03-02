@@ -20,15 +20,22 @@ namespace Json.More
 	/// of composite values is not supported.
 	/// </remarks>
 	/// <example>
-	/// public class MyClass {
-	///	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
-	///	    public MyEnum Value { get; set; }
-	/// }
-	/// 
+	/// The attribute can be applied to both the enum type itself:
+	/// ```c#
 	/// public enum MyEnum {
 	///     Foo,
 	///     Bar
 	/// }
+	/// ```
+	/// 
+	/// or to a property of the enum type:
+	///
+	/// ```c#
+	/// public class MyClass {
+	///	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
+	///	    public MyEnum Value { get; set; }
+	/// }
+	/// ```
 	/// </example>
 	public class EnumStringConverter<T> : JsonConverter<T>
 		where T : Enum

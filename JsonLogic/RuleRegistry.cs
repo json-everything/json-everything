@@ -21,7 +21,7 @@ namespace Json.Logic
 		/// Gets a <see cref="Rule"/> implementation for a given identifier string.
 		/// </summary>
 		/// <param name="identifier">The identifier.</param>
-		/// <returns>The <see cref="Type"/> of the rule.</returns>
+		/// <returns>The <see cref="System.Type"/> of the rule.</returns>
 		public static Type? GetRule(string identifier)
 		{
 			return _rules.TryGetValue(identifier, out var t) ? t : null;

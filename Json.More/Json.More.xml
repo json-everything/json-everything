@@ -16,6 +16,7 @@
              of composite values is not supported.
              </remarks>
              <example>
+             ```c#
              public class MyClass {
             	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
             	    public MyEnum Value { get; set; }
@@ -25,6 +26,7 @@
                  Foo,
                  Bar
              }
+             ```
              </example>
         </member>
         <member name="M:Json.More.EnumStringConverter`1.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">

@@ -1,4 +1,4 @@
-# Serializing Enumerations by Their Name
+# Serializing Enumerations by Name
 
 By default, the `System.Text.Json` serializer will convert enumeration members to their numeric values.  But suppose we're interacting with an API that expects named values.  To do this, we need to tell the serializer how to convert the enum values into strings.  This is the purpose of the `EnumStringConverter<T>` class.
 
