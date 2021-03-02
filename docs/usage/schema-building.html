@@ -89,32 +89,76 @@
 </code></pre>
 <p>Done.</p>
 <h2 id="inline">Inline</h2>
-<p>To build a schema inline, you will utilize the <code>JsonSchemaBuiler</code> class and its fluent-style extension methods.</p>
-<pre><code class="lang-json">{
-    &quot;properties&quot;:{
-        &quot;myProperty&quot;:{
-            &quot;type&quot;:&quot;string&quot;,
-            &quot;minLength&quot;:10
-        }
-    },
-    &quot;required&quot;:[&quot;myProperty&quot;]
-}
+<p>There are many reasons why you would want to hard-code your schemas.  This library actually hard-codes all of the meta-schemas.  Whatever your reason, the <code>JsonSchemaBuilder</code> class is going to be your friend.</p>
+<p>The builder class itself is pretty simple.  It just has an <code>.Add()</code> method which takes an instance of <code>IJsonSchemaKeyword</code>.  The real power comes from the multitudes of extension methods.  There's at least one for every keyword, and they all take the appropriate types for the data that the keyword expects.</p>
+<p>Once you've added all of your properties, just call the <code>.Build()</code> method to get your schema object.</p>
+<pre><code class="lang-c#">var builder = new JsonSchemaBuilder()
+    // builder methods
+    ;
+var schema = builder.Build();
 </code></pre>
-<pre><code class="lang-c#">// JsonSchemaBuilder has an implicit cast for convenience that calls
-// the .Build() method.  To use this you need to specify the type in
-// the declaration.
-JsonSchema schema = new JsonSchemaBuilder()
-    .Properties(
-        (
-            &quot;myProperty&quot;, new JsonSchemaBuilder()
-                .Type(SchemaValueType.String),
-                .MinLength(10)
+<p>Let's take a look at some of the builder extension methods.</p>
+<h3 id="easy-mode">Easy Mode</h3>
+<p>Some of the more straightforward builder methods are for like the <code>title</code> and <code>$comment</code> keywords, which just take a string:</p>
+<pre><code class="lang-c#">builder.Comment(&quot;a comment&quot;)
+    .Title(&quot;A title for my schema&quot;);
+</code></pre>
+<p>Notice that these methods implement a fluent interface so that you can chain them together.</p>
+<h3 id="a-little-spice">A Little Spice</h3>
+<p>Other extension methods can take multiple values.  These have been overloaded to accept both <code>IEnumerable&lt;T&gt;</code> and <code>params</code> arrays just to keep things flexible.</p>
+<pre><code class="lang-c#">var required = new List&lt;string&gt;{&quot;prop1&quot;, &quot;prop2&quot;};
+builder.Required(required);
+</code></pre>
+<p>or just</p>
+<pre><code class="lang-c#">builder.Required(&quot;prop1&quot;, &quot;prop2&quot;);
+</code></pre>
+<h3 id="now-youre-cooking-with-fire">Now You're Cooking With Fire</h3>
+<p>Lastly, we have the extension methods which take advantage of C# 7 tuples.  These include keywords like <code>$defs</code> and <code>properties</code> which take objects in their JSON form.</p>
+<pre><code class="lang-c#">builder.Properties(
+        (&quot;prop1&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(8)
+        ),
+        (&quot;prop2&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.Number)
+            .MultipleOf(42)
+        )
+    );
+</code></pre>
+<p>Did you notice how the <code>JsonSchemaBuilder</code> is just included directly without the <code>.Build()</code> method?  These methods actually require <code>JsonSchema</code> objects.  This leads us into the next part.</p>
+<h3 id="conversions">Conversions</h3>
+<p><code>JsonSchemaBuilder</code> defines an implicit cast to <code>JsonSchema</code> which calls the <code>.Build()</code> method.</p>
+<p>To help things further, <code>JsonSchema</code> also defines implicit conversions from <code>bool</code>.  This allows you to simply use <code>true</code> and <code>false</code> to create their respective schemas.</p>
+<pre><code class="lang-c#">builder.Properties(
+        (&quot;prop1&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(8)
+        ),
+        (&quot;prop2&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.Number)
+            .MultipleOf(42)
+        ),
+        (&quot;prop3&quot;, true)
+    );
+</code></pre>
+<p>This cast can be used anywhere a <code>JsonSchema</code> is needed, such as in the <code>additionalProperties</code> or <code>items</code> keywords.</p>
+<pre><code class="lang-c#">builder.Properties(
+        (&quot;prop1&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(8)
+        ),
+        (&quot;prop2&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.Number)
+            .MultipleOf(42)
+        ),
+        (&quot;prop3&quot;, true),
+        (&quot;prop4&quot;, new JsonSchemaBuilder()
+            .Type(SchemaValueType.Array)
+            .Items(true)
         )
     )
-    .Required(&quot;myProperty&quot;);
+    .AdditionalProperties(false);
 </code></pre>
-<p>The fluent-style interface is designed to be able to express the schema in C# in such a way that it mimics the JSON representation.</p>
-<p><em><strong>NOTE</strong> The meta-schemas exposed by the library are built using the fluent syntax.</em></p>
 </nsp></article>
           </div>
           

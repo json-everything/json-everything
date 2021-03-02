@@ -119,14 +119,18 @@
 of composite values is not supported.</p>
 </div>
   <h5 id="Json_More_EnumStringConverter_1_examples"><strong>Examples</strong></h5>
-  <p>public class MyClass {
-[JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
-public MyEnum Value { get; set; }
-}</p>
-<p>public enum MyEnum {
+  <p>The attribute can be applied to both the enum type itself:</p>
+<pre><code class="lang-c#">public enum MyEnum {
 Foo,
 Bar
-}</p>
+}
+</code></pre>
+<p>or to a property of the enum type:</p>
+<pre><code class="lang-c#">public class MyClass {
+[JsonConverter(typeof(EnumStringConverter&amp;lt;MyEnum&gt;))]
+public MyEnum Value { get; set; }
+}
+</code></pre>
 
   <h3 id="methods">Methods
   </h3>
@@ -135,7 +139,7 @@ Bar
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_EnumStringConverter_1_Read_Utf8JsonReader__Type_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20Json.More.EnumStringConverter%601.Read(Utf8JsonReader%40%2CType%2CJsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/EnumStringConverter.cs/#L68">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/EnumStringConverter.cs/#L75">View Source</a>
   </span>
   <a id="Json_More_EnumStringConverter_1_Read_" data-uid="Json.More.EnumStringConverter`1.Read*"></a>
   <h4 id="Json_More_EnumStringConverter_1_Read_Utf8JsonReader__Type_JsonSerializerOptions_" data-uid="Json.More.EnumStringConverter`1.Read(Utf8JsonReader@,Type,JsonSerializerOptions)">Read(ref Utf8JsonReader, Type, JsonSerializerOptions)</h4>
@@ -197,7 +201,7 @@ Bar
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_EnumStringConverter_1_Write_Utf8JsonWriter__0_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20Json.More.EnumStringConverter%601.Write(Utf8JsonWriter%2C%600%2CJsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/EnumStringConverter.cs/#L107">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/EnumStringConverter.cs/#L114">View Source</a>
   </span>
   <a id="Json_More_EnumStringConverter_1_Write_" data-uid="Json.More.EnumStringConverter`1.Write*"></a>
   <h4 id="Json_More_EnumStringConverter_1_Write_Utf8JsonWriter__0_JsonSerializerOptions_" data-uid="Json.More.EnumStringConverter`1.Write(Utf8JsonWriter,`0,JsonSerializerOptions)">Write(Utf8JsonWriter, T, JsonSerializerOptions)</h4>
@@ -253,7 +257,7 @@ Bar
                     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_EnumStringConverter_1.md&amp;value=---%0Auid%3A%20Json.More.EnumStringConverter%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/EnumStringConverter.cs/#L33" class="contribution-link">View Source</a>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/EnumStringConverter.cs/#L40" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

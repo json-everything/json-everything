@@ -102,7 +102,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Logic.RuleRegistry.html",
-          "hash": "XvVz9CNy1FVAmopoLJQ+oQ=="
+          "hash": "JxRRWy4MTyPBAOQSDqmHUg=="
         }
       },
       "is_incremental": false,
@@ -126,7 +126,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.More.EnumStringConverter-1.html",
-          "hash": "Po5FsNfx4h2FU+rlP1bTNQ=="
+          "hash": "KZ3px7wl2uKbVagK71XD2g=="
         }
       },
       "is_incremental": false,
@@ -2274,7 +2274,19 @@
       "output": {
         ".html": {
           "relative_path": "examples/more-enums.html",
-          "hash": "8hNZXlDhOB97SVCHkyS6SA=="
+          "hash": "SN7gqGaUqYWOFM+EwLr1Kg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "examples/more-extensions.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/more-extensions.html",
+          "hash": "Nx0h9NRYz6CYs74f+VTKUg=="
         }
       },
       "is_incremental": false,
@@ -2310,7 +2322,7 @@
       "output": {
         ".html": {
           "relative_path": "examples/toc.html",
-          "hash": "7kDp2/VH7atwoHE1kCplmg=="
+          "hash": "UcRvLP6NhYt86mxEBI9zBA=="
         }
       },
       "is_incremental": false,
@@ -2413,7 +2425,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-more.html",
-          "hash": "vFTsRFZW8mZD2DJ91c6N1A=="
+          "hash": "Q5abg58m4JhTPIF8vLJnMQ=="
         }
       },
       "is_incremental": false,
@@ -2605,7 +2617,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-building.html",
-          "hash": "oVeUqeX/6dd5p81SEN8IVA=="
+          "hash": "UYUJh+C8M53pX9P938BHdw=="
         }
       },
       "is_incremental": false,
@@ -2722,7 +2734,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 31,
+          "total_file_count": 32,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
