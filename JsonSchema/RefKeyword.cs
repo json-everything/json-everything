@@ -65,7 +65,7 @@ namespace Json.Schema
 			else
 			{
 				newUri = context.CurrentUri;
-				baseSchema = context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
+				baseSchema = context.SchemaRoot;
 			}
 
 			JsonSchema? schema;
