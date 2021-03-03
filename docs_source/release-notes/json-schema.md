@@ -1,3 +1,7 @@
+# [1.9.2](https://github.com/gregsdennis/json-everything/pull/80)
+
+[#79](https://github.com/gregsdennis/json-everything/issues/79) - `$ref` was calling out to resolve a parent URI.
+
 # [1.9.1](https://github.com/gregsdennis/json-everything/pull/77)
 
 Fixes found by the release of the 2020-12 test suite.
