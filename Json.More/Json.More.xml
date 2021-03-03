@@ -16,15 +16,20 @@
              of composite values is not supported.
              </remarks>
              <example>
+             The attribute can be applied to both the enum type itself:
+             ```c#
+             public enum MyEnum {
+                 Foo,
+                 Bar
+             }
+             ```
+             
+             or to a property of the enum type:
+            
              ```c#
              public class MyClass {
             	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
             	    public MyEnum Value { get; set; }
-             }
-             
-             public enum MyEnum {
-                 Foo,
-                 Bar
              }
              ```
              </example>

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests
@@ -372,6 +374,103 @@ namespace Json.Schema.Tests
 
 			Assert.IsTrue(schema1.Equals(schema2));
 			Assert.AreEqual(schema1.GetHashCode(), schema2.GetHashCode());
+		}
+
+		[Test]
+		public void Issue79_RefsTryingToResolveParent()
+		{
+			var schema1Str = @"
+{
+  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+  ""$id"": ""schema1.json"",
+  ""definitions"": {
+    ""myDef"": {
+      ""properties"": {
+        ""abc"": { ""type"": ""string"" }
+      }
+    }
+  },
+  ""$ref"": ""#/definitions/myDef""
+}";
+			var schema2Str = @"
+{
+  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+  ""$id"": ""schema2.json"",
+  ""$ref"": ""schema1.json""
+}";
+			var jsonStr = @"{ ""abc"": ""s"" }";
+			var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str);
+			var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str);
+			var json = JsonDocument.Parse(jsonStr).RootElement;
+			var uri1 = new Uri("http://first.com/schema1.json");
+			var uri2 = new Uri("http://first.com/schema2.json");
+			var firstBaseUri = new Uri("http://first.com");
+			var map = new Dictionary<Uri, JsonSchema>
+			{
+				{ uri1, schema1 },
+				{ uri2, schema2 },
+			};
+			var options = new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Verbose,
+				DefaultBaseUri = firstBaseUri,
+				SchemaRegistry =
+				{
+					Fetch = uri =>
+					{
+						Console.WriteLine("Fetching {0}", uri);
+						return map.TryGetValue(uri, out var ret) ? ret : null;
+						//return map[uri];
+					}
+				}
+			};
+			var validation = schema2.Validate(json, options);
+			Console.WriteLine("Validation: {0}", JsonSerializer.Serialize(validation, new JsonSerializerOptions {WriteIndented = true}));
+		}
+
+		[Test]
+		public void Issue79_RefsTryingToResolveParent_Explanation()
+		{
+			var schemaText = @"{
+  ""$id"": ""https://mydomain.com/outer"",
+  ""properties"": {
+    ""foo"": {
+      ""$id"": ""https://mydomain.com/foo"",
+      ""properties"": {
+        ""inner1"": {
+          ""$anchor"": ""bar"",
+          ""type"": ""string""
+        },
+        ""inner2"": {
+          ""$ref"": ""#bar""
+        }
+      }
+    },
+    ""bar"": {
+      ""$anchor"": ""bar"",
+      ""type"": ""integer""
+    }
+  }
+}";
+			var passingText = @"
+{
+  ""foo"": {
+    ""inner2"": ""value""
+  }
+}";
+			var failingText = @"
+{
+  ""foo"": {
+    ""inner2"": 42
+  }
+}";
+
+			var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+			var passing = JsonDocument.Parse(passingText).RootElement;
+			var failing = JsonDocument.Parse(failingText).RootElement;
+
+			schema.Validate(passing, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertValid();
+			schema.Validate(failing, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
 		}
 	}
 }
