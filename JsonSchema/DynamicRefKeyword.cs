@@ -60,7 +60,7 @@ namespace Json.Schema
 				newUri = context.CurrentUri;
 				if (fragment != null && context.DynamicAnchors.TryGetValue(fragment, out var dynamicSchema))
 					baseSchema = dynamicSchema;
-				baseSchema ??= context.Options.SchemaRegistry.Get(newUri, fragment) ?? context.SchemaRoot;
+				baseSchema ??= context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;
