@@ -423,7 +423,9 @@ namespace Json.Schema.Tests
 					}
 				}
 			};
-			schema2.Validate(json, options).AssertValid();
+            var result = schema2.Validate(json, options);
+            result.AssertValid();
+            Assert.AreEqual(result.NestedResults[0].NestedResults[0].AbsoluteSchemaLocation, "http://first.com/schema1.json#");
 		}
 
 		[Test]
