@@ -40,7 +40,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			var parts = Reference.OriginalString.Split(new []{'#'}, StringSplitOptions.None);
+			var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
@@ -86,6 +86,7 @@ namespace Json.Schema
 						context.Message = $"Could not parse pointer `{fragment}`";
 						return;
 					}
+
 					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
 				}
 				else
@@ -100,9 +101,9 @@ namespace Json.Schema
 			}
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
-			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference)) 
+			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
 				subContext.Reference = reference;
-			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
+			if (!ReferenceEquals(baseSchema, context.SchemaRoot))
 				subContext.SchemaRoot = baseSchema!;
 			schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
