@@ -418,14 +418,14 @@ namespace Json.Schema.Tests
 				{
 					Fetch = uri =>
 					{
-						Console.WriteLine("Fetching {0}", uri);
-						return map.TryGetValue(uri, out var ret) ? ret : null;
-						//return map[uri];
+						Assert.True(map.TryGetValue(uri, out var ret), "Unexpected uri: {0}", uri);
+						return ret;
 					}
 				}
 			};
-			var validation = schema2.Validate(json, options);
-			Console.WriteLine("Validation: {0}", JsonSerializer.Serialize(validation, new JsonSerializerOptions {WriteIndented = true}));
+            var result = schema2.Validate(json, options);
+            result.AssertValid();
+            Assert.AreEqual(result.NestedResults[0].NestedResults[0].AbsoluteSchemaLocation, "http://first.com/schema1.json#");
 		}
 
 		[Test]

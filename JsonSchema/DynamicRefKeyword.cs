@@ -51,11 +51,8 @@ namespace Json.Schema
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
 						: context.CurrentUri.GetParentUri();
-					newUri = uriFolder;
-					var newBaseUri = new Uri(uriFolder, baseUri);
-					if (!string.IsNullOrEmpty(fragment))
-						newUri = newBaseUri;
-					baseSchema = context.Options.SchemaRegistry.Get(newBaseUri);
+					newUri = new Uri(uriFolder, baseUri);
+					baseSchema = context.Options.SchemaRegistry.Get(newUri);
 				}
 			}
 			else
@@ -63,7 +60,7 @@ namespace Json.Schema
 				newUri = context.CurrentUri;
 				if (fragment != null && context.DynamicAnchors.TryGetValue(fragment, out var dynamicSchema))
 					baseSchema = dynamicSchema;
-				baseSchema ??= context.Options.SchemaRegistry.Get(newUri, fragment) ?? context.SchemaRoot;
+				baseSchema ??= context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;
