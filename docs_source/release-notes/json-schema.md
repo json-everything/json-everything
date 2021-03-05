@@ -1,3 +1,7 @@
+# [1.9.2](https://github.com/gregsdennis/json-everything/pull/83)
+
+[#82](https://github.com/gregsdennis/json-everything/pulll/82) - Fixing issues managing `ValidationContext.CurrentUri`.  Credit to [@amosonn](https://github.com/amosonn).
+
 # [1.9.2](https://github.com/gregsdennis/json-everything/pull/80)
 
 [#79](https://github.com/gregsdennis/json-everything/issues/79) - `$ref` was calling out to resolve a parent URI.

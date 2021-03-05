@@ -36,7 +36,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			var parts = Reference.OriginalString.Split(new []{'#'}, StringSplitOptions.None);
+			var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
@@ -51,11 +51,8 @@ namespace Json.Schema
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
 						: context.CurrentUri.GetParentUri();
-					newUri = uriFolder;
-					var newBaseUri = new Uri(uriFolder, baseUri);
-					if (!string.IsNullOrEmpty(fragment))
-						newUri = newBaseUri;
-					baseSchema = context.Options.SchemaRegistry.Get(newBaseUri);
+					newUri = new Uri(uriFolder, baseUri);
+					baseSchema = context.Options.SchemaRegistry.Get(newUri);
 				}
 			}
 			else
@@ -63,7 +60,7 @@ namespace Json.Schema
 				newUri = context.CurrentUri;
 				if (fragment != null && context.DynamicAnchors.TryGetValue(fragment, out var dynamicSchema))
 					baseSchema = dynamicSchema;
-				baseSchema ??= context.Options.SchemaRegistry.Get(newUri, fragment) ?? context.SchemaRoot;
+				baseSchema ??= context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;
@@ -87,6 +84,7 @@ namespace Json.Schema
 						context.Message = $"Could not parse pointer `{fragment}`";
 						return;
 					}
+
 					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
 				}
 				else
@@ -101,7 +99,7 @@ namespace Json.Schema
 			}
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
-			if (!ReferenceEquals(baseSchema, context.SchemaRoot)) 
+			if (!ReferenceEquals(baseSchema, context.SchemaRoot))
 				subContext.SchemaRoot = baseSchema!;
 			schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
