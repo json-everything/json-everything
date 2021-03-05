@@ -1,7 +1,6 @@
 {
 	"settings": {
-		"ruleOverrides": { },
-		"omitDisclaimer": true
+		"ruleOverrides": { }
 	},
 	"nuget": {
 		"repositoryUrl": "https://api.nuget.org/"
