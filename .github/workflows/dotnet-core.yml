@@ -124,7 +124,7 @@ jobs:
         if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
-          dotnet analyze-semver -a artifacts/DLLs/Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c .github/semver_config.json -p Json.More.Net
+          dotnet analyze-semver -a artifacts/DLLs/Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c .github/semver_config.json -p Json.More.Net --include-Header --omit-disclaimer --assume-changes
           unset HAS_REPORT
           unset REPORT
           if [ -s semver-report-more.md ]
@@ -176,7 +176,7 @@ jobs:
         if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
-          dotnet analyze-semver -a artifacts/DLLs/JsonPatch/bin/Release/netstandard2.0/JsonPatch.dll -o semver-report-patch.md -c .github/semver_config.json -p JsonPatch.Net
+          dotnet analyze-semver -a artifacts/DLLs/JsonPatch/bin/Release/netstandard2.0/JsonPatch.dll -o semver-report-patch.md -c .github/semver_config.json -p JsonPatch.Net --include-Header --omit-disclaimer --assume-changes
           unset HAS_REPORT
           unset REPORT
           if [ -s semver-report-patch.md ]
