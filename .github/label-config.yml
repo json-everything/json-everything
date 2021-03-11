@@ -22,5 +22,5 @@
 "documentation":
   - docs_source/**/*
 
-"build pipeline"
+"build pipeline":
   - .github/workflows/**/*
