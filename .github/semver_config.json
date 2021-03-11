@@ -1,6 +1,9 @@
 {
 	"settings": {
-		"ruleOverrides": { }
+		"ruleOverrides": { },
+		"assumeChanges": true,
+		"omitDisclaimer": true,
+		"includeHeader": true
 	},
 	"nuget": {
 		"repositoryUrl": "https://api.nuget.org/"
