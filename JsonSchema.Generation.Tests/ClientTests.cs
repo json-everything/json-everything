@@ -21,8 +21,12 @@ namespace Json.Schema.Generation.Tests
 				.Type(SchemaValueType.Object)
 				.Properties(
 					(nameof(TestMenu.Name), new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+					),
+					(nameof(TestMenu.Children), new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
-						.Items(new JsonSchemaBuilder().Ref("#")))
+						.Items(new JsonSchemaBuilder().Ref("#"))
+					)
 				);
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<TestMenu>();
