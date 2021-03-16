@@ -59,7 +59,7 @@ namespace Json.Schema.Generation
 
 			var currentNames = new List<string>();
 			var defs = new Dictionary<string, SchemaGeneratorContext>();
-			var contextContainers = Intents.OfType<IContextContainer>().ToList();
+			var contextContainers = GetNestedContainers().ToList();
 			foreach (var def in defsByHashCode)
 			{
 				var name = def.Value.GetDefName(currentNames);
@@ -79,6 +79,24 @@ namespace Json.Schema.Generation
 				var defsIntent = new DefsIntent(defs);
 				Intents.Add(defsIntent);
 			}
+		}
+
+		private IEnumerable<IContextContainer> GetNestedContainers()
+		{
+			var contextContainers = Intents.OfType<IContextContainer>().ToList();
+			var i = 0;
+
+			while (i < contextContainers.Count)
+			{
+				var current = contextContainers[i];
+				var unknownContainers = current.GetContexts()
+					.SelectMany(c => c.Intents.OfType<IContextContainer>())
+					.Except(contextContainers);
+				contextContainers.AddRange(unknownContainers);
+				i++;
+			}
+
+			return contextContainers;
 		}
 
 		private string GetDefName(List<string> currentNames)
