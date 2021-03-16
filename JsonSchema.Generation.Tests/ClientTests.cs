@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests
@@ -25,6 +27,8 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<TestMenu>();
 
+			Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
+			Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
 			Assert.AreEqual(expected, actual);
 		}
 	}

@@ -27,9 +27,7 @@ namespace Json.Schema.Generation
 		/// <returns>The schema builder (for fluent syntax support).</returns>
 		public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type)
 		{
-			var context = new SchemaGeneratorContext(type, new List<Attribute>());
-
-			context.GenerateIntents();
+			var context = SchemaGenerationContextCache.Get(type, new List<Attribute>());
 
 			context.Optimize();
 
