@@ -1,4 +1,8 @@
-# [1.2.1](https://github.com/gregsdennis/json-everything/pull/??)
+# [1.2.2](https://github.com/gregsdennis/json-everything/pull/86)
+
+[#85](https://github.com/gregsdennis/json-everything/issues/85) - Generation for `List<TSelf>` producing StackOverflowException.
+
+# [1.2.1](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.
 
