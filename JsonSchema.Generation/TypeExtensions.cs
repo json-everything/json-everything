@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Json.Schema.Generation
 {
@@ -62,10 +64,13 @@ namespace Json.Schema.Generation
 
 		internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
 		{
+			var eligible = items.Where(
+				a => !(a is JsonPropertyNameAttribute) &&
+				     !(a is RequiredAttribute));
 			unchecked
 			{
 				int hashCode = 0;
-				foreach (var item in items)
+				foreach (var item in eligible)
 				{
 					hashCode = (hashCode * 397) ^ item.GetHashCode();
 				}
