@@ -1001,8 +1001,8 @@
   },
   "release-notes/json-schema-generation.html": {
     "href": "release-notes/json-schema-generation.html",
-    "title": "1.2.2",
-    "keywords": "1.2.2 #85 - Generation for List<TSelf> producing StackOverflowException. 1.2.1 Added support for nullable reference types. 1.2.0 Added support for .Net 5 and remaining in-built JSON serialization attributes: JsonInclude & JsonNumberHandling . Exposed static class AttributeHandler and added methods to allow for handlers of predefined attributes. This mechanism should only be used for attributes that cannot also be made to implement IAttributeHandler . Attributes which also implement this interface are implicitly handled. 1.1.1 Signed the DLL for strong name compatibility. 1.1.0 Added support for in-built JSON serialization attributes (Standard 2.0 & Core 3.x): JsonPropertyName & JsonIgnore . 1.0.1 Added debug symbols to package. No functional change. 1.0.0 Initial release."
+    "title": "1.2.3",
+    "keywords": "1.2.3 #87 - Generation for the same property type under different property names causes StackOverflowException. 1.2.2 #85 - Generation for List<TSelf> producing StackOverflowException. 1.2.1 Added support for nullable reference types. 1.2.0 Added support for .Net 5 and remaining in-built JSON serialization attributes: JsonInclude & JsonNumberHandling . Exposed static class AttributeHandler and added methods to allow for handlers of predefined attributes. This mechanism should only be used for attributes that cannot also be made to implement IAttributeHandler . Attributes which also implement this interface are implicitly handled. 1.1.1 Signed the DLL for strong name compatibility. 1.1.0 Added support for in-built JSON serialization attributes (Standard 2.0 & Core 3.x): JsonPropertyName & JsonIgnore . 1.0.1 Added debug symbols to package. No functional change. 1.0.0 Initial release."
   },
   "support.html": {
     "href": "support.html",
