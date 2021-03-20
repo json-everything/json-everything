@@ -1,3 +1,7 @@
+# [1.2.3](https://github.com/gregsdennis/json-everything/pull/88)
+
+[#87](https://github.com/gregsdennis/json-everything/issues/87) - Generation for the same property type under different property names causes StackOverflowException.
+
 # [1.2.2](https://github.com/gregsdennis/json-everything/pull/86)
 
 [#85](https://github.com/gregsdennis/json-everything/issues/85) - Generation for `List<TSelf>` producing StackOverflowException.

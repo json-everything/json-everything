@@ -62,7 +62,7 @@ namespace Json.Schema.Generation
 			       typeof(IEnumerable).IsAssignableFrom(type);
 		}
 
-		public static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
+		internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
 		{
 			var eligible = items.Where(
 				a => !(a is JsonPropertyNameAttribute) &&
