@@ -6,8 +6,26 @@ using Json.More;
 
 namespace Json.Logic
 {
-	internal static class JsonElementExtensions
+	/// <summary>
+	/// Provides fuzzy-logic extensions for <see cref="JsonElement"/> values.
+	/// </summary>
+	public static class JsonElementExtensions
 	{
+		/// <summary>
+		/// Determines whether a value can be considered as `true`.
+		/// </summary>
+		/// <param name="element">The element.</param>
+		/// <returns>
+		/// `true` if the value is:
+		///
+		/// - a non-empty array
+		/// - a non-empty string
+		/// - a non-zero number
+		/// - true
+		///
+		///	`false` otherwise
+		///
+		/// </returns>
 		public static bool IsTruthy(this JsonElement element)
 		{
 			return element.ValueKind switch
@@ -22,6 +40,19 @@ namespace Json.Logic
 			};
 		}
 
+		/// <summary>
+		/// Provides a loose-cast to a string.
+		/// </summary>
+		/// <param name="element">The element.</param>
+		/// <returns>
+		///	A string representation of the value as follows:
+		///
+		/// - arrays are the elements stringified and comma-delimited
+		/// - null returns the empty string
+		/// - objects return null (not stringifiable)
+		///	- numbers and booleans return their JSON equivalents
+		/// - strings are unchanged
+		/// </returns>
 		public static string? Stringify(this JsonElement element)
 		{
 			return element.ValueKind switch
@@ -36,6 +67,19 @@ namespace Json.Logic
 			};
 		}
 
+		/// <summary>
+		/// Provides a loose-cast to a number.
+		/// </summary>
+		/// <param name="element">The element.</param>
+		/// <returns>
+		///	A string representation of the value as follows:
+		///
+		/// - strings try to parse a number from the value
+		/// - true returns 1
+		/// - false returns 0
+		///	- numbers are unchanged
+		/// - null, objects, and arrays return null (not numberifiable)
+		/// </returns>
 		public static decimal? Numberify(this JsonElement element)
 		{
 			return element.ValueKind switch
@@ -48,6 +92,11 @@ namespace Json.Logic
 			};
 		}
 
+		/// <summary>
+		/// Flattens an array into its root components (removes intermediate arrays).
+		/// </summary>
+		/// <param name="root">The element.</param>
+		/// <returns>Returns a single array with all of the intermediate arrays removed.</returns>
 		public static IEnumerable<JsonElement> Flatten(this JsonElement root)
 		{
 			if (root.ValueKind != JsonValueKind.Array) return new[] {root};
@@ -55,7 +104,15 @@ namespace Json.Logic
 			return root.EnumerateArray().SelectMany(Flatten);
 		}
 
-		// Ported from: https://github.com/marvindv/jsonlogic_rs/blob/b2ad93af575f19c6b220a6a54d599e104e72a630/src/operators/logic.rs#L33
+		/// <summary>
+		/// Provides loose equality comparison of <see cref="JsonElement"/> values.
+		/// </summary>
+		/// <param name="a">The first value.</param>
+		/// <param name="b">The second value.</param>
+		/// <returns>`true` if the values are loosely equal; `false` otherwise.</returns>
+		/// <remarks>
+		/// Ported from [@marvindv/jsonlogic_rs](https://github.com/marvindv/jsonlogic_rs/blob/b2ad93af575f19c6b220a6a54d599e104e72a630/src/operators/logic.rs#L33).
+		/// </remarks>
 		public static bool LooseEquals(this JsonElement a, JsonElement b)
 		{
 			static string CoerceArrayToString(JsonElement array) => string.Join(",", array.EnumerateArray().Select(e => e.ToJsonString()));
