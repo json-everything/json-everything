@@ -49,6 +49,15 @@ namespace Json.Schema
 			Global.Register(MetaSchemas.Metadata201909Id, MetaSchemas.Metadata201909);
 			Global.Register(MetaSchemas.Format201909Id, MetaSchemas.Format201909);
 			Global.Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
+			Global.Register(MetaSchemas.Draft202012Id, MetaSchemas.Draft202012);
+			Global.Register(MetaSchemas.Core202012Id, MetaSchemas.Core202012);
+			Global.Register(MetaSchemas.Applicator202012Id, MetaSchemas.Applicator202012);
+			Global.Register(MetaSchemas.Validation202012Id, MetaSchemas.Validation202012);
+			Global.Register(MetaSchemas.Metadata202012Id, MetaSchemas.Metadata202012);
+			Global.Register(MetaSchemas.Unevaluated202012Id, MetaSchemas.Unevaluated202012);
+			Global.Register(MetaSchemas.FormatAnnotation202012Id, MetaSchemas.FormatAnnotation202012);
+			Global.Register(MetaSchemas.FormatAssertion202012Id, MetaSchemas.FormatAssertion202012);
+			Global.Register(MetaSchemas.Content202012Id, MetaSchemas.Content202012);
 		}
 
 		internal SchemaRegistry()

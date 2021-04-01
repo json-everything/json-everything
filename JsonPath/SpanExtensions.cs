@@ -86,7 +86,7 @@ namespace Json.Path
 			if (!followingNodes.Any())
 			{
 				i = index;
-				expression = new QueryExpressionNode(left, Operators.Exists, null);
+				expression = new QueryExpressionNode(left, Operators.Exists, null!);
 				return true;
 			}
 
@@ -118,7 +118,7 @@ namespace Json.Path
 
 			i = index;
 			expression = root;
-			return true;
+			return expression != null;
 		}
 
 		public static bool TryParseJsonElement(this ReadOnlySpan<char> span, ref int i, out JsonElement element)
