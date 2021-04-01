@@ -1,4 +1,4 @@
-# [1.3.0](https://github.com/gregsdennis/json-everything/pull/??)
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/92)
 
 Added support for nullable reference types.
 
