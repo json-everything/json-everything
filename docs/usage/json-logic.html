@@ -8,7 +8,7 @@
     <title>JsonLogic </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="JsonLogic ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -183,8 +183,16 @@ var result = rule.Apply(data);
 <h3 id="automatic-array-flattening">Automatic array flattening</h3>
 <p>Nested arrays are flattened before being operated upon.  As an example of this, <code>[[&quot;a&quot;]]</code> is flattened to <code>[&quot;a&quot;]</code> and <code>[&quot;a&quot;,[&quot;b&quot;]]</code> is flattened to <code>[&quot;a&quot;,&quot;b&quot;]</code>.</p>
 <p>That's it.  Not much to it; just be aware that it happens.</p>
-<h2 id="creating-new-rules">Creating new rules</h2>
-<p><a href="https://jsonlogic.com/add_operation.html">Adding new operations</a> is currently supported in the Javascript implementation, and it's coming soon here.  The initial version only supports the predefined operations.</p>
+<h2 id="creating-new-operators">Creating new operators</h2>
+<p>JSON Logic also supports <a href="https://jsonlogic.com/add_operation.html">adding custom operations</a>.</p>
+<p>In C#, your operators will need to derive from the <code>Rule</code> abstract class.  There is only a single method to implement, <code>Apply()</code>, and you'll need to add an <code>Operator</code> attribute.  The logic in the rule doesn't need to be complex, but there are a couple things to be aware of:</p>
+<ul>
+<li>Your rule must have a parameterless constructor.</li>
+<li>You're working with <code>JsonElement</code>s, so you'll need to detect compatible value types.  There are a few extension methods that you can use, like <code>.Numberify()</code>, that try to &quot;fuzzy-cast&quot; to a numberish value.</li>
+<li>If you encounter invalid input, throw a <code>JsonLogicException</code> with an appropriate message.</li>
+</ul>
+<p>It's definitely recommended to go through the <a href="https://github.com/gregsdennis/json-everything/tree/master/JsonLogic/Rules">code for the built-in ruleset</a> for examples.</p>
+<p>Once your rule is defined, it needs to be registered using the <code>RuleRegistry.Register&lt;T&gt;()</code> method.  This will allow the rule to be automatically deserialized.</p>
 </article>
           </div>
           

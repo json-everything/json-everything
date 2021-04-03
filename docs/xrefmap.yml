@@ -7,6 +7,77 @@ references:
   commentId: N:Json.Logic
   fullName: Json.Logic
   nameWithType: Json.Logic
+- uid: Json.Logic.JsonElementExtensions
+  name: JsonElementExtensions
+  href: api/Json.Logic.JsonElementExtensions.html
+  commentId: T:Json.Logic.JsonElementExtensions
+  fullName: Json.Logic.JsonElementExtensions
+  nameWithType: JsonElementExtensions
+- uid: Json.Logic.JsonElementExtensions.Flatten(JsonElement)
+  name: Flatten(JsonElement)
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_Flatten_JsonElement_
+  commentId: M:Json.Logic.JsonElementExtensions.Flatten(JsonElement)
+  fullName: Json.Logic.JsonElementExtensions.Flatten(JsonElement)
+  nameWithType: JsonElementExtensions.Flatten(JsonElement)
+- uid: Json.Logic.JsonElementExtensions.Flatten*
+  name: Flatten
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_Flatten_
+  commentId: Overload:Json.Logic.JsonElementExtensions.Flatten
+  isSpec: "True"
+  fullName: Json.Logic.JsonElementExtensions.Flatten
+  nameWithType: JsonElementExtensions.Flatten
+- uid: Json.Logic.JsonElementExtensions.IsTruthy(JsonElement)
+  name: IsTruthy(JsonElement)
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_IsTruthy_JsonElement_
+  commentId: M:Json.Logic.JsonElementExtensions.IsTruthy(JsonElement)
+  fullName: Json.Logic.JsonElementExtensions.IsTruthy(JsonElement)
+  nameWithType: JsonElementExtensions.IsTruthy(JsonElement)
+- uid: Json.Logic.JsonElementExtensions.IsTruthy*
+  name: IsTruthy
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_IsTruthy_
+  commentId: Overload:Json.Logic.JsonElementExtensions.IsTruthy
+  isSpec: "True"
+  fullName: Json.Logic.JsonElementExtensions.IsTruthy
+  nameWithType: JsonElementExtensions.IsTruthy
+- uid: Json.Logic.JsonElementExtensions.LooseEquals(JsonElement,JsonElement)
+  name: LooseEquals(JsonElement, JsonElement)
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_LooseEquals_JsonElement_JsonElement_
+  commentId: M:Json.Logic.JsonElementExtensions.LooseEquals(JsonElement,JsonElement)
+  fullName: Json.Logic.JsonElementExtensions.LooseEquals(JsonElement, JsonElement)
+  nameWithType: JsonElementExtensions.LooseEquals(JsonElement, JsonElement)
+- uid: Json.Logic.JsonElementExtensions.LooseEquals*
+  name: LooseEquals
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_LooseEquals_
+  commentId: Overload:Json.Logic.JsonElementExtensions.LooseEquals
+  isSpec: "True"
+  fullName: Json.Logic.JsonElementExtensions.LooseEquals
+  nameWithType: JsonElementExtensions.LooseEquals
+- uid: Json.Logic.JsonElementExtensions.Numberify(JsonElement)
+  name: Numberify(JsonElement)
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_Numberify_JsonElement_
+  commentId: M:Json.Logic.JsonElementExtensions.Numberify(JsonElement)
+  fullName: Json.Logic.JsonElementExtensions.Numberify(JsonElement)
+  nameWithType: JsonElementExtensions.Numberify(JsonElement)
+- uid: Json.Logic.JsonElementExtensions.Numberify*
+  name: Numberify
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_Numberify_
+  commentId: Overload:Json.Logic.JsonElementExtensions.Numberify
+  isSpec: "True"
+  fullName: Json.Logic.JsonElementExtensions.Numberify
+  nameWithType: JsonElementExtensions.Numberify
+- uid: Json.Logic.JsonElementExtensions.Stringify(JsonElement)
+  name: Stringify(JsonElement)
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_Stringify_JsonElement_
+  commentId: M:Json.Logic.JsonElementExtensions.Stringify(JsonElement)
+  fullName: Json.Logic.JsonElementExtensions.Stringify(JsonElement)
+  nameWithType: JsonElementExtensions.Stringify(JsonElement)
+- uid: Json.Logic.JsonElementExtensions.Stringify*
+  name: Stringify
+  href: api/Json.Logic.JsonElementExtensions.html#Json_Logic_JsonElementExtensions_Stringify_
+  commentId: Overload:Json.Logic.JsonElementExtensions.Stringify
+  isSpec: "True"
+  fullName: Json.Logic.JsonElementExtensions.Stringify
+  nameWithType: JsonElementExtensions.Stringify
 - uid: Json.Logic.JsonLogic
   name: JsonLogic
   href: api/Json.Logic.JsonLogic.html
