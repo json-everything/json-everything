@@ -59,14 +59,19 @@ namespace Json.Schema
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var notFound = new List<string>();
 			for (int i = 0; i < Properties.Count; i++)
 			{
 				var property = Properties[i];
+				context.Log(() => $"Checking for property '{property}'");
 				if (!context.LocalInstance.TryGetProperty(property, out _))
 					notFound.Add(property);
 				if (notFound.Count != 0 && context.ApplyOptimizations) break;
 			}
+			if (notFound.Any())
+				context.Log(() => $"Missing properties: [{string.Join(",", notFound.Select(x => $"'{x}'"))}]");
+			context.Options.LogIndentLevel--;
 
 			context.IsValid = notFound.Count == 0;
 			if (!context.IsValid)

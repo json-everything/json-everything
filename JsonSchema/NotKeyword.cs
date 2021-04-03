@@ -49,6 +49,9 @@ namespace Json.Schema
 			context.NestedContexts.Add(subContext);
 			context.IsValid = !subContext.IsValid;
 			context.ConsolidateAnnotations();
+			context.Options.LogIndentLevel++;
+			context.Log(() => $"Subschema {subContext.IsValid.GetValidityString()}.");
+			context.Options.LogIndentLevel--;
 			context.ExitKeyword(Name, context.IsValid);
 		}
 

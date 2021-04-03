@@ -59,12 +59,19 @@ namespace Json.Schema
 			var evaluatedProperties = new List<string>();
 			foreach (var property in Requirements)
 			{
+				context.Log(() => $"Validating property '{property.Key}'.");
 				var requirements = property.Value;
 				var name = property.Key;
-				if (!context.LocalInstance.TryGetProperty(name, out _)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out _))
+				{
+					context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
+					continue;
+				}
 
+				context.Options.LogIndentLevel++;
 				if (requirements.Schema != null)
 				{
+					context.Log(() => "Found schema requirement.");
 					var subContext = ValidationContext.From(context,
 						subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
 					requirements.Schema.ValidateSubschema(subContext);
@@ -72,9 +79,11 @@ namespace Json.Schema
 					context.NestedContexts.Add(subContext);
 					if (subContext.IsValid)
 						evaluatedProperties.Add(name);
+					context.Log(() => $"Property '{property.Key}' {subContext.IsValid.GetValidityString()}.");
 				}
 				else
 				{
+					context.Log(() => "Found property list requirement.");
 					var missingDependencies = new List<string>();
 					foreach (var dependency in requirements.Requirements!)
 					{
@@ -87,8 +96,12 @@ namespace Json.Schema
 					if (!missingDependencies.Any())
 						evaluatedProperties.Add(name);
 					else
+					{
+						context.Log(() => $"Missing properties [{string.Join(",", missingDependencies.Select(x => $"'{x}'"))}].");
 						overallResult = false;
+					}
 				}
+				context.Options.LogIndentLevel--;
 
 				if (!overallResult && context.ApplyOptimizations) break;
 			}

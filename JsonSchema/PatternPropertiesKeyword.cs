@@ -59,6 +59,7 @@ namespace Json.Schema
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			var evaluatedProperties = new List<string>();
 			var instanceProperties = context.LocalInstance.EnumerateObject().ToList();
@@ -68,17 +69,20 @@ namespace Json.Schema
 				var pattern = entry.Key;
 				foreach (var instanceProperty in instanceProperties.Where(p => pattern.IsMatch(p.Name)))
 				{
+					context.Log(() => $"Validating property '{instanceProperty.Name}'.");
 					var subContext = ValidationContext.From(context,
 						context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Name}")),
 						instanceProperty.Value,
 						context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
 					schema.ValidateSubschema(subContext);
 					overallResult &= subContext.IsValid;
+					context.Log(() => $"Property '{instanceProperty.Name}' {subContext.IsValid.GetValidityString()}.");
 					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 					evaluatedProperties.Add(instanceProperty.Name);
 				}
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 			{

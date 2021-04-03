@@ -54,6 +54,7 @@ namespace Json.Schema
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			int startIndex = 0;
 			object? annotation;
@@ -115,6 +116,7 @@ namespace Json.Schema
 				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 				context.SetAnnotation(Name, true);

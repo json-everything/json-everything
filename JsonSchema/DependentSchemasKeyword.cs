@@ -54,9 +54,15 @@ namespace Json.Schema
 			var evaluatedProperties = new List<string>();
 			foreach (var property in Schemas)
 			{
+				context.Options.LogIndentLevel++;
+				context.Log(() => $"Validating property '{property.Key}'.");
 				var schema = property.Value;
 				var name = property.Key;
-				if (!context.LocalInstance.TryGetProperty(name, out _)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out _))
+				{
+					context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
+					continue;
+				}
 				
 				var subContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
@@ -66,6 +72,8 @@ namespace Json.Schema
 				context.NestedContexts.Add(subContext);
 				if (subContext.IsValid)
 					evaluatedProperties.Add(name);
+				context.Log(() => $"Property '{property.Key}' {subContext.IsValid.GetValidityString()}.");
+				context.Options.LogIndentLevel--;
 			}
 
 			context.ConsolidateAnnotations();

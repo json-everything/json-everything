@@ -54,6 +54,7 @@ namespace Json.Schema
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation == null)
@@ -83,6 +84,7 @@ namespace Json.Schema
 				context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 				context.SetAnnotation(Name, true);

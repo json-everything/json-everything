@@ -56,6 +56,7 @@ namespace Json.Schema
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			var annotation = (context.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 			List<string> evaluatedProperties;
@@ -99,6 +100,7 @@ namespace Json.Schema
 				else if (context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 			{
