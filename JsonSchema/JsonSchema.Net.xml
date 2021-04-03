@@ -2487,12 +2487,26 @@
             <param name="keyword">The keyword name</param>
             <param name="valid">Whether the validation was successful</param>
         </member>
+        <member name="M:Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ILog,System.Text.Json.JsonValueKind)">
+            <summary>
+            Adds a message to indicate that a keyword doesn't apply and why.
+            </summary>
+            <param name="log">The log</param>
+            <param name="kind">The value kind</param>
+        </member>
         <member name="M:Json.Schema.LogExtensions.NotApplicable(Json.Schema.ILog,System.Func{System.String})">
             <summary>
             Adds a message to indicate that a keyword doesn't apply and why.
             </summary>
             <param name="log">The log</param>
             <param name="reason">The reason</param>
+        </member>
+        <member name="M:Json.Schema.LogExtensions.Validity(System.Boolean)">
+            <summary>
+            Gets the valid or invalid strings.
+            </summary>
+            <param name="isValid">The validity.</param>
+            <returns>"valid" for `true`; "invalid" for `false`.</returns>
         </member>
         <member name="T:Json.Schema.MaxContainsKeyword">
             <summary>

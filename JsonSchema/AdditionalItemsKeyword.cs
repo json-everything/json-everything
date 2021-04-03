@@ -49,7 +49,7 @@ namespace Json.Schema
 			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
-				context.Options.Log.NotApplicable(() => $"Value type is {context.LocalInstance.ValueKind}.");
+				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -62,9 +62,9 @@ namespace Json.Schema
 				context.IsValid = true;
 				return;
 			}
+			context.Options.Log.NotApplicable(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 			if (annotation is bool)
 			{
-				context.Options.Log.NotApplicable(() => $"Annotations from {ItemsKeyword.Name} is true.");
 				context.IsValid = true;
 				return;
 			}
@@ -79,7 +79,7 @@ namespace Json.Schema
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
-				context.Options.Log.Write(() => $"Item at index {i} {(subContext.IsValid ? "valid" : "invalid")}.");
+				context.Options.Log.Write(() => $"Item at index {i} {subContext.IsValid.Validity()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 

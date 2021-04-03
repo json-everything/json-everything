@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace Json.Schema
 {
@@ -32,10 +33,30 @@ namespace Json.Schema
 		/// Adds a message to indicate that a keyword doesn't apply and why.
 		/// </summary>
 		/// <param name="log">The log</param>
+		/// <param name="kind">The value kind</param>
+		public static void WrongValueKind(this ILog log, JsonValueKind kind)
+		{
+			log.Write(() => $"Value type is {kind}. Not applicable.");
+		}
+
+		/// <summary>
+		/// Adds a message to indicate that a keyword doesn't apply and why.
+		/// </summary>
+		/// <param name="log">The log</param>
 		/// <param name="reason">The reason</param>
 		public static void NotApplicable(this ILog log, Func<string> reason)
 		{
 			log.Write(() => $"{reason()} Not applicable.");
+		}
+
+		/// <summary>
+		/// Gets the valid or invalid strings.
+		/// </summary>
+		/// <param name="isValid">The validity.</param>
+		/// <returns>"valid" for `true`; "invalid" for `false`.</returns>
+		public static string Validity(this bool isValid)
+		{
+			return isValid ? "valid" : "invalid";
 		}
 	}
 }
