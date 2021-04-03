@@ -79,10 +79,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
-				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -97,11 +97,11 @@ namespace Json.Schema
 					startIndex = 0;
 				else
 				{
-					context.Options.Log.Write(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
+					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
 					if (annotation is bool)
 					{
 						context.IsValid = true;
-						context.Options.Log.ExitKeyword(Name, context.IsValid);
+						context.ExitKeyword(Name, context.IsValid);
 						return;
 					}
 
@@ -133,8 +133,8 @@ namespace Json.Schema
 				{
 					context.IsValid = false;
 					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
-					context.Options.Log.Write(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
-					context.Options.Log.ExitKeyword(Name, context.IsValid);
+					context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
+					context.ExitKeyword(Name, context.IsValid);
 					return;
 				}
 				var maxEvaluations = Math.Min(ArraySchemas!.Count, context.LocalInstance.GetArrayLength());
@@ -166,7 +166,7 @@ namespace Json.Schema
 			}
 
 			context.IsValid = overallResult;
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

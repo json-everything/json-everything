@@ -108,6 +108,7 @@ namespace Json.Schema
 					SchemaRoot = this
 				};
 
+			options.Log.Write(() => "Registering subschemas.");
 			var baseUri = RegisterSubschemasAndGetBaseUri(context.Options.SchemaRegistry, BaseUri ?? context.Options.DefaultBaseUri);
 			if (baseUri != null && baseUri.IsAbsoluteUri)
 				BaseUri = baseUri;
@@ -118,8 +119,10 @@ namespace Json.Schema
 
 			context.Options.SchemaRegistry.Register(context.CurrentUri, this);
 
+			options.Log.Write(() => "Beginning validation.");
 			ValidateSubschema(context);
 
+			options.Log.Write(() => "Transforming output.");
 			var results = new ValidationResults(context);
 			switch (options.OutputFormat)
 			{
@@ -138,6 +141,7 @@ namespace Json.Schema
 					throw new ArgumentOutOfRangeException();
 			}
 
+			options.Log.Write(() => $"Validation complete: {results.IsValid.GetValidityString()}");
 			return results;
 		}
 
@@ -192,6 +196,7 @@ namespace Json.Schema
 		{
 			if (BoolValue.HasValue)
 			{
+				context.Log(() => $"Found {(BoolValue.Value ? "true" : "false")} schema: {BoolValue.Value.GetValidityString()}");
 				context.IsValid = BoolValue.Value;
 				context.SchemaLocation = context.SchemaLocation.Combine(PointerSegment.Create($"${BoolValue}".ToLowerInvariant()));
 				if (!context.IsValid)

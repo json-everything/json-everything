@@ -46,10 +46,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
-				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -62,7 +62,7 @@ namespace Json.Schema
 				annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
 				if (annotation != null)
 				{
-					context.Options.Log.Write(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
+					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
 					if (annotation is bool) // is only ever true or a number
 					{
 						context.IsValid = true;
@@ -71,12 +71,12 @@ namespace Json.Schema
 					startIndex = (int)annotation;
 				}
 				else
-					context.Options.Log.Write(() => $"No annotations from {PrefixItemsKeyword.Name}.");
+					context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
 			}
 			annotation = context.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation != null)
 			{
-				context.Options.Log.Write(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
+				context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 				if (annotation is bool) // is only ever true or a number
 				{
 					context.IsValid = true;
@@ -85,33 +85,33 @@ namespace Json.Schema
 				startIndex = (int) annotation;
 			}
 			else
-				context.Options.Log.Write(() => $"No annotations from {ItemsKeyword.Name}.");
+				context.Log(() => $"No annotations from {ItemsKeyword.Name}.");
 			annotation = context.TryGetAnnotation(AdditionalItemsKeyword.Name);
 			if (annotation is bool) // is only ever true
 			{
-				context.Options.Log.Write(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
+				context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
 				context.IsValid = true;
 				return;
 			}
-			context.Options.Log.Write(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
+			context.Log(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
 			annotation = context.TryGetAnnotation(Name);
 			if (annotation is bool) // is only ever true
 			{
-				context.Options.Log.Write(() => $"Annotation from {Name}: {annotation}.");
+				context.Log(() => $"Annotation from {Name}: {annotation}.");
 				context.IsValid = true;
 				return;
 			}
-			context.Options.Log.Write(() => $"No annotations from {Name}.");
+			context.Log(() => $"No annotations from {Name}.");
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
-				context.Options.Log.Write(() => $"Validating item at index {i}.");
+				context.Log(() => $"Validating item at index {i}.");
 				var item = context.LocalInstance[i];
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
-				context.Options.Log.Write(() => $"Item at index {i} {subContext.IsValid.Validity()}.");
+				context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
@@ -119,7 +119,7 @@ namespace Json.Schema
 			if (overallResult)
 				context.SetAnnotation(Name, true);
 			context.IsValid = overallResult;
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

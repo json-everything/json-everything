@@ -40,7 +40,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			var newUri = UpdateUri(context.CurrentUri);
 			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
 			if (context.ParentContext.UriChanged) 
@@ -49,7 +49,7 @@ namespace Json.Schema
 			context.IsNewDynamicScope = true;
 			context.ParentContext.CurrentUri = newUri;
 			context.IsValid = true;
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		internal Uri UpdateUri(Uri? currentUri)

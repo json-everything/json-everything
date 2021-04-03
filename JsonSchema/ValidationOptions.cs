@@ -52,6 +52,11 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Gets or sets the indent level for the log.
+		/// </summary>
+		public int LogIndentLevel { get; set; }
+
+		/// <summary>
 		/// Gets or sets a log which will output processing information.
 		/// </summary>
 		public ILog Log
@@ -94,6 +99,7 @@ namespace Json.Schema
 				DefaultBaseUri = other.DefaultBaseUri,
 				ValidateMetaSchema = other.ValidateMetaSchema,
 				RequireFormatValidation = other.RequireFormatValidation,
+				LogIndentLevel = other.LogIndentLevel,
 				Log = other._log ?? Default.Log
 			};
 			options.SchemaRegistry.CopyFrom(other.SchemaRegistry);

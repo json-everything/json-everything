@@ -42,10 +42,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
-				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -53,7 +53,7 @@ namespace Json.Schema
 			if (!Value)
 			{
 				context.IsValid = true;
-				context.Options.Log.ExitKeyword(Name, context.IsValid);
+				context.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 
@@ -73,7 +73,7 @@ namespace Json.Schema
 				var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
 				context.Message = $"Found duplicates at the following index pairs: {pairs}";
 			}
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

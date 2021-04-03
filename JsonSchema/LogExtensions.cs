@@ -9,48 +9,58 @@ namespace Json.Schema
 	public static class LogExtensions
 	{
 		/// <summary>
+		/// Logs a message.
+		/// </summary>
+		/// <param name="context">The validation context.</param>
+		/// <param name="message">The message.</param>
+		public static void Log(this ValidationContext context, Func<string> message)
+		{
+			context.Options.Log.Write(message, context.Options.LogIndentLevel);
+		}
+
+		/// <summary>
 		/// Adds a message to indicate a keyword has begun processing.  Increments indention.
 		/// </summary>
-		/// <param name="log">The log</param>
+		/// <param name="context">The validation context.</param>
 		/// <param name="keyword">The keyword name</param>
-		public static void EnterKeyword(this ILog log, string keyword)
+		public static void EnterKeyword(this ValidationContext context, string keyword)
 		{
-			log.Indent++;
-			log.Write(() => $"Processing {keyword}...");
+			context.Options.LogIndentLevel++;
+			context.Log(() => $"Processing {keyword}...");
 		}
 
 		/// <summary>
 		/// Adds a message to indicate a keyword has finished processing.  Decrements indention.
 		/// </summary>
-		/// <param name="log">The log</param>
+		/// <param name="context">The validation context.</param>
 		/// <param name="keyword">The keyword name</param>
 		/// <param name="valid">Whether the validation was successful</param>
-		public static void ExitKeyword(this ILog log, string keyword, bool valid)
+		public static void ExitKeyword(this ValidationContext context, string keyword, bool valid)
 		{
-			log.Write(() => $"{keyword} complete: {(valid ? "valid" : "invalid")}");
-			log.Indent--;
+			context.Log(() => $"{keyword} complete: {(valid ? "valid" : "invalid")}");
+			context.Options.LogIndentLevel--;
 		}
 
 		/// <summary>
 		/// Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
 		/// </summary>
-		/// <param name="log">The log</param>
+		/// <param name="context">The validation context.</param>
 		/// <param name="kind">The value kind</param>
-		public static void WrongValueKind(this ILog log, JsonValueKind kind)
+		public static void WrongValueKind(this ValidationContext context, JsonValueKind kind)
 		{
-			log.Write(() => $"Value type is {kind}. Not applicable.");
-			log.Indent--;
+			context.Log(() => $"Value type is {kind}. Not applicable.");
+			context.Options.LogIndentLevel--;
 		}
 
 		/// <summary>
 		/// Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
 		/// </summary>
-		/// <param name="log">The log</param>
+		/// <param name="context">The validation context.</param>
 		/// <param name="reason">The reason</param>
-		public static void NotApplicable(this ILog log, Func<string> reason)
+		public static void NotApplicable(this ValidationContext context, Func<string> reason)
 		{
-			log.Write(() => $"{reason()} Not applicable.");
-			log.Indent--;
+			context.Log(() => $"{reason()} Not applicable.");
+			context.Options.LogIndentLevel--;
 		}
 
 		/// <summary>
@@ -58,7 +68,7 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="isValid">The validity.</param>
 		/// <returns>"valid" for `true`; "invalid" for `false`.</returns>
-		public static string Validity(this bool isValid)
+		public static string GetValidityString(this bool isValid)
 		{
 			return isValid ? "valid" : "invalid";
 		}

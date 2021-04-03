@@ -42,10 +42,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
-				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -70,7 +70,7 @@ namespace Json.Schema
 				context.SetAnnotation(Name, found);
 			else
 				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

@@ -40,11 +40,18 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			var annotation = context.TryGetAnnotation(IfKeyword.Name);
-			if (annotation == null || (bool) annotation)
+			if (annotation == null)
 			{
-				context.Options.Log.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
+				context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
+				context.IsValid = true;
+				return;
+			}
+
+			if ((bool) annotation)
+			{
+				context.NotApplicable(() => $"Annotation for {IfKeyword.Name} is {annotation}.");
 				context.IsValid = true;
 				return;
 			}
@@ -55,7 +62,7 @@ namespace Json.Schema
 
 			context.ConsolidateAnnotations();
 			context.IsValid = subContext.IsValid;
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

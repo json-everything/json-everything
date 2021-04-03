@@ -39,7 +39,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.Options.Log.EnterKeyword(Name);
+			context.EnterKeyword(Name);
 			if (Value == 0)
 			{
 				context.IsValid = true;
@@ -48,17 +48,17 @@ namespace Json.Schema
 					var containsContext = context.SiblingContexts.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault().Value == ContainsKeyword.Name);
 					if (containsContext != null)
 					{
-						context.Options.Log.Write(() => $"Marking result from {ContainsKeyword.Name} as {true.Validity()}.");
+						context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
 						containsContext.IsValid = true;
 					}
 				}
-				context.Options.Log.ExitKeyword(Name, context.IsValid);
+				context.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
-				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -66,17 +66,17 @@ namespace Json.Schema
 			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
 			if (annotation == null)
 			{
-				context.Options.Log.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
+				context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 				context.IsValid = true;
 				return;
 			}
 
-			context.Options.Log.Write(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
+			context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
 			var containsCount = (int) annotation;
 			context.IsValid = Value <= containsCount;
 			if (!context.IsValid)
 				context.Message = $"Value has less than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword";
-			context.Options.Log.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

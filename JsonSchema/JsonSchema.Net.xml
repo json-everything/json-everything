@@ -1464,19 +1464,12 @@
             Used to log processing details.
             </summary>
         </member>
-        <member name="P:Json.Schema.ILog.Indent">
-            <summary>
-            Gets or sets the indent level.
-            </summary>
-            <remarks>
-            Implementations are not required to make use of this, but it can be useful to human log readers.
-            </remarks>
-        </member>
-        <member name="M:Json.Schema.ILog.Write(System.Func{System.String})">
+        <member name="M:Json.Schema.ILog.Write(System.Func{System.String},System.Int32)">
             <summary>
             Logs a message with a newline.
             </summary>
             <param name="message">The message.</param>
+            <param name="indent"></param>
         </member>
         <member name="T:Json.Schema.IRefResolvable">
             <summary>
@@ -2480,36 +2473,43 @@
             Provides common log messages.
             </summary>
         </member>
-        <member name="M:Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ILog,System.String)">
+        <member name="M:Json.Schema.LogExtensions.Log(Json.Schema.ValidationContext,System.Func{System.String})">
+            <summary>
+            Logs a message.
+            </summary>
+            <param name="context">The validation context.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ValidationContext,System.String)">
             <summary>
             Adds a message to indicate a keyword has begun processing.  Increments indention.
             </summary>
-            <param name="log">The log</param>
+            <param name="context">The validation context.</param>
             <param name="keyword">The keyword name</param>
         </member>
-        <member name="M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ILog,System.String,System.Boolean)">
+        <member name="M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String,System.Boolean)">
             <summary>
             Adds a message to indicate a keyword has finished processing.  Decrements indention.
             </summary>
-            <param name="log">The log</param>
+            <param name="context">The validation context.</param>
             <param name="keyword">The keyword name</param>
             <param name="valid">Whether the validation was successful</param>
         </member>
-        <member name="M:Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ILog,System.Text.Json.JsonValueKind)">
+        <member name="M:Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ValidationContext,System.Text.Json.JsonValueKind)">
             <summary>
             Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
             </summary>
-            <param name="log">The log</param>
+            <param name="context">The validation context.</param>
             <param name="kind">The value kind</param>
         </member>
-        <member name="M:Json.Schema.LogExtensions.NotApplicable(Json.Schema.ILog,System.Func{System.String})">
+        <member name="M:Json.Schema.LogExtensions.NotApplicable(Json.Schema.ValidationContext,System.Func{System.String})">
             <summary>
             Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
             </summary>
-            <param name="log">The log</param>
+            <param name="context">The validation context.</param>
             <param name="reason">The reason</param>
         </member>
-        <member name="M:Json.Schema.LogExtensions.Validity(System.Boolean)">
+        <member name="M:Json.Schema.LogExtensions.GetValidityString(System.Boolean)">
             <summary>
             Gets the valid or invalid strings.
             </summary>
@@ -4271,6 +4271,11 @@
         <member name="P:Json.Schema.ValidationOptions.DefaultBaseUri">
             <summary>
             Specifies a default URI to be used when a schema is missing a
+            </summary>
+        </member>
+        <member name="P:Json.Schema.ValidationOptions.LogIndentLevel">
+            <summary>
+            Gets or sets the indent level for the log.
             </summary>
         </member>
         <member name="P:Json.Schema.ValidationOptions.Log">
