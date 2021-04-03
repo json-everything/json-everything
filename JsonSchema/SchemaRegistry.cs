@@ -49,24 +49,45 @@ namespace Json.Schema
 		{
 			Global = new SchemaRegistry();
 
-			Global.Register(MetaSchemas.Draft6Id, MetaSchemas.Draft6);
-			Global.Register(MetaSchemas.Draft7Id, MetaSchemas.Draft7);
-			Global.Register(MetaSchemas.Draft201909Id, MetaSchemas.Draft201909);
-			Global.Register(MetaSchemas.Core201909Id, MetaSchemas.Core201909);
-			Global.Register(MetaSchemas.Applicator201909Id, MetaSchemas.Applicator201909);
-			Global.Register(MetaSchemas.Validation201909Id, MetaSchemas.Validation201909);
-			Global.Register(MetaSchemas.Metadata201909Id, MetaSchemas.Metadata201909);
-			Global.Register(MetaSchemas.Format201909Id, MetaSchemas.Format201909);
-			Global.Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
-			Global.Register(MetaSchemas.Draft202012Id, MetaSchemas.Draft202012);
-			Global.Register(MetaSchemas.Core202012Id, MetaSchemas.Core202012);
-			Global.Register(MetaSchemas.Applicator202012Id, MetaSchemas.Applicator202012);
-			Global.Register(MetaSchemas.Validation202012Id, MetaSchemas.Validation202012);
-			Global.Register(MetaSchemas.Metadata202012Id, MetaSchemas.Metadata202012);
-			Global.Register(MetaSchemas.Unevaluated202012Id, MetaSchemas.Unevaluated202012);
-			Global.Register(MetaSchemas.FormatAnnotation202012Id, MetaSchemas.FormatAnnotation202012);
-			Global.Register(MetaSchemas.FormatAssertion202012Id, MetaSchemas.FormatAssertion202012);
-			Global.Register(MetaSchemas.Content202012Id, MetaSchemas.Content202012);
+			//Global.Register(MetaSchemas.Draft6Id, MetaSchemas.Draft6);
+			MetaSchemas.Draft6.RegisterSubschemas(Global, MetaSchemas.Draft6Id);
+
+			//Global.Register(MetaSchemas.Draft7Id, MetaSchemas.Draft7);
+			MetaSchemas.Draft7.RegisterSubschemas(Global, MetaSchemas.Draft7Id);
+
+			//Global.Register(MetaSchemas.Draft201909Id, MetaSchemas.Draft201909);
+			//Global.Register(MetaSchemas.Core201909Id, MetaSchemas.Core201909);
+			//Global.Register(MetaSchemas.Applicator201909Id, MetaSchemas.Applicator201909);
+			//Global.Register(MetaSchemas.Validation201909Id, MetaSchemas.Validation201909);
+			//Global.Register(MetaSchemas.Metadata201909Id, MetaSchemas.Metadata201909);
+			//Global.Register(MetaSchemas.Format201909Id, MetaSchemas.Format201909);
+			//Global.Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
+			MetaSchemas.Draft201909.RegisterSubschemas(Global, MetaSchemas.Draft201909Id);
+			MetaSchemas.Core201909.RegisterSubschemas(Global, MetaSchemas.Core201909Id);
+			MetaSchemas.Applicator201909.RegisterSubschemas(Global, MetaSchemas.Applicator201909Id);
+			MetaSchemas.Validation201909.RegisterSubschemas(Global, MetaSchemas.Validation201909Id);
+			MetaSchemas.Metadata201909.RegisterSubschemas(Global, MetaSchemas.Metadata201909Id);
+			MetaSchemas.Format201909.RegisterSubschemas(Global, MetaSchemas.Format201909Id);
+			MetaSchemas.Content201909.RegisterSubschemas(Global, MetaSchemas.Content201909Id);
+
+			//Global.Register(MetaSchemas.Draft202012Id, MetaSchemas.Draft202012);
+			//Global.Register(MetaSchemas.Core202012Id, MetaSchemas.Core202012);
+			//Global.Register(MetaSchemas.Applicator202012Id, MetaSchemas.Applicator202012);
+			//Global.Register(MetaSchemas.Validation202012Id, MetaSchemas.Validation202012);
+			//Global.Register(MetaSchemas.Metadata202012Id, MetaSchemas.Metadata202012);
+			//Global.Register(MetaSchemas.Unevaluated202012Id, MetaSchemas.Unevaluated202012);
+			//Global.Register(MetaSchemas.FormatAnnotation202012Id, MetaSchemas.FormatAnnotation202012);
+			//Global.Register(MetaSchemas.FormatAssertion202012Id, MetaSchemas.FormatAssertion202012);
+			//Global.Register(MetaSchemas.Content202012Id, MetaSchemas.Content202012);
+			MetaSchemas.Draft202012.RegisterSubschemas(Global, MetaSchemas.Draft202012Id);
+			MetaSchemas.Core202012.RegisterSubschemas(Global, MetaSchemas.Core202012Id);
+			MetaSchemas.Applicator202012.RegisterSubschemas(Global, MetaSchemas.Applicator202012Id);
+			MetaSchemas.Validation202012.RegisterSubschemas(Global, MetaSchemas.Validation202012Id);
+			MetaSchemas.Metadata202012.RegisterSubschemas(Global, MetaSchemas.Metadata202012Id);
+			MetaSchemas.Unevaluated202012.RegisterSubschemas(Global, MetaSchemas.Unevaluated202012Id);
+			MetaSchemas.FormatAnnotation202012.RegisterSubschemas(Global, MetaSchemas.FormatAnnotation202012Id);
+			MetaSchemas.FormatAssertion202012.RegisterSubschemas(Global, MetaSchemas.FormatAssertion202012Id);
+			MetaSchemas.Content202012.RegisterSubschemas(Global, MetaSchemas.Content202012Id);
 		}
 
 		internal SchemaRegistry()
@@ -143,14 +164,18 @@ namespace Json.Schema
 		{
 			Registration? registration = null;
 			uri = MakeAbsolute(uri);
+			// check local
 			if (_registered != null)
 				registration = CheckRegistry(_registered, uri);
+			// if not found, check global
+			if (registration == null && !ReferenceEquals(Global, this))
+				registration = CheckRegistry(Global._registered!, uri);
 
 			if (_scopes != null && registration != null && !string.IsNullOrEmpty(anchor) &&
 			    registration.Anchors.TryGetValue(anchor!, out var anchorRegistration) &&
 			    anchorRegistration.HasDynamic)
 			{
-				// Stacks iterate their values in Pop order.  Since we want the one at the root, we get the last.
+				// Stacks iterate their values in Pop order.  Since we want the one at the root, we reverse.
 				foreach (var scope in _scopes.Reverse())
 				{
 					registration = GetRegistration(scope);
@@ -191,8 +216,12 @@ namespace Json.Schema
 		{
 			Registration? registration = null;
 			uri = MakeAbsolute(uri);
+			// check local
 			if (_registered != null)
 				registration = CheckRegistry(_registered, uri);
+			// if not found, check global
+			if (registration == null && !ReferenceEquals(Global, this))
+				registration = CheckRegistry(Global._registered!, uri);
 
 			if (registration != null)
 			{
