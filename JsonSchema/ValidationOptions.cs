@@ -79,7 +79,10 @@ namespace Json.Schema
 			var options = new ValidationOptions
 			{
 				ValidateAs = other.ValidateAs,
-				OutputFormat = other.OutputFormat
+				OutputFormat = other.OutputFormat,
+				DefaultBaseUri = other.DefaultBaseUri,
+				ValidateMetaSchema = other.ValidateMetaSchema,
+				RequireFormatValidation = other.RequireFormatValidation
 			};
 			options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 			options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);

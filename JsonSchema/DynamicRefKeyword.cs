@@ -45,27 +45,27 @@ namespace Json.Schema
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-					baseSchema = context.Options.SchemaRegistry.Get(newUri);
+					baseSchema = context.Options.SchemaRegistry.GetDynamic(newUri, fragment);
 				else if (context.CurrentUri != null)
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
 						: context.CurrentUri.GetParentUri();
 					newUri = new Uri(uriFolder, baseUri);
-					baseSchema = context.Options.SchemaRegistry.Get(newUri);
+					baseSchema = context.Options.SchemaRegistry.GetDynamic(newUri, fragment);
 				}
 			}
 			else
 			{
 				newUri = context.CurrentUri;
-				if (fragment != null && context.DynamicAnchors.TryGetValue(fragment, out var dynamicSchema))
-					baseSchema = dynamicSchema;
-				baseSchema ??= context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
+				baseSchema ??= context.Options.SchemaRegistry.GetDynamic(newUri, fragment) ?? context.SchemaRoot;
 			}
 
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-				schema = baseSchema ?? context.Options.SchemaRegistry.Get(newUri, fragment);
+			{
+				schema = baseSchema ?? context.Options.SchemaRegistry.GetDynamic(newUri, fragment);
+			}
 			else
 			{
 				if (baseSchema == null)

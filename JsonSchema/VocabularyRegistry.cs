@@ -18,12 +18,22 @@ namespace Json.Schema
 		static VocabularyRegistry()
 		{
 			Global = new VocabularyRegistry();
+
 			Global.Register(Vocabularies.Core201909);
 			Global.Register(Vocabularies.Applicator201909);
 			Global.Register(Vocabularies.Validation201909);
 			Global.Register(Vocabularies.Metadata201909);
 			Global.Register(Vocabularies.Format201909);
 			Global.Register(Vocabularies.Content201909);
+
+			Global.Register(Vocabularies.Core202012);
+			Global.Register(Vocabularies.Applicator202012);
+			Global.Register(Vocabularies.Validation202012);
+			Global.Register(Vocabularies.Metadata202012);
+			Global.Register(Vocabularies.Unevaluated202012);
+			Global.Register(Vocabularies.FormatAnnotation202012);
+			Global.Register(Vocabularies.FormatAssertion202012);
+			Global.Register(Vocabularies.Content202012);
 		}
 
 		/// <summary>

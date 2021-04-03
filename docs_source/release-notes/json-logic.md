@@ -1,4 +1,9 @@
-# [1.2.1](https://github.com/gregsdennis/json-everything/pull/??)
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/92)
+
+- Exposed `JsonElementExtensions` so that it can be used in custom rules.
+- Removed `new()` requirement from `RuleRegistry.AddRule<T>()`.
+
+# [1.2.1](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.
 

@@ -41,12 +41,11 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			var newUri = UpdateUri(context.CurrentUri);
-			context.ParentContext.UriChanged = context.ParentContext.CurrentUri != newUri;
-			if (context.ParentContext.UriChanged)
-			{
+			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
+			if (context.ParentContext.UriChanged) 
 				context.ParentContext.CurrentAnchor = null;
-				context.ParentContext.DynamicAnchors.Clear();
-			}
+			context.Options.SchemaRegistry.EnteringUriScope(newUri);
+			context.IsNewDynamicScope = true;
 			context.ParentContext.CurrentUri = newUri;
 			context.IsValid = true;
 		}

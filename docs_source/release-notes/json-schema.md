@@ -1,4 +1,10 @@
-# [1.9.2](https://github.com/gregsdennis/json-everything/pull/83)
+# [1.9.4](https://github.com/gregsdennis/json-everything/pull/92)
+
+- Register the 2020-12 meta-schemas and vocabularies.
+- Fixed several issues with reusing options objects between validations.
+- Fixed `$dynamic*` keywords based on new tests in test suite.
+
+# [1.9.3](https://github.com/gregsdennis/json-everything/pull/83)
 
 [#82](https://github.com/gregsdennis/json-everything/pulll/82) - Fixing issues managing `ValidationContext.CurrentUri`.  Credit to [@amosonn](https://github.com/amosonn).
 

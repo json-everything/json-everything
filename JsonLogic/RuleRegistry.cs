@@ -41,7 +41,7 @@ namespace Json.Logic
 		/// existing registration.
 		/// </remarks>
 		public static void AddRule<T>()
-			where T : Rule, new()
+			where T : Rule
 		{
 			var type = typeof(T);
 			var operators = type.GetCustomAttributes<OperatorAttribute>().Select(a => a.Name);

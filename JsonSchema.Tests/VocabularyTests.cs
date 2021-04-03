@@ -65,7 +65,7 @@ namespace Json.Schema.Tests
 
 			public override void Write(Utf8JsonWriter writer, MinDateKeyword value, JsonSerializerOptions options)
 			{
-				writer.WritePropertyName(MaxDateKeyword.Name);
+				writer.WritePropertyName(MinDateKeyword.Name);
 				writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
 			}
 		}
