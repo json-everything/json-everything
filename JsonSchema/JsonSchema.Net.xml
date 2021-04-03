@@ -1459,6 +1459,11 @@
             The subschemas.
             </summary>
         </member>
+        <member name="T:Json.Schema.ILog">
+            <summary>
+            Used to log processing details.
+            </summary>
+        </member>
         <member name="T:Json.Schema.IRefResolvable">
             <summary>
             Defines functionality required to resolve `$ref` and `$recursiveRef` keywords.
@@ -4211,6 +4216,11 @@
         <member name="P:Json.Schema.ValidationOptions.DefaultBaseUri">
             <summary>
             Specifies a default URI to be used when a schema is missing a
+            </summary>
+        </member>
+        <member name="P:Json.Schema.ValidationOptions.Log">
+            <summary>
+            Gets or sets a log which will output processing information.
             </summary>
         </member>
         <member name="P:Json.Schema.ValidationOptions.ValidateFormat">

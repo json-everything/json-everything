@@ -11,6 +11,7 @@ namespace Json.Schema
 	public class ValidationOptions
 	{
 		private Uri? _defaultBaseUri;
+		private ILog? _log;
 
 		/// <summary>
 		/// The default settings.
@@ -51,6 +52,16 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Gets or sets a log which will output processing information.
+		/// </summary>
+		public ILog Log
+		{
+			get => _log ?? NullLog.Instance;
+			set => _log = value;
+		}
+
+
+		/// <summary>
 		/// Obsolete.  Use <see cref="RequireFormatValidation"/> instead with the same semantics.
 		/// </summary>
 		[Obsolete("Use RequireFormatValidation instead.")]
@@ -82,7 +93,8 @@ namespace Json.Schema
 				OutputFormat = other.OutputFormat,
 				DefaultBaseUri = other.DefaultBaseUri,
 				ValidateMetaSchema = other.ValidateMetaSchema,
-				RequireFormatValidation = other.RequireFormatValidation
+				RequireFormatValidation = other.RequireFormatValidation,
+				Log = other._log ?? Default.Log
 			};
 			options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 			options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
