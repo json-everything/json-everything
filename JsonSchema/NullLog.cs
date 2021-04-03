@@ -8,8 +8,6 @@ namespace Json.Schema
 
 		private NullLog(){ }
 
-		public void Log(Func<string> log)
-		{
-		}
+		public void Write(Func<string> log) { }
 	}
 }

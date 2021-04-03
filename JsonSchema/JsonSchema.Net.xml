@@ -1464,6 +1464,12 @@
             Used to log processing details.
             </summary>
         </member>
+        <member name="M:Json.Schema.ILog.Write(System.Func{System.String})">
+            <summary>
+            Logs a message with a newline.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
         <member name="T:Json.Schema.IRefResolvable">
             <summary>
             Defines functionality required to resolve `$ref` and `$recursiveRef` keywords.
@@ -2460,6 +2466,33 @@
             </summary>
             <param name="keyword">The keyword.</param>
             <returns>An `IEnumerable&lt;JsonSchema&gt;`.</returns>
+        </member>
+        <member name="T:Json.Schema.LogExtensions">
+            <summary>
+            Provides common log messages.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ILog,System.String)">
+            <summary>
+            Adds a message to indicate a keyword has begun processing.
+            </summary>
+            <param name="log">The log</param>
+            <param name="keyword">The keyword name</param>
+        </member>
+        <member name="M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ILog,System.String,System.Boolean)">
+            <summary>
+            Adds a message to indicate a keyword has finished processing.
+            </summary>
+            <param name="log">The log</param>
+            <param name="keyword">The keyword name</param>
+            <param name="valid">Whether the validation was successful</param>
+        </member>
+        <member name="M:Json.Schema.LogExtensions.NotApplicable(Json.Schema.ILog,System.Func{System.String})">
+            <summary>
+            Adds a message to indicate that a keyword doesn't apply and why.
+            </summary>
+            <param name="log">The log</param>
+            <param name="reason">The reason</param>
         </member>
         <member name="T:Json.Schema.MaxContainsKeyword">
             <summary>

@@ -7,6 +7,10 @@ namespace Json.Schema
 	/// </summary>
 	public interface ILog
 	{
-		void Log(Func<string> log);
+		/// <summary>
+		/// Logs a message with a newline.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		void Write(Func<string> message);
 	}
 }
