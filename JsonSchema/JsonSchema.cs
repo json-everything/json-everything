@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -14,6 +15,7 @@ namespace Json.Schema
 	/// Represents a JSON Schema.
 	/// </summary>
 	[JsonConverter(typeof(SchemaJsonConverter))]
+	[DebuggerDisplay("{ToDebugString()}")]
 	public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	{
 		/// <summary>
@@ -95,7 +97,7 @@ namespace Json.Schema
 		/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
 		public ValidationResults Validate(JsonElement root, ValidationOptions? options = null)
 		{
-			options ??= ValidationOptions.Default;
+			options = ValidationOptions.From(options ?? ValidationOptions.Default);
 
 			var context = new ValidationContext(options)
 				{
@@ -167,9 +169,11 @@ namespace Json.Schema
 					registry.RegisterAnchor(currentUri, fragment, this);
 			}
 
-			var anchorKeyword = Keywords.OfType<AnchorKeyword>().SingleOrDefault();
-			if (anchorKeyword != null) 
-				registry.RegisterAnchor(currentUri, anchorKeyword.Anchor, this);
+			var anchors = Keywords.OfType<IAnchorProvider>();
+			foreach (var anchor in anchors)
+			{
+				anchor.RegisterAnchor(registry, currentUri, this);
+			}
 
 			var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
 			foreach (var keyword in keywords)
@@ -211,11 +215,15 @@ namespace Json.Schema
 				if (context.HasNestedContexts)
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
 				keyword.Validate(newContext);
+				context.IsNewDynamicScope |= context.IsNewDynamicScope;
 				overallResult &= newContext.IsValid;
 				if (!overallResult && context.ApplyOptimizations) break;
 				if (!newContext.Ignore)
 					context.NestedContexts.Add(newContext);
 			}
+
+			if (context.IsNewDynamicScope)
+				context.Options.SchemaRegistry.ExitingUriScope();
 
 			context.IsValid = overallResult;
 			if (context.IsValid)
@@ -274,6 +282,12 @@ namespace Json.Schema
 		public static implicit operator JsonSchema(bool value)
 		{
 			return value ? True : False;
+		}
+
+		private string ToDebugString()
+		{
+			var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
+			return idKeyword?.Id.OriginalString ?? ValidationOptions.Default.DefaultBaseUri.OriginalString;
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

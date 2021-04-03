@@ -28,7 +28,6 @@ namespace Json.Schema
 		private List<ValidationContext>? _siblingContexts;
 		private Dictionary<string, JsonSchema>? _dynamicAnchors;
 		private JsonSchema? _currentAnchorBackup;
-		private Dictionary<string, JsonSchema>? _dynamicAnchorBackups;
 		private bool _isConsolidating;
 
 		/// <summary>
@@ -102,14 +101,16 @@ namespace Json.Schema
 		/// </summary>
 		public JsonSchema? CurrentAnchor { get; internal set; }
 		/// <summary>
-		/// Get the set of defined dynamic anchors.
+		/// (Obsolete) Get the set of defined dynamic anchors.
 		/// </summary>
+		[Obsolete("This is no longer used. Dynamic anchors are tracked with the registry now.")]
 		public Dictionary<string, JsonSchema> DynamicAnchors => _dynamicAnchors ??= new Dictionary<string, JsonSchema>();
 
 		internal bool UriChanged { get; set; }
 		internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
 		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
+		internal bool IsNewDynamicScope { get; set; }
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).
@@ -158,11 +159,7 @@ namespace Json.Schema
 					CurrentAnchor = source.CurrentAnchor,
 					CurrentUri = newUri ?? source.CurrentUri,
 					Reference = source.Reference,
-					_dynamicAnchorBackups = source.DynamicAnchors.Any()
-						? new Dictionary<string, JsonSchema>(source.DynamicAnchors)
-						: null,
-					_dynamicAnchors = new Dictionary<string, JsonSchema>(source.DynamicAnchors),
-					UriChanged = source.UriChanged
+					UriChanged = source.UriChanged || source.CurrentUri != newUri
 				};
 		}
 
@@ -174,16 +171,6 @@ namespace Json.Schema
 		internal void ValidateAnchor()
 		{
 			CurrentAnchor = _currentAnchorBackup;
-		}
-
-		internal void ValidateDynamicAnchor(string value)
-		{
-			if (_dynamicAnchorBackups == null) return;
-
-			if (_dynamicAnchorBackups.TryGetValue(value, out var schema))
-				DynamicAnchors[value] = schema;
-			else
-				DynamicAnchors.Remove(value);
 		}
 
 		/// <summary>

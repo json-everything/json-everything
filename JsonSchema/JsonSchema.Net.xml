@@ -4115,7 +4115,7 @@
         </member>
         <member name="P:Json.Schema.ValidationContext.DynamicAnchors">
             <summary>
-            Get the set of defined dynamic anchors.
+            (Obsolete) Get the set of defined dynamic anchors.
             </summary>
         </member>
         <member name="P:Json.Schema.ValidationContext.ApplyOptimizations">

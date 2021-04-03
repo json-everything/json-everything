@@ -15,7 +15,7 @@ namespace Json.Schema
 	[Vocabulary(Vocabularies.Core201909Id)]
 	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(AnchorKeywordJsonConverter))]
-	public class AnchorKeyword : IJsonSchemaKeyword, IEquatable<AnchorKeyword>
+	public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<AnchorKeyword>
 	{
 		internal const string Name = "$anchor";
 		internal static readonly Regex AnchorPattern = new Regex("^[A-Za-z][-A-Za-z0-9.:_]*$");
@@ -41,6 +41,11 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.IsValid = true;
+		}
+
+		void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)
+		{
+			registry.RegisterAnchor(currentUri, Anchor, schema);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

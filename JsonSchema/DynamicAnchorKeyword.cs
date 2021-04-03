@@ -12,7 +12,7 @@ namespace Json.Schema
 	[SchemaDraft(Draft.Draft202012)]
 	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]
-	public class DynamicAnchorKeyword : IJsonSchemaKeyword, IEquatable<DynamicAnchorKeyword>
+	public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<DynamicAnchorKeyword>
 	{
 		internal const string Name = "$dynamicAnchor";
 
@@ -36,12 +36,14 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
-			context.ParentContext.ValidateDynamicAnchor(Value);
-
-			if (!context.ParentContext.DynamicAnchors.ContainsKey(Value))
-				context.ParentContext.DynamicAnchors[Value] = context.LocalSchema;
 			context.SetAnnotation(Name, Value);
 			context.IsValid = true;
+		}
+
+		void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)
+		{
+			registry.RegisterAnchor(currentUri, Value, schema);
+			registry.RegisterDynamicAnchor(currentUri, Value, schema);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
