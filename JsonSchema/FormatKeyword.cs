@@ -58,10 +58,11 @@ namespace Json.Schema
 				{
 					foreach (var formatAssertionId in _formatAssertionIds)
 					{
-						if (!vocabRequirements.TryGetValue(formatAssertionId, out var formatAssertionRequirement)) continue;
-
-						requireValidation = formatAssertionRequirement;
-						break;
+						if (vocabRequirements.TryGetValue(formatAssertionId, out var formatAssertionRequirement))
+						{
+							requireValidation = formatAssertionRequirement;
+							break;
+						}
 					}
 				}
 			}

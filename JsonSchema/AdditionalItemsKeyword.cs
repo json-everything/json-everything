@@ -62,10 +62,11 @@ namespace Json.Schema
 				context.IsValid = true;
 				return;
 			}
-			context.Options.Log.NotApplicable(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
+			context.Options.Log.Write(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 			if (annotation is bool)
 			{
 				context.IsValid = true;
+				context.Options.Log.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 			var startIndex = (int) annotation;

@@ -41,6 +41,7 @@ namespace Json.Schema
 			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -48,10 +49,12 @@ namespace Json.Schema
 			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
 			if (annotation == null)
 			{
+				context.Options.Log.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.Log.Write(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
 			var containsCount = (int) annotation;
 			context.IsValid = Value >= containsCount;
 			if (!context.IsValid)

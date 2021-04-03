@@ -45,6 +45,7 @@ namespace Json.Schema
 			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}

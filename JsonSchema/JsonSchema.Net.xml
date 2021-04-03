@@ -1464,6 +1464,14 @@
             Used to log processing details.
             </summary>
         </member>
+        <member name="P:Json.Schema.ILog.Indent">
+            <summary>
+            Gets or sets the indent level.
+            </summary>
+            <remarks>
+            Implementations are not required to make use of this, but it can be useful to human log readers.
+            </remarks>
+        </member>
         <member name="M:Json.Schema.ILog.Write(System.Func{System.String})">
             <summary>
             Logs a message with a newline.
@@ -2474,14 +2482,14 @@
         </member>
         <member name="M:Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ILog,System.String)">
             <summary>
-            Adds a message to indicate a keyword has begun processing.
+            Adds a message to indicate a keyword has begun processing.  Increments indention.
             </summary>
             <param name="log">The log</param>
             <param name="keyword">The keyword name</param>
         </member>
         <member name="M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ILog,System.String,System.Boolean)">
             <summary>
-            Adds a message to indicate a keyword has finished processing.
+            Adds a message to indicate a keyword has finished processing.  Decrements indention.
             </summary>
             <param name="log">The log</param>
             <param name="keyword">The keyword name</param>
@@ -2489,14 +2497,14 @@
         </member>
         <member name="M:Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ILog,System.Text.Json.JsonValueKind)">
             <summary>
-            Adds a message to indicate that a keyword doesn't apply and why.
+            Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
             </summary>
             <param name="log">The log</param>
             <param name="kind">The value kind</param>
         </member>
         <member name="M:Json.Schema.LogExtensions.NotApplicable(Json.Schema.ILog,System.Func{System.String})">
             <summary>
-            Adds a message to indicate that a keyword doesn't apply and why.
+            Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
             </summary>
             <param name="log">The log</param>
             <param name="reason">The reason</param>

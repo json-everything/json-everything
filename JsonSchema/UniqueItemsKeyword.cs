@@ -45,6 +45,7 @@ namespace Json.Schema
 			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -52,6 +53,7 @@ namespace Json.Schema
 			if (!Value)
 			{
 				context.IsValid = true;
+				context.Options.Log.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 

@@ -9,17 +9,18 @@ namespace Json.Schema
 	public static class LogExtensions
 	{
 		/// <summary>
-		/// Adds a message to indicate a keyword has begun processing.
+		/// Adds a message to indicate a keyword has begun processing.  Increments indention.
 		/// </summary>
 		/// <param name="log">The log</param>
 		/// <param name="keyword">The keyword name</param>
 		public static void EnterKeyword(this ILog log, string keyword)
 		{
+			log.Indent++;
 			log.Write(() => $"Processing {keyword}...");
 		}
 
 		/// <summary>
-		/// Adds a message to indicate a keyword has finished processing.
+		/// Adds a message to indicate a keyword has finished processing.  Decrements indention.
 		/// </summary>
 		/// <param name="log">The log</param>
 		/// <param name="keyword">The keyword name</param>
@@ -27,26 +28,29 @@ namespace Json.Schema
 		public static void ExitKeyword(this ILog log, string keyword, bool valid)
 		{
 			log.Write(() => $"{keyword} complete: {(valid ? "valid" : "invalid")}");
+			log.Indent--;
 		}
 
 		/// <summary>
-		/// Adds a message to indicate that a keyword doesn't apply and why.
+		/// Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
 		/// </summary>
 		/// <param name="log">The log</param>
 		/// <param name="kind">The value kind</param>
 		public static void WrongValueKind(this ILog log, JsonValueKind kind)
 		{
 			log.Write(() => $"Value type is {kind}. Not applicable.");
+			log.Indent--;
 		}
 
 		/// <summary>
-		/// Adds a message to indicate that a keyword doesn't apply and why.
+		/// Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
 		/// </summary>
 		/// <param name="log">The log</param>
 		/// <param name="reason">The reason</param>
 		public static void NotApplicable(this ILog log, Func<string> reason)
 		{
 			log.Write(() => $"{reason()} Not applicable.");
+			log.Indent--;
 		}
 
 		/// <summary>

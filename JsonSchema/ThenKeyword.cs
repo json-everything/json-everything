@@ -44,6 +44,7 @@ namespace Json.Schema
 			var annotation = context.TryGetAnnotation(IfKeyword.Name);
 			if (annotation == null || !(bool) annotation)
 			{
+				context.Options.Log.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
 				context.IsValid = true;
 				return;
 			}

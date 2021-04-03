@@ -47,6 +47,8 @@ namespace Json.Schema
 			{
 				context.Message = $"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation";
 				context.IsValid = false;
+				context.Options.Log.Write(() => context.Message);
+				context.Options.Log.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 
@@ -57,9 +59,11 @@ namespace Json.Schema
 			if (!context.Options.ValidateMetaSchema)
 			{
 				context.IsValid = true;
+				context.Options.Log.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 
+			context.Options.Log.Write(() => "Validating against meta-schema.");
 			var schemaAsJson = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema)).RootElement;
 			var newOptions = ValidationOptions.From(context.Options);
 			newOptions.ValidateMetaSchema = false;

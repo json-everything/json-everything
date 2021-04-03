@@ -82,6 +82,7 @@ namespace Json.Schema
 			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -94,13 +95,19 @@ namespace Json.Schema
 				var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
 				if (annotation == null)
 					startIndex = 0;
-				else if (annotation is bool)
+				else
 				{
-					context.IsValid = true;
-					return;
+					context.Options.Log.Write(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
+					if (annotation is bool)
+					{
+						context.IsValid = true;
+						context.Options.Log.ExitKeyword(Name, context.IsValid);
+						return;
+					}
+
+					startIndex = (int) annotation;
 				}
-				else 
-					startIndex = (int)annotation;
+
 				for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 				{
 					var item = context.LocalInstance[i];
@@ -126,6 +133,8 @@ namespace Json.Schema
 				{
 					context.IsValid = false;
 					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
+					context.Options.Log.Write(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
+					context.Options.Log.ExitKeyword(Name, context.IsValid);
 					return;
 				}
 				var maxEvaluations = Math.Min(ArraySchemas!.Count, context.LocalInstance.GetArrayLength());

@@ -47,13 +47,18 @@ namespace Json.Schema
 				{
 					var containsContext = context.SiblingContexts.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault().Value == ContainsKeyword.Name);
 					if (containsContext != null)
+					{
+						context.Options.Log.Write(() => $"Marking result from {ContainsKeyword.Name} as {true.Validity()}.");
 						containsContext.IsValid = true;
+					}
 				}
+				context.Options.Log.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.Options.Log.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -61,10 +66,12 @@ namespace Json.Schema
 			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
 			if (annotation == null)
 			{
+				context.Options.Log.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.Log.Write(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
 			var containsCount = (int) annotation;
 			context.IsValid = Value <= containsCount;
 			if (!context.IsValid)

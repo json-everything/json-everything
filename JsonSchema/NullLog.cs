@@ -6,6 +6,8 @@ namespace Json.Schema
 	{
 		public static NullLog Instance { get; } = new NullLog();
 
+		public int Indent { get; set; }
+
 		private NullLog(){ }
 
 		public void Write(Func<string> log) { }

@@ -74,6 +74,7 @@ namespace Json.Schema
 				{
 					context.IsValid = false;
 					context.Message = $"Could not resolve base URI `{baseUri}`";
+					context.Options.Log.ExitKeyword(Name, context.IsValid);
 					return;
 				}
 
@@ -84,6 +85,7 @@ namespace Json.Schema
 					{
 						context.IsValid = false;
 						context.Message = $"Could not parse pointer `{fragment}`";
+						context.Options.Log.ExitKeyword(Name, context.IsValid);
 						return;
 					}
 
@@ -97,6 +99,7 @@ namespace Json.Schema
 			{
 				context.IsValid = false;
 				context.Message = $"Could not resolve RecursiveReference `{Reference}`";
+				context.Options.Log.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 
