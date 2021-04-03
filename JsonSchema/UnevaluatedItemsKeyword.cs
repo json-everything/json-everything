@@ -119,7 +119,7 @@ namespace Json.Schema
 			if (overallResult)
 				context.SetAnnotation(Name, true);
 			context.IsValid = overallResult;
-			context.Options.Log.ExitKeyword(Name, overallResult);
+			context.Options.Log.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

@@ -50,6 +50,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.IsValid = true;
@@ -83,8 +84,8 @@ namespace Json.Schema
 				else
 					context.SetAnnotation(Name, evaluatedProperties);
 			}
-			// TODO: add message
 			context.IsValid = overallResult;
+			context.Options.Log.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

@@ -118,7 +118,7 @@ namespace Json.Schema
 				context.SetAnnotation(Name, evaluatedProperties);
 			context.IsValid = overallResult;
 			context.ConsolidateAnnotations();
-			context.Options.Log.ExitKeyword(Name, overallResult);
+			context.Options.Log.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

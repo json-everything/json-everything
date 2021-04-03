@@ -36,8 +36,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.Options.Log.EnterKeyword(Name);
 			context.SetAnnotation(Name, Value);
 			context.IsValid = true;
+			context.Options.Log.ExitKeyword(Name, context.IsValid);
 		}
 
 		void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)

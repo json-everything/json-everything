@@ -39,6 +39,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.Options.Log.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Number)
 			{
 				context.IsValid = true;
@@ -49,6 +50,7 @@ namespace Json.Schema
 			context.IsValid = number % Value == 0;
 			if (!context.IsValid)
 				context.Message = $"{number} a multiple of {Value}";
+			context.Options.Log.ExitKeyword(Name, context.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
