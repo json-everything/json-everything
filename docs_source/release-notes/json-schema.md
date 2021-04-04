@@ -1,3 +1,5 @@
+# [1.10.0](https://github.com/gregsdennis/json-everything/pull/??)
+
 # [1.9.4](https://github.com/gregsdennis/json-everything/pull/92)
 
 - Register the 2020-12 meta-schemas and vocabularies.
