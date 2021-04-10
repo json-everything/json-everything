@@ -22,6 +22,17 @@ namespace Json.Schema
 		}
 
 		/// <summary>
+		/// Gets a keyword if one has been added.
+		/// </summary>
+		/// <typeparam name="T">the keyword type.</typeparam>
+		/// <returns>The keyword, if it exists; `null` otherwise.</returns>
+		public T? Get<T>()
+			where T : IJsonSchemaKeyword
+		{
+			return _keywords.Values.OfType<T>().SingleOrDefault();
+		}
+
+		/// <summary>
 		/// Creates a new <see cref="JsonSchema"/>.
 		/// </summary>
 		/// <returns>A JSON Schema that simply refers back to the root schema.</returns>

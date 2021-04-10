@@ -46,40 +46,50 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation == null)
 			{
+				context.NotApplicable(() => $"No annotations from {ItemsKeyword.Name}.");
 				context.IsValid = true;
 				return;
 			}
+			context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 			if (annotation is bool)
 			{
 				context.IsValid = true;
+				context.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 			var startIndex = (int) annotation;
 
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
+				context.Log(() => $"Validating item at index {i}.");
 				var item = context.LocalInstance[i];
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 				context.SetAnnotation(Name, true);
 			context.IsValid = overallResult;
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

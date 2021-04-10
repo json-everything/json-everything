@@ -114,6 +114,7 @@ namespace Json.Schema.Tests.Suite
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			};
+			Console.WriteLine();
 			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 			Console.WriteLine();
 			Console.WriteLine(test.Data.ToJsonString());

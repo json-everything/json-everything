@@ -11,7 +11,9 @@ namespace Json.Schema
 	{
 		private class Anchor
 		{
+#pragma warning disable 8618
 			public JsonSchema Schema { get; set; }
+#pragma warning restore 8618
 			public bool HasDynamic { get; set; }
 			public bool HasStatic { get; set; }
 		}

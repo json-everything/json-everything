@@ -50,19 +50,27 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			var evaluatedProperties = new List<string>();
 			foreach (var property in Properties)
 			{
+				context.Log(() => $"Validating property '{property.Key}'.");
 				var schema = property.Value;
 				var name = property.Key;
-				if (!context.LocalInstance.TryGetProperty(name, out var item)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out var item))
+				{
+					context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
+					continue;
+				}
 				
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
@@ -70,11 +78,13 @@ namespace Json.Schema
 					context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
 				schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				context.Log(() => $"Property '{property.Key}' {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 				if (subContext.IsValid)
 					evaluatedProperties.Add(name);
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 			{
@@ -83,8 +93,8 @@ namespace Json.Schema
 				else
 					context.SetAnnotation(Name, evaluatedProperties);
 			}
-			// TODO: add message
 			context.IsValid = overallResult;
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

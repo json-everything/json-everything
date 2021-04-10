@@ -53,13 +53,16 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			var validCount = 0;
 			for (var i = 0; i < Schemas.Count; i++)
 			{
+				context.Log(() => $"Processing {Name}[{i}]...");
 				var schema = Schemas[i];
 				var subContext = ValidationContext.From(context, subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 				schema.ValidateSubschema(subContext);
 				validCount += subContext.IsValid ? 1 : 0;
+				context.Log(() => $"{Name}[{i}] {subContext.IsValid.GetValidityString()}.");
 				if (validCount > 1 && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
@@ -68,6 +71,7 @@ namespace Json.Schema
 			context.IsValid = validCount == 1;
 			if (!context.IsValid)
 				context.Message = $"Expected 1 matching subschema but found {validCount}";
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

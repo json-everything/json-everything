@@ -50,26 +50,33 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			foreach (var name in context.LocalInstance.EnumerateObject().Select(p => p.Name))
 			{
+				context.Log(() => $"Validating property name '{name}'.");
 				var instance = name.AsJsonElement();
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
 					instance);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				context.Log(() => $"Property name '{name}' {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
+			context.Options.LogIndentLevel--;
 
 			context.IsValid = overallResult;
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

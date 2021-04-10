@@ -46,43 +46,81 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
-			var annotation = context.TryGetAnnotation(PropertiesKeyword.Name);
-			var evaluatedProperties = (annotation as List<string>)?.ToList() ?? new List<string>();
-			annotation = context.TryGetAnnotation(PatternPropertiesKeyword.Name);
-			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
-			annotation = context.TryGetAnnotation(AdditionalPropertiesKeyword.Name);
-			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
-			annotation = context.TryGetAnnotation(Name);
-			evaluatedProperties.AddRange(annotation as List<string> ?? Enumerable.Empty<string>());
+			List<string> evaluatedProperties;
+			var annotation = (context.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
+			if (annotation == null)
+			{
+				context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
+				evaluatedProperties = new List<string>();
+			}
+			else
+			{
+				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
+				evaluatedProperties = annotation;
+			}
+			annotation = (context.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
+			if (annotation == null)
+				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
+			else
+			{
+				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
+				evaluatedProperties.AddRange(annotation);
+			}
+			annotation = (context.TryGetAnnotation(AdditionalPropertiesKeyword.Name) as List<string>)?.ToList();
+			if (annotation == null)
+				context.Log(() => $"No annotation from {AdditionalPropertiesKeyword.Name}.");
+			else
+			{
+				context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
+				evaluatedProperties.AddRange(annotation);
+			}
+			annotation = (context.TryGetAnnotation(Name) as List<string>)?.ToList();
+			if (annotation == null)
+				context.Log(() => $"No annotation from {Name}.");
+			else
+			{
+				context.Log(() => $"Annotation from {Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
+				evaluatedProperties.AddRange(annotation);
+			}
 			var unevaluatedProperties = context.LocalInstance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
 			evaluatedProperties.Clear();
 			foreach (var property in unevaluatedProperties)
 			{
-				if (!context.LocalInstance.TryGetProperty(property.Name, out var item)) continue;
+				if (!context.LocalInstance.TryGetProperty(property.Name, out var item))
+				{
+					context.Log(() => $"Property '{property.Name}' does not exist. Skipping.");
+					continue;
+				}
 
+				context.Log(() => $"Validating property '{property.Name}'.");
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")),
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				context.Log(() => $"Property '{property.Name}' {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 				if (subContext.IsValid)
 					evaluatedProperties.Add(property.Name);
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 				context.SetAnnotation(Name, evaluatedProperties);
-			// TODO: add message
 			context.IsValid = overallResult;
 			context.ConsolidateAnnotations();
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

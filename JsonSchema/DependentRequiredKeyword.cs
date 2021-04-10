@@ -45,8 +45,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -55,26 +57,42 @@ namespace Json.Schema
 			var missingDependencies = new Dictionary<string, List<string>>();
 			foreach (var property in Requirements)
 			{
+				context.Options.LogIndentLevel++;
+				context.Log(() => $"Validating property '{property.Key}'.");
 				var dependencies = property.Value;
 				var name = property.Key;
-				if (!context.LocalInstance.TryGetProperty(name, out _)) continue;
+				if (!context.LocalInstance.TryGetProperty(name, out _))
+				{
+					context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
+					continue;
+				}
 
+				if (!missingDependencies.TryGetValue(name, out var list))
+					list = missingDependencies[name] = new List<string>();
 				foreach (var dependency in dependencies)
 				{
 					if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
 
 					overallResult = false;
 					if (context.ApplyOptimizations) break;
-					if (!missingDependencies.TryGetValue(name, out var list)) 
-						list = missingDependencies[name] = new List<string>();
 					list.Add(dependency);
 				}
+
+				if (list.Any())
+					context.Log(() => $"Missing properties: [{string.Join(",", list.Select(x => $"'{x}'"))}].");
+				else
+					context.Log(() => "All dependencies found.");
+				context.Options.LogIndentLevel--;
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
 			context.IsValid = overallResult;
 			if (!context.IsValid)
-				context.Message = $"Some required property dependencies are missing: {JsonSerializer.Serialize(missingDependencies)}";
+			{
+				var missing = JsonSerializer.Serialize(missingDependencies);
+				context.Message = $"Some required property dependencies are missing: {missing}";
+			}
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

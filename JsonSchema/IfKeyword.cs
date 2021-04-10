@@ -39,6 +39,7 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			var subContext = ValidationContext.From(context);
 			Schema.ValidateSubschema(subContext);
 			context.NestedContexts.Add(subContext);
@@ -46,6 +47,7 @@ namespace Json.Schema
 			context.SetAnnotation(Name, subContext.IsValid);
 			context.ConsolidateAnnotations();
 			context.IsValid = true;
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
