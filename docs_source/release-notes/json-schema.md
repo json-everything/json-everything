@@ -2,11 +2,15 @@
 
 [#90](https://github.com/gregsdennis/json-everything/issues/90) - Added `JsonSchemaBuilder.Get<T>()` to support the discussion around incrementally adding properties while building schemas.
 
+Added optional logging around schema processing decisions.
+
 # [1.9.4](https://github.com/gregsdennis/json-everything/pull/92)
 
-- Register the 2020-12 meta-schemas and vocabularies.
-- Fixed several issues with reusing options objects between validations.
-- Fixed `$dynamic*` keywords based on new tests in test suite.
+Register the 2020-12 meta-schemas and vocabularies.
+
+Fixed several issues with reusing options objects between validations.
+
+Fixed `$dynamic*` keywords based on new tests in test suite.
 
 # [1.9.3](https://github.com/gregsdennis/json-everything/pull/83)
 

@@ -79,8 +79,10 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
@@ -89,19 +91,27 @@ namespace Json.Schema
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
+				context.Options.LogIndentLevel++;
 				int startIndex;
 				var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
 				if (annotation == null)
 					startIndex = 0;
-				else if (annotation is bool)
+				else
 				{
-					context.IsValid = true;
-					return;
+					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
+					if (annotation is bool)
+					{
+						context.IsValid = true;
+						context.ExitKeyword(Name, context.IsValid);
+						return;
+					}
+
+					startIndex = (int) annotation;
 				}
-				else 
-					startIndex = (int)annotation;
+
 				for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 				{
+					context.Log(() => $"Validating item at index {i}.");
 					var item = context.LocalInstance[i];
 					var subContext = ValidationContext.From(context,
 						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
@@ -109,9 +119,11 @@ namespace Json.Schema
 					SingleSchema.ValidateSubschema(subContext);
 					context.CurrentUri ??= subContext.CurrentUri;
 					overallResult &= subContext.IsValid;
+					context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
 					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 				}
+				context.Options.LogIndentLevel--;
 
 				if (overwriteAnnotation)
 				{
@@ -125,11 +137,15 @@ namespace Json.Schema
 				{
 					context.IsValid = false;
 					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
+					context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
+					context.ExitKeyword(Name, context.IsValid);
 					return;
 				}
+				context.Options.LogIndentLevel++;
 				var maxEvaluations = Math.Min(ArraySchemas!.Count, context.LocalInstance.GetArrayLength());
 				for (int i = 0; i < maxEvaluations; i++)
 				{
+					context.Log(() => $"Validating item at index {i}.");
 					var schema = ArraySchemas[i];
 					var item = context.LocalInstance[i];
 					var subContext = ValidationContext.From(context,
@@ -138,9 +154,11 @@ namespace Json.Schema
 						context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 					schema.ValidateSubschema(subContext);
 					overallResult &= subContext.IsValid;
+					context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
 					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 				}
+				context.Options.LogIndentLevel--;
 
 				if (overwriteAnnotation)
 				{
@@ -156,6 +174,7 @@ namespace Json.Schema
 			}
 
 			context.IsValid = overallResult;
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

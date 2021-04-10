@@ -51,24 +51,32 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var notFound = new List<string>();
 			for (int i = 0; i < Properties.Count; i++)
 			{
 				var property = Properties[i];
+				context.Log(() => $"Checking for property '{property}'");
 				if (!context.LocalInstance.TryGetProperty(property, out _))
 					notFound.Add(property);
 				if (notFound.Count != 0 && context.ApplyOptimizations) break;
 			}
+			if (notFound.Any())
+				context.Log(() => $"Missing properties: [{string.Join(",", notFound.Select(x => $"'{x}'"))}]");
+			context.Options.LogIndentLevel--;
 
 			context.IsValid = notFound.Count == 0;
 			if (!context.IsValid)
 				context.Message = $"Required properties [{string.Join(", ", notFound)}] were not present";
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

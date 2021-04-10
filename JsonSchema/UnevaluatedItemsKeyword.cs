@@ -46,27 +46,38 @@ namespace Json.Schema
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
 				context.IsValid = true;
 				return;
 			}
 
+			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			int startIndex = 0;
-			var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
-			if (annotation != null)
+			object? annotation;
+			if (context.Options.ValidatingAs == Draft.Unspecified || context.Options.ValidatingAs.HasFlag(Draft.Draft202012))
 			{
-				if (annotation is bool) // is only ever true or a number
+				annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
+				if (annotation != null)
 				{
-					context.IsValid = true;
-					return;
+					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
+					if (annotation is bool) // is only ever true or a number
+					{
+						context.IsValid = true;
+						return;
+					}
+					startIndex = (int)annotation;
 				}
-				startIndex = (int) annotation;
+				else
+					context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
 			}
 			annotation = context.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation != null)
 			{
+				context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 				if (annotation is bool) // is only ever true or a number
 				{
 					context.IsValid = true;
@@ -74,33 +85,43 @@ namespace Json.Schema
 				}
 				startIndex = (int) annotation;
 			}
+			else
+				context.Log(() => $"No annotations from {ItemsKeyword.Name}.");
 			annotation = context.TryGetAnnotation(AdditionalItemsKeyword.Name);
 			if (annotation is bool) // is only ever true
 			{
+				context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
 				context.IsValid = true;
 				return;
 			}
+			context.Log(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
 			annotation = context.TryGetAnnotation(Name);
 			if (annotation is bool) // is only ever true
 			{
+				context.Log(() => $"Annotation from {Name}: {annotation}.");
 				context.IsValid = true;
 				return;
 			}
+			context.Log(() => $"No annotations from {Name}.");
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
+				context.Log(() => $"Validating item at index {i}.");
 				var item = context.LocalInstance[i];
 				var subContext = ValidationContext.From(context,
 					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item);
 				Schema.ValidateSubschema(subContext);
 				overallResult &= subContext.IsValid;
+				context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
 				if (!overallResult && context.ApplyOptimizations) break;
 				context.NestedContexts.Add(subContext);
 			}
+			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 				context.SetAnnotation(Name, true);
 			context.IsValid = overallResult;
+			context.ExitKeyword(Name, context.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
