@@ -8535,6 +8535,28 @@ references:
   isSpec: "True"
   fullName: Json.Schema.IKeyedSchemaCollector.Schemas
   nameWithType: IKeyedSchemaCollector.Schemas
+- uid: Json.Schema.ILog
+  name: ILog
+  href: api/Json.Schema.ILog.html
+  commentId: T:Json.Schema.ILog
+  fullName: Json.Schema.ILog
+  nameWithType: ILog
+- uid: Json.Schema.ILog.Write(Func{System.String},System.Int32)
+  name: Write(Func<String>, Int32)
+  href: api/Json.Schema.ILog.html#Json_Schema_ILog_Write_Func_System_String__System_Int32_
+  commentId: M:Json.Schema.ILog.Write(Func{System.String},System.Int32)
+  name.vb: Write(Func(Of String), Int32)
+  fullName: Json.Schema.ILog.Write(Func<System.String>, System.Int32)
+  fullName.vb: Json.Schema.ILog.Write(Func(Of System.String), System.Int32)
+  nameWithType: ILog.Write(Func<String>, Int32)
+  nameWithType.vb: ILog.Write(Func(Of String), Int32)
+- uid: Json.Schema.ILog.Write*
+  name: Write
+  href: api/Json.Schema.ILog.html#Json_Schema_ILog_Write_
+  commentId: Overload:Json.Schema.ILog.Write
+  isSpec: "True"
+  fullName: Json.Schema.ILog.Write
+  nameWithType: ILog.Write
 - uid: Json.Schema.IRefResolvable
   name: IRefResolvable
   href: api/Json.Schema.IRefResolvable.html
@@ -9014,6 +9036,22 @@ references:
   isSpec: "True"
   fullName: Json.Schema.JsonSchemaBuilder.Build
   nameWithType: JsonSchemaBuilder.Build
+- uid: Json.Schema.JsonSchemaBuilder.Get*
+  name: Get
+  href: api/Json.Schema.JsonSchemaBuilder.html#Json_Schema_JsonSchemaBuilder_Get_
+  commentId: Overload:Json.Schema.JsonSchemaBuilder.Get
+  isSpec: "True"
+  fullName: Json.Schema.JsonSchemaBuilder.Get
+  nameWithType: JsonSchemaBuilder.Get
+- uid: Json.Schema.JsonSchemaBuilder.Get``1
+  name: Get<T>()
+  href: api/Json.Schema.JsonSchemaBuilder.html#Json_Schema_JsonSchemaBuilder_Get__1
+  commentId: M:Json.Schema.JsonSchemaBuilder.Get``1
+  name.vb: Get(Of T)()
+  fullName: Json.Schema.JsonSchemaBuilder.Get<T>()
+  fullName.vb: Json.Schema.JsonSchemaBuilder.Get(Of T)()
+  nameWithType: JsonSchemaBuilder.Get<T>()
+  nameWithType.vb: JsonSchemaBuilder.Get(Of T)()
 - uid: Json.Schema.JsonSchemaBuilder.op_Implicit(Json.Schema.JsonSchemaBuilder)~Json.Schema.JsonSchema
   name: Implicit(JsonSchemaBuilder to JsonSchema)
   href: api/Json.Schema.JsonSchemaBuilder.html#Json_Schema_JsonSchemaBuilder_op_Implicit_Json_Schema_JsonSchemaBuilder__Json_Schema_JsonSchema
@@ -10190,6 +10228,96 @@ references:
   isSpec: "True"
   fullName: Json.Schema.KeywordExtensions.Priority
   nameWithType: KeywordExtensions.Priority
+- uid: Json.Schema.LogExtensions
+  name: LogExtensions
+  href: api/Json.Schema.LogExtensions.html
+  commentId: T:Json.Schema.LogExtensions
+  fullName: Json.Schema.LogExtensions
+  nameWithType: LogExtensions
+- uid: Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ValidationContext,System.String)
+  name: EnterKeyword(ValidationContext, String)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_EnterKeyword_Json_Schema_ValidationContext_System_String_
+  commentId: M:Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ValidationContext,System.String)
+  fullName: Json.Schema.LogExtensions.EnterKeyword(Json.Schema.ValidationContext, System.String)
+  nameWithType: LogExtensions.EnterKeyword(ValidationContext, String)
+- uid: Json.Schema.LogExtensions.EnterKeyword*
+  name: EnterKeyword
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_EnterKeyword_
+  commentId: Overload:Json.Schema.LogExtensions.EnterKeyword
+  isSpec: "True"
+  fullName: Json.Schema.LogExtensions.EnterKeyword
+  nameWithType: LogExtensions.EnterKeyword
+- uid: Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String,System.Boolean)
+  name: ExitKeyword(ValidationContext, String, Boolean)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_ExitKeyword_Json_Schema_ValidationContext_System_String_System_Boolean_
+  commentId: M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String,System.Boolean)
+  fullName: Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext, System.String, System.Boolean)
+  nameWithType: LogExtensions.ExitKeyword(ValidationContext, String, Boolean)
+- uid: Json.Schema.LogExtensions.ExitKeyword*
+  name: ExitKeyword
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_ExitKeyword_
+  commentId: Overload:Json.Schema.LogExtensions.ExitKeyword
+  isSpec: "True"
+  fullName: Json.Schema.LogExtensions.ExitKeyword
+  nameWithType: LogExtensions.ExitKeyword
+- uid: Json.Schema.LogExtensions.GetValidityString(System.Boolean)
+  name: GetValidityString(Boolean)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_GetValidityString_System_Boolean_
+  commentId: M:Json.Schema.LogExtensions.GetValidityString(System.Boolean)
+  fullName: Json.Schema.LogExtensions.GetValidityString(System.Boolean)
+  nameWithType: LogExtensions.GetValidityString(Boolean)
+- uid: Json.Schema.LogExtensions.GetValidityString*
+  name: GetValidityString
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_GetValidityString_
+  commentId: Overload:Json.Schema.LogExtensions.GetValidityString
+  isSpec: "True"
+  fullName: Json.Schema.LogExtensions.GetValidityString
+  nameWithType: LogExtensions.GetValidityString
+- uid: Json.Schema.LogExtensions.Log(Json.Schema.ValidationContext,Func{System.String})
+  name: Log(ValidationContext, Func<String>)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_Log_Json_Schema_ValidationContext_Func_System_String__
+  commentId: M:Json.Schema.LogExtensions.Log(Json.Schema.ValidationContext,Func{System.String})
+  name.vb: Log(ValidationContext, Func(Of String))
+  fullName: Json.Schema.LogExtensions.Log(Json.Schema.ValidationContext, Func<System.String>)
+  fullName.vb: Json.Schema.LogExtensions.Log(Json.Schema.ValidationContext, Func(Of System.String))
+  nameWithType: LogExtensions.Log(ValidationContext, Func<String>)
+  nameWithType.vb: LogExtensions.Log(ValidationContext, Func(Of String))
+- uid: Json.Schema.LogExtensions.Log*
+  name: Log
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_Log_
+  commentId: Overload:Json.Schema.LogExtensions.Log
+  isSpec: "True"
+  fullName: Json.Schema.LogExtensions.Log
+  nameWithType: LogExtensions.Log
+- uid: Json.Schema.LogExtensions.NotApplicable(Json.Schema.ValidationContext,Func{System.String})
+  name: NotApplicable(ValidationContext, Func<String>)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_NotApplicable_Json_Schema_ValidationContext_Func_System_String__
+  commentId: M:Json.Schema.LogExtensions.NotApplicable(Json.Schema.ValidationContext,Func{System.String})
+  name.vb: NotApplicable(ValidationContext, Func(Of String))
+  fullName: Json.Schema.LogExtensions.NotApplicable(Json.Schema.ValidationContext, Func<System.String>)
+  fullName.vb: Json.Schema.LogExtensions.NotApplicable(Json.Schema.ValidationContext, Func(Of System.String))
+  nameWithType: LogExtensions.NotApplicable(ValidationContext, Func<String>)
+  nameWithType.vb: LogExtensions.NotApplicable(ValidationContext, Func(Of String))
+- uid: Json.Schema.LogExtensions.NotApplicable*
+  name: NotApplicable
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_NotApplicable_
+  commentId: Overload:Json.Schema.LogExtensions.NotApplicable
+  isSpec: "True"
+  fullName: Json.Schema.LogExtensions.NotApplicable
+  nameWithType: LogExtensions.NotApplicable
+- uid: Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ValidationContext,JsonValueKind)
+  name: WrongValueKind(ValidationContext, JsonValueKind)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_WrongValueKind_Json_Schema_ValidationContext_JsonValueKind_
+  commentId: M:Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ValidationContext,JsonValueKind)
+  fullName: Json.Schema.LogExtensions.WrongValueKind(Json.Schema.ValidationContext, JsonValueKind)
+  nameWithType: LogExtensions.WrongValueKind(ValidationContext, JsonValueKind)
+- uid: Json.Schema.LogExtensions.WrongValueKind*
+  name: WrongValueKind
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_WrongValueKind_
+  commentId: Overload:Json.Schema.LogExtensions.WrongValueKind
+  isSpec: "True"
+  fullName: Json.Schema.LogExtensions.WrongValueKind
+  nameWithType: LogExtensions.WrongValueKind
 - uid: Json.Schema.MaxContainsKeyword
   name: MaxContainsKeyword
   href: api/Json.Schema.MaxContainsKeyword.html
@@ -14006,6 +14134,32 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationOptions.DefaultBaseUri
   nameWithType: ValidationOptions.DefaultBaseUri
+- uid: Json.Schema.ValidationOptions.Log
+  name: Log
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_Log
+  commentId: P:Json.Schema.ValidationOptions.Log
+  fullName: Json.Schema.ValidationOptions.Log
+  nameWithType: ValidationOptions.Log
+- uid: Json.Schema.ValidationOptions.Log*
+  name: Log
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_Log_
+  commentId: Overload:Json.Schema.ValidationOptions.Log
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.Log
+  nameWithType: ValidationOptions.Log
+- uid: Json.Schema.ValidationOptions.LogIndentLevel
+  name: LogIndentLevel
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_LogIndentLevel
+  commentId: P:Json.Schema.ValidationOptions.LogIndentLevel
+  fullName: Json.Schema.ValidationOptions.LogIndentLevel
+  nameWithType: ValidationOptions.LogIndentLevel
+- uid: Json.Schema.ValidationOptions.LogIndentLevel*
+  name: LogIndentLevel
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_LogIndentLevel_
+  commentId: Overload:Json.Schema.ValidationOptions.LogIndentLevel
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.LogIndentLevel
+  nameWithType: ValidationOptions.LogIndentLevel
 - uid: Json.Schema.ValidationOptions.OutputFormat
   name: OutputFormat
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_OutputFormat
