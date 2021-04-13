@@ -48,6 +48,11 @@ namespace Json.Schema.Generation
 			generator?.AddConstraints(this);
 
 			AttributeHandler.HandleAttributes(this);
+
+			foreach (var refiner in RefinerRegistry.Get(this))
+			{
+				refiner.Run(this);
+			}
 		}
 
 		internal void Optimize()
