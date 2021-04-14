@@ -7248,6 +7248,80 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.PropertiesIntent.Replace
   nameWithType: PropertiesIntent.Replace
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent
+  name: ReadOnlyIntent
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html
+  commentId: T:Json.Schema.Generation.Intents.ReadOnlyIntent
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent
+  nameWithType: ReadOnlyIntent
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.#ctor(System.Boolean)
+  name: ReadOnlyIntent(Boolean)
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent__ctor_System_Boolean_
+  commentId: M:Json.Schema.Generation.Intents.ReadOnlyIntent.#ctor(System.Boolean)
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.ReadOnlyIntent(System.Boolean)
+  nameWithType: ReadOnlyIntent.ReadOnlyIntent(Boolean)
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.#ctor*
+  name: ReadOnlyIntent
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent__ctor_
+  commentId: Overload:Json.Schema.Generation.Intents.ReadOnlyIntent.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.ReadOnlyIntent
+  nameWithType: ReadOnlyIntent.ReadOnlyIntent
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  name: Apply(JsonSchemaBuilder)
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_Apply_Json_Schema_JsonSchemaBuilder_
+  commentId: M:Json.Schema.Generation.Intents.ReadOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  nameWithType: ReadOnlyIntent.Apply(JsonSchemaBuilder)
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.Apply*
+  name: Apply
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_Apply_
+  commentId: Overload:Json.Schema.Generation.Intents.ReadOnlyIntent.Apply
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.Apply
+  nameWithType: ReadOnlyIntent.Apply
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.ReadOnlyIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.ReadOnlyIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: ReadOnlyIntent.Equals(Nullable<Object>)
+  nameWithType.vb: ReadOnlyIntent.Equals(Nullable(Of Object))
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.Equals*
+  name: Equals
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_Equals_
+  commentId: Overload:Json.Schema.Generation.Intents.ReadOnlyIntent.Equals
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.Equals
+  nameWithType: ReadOnlyIntent.Equals
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_GetHashCode
+  commentId: M:Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode()
+  nameWithType: ReadOnlyIntent.GetHashCode()
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_GetHashCode_
+  commentId: Overload:Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode
+  nameWithType: ReadOnlyIntent.GetHashCode
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.Value
+  name: Value
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_Value
+  commentId: P:Json.Schema.Generation.Intents.ReadOnlyIntent.Value
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.Value
+  nameWithType: ReadOnlyIntent.Value
+- uid: Json.Schema.Generation.Intents.ReadOnlyIntent.Value*
+  name: Value
+  href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html#Json_Schema_Generation_Intents_ReadOnlyIntent_Value_
+  commentId: Overload:Json.Schema.Generation.Intents.ReadOnlyIntent.Value
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.ReadOnlyIntent.Value
+  nameWithType: ReadOnlyIntent.Value
 - uid: Json.Schema.Generation.Intents.RefIntent
   name: RefIntent
   href: api/Json.Schema.Generation.Intents.RefIntent.html
@@ -7547,6 +7621,80 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.UniqueItemsIntent.Value
   nameWithType: UniqueItemsIntent.Value
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent
+  name: WriteOnlyIntent
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html
+  commentId: T:Json.Schema.Generation.Intents.WriteOnlyIntent
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent
+  nameWithType: WriteOnlyIntent
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.#ctor(System.Boolean)
+  name: WriteOnlyIntent(Boolean)
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent__ctor_System_Boolean_
+  commentId: M:Json.Schema.Generation.Intents.WriteOnlyIntent.#ctor(System.Boolean)
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.WriteOnlyIntent(System.Boolean)
+  nameWithType: WriteOnlyIntent.WriteOnlyIntent(Boolean)
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.#ctor*
+  name: WriteOnlyIntent
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent__ctor_
+  commentId: Overload:Json.Schema.Generation.Intents.WriteOnlyIntent.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.WriteOnlyIntent
+  nameWithType: WriteOnlyIntent.WriteOnlyIntent
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  name: Apply(JsonSchemaBuilder)
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_Apply_Json_Schema_JsonSchemaBuilder_
+  commentId: M:Json.Schema.Generation.Intents.WriteOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  nameWithType: WriteOnlyIntent.Apply(JsonSchemaBuilder)
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.Apply*
+  name: Apply
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_Apply_
+  commentId: Overload:Json.Schema.Generation.Intents.WriteOnlyIntent.Apply
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.Apply
+  nameWithType: WriteOnlyIntent.Apply
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.WriteOnlyIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.WriteOnlyIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: WriteOnlyIntent.Equals(Nullable<Object>)
+  nameWithType.vb: WriteOnlyIntent.Equals(Nullable(Of Object))
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.Equals*
+  name: Equals
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_Equals_
+  commentId: Overload:Json.Schema.Generation.Intents.WriteOnlyIntent.Equals
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.Equals
+  nameWithType: WriteOnlyIntent.Equals
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_GetHashCode
+  commentId: M:Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode()
+  nameWithType: WriteOnlyIntent.GetHashCode()
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_GetHashCode_
+  commentId: Overload:Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode
+  nameWithType: WriteOnlyIntent.GetHashCode
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.Value
+  name: Value
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_Value
+  commentId: P:Json.Schema.Generation.Intents.WriteOnlyIntent.Value
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.Value
+  nameWithType: WriteOnlyIntent.Value
+- uid: Json.Schema.Generation.Intents.WriteOnlyIntent.Value*
+  name: Value
+  href: api/Json.Schema.Generation.Intents.WriteOnlyIntent.html#Json_Schema_Generation_Intents_WriteOnlyIntent_Value_
+  commentId: Overload:Json.Schema.Generation.Intents.WriteOnlyIntent.Value
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.WriteOnlyIntent.Value
+  nameWithType: WriteOnlyIntent.Value
 - uid: Json.Schema.Generation.ISchemaKeywordIntent
   name: ISchemaKeywordIntent
   href: api/Json.Schema.Generation.ISchemaKeywordIntent.html
@@ -7566,6 +7714,38 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.ISchemaKeywordIntent.Apply
   nameWithType: ISchemaKeywordIntent.Apply
+- uid: Json.Schema.Generation.ISchemaRefiner
+  name: ISchemaRefiner
+  href: api/Json.Schema.Generation.ISchemaRefiner.html
+  commentId: T:Json.Schema.Generation.ISchemaRefiner
+  fullName: Json.Schema.Generation.ISchemaRefiner
+  nameWithType: ISchemaRefiner
+- uid: Json.Schema.Generation.ISchemaRefiner.Run(Json.Schema.Generation.SchemaGeneratorContext)
+  name: Run(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.ISchemaRefiner.html#Json_Schema_Generation_ISchemaRefiner_Run_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.ISchemaRefiner.Run(Json.Schema.Generation.SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.ISchemaRefiner.Run(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: ISchemaRefiner.Run(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.ISchemaRefiner.Run*
+  name: Run
+  href: api/Json.Schema.Generation.ISchemaRefiner.html#Json_Schema_Generation_ISchemaRefiner_Run_
+  commentId: Overload:Json.Schema.Generation.ISchemaRefiner.Run
+  isSpec: "True"
+  fullName: Json.Schema.Generation.ISchemaRefiner.Run
+  nameWithType: ISchemaRefiner.Run
+- uid: Json.Schema.Generation.ISchemaRefiner.ShouldRun(Json.Schema.Generation.SchemaGeneratorContext)
+  name: ShouldRun(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.ISchemaRefiner.html#Json_Schema_Generation_ISchemaRefiner_ShouldRun_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.ISchemaRefiner.ShouldRun(Json.Schema.Generation.SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.ISchemaRefiner.ShouldRun(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: ISchemaRefiner.ShouldRun(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.ISchemaRefiner.ShouldRun*
+  name: ShouldRun
+  href: api/Json.Schema.Generation.ISchemaRefiner.html#Json_Schema_Generation_ISchemaRefiner_ShouldRun_
+  commentId: Overload:Json.Schema.Generation.ISchemaRefiner.ShouldRun
+  isSpec: "True"
+  fullName: Json.Schema.Generation.ISchemaRefiner.ShouldRun
+  nameWithType: ISchemaRefiner.ShouldRun
 - uid: Json.Schema.Generation.JsonIncludeAttribute
   name: JsonIncludeAttribute
   href: api/Json.Schema.Generation.JsonIncludeAttribute.html
@@ -7672,12 +7852,12 @@ references:
   commentId: T:Json.Schema.Generation.JsonSchemaBuilderExtensions
   fullName: Json.Schema.Generation.JsonSchemaBuilderExtensions
   nameWithType: JsonSchemaBuilderExtensions
-- uid: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,Type)
-  name: FromType(JsonSchemaBuilder, Type)
-  href: api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html#Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_Json_Schema_JsonSchemaBuilder_Type_
-  commentId: M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,Type)
-  fullName: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder, Type)
-  nameWithType: JsonSchemaBuilderExtensions.FromType(JsonSchemaBuilder, Type)
+- uid: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,Type,Json.Schema.Generation.SchemaGeneratorConfiguration)
+  name: FromType(JsonSchemaBuilder, Type, SchemaGeneratorConfiguration)
+  href: api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html#Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_Json_Schema_JsonSchemaBuilder_Type_Json_Schema_Generation_SchemaGeneratorConfiguration_
+  commentId: M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,Type,Json.Schema.Generation.SchemaGeneratorConfiguration)
+  fullName: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder, Type, Json.Schema.Generation.SchemaGeneratorConfiguration)
+  nameWithType: JsonSchemaBuilderExtensions.FromType(JsonSchemaBuilder, Type, SchemaGeneratorConfiguration)
 - uid: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType*
   name: FromType
   href: api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html#Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_
@@ -7685,15 +7865,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType
   nameWithType: JsonSchemaBuilderExtensions.FromType
-- uid: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder)
-  name: FromType<T>(JsonSchemaBuilder)
-  href: api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html#Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType__1_Json_Schema_JsonSchemaBuilder_
-  commentId: M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder)
-  name.vb: FromType(Of T)(JsonSchemaBuilder)
-  fullName: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType<T>(Json.Schema.JsonSchemaBuilder)
-  fullName.vb: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Of T)(Json.Schema.JsonSchemaBuilder)
-  nameWithType: JsonSchemaBuilderExtensions.FromType<T>(JsonSchemaBuilder)
-  nameWithType.vb: JsonSchemaBuilderExtensions.FromType(Of T)(JsonSchemaBuilder)
+- uid: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder,Json.Schema.Generation.SchemaGeneratorConfiguration)
+  name: FromType<T>(JsonSchemaBuilder, SchemaGeneratorConfiguration)
+  href: api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html#Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType__1_Json_Schema_JsonSchemaBuilder_Json_Schema_Generation_SchemaGeneratorConfiguration_
+  commentId: M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder,Json.Schema.Generation.SchemaGeneratorConfiguration)
+  name.vb: FromType(Of T)(JsonSchemaBuilder, SchemaGeneratorConfiguration)
+  fullName: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType<T>(Json.Schema.JsonSchemaBuilder, Json.Schema.Generation.SchemaGeneratorConfiguration)
+  fullName.vb: Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Of T)(Json.Schema.JsonSchemaBuilder, Json.Schema.Generation.SchemaGeneratorConfiguration)
+  nameWithType: JsonSchemaBuilderExtensions.FromType<T>(JsonSchemaBuilder, SchemaGeneratorConfiguration)
+  nameWithType.vb: JsonSchemaBuilderExtensions.FromType(Of T)(JsonSchemaBuilder, SchemaGeneratorConfiguration)
 - uid: Json.Schema.Generation.MaximumAttribute
   name: MaximumAttribute
   href: api/Json.Schema.Generation.MaximumAttribute.html
@@ -8086,6 +8266,61 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.PatternAttribute.Value
   nameWithType: PatternAttribute.Value
+- uid: Json.Schema.Generation.ReadOnlyAttribute
+  name: ReadOnlyAttribute
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html
+  commentId: T:Json.Schema.Generation.ReadOnlyAttribute
+  fullName: Json.Schema.Generation.ReadOnlyAttribute
+  nameWithType: ReadOnlyAttribute
+- uid: Json.Schema.Generation.ReadOnlyAttribute.#ctor
+  name: ReadOnlyAttribute()
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute__ctor
+  commentId: M:Json.Schema.Generation.ReadOnlyAttribute.#ctor
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.ReadOnlyAttribute()
+  nameWithType: ReadOnlyAttribute.ReadOnlyAttribute()
+- uid: Json.Schema.Generation.ReadOnlyAttribute.#ctor(System.Boolean)
+  name: ReadOnlyAttribute(Boolean)
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute__ctor_System_Boolean_
+  commentId: M:Json.Schema.Generation.ReadOnlyAttribute.#ctor(System.Boolean)
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.ReadOnlyAttribute(System.Boolean)
+  nameWithType: ReadOnlyAttribute.ReadOnlyAttribute(Boolean)
+- uid: Json.Schema.Generation.ReadOnlyAttribute.#ctor*
+  name: ReadOnlyAttribute
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute__ctor_
+  commentId: Overload:Json.Schema.Generation.ReadOnlyAttribute.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.ReadOnlyAttribute
+  nameWithType: ReadOnlyAttribute.ReadOnlyAttribute
+- uid: Json.Schema.Generation.ReadOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name: IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.ReadOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: ReadOnlyAttribute.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  nameWithType.vb: ReadOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.ReadOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints*
+  name: IAttributeHandler.AddConstraints
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_
+  commentId: Overload:Json.Schema.Generation.ReadOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints
+  isSpec: "True"
+  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
+  nameWithType: ReadOnlyAttribute.IAttributeHandler.AddConstraints
+  nameWithType.vb: ReadOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
+- uid: Json.Schema.Generation.ReadOnlyAttribute.Value
+  name: Value
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute_Value
+  commentId: P:Json.Schema.Generation.ReadOnlyAttribute.Value
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.Value
+  nameWithType: ReadOnlyAttribute.Value
+- uid: Json.Schema.Generation.ReadOnlyAttribute.Value*
+  name: Value
+  href: api/Json.Schema.Generation.ReadOnlyAttribute.html#Json_Schema_Generation_ReadOnlyAttribute_Value_
+  commentId: Overload:Json.Schema.Generation.ReadOnlyAttribute.Value
+  isSpec: "True"
+  fullName: Json.Schema.Generation.ReadOnlyAttribute.Value
+  nameWithType: ReadOnlyAttribute.Value
 - uid: Json.Schema.Generation.RequiredAttribute
   name: RequiredAttribute
   href: api/Json.Schema.Generation.RequiredAttribute.html
@@ -8107,6 +8342,15 @@ references:
   fullName.vb: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, System.Nullable(Of List(Of Attribute)))
   nameWithType: SchemaGenerationContextCache.Get(Type, Nullable<List<Attribute>>)
   nameWithType.vb: SchemaGenerationContextCache.Get(Type, Nullable(Of List(Of Attribute)))
+- uid: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type,System.Nullable{List{Attribute}},Json.Schema.Generation.SchemaGeneratorConfiguration)
+  name: Get(Type, Nullable<List<Attribute>>, SchemaGeneratorConfiguration)
+  href: api/Json.Schema.Generation.SchemaGenerationContextCache.html#Json_Schema_Generation_SchemaGenerationContextCache_Get_Type_System_Nullable_List_Attribute___Json_Schema_Generation_SchemaGeneratorConfiguration_
+  commentId: M:Json.Schema.Generation.SchemaGenerationContextCache.Get(Type,System.Nullable{List{Attribute}},Json.Schema.Generation.SchemaGeneratorConfiguration)
+  name.vb: Get(Type, Nullable(Of List(Of Attribute)), SchemaGeneratorConfiguration)
+  fullName: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, System.Nullable<List<Attribute>>, Json.Schema.Generation.SchemaGeneratorConfiguration)
+  fullName.vb: Json.Schema.Generation.SchemaGenerationContextCache.Get(Type, System.Nullable(Of List(Of Attribute)), Json.Schema.Generation.SchemaGeneratorConfiguration)
+  nameWithType: SchemaGenerationContextCache.Get(Type, Nullable<List<Attribute>>, SchemaGeneratorConfiguration)
+  nameWithType.vb: SchemaGenerationContextCache.Get(Type, Nullable(Of List(Of Attribute)), SchemaGeneratorConfiguration)
 - uid: Json.Schema.Generation.SchemaGenerationContextCache.Get*
   name: Get
   href: api/Json.Schema.Generation.SchemaGenerationContextCache.html#Json_Schema_Generation_SchemaGenerationContextCache_Get_
@@ -8114,6 +8358,38 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.SchemaGenerationContextCache.Get
   nameWithType: SchemaGenerationContextCache.Get
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration
+  name: SchemaGeneratorConfiguration
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html
+  commentId: T:Json.Schema.Generation.SchemaGeneratorConfiguration
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration
+  nameWithType: SchemaGeneratorConfiguration
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
+  name: Generators
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Generators
+  commentId: P:Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
+  nameWithType: SchemaGeneratorConfiguration.Generators
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Generators*
+  name: Generators
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Generators_
+  commentId: Overload:Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
+  isSpec: "True"
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
+  nameWithType: SchemaGeneratorConfiguration.Generators
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners
+  name: Refiners
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Refiners
+  commentId: P:Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners
+  nameWithType: SchemaGeneratorConfiguration.Refiners
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners*
+  name: Refiners
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Refiners_
+  commentId: Overload:Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners
+  isSpec: "True"
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners
+  nameWithType: SchemaGeneratorConfiguration.Refiners
 - uid: Json.Schema.Generation.SchemaGeneratorContext
   name: SchemaGeneratorContext
   href: api/Json.Schema.Generation.SchemaGeneratorContext.html
@@ -8146,6 +8422,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.SchemaGeneratorContext.Attributes
   nameWithType: SchemaGeneratorContext.Attributes
+- uid: Json.Schema.Generation.SchemaGeneratorContext.Configuration
+  name: Configuration
+  href: api/Json.Schema.Generation.SchemaGeneratorContext.html#Json_Schema_Generation_SchemaGeneratorContext_Configuration
+  commentId: P:Json.Schema.Generation.SchemaGeneratorContext.Configuration
+  fullName: Json.Schema.Generation.SchemaGeneratorContext.Configuration
+  nameWithType: SchemaGeneratorContext.Configuration
+- uid: Json.Schema.Generation.SchemaGeneratorContext.Configuration*
+  name: Configuration
+  href: api/Json.Schema.Generation.SchemaGeneratorContext.html#Json_Schema_Generation_SchemaGeneratorContext_Configuration_
+  commentId: Overload:Json.Schema.Generation.SchemaGeneratorContext.Configuration
+  isSpec: "True"
+  fullName: Json.Schema.Generation.SchemaGeneratorContext.Configuration
+  nameWithType: SchemaGeneratorContext.Configuration
 - uid: Json.Schema.Generation.SchemaGeneratorContext.Equals(System.Nullable{System.Object})
   name: Equals(Nullable<Object>)
   href: api/Json.Schema.Generation.SchemaGeneratorContext.html#Json_Schema_Generation_SchemaGeneratorContext_Equals_System_Nullable_System_Object__
@@ -8308,6 +8597,61 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.UniqueItemsAttribute.Value
   nameWithType: UniqueItemsAttribute.Value
+- uid: Json.Schema.Generation.WriteOnlyAttribute
+  name: WriteOnlyAttribute
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html
+  commentId: T:Json.Schema.Generation.WriteOnlyAttribute
+  fullName: Json.Schema.Generation.WriteOnlyAttribute
+  nameWithType: WriteOnlyAttribute
+- uid: Json.Schema.Generation.WriteOnlyAttribute.#ctor
+  name: WriteOnlyAttribute()
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute__ctor
+  commentId: M:Json.Schema.Generation.WriteOnlyAttribute.#ctor
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.WriteOnlyAttribute()
+  nameWithType: WriteOnlyAttribute.WriteOnlyAttribute()
+- uid: Json.Schema.Generation.WriteOnlyAttribute.#ctor(System.Boolean)
+  name: WriteOnlyAttribute(Boolean)
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute__ctor_System_Boolean_
+  commentId: M:Json.Schema.Generation.WriteOnlyAttribute.#ctor(System.Boolean)
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.WriteOnlyAttribute(System.Boolean)
+  nameWithType: WriteOnlyAttribute.WriteOnlyAttribute(Boolean)
+- uid: Json.Schema.Generation.WriteOnlyAttribute.#ctor*
+  name: WriteOnlyAttribute
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute__ctor_
+  commentId: Overload:Json.Schema.Generation.WriteOnlyAttribute.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.WriteOnlyAttribute
+  nameWithType: WriteOnlyAttribute.WriteOnlyAttribute
+- uid: Json.Schema.Generation.WriteOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name: IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.WriteOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: WriteOnlyAttribute.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  nameWithType.vb: WriteOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.WriteOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints*
+  name: IAttributeHandler.AddConstraints
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_
+  commentId: Overload:Json.Schema.Generation.WriteOnlyAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints
+  isSpec: "True"
+  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
+  nameWithType: WriteOnlyAttribute.IAttributeHandler.AddConstraints
+  nameWithType.vb: WriteOnlyAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
+- uid: Json.Schema.Generation.WriteOnlyAttribute.Value
+  name: Value
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute_Value
+  commentId: P:Json.Schema.Generation.WriteOnlyAttribute.Value
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.Value
+  nameWithType: WriteOnlyAttribute.Value
+- uid: Json.Schema.Generation.WriteOnlyAttribute.Value*
+  name: Value
+  href: api/Json.Schema.Generation.WriteOnlyAttribute.html#Json_Schema_Generation_WriteOnlyAttribute_Value_
+  commentId: Overload:Json.Schema.Generation.WriteOnlyAttribute.Value
+  isSpec: "True"
+  fullName: Json.Schema.Generation.WriteOnlyAttribute.Value
+  nameWithType: WriteOnlyAttribute.Value
 - uid: Json.Schema.IdKeyword
   name: IdKeyword
   href: api/Json.Schema.IdKeyword.html

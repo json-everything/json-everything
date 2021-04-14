@@ -101,19 +101,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_Json_Schema_JsonSchemaBuilder_Type_.md&amp;value=---%0Auid%3A%20Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder%2CType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_Json_Schema_JsonSchemaBuilder_Type_Json_Schema_Generation_SchemaGeneratorConfiguration_.md&amp;value=---%0Auid%3A%20Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder%2CType%2CJson.Schema.Generation.SchemaGeneratorConfiguration)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema.Generation/JsonSchemaBuilderExtensions.cs/#L28">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema.Generation/JsonSchemaBuilderExtensions.cs/#L30">View Source</a>
   </span>
   <a id="Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_" data-uid="Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType*"></a>
-  <h4 id="Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_Json_Schema_JsonSchemaBuilder_Type_" data-uid="Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,Type)">FromType(JsonSchemaBuilder, Type)</h4>
+  <h4 id="Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_Json_Schema_JsonSchemaBuilder_Type_Json_Schema_Generation_SchemaGeneratorConfiguration_" data-uid="Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,Type,Json.Schema.Generation.SchemaGeneratorConfiguration)">FromType(JsonSchemaBuilder, Type, SchemaGeneratorConfiguration)</h4>
   <div class="markdown level1 summary"><p>Generates a schema from a CLR type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type)</code></pre>
+    <pre><code class="lang-csharp hljs">public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type, SchemaGeneratorConfiguration configuration = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -137,6 +137,12 @@
         <td><p>The type to generate.</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="Json.Schema.Generation.SchemaGeneratorConfiguration.html">SchemaGeneratorConfiguration</a></td>
+        <td><span class="parametername">configuration</span></td>
+        <td><p>The generator configuration.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -157,19 +163,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType__1_Json_Schema_JsonSchemaBuilder_.md&amp;value=---%0Auid%3A%20Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType%60%601(Json.Schema.JsonSchemaBuilder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType__1_Json_Schema_JsonSchemaBuilder_Json_Schema_Generation_SchemaGeneratorConfiguration_.md&amp;value=---%0Auid%3A%20Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType%60%601(Json.Schema.JsonSchemaBuilder%2CJson.Schema.Generation.SchemaGeneratorConfiguration)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema.Generation/JsonSchemaBuilderExtensions.cs/#L17">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema.Generation/JsonSchemaBuilderExtensions.cs/#L18">View Source</a>
   </span>
   <a id="Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType_" data-uid="Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType*"></a>
-  <h4 id="Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType__1_Json_Schema_JsonSchemaBuilder_" data-uid="Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder)">FromType&lt;T&gt;(JsonSchemaBuilder)</h4>
+  <h4 id="Json_Schema_Generation_JsonSchemaBuilderExtensions_FromType__1_Json_Schema_JsonSchemaBuilder_Json_Schema_Generation_SchemaGeneratorConfiguration_" data-uid="Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder,Json.Schema.Generation.SchemaGeneratorConfiguration)">FromType&lt;T&gt;(JsonSchemaBuilder, SchemaGeneratorConfiguration)</h4>
   <div class="markdown level1 summary"><p>Generates a schema from a CLR type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static JsonSchemaBuilder FromType&lt;T&gt;(this JsonSchemaBuilder builder)</code></pre>
+    <pre><code class="lang-csharp hljs">public static JsonSchemaBuilder FromType&lt;T&gt;(this JsonSchemaBuilder builder, SchemaGeneratorConfiguration configuration = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -185,6 +191,12 @@
         <td><a class="xref" href="Json.Schema.JsonSchemaBuilder.html">JsonSchemaBuilder</a></td>
         <td><span class="parametername">builder</span></td>
         <td><p>The schema builder.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Json.Schema.Generation.SchemaGeneratorConfiguration.html">SchemaGeneratorConfiguration</a></td>
+        <td><span class="parametername">configuration</span></td>
+        <td><p>The generator configuration.</p>
 </td>
       </tr>
     </tbody>

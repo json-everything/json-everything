@@ -738,7 +738,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.DynamicRefKeyword.html",
-          "hash": "Oea849Wn7w8xyeFG59yd1A=="
+          "hash": "eLiJG21z4ZxBc/t2EukTLQ=="
         }
       },
       "is_incremental": false,
@@ -962,6 +962,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.ISchemaRefiner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.ISchemaRefiner.html",
+          "hash": "f+91pcts5TN0AEQcyAaoMA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.Intents.AdditionalPropertiesIntent.yml",
       "output": {
         ".html": {
@@ -1178,6 +1190,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.ReadOnlyIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.ReadOnlyIntent.html",
+          "hash": "GwjS+gYAlNdFH2dUW66L5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.Intents.RefIntent.yml",
       "output": {
         ".html": {
@@ -1226,11 +1250,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.WriteOnlyIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.WriteOnlyIntent.html",
+          "hash": "pB0O1xd2P1zUYe85y0f8+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.Intents.yml",
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.Intents.html",
-          "hash": "SoOYO/2hb3vRYddarNLYog=="
+          "hash": "ityF2dlUsVahJhZdg+Fjtw=="
         }
       },
       "is_incremental": false,
@@ -1290,7 +1326,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.JsonSchemaBuilderExtensions.html",
-          "hash": "vxO4pQUYkQHSnQbcAhiEOg=="
+          "hash": "J9HW4rHRFwb0R3PCdXofXQ=="
         }
       },
       "is_incremental": false,
@@ -1394,6 +1430,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.ReadOnlyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.ReadOnlyAttribute.html",
+          "hash": "FASc7eKEW30JB1VmcZaMOA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.RequiredAttribute.yml",
       "output": {
         ".html": {
@@ -1410,7 +1458,19 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.SchemaGenerationContextCache.html",
-          "hash": "u4/GyOnI3tj+Z4XY1R80wg=="
+          "hash": "pyI4s1WYDxWXMAV0JsvLgg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.SchemaGeneratorConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.SchemaGeneratorConfiguration.html",
+          "hash": "RxUCVj/MtTp/aohS+0Iq2Q=="
         }
       },
       "is_incremental": false,
@@ -1422,7 +1482,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.SchemaGeneratorContext.html",
-          "hash": "DJJLNBtBFsC8hdCWZ8ma8g=="
+          "hash": "4Qy4T7+0wZGeoO6YR4jSNQ=="
         }
       },
       "is_incremental": false,
@@ -1454,11 +1514,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.WriteOnlyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.WriteOnlyAttribute.html",
+          "hash": "4JY4JB1M5El47De49xHriQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.yml",
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.html",
-          "hash": "KoFdUO2BAVYpVkaleDwjIg=="
+          "hash": "oBZHHtunduwJMHbmCojutg=="
         }
       },
       "is_incremental": false,
@@ -1590,7 +1662,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.JsonSchemaBuilder.html",
-          "hash": "cpUhQhX0g/pJOMb7RHcOLQ=="
+          "hash": "c3H89+EJ1snAjeer5WlxMg=="
         }
       },
       "is_incremental": false,
@@ -1914,7 +1986,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.RecursiveRefKeyword.html",
-          "hash": "NG3Xn0hAhrlasgVKmpPbAQ=="
+          "hash": "V70TW4FuK7qav8szRlGLgw=="
         }
       },
       "is_incremental": false,
@@ -1926,7 +1998,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.RefKeyword.html",
-          "hash": "BGaVqpXn6SNqAl3lplLJSw=="
+          "hash": "bMeh4VUrg2v0VAx9C/y28w=="
         }
       },
       "is_incremental": false,
@@ -2154,7 +2226,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.ValidationContext.html",
-          "hash": "z1u2Sq4DBT+O7DIKm8AwtQ=="
+          "hash": "XDqjvIybo4BJX99mPp5Ajw=="
         }
       },
       "is_incremental": false,
@@ -2286,7 +2358,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "1wdyFDHGyK1fxod6l/BkvA=="
+          "hash": "gP8IQy7HJ8W1LpAUznuxCQ=="
         }
       },
       "is_incremental": false,
@@ -2521,7 +2593,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "bIkQyNnwApkD1tV8JerCtw=="
+          "hash": "oCDmD2VKDUfzxdT5cHDF+Q=="
         }
       },
       "is_incremental": false,
@@ -2533,7 +2605,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "L61pBcXn/LbRL/V2KNIO7A=="
+          "hash": "ugO9oPTVZsPvKKAG6ln2eg=="
         }
       },
       "is_incremental": false,
@@ -2665,7 +2737,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-generation.html",
-          "hash": "GlxRi9qyJA195jeltcXDXw=="
+          "hash": "P/dt/FeVdU0kU3gh7zVeaw=="
         }
       },
       "is_incremental": false,
@@ -2689,7 +2761,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-overview.html",
-          "hash": "nkESyg0r98HZ9aiW290qfQ=="
+          "hash": "9/4Y/D3T/hOjkj6cAFMfwg=="
         }
       },
       "is_incremental": false,
@@ -2701,7 +2773,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-references.html",
-          "hash": "xEaBMC5r8DcwqNRyBTWRRg=="
+          "hash": "5r/WvqCMppJKpKnIdpvLGw=="
         }
       },
       "is_incremental": false,
@@ -2776,7 +2848,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 187,
+          "total_file_count": 193,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

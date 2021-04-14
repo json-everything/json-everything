@@ -79,7 +79,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="managing-references-ref">Managing references (<code>$ref</code>)</h1>
 
-<p>JsonSchema<nsp>.Net handles all references as defined in the draft 2019-09 version of the JSON Schema specification.  This is <em>not</em> a change as of v11.0.0;  JsonSchema<nsp>.Net has always behaved this way.  The only change for draft 2019-09 schemas in JsonSchema<nsp>.Net is that <code>$ref</code> can now exist alongside other keywords; for earlier drafts, keywords as siblings to <code>$ref</code> will be ignored.<p>
+<p>JsonSchema<nsp>.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that <code>$ref</code> can now exist alongside other keywords; for earlier drafts, keywords as siblings to <code>$ref</code> will be ignored.<p>
 <h2 id="schema-registration">Schema registration</h2>
 <p>In order to resolve references more quickly, JsonSchema<nsp>.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.<p>
 <p>A <code>JsonSchema</code> instance will automatically register itself upon calling <code>Validate()</code>.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to validation.</p>
@@ -114,7 +114,7 @@ SchemaRegistry.Global.Register(&quot;http://localhost/random-string&quot;, rando
 <h2 id="automatic-resolution">Automatic resolution</h2>
 <p>In order to support scenarios where schemas cannot be registered ahead of time, the <code>SchemaRegistry</code> class exposes the <code>Fetch</code> property which is defined as <code>Func&lt;Uri, JsonSchema&gt;</code>.  This property can be set to a method which downloads the content from the supplied URI and deserializes it into a <code>JsonSchema</code> object.</p>
 <p>The URI that is passed may need to be transformed, based on the schemas you're dealing with.  For instance if you're loading schemas from a local filesystem, and the schema <code>$ref</code>s use relative paths, you may need to prepend the working folder to the URI in order to locate it.</p>
-</nsp></nsp></nsp></nsp></nsp></article>
+</nsp></nsp></nsp></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

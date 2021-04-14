@@ -175,11 +175,12 @@
 </ol>
 <h2 id="extending-support">Extending support</h2>
 <p>The above will work most of the time, but occasionally you may find that you need some additional support.  Happily, the library is configured for you to provide that support yourself.</p>
-<p>There are three areas that can be augmented in order to get the results you're after.</p>
+<p>There are four areas that can be utilized in order to get the results you're after.</p>
 <ul>
 <li>Generators</li>
 <li>Intents</li>
 <li>Attributes</li>
+<li>Refiners</li>
 </ul>
 <p>These do not <em>all</em> need to be implemented.</p>
 <h3 id="generators">Generators</h3>
@@ -302,6 +303,15 @@ public class MaximumAttribute : Attribute, IAttributeHandler
 <p>The <code>AddConstraints()</code> method works exactly the same as in the generator class.  A key difference here is that you will need to guard against unrelated types.  For instance, with <code>MaximumAttribute</code> above, it doesn't make sense to have <code>maximum</code> on a non-numeric type, so we check it before adding the intent.</p>
 <p><em><strong>NOTE</strong> <code>.IsNumber()</code> is an extension method on <code>Type</code> that determines if it's a numeric type.  There are a few more of these helper extensions as well.</em></p>
 <p>The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement <code>IAttributeHandler</code>.  For these cases, just implement the handler class, and then add it using one of the <code>AttributeHandler.AddHandler()</code> static methods.  A handler can be removed using the <code>AttributeHandler.RemoveHandler&lt;T&gt;()</code> static method.</p>
+<h3 id="refiners">Refiners</h3>
+<p>Sometimes you may need to make minor adjustments to the generated schemas dynamically.  For this you'll need to create an implementation of <code>ISchemaRefiner</code>.</p>
+<p>Refiners are called after all intents have been generated for each type, recursively, throughout the process.</p>
+<p>To implement a refiner, two methods will be needed:</p>
+<ul>
+<li><code>bool ShouldRun(SchemaGenerationContext)</code> which determines whether the refiner needs to run for the current generation iteration.</li>
+<li><code>void Run(SchemaGenerationContext)</code> which makes whatever modifications are needed.</li>
+</ul>
+<p>Remember that a this point, you're stil working with intents.  You can add new ones as well as modify or remove existing ones.  You really have complete freedom within a refiner.</p>
 <h2 id="thats-it">That's it</h2>
 <p>That should get you generating schemas for all of your types.  If you come up with ideas or implement your own extensions and think they'd be handy if they were built in, feel free to open up an issue or a pull request.</p>
 </article>
