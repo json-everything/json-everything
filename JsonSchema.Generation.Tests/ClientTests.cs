@@ -115,7 +115,7 @@ namespace Json.Schema.Generation.Tests
 		}
 
 		[Test]
-		public void Issue97_MultipleGenerationCausesStackOverflow()
+		public void Issue97_PersistentDataBetweenGenerationCalls()
 		{
 			var simpleValueSettingsSchema1 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 			var simpleValueSettingsSchema2 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();

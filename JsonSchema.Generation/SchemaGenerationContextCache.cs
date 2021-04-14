@@ -74,5 +74,10 @@ namespace Json.Schema.Generation
 
 			return context;
 		}
+
+		internal static void Clear()
+		{
+			Cache.Clear();
+		}
 	}
 }
