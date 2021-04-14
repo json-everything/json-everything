@@ -388,7 +388,7 @@ jobs:
         if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
-          dotnet analyze-semver -a artifacts/DLLs/JsonSchema.Generation/bin/Release/netstandard2.0/JsonSchema.Net.Generation.dll -o semver-report-schema-gen.md -c .github/semver_config.json
+          dotnet analyze-semver -a artifacts/DLLs/JsonSchema.Generation/bin/Release/net5.0/JsonSchema.Net.Generation.dll -o semver-report-schema-gen.md -c .github/semver_config.json
           unset HAS_REPORT
           unset REPORT
           if [ -s semver-report-schema-gen.md ]
