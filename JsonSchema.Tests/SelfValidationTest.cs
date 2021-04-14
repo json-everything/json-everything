@@ -17,14 +17,15 @@ namespace Json.Schema.Tests
 				{
 					new TestCaseData(nameof(MetaSchemas.Draft6), MetaSchemas.Draft6),
 					new TestCaseData(nameof(MetaSchemas.Draft7), MetaSchemas.Draft7),
-					new TestCaseData(nameof(MetaSchemas.Draft201909), MetaSchemas.Draft201909)
+					new TestCaseData(nameof(MetaSchemas.Draft201909), MetaSchemas.Draft201909),
+					new TestCaseData(nameof(MetaSchemas.Draft202012), MetaSchemas.Draft202012),
 				};
 
 		[TestCaseSource(nameof(TestData))]
 		public void Hardcoded(string testName, JsonSchema schema)
 		{
 			var json = JsonSerializer.Serialize(schema);
-			var validation = schema.Validate(JsonDocument.Parse(json).RootElement);
+			var validation = schema.Validate(JsonDocument.Parse(json).RootElement, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
 
 			validation.AssertValid();
 		}

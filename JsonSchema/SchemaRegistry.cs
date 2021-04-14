@@ -229,7 +229,7 @@ namespace Json.Schema
 
 		internal static string GetFullReference(Uri? uri, string? fragment)
 		{
-			var baseUri = MakeAbsolute(uri).Fragment;
+			var baseUri = MakeAbsolute(uri).OriginalString;
 
 			if (string.IsNullOrEmpty(fragment)) return baseUri;
 

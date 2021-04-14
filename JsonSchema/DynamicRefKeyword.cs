@@ -67,6 +67,7 @@ namespace Json.Schema
 			{
 				context.IsValid = false;
 				context.Message = "Encountered recursive reference";
+				context.ExitKeyword(Name, context.IsValid);
 				return;
 			}
 

@@ -1681,6 +1681,13 @@
             </summary>
             <param name="keyword">The keyword to add.</param>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilder.Get``1">
+            <summary>
+            Gets a keyword if one has been added.
+            </summary>
+            <typeparam name="T">the keyword type.</typeparam>
+            <returns>The keyword, if it exists; `null` otherwise.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilder.RefRoot">
             <summary>
             Creates a new <see cref="T:Json.Schema.JsonSchema"/>.
