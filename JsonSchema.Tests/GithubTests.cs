@@ -472,5 +472,17 @@ namespace Json.Schema.Tests
 			schema.Validate(passing, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertValid();
 			schema.Validate(failing, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
 		}
+
+		[Test]
+		public void Issue97_IdentifyCircularReferences()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Ref("#/$defs/string")
+				.Defs(("string", new JsonSchemaBuilder().Ref("#/$defs/string")));
+
+			var json = JsonDocument.Parse("\"value\"").RootElement;
+
+			schema.Validate(json).AssertInvalid();
+		}
 	}
 }
