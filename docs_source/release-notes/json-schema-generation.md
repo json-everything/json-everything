@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/98)
+
+[#96](https://github.com/gregsdennis/json-everything/issues/96) - Added `ISchemaRefiner` to the schema generation process to allow users to inject custom logic after intents are created.
+
+[#97](https://github.com/gregsdennis/json-everything/issues/97) - Fixed an issue with subsequent schema generations off of the same type.
+
 # [1.2.3](https://github.com/gregsdennis/json-everything/pull/88)
 
 [#87](https://github.com/gregsdennis/json-everything/issues/87) - Generation for the same property type under different property names causes StackOverflowException.

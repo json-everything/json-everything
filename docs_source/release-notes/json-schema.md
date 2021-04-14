@@ -1,3 +1,7 @@
+# [1.10.1](https://github.com/gregsdennis/json-everything/pull/98)
+
+[#97](https://github.com/gregsdennis/json-everything/issues/97) - Added support for circular reference detection.
+
 # [1.10.0](https://github.com/gregsdennis/json-everything/pull/93)
 
 [#90](https://github.com/gregsdennis/json-everything/issues/90) - Added `JsonSchemaBuilder.Get<T>()` to support the discussion around incrementally adding properties while building schemas.

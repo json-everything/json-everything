@@ -73,6 +73,7 @@ namespace Json.Schema.Generation
 				foreach (var item in eligible)
 				{
 					hashCode = (hashCode * 397) ^ item.GetHashCode();
+					hashCode = (hashCode * 397) ^ item.GetType().GetHashCode();
 				}
 				return hashCode;
 			}

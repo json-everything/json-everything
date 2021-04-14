@@ -105,11 +105,12 @@ There are a couple advanced features that bear mentioning.
 
 The above will work most of the time, but occasionally you may find that you need some additional support.  Happily, the library is configured for you to provide that support yourself.
 
-There are three areas that can be augmented in order to get the results you're after.
+There are four areas that can be utilized in order to get the results you're after.
 
 - Generators
 - Intents
 - Attributes
+- Refiners
 
 These do not _all_ need to be implemented.
 
@@ -269,6 +270,19 @@ The `AddConstraints()` method works exactly the same as in the generator class. 
 ***NOTE** `.IsNumber()` is an extension method on `Type` that determines if it's a numeric type.  There are a few more of these helper extensions as well.*
 
 The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method.
+
+### Refiners
+
+Sometimes you may need to make minor adjustments to the generated schemas dynamically.  For this you'll need to create an implementation of `ISchemaRefiner`.
+
+Refiners are called after all intents have been generated for each type, recursively, throughout the process.
+
+To implement a refiner, two methods will be needed:
+
+- `bool ShouldRun(SchemaGenerationContext)` which determines whether the refiner needs to run for the current generation iteration.
+- `void Run(SchemaGenerationContext)` which makes whatever modifications are needed.
+
+Remember that a this point, you're stil working with intents.  You can add new ones as well as modify or remove existing ones.  You really have complete freedom within a refiner.
 
 ## That's it
 

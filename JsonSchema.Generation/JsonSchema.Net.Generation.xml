@@ -759,6 +759,37 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.ReadOnlyIntent">
+            <summary>
+            Provides intent to create a `readOnly` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ReadOnlyIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ReadOnlyIntent.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ReadOnlyIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ReadOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ReadOnlyIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ReadOnlyIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.Generation.Intents.RefIntent">
             <summary>
             Provides intent to create a `$ref` keyword.
@@ -883,6 +914,37 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.WriteOnlyIntent">
+            <summary>
+            Provides intent to create a `writeOnly` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.WriteOnlyIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.WriteOnlyIntent.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.WriteOnlyIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.WriteOnlyIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.WriteOnlyIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.WriteOnlyIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.Generation.ISchemaKeywordIntent">
              <summary>
              Describes the intent to create a keyword.
@@ -907,6 +969,29 @@
             </summary>
             <param name="builder">The builder.</param>
         </member>
+        <member name="T:Json.Schema.Generation.ISchemaRefiner">
+            <summary>
+            Describes a schema generation refiner.
+            </summary>
+            <remarks>
+            Refiners run after attributes have been processed, before the
+            schema itself is created.  This is used to add customization
+            logic.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.ISchemaRefiner.ShouldRun(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Determines if the refiner should run.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Json.Schema.Generation.ISchemaRefiner.Run(Json.Schema.Generation.SchemaGeneratorContext)">
+            <summary>
+            Runs the refiner.
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
             <summary>
             Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
@@ -924,20 +1009,22 @@
             Provides extension methods for schema generation.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder)">
+        <member name="M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType``1(Json.Schema.JsonSchemaBuilder,Json.Schema.Generation.SchemaGeneratorConfiguration)">
             <summary>
             Generates a schema from a CLR type.
             </summary>
             <typeparam name="T">The type to generate.</typeparam>
             <param name="builder">The schema builder.</param>
+            <param name="configuration">The generator configuration.</param>
             <returns>The schema builder (for fluent syntax support).</returns>
         </member>
-        <member name="M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,System.Type)">
+        <member name="M:Json.Schema.Generation.JsonSchemaBuilderExtensions.FromType(Json.Schema.JsonSchemaBuilder,System.Type,Json.Schema.Generation.SchemaGeneratorConfiguration)">
             <summary>
             Generates a schema from a CLR type.
             </summary>
             <param name="builder">The schema builder.</param>
             <param name="type">The type to generate.</param>
+            <param name="configuration">The generator configuration.</param>
             <returns>The schema builder (for fluent syntax support).</returns>
         </member>
         <member name="T:Json.Schema.Generation.MaximumAttribute">
@@ -1068,6 +1155,27 @@
             </summary>
             <param name="value">The value.</param>
         </member>
+        <member name="T:Json.Schema.Generation.ReadOnlyAttribute">
+            <summary>
+            Applies a `readOnly` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.ReadOnlyAttribute.Value">
+            <summary>
+            Whether the property should be read-only.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance with a value of `true`.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
         <member name="T:Json.Schema.Generation.RequiredAttribute">
             <summary>
             Indicates a property is required and should be listed in the
@@ -1079,13 +1187,14 @@
             Gets the contexts for the current run.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute})">
+        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute},Json.Schema.Generation.SchemaGeneratorConfiguration)">
             <summary>
             Gets or creates a <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/> based on the given
             type and attribute set.
             </summary>
             <param name="type">The type to generate.</param>
             <param name="attributes">The attribute set on the property.</param>
+            <param name="configuration">The generator configuration.</param>
             <returns>
             A generation context, from the cache if one exists with the specified
             type and attribute set; otherwise a new one.  New contexts are automatically
@@ -1094,6 +1203,21 @@
             <remarks>
             Use this in your generator if it needs to create keywords with subschemas.
             </remarks>
+        </member>
+        <member name="T:Json.Schema.Generation.SchemaGeneratorConfiguration">
+            <summary>
+            Provides additional configuration for the generator.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners">
+            <summary>
+            A collection of refiners.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Generators">
+            <summary>
+            A collection of generators in addition to the global set.
+            </summary>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGeneratorContext">
             <summary>
@@ -1113,6 +1237,11 @@
         <member name="P:Json.Schema.Generation.SchemaGeneratorContext.Intents">
             <summary>
             The current set of keyword intents.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorContext.Configuration">
+            <summary>
+            The generator configuration.
             </summary>
         </member>
         <member name="M:Json.Schema.Generation.SchemaGeneratorContext.Apply(Json.Schema.JsonSchemaBuilder)">
@@ -1177,6 +1306,27 @@
         <member name="M:Json.Schema.Generation.UniqueItemsAttribute.#ctor(System.Boolean)">
             <summary>
             Creates a new <see cref="T:Json.Schema.Generation.UniqueItemsAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.WriteOnlyAttribute">
+            <summary>
+            Applies a `writeOnly` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.WriteOnlyAttribute.Value">
+            <summary>
+            Whether the property should be write-only.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance with a value of `true`.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
         </member>

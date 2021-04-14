@@ -8,13 +8,14 @@ To support JSON Schema, JsonSchmea<nsp>.Net exposes the `JsonSchema` type.  This
 
 ## Drafts
 
-There are currently five active drafts of the JSON Schema specification:
+There are currently six active drafts of the JSON Schema specification:
 
 - Draft 3
 - Draft 4
 - Draft 6
 - Draft 7
 - Draft 2019-09
+- Draft 2020-12
 
 JsonSchema<nsp>.Net supports draft 6 and later.
 
@@ -24,7 +25,7 @@ Each draft defines a meta-schema.  This is a special JSON Schema that describes 
 
 JsonSchmea<nsp>.Net declares the meta-schemas for the supported drafts as members of the `MetaSchemas` static class.
 
-Draft 2019-09 introduced vocabularies.  As part of this new feature, the meta-schema for draft 2019-09 has been split into vocabulary-specific meta-schemas.  Additionally, the specification recognizes that the meta-schemas aren't perfect and may need to be updated occasionally.  To this end, the meta-schemas are versioned with the year and month they are published.  The schemas within this library are named accordingly.
+Draft 2019-09 introduced vocabularies.  As part of this new feature, the meta-schemas for this draft and those which follow it have been split into vocabulary-specific meta-schemas.  Additionally, the specification recognizes that the meta-schemas aren't perfect and may need to be updated occasionally.  To this end, the meta-schemas are versioned with the year and month they are published.  The schemas within this library are named accordingly.
 
 ## Keywords
 

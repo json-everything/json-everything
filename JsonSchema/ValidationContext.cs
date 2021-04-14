@@ -29,6 +29,7 @@ namespace Json.Schema
 		private Dictionary<string, JsonSchema>? _dynamicAnchors;
 		private JsonSchema? _currentAnchorBackup;
 		private bool _isConsolidating;
+		private HashSet<string>? _navigatedReferences;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
@@ -111,6 +112,7 @@ namespace Json.Schema
 		internal JsonPointer? Reference { get; set; }
 		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
 		internal bool IsNewDynamicScope { get; set; }
+		internal HashSet<string> NavigatedReferences => _navigatedReferences ??= new HashSet<string>();
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).
@@ -148,19 +150,22 @@ namespace Json.Schema
 		                                     Uri? newUri = null)
 		{
 			return new ValidationContext(source.Options)
-				{
-					InstanceRoot = source.InstanceRoot,
-					SchemaRoot = source.SchemaRoot,
-					SchemaLocation = subschemaLocation ?? source.SchemaLocation,
-					LocalSchema = source.LocalSchema,
-					InstanceLocation = instanceLocation ?? source.InstanceLocation,
-					LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
-					_currentAnchorBackup = source.CurrentAnchor,
-					CurrentAnchor = source.CurrentAnchor,
-					CurrentUri = newUri ?? source.CurrentUri,
-					Reference = source.Reference,
-					UriChanged = source.UriChanged || source.CurrentUri != newUri
-				};
+			{
+				InstanceRoot = source.InstanceRoot,
+				SchemaRoot = source.SchemaRoot,
+				SchemaLocation = subschemaLocation ?? source.SchemaLocation,
+				LocalSchema = source.LocalSchema,
+				InstanceLocation = instanceLocation ?? source.InstanceLocation,
+				LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
+				_currentAnchorBackup = source.CurrentAnchor,
+				CurrentAnchor = source.CurrentAnchor,
+				CurrentUri = newUri ?? source.CurrentUri,
+				Reference = source.Reference,
+				UriChanged = source.UriChanged || source.CurrentUri != newUri,
+				_navigatedReferences = source._navigatedReferences == null || instance != null
+					? null
+					: new HashSet<string>(source._navigatedReferences)
+			};
 		}
 
 		internal void ImportAnnotations(ValidationContext? context)

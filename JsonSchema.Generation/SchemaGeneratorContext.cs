@@ -35,19 +35,29 @@ namespace Json.Schema.Generation
 		/// The current set of keyword intents.
 		/// </summary>
 		public List<ISchemaKeywordIntent> Intents { get; } = new List<ISchemaKeywordIntent>();
+		/// <summary>
+		/// The generator configuration.
+		/// </summary>
+		public SchemaGeneratorConfiguration Configuration { get; }
 
-		internal SchemaGeneratorContext(Type type, List<Attribute> attributes)
+		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)
 		{
 			Type = type;
 			Attributes = attributes;
+			Configuration = configuration;
 		}
 
 		internal void GenerateIntents()
 		{
-			var generator = GeneratorRegistry.Get(Type);
+			var generator = Configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
 			generator?.AddConstraints(this);
 
 			AttributeHandler.HandleAttributes(this);
+
+			foreach (var refiner in Configuration.Refiners.Where(x => x.ShouldRun(this)))
+			{
+				refiner.Run(this);
+			}
 		}
 
 		internal void Optimize()
@@ -64,7 +74,7 @@ namespace Json.Schema.Generation
 			{
 				var name = def.Value.GetDefName(currentNames);
 				var refIntent = new RefIntent(new Uri(def.Key == thisHash ? "#" : $"#/$defs/{name}", UriKind.Relative));
-				var refContext = new SchemaGeneratorContext(def.Value.Type, null!);
+				var refContext = new SchemaGeneratorContext(def.Value.Type, null!, Configuration);
 				refContext.Intents.Add(refIntent);
 				foreach (var intent in contextContainers)
 				{
@@ -114,6 +124,7 @@ namespace Json.Schema.Generation
 		private static string GetName(Type type)
 		{
 			if (type.IsInteger()) return "integer";
+			if (type.IsNumber()) return "number";
 			if (type == typeof(string)) return "string";
 			if (type.IsArray()) return "array";
 			if (type == typeof(bool)) return "boolean";
