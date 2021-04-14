@@ -52,6 +52,7 @@ namespace Json.Schema.Generation
 		/// </summary>
 		/// <param name="type">The type to generate.</param>
 		/// <param name="attributes">The attribute set on the property.</param>
+		/// <param name="configuration">The generator configuration.</param>
 		/// <returns>
 		/// A generation context, from the cache if one exists with the specified
 		/// type and attribute set; otherwise a new one.  New contexts are automatically
@@ -60,13 +61,13 @@ namespace Json.Schema.Generation
 		/// <remarks>
 		/// Use this in your generator if it needs to create keywords with subschemas.
 		/// </remarks>
-		public static SchemaGeneratorContext Get(Type type, List<Attribute>? attributes)
+		public static SchemaGeneratorContext Get(Type type, List<Attribute>? attributes, SchemaGeneratorConfiguration configuration)
 		{
 			var hash = attributes?.GetAttributeSetHashCode() ?? 0;
 			var key = new Key(type, hash);
 			if (!Cache.TryGetValue(key, out var context))
 			{
-				context = new SchemaGeneratorContext(type, attributes!);
+				context = new SchemaGeneratorContext(type, attributes!, configuration);
 				Cache[key] = context;
 				context.GenerateIntents();
 			}

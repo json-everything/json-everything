@@ -13,10 +13,11 @@ namespace Json.Schema.Generation
 		/// </summary>
 		/// <typeparam name="T">The type to generate.</typeparam>
 		/// <param name="builder">The schema builder.</param>
+		/// <param name="configuration">The generator configuration.</param>
 		/// <returns>The schema builder (for fluent syntax support).</returns>
-		public static JsonSchemaBuilder FromType<T>(this JsonSchemaBuilder builder)
+		public static JsonSchemaBuilder FromType<T>(this JsonSchemaBuilder builder, SchemaGeneratorConfiguration? configuration = null)
 		{
-			return FromType(builder, typeof(T));
+			return FromType(builder, typeof(T), configuration);
 		}
 
 		/// <summary>
@@ -24,10 +25,13 @@ namespace Json.Schema.Generation
 		/// </summary>
 		/// <param name="builder">The schema builder.</param>
 		/// <param name="type">The type to generate.</param>
+		/// <param name="configuration">The generator configuration.</param>
 		/// <returns>The schema builder (for fluent syntax support).</returns>
-		public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type)
+		public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type, SchemaGeneratorConfiguration? configuration = null)
 		{
-			var context = SchemaGenerationContextCache.Get(type, new List<Attribute>());
+			configuration ??= new SchemaGeneratorConfiguration();
+
+			var context = SchemaGenerationContextCache.Get(type, new List<Attribute>(), configuration);
 
 			context.Optimize();
 

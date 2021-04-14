@@ -26,7 +26,7 @@ namespace Json.Schema.Generation.Generators
 			context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 			var valueType = context.Type.GenericTypeArguments[1];
-			var valueContext = SchemaGenerationContextCache.Get(valueType, context.Attributes);
+			var valueContext = SchemaGenerationContextCache.Get(valueType, context.Attributes, context.Configuration);
 
 			context.Intents.Add(new AdditionalPropertiesIntent(valueContext));
 		}

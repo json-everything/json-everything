@@ -39,7 +39,7 @@ namespace Json.Schema.Generation.Generators
 				var ignoreAttribute = memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
 				if (ignoreAttribute != null) continue;
 
-				var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes);
+				var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes, context.Configuration);
 
 				var name = member.Name;
 				var nameAttribute = memberAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();

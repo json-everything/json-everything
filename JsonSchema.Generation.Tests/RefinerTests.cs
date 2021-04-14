@@ -36,7 +36,10 @@ namespace Json.Schema.Generation.Tests
 		[Test]
 		public void TypesWithAnOddNumberOfPropertiesShouldBeImmutable()
 		{
-			RefinerRegistry.Register(new Refiner());
+			var configuration = new SchemaGeneratorConfiguration
+			{
+				Refiners = {new Refiner()}
+			};
 
 			JsonSchema expected = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
@@ -47,7 +50,7 @@ namespace Json.Schema.Generation.Tests
 				)
 				.ReadOnly(true);
 
-			JsonSchema actual = new JsonSchemaBuilder().FromType<ThreeProps>();
+			JsonSchema actual = new JsonSchemaBuilder().FromType<ThreeProps>(configuration);
 
 			Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions {WriteIndented = true}));
 			Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions {WriteIndented = true}));
@@ -57,7 +60,10 @@ namespace Json.Schema.Generation.Tests
 		[Test]
 		public void TypesWithAnEvenNumberOfPropertiesShouldBeMutable()
 		{
-			RefinerRegistry.Register(new Refiner());
+			var configuration = new SchemaGeneratorConfiguration
+			{
+				Refiners = {new Refiner()}
+			};
 
 			JsonSchema expected = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
@@ -66,7 +72,7 @@ namespace Json.Schema.Generation.Tests
 					("Value2", new JsonSchemaBuilder().Type(SchemaValueType.String))
 				);
 
-			JsonSchema actual = new JsonSchemaBuilder().FromType<TwoProps>();
+			JsonSchema actual = new JsonSchemaBuilder().FromType<TwoProps>(configuration);
 
 			Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions {WriteIndented = true}));
 			Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions {WriteIndented = true}));
