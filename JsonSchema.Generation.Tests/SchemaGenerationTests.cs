@@ -170,6 +170,12 @@ namespace Json.Schema.Generation.Tests
 
 			public float StrictNumber { get; set; }
 
+			[ReadOnly]
+			public float ReadOnlyNumber { get; set; }
+
+			[WriteOnly]
+			public float WriteOnlyNumber { get; set; }
+
 			[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
 			public float StringyNumber { get; set; }
 
@@ -223,6 +229,14 @@ namespace Json.Schema.Generation.Tests
 					("Target", JsonSchemaBuilder.RefRoot()),
 					("rename-this", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 					("StrictNumber", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
+					("ReadOnlyNumber", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Number)
+						.ReadOnly(true)
+					),
+					("WriteOnlyNumber", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Number)
+						.WriteOnly(true)
+					),
 					("StringyNumber", new JsonSchemaBuilder().Type(SchemaValueType.String | SchemaValueType.Number)),
 					("NotANumber", new JsonSchemaBuilder()
 						.AnyOf(new JsonSchemaBuilder().Type(SchemaValueType.Number),

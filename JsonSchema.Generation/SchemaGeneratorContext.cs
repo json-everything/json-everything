@@ -119,6 +119,7 @@ namespace Json.Schema.Generation
 		private static string GetName(Type type)
 		{
 			if (type.IsInteger()) return "integer";
+			if (type.IsNumber()) return "number";
 			if (type == typeof(string)) return "string";
 			if (type.IsArray()) return "array";
 			if (type == typeof(bool)) return "boolean";

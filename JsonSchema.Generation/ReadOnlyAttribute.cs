@@ -38,8 +38,6 @@ namespace Json.Schema.Generation
 			var attribute = context.Attributes.OfType<ReadOnlyAttribute>().FirstOrDefault();
 			if (attribute == null) return;
 
-			if (!context.Type.IsArray()) return;
-
 			context.Intents.Add(new ReadOnlyIntent(attribute.Value));
 		}
 	}
