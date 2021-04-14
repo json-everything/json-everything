@@ -1,6 +1,6 @@
 # Managing references (`$ref`)
 
-JsonSchema<nsp>.Net handles all references as defined in the draft 2019-09 version of the JSON Schema specification.  This is *not* a change as of v11.0.0;  JsonSchema<nsp>.Net has always behaved this way.  The only change for draft 2019-09 schemas in JsonSchema<nsp>.Net is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
+JsonSchema<nsp>.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
 
 ## Schema registration
 

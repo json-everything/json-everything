@@ -75,6 +75,35 @@ namespace Json.Schema.Generation
 			return context;
 		}
 
+		/// <summary>
+		/// (Obsolete) Gets or creates a <see cref="SchemaGeneratorContext"/> based on the given
+		/// type and attribute set.
+		/// </summary>
+		/// <param name="type">The type to generate.</param>
+		/// <param name="attributes">The attribute set on the property.</param>
+		/// <returns>
+		/// A generation context, from the cache if one exists with the specified
+		/// type and attribute set; otherwise a new one.  New contexts are automatically
+		/// cached.
+		/// </returns>
+		/// <remarks>
+		/// Use this in your generator if it needs to create keywords with subschemas.
+		/// </remarks>
+		[Obsolete("Use the overload with SchemaGeneratorConfiguration instead.")]
+		public static SchemaGeneratorContext Get(Type type, List<Attribute>? attributes)
+		{
+			var hash = attributes?.GetAttributeSetHashCode() ?? 0;
+			var key = new Key(type, hash);
+			if (!Cache.TryGetValue(key, out var context))
+			{
+				context = new SchemaGeneratorContext(type, attributes!, new SchemaGeneratorConfiguration());
+				Cache[key] = context;
+				context.GenerateIntents();
+			}
+
+			return context;
+		}
+
 		internal static void Clear()
 		{
 			Cache.Clear();
