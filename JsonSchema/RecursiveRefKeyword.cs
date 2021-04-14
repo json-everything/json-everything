@@ -65,6 +65,16 @@ namespace Json.Schema
 				baseSchema = context.CurrentAnchor ?? context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
 			}
 
+			var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
+			if (context.NavigatedReferences.Contains(absoluteReference))
+			{
+				context.IsValid = false;
+				context.Message = "Encountered recursive reference";
+				return;
+			}
+
+			context.NavigatedReferences.Add(absoluteReference);
+
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
 				schema = context.Options.SchemaRegistry.Get(newUri, fragment);

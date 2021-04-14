@@ -482,7 +482,22 @@ namespace Json.Schema.Tests
 
 			var json = JsonDocument.Parse("\"value\"").RootElement;
 
-			schema.Validate(json).AssertInvalid();
+			schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
+		}
+
+		[Test]
+		public void Issue97_IdentifyComplexCircularReferences()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Ref("#/$defs/a")
+				.Defs(
+					("a", new JsonSchemaBuilder().Ref("#/$defs/b")),
+					("b", new JsonSchemaBuilder().Ref("#/$defs/a"))
+				);
+
+			var json = JsonDocument.Parse("\"value\"").RootElement;
+
+			schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
 		}
 	}
 }
