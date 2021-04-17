@@ -1204,6 +1204,22 @@
             Use this in your generator if it needs to create keywords with subschemas.
             </remarks>
         </member>
+        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute})">
+            <summary>
+            (Obsolete) Gets or creates a <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/> based on the given
+            type and attribute set.
+            </summary>
+            <param name="type">The type to generate.</param>
+            <param name="attributes">The attribute set on the property.</param>
+            <returns>
+            A generation context, from the cache if one exists with the specified
+            type and attribute set; otherwise a new one.  New contexts are automatically
+            cached.
+            </returns>
+            <remarks>
+            Use this in your generator if it needs to create keywords with subschemas.
+            </remarks>
+        </member>
         <member name="T:Json.Schema.Generation.SchemaGeneratorConfiguration">
             <summary>
             Provides additional configuration for the generator.

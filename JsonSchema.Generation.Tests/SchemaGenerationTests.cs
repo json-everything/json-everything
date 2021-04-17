@@ -169,6 +169,7 @@ namespace Json.Schema.Generation.Tests
 			public string RenameThis { get; set; }
 
 			public float StrictNumber { get; set; }
+			public float OtherStrictNumber { get; set; }
 
 			[ReadOnly]
 			public float ReadOnlyNumber { get; set; }
@@ -229,6 +230,7 @@ namespace Json.Schema.Generation.Tests
 					("Target", JsonSchemaBuilder.RefRoot()),
 					("rename-this", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 					("StrictNumber", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
+					("OtherStrictNumber", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
 					("ReadOnlyNumber", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Number)
 						.ReadOnly(true)
