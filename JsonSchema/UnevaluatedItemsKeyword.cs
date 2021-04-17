@@ -107,10 +107,9 @@ namespace Json.Schema
 			if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
 			{
 				annotation = context.TryGetAnnotation(ContainsKeyword.Name);
-				if (annotation != null)
+				if (annotation is List<int> validatedByContains)
 				{
 					context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-					var validatedByContains = (List<int>) annotation;
 					indicesToValidate = indicesToValidate.Except(validatedByContains);
 				}
 				else

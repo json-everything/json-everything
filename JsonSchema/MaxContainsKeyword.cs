@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -47,7 +48,7 @@ namespace Json.Schema
 			}
 
 			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
-			if (annotation == null)
+			if (!(annotation is List<int> validatedIndices))
 			{
 				context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 				context.IsValid = true;
@@ -55,7 +56,7 @@ namespace Json.Schema
 			}
 
 			context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-			var containsCount = (int) annotation;
+			var containsCount = validatedIndices.Count;
 			context.IsValid = Value >= containsCount;
 			if (!context.IsValid)
 				context.Message = $"Value has more than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword";
