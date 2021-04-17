@@ -103,7 +103,19 @@ namespace Json.Schema
 				return;
 			}
 			context.Log(() => $"No annotations from {Name}.");
-			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
+			var indicesToValidate = Enumerable.Range(startIndex, context.LocalInstance.GetArrayLength() - startIndex);
+			if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
+			{
+				annotation = context.TryGetAnnotation(ContainsKeyword.Name);
+				if (annotation is List<int> validatedByContains)
+				{
+					context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
+					indicesToValidate = indicesToValidate.Except(validatedByContains);
+				}
+				else
+					context.Log(() => $"No annotations from {ContainsKeyword.Name}.");
+			}
+			foreach (var i in indicesToValidate)
 			{
 				context.Log(() => $"Validating item at index {i}.");
 				var item = context.LocalInstance[i];
