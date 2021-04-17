@@ -1,3 +1,7 @@
+# [1.3.1](https://github.com/gregsdennis/json-everything/pull/101)
+
+[#100](https://github.com/gregsdennis/json-everything/issues/100) - Don't optimize type-only subschemas.
+
 # [1.3.0](https://github.com/gregsdennis/json-everything/pull/98)
 
 [#96](https://github.com/gregsdennis/json-everything/issues/96) - Added `ISchemaRefiner` to the schema generation process to allow users to inject custom logic after intents are created.

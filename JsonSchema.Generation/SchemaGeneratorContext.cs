@@ -64,7 +64,9 @@ namespace Json.Schema.Generation
 		{
 			var thisHash = GetHashCode();
 			var allContexts = GetChildContexts();
-			var defsByHashCode = allContexts.Where(g => g.Value.Count > 1)
+			var defsByHashCode = allContexts.Where(g => g.Value.Count > 1 &&
+			                                            (g.Value.Context.Intents.Count != 1 ||
+			                                            !(g.Value.Context.Intents[0] is TypeIntent)))
 				.ToDictionary(g => g.Key, g => g.Value.Context);
 
 			var currentNames = new List<string>();
