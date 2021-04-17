@@ -1,3 +1,7 @@
+# [1.10.2](https://github.com/gregsdennis/json-everything/pull/102)
+
+In 2020-12, `unevaluatedItems` should consider `contains`.
+
 # [1.10.1](https://github.com/gregsdennis/json-everything/pull/98)
 
 [#97](https://github.com/gregsdennis/json-everything/issues/97) - Added support for circular reference detection.
