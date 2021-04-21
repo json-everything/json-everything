@@ -28,7 +28,7 @@ JsonSchema<nsp>.Net provides [JSON Schema](https://json-schema.org) support for 
 
 Builds on top of JsonSchema<nsp>.Net to provide schema generation from .Net types.
 
-### JsonSchema.Net.Generation
+### JsonSchema.Net.Data
 
 Provides an implementation of a [vocabulary](usage/vocabs-data.md) that defines a way to access instance and external data, a long-sought feature of JSON Schema.
 

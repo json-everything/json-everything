@@ -2,11 +2,11 @@
 
 ## Vocabularies
 
-JSON Schema draft 2019-09 has introduced the idea of vocabularies to enable some spec support for custom keywords.
+JSON Schema draft 2019-09 introduced the idea of vocabularies to enable some spec support for custom keywords.
 
 A vocabulary is just a collection of keywords.  It will be identified by a URI and should have an associated specification that describes the function of each of the keywords.  There *may* also be an associated meta-schema.
 
-Creating a vocabulary in JsonSchema<nsp>.Net isn't strictly required in order to add custom keywords, but if you're using it to create a meta-schema that will consume and validate other draft 2019-09 schemas, it is strongly suggested.
+Creating a vocabulary in JsonSchema<nsp>.Net isn't strictly required in order to add custom keywords, but if you're using it to create a meta-schema that will consume and validate other draft 2019-09 or later schemas, it is strongly suggested.
 
 ### How vocabularies work
 
@@ -15,19 +15,20 @@ This is best explained with an example.  Suppose we have a meta-schema **M**, a 
 ```json
 // meta-schema M
 {
-  "$schema": "https://myserver.net/meta-schema#",                           // 1
-  "$id": "https://myserver.net/meta-schema#",
+  "$schema": "https://myserver.net/meta-schema",                           // 1
+  "$id": "https://myserver.net/meta-schema",
   "$vocabulary": {
-    "https://json-schema.org/draft/2019-WIP/vocab/core": true,              // 2
-    "https://json-schema.org/draft/2019-WIP/vocab/applicator": true,
-    "https://json-schema.org/draft/2019-WIP/vocab/validation": true,
-    "https://json-schema.org/draft/2019-WIP/vocab/meta-data": true,
-    "https://json-schema.org/draft/2019-WIP/vocab/format": true,
-    "https://json-schema.org/draft/2019-WIP/vocab/content": true,
+    "https://json-schema.org/draft/2020-12/vocab/core": true,              // 2
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+    "https://json-schema.org/draft/2020-12/vocab/validation": true,
+    "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+    "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+    "https://json-schema.org/draft/2020-12/vocab/content": true,
+    "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
     "https://myserver.net/my-vocab": true
   },
   "allOf": [                                                                // 3
-    { "$ref": "https://json-schema.org/draft/2019-06/schema#" }
+    { "$ref": "https://json-schema.org/draft/2020-12/schema" }
   ],
   "properties": {
     "minDate": {                                                            // 4
@@ -39,8 +40,8 @@ This is best explained with an example.  Suppose we have a meta-schema **M**, a 
 
 // schema S
 {
-  "$schema": "https://myserver.net/meta-schema#",                           // 5
-  "$id": "https://myserver.net/schema#",
+  "$schema": "https://myserver.net/meta-schema",                           // 5
+  "$id": "https://myserver.net/schema",
   "properties": {
     "publishedOnDate": {
       "minDate": "2019-01-01"                                               // 6
@@ -59,8 +60,8 @@ This is best explained with an example.  Suppose we have a meta-schema **M**, a 
 ```
 
 1. We declare a meta-schema.  The meta-schema should validate itself, so we declare `$schema` to be the same as `$id`.
-2. We list the vocabularies that the JsonSchema<nsp>.Net should know about in order to process schemas that declare this meta-schema as their `$schema` (see #5).  This includes all of the vocabularies from draft-08 (because we want all of the draft-08 capabilities) as well as the vocab for this meta-schema.  We'll explain a bit more about this later.
-3. We also need all of the syntactic validation from draft-08, so we include it in an `allOf`.
+2. We list the vocabularies that the JsonSchema<nsp>.Net should know about in order to process schemas that declare this meta-schema as their `$schema` (see #5).  This includes all of the vocabularies from 2020-12 (because we want all of the 2020-12 capabilities) as well as the vocab for this meta-schema.  We'll explain a bit more about this later.
+3. We also need all of the syntactic validation from 2020-12, so we include it in an `allOf`.
 4. We define a new keyword, `minDate`, that takes a date-formatted string value.
 5. We create a schema that uses our new meta-schema (because we want to use the new keyword).
 6. We use the new keyword to define a property to be found in the instance.
@@ -95,6 +96,6 @@ To tell JsonSchema<nsp>.Net about a vocabulary, you need to create a `Vocabulary
 
 The `Vocabulary` class is quite simple.  It defines the vocabulary's ID and lists the keywords which it supports.
 
-The keywords must be registered separately.  The process is described on the [keywords page](schema-keywords.md).
+The keywords must be [registered separately](schema-keywords.md).
 
 It's not always necessary to have a meta-schema for your vocabulary.  However, if you want to enable `ValidationOptions.ValidateMetaschema`, you will need to register it.
