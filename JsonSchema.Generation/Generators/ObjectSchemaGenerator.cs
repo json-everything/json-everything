@@ -52,7 +52,7 @@ namespace Json.Schema.Generation.Generators
 				props.Add(name, memberContext);
 
 				if (memberAttributes.OfType<RequiredAttribute>().Any())
-					required.Add(member.Name);
+					required.Add(name);
 			}
 
 			context.Intents.Add(new PropertiesIntent(props)); 
