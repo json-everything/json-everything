@@ -80,26 +80,27 @@
 <h1 id="extending-schemas">Extending schemas</h1>
 
 <h2 id="vocabularies">Vocabularies</h2>
-<p>JSON Schema draft 2019-09 has introduced the idea of vocabularies to enable some spec support for custom keywords.</p>
+<p>JSON Schema draft 2019-09 introduced the idea of vocabularies to enable some spec support for custom keywords.</p>
 <p>A vocabulary is just a collection of keywords.  It will be identified by a URI and should have an associated specification that describes the function of each of the keywords.  There <em>may</em> also be an associated meta-schema.</p>
-<p>Creating a vocabulary in JsonSchema<nsp>.Net isn't strictly required in order to add custom keywords, but if you're using it to create a meta-schema that will consume and validate other draft 2019-09 schemas, it is strongly suggested.<p>
+<p>Creating a vocabulary in JsonSchema<nsp>.Net isn't strictly required in order to add custom keywords, but if you're using it to create a meta-schema that will consume and validate other draft 2019-09 or later schemas, it is strongly suggested.<p>
 <h3 id="how-vocabularies-work">How vocabularies work</h3>
 <p>This is best explained with an example.  Suppose we have a meta-schema <strong>M</strong>, a schema <strong>S</strong> that uses <strong>M</strong> as its <code>$schema</code>, and a couple instances <strong>I1</strong> and <strong>I2</strong> to be validated by <strong>S</strong>.</p>
 <pre><code class="lang-json">// meta-schema M
 {
-  &quot;$schema&quot;: &quot;https://myserver.net/meta-schema#&quot;,                           // 1
-  &quot;$id&quot;: &quot;https://myserver.net/meta-schema#&quot;,
+  &quot;$schema&quot;: &quot;https://myserver.net/meta-schema&quot;,                           // 1
+  &quot;$id&quot;: &quot;https://myserver.net/meta-schema&quot;,
   &quot;$vocabulary&quot;: {
-    &quot;https://json-schema.org/draft/2019-WIP/vocab/core&quot;: true,              // 2
-    &quot;https://json-schema.org/draft/2019-WIP/vocab/applicator&quot;: true,
-    &quot;https://json-schema.org/draft/2019-WIP/vocab/validation&quot;: true,
-    &quot;https://json-schema.org/draft/2019-WIP/vocab/meta-data&quot;: true,
-    &quot;https://json-schema.org/draft/2019-WIP/vocab/format&quot;: true,
-    &quot;https://json-schema.org/draft/2019-WIP/vocab/content&quot;: true,
+    &quot;https://json-schema.org/draft/2020-12/vocab/core&quot;: true,              // 2
+    &quot;https://json-schema.org/draft/2020-12/vocab/applicator&quot;: true,
+    &quot;https://json-schema.org/draft/2020-12/vocab/validation&quot;: true,
+    &quot;https://json-schema.org/draft/2020-12/vocab/meta-data&quot;: true,
+    &quot;https://json-schema.org/draft/2020-12/vocab/format-annotation&quot;: true,
+    &quot;https://json-schema.org/draft/2020-12/vocab/content&quot;: true,
+    &quot;https://json-schema.org/draft/2020-12/vocab/unevaluated&quot;: true,
     &quot;https://myserver.net/my-vocab&quot;: true
   },
   &quot;allOf&quot;: [                                                                // 3
-    { &quot;$ref&quot;: &quot;https://json-schema.org/draft/2019-06/schema#&quot; }
+    { &quot;$ref&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot; }
   ],
   &quot;properties&quot;: {
     &quot;minDate&quot;: {                                                            // 4
@@ -111,8 +112,8 @@
 
 // schema S
 {
-  &quot;$schema&quot;: &quot;https://myserver.net/meta-schema#&quot;,                           // 5
-  &quot;$id&quot;: &quot;https://myserver.net/schema#&quot;,
+  &quot;$schema&quot;: &quot;https://myserver.net/meta-schema&quot;,                           // 5
+  &quot;$id&quot;: &quot;https://myserver.net/schema&quot;,
   &quot;properties&quot;: {
     &quot;publishedOnDate&quot;: {
       &quot;minDate&quot;: &quot;2019-01-01&quot;                                               // 6
@@ -131,8 +132,8 @@
 </code></pre>
 <ol>
 <li>We declare a meta-schema.  The meta-schema should validate itself, so we declare <code>$schema</code> to be the same as <code>$id</code>.</li>
-<li>We list the vocabularies that the JsonSchema<nsp>.Net should know about in order to process schemas that declare this meta-schema as their <code>$schema</code> (see #5).  This includes all of the vocabularies from draft-08 (because we want all of the draft-08 capabilities) as well as the vocab for this meta-schema.  We'll explain a bit more about this later.</nsp></li>
-<li>We also need all of the syntactic validation from draft-08, so we include it in an <code>allOf</code>.</li>
+<li>We list the vocabularies that the JsonSchema<nsp>.Net should know about in order to process schemas that declare this meta-schema as their <code>$schema</code> (see #5).  This includes all of the vocabularies from 2020-12 (because we want all of the 2020-12 capabilities) as well as the vocab for this meta-schema.  We'll explain a bit more about this later.</nsp></li>
+<li>We also need all of the syntactic validation from 2020-12, so we include it in an <code>allOf</code>.</li>
 <li>We define a new keyword, <code>minDate</code>, that takes a date-formatted string value.</li>
 <li>We create a schema that uses our new meta-schema (because we want to use the new keyword).</li>
 <li>We use the new keyword to define a property to be found in the instance.</li>
@@ -155,7 +156,7 @@
 <h3 id="registering-a-vocabulary">Registering a vocabulary</h3>
 <p>To tell JsonSchema<nsp>.Net about a vocabulary, you need to create a <code>Vocabulary</code> instance and register it using <code>VocabularyRegistry.Add&lt;T&gt;()</code>.<p>
 <p>The <code>Vocabulary</code> class is quite simple.  It defines the vocabulary's ID and lists the keywords which it supports.</p>
-<p>The keywords must be registered separately.  The process is described on the <a href="schema-keywords.html">keywords page</a>.</p>
+<p>The keywords must be <a href="schema-keywords.html">registered separately</a>.</p>
 <p>It's not always necessary to have a meta-schema for your vocabulary.  However, if you want to enable <code>ValidationOptions.ValidateMetaschema</code>, you will need to register it.</p>
 </nsp></nsp></nsp></nsp></nsp></nsp></article>
           </div>
