@@ -146,6 +146,13 @@ namespace Json.Schema.Generation.Tests
 			[Pattern("^[a-z0-9_]$")]
 			public string String { get; set; }
 
+			[Required]
+			public string RequiredString { get; set; }
+
+			[JsonPropertyName("rename-this-required-string")]
+			[Required]
+			public string RenameThisRequiredString { get; set; }
+
 			[MinItems(5)]
 			[MaxItems(10)]
 			public List<bool> ListOfBool { get; set; }
@@ -165,6 +172,7 @@ namespace Json.Schema.Generation.Tests
 
 			[JsonIgnore]
 			public int IgnoreThis { get; set; }
+
 			[JsonPropertyName("rename-this")]
 			public string RenameThis { get; set; }
 
@@ -206,6 +214,12 @@ namespace Json.Schema.Generation.Tests
 						.Type(SchemaValueType.String)
 						.MaxLength(10)
 						.Pattern("^[a-z0-9_]$")
+					),
+					("RequiredString", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+					),
+					("rename-this-required-string", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
 					),
 					("ListOfBool", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Array)
@@ -251,7 +265,7 @@ namespace Json.Schema.Generation.Tests
 						)
 					)
 				)
-				.Required(nameof(GenerationTarget.Integer))
+				.Required(nameof(GenerationTarget.Integer), "RequiredString", "rename-this-required-string")
 				.Defs(
 					("integer", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Integer)
