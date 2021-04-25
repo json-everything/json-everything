@@ -151,10 +151,10 @@ namespace Json.More
 
 		private static void EnsureMap()
 		{
-			if (_writeValues != null) return;
+			if (_readValues != null && _writeValues != null) return;
 			lock (_lock)
 			{
-				if (_writeValues != null) return;
+				if (_readValues != null && _writeValues != null) return;
 
 				var map = typeof(T).GetFields()
 					.Where(f => !f.IsSpecialName)
