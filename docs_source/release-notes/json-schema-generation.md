@@ -1,3 +1,7 @@
+# [1.3.2](https://github.com/gregsdennis/json-everything/pull/105)
+
+Fixes property name callout in `required` keyword.  Credit to [@jaysvoboda](https://github.com/jaysvoboda) for finding and fixing this.
+
 # [1.3.1](https://github.com/gregsdennis/json-everything/pull/101)
 
 [#100](https://github.com/gregsdennis/json-everything/issues/100) - Don't optimize type-only subschemas.
