@@ -2533,7 +2533,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-more.html",
-          "hash": "eePMpjzndzq4tmmVGlhtHg=="
+          "hash": "RG9aze8YQR/o8ieA78Iikg=="
         }
       },
       "is_incremental": false,
@@ -2593,7 +2593,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "tObreUMs/+rPzQ0FBIPdBA=="
+          "hash": "8BDX7ohxl8q7sDTXlpFVug=="
         }
       },
       "is_incremental": false,
