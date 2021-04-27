@@ -1,3 +1,7 @@
+# [1.4.2](https://github.com/gregsdennis/json-everything/pull/105)
+
+Fixes potential race condition in `EnumStringConverter`.  Credit to [@jaysvoboda](https://github.com/jaysvoboda) for finding and fixing this.
+
 # [1.4.1](https://github.com/gregsdennis/json-everything/pull/78)
 
 `JsonElementEqualityComparer` now uses `.GetEquivalenceHashCode()`.
