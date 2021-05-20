@@ -27,7 +27,7 @@ namespace Json.Schema.Generation
 		public static void AddHandler<T>()
 			where T : IAttributeHandler, new()
 		{
-			if (_handlers.Any(h => h.GetType() != typeof(T))) return;
+			if (_handlers.Any(h => h.GetType() == typeof(T))) return;
 
 			_handlers.Add(new T());
 		}
@@ -39,7 +39,7 @@ namespace Json.Schema.Generation
 		public static void AddHandler(IAttributeHandler handler)
 		{
 			var handlerType = handler.GetType();
-			if (_handlers.Any(h => h.GetType() != handlerType)) return;
+			if (_handlers.Any(h => h.GetType() == handlerType)) return;
 
 			_handlers.Add(handler);
 		}
