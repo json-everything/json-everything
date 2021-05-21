@@ -1215,6 +1215,21 @@
             </summary>
             <param name="value">The value.</param>
         </member>
+        <member name="T:Json.Schema.Generation.PropertyOrder">
+            <summary>
+            Indicates the sequence in which properties will be listed in the schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyOrder.AsDeclared">
+            <summary>
+            Properties will be listed in the order they're declared in code.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyOrder.ByName">
+            <summary>
+            Properties will be sorted by name, case-insensitive.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Generation.ReadOnlyAttribute">
             <summary>
             Applies a `readOnly` keyword.
@@ -1295,18 +1310,10 @@
             A collection of generators in addition to the global set.
             </summary>
         </member>
-        <member name="T:Json.Schema.Generation.PropertyOrder">
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder">
             <summary>
-            Indicates the sequence in which properties will be listed in the schema.
+            Gets or sets the order in which properties will be listed in the schema.
             </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyOrder.AsDeclared">
-            <summary>
-            Properties will be listed in the order they're declared in code.
-            </summary>
-            <remarks>
-            This is the default
-            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGeneratorContext">
             <summary>
