@@ -992,11 +992,11 @@
             </summary>
             <param name="context"></param>
         </member>
-        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
-            <summary>
-            Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
-            </summary>
-     <remarks>
+        <member name="T:Json.Schema.Generation.JsonIncludeAttribute">
+             <summary>
+             Indicates that the property or field should be included for serialization and deserialization.
+             </summary>
+             <remarks>
              When applied to a public property, indicates that non-public getters and setters should be used for serialization and deserialization.
             
              Non-public properties and fields are not allowed when serializing and deserializing. If the attribute is used on a non-public property or field,
@@ -1294,6 +1294,19 @@
             <summary>
             A collection of generators in addition to the global set.
             </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.PropertyOrder">
+            <summary>
+            Indicates the sequence in which properties will be listed in the schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyOrder.AsDeclared">
+            <summary>
+            Properties will be listed in the order they're declared in code.
+            </summary>
+            <remarks>
+            This is the default
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGeneratorContext">
             <summary>

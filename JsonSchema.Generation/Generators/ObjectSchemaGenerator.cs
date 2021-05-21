@@ -30,8 +30,14 @@ namespace Json.Schema.Generation.Generators
 			var membersToGenerate = propertiesToGenerate.Cast<MemberInfo>()
 				.Concat(fieldsToGenerate)
 				.Concat(hiddenPropertiesToGenerate)
-				.Concat(hiddenFieldsToGenerate)
-				.OrderBy(m => m.Name);
+				.Concat(hiddenFieldsToGenerate);
+
+			membersToGenerate = context.Configuration.PropertyOrder switch
+			{
+				PropertyOrder.AsDeclared => membersToGenerate.OrderBy(GetMemberSequenceValue),
+				PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name),
+				_ => membersToGenerate
+			};
 
 			foreach (var member in membersToGenerate)
 			{
@@ -58,6 +64,11 @@ namespace Json.Schema.Generation.Generators
 			context.Intents.Add(new PropertiesIntent(props)); 
 			if (required.Any())
 				context.Intents.Add(new RequiredIntent(required));
+		}
+
+		private static int GetMemberSequenceValue(MemberInfo member)
+		{
+			return member.MetadataToken;
 		}
 	}
 }
