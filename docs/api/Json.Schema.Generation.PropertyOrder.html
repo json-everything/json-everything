@@ -5,9 +5,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.4.0 </title>
+    <title>Enum PropertyOrder
+   </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.4.0 ">
+    <meta name="title" content="Enum PropertyOrder
+   ">
     <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -76,35 +78,46 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
-<h1 id="140"><a href="https://github.com/gregsdennis/json-everything/pull/113">1.4.0</a></h1>
-
-<p><a href="https://github.com/gregsdennis/json-everything/issues/109">#109</a> - Add properties in the order they're declared in code.  Credit to <a href="https://github.com/jaysvoboda">@wazzamatazz</a></p>
-<p><a href="https://github.com/gregsdennis/json-everything/issues/112">#112</a> - Add properties in the order they're declared in code.</p>
-<h1 id="132"><a href="https://github.com/gregsdennis/json-everything/pull/105">1.3.2</a></h1>
-<p>Fixes property name callout in <code>required</code> keyword.  Credit to <a href="https://github.com/jaysvoboda">@jaysvoboda</a> for finding and fixing this.</p>
-<h1 id="131"><a href="https://github.com/gregsdennis/json-everything/pull/101">1.3.1</a></h1>
-<p><a href="https://github.com/gregsdennis/json-everything/issues/100">#100</a> - Don't optimize type-only subschemas.</p>
-<h1 id="130"><a href="https://github.com/gregsdennis/json-everything/pull/98">1.3.0</a></h1>
-<p><a href="https://github.com/gregsdennis/json-everything/issues/96">#96</a> - Added <code>ISchemaRefiner</code> to the schema generation process to allow users to inject custom logic after intents are created.</p>
-<p><a href="https://github.com/gregsdennis/json-everything/issues/97">#97</a> - Fixed an issue with subsequent schema generations off of the same type.</p>
-<h1 id="123"><a href="https://github.com/gregsdennis/json-everything/pull/88">1.2.3</a></h1>
-<p><a href="https://github.com/gregsdennis/json-everything/issues/87">#87</a> - Generation for the same property type under different property names causes StackOverflowException.</p>
-<h1 id="122"><a href="https://github.com/gregsdennis/json-everything/pull/86">1.2.2</a></h1>
-<p><a href="https://github.com/gregsdennis/json-everything/issues/85">#85</a> - Generation for <code>List&lt;TSelf&gt;</code> producing StackOverflowException.</p>
-<h1 id="121"><a href="https://github.com/gregsdennis/json-everything/pull/75">1.2.1</a></h1>
-<p>Added support for nullable reference types.</p>
-<h1 id="120"><a href="https://github.com/gregsdennis/json-everything/pull/74">1.2.0</a></h1>
-<p>Added support for .Net 5 and remaining in-built JSON serialization attributes: <code>JsonInclude</code> &amp; <code>JsonNumberHandling</code>.</p>
-<p>Exposed static class <code>AttributeHandler</code> and added methods to allow for handlers of predefined attributes.  This mechanism should only be used for attributes that cannot also be made to implement <code>IAttributeHandler</code>.  Attributes which also implement this interface are implicitly handled.</p>
-<h1 id="111"><a href="https://github.com/gregsdennis/json-everything/pull/61">1.1.1</a></h1>
-<p>Signed the DLL for strong name compatibility.</p>
-<h1 id="110"><a href="https://github.com/gregsdennis/json-everything/pull/49">1.1.0</a></h1>
-<p>Added support for in-built JSON serialization attributes (Standard 2.0 &amp; Core 3.x): <code>JsonPropertyName</code> &amp; <code>JsonIgnore</code>.</p>
-<h1 id="101"><a href="https://github.com/gregsdennis/json-everything/pull/45">1.0.1</a></h1>
-<p>Added debug symbols to package.  No functional change.</p>
-<h1 id="100"><a href="https://github.com/gregsdennis/json-everything/pull/41">1.0.0</a></h1>
-<p>Initial release.</p>
+            <article class="content wrap" id="_content" data-uid="Json.Schema.Generation.PropertyOrder">
+  
+  
+  <h1 id="Json_Schema_Generation_PropertyOrder" data-uid="Json.Schema.Generation.PropertyOrder" class="text-break">Enum PropertyOrder
+  </h1>
+  <div class="markdown level0 summary"><p>Indicates the sequence in which properties will be listed in the schema.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.Generation.html">Json.Schema.Generation</a></h6>
+  <h6><strong>Assembly</strong>: JsonSchema.Net.Generation.dll</h6>
+  <h5 id="Json_Schema_Generation_PropertyOrder_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public enum PropertyOrder : int</code></pre>
+  </div>
+  <h3 id="fields">Fields
+  </h3>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    <thead>
+    <tbody>
+      <tr>
+        <td id="Json_Schema_Generation_PropertyOrder_AsDeclared">AsDeclared</td>
+        <td><p>Properties will be listed in the order they're declared in code.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Json_Schema_Generation_PropertyOrder_ByName">ByName</td>
+        <td><p>Properties will be sorted by name, case-insensitive.</p>
+</td>
+      </tr>
+    </tbody>
+  </thead></thead></table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Nullable_JsonSerializerOptions__">JsonDocumentExtensions.ToJsonDocument&lt;PropertyOrder&gt;(Nullable&lt;JsonSerializerOptions&gt;)</a>
+  </div>
 </article>
           </div>
           
@@ -113,7 +126,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/release-notes/json-schema-generation.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_Generation_PropertyOrder.md&amp;value=---%0Auid%3A%20Json.Schema.Generation.PropertyOrder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema.Generation/PropertyOrder.cs/#L6" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

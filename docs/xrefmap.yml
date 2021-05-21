@@ -8266,6 +8266,24 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.PatternAttribute.Value
   nameWithType: PatternAttribute.Value
+- uid: Json.Schema.Generation.PropertyOrder
+  name: PropertyOrder
+  href: api/Json.Schema.Generation.PropertyOrder.html
+  commentId: T:Json.Schema.Generation.PropertyOrder
+  fullName: Json.Schema.Generation.PropertyOrder
+  nameWithType: PropertyOrder
+- uid: Json.Schema.Generation.PropertyOrder.AsDeclared
+  name: AsDeclared
+  href: api/Json.Schema.Generation.PropertyOrder.html#Json_Schema_Generation_PropertyOrder_AsDeclared
+  commentId: F:Json.Schema.Generation.PropertyOrder.AsDeclared
+  fullName: Json.Schema.Generation.PropertyOrder.AsDeclared
+  nameWithType: PropertyOrder.AsDeclared
+- uid: Json.Schema.Generation.PropertyOrder.ByName
+  name: ByName
+  href: api/Json.Schema.Generation.PropertyOrder.html#Json_Schema_Generation_PropertyOrder_ByName
+  commentId: F:Json.Schema.Generation.PropertyOrder.ByName
+  fullName: Json.Schema.Generation.PropertyOrder.ByName
+  nameWithType: PropertyOrder.ByName
 - uid: Json.Schema.Generation.ReadOnlyAttribute
   name: ReadOnlyAttribute
   href: api/Json.Schema.Generation.ReadOnlyAttribute.html
@@ -8377,6 +8395,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
   nameWithType: SchemaGeneratorConfiguration.Generators
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
+  name: PropertyOrder
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_PropertyOrder
+  commentId: P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
+  nameWithType: SchemaGeneratorConfiguration.PropertyOrder
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder*
+  name: PropertyOrder
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_PropertyOrder_
+  commentId: Overload:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
+  isSpec: "True"
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
+  nameWithType: SchemaGeneratorConfiguration.PropertyOrder
 - uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners
   name: Refiners
   href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Refiners

@@ -151,6 +151,11 @@
 </code></pre>
 <p>The <code>minimum</code> is applied to the <code>items</code> because that keyword is not relevant for an array.</p>
 <p><em><strong>NOTE</strong> This means that the generator will have trouble determining where to apply keywords to properties like <code>List&lt;List&lt;T&gt;&gt;</code> because the attributes could be relevant for both the outer and inner lists.</em></p>
+<p>The generator also supports these built-in attributes:</p>
+<ul>
+<li><code>JsonPropertyName</code> - supports custom property naming</li>
+<li><code>JsonNumberHandling</code> - supports allowing numeric values in strings or only as numbers as well as allowing the <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code> values.</li>
+</ul>
 <p>The generator will handle most common types:</p>
 <ul>
 <li>numeric types (<code>int</code>, <code>decimal</code>, etc.)</li>
@@ -167,6 +172,7 @@
 <li>POCOs</li>
 </ul>
 <p>For POCOs, currently only read/write properties are converted.  Future versions of this library may also support read-only or write-only by adding the <code>readOnly</code> and <code>writeOnly</code> keywords, respectively.</p>
+<p>Lastly, property names will either be listed as declared in code (default) or sorted by name.  This is controlled via the <code>SchemaGenerationConfiguration.PropertyOrder</code> property.</p>
 <h3 id="additional-built-in-support">Additional built-in support</h3>
 <p>There are a couple advanced features that bear mentioning.</p>
 <ol>
