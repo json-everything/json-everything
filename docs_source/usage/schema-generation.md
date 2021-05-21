@@ -77,6 +77,11 @@ The `minimum` is applied to the `items` because that keyword is not relevant for
 
 ***NOTE** This means that the generator will have trouble determining where to apply keywords to properties like `List<List<T>>` because the attributes could be relevant for both the outer and inner lists.*
 
+The generator also supports these built-in attributes:
+
+- `JsonPropertyName` - supports custom property naming
+- `JsonNumberHandling` - supports allowing numeric values in strings or only as numbers as well as allowing the `NaN`, `Infinity`, and `-Infinity` values.
+
 The generator will handle most common types:
 
 - numeric types (`int`, `decimal`, etc.)
@@ -93,6 +98,8 @@ The generator will handle most common types:
 - POCOs
 
 For POCOs, currently only read/write properties are converted.  Future versions of this library may also support read-only or write-only by adding the `readOnly` and `writeOnly` keywords, respectively.
+
+Lastly, property names will either be listed as declared in code (default) or sorted by name.  This is controlled via the `SchemaGenerationConfiguration.PropertyOrder` property.
 
 ### Additional built-in support
 
