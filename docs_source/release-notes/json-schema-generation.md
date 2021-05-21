@@ -1,5 +1,7 @@
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/113)
 
+[#109](https://github.com/gregsdennis/json-everything/issues/109) - Add properties in the order they're declared in code.  Credit to [@wazzamatazz](https://github.com/jaysvoboda)
+
 [#112](https://github.com/gregsdennis/json-everything/issues/112) - Add properties in the order they're declared in code.
 
 # [1.3.2](https://github.com/gregsdennis/json-everything/pull/105)
