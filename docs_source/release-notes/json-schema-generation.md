@@ -1,3 +1,7 @@
+# [1.4.1](https://github.com/gregsdennis/json-everything/pull/115)
+
+[#114](https://github.com/gregsdennis/json-everything/issues/114) - `DateTime` properties not generating properly.  Also fixes `Guid`, `JsonPointer`, and  `Uri` properties.
+
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/113)
 
 [#109](https://github.com/gregsdennis/json-everything/issues/109) - Add properties in the order they're declared in code.  Credit to [@wazzamatazz](https://github.com/jaysvoboda)

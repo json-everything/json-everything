@@ -2,6 +2,9 @@
 
 namespace Json.Schema.Generation.Intents
 {
+	/// <summary>
+	/// Provides intent to create a `propertyNames` keyword.
+	/// </summary>
 	public class PropertyNamesIntent : ISchemaKeywordIntent, IContextContainer
 	{
 		/// <summary>
