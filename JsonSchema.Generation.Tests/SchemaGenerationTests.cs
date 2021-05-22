@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using Json.More;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
@@ -52,18 +50,6 @@ namespace Json.Schema.Generation.Tests
 		}
 
 		[Test]
-		public void ListOfStrings()
-		{
-			JsonSchema expected = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Array)
-				.Items(new JsonSchemaBuilder().Type(SchemaValueType.String));
-
-			JsonSchema actual = new JsonSchemaBuilder().FromType<List<string>>();
-
-			AssertEqual(expected, actual);
-		}
-
-		[Test]
 		// ReSharper disable once InconsistentNaming
 		public void IEnumerableOfListOfStrings()
 		{
@@ -97,29 +83,6 @@ namespace Json.Schema.Generation.Tests
 				.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<string, int>>();
-
-			AssertEqual(expected, actual);
-		}
-
-		[Test]
-		public void EnumDictionaryOfInt()
-		{
-			JsonSchema expected = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Object)
-				.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
-
-			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<DayOfWeek, int>>();
-
-			AssertEqual(expected, actual);
-		}
-
-		[Test]
-		public void Enum()
-		{
-			JsonSchema expected = new JsonSchemaBuilder()
-				.Enum(System.Enum.GetNames(typeof(DayOfWeek)).Select(v => v.AsJsonElement()));
-
-			JsonSchema actual = new JsonSchemaBuilder().FromType<DayOfWeek>();
 
 			AssertEqual(expected, actual);
 		}
