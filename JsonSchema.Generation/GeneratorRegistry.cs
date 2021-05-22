@@ -18,6 +18,10 @@ namespace Json.Schema.Generation
 				new NumberSchemaGenerator(),
 				new StringSchemaGenerator(),
 				new EnumGenerator(),
+				new DateTimeSchemaGenerator(),
+				new GuidSchemaGenerator(),
+				new JsonPointerSchemaGenerator(),
+				new UriSchemaGenerator(),
 				// the dictionary ones are enumerable, so they need to come before the array one
 				new StringDictionarySchemaGenerator(),
 				new EnumDictionarySchemaGenerator(),

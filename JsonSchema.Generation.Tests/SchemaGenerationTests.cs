@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
-using Json.Schema.Generation.Generators;
 using NUnit.Framework;
+
+using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests
 {
@@ -37,7 +35,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType(dotnetType);
 
-			Assert.AreEqual(expected, actual);
+			AssertEqual(expected, actual);
 		}
 
 		[Test]
@@ -48,19 +46,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<int[]>();
 
-			Assert.AreEqual(expected, actual);
-		}
-
-		[Test]
-		public void ListOfStrings()
-		{
-			JsonSchema expected = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Array)
-				.Items(new JsonSchemaBuilder().Type(SchemaValueType.String));
-
-			JsonSchema actual = new JsonSchemaBuilder().FromType<List<string>>();
-
-			Assert.AreEqual(expected, actual);
+			AssertEqual(expected, actual);
 		}
 
 		[Test]
@@ -76,7 +62,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<IEnumerable<List<string>>>();
 
-			Assert.AreEqual(expected, actual);
+			AssertEqual(expected, actual);
 		}
 
 		[Test]
@@ -86,7 +72,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<Array>();
 
-			Assert.AreEqual(expected, actual);
+			AssertEqual(expected, actual);
 		}
 
 		[Test]
@@ -98,30 +84,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<string, int>>();
 
-			Assert.AreEqual(expected, actual);
-		}
-
-		[Test]
-		public void EnumDictionaryOfInt()
-		{
-			JsonSchema expected = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Object)
-				.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
-
-			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<DayOfWeek, int>>();
-
-			Assert.AreEqual(expected, actual);
-		}
-
-		[Test]
-		public void Enum()
-		{
-			JsonSchema expected = new JsonSchemaBuilder()
-				.Enum(System.Enum.GetNames(typeof(DayOfWeek)).Select(v => v.AsJsonElement()));
-
-			JsonSchema actual = new JsonSchemaBuilder().FromType<DayOfWeek>();
-
-			Assert.AreEqual(expected, actual);
+			AssertEqual(expected, actual);
 		}
 
 		// ReSharper disable once ClassNeverInstantiated.Local
@@ -275,9 +238,7 @@ namespace Json.Schema.Generation.Tests
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<GenerationTarget>();
 
-			Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions{WriteIndented = true}));
-			Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions{WriteIndented = true}));
-			Assert.AreEqual(expected, actual);
+			AssertEqual(expected, actual);
 		}
 	}
 }
