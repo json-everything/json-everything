@@ -7248,6 +7248,106 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.Intents.PropertiesIntent.Replace
   nameWithType: PropertiesIntent.Replace
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent
+  name: PropertyNamesIntent
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html
+  commentId: T:Json.Schema.Generation.Intents.PropertyNamesIntent
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent
+  nameWithType: PropertyNamesIntent
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.#ctor(Json.Schema.Generation.SchemaGeneratorContext)
+  name: PropertyNamesIntent(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent__ctor_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.Intents.PropertyNamesIntent.#ctor(Json.Schema.Generation.SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.PropertyNamesIntent(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: PropertyNamesIntent.PropertyNamesIntent(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.#ctor*
+  name: PropertyNamesIntent
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent__ctor_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.PropertyNamesIntent
+  nameWithType: PropertyNamesIntent.PropertyNamesIntent
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  name: Apply(JsonSchemaBuilder)
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Apply_Json_Schema_JsonSchemaBuilder_
+  commentId: M:Json.Schema.Generation.Intents.PropertyNamesIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Apply(Json.Schema.JsonSchemaBuilder)
+  nameWithType: PropertyNamesIntent.Apply(JsonSchemaBuilder)
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Apply*
+  name: Apply
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Apply_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.Apply
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Apply
+  nameWithType: PropertyNamesIntent.Apply
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Context
+  name: Context
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Context
+  commentId: P:Json.Schema.Generation.Intents.PropertyNamesIntent.Context
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Context
+  nameWithType: PropertyNamesIntent.Context
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Context*
+  name: Context
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Context_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.Context
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Context
+  nameWithType: PropertyNamesIntent.Context
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Equals(System.Nullable{System.Object})
+  name: Equals(Nullable<Object>)
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Equals_System_Nullable_System_Object__
+  commentId: M:Json.Schema.Generation.Intents.PropertyNamesIntent.Equals(System.Nullable{System.Object})
+  name.vb: Equals(Nullable(Of Object))
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Equals(System.Nullable<System.Object>)
+  fullName.vb: Json.Schema.Generation.Intents.PropertyNamesIntent.Equals(System.Nullable(Of System.Object))
+  nameWithType: PropertyNamesIntent.Equals(Nullable<Object>)
+  nameWithType.vb: PropertyNamesIntent.Equals(Nullable(Of Object))
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Equals*
+  name: Equals
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Equals_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.Equals
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Equals
+  nameWithType: PropertyNamesIntent.Equals
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.GetContexts
+  name: GetContexts()
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_GetContexts
+  commentId: M:Json.Schema.Generation.Intents.PropertyNamesIntent.GetContexts
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.GetContexts()
+  nameWithType: PropertyNamesIntent.GetContexts()
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.GetContexts*
+  name: GetContexts
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_GetContexts_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.GetContexts
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.GetContexts
+  nameWithType: PropertyNamesIntent.GetContexts
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.GetHashCode
+  name: GetHashCode()
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_GetHashCode
+  commentId: M:Json.Schema.Generation.Intents.PropertyNamesIntent.GetHashCode
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.GetHashCode()
+  nameWithType: PropertyNamesIntent.GetHashCode()
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.GetHashCode*
+  name: GetHashCode
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_GetHashCode_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.GetHashCode
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.GetHashCode
+  nameWithType: PropertyNamesIntent.GetHashCode
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGeneratorContext)
+  name: Replace(Int32, SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Replace_System_Int32_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.Intents.PropertyNamesIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Replace(System.Int32, Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: PropertyNamesIntent.Replace(Int32, SchemaGeneratorContext)
+- uid: Json.Schema.Generation.Intents.PropertyNamesIntent.Replace*
+  name: Replace
+  href: api/Json.Schema.Generation.Intents.PropertyNamesIntent.html#Json_Schema_Generation_Intents_PropertyNamesIntent_Replace_
+  commentId: Overload:Json.Schema.Generation.Intents.PropertyNamesIntent.Replace
+  isSpec: "True"
+  fullName: Json.Schema.Generation.Intents.PropertyNamesIntent.Replace
+  nameWithType: PropertyNamesIntent.Replace
 - uid: Json.Schema.Generation.Intents.ReadOnlyIntent
   name: ReadOnlyIntent
   href: api/Json.Schema.Generation.Intents.ReadOnlyIntent.html
