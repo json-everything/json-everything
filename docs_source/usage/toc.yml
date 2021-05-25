@@ -21,6 +21,8 @@
     items:
     - name: Data Access
       href: vocabs-data.md
+    - name: Key-based Uniqueness
+      href: vocabs-unique-keys.md
 - name: JSON Path
   href: json-path.md
 - name: JSON Patch
