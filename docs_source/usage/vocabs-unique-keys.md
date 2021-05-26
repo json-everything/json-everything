@@ -18,9 +18,9 @@ A draft 2020-12 meta-schema which includes this vocabulary has been defined for 
 
 The value of `uniqueKeys` must be an array of JSON Pointers as defined by [RFC 6901](https://tools.ietf.org/html/rfc6901).  At least one JSON Pointer MUST be specified.
 
-These JSON Pointers, when resolved against each item, define a set of values for that item.  If an item does not contain the location specified by a JSON Pointer, that JSON Pointer is skipped and the resulting set does not contain a corresponding value for that JSON Pointer.
+These JSON Pointers, when resolved against each item, define a set of values for that item.  If an item does not contain the location specified by a JSON Pointer, the implementation MUST keep a placeholder to indicate a missing value.
 
-Validation for this keyword passes if the value sets for all of the items are distinct, that is, no two sets contain the same collection and counts of values.
+Validation for this keyword passes if the value sets for all of the items are distinct, that is, no two sets contain the same collection, including missing values.
 
 Implementations SHOULD support JSON Pointers in both the basic and URI formats as specified by RFC 6901.  URI-formatted JSON Pointers are not required in this context, but they are so frequently used throughout JSON Schema that it makes sense for implementations to support them here as well.
 
@@ -66,7 +66,7 @@ This value fails validation because the value `8` is repeated in two of the item
 ]
 ```
 
-This value passes validation because `/foo` doesn't return a value for `{"bar": 8}`, so the value sets are `[8]` and `[]`, which are unique.
+This value passes validation because `/foo` doesn't return a value for `{"bar": 8}`, so the value sets are `(8)` and `(<missing>)`, which are unique.
 
 ```json
 [
@@ -101,8 +101,8 @@ The following defines a schema to validate an array with items that have unique 
     }
   },
   "uniqueKeys": [
-    "/key",
-    "/foo"
+    "/foo",
+    "/bar"
   ]
 }
 ```
@@ -117,7 +117,7 @@ This value passes validation because for all combinations of "foo" and "bar", th
 ]
 ```
 
-This value fails validation because the first two items have the same combinations of "foo" and "bar", `[8, true]`, even though `"baz"` is different.  This would also pass `uniqueItems`.
+This value fails validation because the first two items have the same combinations of "foo" and "bar", `(8, true)`, even though `"baz"` is different.  This example also would pass `uniqueItems`.
 
 ```json
 [
