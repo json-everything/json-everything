@@ -18,11 +18,9 @@ A draft 2020-12 meta-schema which includes this vocabulary has been defined for 
 
 The value of `uniqueKeys` must be an array of JSON Pointers as defined by [RFC 6901](https://tools.ietf.org/html/rfc6901).  At least one JSON Pointer MUST be specified.
 
-These JSON Pointers, when resolved against each item, define a set of values for that item.  If an item does not contain the location specified by a JSON Pointer, the implementation MUST keep a placeholder to indicate a missing value.
+These JSON Pointers, when resolved against each item, define a set of values for that item.  If an item does not contain the location specified by a JSON Pointer, the implementation MUST keep a placeholder to indicate a missing value.  (The placeholder cannot be a JSON `null` as there needs to be a distinction between the location existing and holding a `null` value and the location not existing at all.)
 
-Validation for this keyword passes if the value sets for all of the items are distinct, that is, no two sets contain the same collection, including missing values.
-
-Implementations SHOULD support JSON Pointers in both the basic and URI formats as specified by RFC 6901.  URI-formatted JSON Pointers are not required in this context, but they are so frequently used throughout JSON Schema that it makes sense for implementations to support them here as well.
+Validation for this keyword passes if the value sets for all of the items are distinct, that is, no two sets contain the same ordered collection.
 
 ## 4. Examples
 
