@@ -23,7 +23,6 @@ namespace Json.Path
 					IEnumerable<int> indices;
 					indices = _ranges?.OfType<IArrayIndexExpression>()
 						          .SelectMany(r => r.GetIndices(match.Value))
-						          .OrderBy(i => i)
 						          .Where(i => 0 <= i && i < array.Length)
 						          .Distinct() ??
 					          Enumerable.Range(0, array.Length);

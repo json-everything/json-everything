@@ -12,18 +12,11 @@ using NUnit.Framework;
 
 namespace Json.Path.Tests.Suite
 {
-	public class ReferenceImplTests
+	public class ComplianceTestSuiteTests
 	{
-		private const string _testsFile = @"../../../../ref-repos/jsonpath-reference-implementation/tests/cts.json";
+		private const string _testsFile = @"../../../../ref-repos/jsonpath-compliance-test-suite/cts.json";
 		private static readonly string[] _notSupported =
 			{
-				// expect these to be out of spec soon
-				"$.key-dash",
-				"$.length",
-
-				// big numbers not supported
-				"$[2:-113667776004:-1]",
-				"$[113667776004:2:-1]"
 			};
 
 		//  - id: array_index
@@ -36,7 +29,7 @@ namespace Json.Path.Tests.Suite
 			get
 			{
 				var fileText = File.ReadAllText(_testsFile);
-				var suite = JsonSerializer.Deserialize<ReferenceImplTestSuite>(fileText, new JsonSerializerOptions
+				var suite = JsonSerializer.Deserialize<ComplianceTestSuite>(fileText, new JsonSerializerOptions
 				{
 					AllowTrailingCommas = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -47,7 +40,7 @@ namespace Json.Path.Tests.Suite
 		}
 
 		[TestCaseSource(nameof(TestCases))]
-		public void Run(ReferenceImplTestCase testCase)
+		public void Run(ComplianceTestCase testCase)
 		{
 			if (_notSupported.Contains(testCase.Selector))
 				Assert.Inconclusive("This case will not be supported.");
@@ -57,14 +50,14 @@ namespace Json.Path.Tests.Suite
 			Console.WriteLine(testCase);
 			Console.WriteLine();
 
-			Json.Path.JsonPath path = null;
+			JsonPath path = null;
 			PathResult actual = null;
 
 			var time = Debugger.IsAttached ? int.MaxValue : 100;
 			using var cts = new CancellationTokenSource(time);
 			Task.Run(() =>
 			{
-				if (!Json.Path.JsonPath.TryParse(testCase.Selector, out path)) return;
+				if (!JsonPath.TryParse(testCase.Selector, out path)) return;
 
 				if (testCase.Document.ValueKind == JsonValueKind.Undefined) return;
 
@@ -80,30 +73,13 @@ namespace Json.Path.Tests.Suite
 				Assert.Fail($"Could not parse path: {testCase.Selector}");
 			}
 
-			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
+			var actualValues = actual.Matches.Select(m => m.Value).AsJsonElement();
+			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actualValues)}");
 			if (testCase.InvalidSelector)
 				Assert.Fail($"{testCase.Selector} is not a valid path.");
 
-			var expected = testCase.Result;
-			Assert.IsTrue(expected.Select((v, i) => (v, i)).All(v => JsonElementEqualityComparer.Instance.Equals(v.v, TryGetValueAtIndex(actual.Matches, v.i)?.Value ?? default)));
-		}
-
-		private static T TryGetValueAtIndex<T>(IReadOnlyList<T> collection, int i)
-		{
-			if (0 <= i && i < collection.Count) return collection[i];
-			return default;
-		}
-
-		private static PathResult Evaluate(JsonElement element, string pathString, bool invalidSelector)
-		{
-			var selector = pathString;
-			if (!Json.Path.JsonPath.TryParse(selector, out var path))
-				return null;
-			if (invalidSelector)
-				Assert.Inconclusive($"{pathString} is not a valid path but was parsed without error.");
-			var results = path.Evaluate(element);
-
-			return results;
+			var expected = testCase.Result.AsJsonElement();
+			Assert.IsTrue(expected.IsEquivalentTo(actualValues));
 		}
 	}
 }
