@@ -14,8 +14,6 @@ A draft 2020-12 meta-schema which includes this vocabulary has been defined for 
 
 ## 3. The `uniqueKeys` Keyword
 
-### 3.1 Syntax and Semantics
-
 The value of `uniqueKeys` must be an array of JSON Pointers as defined by [RFC 6901](https://tools.ietf.org/html/rfc6901).  At least one JSON Pointer MUST be specified.
 
 These JSON Pointers, when resolved against each item, define a set of values for that item.  If an item does not contain the location specified by a JSON Pointer, the implementation MUST keep an internal placeholder to indicate a missing value.  (The placeholder cannot be a JSON `null` as there needs to be a distinction between the location existing and holding a `null` value and the location not existing at all.)
