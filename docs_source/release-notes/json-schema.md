@@ -1,3 +1,7 @@
+# [1.10.3](https://github.com/gregsdennis/json-everything/pull/120)
+
+Added overload for `ExitKeyword` logging extension to pull the validition result from the context rather than having to pass it in.
+
 # [1.10.2](https://github.com/gregsdennis/json-everything/pull/102)
 
 In 2020-12, `unevaluatedItems` should consider `contains`.

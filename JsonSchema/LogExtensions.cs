@@ -34,6 +34,17 @@ namespace Json.Schema
 		/// </summary>
 		/// <param name="context">The validation context.</param>
 		/// <param name="keyword">The keyword name</param>
+		public static void ExitKeyword(this ValidationContext context, string keyword)
+		{
+			context.Log(() => $"{keyword} complete: {(context.IsValid ? "valid" : "invalid")}");
+			context.Options.LogIndentLevel--;
+		}
+
+		/// <summary>
+		/// Adds a message to indicate a keyword has finished processing.  Decrements indention.
+		/// </summary>
+		/// <param name="context">The validation context.</param>
+		/// <param name="keyword">The keyword name</param>
 		/// <param name="valid">Whether the validation was successful</param>
 		public static void ExitKeyword(this ValidationContext context, string keyword, bool valid)
 		{

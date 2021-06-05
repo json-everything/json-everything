@@ -57,6 +57,7 @@ namespace Json.Schema.Data
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
 			var data = new Dictionary<string, JsonElement>();
 			foreach (var reference in References)
 			{
@@ -80,6 +81,7 @@ namespace Json.Schema.Data
 			}
 
 			subschema.ValidateSubschema(context);
+			context.ExitKeyword(Name);
 		}
 
 		private static JsonElement? Resolve(ValidationContext context, Uri target)
