@@ -8,6 +8,8 @@
   href: json-schema-generation.md
 - name: JsonSchema.Net.Data
   href: json-schema-data.md
+- name: JsonSchema.Net.UniqueKeys
+  href: json-schema-unique-keys.md
 - name: JsonPath.Net
   href: json-path.md
 - name: JsonLogic.Net
