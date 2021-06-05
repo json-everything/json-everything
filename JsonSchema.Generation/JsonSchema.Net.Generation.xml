@@ -759,6 +759,11 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.PropertyNamesIntent">
+            <summary>
+            Provides intent to create a `propertyNames` keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.Generation.Intents.PropertyNamesIntent.Context">
             <summary>
             The context that represents the inner requirements.
