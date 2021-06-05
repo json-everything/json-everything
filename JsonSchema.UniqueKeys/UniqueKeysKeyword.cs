@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.UniqueKeys
@@ -18,6 +19,24 @@ namespace Json.Schema.UniqueKeys
 	[JsonConverter(typeof(UniqueKeysKeywordJsonConverter))]
 	public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeyword>
 	{
+		private class NullableJsonElementComparer : IEqualityComparer<JsonElement?>
+		{
+			public static IEqualityComparer<JsonElement?> Instance { get; } = new NullableJsonElementComparer();
+
+			public bool Equals(JsonElement? x, JsonElement? y)
+			{
+				if (x == null) return y == null;
+				if (y == null) return false;
+
+				return JsonElementEqualityComparer.Instance.Equals(x.Value, y.Value);
+			}
+
+			public int GetHashCode(JsonElement? obj)
+			{
+				return obj == null ? 0 : JsonElementEqualityComparer.Instance.GetHashCode(obj.Value);
+			}
+		}
+
 		internal const string Name = "uniqueKeys";
 
 		/// <summary>
@@ -40,6 +59,47 @@ namespace Json.Schema.UniqueKeys
 		/// <param name="context">Contextual details for the validation process.</param>
 		public void Validate(ValidationContext context)
 		{
+			context.EnterKeyword(Name);
+			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+			{
+				context.WrongValueKind(context.LocalInstance.ValueKind);
+				context.IsValid = true;
+				return;
+			}
+
+			var collections = new List<List<JsonElement?>>();
+			foreach (var item in context.LocalInstance.EnumerateArray())
+			{
+				var values = Keys.Select(x => x.Evaluate(item));
+				collections.Add(values.ToList());
+			}
+
+			var matchedIndexPairs = new List<(int, int)>();
+			for (int i = 0; i < collections.Count; i++)
+			{
+				for (int j = i+1; j < collections.Count; j++)
+				{
+					var a = collections[i];
+					var b = collections[j];
+
+					if (a.SequenceEqual(b, NullableJsonElementComparer.Instance))
+					{
+						if (context.Options.OutputFormat == OutputFormat.Flag)
+						{
+							context.IsValid = false;
+							context.Message = $"Found duplicate items at indices {i} and {j}";
+							context.ExitKeyword(Name);
+							return;
+						}
+						matchedIndexPairs.Add((i, j));
+					}
+				}
+			}
+
+			context.IsValid = !matchedIndexPairs.Any();
+			if (!context.IsValid)
+				context.Message = $"Found duplicate items at index pairs {string.Join(", ", matchedIndexPairs.Select(x => $"({x.Item1}, {x.Item2})"))}";
+			context.ExitKeyword(Name);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

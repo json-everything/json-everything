@@ -100,9 +100,9 @@ namespace Json.Schema.UniqueKeys.Tests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-			var results = _singleKeySchema.Validate(instance);
+			var results = _multiKeySchema.Validate(instance);
 
-			results.AssertInvalid();
+			results.AssertValid();
 		}
 
 		[Test]
@@ -114,7 +114,7 @@ namespace Json.Schema.UniqueKeys.Tests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-			var results = _singleKeySchema.Validate(instance);
+			var results = _multiKeySchema.Validate(instance);
 
 			results.AssertInvalid();
 		}
