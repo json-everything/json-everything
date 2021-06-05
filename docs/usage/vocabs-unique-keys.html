@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>A Vocabulary for Identifying Uniqueness of Array Items </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="A Vocabulary for Identifying Uniqueness of Array Items ">
+    <meta name="generator" content="docfx 2.56.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="a-vocabulary-for-identifying-uniqueness-of-array-items">A Vocabulary for Identifying Uniqueness of Array Items</h1>
+
+<h2 id="1-purpose">1. Purpose</h2>
+<p>This document describes a vocabulary defining keywords that can be used to validate that arrary instances contain unique values as determined by one or more given paths within each item.</p>
+<p>The intent for these keywords is to cover the use cases discussed in the JSON Schema vocabularies GitHub issue <a href="https://github.com/json-schema-org/json-schema-vocabularies/issues/22">#22</a>.</p>
+<h2 id="2-declarations">2. Declarations</h2>
+<p>The ID for this vocabulary is <code>https://gregsdennis.github.io/json-everything/vocabs-unique-keys</code> (the URI to this document).</p>
+<p>A draft 2020-12 meta-schema which includes this vocabulary has been defined for convenience.  The ID for the meta-schema is <code>https://gregsdennis.github.io/json-everything/meta/unique-keys</code>, and it can also be found at this address.</p>
+<h2 id="3-the-uniquekeys-keyword">3. The <code>uniqueKeys</code> Keyword</h2>
+<p>The value of <code>uniqueKeys</code> must be an array of JSON Pointers as defined by <a href="https://tools.ietf.org/html/rfc6901">RFC 6901</a>.  At least one JSON Pointer MUST be specified.</p>
+<p>These JSON Pointers, when resolved against each item, define a set of values for that item.  If an item does not contain the location specified by a JSON Pointer, the implementation MUST keep an internal placeholder to indicate a missing value.  (The placeholder cannot be a JSON <code>null</code> as there needs to be a distinction between the location existing and holding a <code>null</code> value and the location not existing at all.)</p>
+<p>Validation for this keyword passes if the value sets for all of the items are distinct, that is, no two sets contain the same ordered collection.</p>
+<h2 id="4-examples">4. Examples</h2>
+<h3 id="41-single-key">4.1. Single Key</h3>
+<p>The following defines a schema to validate an array with items that have unique values at <code>/foo</code>.</p>
+<pre><code class="lang-json">{
+  &quot;$schema&quot;: &quot;https://gregsdennis.github.io/json-everything/meta/unique-path&quot;,
+  &quot;type&quot;: &quot;array&quot;,
+  &quot;items&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;foo&quot;: { &quot;type&quot;: &quot;integer&quot; }
+    }
+  },
+  &quot;uniqueKeys&quot;: [
+    &quot;/foo&quot;
+  ]
+}
+</code></pre>
+<p>This value passes validation because all of the values located at <code>/foo</code> in each item are unique.</p>
+<pre><code class="lang-json">[
+  { &quot;foo&quot;: 8 },
+  { &quot;foo&quot;: 12 },
+  { &quot;foo&quot;: 42 }
+]
+</code></pre>
+<p>This value fails validation because the value <code>8</code> is repeated in two of the items at the <code>/foo</code> location.</p>
+<pre><code class="lang-json">[
+  { &quot;foo&quot;: 8 },
+  { &quot;foo&quot;: 12 },
+  { &quot;foo&quot;: 8 }
+]
+</code></pre>
+<p>This value passes validation because <code>/foo</code> doesn't return a value for <code>{&quot;bar&quot;: 8}</code>, so the value sets are <code>(8)</code> and <code>(&lt;missing&gt;)</code>, which are unique.</p>
+<pre><code class="lang-json">[
+  { &quot;foo&quot;: 8 },
+  { &quot;bar&quot;: 8 }
+]
+</code></pre>
+<p>This value fails validation because the value <code>8</code> is repeated in two of the items at the <code>/foo</code> location.  This example highlights the difference between <code>uniqueKeys</code> and <code>uniqueItems</code>.  This value would pass <code>&quot;uniqueItems&quot;: true</code> because <code>bar</code> is different between the two <code>&quot;foo&quot;: 8</code> items.</p>
+<pre><code class="lang-json">[
+  { &quot;foo&quot;: 8, &quot;bar&quot;: true },
+  { &quot;foo&quot;: 12, &quot;bar&quot;: true },
+  { &quot;foo&quot;: 8, &quot;bar&quot;: false }
+]
+</code></pre>
+<h3 id="42-multiple-keys">4.2. Multiple Keys</h3>
+<p>The following defines a schema to validate an array with items that have unique <em>combinations</em> of values at <code>/foo</code> and <code>/bar</code>.</p>
+<pre><code class="lang-json">{
+  &quot;$schema&quot;: &quot;https://gregsdennis.github.io/json-everything/meta/unique-path&quot;,
+  &quot;type&quot;: &quot;array&quot;,
+  &quot;items&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;foo&quot;: { &quot;type&quot;: &quot;integer&quot; },
+      &quot;bar&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+    }
+  },
+  &quot;uniqueKeys&quot;: [
+    &quot;/foo&quot;,
+    &quot;/bar&quot;
+  ]
+}
+</code></pre>
+<p>This value passes validation because for all combinations of &quot;foo&quot; and &quot;bar&quot;, the value sets are unique.</p>
+<pre><code class="lang-json">[
+  { &quot;foo&quot;: 8, &quot;bar&quot;: true },
+  { &quot;foo&quot;: 12, &quot;bar&quot;: true },
+  { &quot;foo&quot;: 8, &quot;bar&quot;: false }
+]
+</code></pre>
+<p>This value fails validation because the first two items have the same combinations of &quot;foo&quot; and &quot;bar&quot;, <code>(8, true)</code>, even though <code>&quot;baz&quot;</code> is different.  This example also would pass <code>uniqueItems</code>.</p>
+<pre><code class="lang-json">[
+  { &quot;foo&quot;: 8, &quot;bar&quot;: true, &quot;baz&quot;: &quot;yes&quot; },
+  { &quot;foo&quot;: 8, &quot;bar&quot;: true, &quot;baz&quot;: &quot;no&quot; },
+  { &quot;foo&quot;: 8, &quot;bar&quot;: false }
+]
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/usage/vocabs-unique-keys.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

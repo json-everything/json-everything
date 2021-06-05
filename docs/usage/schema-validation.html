@@ -97,7 +97,7 @@
 {&quot;otherProperty&quot;:35.4}
 &quot;nonObject&quot;
 </code></pre>
-<p>To validate these, all we have to do is pass these into our schema's <code>Validate(JsonValue)</code> method.</p>
+<p>To validate these, all we have to do is pass these into our schema's <code>Validate(JsonElement)</code> method.</p>
 <pre><code class="lang-csharp">JsonSchema schema = new JsonSchemaBuilder()
     .Properties(
         (

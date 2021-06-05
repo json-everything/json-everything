@@ -1,0 +1,28 @@
+{
+    "$id": "https://gregsdennis.github.io/json-everything/meta/unique-keys",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$vocabulary": {
+        "https://json-schema.org/draft/2020-12/vocab/core": true,
+        "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+        "https://json-schema.org/draft/2020-12/vocab/validation": true,
+        "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+        "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+        "https://gregsdennis.github.io/json-everything/vocabs-unique-keys": true
+    },
+    "$dynamicAnchor": "meta",
+    
+    "title": "Unique keys meta-schema",
+    "allOf": [
+        { "$ref": "https://json-schema.org/draft/2020-12/schema" }
+    ],
+    "properties": {
+        "uniqueKeys": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "json-pointer"
+            },
+            "minItems": 1
+        }
+    }
+}
