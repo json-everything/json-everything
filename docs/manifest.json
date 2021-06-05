@@ -1722,7 +1722,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.LogExtensions.html",
-          "hash": "KrATVwZLK9EtpgyMUlzuBA=="
+          "hash": "6jPxCJvV9sE6p727lx262Q=="
         }
       },
       "is_incremental": false,
@@ -2250,7 +2250,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.ValidationContext.html",
-          "hash": "XDqjvIybo4BJX99mPp5Ajw=="
+          "hash": "jbpq+mGqI93KD6L6p0dr+Q=="
         }
       },
       "is_incremental": false,
@@ -2528,6 +2528,17 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "meta/unique-keys",
+      "output": {
+        "resource": {
+          "relative_path": "meta/unique-keys"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "release-notes/index.md",
       "output": {
@@ -2605,7 +2616,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-data.html",
-          "hash": "/pXCkWGGBmcq39q8Dh9IGQ=="
+          "hash": "VDOrVVdKFGTB6f6CxplUtg=="
         }
       },
       "is_incremental": false,
@@ -2625,11 +2636,23 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "release-notes/json-schema-unique-keys.md",
+      "output": {
+        ".html": {
+          "relative_path": "release-notes/json-schema-unique-keys.html",
+          "hash": "oNA2YZi6TME6Ks36pijs9w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "release-notes/json-schema.md",
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "4z/vkYRFdngcrezgvYz+dA=="
+          "hash": "ndi7a82fm40ZulotILVmAA=="
         }
       },
       "is_incremental": false,
@@ -2809,7 +2832,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-validation.html",
-          "hash": "5Bj2eRiS0ZoKqn2OzpOmRw=="
+          "hash": "wA6dABC4LWUos7RcLhK8dA=="
         }
       },
       "is_incremental": false,
@@ -2833,7 +2856,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "LVdFLfrFW8zXc8ULMEHL5g=="
+          "hash": "nt+z1cKUs+YyVSGMoR5Mrg=="
         }
       },
       "is_incremental": false,
@@ -2846,6 +2869,18 @@
         ".html": {
           "relative_path": "usage/vocabs-data.html",
           "hash": "W+ptAdgrbFqqU8eX94SCYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/vocabs-unique-keys.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/vocabs-unique-keys.html",
+          "hash": "sqZ4eMMKKgTF2DMI5Nl/IA=="
         }
       },
       "is_incremental": false,
@@ -2866,7 +2901,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 32,
+          "total_file_count": 34,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {

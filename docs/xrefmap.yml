@@ -10722,6 +10722,12 @@ references:
   isSpec: "True"
   fullName: Json.Schema.LogExtensions.EnterKeyword
   nameWithType: LogExtensions.EnterKeyword
+- uid: Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String)
+  name: ExitKeyword(ValidationContext, String)
+  href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_ExitKeyword_Json_Schema_ValidationContext_System_String_
+  commentId: M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String)
+  fullName: Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext, System.String)
+  nameWithType: LogExtensions.ExitKeyword(ValidationContext, String)
 - uid: Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String,System.Boolean)
   name: ExitKeyword(ValidationContext, String, Boolean)
   href: api/Json.Schema.LogExtensions.html#Json_Schema_LogExtensions_ExitKeyword_Json_Schema_ValidationContext_System_String_System_Boolean_
