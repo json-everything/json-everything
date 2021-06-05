@@ -22,7 +22,7 @@
 "nonObject"
 ```
 
-To validate these, all we have to do is pass these into our schema's `Validate(JsonValue)` method.
+To validate these, all we have to do is pass these into our schema's `Validate(JsonElement)` method.
 
 ```csharp
 JsonSchema schema = new JsonSchemaBuilder()

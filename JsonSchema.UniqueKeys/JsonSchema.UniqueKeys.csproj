@@ -2,21 +2,21 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
-		<RootNamespace>Json.Schema.Data</RootNamespace>
+		<AssemblyName>JsonSchema.Net.UniqueKeys</AssemblyName>
+		<RootNamespace>Json.Schema.UniqueKeys</RootNamespace>
 		<Authors>Greg Dennis</Authors>
-		<Description>Extends JsonSchema.Net to provide the "data" keyword.</Description>
+		<Description>Extends JsonSchema.Net to provide the "uniqueKeys" keyword.</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-		<PackageTags>json-schema validation schema json data schema-data</PackageTags>
-		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-data.html</PackageReleaseNotes>
+		<PackageTags>json-schema validation schema json</PackageTags>
+		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-unique-keys.html</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
+		<DocumentationFile>JsonSchema.Net.UniqueKeys.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.2</Version>
-		<FileVersion>1.0.2.0</FileVersion>
+		<Version>1.0.0</Version>
+		<FileVersion>1.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\docs_source\release-notes\json-schema-data.md" Link="json-schema-data.md" />
+		<None Include="..\docs_source\release-notes\json-schema-unique-keys.md" Link="json-schema-unique-keys.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

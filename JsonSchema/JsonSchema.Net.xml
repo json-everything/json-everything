@@ -2494,6 +2494,13 @@
             <param name="context">The validation context.</param>
             <param name="keyword">The keyword name</param>
         </member>
+        <member name="M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String)">
+            <summary>
+            Adds a message to indicate a keyword has finished processing.  Decrements indention.
+            </summary>
+            <param name="context">The validation context.</param>
+            <param name="keyword">The keyword name</param>
+        </member>
         <member name="M:Json.Schema.LogExtensions.ExitKeyword(Json.Schema.ValidationContext,System.String,System.Boolean)">
             <summary>
             Adds a message to indicate a keyword has finished processing.  Decrements indention.
