@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+
+		<IsPackable>false</IsPackable>
+
+		<RootNamespace>Json.Schema.UniqueKeys.Tests</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JunitXml.TestLogger" Version="2.1.32" />
+		<PackageReference Include="NUnit" Version="3.12.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\JsonSchema.UniqueKeys\JsonSchema.UniqueKeys.csproj" />
+		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
+	</ItemGroup>
+
+</Project>
