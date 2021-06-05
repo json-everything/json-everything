@@ -10,6 +10,9 @@
 "pkg:schema-data":
   - JsonSchema.Data/**/*
 
+"pkg:schema-unique-keys":
+  - JsonSchema.UniqueKeys/**/*
+
 "pkg:logic":
   - JsonLogic/**/*
 
