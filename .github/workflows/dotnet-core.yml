@@ -10,6 +10,7 @@ on:
     paths:
       - 'Json*/**/*'
       - 'ref-repos/**/*'
+  workflow_dispatch:
 
 jobs:
   build:

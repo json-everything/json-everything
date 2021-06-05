@@ -32,6 +32,10 @@ Builds on top of JsonSchema<nsp>.Net to provide schema generation from .Net type
 
 Provides an implementation of a [vocabulary](usage/vocabs-data.md) that defines a way to access instance and external data, a long-sought feature of JSON Schema.
 
+### JsonSchema.Net.Data
+
+Provides an implementation of a [vocabulary](usage/vocabs-unique-keys.md) that defines a new keyword to validate item uniqueness by idenitifying specific data points within the item.
+
 ### JsonPath<nsp>.Net
 
 JsonPath<nsp>.Net provides JSON querying using the JSON Path querying language inspired by XPath and [conceptualized by Matt Goessner](https://goessner.net/articles/JsonPath/).  An [RFC](https://github.com/jsonpath-standard/internet-draft) is currently being developed for JSON Path.  This library will update as the upcoming spec evolves.
