@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct PointerSegment
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -88,22 +88,7 @@
   <div class="markdown level0 conceptual"></div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Json.Pointer.PointerSegment.html">PointerSegment</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.ValueType.ToString()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Json.Pointer.PointerSegment.html">PointerSegment</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Pointer.html">Json.Pointer</a></h6>
   <h6><strong>Assembly</strong>: JsonPointer.Net.dll</h6>
@@ -335,8 +320,6 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_GetHashCode.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -369,23 +352,21 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_Parse_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.Parse(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_Parse_System_Nullable_System_String__System_Boolean_.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.Parse(System.Nullable%7BSystem.String%7D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/PointerSegment.cs/#L31">View Source</a>
   </span>
   <a id="Json_Pointer_PointerSegment_Parse_" data-uid="Json.Pointer.PointerSegment.Parse*"></a>
-  <h4 id="Json_Pointer_PointerSegment_Parse_System_String_System_Boolean_" data-uid="Json.Pointer.PointerSegment.Parse(System.String,System.Boolean)">Parse(String, Boolean)</h4>
+  <h4 id="Json_Pointer_PointerSegment_Parse_System_Nullable_System_String__System_Boolean_" data-uid="Json.Pointer.PointerSegment.Parse(System.Nullable{System.String},System.Boolean)">Parse(Nullable&lt;String&gt;, Boolean)</h4>
   <div class="markdown level1 summary"><p>Parses a JSON Pointer segment from a string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static PointerSegment Parse(string source, bool uriFormatted)</code></pre>
+    <pre><code class="lang-csharp hljs">public static PointerSegment Parse(string? source, bool uriFormatted)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -398,7 +379,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td><span class="parametername">source</span></td>
         <td><p>The source string.</p>
 </td>
@@ -437,11 +418,6 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
-        <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> is null.</p>
-</td>
-      </tr>
-      <tr>
         <td><a class="xref" href="Json.Pointer.PointerParseException.html">PointerParseException</a></td>
         <td><p><code data-dev-comment-type="paramref" class="paramref">source</code> contains an invalid escape sequence or an invalid URI-encoded sequence or ends with <code>~</code>.</p>
 </td>
@@ -450,19 +426,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_TryParse_System_String_System_Boolean_Json_Pointer_PointerSegment__.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.TryParse(System.String%2CSystem.Boolean%2CJson.Pointer.PointerSegment%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_PointerSegment_TryParse_System_Nullable_System_String__System_Boolean_Json_Pointer_PointerSegment__.md&amp;value=---%0Auid%3A%20Json.Pointer.PointerSegment.TryParse(System.Nullable%7BSystem.String%7D%2CSystem.Boolean%2CJson.Pointer.PointerSegment%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/PointerSegment.cs/#L49">View Source</a>
   </span>
   <a id="Json_Pointer_PointerSegment_TryParse_" data-uid="Json.Pointer.PointerSegment.TryParse*"></a>
-  <h4 id="Json_Pointer_PointerSegment_TryParse_System_String_System_Boolean_Json_Pointer_PointerSegment__" data-uid="Json.Pointer.PointerSegment.TryParse(System.String,System.Boolean,Json.Pointer.PointerSegment@)">TryParse(String, Boolean, out PointerSegment)</h4>
+  <h4 id="Json_Pointer_PointerSegment_TryParse_System_Nullable_System_String__System_Boolean_Json_Pointer_PointerSegment__" data-uid="Json.Pointer.PointerSegment.TryParse(System.Nullable{System.String},System.Boolean,Json.Pointer.PointerSegment@)">TryParse(Nullable&lt;String&gt;, Boolean, out PointerSegment)</h4>
   <div class="markdown level1 summary"><p>Parses a JSON Pointer segment from a string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool TryParse(string source, bool uriFormatted, out PointerSegment segment)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool TryParse(string? source, bool uriFormatted, out PointerSegment segment)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -475,7 +451,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td><span class="parametername">source</span></td>
         <td><p>The source string.</p>
 </td>
@@ -626,11 +602,11 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Nullable_JsonSerializerOptions__">JsonDocumentExtensions.ToJsonDocument&lt;T&gt;(T, Nullable&lt;JsonSerializerOptions&gt;)</a>
   </div>
 </article>
           </div>
@@ -648,7 +624,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

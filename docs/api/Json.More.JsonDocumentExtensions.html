@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonDocumentExtensions
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -83,7 +83,7 @@
   
   <h1 id="Json_More_JsonDocumentExtensions" data-uid="Json.More.JsonDocumentExtensions" class="text-break">Class JsonDocumentExtensions
   </h1>
-  <div class="markdown level0 summary"><p>Provides extension functionality for <span class="xref">System.Text.Json.JsonDocument</span>.</p>
+  <div class="markdown level0 summary"><p>Provides extension functionality for <see cref="!:JsonDocument"></see>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -91,47 +91,23 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">JsonDocumentExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.More.html">Json.More</a></h6>
   <h6><strong>Assembly</strong>: Json.More.dll</h6>
   <h5 id="Json_More_JsonDocumentExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class JsonDocumentExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class JsonDocumentExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonDocumentExtensions_IsEquivalentTo_System_Text_Json_JsonDocument_System_Text_Json_JsonDocument_.md&amp;value=---%0Auid%3A%20Json.More.JsonDocumentExtensions.IsEquivalentTo(System.Text.Json.JsonDocument%2CSystem.Text.Json.JsonDocument)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonDocumentExtensions_IsEquivalentTo_JsonDocument_JsonDocument_.md&amp;value=---%0Auid%3A%20Json.More.JsonDocumentExtensions.IsEquivalentTo(JsonDocument%2CJsonDocument)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonDocumentExtensions.cs/#L16">View Source</a>
   </span>
   <a id="Json_More_JsonDocumentExtensions_IsEquivalentTo_" data-uid="Json.More.JsonDocumentExtensions.IsEquivalentTo*"></a>
-  <h4 id="Json_More_JsonDocumentExtensions_IsEquivalentTo_System_Text_Json_JsonDocument_System_Text_Json_JsonDocument_" data-uid="Json.More.JsonDocumentExtensions.IsEquivalentTo(System.Text.Json.JsonDocument,System.Text.Json.JsonDocument)">IsEquivalentTo(JsonDocument, JsonDocument)</h4>
+  <h4 id="Json_More_JsonDocumentExtensions_IsEquivalentTo_JsonDocument_JsonDocument_" data-uid="Json.More.JsonDocumentExtensions.IsEquivalentTo(JsonDocument,JsonDocument)">IsEquivalentTo(JsonDocument, JsonDocument)</h4>
   <div class="markdown level1 summary"><p>Determines JSON-compatible equivalence.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -150,13 +126,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonDocument</span></td>
+        <td><span class="xref">JsonDocument</span></td>
         <td><span class="parametername">a</span></td>
         <td><p>The first document.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonDocument</span></td>
+        <td><span class="xref">JsonDocument</span></td>
         <td><span class="parametername">b</span></td>
         <td><p>The second document.</p>
 </td>
@@ -181,19 +157,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20Json.More.JsonDocumentExtensions.ToJsonDocument%60%601(%60%600%2CSystem.Text.Json.JsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Nullable_JsonSerializerOptions__.md&amp;value=---%0Auid%3A%20Json.More.JsonDocumentExtensions.ToJsonDocument%60%601(%60%600%2CSystem.Nullable%7BJsonSerializerOptions%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/Json.More/JsonDocumentExtensions.cs/#L28">View Source</a>
   </span>
   <a id="Json_More_JsonDocumentExtensions_ToJsonDocument_" data-uid="Json.More.JsonDocumentExtensions.ToJsonDocument*"></a>
-  <h4 id="Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_" data-uid="Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Text.Json.JsonSerializerOptions)">ToJsonDocument&lt;T&gt;(T, JsonSerializerOptions)</h4>
-  <div class="markdown level1 summary"><p>Converts an object to a <span class="xref">System.Text.Json.JsonDocument</span>.</p>
+  <h4 id="Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Nullable_JsonSerializerOptions__" data-uid="Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Nullable{JsonSerializerOptions})">ToJsonDocument&lt;T&gt;(T, Nullable&lt;JsonSerializerOptions&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts an object to a <see cref="!:JsonDocument"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static JsonDocument ToJsonDocument&lt;T&gt;(this T value, JsonSerializerOptions options = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static JsonDocument ToJsonDocument&lt;T&gt;(this T value, JsonSerializerOptions? options = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -212,7 +188,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonSerializerOptions</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">JsonSerializerOptions</span>&gt;</td>
         <td><span class="parametername">options</span></td>
         <td><p>(optional) JSON serialization options.</p>
 </td>
@@ -229,8 +205,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonDocument</span></td>
-        <td><p>A <span class="xref">System.Text.Json.JsonDocument</span> representing the vale.</p>
+        <td><span class="xref">JsonDocument</span></td>
+        <td><p>A <see cref="!:JsonDocument"></see> representing the vale.</p>
 </td>
       </tr>
     </tbody>
@@ -267,7 +243,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

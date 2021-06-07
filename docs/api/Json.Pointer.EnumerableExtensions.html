@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class EnumerableExtensions
    ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -83,7 +83,7 @@
   
   <h1 id="Json_Pointer_EnumerableExtensions" data-uid="Json.Pointer.EnumerableExtensions" class="text-break">Class EnumerableExtensions
   </h1>
-  <div class="markdown level0 summary"><p>More extensions on <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>.</p>
+  <div class="markdown level0 summary"><p>More extensions on <see cref="!:IEnumerable&lt;T>"></see>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -91,47 +91,23 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">EnumerableExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Pointer.html">Json.Pointer</a></h6>
   <h6><strong>Assembly</strong>: JsonPointer.Net.dll</h6>
   <h5 id="Json_Pointer_EnumerableExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class EnumerableExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class EnumerableExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_EnumerableExtensions_GetCollectionHashCode__1_System_Collections_Generic_IEnumerable___0__.md&amp;value=---%0Auid%3A%20Json.Pointer.EnumerableExtensions.GetCollectionHashCode%60%601(System.Collections.Generic.IEnumerable%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Pointer_EnumerableExtensions_GetCollectionHashCode__1_IEnumerable___0__.md&amp;value=---%0Auid%3A%20Json.Pointer.EnumerableExtensions.GetCollectionHashCode%60%601(IEnumerable%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonPointer/EnumerableExtensions.cs/#L19">View Source</a>
   </span>
   <a id="Json_Pointer_EnumerableExtensions_GetCollectionHashCode_" data-uid="Json.Pointer.EnumerableExtensions.GetCollectionHashCode*"></a>
-  <h4 id="Json_Pointer_EnumerableExtensions_GetCollectionHashCode__1_System_Collections_Generic_IEnumerable___0__" data-uid="Json.Pointer.EnumerableExtensions.GetCollectionHashCode``1(System.Collections.Generic.IEnumerable{``0})">GetCollectionHashCode&lt;T&gt;(IEnumerable&lt;T&gt;)</h4>
+  <h4 id="Json_Pointer_EnumerableExtensions_GetCollectionHashCode__1_IEnumerable___0__" data-uid="Json.Pointer.EnumerableExtensions.GetCollectionHashCode``1(IEnumerable{``0})">GetCollectionHashCode&lt;T&gt;(IEnumerable&lt;T&gt;)</h4>
   <div class="markdown level1 summary"><p>Gets a collection-oriented hash code by combining the hash codes of its elements.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -150,7 +126,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;T&gt;</td>
         <td><span class="parametername">collection</span></td>
         <td><p>The collection of elements.</p>
 </td>
@@ -189,7 +165,7 @@
       </tr>
     </tbody>
   </table>
-  <h5 id="Json_Pointer_EnumerableExtensions_GetCollectionHashCode__1_System_Collections_Generic_IEnumerable___0___remarks">Remarks</h5>
+  <h5 id="Json_Pointer_EnumerableExtensions_GetCollectionHashCode__1_IEnumerable___0___remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>This can be used to correctly compare the contents of collections.</p>
 </div>
 </article>
@@ -208,7 +184,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>
