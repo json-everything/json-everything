@@ -51,6 +51,7 @@ namespace Json.Path
 			}
 
 			index++;
+			span.ConsumeWhitespace(ref index);
 			if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out var left))
 			{
 				expression = null;
@@ -60,6 +61,7 @@ namespace Json.Path
 			var followingNodes = new List<(IQueryExpressionOperator, QueryExpressionNode)>();
 			while (index < span.Length && span[index] != ')')
 			{
+				span.ConsumeWhitespace(ref index);
 				if (!Operators.TryParse(span, ref index, out var op))
 				{
 					expression = null;
@@ -67,19 +69,26 @@ namespace Json.Path
 				}
 
 				QueryExpressionNode? right;
+				span.ConsumeWhitespace(ref index);
 				if (span[index] == '(')
 				{
+					span.ConsumeWhitespace(ref index);
 					if (!span.TryParseExpression(ref index, out right))
 					{
 						expression = null;
 						return false;
 					}
 				}
-				else if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out right))
+				else
 				{
-					expression = null;
-					return false;
+					span.ConsumeWhitespace(ref index);
+					if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out right))
+					{
+						expression = null;
+						return false;
+					}
 				}
+
 				followingNodes.Add((op!, right!));
 			}
 
