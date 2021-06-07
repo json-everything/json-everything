@@ -5,16 +5,15 @@ using Json.More;
 
 namespace Json.Path.QueryExpressions
 {
-	// TODO: this can be done better. use interface and multiple implementation types: path, value, and operation
 	internal class QueryExpressionNode
 	{
-		private readonly JsonPath _path;
+		private readonly JsonPath? _path;
+		private readonly QueryExpressionNode? _left;
+		private QueryExpressionNode? _right;
 		private QueryExpressionType? _outputType;
 		private JsonElement? _value;
 
-		public QueryExpressionNode Left { get; }
-		public IQueryExpressionOperator Operator { get; }
-		public QueryExpressionNode Right { get; private set; }
+		public IQueryExpressionOperator? Operator { get; }
 
 		public QueryExpressionType OutputType => _outputType ??= GetOutputType();
 
@@ -31,9 +30,9 @@ namespace Json.Path.QueryExpressions
 
 		public QueryExpressionNode(QueryExpressionNode left, IQueryExpressionOperator op, QueryExpressionNode right)
 		{
-			Left = left ?? throw new ArgumentNullException(nameof(left));
+			_left = left ?? throw new ArgumentNullException(nameof(left));
 			Operator = op ?? throw new ArgumentNullException(nameof(op));
-			Right = right;
+			_right = right;
 		}
 
 		public JsonElement Evaluate(JsonElement element)
@@ -44,14 +43,14 @@ namespace Json.Path.QueryExpressions
 			{
 				var result = _path.Evaluate(element);
 				// don't set _value; need to always eval
-				return result.Matches.Count == 1
+				return result.Matches?.Count == 1
 					? result.Matches[0].Value
 					: default;
 			}
 
 			if (OutputType == QueryExpressionType.Invalid) return default;
 			
-			var value = Operator.Evaluate(Left, Right, element);
+			var value = Operator!.Evaluate(_left!, _right!, element);
 			if (OutputType != QueryExpressionType.InstanceDependent)
 				_value = value;
 			return value;
@@ -59,10 +58,10 @@ namespace Json.Path.QueryExpressions
 
 		public void InsertRight(IQueryExpressionOperator op, QueryExpressionNode newRight)
 		{
-			Right = new QueryExpressionNode(Right, op, newRight);
+			_right = new QueryExpressionNode(_right!, op, newRight);
 		}
 
-		public static bool TryParseSingleValue(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode node)
+		public static bool TryParseSingleValue(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode? node)
 		{
 			if (JsonPath.TryParse(span, ref i, true, out var path))
 			{
@@ -93,22 +92,22 @@ namespace Json.Path.QueryExpressions
 			if (_value.HasValue) return GetValueType();
 			if (_path != null) return QueryExpressionType.InstanceDependent;
 
-			if (Left.OutputType == QueryExpressionType.Invalid ||
-			    Right?.OutputType == QueryExpressionType.Invalid)
+			if (_left?.OutputType == QueryExpressionType.Invalid ||
+			    _right?.OutputType == QueryExpressionType.Invalid)
 				return QueryExpressionType.Invalid;
 
 			// TODO: this might be optimizable depending on the operation
-			if (Left.OutputType == QueryExpressionType.InstanceDependent ||
-			    Right?.OutputType == QueryExpressionType.InstanceDependent)
+			if (_left?.OutputType == QueryExpressionType.InstanceDependent ||
+			    _right?.OutputType == QueryExpressionType.InstanceDependent)
 				return QueryExpressionType.InstanceDependent;
 
-			return Operator?.GetOutputType(Left, Right) ?? GetValueType();
+			return Operator?.GetOutputType(_left!, _right!) ?? GetValueType();
 		}
 
 		private QueryExpressionType GetValueType()
 		{
 			// ReSharper disable once PossibleInvalidOperationException
-			return _value.Value.ValueKind switch
+			return _value?.ValueKind switch
 			{
 				JsonValueKind.Undefined => QueryExpressionType.Invalid,
 				JsonValueKind.Object => QueryExpressionType.Invalid,
@@ -124,7 +123,7 @@ namespace Json.Path.QueryExpressions
 
 		public override string ToString()
 		{
-			return Operator?.ToString(Left, Right) ?? _value?.ToJsonString() ?? _path.ToString();
+			return Operator?.ToString(_left!, _right!) ?? _value?.ToJsonString() ?? _path!.ToString();
 		}
 	}
 }

@@ -89,7 +89,7 @@ namespace Json.Path
 					}
 				}
 
-				followingNodes.Add((op!, right!));
+				followingNodes.Add((op, right));
 			}
 
 			if (!followingNodes.Any())
@@ -110,7 +110,7 @@ namespace Json.Path
 					continue;
 				}
 
-				while (current.Any() && current.Peek().Operator.OrderOfOperation < op.OrderOfOperation)
+				while (current.Any() && current.Peek().Operator?.OrderOfOperation < op.OrderOfOperation)
 				{
 					current.Pop();
 				}

@@ -82,7 +82,7 @@ namespace Json.Path
 			return TryParse(span, ref i, false, out path);
 		}
 
-		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, bool allowTrailingContent, out JsonPath? path)
+		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, bool allowTrailingContent, [NotNullWhen(true)] out JsonPath? path)
 		{
 			var nodes = new List<ISelector>();
 			while (i < span.Length)
