@@ -22,15 +22,15 @@ namespace Json.Path
 				SliceIndex.TryParse,
 				SimpleIndex.TryParse
 			};
-		private static readonly Dictionary<string, IPathNode> _reservedWords =
-			new Dictionary<string, IPathNode>
+		private static readonly Dictionary<string, ISelector> _reservedWords =
+			new Dictionary<string, ISelector>
 			{
-				["length"] = LengthNode.Instance
+				["length"] = LengthSelector.Instance
 			};
 
-		private readonly IEnumerable<IPathNode> _nodes;
+		private readonly IEnumerable<ISelector> _nodes;
 
-		private JsonPath(IEnumerable<IPathNode> nodes)
+		private JsonPath(IEnumerable<ISelector> nodes)
 		{
 			_nodes = nodes;
 		}
@@ -45,7 +45,7 @@ namespace Json.Path
 		{
 			var i = 0;
 			var span = source.AsSpan();
-			var nodes = new List<IPathNode>();
+			var nodes = new List<ISelector>();
 			while (i < span.Length)
 			{
 				var node = span[i] switch
@@ -84,7 +84,7 @@ namespace Json.Path
 
 		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, bool allowTrailingContent, out JsonPath? path)
 		{
-			var nodes = new List<IPathNode>();
+			var nodes = new List<ISelector>();
 			while (i < span.Length)
 			{
 				var node = span[i] switch
@@ -116,45 +116,45 @@ namespace Json.Path
 			return true;
 		}
 
-		private static IPathNode AddRootNode(ReadOnlySpan<char> span, ref int i)
+		private static ISelector AddRootNode(ReadOnlySpan<char> span, ref int i)
 		{
 			i++;
-			return new RootNode();
+			return new RootNodeSelector();
 		}
 
-		private static IPathNode AddLocalRootNode(ReadOnlySpan<char> span, ref int i)
+		private static ISelector AddLocalRootNode(ReadOnlySpan<char> span, ref int i)
 		{
 			i++;
-			return new LocalRootNode();
+			return new LocalNodeSelector();
 		}
 
-		private static IPathNode AddPropertyOrRecursive(ReadOnlySpan<char> span, ref int i)
+		private static ISelector AddPropertyOrRecursive(ReadOnlySpan<char> span, ref int i)
 		{
-			var slice = span.Slice(i);
+			var slice = span[i..];
 			if (slice.StartsWith("..") || slice.StartsWith(".["))
 			{
 				i++;
-				return new RecursiveNode();
+				return new RecursiveDescentSelector();
 			}
 
 			if (slice.StartsWith(".*"))
 			{
 				i += 2;
-				return new PropertyNode(null);
+				return new PropertySelector(null);
 			}
 
-			slice = slice.Slice(1);
+			slice = slice[1..];
 			var propertyNameLength = 0;
 			while (propertyNameLength < slice.Length && IsValidForPropertyName(slice[propertyNameLength]))
 			{
 				propertyNameLength++;
 			}
 
-			var propertyName = slice.Slice(0, propertyNameLength);
+			var propertyName = slice[..propertyNameLength];
 			i += 1 + propertyNameLength;
 			return _reservedWords.TryGetValue(propertyName.ToString(), out var node)
 				? node
-				: new PropertyNode(propertyName.ToString());
+				: new PropertySelector(propertyName.ToString());
 		}
 
 		private static bool IsValidForPropertyName(char ch)
@@ -166,14 +166,14 @@ namespace Json.Path
 			       ch.In(0x80..0x10FFFF);
 		}
 
-		private static IPathNode? AddIndex(ReadOnlySpan<char> span, ref int i)
+		private static ISelector? AddIndex(ReadOnlySpan<char> span, ref int i)
 		{
-			var slice = span.Slice(i);
+			var slice = span[i..];
 			// replace this with an actual index parser that returns null to handle spaces
 			if (slice.StartsWith("[*]"))
 			{
 				i += 3;
-				return new IndexNode(null);
+				return new IndexSelector(null);
 			}
 
 			// consume [
@@ -196,7 +196,7 @@ namespace Json.Path
 
 			if (ch != ']') return null;
 			
-			return new IndexNode(indices);
+			return new IndexSelector(indices);
 		}
 
 		private static bool ParseIndex(ReadOnlySpan<char> span, ref int i, out IIndexExpression? index)

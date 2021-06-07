@@ -4,9 +4,9 @@
 [submodule "ref-repos/json-path-comparison"]
 	path = ref-repos/json-path-comparison
 	url = https://github.com/cburgmer/json-path-comparison.git
-[submodule "ref-repos/jsonpath-reference-implementation"]
-	path = ref-repos/jsonpath-reference-implementation
-	url = https://github.com/jsonpath-standard/jsonpath-reference-implementation.git
 [submodule "ref-repos/json-patch-tests"]
 	path = ref-repos/json-patch-tests
 	url = https://github.com/json-patch/json-patch-tests.git
+[submodule "ref-repos/jsonpath-compliance-test-suite"]
+	path = ref-repos/jsonpath-compliance-test-suite
+	url = https://github.com/jsonpath-standard/jsonpath-compliance-test-suite.git

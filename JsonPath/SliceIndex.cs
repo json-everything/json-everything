@@ -20,33 +20,72 @@ namespace Json.Path
 
 		IEnumerable<int> IArrayIndexExpression.GetIndices(JsonElement array)
 		{
+			if (_step == 0) return Enumerable.Empty<int>();
+
 			var length = array.GetArrayLength();
-			var end = _range.End.IsFromEnd ? length - _range.End.Value : _range.End.Value;
-			var max = Math.Min(length, end);
+			var startUnspecified = _range.Start.IsFromEnd && _range.Start.Value == 0;
+			var start = startUnspecified ? (int?) null : _range.Start.Value * (_range.Start.IsFromEnd ? -1 : 1);
 
-			var start = _range.Start.IsFromEnd ? length - _range.Start.Value : _range.Start.Value;
-			var min = Math.Max(0, start);
+			var endUnspecified = _range.End.IsFromEnd && _range.End.Value == 0;
+			var end = endUnspecified ? (int?) null : _range.End.Value * (_range.End.IsFromEnd ? -1 : 1);
 
-			IEnumerable<int> all;
-			if (min == max) all = new[] {min};
-			else if (min < max) all = Enumerable.Range(min, max-min);
-			else all = Enumerable.Range(max, min - max);
+			var indices = new List<int>();
+			var (lower, upper) = Bounds(start, end, _step, length);
 
-			var step = _step;
-			if (step < 0)
+			if (_step > 0)
 			{
-				all = all.Reverse();
-				step = -step;
+				var i = lower ?? 0;
+				upper ??= length;
+				while (i < upper)
+				{
+					indices.Add(i);
+					i += _step;
+				}
 			}
-			return all.Select((index, i) => (index, i))
-				.Where(x => x.i % step == 0)
-				.Select(x => x.index);
+			else
+			{
+				var i = upper ?? length - 1;
+				lower ??= -1;
+				while (lower < i)
+				{
+					indices.Add(i);
+					i += _step;
+				}
+			}
+
+			return indices;
+		}
+
+		private static int? Normalize(int? index, int length)
+		{
+			return index >= 0 ? index : length + index;
+		}
+
+		private static (int? ,int?) Bounds(int? start, int? end, int? step, int length)
+		{
+			var startIndex = Normalize(start, length);
+			var endIndex = Normalize(end, length);
+
+			int? lower, upper;
+
+			if (step >= 0)
+			{
+				lower = startIndex.HasValue ? Math.Min(Math.Max(startIndex.Value, 0), length) : (int?) null;
+				upper = endIndex.HasValue ? Math.Min(Math.Max(endIndex.Value, 0), length) : (int?) null;
+			}
+			else
+			{
+				upper = startIndex.HasValue ? Math.Min(Math.Max(startIndex.Value, -1), length-1) : (int?)null;
+				lower = endIndex.HasValue ? Math.Min(Math.Max(endIndex.Value, -1), length-1) : (int?)null;
+			}
+
+			return (lower, upper);
 		}
 
 		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)
 		{
-			Index start = Index.Start, end = Index.End;
-			if (span.TryGetInt(ref i, out var v)) 
+			Index start = Index.End, end = Index.End;
+			if (span.TryGetInt(ref i, out var v))
 				start = new Index(Math.Abs(v), v < 0);
 			if (span[i] != ':')
 			{
@@ -67,11 +106,6 @@ namespace Json.Path
 				index = new SliceIndex(start..end);
 				return true;
 			}
-			if (v == 0)
-			{
-				index = null;
-				return false;
-			}
 			index = new SliceIndex(start..end, v);
 			return true;
 		}
@@ -84,7 +118,7 @@ namespace Json.Path
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			if (!_range.Start.Equals(Index.Start))
+			if (!_range.Start.Equals(Index.End))
 				sb.Append(_range.Start.ToPathString());
 			sb.Append(":");
 			if (!_range.End.Equals(Index.End))

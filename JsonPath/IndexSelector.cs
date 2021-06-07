@@ -5,11 +5,11 @@ using Json.Pointer;
 
 namespace Json.Path
 {
-	internal class IndexNode : PathNodeBase
+	internal class IndexSelector : SelectorBase
 	{
 		private readonly List<IIndexExpression>? _ranges;
 
-		public IndexNode(IEnumerable<IIndexExpression>? ranges)
+		public IndexSelector(IEnumerable<IIndexExpression>? ranges)
 		{
 			_ranges = ranges?.ToList();
 		}
@@ -23,7 +23,6 @@ namespace Json.Path
 					IEnumerable<int> indices;
 					indices = _ranges?.OfType<IArrayIndexExpression>()
 						          .SelectMany(r => r.GetIndices(match.Value))
-						          .OrderBy(i => i)
 						          .Where(i => 0 <= i && i < array.Length)
 						          .Distinct() ??
 					          Enumerable.Range(0, array.Length);

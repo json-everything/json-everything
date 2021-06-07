@@ -6,7 +6,7 @@ using Json.More;
 
 namespace Json.Path.Tests.Suite
 {
-	public class ReferenceImplTestCase
+	public class ComplianceTestCase
 	{
 		public string Name { get; set; }
 		public string Selector { get; set; }

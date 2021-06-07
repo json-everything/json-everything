@@ -6,11 +6,11 @@ using Json.Pointer;
 
 namespace Json.Path
 {
-	internal class LengthNode : PathNodeBase
+	internal class LengthSelector : SelectorBase
 	{
-		public static LengthNode Instance { get; } = new LengthNode();
+		public static LengthSelector Instance { get; } = new LengthSelector();
 
-		private LengthNode() { }
+		private LengthSelector() { }
 
 		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
 		{
