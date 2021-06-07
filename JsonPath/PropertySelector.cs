@@ -5,11 +5,11 @@ using Json.Pointer;
 
 namespace Json.Path
 {
-	internal class PropertyNode : PathNodeBase
+	internal class PropertySelector : SelectorBase
 	{
 		private readonly string? _name;
 
-		public PropertyNode(string? name)
+		public PropertySelector(string? name)
 		{
 			_name = name;
 		}
