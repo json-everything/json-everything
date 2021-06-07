@@ -24,42 +24,83 @@ namespace Json.Path
 
 			var length = array.GetArrayLength();
 			var startUnspecified = _range.Start.IsFromEnd && _range.Start.Value == 0;
-			int start;
-			if (startUnspecified)
-				start = _step < 0 ? length - 1 : 0;
-			else
-				start = _range.Start.IsFromEnd ? length - _range.Start.Value : _range.Start.Value;
+			var start = startUnspecified ? (int?) null : _range.Start.Value * (_range.Start.IsFromEnd ? -1 : 1);
 
 			var endUnspecified = _range.End.IsFromEnd && _range.End.Value == 0;
-			int end;
-			if (endUnspecified)
-				end = _step < 0 ? 0 : length;
-			else
-				end = _range.End.IsFromEnd ? length - _range.End.Value : _range.End.Value;
+			var end = endUnspecified ? (int?) null : _range.End.Value * (_range.End.IsFromEnd ? -1 : 1);
 
-			var low = start < end ? start : end;
-			low = Math.Max(0, low);
-			var high = start < end ? end : start;
-			high = Math.Min(length - 1, high);
+			//var low = start < end ? start : end;
+			//low = Math.Max(0, low);
+			//var high = start < end ? end : start;
+			//high = Math.Min(length - 1, high);
 
-			if (low > high) return Enumerable.Empty<int>();
+			//if (low > high) return Enumerable.Empty<int>();
 
 			var indices = new List<int>();
-			var current = start;
+			//var current = start;
 
-			var stepsToLow = Math.Abs((start - low) / _step);
-			var stepsToHigh = Math.Abs((start - high) / _step);
-			var stepsToTake = Math.Min(stepsToLow, stepsToHigh);
-			current += stepsToTake * _step;
+			//var stepsToLow = Math.Abs((start - low) / _step);
+			//var stepsToHigh = Math.Abs((start - high) / _step);
+			//var stepsToTake = Math.Min(stepsToLow, stepsToHigh);
+			//current += stepsToTake * _step;
 
-			while (low <= current && current <= high)
+			//while (low <= current && current <= high)
+			//{
+			//	if (current != end || endUnspecified)
+			//		indices.Add(current);
+			//	current += _step;
+			//}
+
+			var (lower, upper) = Bounds(start, end, _step, length);
+
+			if (_step > 0)
 			{
-				if (current != end || endUnspecified)
-					indices.Add(current);
-				current += _step;
+				var i = lower ?? 0;
+				upper ??= length;
+				while (i < upper)
+				{
+					indices.Add(i);
+					i += _step;
+				}
+			}
+			else
+			{
+				var i = upper ?? length - 1;
+				lower ??= -1;
+				while (lower < i)
+				{
+					indices.Add(i);
+					i += _step;
+				}
 			}
 
 			return indices;
+		}
+
+		private static int? Normalize(int? index, int length)
+		{
+			return index >= 0 ? index : length + index;
+		}
+
+		private static (int? ,int?) Bounds(int? start, int? end, int? step, int length)
+		{
+			var startIndex = Normalize(start, length);
+			var endIndex = Normalize(end, length);
+
+			int? lower, upper;
+
+			if (step >= 0)
+			{
+				lower = startIndex.HasValue ? Math.Min(Math.Max(startIndex.Value, 0), length) : (int?) null;
+				upper = endIndex.HasValue ? Math.Min(Math.Max(endIndex.Value, 0), length) : (int?) null;
+			}
+			else
+			{
+				upper = startIndex.HasValue ? Math.Min(Math.Max(startIndex.Value, -1), length-1) : (int?)null;
+				lower = endIndex.HasValue ? Math.Min(Math.Max(endIndex.Value, -1), length-1) : (int?)null;
+			}
+
+			return (lower, upper);
 		}
 
 		internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)

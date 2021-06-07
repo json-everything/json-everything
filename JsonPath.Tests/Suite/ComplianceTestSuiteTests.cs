@@ -74,7 +74,9 @@ namespace Json.Path.Tests.Suite
 			}
 
 			var actualValues = actual.Matches.Select(m => m.Value).AsJsonElement();
-			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actualValues)}");
+			Console.WriteLine($"Actual (values): {actualValues}");
+			Console.WriteLine();
+			Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
 			if (testCase.InvalidSelector)
 				Assert.Fail($"{testCase.Selector} is not a valid path.");
 
