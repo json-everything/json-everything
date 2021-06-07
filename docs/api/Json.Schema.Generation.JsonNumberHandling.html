@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Enum JsonNumberHandling
    ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list">Search Results for <span></span></div>
+          <div class="search-list"></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+          <ul id="pagination"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -83,14 +83,15 @@
   
   <h1 id="Json_Schema_Generation_JsonNumberHandling" data-uid="Json.Schema.Generation.JsonNumberHandling" class="text-break">Enum JsonNumberHandling
   </h1>
-  <div class="markdown level0 summary"><p>Determines how <see cref="!:JsonSerializer"></see> handles numbers when serializing and deserializing.</p>
+  <div class="markdown level0 summary"><p>Determines how <span class="xref">System.Text.Json.JsonSerializer</span> handles numbers when serializing and deserializing.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Json.Schema.Generation.html">Json.Schema.Generation</a></h6>
   <h6><strong>Assembly</strong>: JsonSchema.Net.Generation.dll</h6>
   <h5 id="Json_Schema_Generation_JsonNumberHandling_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum JsonNumberHandling : int</code></pre>
+    <pre><code class="lang-csharp hljs">[Flags]
+public enum JsonNumberHandling</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -104,20 +105,20 @@
     <tbody>
       <tr>
         <td id="Json_Schema_Generation_JsonNumberHandling_AllowNamedFloatingPointLiterals">AllowNamedFloatingPointLiterals</td>
-        <td><p>The &quot;NaN&quot;, &quot;Infinity&quot;, and &quot;-Infinity&quot; <see cref="!:JsonTokenType.String"></see> tokens can be read as
-floating-point constants, and the <see cref="!:System.Single"></see> and <see cref="!:System.Double"></see> values for these
+        <td><p>The &quot;NaN&quot;, &quot;Infinity&quot;, and &quot;-Infinity&quot; <span class="xref">System.Text.Json.JsonTokenType.String</span> tokens can be read as
+floating-point constants, and the <span class="xref">System.Single</span> and <span class="xref">System.Double</span> values for these
 constants will be written as their corresponding JSON string representations.</p>
 </td>
       </tr>
       <tr>
         <td id="Json_Schema_Generation_JsonNumberHandling_AllowReadingFromString">AllowReadingFromString</td>
-        <td><p>Numbers can be read from <see cref="!:JsonTokenType.String"></see> tokens.
-Does not prevent numbers from being read from <see cref="!:JsonTokenType.Number"></see> token.</p>
+        <td><p>Numbers can be read from <span class="xref">System.Text.Json.JsonTokenType.String</span> tokens.
+Does not prevent numbers from being read from <span class="xref">System.Text.Json.JsonTokenType.Number</span> token.</p>
 </td>
       </tr>
       <tr>
         <td id="Json_Schema_Generation_JsonNumberHandling_Strict">Strict</td>
-        <td><p>Numbers will only be read from <see cref="!:JsonTokenType.Number"></see> tokens and will only be written as JSON numbers (without quotes).</p>
+        <td><p>Numbers will only be read from <span class="xref">System.Text.Json.JsonTokenType.Number</span> tokens and will only be written as JSON numbers (without quotes).</p>
 </td>
       </tr>
       <tr>
@@ -129,7 +130,7 @@ Does not prevent numbers from being read from <see cref="!:JsonTokenType.Number"
   </thead></thead></table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Nullable_JsonSerializerOptions__">JsonDocumentExtensions.ToJsonDocument&lt;JsonNumberHandling&gt;(Nullable&lt;JsonSerializerOptions&gt;)</a>
+      <a class="xref" href="Json.More.JsonDocumentExtensions.html#Json_More_JsonDocumentExtensions_ToJsonDocument__1___0_System_Text_Json_JsonSerializerOptions_">JsonDocumentExtensions.ToJsonDocument&lt;JsonNumberHandling&gt;(JsonSerializerOptions)</a>
   </div>
 </article>
           </div>
@@ -147,8 +148,7 @@ Does not prevent numbers from being read from <see cref="!:JsonTokenType.Number"
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
               </nav>
             </div>
           </div>

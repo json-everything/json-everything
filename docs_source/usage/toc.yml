@@ -18,6 +18,7 @@
   - name: Generation
     href: schema-generation.md
   - name: Custom Vocabularies
+    href: custom-vocabs.md
     items:
     - name: Data Access
       href: vocabs-data.md

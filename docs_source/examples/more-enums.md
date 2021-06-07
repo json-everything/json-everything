@@ -2,50 +2,46 @@
 
 By default, the `System.Text.Json` serializer will convert enumeration members to their numeric values.  But suppose we're interacting with an API that expects named values.  To do this, we need to tell the serializer how to convert the enum values into strings.  This is the purpose of the `EnumStringConverter<T>` class.
 
-Let's assume that the API we're trying to talk with has a `Gender` enumeration with the values `male`, `female`, `other`, and `not-specified`.
+Let's assume that the API we're trying to talk with has a `MemberType` enumeration with the values `free-tier`, `pro`, and `enterprise`.
 
 We can model this in our code with
 
 ```c#
-enum Gender
+enum MemberType
 {
     Default, // we don't want to default to a valid value
-    Male,
-    Female,
-    Other,
-    NotSpecified
+    FreeTier,
+    Pro,
+    Enterprise
 }
 ```
 
 but as mentioned, this just renders as numbers in the JSON.  Let's add the converter.
 
 ```c#
-[JsonConverter(typeof(EnumStringConverter<Gender>))]
-enum Gender
+[JsonConverter(typeof(EnumStringConverter<MemberType>))]
+enum MemberType
 {
     Default, // we don't want to default to a valid value
-    Male,
-    Female,
-    Other,
-    NotSpecified
+    FreeTier,
+    Pro,
+    Enterprise
 }
 ```
 
 This will now render the values as they appear in the C# code, in _PascalCase_.  Still not quite what the API needs.  So let's add some `DescriptionAttribute`s from the `System.ComponentModel` namespace.
 
 ```c#
-[JsonConverter(typeof(EnumStringConverter<Gender>))]
-enum Gender
+[JsonConverter(typeof(EnumStringConverter<MemberType>))]
+enum MemberType
 {
     Default, // we don't want to default to a valid value
-    [Description("male")]
-    Male,
-    [Description("female")]
-    Female,
-    [Description("other")]
-    Other,
-    [Description("not-specified")]
-    NotSpecified
+    [Description("free-tier")]
+    FreeTier,
+    [Description("pro")]
+    Pro,
+    [Description("enterprise")]
+    Enterprise
 }
 ```
 

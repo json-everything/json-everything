@@ -11,4 +11,4 @@
 - name: JsonSchema.Net.Generation
   items:
   - name: Extending Schema Generation
-    href: schema-gen.md
+    href: schema-gen-ext.md
