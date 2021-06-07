@@ -29,28 +29,7 @@ namespace Json.Path
 			var endUnspecified = _range.End.IsFromEnd && _range.End.Value == 0;
 			var end = endUnspecified ? (int?) null : _range.End.Value * (_range.End.IsFromEnd ? -1 : 1);
 
-			//var low = start < end ? start : end;
-			//low = Math.Max(0, low);
-			//var high = start < end ? end : start;
-			//high = Math.Min(length - 1, high);
-
-			//if (low > high) return Enumerable.Empty<int>();
-
 			var indices = new List<int>();
-			//var current = start;
-
-			//var stepsToLow = Math.Abs((start - low) / _step);
-			//var stepsToHigh = Math.Abs((start - high) / _step);
-			//var stepsToTake = Math.Min(stepsToLow, stepsToHigh);
-			//current += stepsToTake * _step;
-
-			//while (low <= current && current <= high)
-			//{
-			//	if (current != end || endUnspecified)
-			//		indices.Add(current);
-			//	current += _step;
-			//}
-
 			var (lower, upper) = Bounds(start, end, _step, length);
 
 			if (_step > 0)
