@@ -5,11 +5,11 @@ using Json.Pointer;
 
 namespace Json.Path
 {
-	internal class IndexNode : PathNodeBase
+	internal class IndexSelector : SelectorBase
 	{
 		private readonly List<IIndexExpression>? _ranges;
 
-		public IndexNode(IEnumerable<IIndexExpression>? ranges)
+		public IndexSelector(IEnumerable<IIndexExpression>? ranges)
 		{
 			_ranges = ranges?.ToList();
 		}

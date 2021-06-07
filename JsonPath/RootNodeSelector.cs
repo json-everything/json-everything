@@ -2,7 +2,7 @@
 
 namespace Json.Path
 {
-	internal class RootNode : PathNodeBase
+	internal class RootNodeSelector : SelectorBase
 	{
 		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
 		{

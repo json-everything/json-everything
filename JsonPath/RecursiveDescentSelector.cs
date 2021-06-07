@@ -6,7 +6,7 @@ using Json.Pointer;
 
 namespace Json.Path
 {
-	internal class RecursiveNode : PathNodeBase
+	internal class RecursiveDescentSelector : SelectorBase
 	{
 		protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
 		{

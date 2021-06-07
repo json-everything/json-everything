@@ -2,7 +2,7 @@
 
 namespace Json.Path
 {
-	internal abstract class PathNodeBase : IPathNode
+	internal abstract class SelectorBase : ISelector
 	{
 		public virtual void Evaluate(EvaluationContext context)
 		{
