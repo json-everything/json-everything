@@ -1,3 +1,7 @@
+# [0.1.6](https://github.com/gregsdennis/json-everything/pull/122)
+
+Updated expression parsing to handle whitespace better.
+
 # [0.1.5](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.
