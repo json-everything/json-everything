@@ -1,8 +1,7 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using NUnit.Framework;
-
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests
@@ -83,6 +82,17 @@ namespace Json.Schema.Generation.Tests
 				.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<Dictionary<string, int>>();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void EmptyObject()
+		{
+			JsonSchema expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Object);
+
+			JsonSchema actual = new JsonSchemaBuilder().FromType<object>();
 
 			AssertEqual(expected, actual);
 		}
