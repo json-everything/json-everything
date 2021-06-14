@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -27,6 +27,12 @@ namespace Json.Schema.Generation
 		/// The CLR type currently being processed.
 		/// </summary>
 		public Type Type { get; }
+
+		/// <summary>
+		/// Indicates if the CLR type is originally a Nullable`1.
+		/// </summary>
+		public bool IsNullable { get; }
+
 		/// <summary>
 		/// The set of attributes.  Will be populated when an attribute has a property.
 		/// </summary>
@@ -42,7 +48,9 @@ namespace Json.Schema.Generation
 
 		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)
 		{
-			Type = type;
+			var trueType = Nullable.GetUnderlyingType(type);
+			Type = trueType ?? type;
+			IsNullable = trueType != null;
 			Attributes = attributes;
 			Configuration = configuration;
 		}
@@ -65,8 +73,8 @@ namespace Json.Schema.Generation
 			var thisHash = GetHashCode();
 			var allContexts = GetChildContexts();
 			var defsByHashCode = allContexts.Where(g => g.Value.Count > 1 &&
-			                                            (g.Value.Context.Intents.Count != 1 ||
-			                                            !(g.Value.Context.Intents[0] is TypeIntent)))
+														(g.Value.Context.Intents.Count != 1 ||
+														!(g.Value.Context.Intents[0] is TypeIntent)))
 				.ToDictionary(g => g.Key, g => g.Value.Context);
 
 			var currentNames = new List<string>();
@@ -135,7 +143,7 @@ namespace Json.Schema.Generation
 
 		private Dictionary<int, ContextCount> GetChildContexts()
 		{
-			var contextsToCheck = new List<SchemaGeneratorContext>{this};
+			var contextsToCheck = new List<SchemaGeneratorContext> { this };
 			var contextsReceived = new Dictionary<int, ContextCount>();
 			while (contextsToCheck.Any())
 			{

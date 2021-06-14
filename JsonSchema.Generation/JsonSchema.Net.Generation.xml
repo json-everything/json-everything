@@ -1319,6 +1319,11 @@
             The CLR type currently being processed.
             </summary>
         </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorContext.IsNullable">
+            <summary>
+            Indicates if the CLR type is originally a Nullable`1.
+            </summary>
+        </member>
         <member name="P:Json.Schema.Generation.SchemaGeneratorContext.Attributes">
             <summary>
             The set of attributes.  Will be populated when an attribute has a property.
