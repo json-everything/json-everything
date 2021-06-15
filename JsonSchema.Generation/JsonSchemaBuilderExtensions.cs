@@ -32,6 +32,7 @@ namespace Json.Schema.Generation
 			configuration ??= new SchemaGeneratorConfiguration();
 
 			SchemaGenerationContextCache.Clear();
+
 			var context = SchemaGenerationContextCache.Get(type, new List<Attribute>(), configuration);
 
 			context.Optimize();
