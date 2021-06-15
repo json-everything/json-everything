@@ -20,12 +20,19 @@ namespace Json.Schema.Generation
 		public static bool IsInteger(this Type type)
 		{
 			return type == typeof(byte) ||
-			       type == typeof(short) ||
-			       type == typeof(ushort) ||
-			       type == typeof(int) ||
-			       type == typeof(uint) ||
-			       type == typeof(long) ||
-			       type == typeof(ulong);
+				   type == typeof(short) ||
+				   type == typeof(ushort) ||
+				   type == typeof(int) ||
+				   type == typeof(uint) ||
+				   type == typeof(long) ||
+				   type == typeof(ulong) ||
+				   type == typeof(byte?) ||
+				   type == typeof(short?) ||
+				   type == typeof(ushort?) ||
+				   type == typeof(int?) ||
+				   type == typeof(uint?) ||
+				   type == typeof(long?) ||
+				   type == typeof(ulong?);
 		}
 
 		/// <summary>
@@ -36,8 +43,11 @@ namespace Json.Schema.Generation
 		public static bool IsFloatingPoint(this Type type)
 		{
 			return type == typeof(float) ||
-			       type == typeof(double) ||
-			       type == typeof(decimal);
+				   type == typeof(double) ||
+				   type == typeof(decimal) ||
+				   type == typeof(float?) ||
+				   type == typeof(double?) ||
+				   type == typeof(decimal?);
 		}
 
 		/// <summary>
@@ -58,15 +68,15 @@ namespace Json.Schema.Generation
 		public static bool IsArray(this Type type)
 		{
 			return type.IsArray ||
-			       type == typeof(Array) ||
-			       typeof(IEnumerable).IsAssignableFrom(type);
+				   type == typeof(Array) ||
+				   typeof(IEnumerable).IsAssignableFrom(type);
 		}
 
 		internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
 		{
 			var eligible = items.Where(
 				a => !(a is JsonPropertyNameAttribute) &&
-				     !(a is RequiredAttribute));
+					 !(a is RequiredAttribute));
 			unchecked
 			{
 				int hashCode = 0;

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Json.Schema.Generation.Generators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Json.Schema.Generation.Generators;
 
 namespace Json.Schema.Generation
 {
@@ -20,6 +20,7 @@ namespace Json.Schema.Generation
 				new EnumGenerator(),
 				new DateTimeSchemaGenerator(),
 				new GuidSchemaGenerator(),
+				new NullableValueTypeSchemaGenerator(),
 				new JsonPointerSchemaGenerator(),
 				new UriSchemaGenerator(),
 				// the dictionary ones are enumerable, so they need to come before the array one
