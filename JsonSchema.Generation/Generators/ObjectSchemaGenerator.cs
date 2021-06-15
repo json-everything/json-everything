@@ -61,6 +61,7 @@ namespace Json.Schema.Generation.Generators
 					required.Add(name);
 			}
 
+
 			if (props.Count > 0)
 			{
 				context.Intents.Add(new PropertiesIntent(props));
