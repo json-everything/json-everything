@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Json.More;
+﻿using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests
@@ -146,6 +145,81 @@ namespace Json.Schema.Generation.Tests
 				.Build();
 
 			var actual = new JsonSchemaBuilder().FromType<Uri>().Build();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void NullableBooleanSchema()
+		{
+			var expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Boolean)
+				.Build();
+
+			var actual = new JsonSchemaBuilder().FromType<bool?>().Build();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void NullableDateTimeSchema()
+		{
+			var expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Format(Formats.DateTime)
+				.Build();
+
+			var actual = new JsonSchemaBuilder().FromType<DateTime?>().Build();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void NullableEnumSchema()
+		{
+			var expected = new JsonSchemaBuilder()
+				.Enum(Enum.GetNames(typeof(DayOfWeek)).Select(x => x.AsJsonElement()))
+				.Build();
+
+			var actual = new JsonSchemaBuilder().FromType<DayOfWeek?>().Build();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void NullableGuidSchema()
+		{
+			var expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Format(Formats.Uuid)
+				.Build();
+
+			var actual = new JsonSchemaBuilder().FromType<Guid?>().Build();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void NullableIntegerSchema()
+		{
+			var expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Integer)
+				.Build();
+
+			var actual = new JsonSchemaBuilder().FromType<int?>().Build();
+
+			AssertEqual(expected, actual);
+		}
+
+
+		[Test]
+		public void NullableNumberSchema()
+		{
+			var expected = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Number)
+				.Build();
+
+			var actual = new JsonSchemaBuilder().FromType<double?>().Build();
 
 			AssertEqual(expected, actual);
 		}
