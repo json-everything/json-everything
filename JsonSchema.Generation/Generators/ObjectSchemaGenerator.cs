@@ -1,22 +1,24 @@
-﻿using System;
+﻿using Json.Schema.Generation.Intents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators
 {
-	internal class ObjectSchemaGenerator : ISchemaGenerator
+	internal class ObjectSchemaGenerator : BaseReferenceTypeGenerator
 	{
-		public bool Handles(Type type)
+		protected override SchemaValueType Type { get; } = SchemaValueType.Object;
+
+		public override bool Handles(Type type)
 		{
 			return true;
 		}
 
-		public void AddConstraints(SchemaGeneratorContext context)
+		public override void AddConstraints(SchemaGeneratorContext context)
 		{
-			context.Intents.Add(new TypeIntent(SchemaValueType.Object));
+			base.AddConstraints(context);
 
 			var props = new Dictionary<string, SchemaGeneratorContext>();
 			var required = new List<string>();
@@ -61,7 +63,7 @@ namespace Json.Schema.Generation.Generators
 					required.Add(name);
 			}
 
-			context.Intents.Add(new PropertiesIntent(props)); 
+			context.Intents.Add(new PropertiesIntent(props));
 			if (required.Any())
 				context.Intents.Add(new RequiredIntent(required));
 		}

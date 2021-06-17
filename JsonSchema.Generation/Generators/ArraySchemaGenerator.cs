@@ -1,19 +1,21 @@
-﻿using System;
+﻿using Json.Schema.Generation.Intents;
+using System;
 using System.Linq;
-using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators
 {
-	internal class ArraySchemaGenerator : ISchemaGenerator
+	internal class ArraySchemaGenerator : BaseReferenceTypeGenerator
 	{
-		public bool Handles(Type type)
+		protected override SchemaValueType Type { get; } = SchemaValueType.Array;
+
+		public override bool Handles(Type type)
 		{
 			return type.IsArray();
 		}
 
-		public void AddConstraints(SchemaGeneratorContext context)
+		public override void AddConstraints(SchemaGeneratorContext context)
 		{
-			context.Intents.Add(new TypeIntent(SchemaValueType.Array));
+			base.AddConstraints(context);
 
 			Type? itemType = null;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Json.Schema.Generation.Intents;
+using System;
 
 namespace Json.Schema.Generation.Generators
 {
@@ -27,7 +28,22 @@ namespace Json.Schema.Generation.Generators
 				GeneratorRegistry.Get(Nullable.GetUnderlyingType(context.Type))?
 					.AddConstraints(underlyingContext);
 
-				context.Intents.AddRange(underlyingContext.Intents);
+
+				var nullable = (context.Configuration.Nullability & Nullability.AllowForNullableValueTypes)
+					== Nullability.AllowForNullableValueTypes;
+
+				foreach (var intent in underlyingContext.Intents)
+				{
+					if (nullable
+						&& intent is TypeIntent tIntent
+						&& (tIntent.Type & SchemaValueType.Null) == 0)
+					{
+						context.Intents.Add(new TypeIntent(tIntent.Type | SchemaValueType.Null));
+						continue;
+					}
+
+					context.Intents.Add(intent);
+				}
 			}
 		}
 	}

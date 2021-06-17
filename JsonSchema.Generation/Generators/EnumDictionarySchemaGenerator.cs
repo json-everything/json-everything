@@ -1,29 +1,31 @@
-﻿using System;
+﻿using Json.Schema.Generation.Intents;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators
 {
-	internal class EnumDictionarySchemaGenerator : ISchemaGenerator
+	internal class EnumDictionarySchemaGenerator : BaseReferenceTypeGenerator
 	{
-		public bool Handles(Type type)
+		protected override SchemaValueType Type { get; } = SchemaValueType.Object;
+
+		public override bool Handles(Type type)
 		{
 			if (!type.IsGenericType) return false;
 
 			var generic = type.GetGenericTypeDefinition();
 			if (generic != typeof(IDictionary<,>) &&
-			    generic != typeof(Dictionary<,>) &&
-			    generic != typeof(ConcurrentDictionary<,>))
+				generic != typeof(Dictionary<,>) &&
+				generic != typeof(ConcurrentDictionary<,>))
 				return false;
 
 			var keyType = type.GenericTypeArguments[0];
 			return keyType.IsEnum;
 		}
 
-		public void AddConstraints(SchemaGeneratorContext context)
+		public override void AddConstraints(SchemaGeneratorContext context)
 		{
-			context.Intents.Add(new TypeIntent(SchemaValueType.Object));
+			base.AddConstraints(context);
 
 			var keyType = context.Type.GenericTypeArguments[0];
 			var keyContext = SchemaGenerationContextCache.Get(keyType, context.Attributes, context.Configuration);

@@ -1,18 +1,14 @@
 ﻿using System;
-using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators
 {
-	internal class StringSchemaGenerator : ISchemaGenerator
+	internal class StringSchemaGenerator : BaseReferenceTypeGenerator
 	{
-		public bool Handles(Type type)
+		protected override SchemaValueType Type { get; } = SchemaValueType.String;
+
+		public override bool Handles(Type type)
 		{
 			return type == typeof(string);
-		}
-
-		public void AddConstraints(SchemaGeneratorContext context)
-		{
-			context.Intents.Add(new TypeIntent(SchemaValueType.String));
 		}
 	}
 }

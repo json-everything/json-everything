@@ -1,18 +1,21 @@
-﻿using System;
-using Json.Schema.Generation.Intents;
+﻿using Json.Schema.Generation.Intents;
+using System;
 
 namespace Json.Schema.Generation.Generators
 {
-	internal class UriSchemaGenerator : ISchemaGenerator
+	internal class UriSchemaGenerator : BaseReferenceTypeGenerator
 	{
-		public bool Handles(Type type)
+		protected override SchemaValueType Type { get; } = SchemaValueType.String;
+
+		public override bool Handles(Type type)
 		{
 			return type == typeof(Uri);
 		}
 
-		public void AddConstraints(SchemaGeneratorContext context)
+		public override void AddConstraints(SchemaGeneratorContext context)
 		{
-			context.Intents.Add(new TypeIntent(SchemaValueType.String));
+			base.AddConstraints(context);
+
 			context.Intents.Add(new FormatIntent(Formats.Uri));
 		}
 	}
