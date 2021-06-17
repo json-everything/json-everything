@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Json.Schema.Generation.Generators;
+﻿using Json.Schema.Generation.Generators;
+using System.Collections.Generic;
 
 namespace Json.Schema.Generation
 {
@@ -20,5 +20,10 @@ namespace Json.Schema.Generation
 		/// Gets or sets the order in which properties will be listed in the schema.
 		/// </summary>
 		public PropertyOrder PropertyOrder { get; set; }
+		/// <summary>
+		/// Gets or sets the application of type `null` to schema.
+		/// </summary>
+		public Nullability Nullability { get; set; } = Nullability.Disabled;
+
 	}
 }

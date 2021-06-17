@@ -1193,6 +1193,55 @@
             </summary>
             <param name="value">The value.</param>
         </member>
+        <member name="T:Json.Schema.Generation.NotNullAttribute">
+            <summary>
+            Removes `null` from schema type array.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.NotNullAttribute.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.NotNullAttribute"/> instance.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.Nullability">
+            <summary>
+            Indicates whether to apply `null` to schema type.
+            </summary>
+            <remarks>
+            This is a flags-enabled enumeration, so values that support multiple
+            types can be bit-wise OR'd `|` together.
+            </remarks>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.Disabled">
+            <summary>
+            Default value. Type `null` will not be applied to schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.AllowForNullableValueTypes">
+            <summary>
+            Type `null` will be applied to Nullable&lt;T&gt; schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.AllowForReferenceTypes">
+            <summary>
+            Type `null` will be applied to Reference Type schema
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.AllowForAllTypes">
+            <summary>
+            Type `null` will be applied to both Reference Type and Nullable&lt;T&gt; schema
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.NullAttribute">
+            <summary>
+            Removes `null` from schema type array.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.NullAttribute.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.NullAttribute"/> instance.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Generation.PatternAttribute">
             <summary>
             Applies a `pattern` keyword.
@@ -1307,6 +1356,11 @@
         <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder">
             <summary>
             Gets or sets the order in which properties will be listed in the schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability">
+            <summary>
+            Gets or sets the application of type `null` to schema.
             </summary>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGeneratorContext">
