@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.Schema.Generation.Tests
 {
@@ -121,17 +122,21 @@ namespace Json.Schema.Generation.Tests
 				Nullability = nullability
 			};
 
-			// Nullability affects root schema so only keywords are compared
+			// Nullability affects root schema so only PropertiesKeywords are compared
 			var expected = new JsonSchemaBuilder()
 				.Properties(
 					(nameof(ReferenceMember.Property), new JsonSchemaBuilder().Type(valueType)))
 				.Build()
-				.Keywords;
+				.Keywords
+				.OfType<PropertiesKeyword>()
+				.First();
 
 			var actual = new JsonSchemaBuilder()
 				.FromType(type, config)
 				.Build()
-				.Keywords;
+				.Keywords
+				.OfType<PropertiesKeyword>()
+				.First();
 
 			Assert.AreEqual(expected, actual);
 		}
