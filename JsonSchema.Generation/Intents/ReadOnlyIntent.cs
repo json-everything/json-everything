@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The value.
 		/// </summary>
-		public bool Value { get; }
+		public bool Value { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="ReadOnlyIntent"/> instance.

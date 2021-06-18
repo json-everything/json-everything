@@ -10,9 +10,10 @@ namespace Json.Schema.Generation
 	/// </summary>
 	public static class GeneratorRegistry
 	{
-		private static readonly List<ISchemaGenerator> _generators =
+		private static readonly List<ISchemaGenerator> Generators =
 			new List<ISchemaGenerator>
 			{
+				new NullableValueTypeSchemaGenerator(),
 				new BooleanSchemaGenerator(),
 				new IntegerSchemaGenerator(),
 				new NumberSchemaGenerator(),
@@ -40,12 +41,12 @@ namespace Json.Schema.Generation
 		/// </remarks>
 		public static void Register(ISchemaGenerator generator)
 		{
-			_generators.Insert(0, generator);
+			Generators.Insert(0, generator);
 		}
 
 		internal static ISchemaGenerator? Get(Type type)
 		{
-			return _generators.FirstOrDefault(g => g.Handles(type));
+			return Generators.FirstOrDefault(g => g.Handles(type));
 		}
 	}
 }

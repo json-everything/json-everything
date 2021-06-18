@@ -1,3 +1,12 @@
+# [1.6.0](https://github.com/gregsdennis/json-everything/pull/130)
+
+[1.6.0](https://github.com/gregsdennis/json-everything/pull/130) - Added support for nullability.  Special thanks to [@JMPSequeira](https://github.com/JMPSequeira) who proposed the feature and worked through multiple designs that lead to the final solution and for adding all the tests needed to ensure proper function.
+- Added `NullableAttribute`.
+- Added `Nullability`.
+- Added `SchemaGenerationConfiguration.Nullability`.
+
+[1.6.0](https://github.com/gregsdennis/json-everything/pull/126) - Bug fix: generation of object with no serializable properties still generates an empty `properties` keyword.
+
 # [1.5.0](https://github.com/gregsdennis/json-everything/pull/115)
 
 [#114](https://github.com/gregsdennis/json-everything/issues/114) - `DateTime` properties not generating properly.  Also fixes `Guid`, `JsonPointer`, and  `Uri` properties.

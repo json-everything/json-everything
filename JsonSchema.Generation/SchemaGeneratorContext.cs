@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Json.Schema.Generation.Intents;
+ using Json.Schema.Generation.Refiners;
 
-namespace Json.Schema.Generation
+ namespace Json.Schema.Generation
 {
 	/// <summary>
 	/// Provides meta-data about the generation process.
@@ -54,7 +55,9 @@ namespace Json.Schema.Generation
 
 			AttributeHandler.HandleAttributes(this);
 
-			foreach (var refiner in Configuration.Refiners.Where(x => x.ShouldRun(this)))
+			var refiners = Configuration.Refiners.ToList();
+			refiners.Add(NullabilityRefiner.Instance);
+			foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
 			{
 				refiner.Run(this);
 			}

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Json.Schema.Generation.Intents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators
 {
@@ -61,9 +61,14 @@ namespace Json.Schema.Generation.Generators
 					required.Add(name);
 			}
 
-			context.Intents.Add(new PropertiesIntent(props)); 
-			if (required.Any())
-				context.Intents.Add(new RequiredIntent(required));
+
+			if (props.Count > 0)
+			{
+				context.Intents.Add(new PropertiesIntent(props));
+
+				if (required.Count > 0)
+					context.Intents.Add(new RequiredIntent(required));
+			}
 		}
 
 		private static int GetMemberSequenceValue(MemberInfo member)

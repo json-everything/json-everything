@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Json.Schema.Generation.Generators;
+using Json.Schema.Generation.Refiners;
 
 namespace Json.Schema.Generation
 {
@@ -20,5 +21,11 @@ namespace Json.Schema.Generation
 		/// Gets or sets the order in which properties will be listed in the schema.
 		/// </summary>
 		public PropertyOrder PropertyOrder { get; set; }
+		/// <summary>
+		/// Gets or sets whether to include `null` in the `type` keyword.
+		/// Default is <see cref="Nullability.Disabled"/> which means that it will
+		/// not ever be included.
+		/// </summary>
+		public Nullability Nullability { get; set; }
 	}
 }

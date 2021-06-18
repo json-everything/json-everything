@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The type.
 		/// </summary>
-		public SchemaValueType Type { get; }
+		public SchemaValueType Type { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="TypeIntent"/> instance.
