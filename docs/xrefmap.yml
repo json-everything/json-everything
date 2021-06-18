@@ -8317,6 +8317,85 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.MultipleOfAttribute.Value
   nameWithType: MultipleOfAttribute.Value
+- uid: Json.Schema.Generation.Nullability
+  name: Nullability
+  href: api/Json.Schema.Generation.Nullability.html
+  commentId: T:Json.Schema.Generation.Nullability
+  fullName: Json.Schema.Generation.Nullability
+  nameWithType: Nullability
+- uid: Json.Schema.Generation.Nullability.AllowForAllTypes
+  name: AllowForAllTypes
+  href: api/Json.Schema.Generation.Nullability.html#Json_Schema_Generation_Nullability_AllowForAllTypes
+  commentId: F:Json.Schema.Generation.Nullability.AllowForAllTypes
+  fullName: Json.Schema.Generation.Nullability.AllowForAllTypes
+  nameWithType: Nullability.AllowForAllTypes
+- uid: Json.Schema.Generation.Nullability.AllowForNullableValueTypes
+  name: AllowForNullableValueTypes
+  href: api/Json.Schema.Generation.Nullability.html#Json_Schema_Generation_Nullability_AllowForNullableValueTypes
+  commentId: F:Json.Schema.Generation.Nullability.AllowForNullableValueTypes
+  fullName: Json.Schema.Generation.Nullability.AllowForNullableValueTypes
+  nameWithType: Nullability.AllowForNullableValueTypes
+- uid: Json.Schema.Generation.Nullability.AllowForReferenceTypes
+  name: AllowForReferenceTypes
+  href: api/Json.Schema.Generation.Nullability.html#Json_Schema_Generation_Nullability_AllowForReferenceTypes
+  commentId: F:Json.Schema.Generation.Nullability.AllowForReferenceTypes
+  fullName: Json.Schema.Generation.Nullability.AllowForReferenceTypes
+  nameWithType: Nullability.AllowForReferenceTypes
+- uid: Json.Schema.Generation.Nullability.Disabled
+  name: Disabled
+  href: api/Json.Schema.Generation.Nullability.html#Json_Schema_Generation_Nullability_Disabled
+  commentId: F:Json.Schema.Generation.Nullability.Disabled
+  fullName: Json.Schema.Generation.Nullability.Disabled
+  nameWithType: Nullability.Disabled
+- uid: Json.Schema.Generation.NullableAttribute
+  name: NullableAttribute
+  href: api/Json.Schema.Generation.NullableAttribute.html
+  commentId: T:Json.Schema.Generation.NullableAttribute
+  fullName: Json.Schema.Generation.NullableAttribute
+  nameWithType: NullableAttribute
+- uid: Json.Schema.Generation.NullableAttribute.#ctor(System.Boolean)
+  name: NullableAttribute(Boolean)
+  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute__ctor_System_Boolean_
+  commentId: M:Json.Schema.Generation.NullableAttribute.#ctor(System.Boolean)
+  fullName: Json.Schema.Generation.NullableAttribute.NullableAttribute(System.Boolean)
+  nameWithType: NullableAttribute.NullableAttribute(Boolean)
+- uid: Json.Schema.Generation.NullableAttribute.#ctor*
+  name: NullableAttribute
+  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute__ctor_
+  commentId: Overload:Json.Schema.Generation.NullableAttribute.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.Generation.NullableAttribute.NullableAttribute
+  nameWithType: NullableAttribute.NullableAttribute
+- uid: Json.Schema.Generation.NullableAttribute.IsNullable
+  name: IsNullable
+  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute_IsNullable
+  commentId: P:Json.Schema.Generation.NullableAttribute.IsNullable
+  fullName: Json.Schema.Generation.NullableAttribute.IsNullable
+  nameWithType: NullableAttribute.IsNullable
+- uid: Json.Schema.Generation.NullableAttribute.IsNullable*
+  name: IsNullable
+  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute_IsNullable_
+  commentId: Overload:Json.Schema.Generation.NullableAttribute.IsNullable
+  isSpec: "True"
+  fullName: Json.Schema.Generation.NullableAttribute.IsNullable
+  nameWithType: NullableAttribute.IsNullable
+- uid: Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name: IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_Json_Schema_Generation_SchemaGeneratorContext_
+  commentId: M:Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  fullName: Json.Schema.Generation.NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
+  nameWithType: NullableAttribute.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+  nameWithType.vb: NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
+- uid: Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints*
+  name: IAttributeHandler.AddConstraints
+  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_
+  commentId: Overload:Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints
+  isSpec: "True"
+  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints
+  fullName: Json.Schema.Generation.NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
+  nameWithType: NullableAttribute.IAttributeHandler.AddConstraints
+  nameWithType.vb: NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
 - uid: Json.Schema.Generation.PatternAttribute
   name: PatternAttribute
   href: api/Json.Schema.Generation.PatternAttribute.html
@@ -8495,6 +8574,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Generators
   nameWithType: SchemaGeneratorConfiguration.Generators
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability
+  name: Nullability
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Nullability
+  commentId: P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability
+  nameWithType: SchemaGeneratorConfiguration.Nullability
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability*
+  name: Nullability
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_Nullability_
+  commentId: Overload:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability
+  isSpec: "True"
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability
+  nameWithType: SchemaGeneratorConfiguration.Nullability
 - uid: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
   name: PropertyOrder
   href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_PropertyOrder
