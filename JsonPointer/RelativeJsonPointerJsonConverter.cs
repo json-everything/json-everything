@@ -14,7 +14,7 @@ namespace Json.Pointer
 			var str = reader.GetString();
 			return RelativeJsonPointer.TryParse(str, out var pointer)
 				? pointer
-				: RelativeJsonPointer.Parse("0/something/definitely/not/in/test/data");
+				: RelativeJsonPointer.Null;
 		}
 
 		public override void Write(Utf8JsonWriter writer, RelativeJsonPointer value, JsonSerializerOptions options)
