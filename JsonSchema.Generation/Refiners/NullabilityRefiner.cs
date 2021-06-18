@@ -36,9 +36,17 @@ namespace Json.Schema.Generation.Refiners
 			var nullableAttribute = context.Attributes.OfType<NullableAttribute>().FirstOrDefault();
 			var nullabilityOverride = nullableAttribute?.IsNullable;
 
+			if (nullabilityOverride.HasValue)
+			{
+				if (nullabilityOverride.Value)
+					typeIntent.Type |= SchemaValueType.Null;
+				else
+					typeIntent.Type &= ~SchemaValueType.Null;
+				return;
+			}
+
 			if (context.Configuration.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
-			    context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>) &&
-			    nullabilityOverride == true)
+			    context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
 				typeIntent.Type |= SchemaValueType.Null;
 
 			if (context.Configuration.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
