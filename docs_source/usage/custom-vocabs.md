@@ -1,4 +1,4 @@
-#
+# JSON Schema Vocabularies
 
 JSON Schema draft 2019-09 introduced the idea of vocabularies to enable some spec support for custom keywords.
 

@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The value.
 		/// </summary>
-		public decimal Value { get; }
+		public decimal Value { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="ExclusiveMaximumIntent"/> instance.

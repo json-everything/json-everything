@@ -10,7 +10,7 @@ namespace Json.Schema.Generation.Intents
 		/// <summary>
 		/// The reference.
 		/// </summary>
-		public Uri Reference { get; }
+		public Uri Reference { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="RefIntent"/> instance.

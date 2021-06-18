@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The format.
 		/// </summary>
-		public Format Format { get; }
+		public Format Format { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="FormatIntent"/> instance.

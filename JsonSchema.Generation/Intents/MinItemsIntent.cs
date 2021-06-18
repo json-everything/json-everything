@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The value.
 		/// </summary>
-		public uint Value { get; }
+		public uint Value { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="MinItemsIntent"/> instance.

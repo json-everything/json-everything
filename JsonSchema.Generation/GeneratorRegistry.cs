@@ -13,6 +13,7 @@ namespace Json.Schema.Generation
 		private static readonly List<ISchemaGenerator> Generators =
 			new List<ISchemaGenerator>
 			{
+				new NullableValueTypeSchemaGenerator(),
 				new BooleanSchemaGenerator(),
 				new IntegerSchemaGenerator(),
 				new NumberSchemaGenerator(),
