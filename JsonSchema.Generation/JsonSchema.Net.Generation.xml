@@ -1193,6 +1193,48 @@
             </summary>
             <param name="value">The value.</param>
         </member>
+        <member name="T:Json.Schema.Generation.Nullability">
+            <summary>
+            Indicates whether to apply `null` to the `type` keyword.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.Disabled">
+            <summary>
+            Indicates that `null` will not be included.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.AllowForNullableValueTypes">
+            <summary>
+            Indicates that `null` will be applied to <see cref="T:System.Nullable`1"/> types.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.AllowForReferenceTypes">
+            <summary>
+            Indicates that `null` will be applied to reference types.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.Nullability.AllowForAllTypes">
+            <summary>
+            Indicates that `null` will be applied to both reference types and <see cref="T:System.Nullable`1"/> types.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.NullableAttribute">
+            <summary>
+            Overrides the <see cref="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability"/> option and either
+            adds or removes `null` in the `type` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.NullableAttribute.IsNullable">
+            <summary>
+            Gets whether `null` should be included in the `type` keyword.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.NullableAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.NullableAttribute"/> instance.
+            </summary>
+            <param name="isNullable">Whether `null` should be included in the `type` keyword.</param>
+        </member>
         <member name="T:Json.Schema.Generation.PatternAttribute">
             <summary>
             Applies a `pattern` keyword.
@@ -1307,6 +1349,13 @@
         <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder">
             <summary>
             Gets or sets the order in which properties will be listed in the schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability">
+            <summary>
+            Gets or sets whether to include `null` in the `type` keyword.
+            Default is <see cref="F:Json.Schema.Generation.Nullability.Disabled"/> which means that it will
+            not ever be included.
             </summary>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGeneratorContext">
