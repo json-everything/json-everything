@@ -101,6 +101,27 @@ For POCOs, currently only read/write properties are converted.  Future versions 
 
 Lastly, property names will either be listed as declared in code (default) or sorted by name.  This is controlled via the `SchemaGenerationConfiguration.PropertyOrder` property.
 
+### Nullability
+
+There is a discrepancy between how .Net does validation and how JSON Schema does validation that centers primarily around nullable types and the `[Required]` attribute.
+
+Those familiar with .Net validation will recognize that having `[Required]` on your models will also protect against null values when deserializing.  However, JSON Schema separates these two concepts, and this library strives to align with JSON Schema in order to give the most flexibility.
+
+To this end, the `[Required]` attribute will only be represented in generated schemas in the `required` keyword.
+
+However, for nullable types, it may or may not be appropriate to include `null` in the `type` keyword.  JsonSchema.Net.Generation controls this behavior via the `SchemaGenerationConfiguration.Nullability` option with individual properties being overrideable via the `[Nullable(bool)]` attribute.
+
+There are four options:
+
+- `Disabled` - This is the default.  The resulting schemas will not have `null` in the `type` keyword unless `[Nullable(true)]` is used.
+- `AllowForNullableValueTypes` - This will add `null` to the `type` keyword for nullable value types (i.e. `Nullable<T>`) unless `[Nullable(false)]` is used.
+- `AllowForReferenceTypes` - This will add `null` to the `type` keyword for reference types unless `[Nullable(false)]` is used.
+- `AllowForAllTypes` - This is a combination of the previous two and will add `null` to the type keyword for any type unless `[Nullable(false)]` is used.
+
+***NOTE** This library [cannot detect](https://stackoverflow.com/a/62186551/878701) whether the consuming code has nullable reference types enabled.  Therefore all reference types are considered nullable.*
+
+***BONUS NOTE** The library makes a distinction between nullable value types and reference types because value types must be explicitly nullable.  This differs from reference types which are implicitly nullable, and there's not a way (via the type itself) to make a reference type non-nullable.*
+
 ### Additional built-in support
 
 There are a couple advanced features that bear mentioning.
