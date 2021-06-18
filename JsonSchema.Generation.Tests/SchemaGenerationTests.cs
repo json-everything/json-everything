@@ -25,6 +25,17 @@ namespace Json.Schema.Generation.Tests
 				yield return new TestCaseData(typeof(float), SchemaValueType.Number);
 				yield return new TestCaseData(typeof(double), SchemaValueType.Number);
 				yield return new TestCaseData(typeof(decimal), SchemaValueType.Number);
+				yield return new TestCaseData(typeof(bool?), SchemaValueType.Boolean);
+				yield return new TestCaseData(typeof(byte?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(short?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(ushort?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(int?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(uint?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(long?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(ulong?), SchemaValueType.Integer);
+				yield return new TestCaseData(typeof(float?), SchemaValueType.Number);
+				yield return new TestCaseData(typeof(double?), SchemaValueType.Number);
+				yield return new TestCaseData(typeof(decimal?), SchemaValueType.Number);
 			}
 		}
 
@@ -45,6 +56,17 @@ namespace Json.Schema.Generation.Tests
 				.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
 
 			JsonSchema actual = new JsonSchemaBuilder().FromType<int[]>();
+
+			AssertEqual(expected, actual);
+		}
+
+		[Test]
+		public void NullableIntArray()
+		{
+			JsonSchema expected = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+				.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
+
+			JsonSchema actual = new JsonSchemaBuilder().FromType<int?[]>();
 
 			AssertEqual(expected, actual);
 		}
