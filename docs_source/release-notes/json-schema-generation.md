@@ -7,6 +7,8 @@
 
 [1.6.0](https://github.com/gregsdennis/json-everything/pull/126) - Bug fix: generation of object with no serializable properties still generates an empty `properties` keyword.
 
+Also updated intent classes to be mutable.  Should have been this way to begin with, but was probably an oversight.
+
 # [1.5.0](https://github.com/gregsdennis/json-everything/pull/115)
 
 [#114](https://github.com/gregsdennis/json-everything/issues/114) - `DateTime` properties not generating properly.  Also fixes `Guid`, `JsonPointer`, and  `Uri` properties.
