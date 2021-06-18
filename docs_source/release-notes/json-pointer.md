@@ -1,3 +1,7 @@
+# [1.3.3](https://github.com/gregsdennis/json-everything/pull/130)
+
+[#123](https://github.com/gregsdennis/json-everything/pull/123) Removed a copy/paste error that shows up while deserializing relative pointers.  Thanks to [@bastiaantenklooster](https://github.com/bastiaantenklooster) for finding this and creating a PR to fix it.
+
 # [1.3.2](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.
