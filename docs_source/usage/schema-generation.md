@@ -186,7 +186,7 @@ Most intents are pretty simple to implement.  Here's the `TypeIntent` from above
 ```c#
 public class TypeIntent : ISchemaKeywordIntent
 {
-    public SchemaValueType Type { get; }
+    public SchemaValueType Type { get; set; }
 
     public TypeIntent(SchemaValueType type)
     {
