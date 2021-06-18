@@ -13,7 +13,7 @@ namespace Json.Schema.Generation.Intents
 		/// <summary>
 		/// The names defined by the enumeration.
 		/// </summary>
-		public List<string> Names { get; }
+		public List<string> Names { get; set; }
 
 		/// <summary>
 		/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.

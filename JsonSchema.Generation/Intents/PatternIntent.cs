@@ -10,7 +10,7 @@ namespace Json.Schema.Generation.Intents
 		/// <summary>
 		/// The value.
 		/// </summary>
-		public string Value { get; }
+		public string Value { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="PatternIntent"/> instance.
