@@ -1,3 +1,7 @@
+# [1.10.4](https://github.com/gregsdennis/json-everything/pull/133)
+
+[#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+
 # [1.10.3](https://github.com/gregsdennis/json-everything/pull/120)
 
 Added overload for `ExitKeyword` logging extension to pull the validition result from the context rather than having to pass it in.

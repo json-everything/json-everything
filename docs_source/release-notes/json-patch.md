@@ -1,3 +1,7 @@
+# [1.0.6](https://github.com/gregsdennis/json-everything/pull/133)
+
+[#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+
 # [1.0.5](https://github.com/gregsdennis/json-everything/pull/75)
 
 Added support for nullable reference types.
