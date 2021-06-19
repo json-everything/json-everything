@@ -208,7 +208,8 @@ namespace Json.Path
 				var block = span[i..end];
 				if (block[0] == '\'' && block[^1] == '\'')
 					block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-				element = JsonDocument.Parse(block.ToString()).RootElement.Clone();
+				using var doc = JsonDocument.Parse(block.ToString());
+				element = doc.RootElement.Clone();
 				i = end;
 				return true;
 			}
