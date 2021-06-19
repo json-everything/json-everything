@@ -77,7 +77,8 @@ namespace Json.Schema
 	{
 		public override ConstKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			var element = JsonDocument.ParseValue(ref reader).RootElement;
+			using var document = JsonDocument.ParseValue(ref reader);
+			var element = document.RootElement;
 
 			return new ConstKeyword(element);
 		}

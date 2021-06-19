@@ -64,7 +64,8 @@ namespace Json.Schema
 			}
 
 			context.Log(() => "Validating against meta-schema.");
-			var schemaAsJson = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema)).RootElement;
+			using var document = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema));
+			var schemaAsJson = document.RootElement;
 			var newOptions = ValidationOptions.From(context.Options);
 			newOptions.ValidateMetaSchema = false;
 			var results = metaSchema.Validate(schemaAsJson, newOptions);

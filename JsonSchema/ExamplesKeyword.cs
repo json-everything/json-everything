@@ -88,7 +88,7 @@ namespace Json.Schema
 	{
 		public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			var document = JsonDocument.ParseValue(ref reader);
+			using var document = JsonDocument.ParseValue(ref reader);
 
 			if (document.RootElement.ValueKind != JsonValueKind.Array)
 				throw new JsonException("Expected array");
