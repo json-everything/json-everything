@@ -1051,8 +1051,8 @@
   },
   "release-notes/json-pointer.html": {
     "href": "release-notes/json-pointer.html",
-    "title": "1.3.2",
-    "keywords": "1.3.2 Added support for nullable reference types. 1.3.1 Signed the DLL for strong name compatibility. 1.3.0 Added support pointer creation using lambda expressions, e.g. x => x.foo[5].bar to create /foo/5/bar . 1.2.0 Added support for array index manipulation in Relative JSON Pointer 2 (spec updated alongside JSON Schema Draft 2020-12). 1.1.2 Added debug symbols to package. No functional change. 1.1.1 Updated reference to Json.More .Net. 1.1.0 Added JsonPointerKind enumeration. Added JsonPointer.Kind property. Added optional parameters to JsonPointer.Parse() and JsonPointer.TryParse() . 1.0.0 Initial release."
+    "title": "1.3.3",
+    "keywords": "1.3.3 #123 Removed a copy/paste error that shows up while deserializing relative pointers. Thanks to @bastiaantenklooster for finding this and creating a PR to fix it. 1.3.2 Added support for nullable reference types. 1.3.1 Signed the DLL for strong name compatibility. 1.3.0 Added support pointer creation using lambda expressions, e.g. x => x.foo[5].bar to create /foo/5/bar . 1.2.0 Added support for array index manipulation in Relative JSON Pointer 2 (spec updated alongside JSON Schema Draft 2020-12). 1.1.2 Added debug symbols to package. No functional change. 1.1.1 Updated reference to Json.More .Net. 1.1.0 Added JsonPointerKind enumeration. Added JsonPointer.Kind property. Added optional parameters to JsonPointer.Parse() and JsonPointer.TryParse() . 1.0.0 Initial release."
   },
   "release-notes/json-schema.html": {
     "href": "release-notes/json-schema.html",
