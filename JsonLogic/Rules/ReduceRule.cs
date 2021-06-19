@@ -40,7 +40,8 @@ namespace Json.Logic.Rules
 					Current = element,
 					Accumulator = accumulator
 				};
-				var item = JsonDocument.Parse(JsonSerializer.Serialize(intermediary, _options)).RootElement;
+				using var doc = JsonDocument.Parse(JsonSerializer.Serialize(intermediary, _options));
+				var item = doc.RootElement.Clone();
 				
 				accumulator = _rule.Apply(item);
 			}

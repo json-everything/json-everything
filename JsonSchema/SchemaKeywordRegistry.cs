@@ -30,7 +30,8 @@ namespace Json.Schema
 					.Select(t => new {Type = t, Keyword = t.GetCustomAttribute<SchemaKeywordAttribute>().Name})
 					.ToDictionary(k => k.Keyword, k => k.Type));
 
-			var nullElement = JsonDocument.Parse("null").RootElement;
+			using var document = JsonDocument.Parse("null");
+			var nullElement = document.RootElement;
 			_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>
 			{
 				[typeof(ConstKeyword)] = new ConstKeyword(nullElement),

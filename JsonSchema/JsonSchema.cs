@@ -383,7 +383,8 @@ namespace Json.Schema
 						var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 						if (keywordType == null)
 						{
-							var element = JsonDocument.ParseValue(ref reader).RootElement;
+							using var document = JsonDocument.ParseValue(ref reader);
+							var element = document.RootElement;
 							otherData[keyword] = element.Clone();
 							break;
 						}

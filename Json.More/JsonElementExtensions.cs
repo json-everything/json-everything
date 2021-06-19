@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 
@@ -145,8 +146,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this long value)
 		{
-			var doc = JsonDocument.Parse($"{value}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value.ToString(CultureInfo.InvariantCulture));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -157,8 +158,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this int value)
 		{
-			var doc = JsonDocument.Parse($"{value}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value.ToString(CultureInfo.InvariantCulture));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -169,8 +170,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this short value)
 		{
-			var doc = JsonDocument.Parse($"{value}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value.ToString(CultureInfo.InvariantCulture));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -181,8 +182,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this bool value)
 		{
-			var doc = JsonDocument.Parse($"{value.ToString().ToLower()}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value ? "true" : "false");
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -193,8 +194,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this decimal value)
 		{
-			var doc = JsonDocument.Parse($"{value}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value.ToString(CultureInfo.InvariantCulture));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -205,8 +206,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this double value)
 		{
-			var doc = JsonDocument.Parse($"{value}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value.ToString(CultureInfo.InvariantCulture));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -217,8 +218,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this float value)
 		{
-			var doc = JsonDocument.Parse($"{value}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(value.ToString(CultureInfo.InvariantCulture));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -229,8 +230,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this string? value)
 		{
-			var doc = JsonDocument.Parse(JsonSerializer.Serialize(value));
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(value));
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -241,8 +242,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this IEnumerable<JsonElement> values)
 		{
-			var doc = JsonDocument.Parse($"[{string.Join(",", values.Select(v => v.ToJsonString()))}]");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse($"[{string.Join(",", values.Select(v => v.ToJsonString()))}]");
+			return doc.RootElement.Clone();
 		}
 
 		/// <summary>
@@ -253,8 +254,8 @@ namespace Json.More
 		/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
 		public static JsonElement AsJsonElement(this IDictionary<string, JsonElement> values)
 		{
-			var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{JsonSerializer.Serialize(v.Key)}:{v.Value.ToJsonString()}"))}}}");
-			return doc.RootElement;
+			using var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{JsonSerializer.Serialize(v.Key)}:{v.Value.ToJsonString()}"))}}}");
+			return doc.RootElement.Clone();
 		}
 	}
 }

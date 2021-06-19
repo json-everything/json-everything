@@ -42,7 +42,8 @@ namespace Json.Patch
 
 		public JsonElement ToElement()
 		{
-			return JsonDocument.Parse(ToString()).RootElement;
+			using var doc = JsonDocument.Parse(ToString());
+			return doc.RootElement.Clone();
 		}
 
 		public override string ToString()
