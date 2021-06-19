@@ -1,11 +1,11 @@
 # [1.6.0](https://github.com/gregsdennis/json-everything/pull/130)
 
-[1.6.0](https://github.com/gregsdennis/json-everything/pull/130) - Added support for nullability.  Special thanks to [@JMPSequeira](https://github.com/JMPSequeira) who proposed the feature and worked through multiple designs that lead to the final solution and for adding all the tests needed to ensure proper function.
+[#128](https://github.com/gregsdennis/json-everything/pull/128) - Added support for nullability.  Special thanks to [@JMPSequeira](https://github.com/JMPSequeira) who proposed the feature and worked through multiple designs ([#124](https://github.com/gregsdennis/json-everything/pull/124) and [#127](https://github.com/gregsdennis/json-everything/pull/127)) that lead to the final solution and for adding all the tests needed to ensure proper function.
 - Added `NullableAttribute`.
 - Added `Nullability`.
 - Added `SchemaGenerationConfiguration.Nullability`.
 
-[1.6.0](https://github.com/gregsdennis/json-everything/pull/126) - Bug fix: generation of object with no serializable properties still generates an empty `properties` keyword.
+[#125](https://github.com/gregsdennis/json-everything/pull/125) - Bug fix: generation of object with no serializable properties still generates an empty `properties` keyword.
 
 Also updated intent classes to be mutable.  Should have been this way to begin with, but was probably an oversight.
 
