@@ -1446,7 +1446,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.NullableAttribute.html",
-          "hash": "i0/wRGp2OhdVgutuLrGFZQ=="
+          "hash": "iR1czwUFwB5/Yk2TXB6Sxg=="
         }
       },
       "is_incremental": false,
@@ -2450,11 +2450,47 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "examples/schema-gen-ext.md",
+      "source_relative_path": "examples/schema-gen-attribute.md",
       "output": {
         ".html": {
-          "relative_path": "examples/schema-gen-ext.html",
-          "hash": "FgJSpY7Gyu2p+62dtoGYSw=="
+          "relative_path": "examples/schema-gen-attribute.html",
+          "hash": "c6srCFVjbtXhUxHww7NTvQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "examples/schema-gen-generator.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/schema-gen-generator.html",
+          "hash": "NceJ5efx61jr2Ue1ZkiDjQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "examples/schema-gen-intent.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/schema-gen-intent.html",
+          "hash": "NhGaS2FR6scHWyNtgNucXQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "examples/schema-gen-refiner.md",
+      "output": {
+        ".html": {
+          "relative_path": "examples/schema-gen-refiner.html",
+          "hash": "ljQtdevfK9uSJ2xbLRX7yQ=="
         }
       },
       "is_incremental": false,
@@ -2478,7 +2514,7 @@
       "output": {
         ".html": {
           "relative_path": "examples/toc.html",
-          "hash": "/J9GlK0CfozlTJTsEGd05Q=="
+          "hash": "V7ioO6Wj6AlCwNskXXZhYg=="
         }
       },
       "is_incremental": false,
@@ -2534,7 +2570,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "YIG5QJLPb4pYPdjGzVl5YA=="
+          "hash": "a6MA4dY4lzJ238PRNXh8Mg=="
         }
       },
       "is_incremental": false,
@@ -2937,7 +2973,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 35,
+          "total_file_count": 38,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {

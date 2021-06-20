@@ -8379,23 +8379,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.NullableAttribute.IsNullable
   nameWithType: NullableAttribute.IsNullable
-- uid: Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
-  name: IAttributeHandler.AddConstraints(SchemaGeneratorContext)
-  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_Json_Schema_Generation_SchemaGeneratorContext_
-  commentId: M:Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
-  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
-  fullName: Json.Schema.Generation.NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)
-  nameWithType: NullableAttribute.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
-  nameWithType.vb: NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints(SchemaGeneratorContext)
-- uid: Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints*
-  name: IAttributeHandler.AddConstraints
-  href: api/Json.Schema.Generation.NullableAttribute.html#Json_Schema_Generation_NullableAttribute_Json_Schema_Generation_IAttributeHandler_AddConstraints_
-  commentId: Overload:Json.Schema.Generation.NullableAttribute.Json#Schema#Generation#IAttributeHandler#AddConstraints
-  isSpec: "True"
-  name.vb: Json.Schema.Generation.IAttributeHandler.AddConstraints
-  fullName: Json.Schema.Generation.NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
-  nameWithType: NullableAttribute.IAttributeHandler.AddConstraints
-  nameWithType.vb: NullableAttribute.Json.Schema.Generation.IAttributeHandler.AddConstraints
 - uid: Json.Schema.Generation.PatternAttribute
   name: PatternAttribute
   href: api/Json.Schema.Generation.PatternAttribute.html
