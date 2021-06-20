@@ -7,7 +7,7 @@ namespace Json.Schema.Generation
 	/// adds or removes `null` in the `type` keyword.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
-	public class NullableAttribute : Attribute, IAttributeHandler
+	public class NullableAttribute : Attribute
 	{
 		/// <summary>
 		/// Gets whether `null` should be included in the `type` keyword.
@@ -21,11 +21,6 @@ namespace Json.Schema.Generation
 		public NullableAttribute(bool isNullable)
 		{
 			IsNullable = isNullable;
-		}
-
-		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
-		{
-			// Actually handled in the NullabilityRefiner.
 		}
 	}
 }

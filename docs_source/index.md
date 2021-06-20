@@ -32,7 +32,7 @@ Builds on top of JsonSchema<nsp>.Net to provide schema generation from .Net type
 
 Provides an implementation of a [vocabulary](usage/vocabs-data.md) that defines a way to access instance and external data, a long-sought feature of JSON Schema.
 
-### JsonSchema.Net.Data
+### JsonSchema.Net.UniqueKeys
 
 Provides an implementation of a [vocabulary](usage/vocabs-unique-keys.md) that defines a new keyword to validate item uniqueness by idenitifying specific data points within the item.
 
