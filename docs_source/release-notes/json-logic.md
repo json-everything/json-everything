@@ -1,3 +1,7 @@
+# [1.3.1](https://github.com/gregsdennis/json-everything/pull/133)
+
+[#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+
 # [1.3.0](https://github.com/gregsdennis/json-everything/pull/92)
 
 - Exposed `JsonElementExtensions` so that it can be used in custom rules.

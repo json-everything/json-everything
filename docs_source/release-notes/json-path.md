@@ -1,3 +1,7 @@
+# [0.1.7](https://github.com/gregsdennis/json-everything/pull/133)
+
+[#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+
 # [0.1.6](https://github.com/gregsdennis/json-everything/pull/122)
 
 Updated expression parsing to handle whitespace better.

@@ -1,3 +1,7 @@
+# [1.4.3](https://github.com/gregsdennis/json-everything/pull/133)
+
+[#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+
 # [1.4.2](https://github.com/gregsdennis/json-everything/pull/105)
 
 Fixes potential race condition in `EnumStringConverter`.  Credit to [@jaysvoboda](https://github.com/jaysvoboda) for finding and fixing this.
