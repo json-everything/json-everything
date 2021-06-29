@@ -41,14 +41,10 @@ namespace Json.Schema.Generation
 		/// <summary>
 		/// Updates property names to kebab case (e.g. `Kebab-Case`).
 		/// </summary>
-		public static readonly PropertyNamingMethod KebabCase = x => x.Dasherize();
-		/// <summary>
-		/// Updates property names to upper kebab case (e.g. `lower-kebab-case`).
-		/// </summary>
-		public static readonly PropertyNamingMethod LowerKebabCase = x => x.Dasherize();
+		public static readonly PropertyNamingMethod KebabCase = x => x.Kebaberize();
 		/// <summary>
 		/// Updates property names to lower kebab case (e.g. `UPPER-KEBAB-CASE`).
 		/// </summary>
-		public static readonly PropertyNamingMethod UpperKebabCase = x => x.Dasherize();
+		public static readonly PropertyNamingMethod UpperKebabCase = x => x.Kebaberize().ToUpperInvariant();
 	}
 }
