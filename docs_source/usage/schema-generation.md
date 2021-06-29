@@ -77,9 +77,9 @@ The `minimum` is applied to the `items` because that keyword is not relevant for
 
 ***NOTE** This means that the generator will have trouble determining where to apply keywords to properties like `List<List<T>>` because the attributes could be relevant for both the outer and inner lists.*
 
-The generator also supports these built-in attributes:
+The generator also supports these .Net-defined attributes:
 
-- `JsonPropertyName` - supports custom property naming
+- `JsonPropertyName` - supports custom property naming (more on naming below)
 - `JsonNumberHandling` - supports allowing numeric values in strings or only as numbers as well as allowing the `NaN`, `Infinity`, and `-Infinity` values.
 
 The generator will handle most common types:
@@ -121,6 +121,21 @@ There are four options:
 ***NOTE** This library [cannot detect](https://stackoverflow.com/a/62186551/878701) whether the consuming code has nullable reference types enabled.  Therefore all reference types are considered nullable.*
 
 ***BONUS NOTE** The library makes a distinction between nullable value types and reference types because value types must be explicitly nullable.  This differs from reference types which are implicitly nullable, and there's not a way (via the type itself) to make a reference type non-nullable.*
+
+### Property naming
+
+In addition to the `[JsonPropertyName]` attribute, the configuration exposes a `PropertyNamingMethod` that allows you to define a custom method for altering property names from your code into the schema.  The `PropertyNamingMethods` static class defines a few commonly-used conventions:
+
+- `camelCase`
+- `PascalCase`
+- `kebab-case`
+- `UPPER-KEBAB-CASE`
+- `snake_case`
+- `UPPER_SNAKE_CASE`
+
+Just set this property and the system will adjust property names accordingly.
+
+Note that the `[JsonPropertyName]` attribute takes precedence, so you can still use this to get custom naming when you've configured a method.
 
 ### Additional built-in support
 
