@@ -32,11 +32,13 @@ namespace Json.Schema
 		/// Specifies the output format.
 		/// </summary>
 		public OutputFormat OutputFormat { get; set; }
+
 		/// <summary>
 		/// The local schema registry.  If a schema is not found here, it will
 		/// automatically check the global registry as well.
 		/// </summary>
-		public SchemaRegistry SchemaRegistry { get; } = new SchemaRegistry();
+		public SchemaRegistry SchemaRegistry { get; }
+
 		/// <summary>
 		/// The local vocabulary registry.  If a schema is not found here, it will
 		/// automatically check the global registry as well.
@@ -89,6 +91,11 @@ namespace Json.Schema
 		public bool RequireFormatValidation { get; set; }
 		
 		internal Draft ValidatingAs { get; private set; }
+
+		public ValidationOptions()
+		{
+			SchemaRegistry = new SchemaRegistry(this);
+		}
 
 		internal static ValidationOptions From(ValidationOptions other)
 		{

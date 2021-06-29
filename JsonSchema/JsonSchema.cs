@@ -160,7 +160,10 @@ namespace Json.Schema
 			if (Keywords == null) return null; // boolean cases
 
 			var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
-			if (idKeyword != null)
+			var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
+			var refMatters = refKeyword != null &&
+			                 (registry.ValidatingAs == Draft.Draft6 || registry.ValidatingAs == Draft.Draft7);
+			if (idKeyword != null && !refMatters)
 			{
 				currentUri = idKeyword.UpdateUri(currentUri);
 				var parts = idKeyword.Id.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
@@ -214,6 +217,7 @@ namespace Json.Schema
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
+				newContext.NavigatedByDirectRef = context.NavigatedByDirectRef;
 				newContext.ParentContext = context;
 				newContext.LocalSchema = this;
 				newContext.ImportAnnotations(previousContext);

@@ -78,6 +78,7 @@ namespace Json.Schema
 			context.NavigatedReferences.Add(absoluteReference);
 
 			JsonSchema? schema;
+			var navigatedByDirectRef = true;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
 				schema = context.Options.SchemaRegistry.Get(newUri, fragment);
 			else
@@ -85,7 +86,7 @@ namespace Json.Schema
 				if (baseSchema == null)
 				{
 					context.IsValid = false;
-					context.Message = $"Could not resolve base URI `{baseUri}`";
+					context.Message = $"Could not resolve base URI `{newUri}`";
 					context.ExitKeyword(Name, context.IsValid);
 					return;
 				}
@@ -102,6 +103,7 @@ namespace Json.Schema
 					}
 
 					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
+					navigatedByDirectRef = false;
 				}
 				else
 					schema = baseSchema;
@@ -116,6 +118,7 @@ namespace Json.Schema
 			}
 
 			var subContext = ValidationContext.From(context, newUri: newUri);
+			subContext.NavigatedByDirectRef = navigatedByDirectRef;
 			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
 				subContext.Reference = reference;
 			if (!ReferenceEquals(baseSchema, context.SchemaRoot))
