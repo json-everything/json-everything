@@ -1,3 +1,7 @@
+# [1.7.0](https://github.com/gregsdennis/json-everything/pull/135)
+
+[#134](https://github.com/gregsdennis/json-everything/issues/134) - Added custom property naming support.
+
 # [1.6.0](https://github.com/gregsdennis/json-everything/pull/130)
 
 [#128](https://github.com/gregsdennis/json-everything/pull/128) - Added support for nullability.  Special thanks to [@JMPSequeira](https://github.com/JMPSequeira) who proposed the feature and worked through multiple designs ([#124](https://github.com/gregsdennis/json-everything/pull/124) and [#127](https://github.com/gregsdennis/json-everything/pull/127)) that lead to the final solution and for adding all the tests needed to ensure proper function.
