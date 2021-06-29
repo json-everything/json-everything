@@ -151,9 +151,9 @@
 </code></pre>
 <p>The <code>minimum</code> is applied to the <code>items</code> because that keyword is not relevant for an array.</p>
 <p><em><strong>NOTE</strong> This means that the generator will have trouble determining where to apply keywords to properties like <code>List&lt;List&lt;T&gt;&gt;</code> because the attributes could be relevant for both the outer and inner lists.</em></p>
-<p>The generator also supports these built-in attributes:</p>
+<p>The generator also supports these .Net-defined attributes:</p>
 <ul>
-<li><code>JsonPropertyName</code> - supports custom property naming</li>
+<li><code>JsonPropertyName</code> - supports custom property naming (more on naming below)</li>
 <li><code>JsonNumberHandling</code> - supports allowing numeric values in strings or only as numbers as well as allowing the <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code> values.</li>
 </ul>
 <p>The generator will handle most common types:</p>
@@ -187,6 +187,18 @@
 </ul>
 <p><em><strong>NOTE</strong> This library <a href="https://stackoverflow.com/a/62186551/878701">cannot detect</a> whether the consuming code has nullable reference types enabled.  Therefore all reference types are considered nullable.</em></p>
 <p><em><strong>BONUS NOTE</strong> The library makes a distinction between nullable value types and reference types because value types must be explicitly nullable.  This differs from reference types which are implicitly nullable, and there's not a way (via the type itself) to make a reference type non-nullable.</em></p>
+<h3 id="property-naming">Property naming</h3>
+<p>In addition to the <code>[JsonPropertyName]</code> attribute, the configuration exposes a <code>PropertyNamingMethod</code> that allows you to define a custom method for altering property names from your code into the schema.  The <code>PropertyNamingMethods</code> static class defines a few commonly-used conventions:</p>
+<ul>
+<li><code>camelCase</code></li>
+<li><code>PascalCase</code></li>
+<li><code>kebab-case</code></li>
+<li><code>UPPER-KEBAB-CASE</code></li>
+<li><code>snake_case</code></li>
+<li><code>UPPER_SNAKE_CASE</code></li>
+</ul>
+<p>Just set this property and the system will adjust property names accordingly.</p>
+<p>Note that the <code>[JsonPropertyName]</code> attribute takes precedence, so you can still use this to get custom naming when you've configured a method.</p>
 <h3 id="additional-built-in-support">Additional built-in support</h3>
 <p>There are a couple advanced features that bear mentioning.</p>
 <ol>

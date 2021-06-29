@@ -8428,6 +8428,66 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.PatternAttribute.Value
   nameWithType: PatternAttribute.Value
+- uid: Json.Schema.Generation.PropertyNamingMethod
+  name: PropertyNamingMethod
+  href: api/Json.Schema.Generation.PropertyNamingMethod.html
+  commentId: T:Json.Schema.Generation.PropertyNamingMethod
+  fullName: Json.Schema.Generation.PropertyNamingMethod
+  nameWithType: PropertyNamingMethod
+- uid: Json.Schema.Generation.PropertyNamingMethods
+  name: PropertyNamingMethods
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html
+  commentId: T:Json.Schema.Generation.PropertyNamingMethods
+  fullName: Json.Schema.Generation.PropertyNamingMethods
+  nameWithType: PropertyNamingMethods
+- uid: Json.Schema.Generation.PropertyNamingMethods.AsDeclared
+  name: AsDeclared
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_AsDeclared
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.AsDeclared
+  fullName: Json.Schema.Generation.PropertyNamingMethods.AsDeclared
+  nameWithType: PropertyNamingMethods.AsDeclared
+- uid: Json.Schema.Generation.PropertyNamingMethods.CamelCase
+  name: CamelCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_CamelCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.CamelCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.CamelCase
+  nameWithType: PropertyNamingMethods.CamelCase
+- uid: Json.Schema.Generation.PropertyNamingMethods.KebabCase
+  name: KebabCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_KebabCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.KebabCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.KebabCase
+  nameWithType: PropertyNamingMethods.KebabCase
+- uid: Json.Schema.Generation.PropertyNamingMethods.LowerSnakeCase
+  name: LowerSnakeCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_LowerSnakeCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.LowerSnakeCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.LowerSnakeCase
+  nameWithType: PropertyNamingMethods.LowerSnakeCase
+- uid: Json.Schema.Generation.PropertyNamingMethods.PascalCase
+  name: PascalCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_PascalCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.PascalCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.PascalCase
+  nameWithType: PropertyNamingMethods.PascalCase
+- uid: Json.Schema.Generation.PropertyNamingMethods.SnakeCase
+  name: SnakeCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_SnakeCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.SnakeCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.SnakeCase
+  nameWithType: PropertyNamingMethods.SnakeCase
+- uid: Json.Schema.Generation.PropertyNamingMethods.UpperKebabCase
+  name: UpperKebabCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_UpperKebabCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.UpperKebabCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.UpperKebabCase
+  nameWithType: PropertyNamingMethods.UpperKebabCase
+- uid: Json.Schema.Generation.PropertyNamingMethods.UpperSnakeCase
+  name: UpperSnakeCase
+  href: api/Json.Schema.Generation.PropertyNamingMethods.html#Json_Schema_Generation_PropertyNamingMethods_UpperSnakeCase
+  commentId: F:Json.Schema.Generation.PropertyNamingMethods.UpperSnakeCase
+  fullName: Json.Schema.Generation.PropertyNamingMethods.UpperSnakeCase
+  nameWithType: PropertyNamingMethods.UpperSnakeCase
 - uid: Json.Schema.Generation.PropertyOrder
   name: PropertyOrder
   href: api/Json.Schema.Generation.PropertyOrder.html
@@ -8570,6 +8630,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability
   nameWithType: SchemaGeneratorConfiguration.Nullability
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod
+  name: PropertyNamingMethod
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_PropertyNamingMethod
+  commentId: P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod
+  nameWithType: SchemaGeneratorConfiguration.PropertyNamingMethod
+- uid: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod*
+  name: PropertyNamingMethod
+  href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_PropertyNamingMethod_
+  commentId: Overload:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod
+  isSpec: "True"
+  fullName: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod
+  nameWithType: SchemaGeneratorConfiguration.PropertyNamingMethod
 - uid: Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder
   name: PropertyOrder
   href: api/Json.Schema.Generation.SchemaGeneratorConfiguration.html#Json_Schema_Generation_SchemaGeneratorConfiguration_PropertyOrder
@@ -14664,6 +14737,19 @@ references:
   commentId: T:Json.Schema.ValidationOptions
   fullName: Json.Schema.ValidationOptions
   nameWithType: ValidationOptions
+- uid: Json.Schema.ValidationOptions.#ctor
+  name: ValidationOptions()
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions__ctor
+  commentId: M:Json.Schema.ValidationOptions.#ctor
+  fullName: Json.Schema.ValidationOptions.ValidationOptions()
+  nameWithType: ValidationOptions.ValidationOptions()
+- uid: Json.Schema.ValidationOptions.#ctor*
+  name: ValidationOptions
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions__ctor_
+  commentId: Overload:Json.Schema.ValidationOptions.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.ValidationOptions
+  nameWithType: ValidationOptions.ValidationOptions
 - uid: Json.Schema.ValidationOptions.Default
   name: Default
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_Default

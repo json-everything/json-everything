@@ -1466,6 +1466,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.PropertyNamingMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.PropertyNamingMethod.html",
+          "hash": "tr0xJvqbRkvhlfkz1SSbLw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.PropertyNamingMethods.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.PropertyNamingMethods.html",
+          "hash": "SW6bdtbsK9MBfhVRdKXkfA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.PropertyOrder.yml",
       "output": {
         ".html": {
@@ -1518,7 +1542,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.SchemaGeneratorConfiguration.html",
-          "hash": "HufLQT/gp19q8oTHf5Knuw=="
+          "hash": "HMlAzjT+wJaFrmS8NLLWuA=="
         }
       },
       "is_incremental": false,
@@ -1578,7 +1602,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.html",
-          "hash": "zI5BK7zbS9J5nGwbUdlEIw=="
+          "hash": "vNqvNxe9OPf+Q/L7bgXqzg=="
         }
       },
       "is_incremental": false,
@@ -1662,7 +1686,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.IdKeyword.html",
-          "hash": "4UHRhPhYr83xZtvWpe9mrA=="
+          "hash": "HWJvRQwd9QazJzcYz0suzw=="
         }
       },
       "is_incremental": false,
@@ -1698,7 +1722,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.JsonSchema.html",
-          "hash": "W2OW8S3YbiCboYAxi78dEw=="
+          "hash": "R6+ZLVGT9aIsHV6vcTNjFg=="
         }
       },
       "is_incremental": false,
@@ -2046,7 +2070,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.RefKeyword.html",
-          "hash": "bMeh4VUrg2v0VAx9C/y28w=="
+          "hash": "NU6Fd23i19iXzhwSVeapfA=="
         }
       },
       "is_incremental": false,
@@ -2154,7 +2178,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.SchemaRegistry.html",
-          "hash": "F9K0cQVZ4YO0zK0qugsiiA=="
+          "hash": "rMAZQozTtp/xpdlauDZOjw=="
         }
       },
       "is_incremental": false,
@@ -2274,7 +2298,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.ValidationContext.html",
-          "hash": "jbpq+mGqI93KD6L6p0dr+Q=="
+          "hash": "pJKhHMju7+4H3NH+Ra9Mug=="
         }
       },
       "is_incremental": false,
@@ -2286,7 +2310,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.ValidationOptions.html",
-          "hash": "tkl7UxAvXp0q5MYChU4x9w=="
+          "hash": "Iv1lBNmWXWbVYidyeKKzAg=="
         }
       },
       "is_incremental": false,
@@ -2406,7 +2430,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "ZtyQq859g6sP/zJq00dVGg=="
+          "hash": "MjLPr90HVxoE12YRyH+Fzw=="
         }
       },
       "is_incremental": false,
@@ -2688,7 +2712,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "p5w27SLDzBqcQx6QDOBBCQ=="
+          "hash": "AuFGr6jae9xH2kJkgjadgg=="
         }
       },
       "is_incremental": false,
@@ -2712,7 +2736,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "WuE2sjwLcJGuuTWOkZ0rCw=="
+          "hash": "aBxhENwvtsudA7theKL+Dg=="
         }
       },
       "is_incremental": false,
@@ -2856,7 +2880,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-generation.html",
-          "hash": "zjrEqs8ZlzoGAE6iZQAYIQ=="
+          "hash": "el4PHN74BxZGtdK2OXcgnQ=="
         }
       },
       "is_incremental": false,
@@ -2979,7 +3003,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 197,
+          "total_file_count": 199,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
