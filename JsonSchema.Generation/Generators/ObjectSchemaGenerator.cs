@@ -47,7 +47,7 @@ namespace Json.Schema.Generation.Generators
 
 				var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes, context.Configuration);
 
-				var name = member.Name;
+				var name = context.Configuration.PropertyNamingMethod(member.Name);
 				var nameAttribute = memberAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 				if (nameAttribute != null)
 					name = nameAttribute.Name;

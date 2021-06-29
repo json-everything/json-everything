@@ -1,3 +1,7 @@
+# [1.10.5](https://github.com/gregsdennis/json-everything/pull/135)
+
+Fixed an issue with reference resolution when `$ref` and `$id` are sibling keywords in drafts 6 and 7.
+
 # [1.10.4](https://github.com/gregsdennis/json-everything/pull/133)
 
 [#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.

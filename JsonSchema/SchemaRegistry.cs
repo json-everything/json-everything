@@ -9,6 +9,8 @@ namespace Json.Schema
 	/// </summary>
 	public class SchemaRegistry
 	{
+		private readonly ValidationOptions _options;
+
 		private class Anchor
 		{
 #pragma warning disable 8618
@@ -47,9 +49,11 @@ namespace Json.Schema
 			set => _fetch = value;
 		}
 
+		internal Draft ValidatingAs => _options.ValidatingAs;
+
 		static SchemaRegistry()
 		{
-			Global = new SchemaRegistry();
+			Global = new SchemaRegistry(ValidationOptions.Default);
 
 			MetaSchemas.Draft6.RegisterSubschemas(Global, MetaSchemas.Draft6Id);
 
@@ -74,9 +78,9 @@ namespace Json.Schema
 			MetaSchemas.Content202012.RegisterSubschemas(Global, MetaSchemas.Content202012Id);
 		}
 
-		internal SchemaRegistry()
+		internal SchemaRegistry(ValidationOptions options)
 		{
-
+			_options = options;
 		}
 
 		/// <summary>

@@ -113,6 +113,7 @@ namespace Json.Schema
 		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
 		internal bool IsNewDynamicScope { get; set; }
 		internal HashSet<string> NavigatedReferences => _navigatedReferences ??= new HashSet<string>();
+		internal bool NavigatedByDirectRef { get; set; }
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -41,7 +42,14 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			var newUri = UpdateUri(context.CurrentUri);
+			if (context.LocalSchema.Keywords.OfType<RefKeyword>().Any() &&
+			    context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7)
+			{
+				context.NotApplicable(() => "$ref present; ignoring");
+				context.IsValid = true;
+				return;
+			}
+			var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
 			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
 			if (context.ParentContext.UriChanged) 
 				context.ParentContext.CurrentAnchor = null;
@@ -56,8 +64,9 @@ namespace Json.Schema
 		{
 			if (currentUri == null || Id.IsAbsoluteUri) return Id;
 
+			var idHasBase = Id.OriginalString.IndexOf('#') != 0;
 			var baseUri = currentUri;
-			if (currentUri.Segments.Length > 1 && currentUri.OriginalString.EndsWith("/")) 
+			if (idHasBase && currentUri.Segments.Length > 1 && currentUri.IsFile)
 				baseUri = baseUri.GetParentUri();
 
 			return new Uri(baseUri, Id);
