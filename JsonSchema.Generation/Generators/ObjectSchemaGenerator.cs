@@ -97,16 +97,19 @@ namespace Json.Schema.Generation.Generators
 
 			private static bool HasMetadataToken(MemberInfo? member)
 			{
-				if (member == null)
-				{
-					return false;
-				}
+				if (member == null) return false;
 
 #if NET5_0_OR_GREATER
 				return member.HasMetadataToken();
 #else
-				try { var token = member.MetadataToken; return true; }
-				catch (InvalidOperationException) { return false; }
+				try 
+				{ 
+					var token = member.MetadataToken; return true; 
+				}
+				catch (InvalidOperationException) 
+				{ 
+					return false; 
+				}
 #endif
 			}
 
@@ -117,20 +120,11 @@ namespace Json.Schema.Generation.Generators
 
 			public override int Compare(MemberInfo? x, MemberInfo? y)
 			{
-				if (x == y)
-				{
-					return 0;
-				}
+				if (x == y) return 0;
+				
+				if (x == null) return 1;
 
-				if (x == null)
-				{
-					return 1;
-				}
-
-				if (y == null)
-				{
-					return -1;
-				}
+				if (y == null) return -1;
 
 				// Get metadata tokens for the types that declared the members.
 				var xTypeToken = GetMetadataToken(x.DeclaringType);
@@ -144,20 +138,11 @@ namespace Json.Schema.Generation.Generators
 					var xIndex = Array.IndexOf(_typeOrder, xTypeToken);
 					var yIndex = Array.IndexOf(_typeOrder, yTypeToken);
 
-					if (xIndex < 0 && yIndex < 0)
-					{
-						return Comparer<int>.Default.Compare(xTypeToken, yTypeToken);
-					}
+					if (xIndex < 0 && yIndex < 0) return Comparer<int>.Default.Compare(xTypeToken, yTypeToken);
 
-					if (xIndex < 0)
-					{
-						return 1;
-					}
+					if (xIndex < 0) return 1;
 
-					if (yIndex < 0)
-					{
-						return -1;
-					}
+					if (yIndex < 0) return -1;
 
 					return Comparer<int>.Default.Compare(xIndex, yIndex);
 				}
