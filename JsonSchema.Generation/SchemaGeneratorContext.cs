@@ -129,7 +129,8 @@ using Json.Schema.Generation.Intents;
 		/// <summary>
 		/// <see cref="IComparer{MemberInfo}"/> for ordering members when generating a schema with <see cref="PropertyOrder.AsDeclared"/> ordering enabled.
 		/// </summary>
-		internal Lazy<IComparer<MemberInfo>> AsDeclaredMemberInfoComparer { get; }
+		private IComparer<MemberInfo> _memberInfoComparer;
+		internal IComparer<MemberInfo> AsDeclaredMemberInfoComparer => _memberInfoComparer ??= new MemberInfoMetadataTokenComparer(Type);
 
 		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)
 		{
