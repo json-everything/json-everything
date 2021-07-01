@@ -25,6 +25,8 @@ using Json.Schema.Generation.Intents;
 			}
 		}
 
+		private IComparer<MemberInfo>? _memberInfoComparer;
+
 		/// <summary>
 		/// The CLR type currently being processed.
 		/// </summary>
@@ -42,10 +44,6 @@ using Json.Schema.Generation.Intents;
 		/// </summary>
 		public SchemaGeneratorConfiguration Configuration { get; }
 		
-		private IComparer<MemberInfo> _memberInfoComparer;
-		/// <summary>
-		/// <see cref="IComparer{MemberInfo}"/> for ordering members when generating a schema with <see cref="PropertyOrder.AsDeclared"/> ordering enabled.
-		/// </summary>
 		internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= new MemberInfoMetadataTokenComparer(Type);
 
 		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)

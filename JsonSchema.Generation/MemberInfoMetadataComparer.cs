@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Json.Schema.Generation
 {
 	internal class MemberInfoMetadataTokenComparer : Comparer<MemberInfo>
 	{
-
 		private readonly int[] _typeOrder;
 
 		internal MemberInfoMetadataTokenComparer(Type type)
@@ -19,41 +17,15 @@ namespace Json.Schema.Generation
 			{
 				typeStack.Push(type);
 				type = type.BaseType!;
-			} while (type != null);
+			} while (type != null!);
 
 			_typeOrder = typeStack.Select(GetMetadataToken).ToArray();
-		}
-
-
-		private static bool HasMetadataToken(MemberInfo? member)
-		{
-			if (member == null) return false;
-
-#if NET5_0_OR_GREATER
-				return member.HasMetadataToken();
-#else
-			try
-			{
-				var token = member.MetadataToken; return true;
-			}
-			catch (InvalidOperationException)
-			{
-				return false;
-			}
-#endif
-		}
-
-		private static int GetMetadataToken(MemberInfo? member)
-		{
-			return HasMetadataToken(member) ? member!.MetadataToken : int.MaxValue;
 		}
 
 		public override int Compare(MemberInfo? x, MemberInfo? y)
 		{
 			if (x == y) return 0;
-
 			if (x == null) return 1;
-
 			if (y == null) return -1;
 
 			// Get metadata tokens for the types that declared the members.
@@ -69,9 +41,7 @@ namespace Json.Schema.Generation
 				var yIndex = Array.IndexOf(_typeOrder, yTypeToken);
 
 				if (xIndex < 0 && yIndex < 0) return Comparer<int>.Default.Compare(xTypeToken, yTypeToken);
-
 				if (xIndex < 0) return 1;
-
 				if (yIndex < 0) return -1;
 
 				return Comparer<int>.Default.Compare(xIndex, yIndex);
@@ -85,5 +55,28 @@ namespace Json.Schema.Generation
 			return Comparer<int>.Default.Compare(xToken, yToken);
 		}
 
+		private static bool HasMetadataToken(MemberInfo? member)
+		{
+			if (member == null) return false;
+
+#if NET5_0
+				return member.HasMetadataToken();
+#else
+			try
+			{
+				var token = member.MetadataToken;
+				return true;
+			}
+			catch (InvalidOperationException)
+			{
+				return false;
+			}
+#endif
+		}
+
+		private static int GetMetadataToken(MemberInfo? member)
+		{
+			return HasMetadataToken(member) ? member!.MetadataToken : int.MaxValue;
+		}
 	}
 }
