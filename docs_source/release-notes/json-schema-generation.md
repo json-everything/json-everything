@@ -1,3 +1,7 @@
+# [1.7.1](https://github.com/gregsdennis/json-everything/pull/137)
+
+[#136](https://github.com/gregsdennis/json-everything/pull/136) - Better sorting for properties, taking into account inheritance hierarchy and putting inherited properties first.
+
 # [1.7.0](https://github.com/gregsdennis/json-everything/pull/135)
 
 [#134](https://github.com/gregsdennis/json-everything/issues/134) - Added custom property naming support.
