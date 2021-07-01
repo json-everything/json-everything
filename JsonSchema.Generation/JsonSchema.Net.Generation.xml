@@ -1443,6 +1443,11 @@
             The generator configuration.
             </summary>
         </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorContext.AsDeclaredMemberInfoComparer">
+            <summary>
+            <see cref="T:System.Collections.Generic.IComparer`1"/> for ordering members when generating a schema with <see cref="F:Json.Schema.Generation.PropertyOrder.AsDeclared"/> ordering enabled.
+            </summary>
+        </member>
         <member name="M:Json.Schema.Generation.SchemaGeneratorContext.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.

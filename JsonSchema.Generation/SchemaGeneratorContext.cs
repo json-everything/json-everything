@@ -25,91 +25,6 @@ using Json.Schema.Generation.Intents;
 			}
 		}
 
-		private class MemberInfoMetadataTokenComparer : Comparer<MemberInfo>
-		{
-
-			private readonly int[] _typeOrder;
-
-			private MemberInfoMetadataTokenComparer(Type type)
-			{
-				var typeStack = new Stack<Type>();
-
-				do
-				{
-					typeStack.Push(type);
-					type = type.BaseType!;
-				} while (type != null);
-
-				_typeOrder = typeStack.Select(GetMetadataToken).ToArray();
-			}
-
-			public static MemberInfoMetadataTokenComparer ForType(Type type)
-			{
-				return new MemberInfoMetadataTokenComparer(type ?? throw new ArgumentNullException(nameof(type)));
-			}
-
-			private static bool HasMetadataToken(MemberInfo? member)
-			{
-				if (member == null) return false;
-
-#if NET5_0_OR_GREATER
-				return member.HasMetadataToken();
-#else
-				try
-				{
-					var token = member.MetadataToken; return true;
-				}
-				catch (InvalidOperationException)
-				{
-					return false;
-				}
-#endif
-			}
-
-			private static int GetMetadataToken(MemberInfo? member)
-			{
-				return HasMetadataToken(member) ? member!.MetadataToken : int.MaxValue;
-			}
-
-			public override int Compare(MemberInfo? x, MemberInfo? y)
-			{
-				if (x == y) return 0;
-
-				if (x == null) return 1;
-
-				if (y == null) return -1;
-
-				// Get metadata tokens for the types that declared the members.
-				var xTypeToken = GetMetadataToken(x.DeclaringType);
-				var yTypeToken = GetMetadataToken(y.DeclaringType);
-
-				if (xTypeToken != yTypeToken)
-				{
-					// Members were declared in different types. Find the _typeOrder indices for
-					// the types so that we can identify which one we consider to be the
-					// least-derived type.
-					var xIndex = Array.IndexOf(_typeOrder, xTypeToken);
-					var yIndex = Array.IndexOf(_typeOrder, yTypeToken);
-
-					if (xIndex < 0 && yIndex < 0) return Comparer<int>.Default.Compare(xTypeToken, yTypeToken);
-
-					if (xIndex < 0) return 1;
-
-					if (yIndex < 0) return -1;
-
-					return Comparer<int>.Default.Compare(xIndex, yIndex);
-				}
-
-				// Members were declared in the same type. Use the metadata tokens for the members
-				// to determine the sort order.
-				var xToken = GetMetadataToken(x);
-				var yToken = GetMetadataToken(y);
-
-				return Comparer<int>.Default.Compare(xToken, yToken);
-			}
-
-		}
-
 		/// <summary>
 		/// The CLR type currently being processed.
 		/// </summary>
@@ -126,18 +41,18 @@ using Json.Schema.Generation.Intents;
 		/// The generator configuration.
 		/// </summary>
 		public SchemaGeneratorConfiguration Configuration { get; }
+		
+		private IComparer<MemberInfo> _memberInfoComparer;
 		/// <summary>
 		/// <see cref="IComparer{MemberInfo}"/> for ordering members when generating a schema with <see cref="PropertyOrder.AsDeclared"/> ordering enabled.
 		/// </summary>
-		private IComparer<MemberInfo> _memberInfoComparer;
-		internal IComparer<MemberInfo> AsDeclaredMemberInfoComparer => _memberInfoComparer ??= new MemberInfoMetadataTokenComparer(Type);
+		internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= new MemberInfoMetadataTokenComparer(Type);
 
 		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)
 		{
 			Type = type;
 			Attributes = attributes;
 			Configuration = configuration;
-			AsDeclaredMemberInfoComparer = new Lazy<IComparer<MemberInfo>>(() => MemberInfoMetadataTokenComparer.ForType(Type));
 		}
 
 		internal void GenerateIntents()
