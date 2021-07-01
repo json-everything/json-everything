@@ -1,6 +1,7 @@
 ﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Json.Schema.Generation.Intents;
  using Json.Schema.Generation.Refiners;
@@ -40,6 +41,12 @@ using Json.Schema.Generation.Intents;
 		/// The generator configuration.
 		/// </summary>
 		public SchemaGeneratorConfiguration Configuration { get; }
+		
+		private IComparer<MemberInfo> _memberInfoComparer;
+		/// <summary>
+		/// <see cref="IComparer{MemberInfo}"/> for ordering members when generating a schema with <see cref="PropertyOrder.AsDeclared"/> ordering enabled.
+		/// </summary>
+		internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= new MemberInfoMetadataTokenComparer(Type);
 
 		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)
 		{

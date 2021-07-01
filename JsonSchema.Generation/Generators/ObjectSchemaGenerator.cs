@@ -34,7 +34,7 @@ namespace Json.Schema.Generation.Generators
 
 			membersToGenerate = context.Configuration.PropertyOrder switch
 			{
-				PropertyOrder.AsDeclared => membersToGenerate.OrderBy(GetMemberSequenceValue),
+				PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer),
 				PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name),
 				_ => membersToGenerate
 			};
@@ -71,9 +71,5 @@ namespace Json.Schema.Generation.Generators
 			}
 		}
 
-		private static int GetMemberSequenceValue(MemberInfo member)
-		{
-			return member.MetadataToken;
-		}
 	}
 }
