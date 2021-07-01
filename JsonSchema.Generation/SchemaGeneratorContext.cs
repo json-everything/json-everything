@@ -1,6 +1,7 @@
 ﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Json.Schema.Generation.Intents;
  using Json.Schema.Generation.Refiners;
@@ -24,6 +25,8 @@ using Json.Schema.Generation.Intents;
 			}
 		}
 
+		private IComparer<MemberInfo>? _memberInfoComparer;
+
 		/// <summary>
 		/// The CLR type currently being processed.
 		/// </summary>
@@ -40,6 +43,8 @@ using Json.Schema.Generation.Intents;
 		/// The generator configuration.
 		/// </summary>
 		public SchemaGeneratorConfiguration Configuration { get; }
+		
+		internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= new MemberInfoMetadataTokenComparer(Type);
 
 		internal SchemaGeneratorContext(Type type, List<Attribute> attributes, SchemaGeneratorConfiguration configuration)
 		{
