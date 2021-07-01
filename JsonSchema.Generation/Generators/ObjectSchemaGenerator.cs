@@ -34,7 +34,7 @@ namespace Json.Schema.Generation.Generators
 
 			membersToGenerate = context.Configuration.PropertyOrder switch
 			{
-				PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer.Value),
+				PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer),
 				PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name),
 				_ => membersToGenerate
 			};
