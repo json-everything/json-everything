@@ -1554,7 +1554,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.SchemaGeneratorContext.html",
-          "hash": "xUZoFJby7KrMDfxYoQLIBA=="
+          "hash": "vR4XITJPEAtJvT9Tjn3M9w=="
         }
       },
       "is_incremental": false,
@@ -2712,7 +2712,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "AuFGr6jae9xH2kJkgjadgg=="
+          "hash": "U/gcHXyC9z+7TKV1xC4v1Q=="
         }
       },
       "is_incremental": false,
