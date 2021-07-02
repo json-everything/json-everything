@@ -49,7 +49,10 @@ namespace Json.Schema
 			set => _fetch = value;
 		}
 
-		internal Draft ValidatingAs => _options.ValidatingAs;
+		internal Draft ValidatingAs
+		{
+			get => _options?.ValidatingAs ?? Draft.Unspecified;
+		}
 
 		static SchemaRegistry()
 		{
