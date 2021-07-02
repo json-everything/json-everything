@@ -9,8 +9,6 @@ namespace Json.Schema
 	/// </summary>
 	public class SchemaRegistry
 	{
-		private readonly ValidationOptions _options;
-
 		private class Anchor
 		{
 #pragma warning disable 8618
@@ -30,15 +28,25 @@ namespace Json.Schema
 		}
 
 		private static readonly Uri _empty = new Uri("http://everything.json/");
+		private static readonly SchemaRegistry _global;
 
 		private Dictionary<Uri, Registration>? _registered;
 		private Func<Uri, JsonSchema?>? _fetch;
 		private Stack<Uri>? _scopes;
+		private ValidationOptions? _options;
+
 
 		/// <summary>
 		/// The global registry.
 		/// </summary>
-		public static SchemaRegistry Global { get; }
+		public static SchemaRegistry Global
+		{
+			get
+			{
+				_global._options ??= ValidationOptions.Default;
+				return _global;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
@@ -49,11 +57,11 @@ namespace Json.Schema
 			set => _fetch = value;
 		}
 
-		internal Draft ValidatingAs => _options.ValidatingAs;
+		internal Draft ValidatingAs => _options!.ValidatingAs;
 
 		static SchemaRegistry()
 		{
-			Global = new SchemaRegistry(ValidationOptions.Default);
+			_global = new SchemaRegistry();
 
 			MetaSchemas.Draft6.RegisterSubschemas(Global, MetaSchemas.Draft6Id);
 
@@ -82,6 +90,7 @@ namespace Json.Schema
 		{
 			_options = options;
 		}
+		private SchemaRegistry(){}
 
 		/// <summary>
 		/// Registers a schema by URI.

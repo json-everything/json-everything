@@ -92,6 +92,9 @@ namespace Json.Schema
 		
 		internal Draft ValidatingAs { get; private set; }
 
+		/// <summary>
+		/// Create a new instance of the <see cref="ValidationOptions"/> class.
+		/// </summary>
 		public ValidationOptions()
 		{
 			SchemaRegistry = new SchemaRegistry(this);

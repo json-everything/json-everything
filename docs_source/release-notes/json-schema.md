@@ -1,3 +1,7 @@
+# [1.10.6](https://github.com/gregsdennis/json-everything/pull/140)
+
+[#138](https://github.com/gregsdennis/json-everything/issues/138) - [@wazzamatazz](https://github.com/wazzamatazz) found an initialization issue that resulted in a `NullReferenceException`.
+
 # [1.10.5](https://github.com/gregsdennis/json-everything/pull/135)
 
 Fixed an issue with reference resolution when `$ref` and `$id` are sibling keywords in drafts 6 and 7.
