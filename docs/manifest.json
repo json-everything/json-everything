@@ -2178,7 +2178,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.SchemaRegistry.html",
-          "hash": "rMAZQozTtp/xpdlauDZOjw=="
+          "hash": "dQzSF6adCYAFzJtrbkXNKg=="
         }
       },
       "is_incremental": false,
@@ -2310,7 +2310,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.ValidationOptions.html",
-          "hash": "Iv1lBNmWXWbVYidyeKKzAg=="
+          "hash": "IU8j0x5TmCkDaVAzhh9Zig=="
         }
       },
       "is_incremental": false,
@@ -2736,7 +2736,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "aBxhENwvtsudA7theKL+Dg=="
+          "hash": "G2mdNDXnt5vf/w/KBErifQ=="
         }
       },
       "is_incremental": false,
