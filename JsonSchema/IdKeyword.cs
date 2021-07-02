@@ -42,7 +42,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			if (context.LocalSchema.Keywords.OfType<RefKeyword>().Any() &&
+			if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
 			    context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7)
 			{
 				context.NotApplicable(() => "$ref present; ignoring");
@@ -53,7 +53,7 @@ namespace Json.Schema
 			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
 			if (context.ParentContext.UriChanged) 
 				context.ParentContext.CurrentAnchor = null;
-			context.Options.SchemaRegistry.EnteringUriScope(newUri);
+			context.Options.SchemaRegistry.EnteringUriScope(newUri!);
 			context.IsNewDynamicScope = true;
 			context.ParentContext.CurrentUri = newUri;
 			context.IsValid = true;
