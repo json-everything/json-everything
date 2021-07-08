@@ -97,6 +97,7 @@ jobs:
         color: ${{ env.BUILD_STATUS }}
 
   analyze-more:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze Json.More.Net 
     runs-on: ubuntu-latest
@@ -114,15 +115,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze more
         id: analyze-more
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/Json.More/bin/Release/netstandard2.0/Json.More.dll -o semver-report-more.md -c .github/semver_config.json -p Json.More.Net
@@ -149,6 +147,7 @@ jobs:
             ${{ steps.analyze-more.outputs.REPORT }}
 
   analyze-patch:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonPatch.Net
     runs-on: ubuntu-latest
@@ -166,15 +165,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze patch
         id: analyze-patch
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonPatch/bin/Release/netstandard2.0/JsonPatch.dll -o semver-report-patch.md -c .github/semver_config.json -p JsonPatch.Net
@@ -201,6 +197,7 @@ jobs:
             ${{ steps.analyze-patch.outputs.REPORT }}
 
   analyze-path:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonPath.Net
     runs-on: ubuntu-latest
@@ -218,15 +215,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze path
         id: analyze-path
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonPath/bin/Release/netstandard2.1/JsonPath.Net.dll -o semver-report-path.md -c .github/semver_config.json --include-Header
@@ -253,6 +247,7 @@ jobs:
             ${{ steps.analyze-path.outputs.REPORT }}
 
   analyze-pointer:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonPointer.Net
     runs-on: ubuntu-latest
@@ -270,15 +265,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze pointer
         id: analyze-poitner
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonPointer/bin/Release/netstandard2.0/JsonPointer.Net.dll -o semver-report-pointer.md -c .github/semver_config.json
@@ -305,6 +297,7 @@ jobs:
             ${{ steps.analyze-pointer.outputs.REPORT }}
 
   analyze-schema:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonSchema.Net
     runs-on: ubuntu-latest
@@ -322,15 +315,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze schema
         id: analyze-schema
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonSchema/bin/Release/netstandard2.0/JsonSchema.Net.dll -o semver-report-schema.md -c .github/semver_config.json
@@ -357,6 +347,7 @@ jobs:
             ${{ steps.analyze-schema.outputs.REPORT }}
 
   analyze-schema-gen:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonSchema.Net.Generation
     runs-on: ubuntu-latest
@@ -378,15 +369,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze schema generation
         id: analyze-schema-generation
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonSchema.Generation/bin/Release/net5.0/JsonSchema.Net.Generation.dll -o semver-report-schema-gen.md -c .github/semver_config.json
@@ -413,6 +401,7 @@ jobs:
             ${{ steps.analyze-schema-generation.outputs.REPORT }}
 
   analyze-schema-data:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonSchema.Net.Data
     runs-on: ubuntu-latest
@@ -430,15 +419,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze schema data
         id: analyze-schema-data
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonSchema.Data/bin/Release/netstandard2.0/JsonSchema.Net.Data.dll -o semver-report-schema-data.md -c .github/semver_config.json
@@ -465,6 +451,7 @@ jobs:
             ${{ steps.analyze-schema-data.outputs.REPORT }}
 
   analyze-schema-unique-keys:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonSchema.Net.UniqueKeys
     runs-on: ubuntu-latest
@@ -482,15 +469,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze schema unique keys
         id: analyze-schema-unique-keys
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonSchema.UniqueKeys/bin/Release/netstandard2.0/JsonSchema.Net.UniqueKeys.dll -o semver-report-schema-unique-keys.md -c .github/semver_config.json
@@ -517,6 +501,7 @@ jobs:
             ${{ steps.analyze-schema-unique-keys.outputs.REPORT }}
 
   analyze-logic:
+    if: github.event_name == 'pull_request'
     needs: build
     name: Analyze JsonLogic
     runs-on: ubuntu-latest
@@ -534,15 +519,12 @@ jobs:
 
         # Set up
       - name: Create local manifest file
-        if: github.event_name == 'pull_request'
         run: dotnet new tool-manifest
       - name: Install analyzer
-        if: github.event_name == 'pull_request'
         run: dotnet tool install SemVerAnalyzer
 
       - name: Analyze logic
         id: analyze-logic
-        if: github.event_name == 'pull_request'
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
           dotnet analyze-semver -a artifacts/DLLs/JsonLogic/bin/Release/netstandard2.1/JsonLogic.dll -o semver-report-logic.md -c .github/semver_config.json
