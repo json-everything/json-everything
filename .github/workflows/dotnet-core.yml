@@ -106,21 +106,26 @@ jobs:
         id: changed-more
         with:
           paths: Json.More/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-more.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-more.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-more.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-more.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-more.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-more.outputs.changed == 'true'
@@ -161,21 +166,26 @@ jobs:
         id: changed-patch
         with:
           paths: JsonPatch/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-patch.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-patch.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-patch.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-patch.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-patch.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-patch.outputs.changed == 'true'
@@ -216,21 +226,26 @@ jobs:
         id: changed-path
         with:
           paths: JsonPath/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-path.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-path.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-path.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-path.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-path.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-path.outputs.changed == 'true'
@@ -271,21 +286,26 @@ jobs:
         id: changed-pointer
         with:
           paths: JsonPointer/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-pointer.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-pointer.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-pointer.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-pointer.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-pointer.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-pointer.outputs.changed == 'true'
@@ -326,21 +346,26 @@ jobs:
         id: changed-schema
         with:
           paths: JsonSchema/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-schema.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-schema.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-schema.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-schema.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-schema.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-schema.outputs.changed == 'true'
@@ -381,25 +406,31 @@ jobs:
         id: changed-schema-gen
         with:
           paths: JsonSchema.Generation/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
-      - name: Setup .NET Core
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
 
-      - name: Download Artifacts
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-schema-gen.outputs.changed == 'true'
@@ -440,21 +471,26 @@ jobs:
         id: changed-schema-data
         with:
           paths: JsonSchema.Data/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-schema-data.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-schema-data.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-schema-data.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-schema-data.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-schema-data.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-schema-data.outputs.changed == 'true'
@@ -495,21 +531,26 @@ jobs:
         id: changed-schema-uniquekeys
         with:
           paths: JsonSchema.UniqueKeys/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
@@ -550,21 +591,26 @@ jobs:
         id: changed-logic
         with:
           paths: JsonLogic/**
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - if: steps.changed-logic.outputs.changed == 'true'
+        uses: actions/checkout@v2
+      - if: steps.changed-logic.outputs.changed == 'true'
+        name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
 
-      - name: Download Artifacts
+      - if: steps.changed-logic.outputs.changed == 'true'
+        name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
         # Set up
-      - name: Create local manifest file
+      - if: steps.changed-logic.outputs.changed == 'true'
+        name: Create local manifest file
         run: dotnet new tool-manifest
-      - name: Install analyzer
+      - if: steps.changed-logic.outputs.changed == 'true'
+        name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
       - if: steps.changed-logic.outputs.changed == 'true'
