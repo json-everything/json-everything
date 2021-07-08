@@ -102,6 +102,10 @@ jobs:
     name: Analyze Json.More.Net 
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-more
+        with:
+          paths: Json.More/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -119,7 +123,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze more
+      - if: steps.changed-more.outputs.changed == 'true'
+        name: Analyze more
         id: analyze-more
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -152,6 +157,10 @@ jobs:
     name: Analyze JsonPatch.Net
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-patch
+        with:
+          paths: JsonPatch/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -169,7 +178,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze patch
+      - if: steps.changed-patch.outputs.changed == 'true'
+        name: Analyze patch
         id: analyze-patch
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -202,6 +212,10 @@ jobs:
     name: Analyze JsonPath.Net
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-path
+        with:
+          paths: JsonPath/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -219,7 +233,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze path
+      - if: steps.changed-path.outputs.changed == 'true'
+        name: Analyze path
         id: analyze-path
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -252,6 +267,10 @@ jobs:
     name: Analyze JsonPointer.Net
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-pointer
+        with:
+          paths: JsonPointer/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -269,7 +288,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze pointer
+      - if: steps.changed-pointer.outputs.changed == 'true'
+        name: Analyze pointer
         id: analyze-poitner
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -302,6 +322,10 @@ jobs:
     name: Analyze JsonSchema.Net
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-schema
+        with:
+          paths: JsonSchema/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -319,7 +343,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze schema
+      - if: steps.changed-schema.outputs.changed == 'true'
+        name: Analyze schema
         id: analyze-schema
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -352,6 +377,10 @@ jobs:
     name: Analyze JsonSchema.Net.Generation
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-schema-gen
+        with:
+          paths: JsonSchema.Generation/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -373,7 +402,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze schema generation
+      - if: steps.changed-schema-gen.outputs.changed == 'true'
+        name: Analyze schema generation
         id: analyze-schema-generation
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -406,6 +436,10 @@ jobs:
     name: Analyze JsonSchema.Net.Data
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-schema-data
+        with:
+          paths: JsonSchema.Data/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -423,7 +457,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze schema data
+      - if: steps.changed-schema-data.outputs.changed == 'true'
+        name: Analyze schema data
         id: analyze-schema-data
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -456,6 +491,10 @@ jobs:
     name: Analyze JsonSchema.Net.UniqueKeys
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-schema-uniquekeys
+        with:
+          paths: JsonSchema.UniqueKeys/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -473,7 +512,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze schema unique keys
+      - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
+        name: Analyze schema unique keys
         id: analyze-schema-unique-keys
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
@@ -506,6 +546,10 @@ jobs:
     name: Analyze JsonLogic
     runs-on: ubuntu-latest
     steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-logic
+        with:
+          paths: JsonLogic/**
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -523,7 +567,8 @@ jobs:
       - name: Install analyzer
         run: dotnet tool install SemVerAnalyzer
 
-      - name: Analyze logic
+      - if: steps.changed-logic.outputs.changed == 'true'
+        name: Analyze logic
         id: analyze-logic
         # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
         run: |
