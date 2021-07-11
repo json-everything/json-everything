@@ -45,7 +45,8 @@ All of these and more are supplied via a set of attributes that can be applied t
     - `ReadOnly`
     - `WriteOnly`
 
-\* The `[Obsolete]` attribute is `System.Obsolete`.  All of the others have been defined within this library.  `System.ComponentModel.DataAnnotations` support is currently [in discussion](https://github.com/gregsdennis/json-everything/issues/143).*
+\* The `[Obsolete]` attribute is `System.Obsolete`.  All of the others have been defined within this library.  `System.ComponentModel.DataAnnotations` support is currently [in discussion](https://github.com/gregsdennis/json-everything/issues/143).
+
 \*\* The `[JsonExclude]` attribute functions equivalently to `[JsonIgnore]` (see below).  It is included to allow generation to skip a property while allowing serialization to consider it.
 
 Simply add the attributes directly to the properties and the corresponding keywords will be added to the schema.
