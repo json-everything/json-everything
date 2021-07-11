@@ -13,15 +13,15 @@ namespace Json.Schema.Generation
 		/// <summary>
 		/// The exclusive minimum.
 		/// </summary>
-		public uint Value { get; }
+		public decimal Value { get; }
 
 		/// <summary>
 		/// Creates a new <see cref="ExclusiveMinimumAttribute"/> instance.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public ExclusiveMinimumAttribute(uint value)
+		public ExclusiveMinimumAttribute(double value)
 		{
-			Value = value;
+			Value = Convert.ToDecimal(value);
 		}
 
 		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)

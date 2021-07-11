@@ -37,8 +37,16 @@ All of these and more are supplied via a set of attributes that can be applied t
     - `MaxItems`
     - `UniqueItems`
 - All
-    - `Required`
-    - `Obsolete` (translates to `deprecated`)
+    - `Required` & `Nullable` (see below)
+    - `Obsolete`\* (translates to `deprecated`)
+    - `JsonExclude`\*\*
+    - `Title`
+    - `Description`
+    - `ReadOnly`
+    - `WriteOnly`
+
+\* The `[Obsolete]` attribute is `System.Obsolete`.  All of the others have been defined within this library.  `System.ComponentModel.DataAnnotations` support is currently [in discussion](https://github.com/gregsdennis/json-everything/issues/143).*
+\*\* The `[JsonExclude]` attribute functions equivalently to `[JsonIgnore]` (see below).  It is included to allow generation to skip a property while allowing serialization to consider it.
 
 Simply add the attributes directly to the properties and the corresponding keywords will be added to the schema.
 
@@ -80,7 +88,10 @@ The `minimum` is applied to the `items` because that keyword is not relevant for
 The generator also supports these .Net-defined attributes:
 
 - `JsonPropertyName` - supports custom property naming (more on naming below)
-- `JsonNumberHandling` - supports allowing numeric values in strings or only as numbers as well as allowing the `NaN`, `Infinity`, and `-Infinity` values.
+- `JsonNumberHandling`\* - supports allowing numeric values in strings or only as numbers as well as allowing the `NaN`, `Infinity`, and `-Infinity` values.
+- `JsonIgnore`\* - ignores a property
+
+\* These attributes were introduced with .Net 5.  The .Net Standard version of the library also provides a definition for them.
 
 The generator will handle most common types:
 

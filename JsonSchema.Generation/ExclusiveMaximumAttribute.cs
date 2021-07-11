@@ -13,15 +13,15 @@ namespace Json.Schema.Generation
 		/// <summary>
 		/// The exclusive maximum.
 		/// </summary>
-		public uint Value { get; }
+		public decimal Value { get; }
 
 		/// <summary>
 		/// Creates a new <see cref="ExclusiveMaximumAttribute"/> instance.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public ExclusiveMaximumAttribute(uint value)
+		public ExclusiveMaximumAttribute(double value)
 		{
-			Value = value;
+			Value = Convert.ToDecimal(value);
 		}
 
 		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)

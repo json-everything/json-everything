@@ -19,9 +19,9 @@ namespace Json.Schema.Generation
 		/// Creates a new <see cref="MaximumAttribute"/> instance.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public MaximumAttribute(decimal value)
+		public MaximumAttribute(double value)
 		{
-			Value = value;
+			Value = Convert.ToDecimal(value);
 		}
 
 		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)

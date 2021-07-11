@@ -19,9 +19,9 @@ namespace Json.Schema.Generation
 		/// Creates a new <see cref="MinimumAttribute"/> instance.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public MinimumAttribute(decimal value)
+		public MinimumAttribute(double value)
 		{
-			Value = value;
+			Value = Convert.ToDecimal(value);
 		}
 
 		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
