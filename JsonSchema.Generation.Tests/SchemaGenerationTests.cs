@@ -188,6 +188,10 @@ namespace Json.Schema.Generation.Tests
 
 			[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals)]
 			public float StringyNotANumber { get; set; }
+
+			[Title("title")]
+			[Description("description")]
+			public string Metadata { get; set; }
 		}
 
 		[Test]
@@ -258,6 +262,11 @@ namespace Json.Schema.Generation.Tests
 						.AnyOf(new JsonSchemaBuilder().Type(SchemaValueType.String | SchemaValueType.Number),
 							new JsonSchemaBuilder().Enum("NaN", "Infinity", "-Infinity")
 						)
+					),
+					("Metadata", new JsonSchemaBuilder()
+						.Type(SchemaValueType.String)
+						.Title("title")
+						.Description("description")
 					)
 				)
 				.Required(nameof(GenerationTarget.Integer), "RequiredString", "rename-this-required-string")

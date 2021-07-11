@@ -22,6 +22,8 @@ namespace Json.Schema.Generation
 		/// Gets or sets the order in which properties will be listed in the schema.
 		/// </summary>
 		public PropertyOrder PropertyOrder { get; set; }
+
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 		/// <summary>
 		/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethod.AsDeclared"/>.
 		/// </summary>
@@ -33,6 +35,7 @@ namespace Json.Schema.Generation
 			get => _propertyNamingMethod ??= PropertyNamingMethods.AsDeclared;
 			set => _propertyNamingMethod = value;
 		}
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		/// <summary>
 		/// Gets or sets whether to include `null` in the `type` keyword.
 		/// Default is <see cref="Nullability.Disabled"/> which means that it will

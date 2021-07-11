@@ -1,3 +1,9 @@
+# [1.8.0](https://github.com/gregsdennis/json-everything/pull/144)
+
+[#141](https://github.com/gregsdennis/json-everything/issues/141) - Added `[Title()]` and `[Description()]` attributes.
+
+Fixed `[Minimum()]`, `[ExclusiveMinimum()]`, `[Maximum()]`, and `[ExclusiveMaximum()]` attributes to take `double` instead of `uint` which was a copy/paste error.
+
 # [1.7.1](https://github.com/gregsdennis/json-everything/pull/137)
 
 [#136](https://github.com/gregsdennis/json-everything/pull/136) - Better sorting for properties, taking into account inheritance hierarchy and putting inherited properties first.  Thanks to [@wazzamatazz](https://github.com/wazzamatazz) for working this up.
