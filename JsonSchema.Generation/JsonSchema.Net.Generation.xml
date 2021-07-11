@@ -27,6 +27,22 @@
             </summary>
             <typeparam name="T">The handler type.</typeparam>
         </member>
+        <member name="T:Json.Schema.Generation.DescriptionAttribute">
+            <summary>
+            Applies a `description` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.DescriptionAttribute.Desription">
+            <summary>
+            The description.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.DescriptionAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.DescriptionAttribute"/> instance.
+            </summary>
+            <param name="description">The value.</param>
+        </member>
         <member name="T:Json.Schema.Generation.ExclusiveMaximumAttribute">
             <summary>
             Applies an `exclusiveMaximum` keyword.
@@ -286,6 +302,37 @@
             <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
         </member>
         <member name="M:Json.Schema.Generation.Intents.DeprecatedIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.DescriptionIntent">
+            <summary>
+            Provides intent to create a `description` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.DescriptionIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DescriptionIntent.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MinimumIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DescriptionIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DescriptionIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DescriptionIntent.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
@@ -906,6 +953,37 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.TitleIntent">
+            <summary>
+            Provides intent to create a `title` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.TitleIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TitleIntent.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.TitleIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TitleIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TitleIntent.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.TitleIntent.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.Generation.Intents.TypeIntent">
             <summary>
             Provides intent to create a `type` keyword.
@@ -1045,6 +1123,21 @@
             Runs the refiner.
             </summary>
             <param name="context"></param>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonExcludeAttribute">
+            <summary>
+            Indicates that the property should be excluded from generation.
+            </summary>
+            <remarks>
+            This attribute functions exactly the same as the <see cref="T:System.Text.Json.Serialization.JsonIgnoreAttribute"/>.  It
+            is included separately to support the case where the model should be serialized with
+            a property but schema generation should ignore it.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonExcludeAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonExcludeAttribute"/>.
+            </summary>
         </member>
         <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
             <summary>
@@ -1458,6 +1551,22 @@
         <member name="M:Json.Schema.Generation.SchemaGeneratorContext.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.TitleAttribute">
+            <summary>
+            Applies a `title` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.TitleAttribute.Title">
+            <summary>
+            The title.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.TitleAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.TitleAttribute"/> instance.
+            </summary>
+            <param name="title">The value.</param>
         </member>
         <member name="T:Json.Schema.Generation.TypeExtensions">
             <summary>
