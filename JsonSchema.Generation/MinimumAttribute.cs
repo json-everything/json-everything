@@ -13,13 +13,13 @@ namespace Json.Schema.Generation
 		/// <summary>
 		/// The minimum.
 		/// </summary>
-		public uint Value { get; }
+		public decimal Value { get; }
 
 		/// <summary>
 		/// Creates a new <see cref="MinimumAttribute"/> instance.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public MinimumAttribute(uint value)
+		public MinimumAttribute(decimal value)
 		{
 			Value = value;
 		}
