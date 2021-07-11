@@ -119,11 +119,18 @@
 </li>
 <li>All
 <ul>
-<li><code>Required</code></li>
-<li><code>Obsolete</code> (translates to <code>deprecated</code>)</li>
+<li><code>Required</code> &amp; <code>Nullable</code> (see below)</li>
+<li><code>Obsolete</code>* (translates to <code>deprecated</code>)</li>
+<li><code>JsonExclude</code>**</li>
+<li><code>Title</code></li>
+<li><code>Description</code></li>
+<li><code>ReadOnly</code></li>
+<li><code>WriteOnly</code></li>
 </ul>
 </li>
 </ul>
+<p>* The <code>[Obsolete]</code> attribute is <code>System.Obsolete</code>.  All of the others have been defined within this library.  <code>System.ComponentModel.DataAnnotations</code> support is currently <a href="https://github.com/gregsdennis/json-everything/issues/143">in discussion</a>.</p>
+<p>** The <code>[JsonExclude]</code> attribute functions equivalently to <code>[JsonIgnore]</code> (see below).  It is included to allow generation to skip a property while allowing serialization to consider it.</p>
 <p>Simply add the attributes directly to the properties and the corresponding keywords will be added to the schema.</p>
 <p>For properties typed with generic collections, like <code>List&lt;T&gt;</code>, the schema will automatically generate an <code>items</code> keyword and an generate a schema for the indicated <code>T</code>.  If your <code>T</code> is a numeric value or a string, then you can also apply the relevant attributes and they'll be applied in the <code>items</code> subschema.</p>
 <p>For example, this object:</p>
@@ -154,8 +161,10 @@
 <p>The generator also supports these .Net-defined attributes:</p>
 <ul>
 <li><code>JsonPropertyName</code> - supports custom property naming (more on naming below)</li>
-<li><code>JsonNumberHandling</code> - supports allowing numeric values in strings or only as numbers as well as allowing the <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code> values.</li>
+<li><code>JsonNumberHandling</code>* - supports allowing numeric values in strings or only as numbers as well as allowing the <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code> values.</li>
+<li><code>JsonIgnore</code>* - ignores a property</li>
 </ul>
+<p>* These attributes were introduced with .Net 5.  The .Net Standard version of the library also provides a definition for them.</p>
 <p>The generator will handle most common types:</p>
 <ul>
 <li>numeric types (<code>int</code>, <code>decimal</code>, etc.)</li>

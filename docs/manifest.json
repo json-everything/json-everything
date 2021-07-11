@@ -866,11 +866,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.DescriptionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.DescriptionAttribute.html",
+          "hash": "z2LfdbN+h/797ChU8Rg0TA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.ExclusiveMaximumAttribute.yml",
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.ExclusiveMaximumAttribute.html",
-          "hash": "3AzjyOiFJ6s43nYULXTtxw=="
+          "hash": "0jmbpw8IWj8yLs5PwtAU4g=="
         }
       },
       "is_incremental": false,
@@ -882,7 +894,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.ExclusiveMinimumAttribute.html",
-          "hash": "EIrQN1/++Qg2LAX28VY9Lw=="
+          "hash": "6Qa8/+8Gjptj4qTajGeTBw=="
         }
       },
       "is_incremental": false,
@@ -1015,6 +1027,18 @@
         ".html": {
           "relative_path": "api/Json.Schema.Generation.Intents.DeprecatedIntent.html",
           "hash": "mPHGHlL0yivKt0pfU7nf8Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.DescriptionIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.DescriptionIntent.html",
+          "hash": "DkSGV2EyYDiUJTdNY430EQ=="
         }
       },
       "is_incremental": false,
@@ -1238,6 +1262,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.Intents.TitleIntent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.Intents.TitleIntent.html",
+          "hash": "u6Zm+ZRnVWjfzZdQWxiJqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.Generation.Intents.TypeIntent.yml",
       "output": {
         ".html": {
@@ -1278,7 +1314,19 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.Intents.html",
-          "hash": "CObJhFsHKZYpSuMJXx+3oA=="
+          "hash": "N5OtmRKQHjcPrnFpi5Km2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.JsonExcludeAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.JsonExcludeAttribute.html",
+          "hash": "1VEfH1j8/j4b+3s7XN1MWA=="
         }
       },
       "is_incremental": false,
@@ -1374,7 +1422,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.MaximumAttribute.html",
-          "hash": "WaCfM8rWqAG5D9zMUWJQ6w=="
+          "hash": "NyqnjxvzECyW+0PUCyX9Eg=="
         }
       },
       "is_incremental": false,
@@ -1410,7 +1458,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.MinimumAttribute.html",
-          "hash": "FFsTki+tlXtPP/5tYXqWyw=="
+          "hash": "4TL1W2NNI5V43bttYmMFMA=="
         }
       },
       "is_incremental": false,
@@ -1542,7 +1590,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.SchemaGeneratorConfiguration.html",
-          "hash": "HMlAzjT+wJaFrmS8NLLWuA=="
+          "hash": "uCnTuchpDMCxgb0PHEgYpw=="
         }
       },
       "is_incremental": false,
@@ -1555,6 +1603,18 @@
         ".html": {
           "relative_path": "api/Json.Schema.Generation.SchemaGeneratorContext.html",
           "hash": "vR4XITJPEAtJvT9Tjn3M9w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.Generation.TitleAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.Generation.TitleAttribute.html",
+          "hash": "FF5pl+glN2V7t3h1M9QC/g=="
         }
       },
       "is_incremental": false,
@@ -1602,7 +1662,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Generation.html",
-          "hash": "vNqvNxe9OPf+Q/L7bgXqzg=="
+          "hash": "JQ+/8zZKScetz8oqWDKncQ=="
         }
       },
       "is_incremental": false,
@@ -2430,7 +2490,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "MjLPr90HVxoE12YRyH+Fzw=="
+          "hash": "7VWihYA6MSyGAajcm6mE6A=="
         }
       },
       "is_incremental": false,
@@ -2712,7 +2772,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema-generation.html",
-          "hash": "sAliskUe0+J8kdLWr0LcPg=="
+          "hash": "nMRwpaRRZWqtZUQOOSXYIQ=="
         }
       },
       "is_incremental": false,
@@ -2880,7 +2940,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/schema-generation.html",
-          "hash": "el4PHN74BxZGtdK2OXcgnQ=="
+          "hash": "K9woHhxwizjFX/Vxyk0Dwg=="
         }
       },
       "is_incremental": false,
@@ -3003,7 +3063,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 199,
+          "total_file_count": 204,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
