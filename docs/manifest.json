@@ -1782,7 +1782,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.JsonSchema.html",
-          "hash": "R6+ZLVGT9aIsHV6vcTNjFg=="
+          "hash": "bZtSTfBvzco4+2jiKM3oUQ=="
         }
       },
       "is_incremental": false,
@@ -2238,7 +2238,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.SchemaRegistry.html",
-          "hash": "dQzSF6adCYAFzJtrbkXNKg=="
+          "hash": "xbAOo6sl0kfe19fSlKoF3A=="
         }
       },
       "is_incremental": false,
@@ -2796,7 +2796,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "G2mdNDXnt5vf/w/KBErifQ=="
+          "hash": "R19M1+UsFRH4oRrFuEqsJA=="
         }
       },
       "is_incremental": false,
