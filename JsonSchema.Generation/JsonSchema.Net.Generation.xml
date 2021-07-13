@@ -53,7 +53,7 @@
             The exclusive maximum.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.ExclusiveMaximumAttribute.#ctor(System.UInt32)">
+        <member name="M:Json.Schema.Generation.ExclusiveMaximumAttribute.#ctor(System.Double)">
             <summary>
             Creates a new <see cref="T:Json.Schema.Generation.ExclusiveMaximumAttribute"/> instance.
             </summary>
@@ -69,7 +69,7 @@
             The exclusive minimum.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.ExclusiveMinimumAttribute.#ctor(System.UInt32)">
+        <member name="M:Json.Schema.Generation.ExclusiveMinimumAttribute.#ctor(System.Double)">
             <summary>
             Creates a new <see cref="T:Json.Schema.Generation.ExclusiveMinimumAttribute"/> instance.
             </summary>
@@ -1139,9 +1139,69 @@
             Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonExcludeAttribute"/>.
             </summary>
         </member>
+        <member name="T:Json.Schema.Generation.JsonIncludeAttribute">
+             <summary>
+             Indicates that the property or field should be included for serialization and deserialization.
+             </summary>
+             <remarks>
+             When applied to a public property, indicates that non-public getters and setters should be used for serialization and deserialization.
+            
+             Non-public properties and fields are not allowed when serializing and deserializing. If the attribute is used on a non-public property or field,
+             an <see cref="T:System.InvalidOperationException"/> is thrown during the first serialization or deserialization of the declaring type.
+             </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonIncludeAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonIncludeAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonNumberHandling">
+            <summary>
+            Determines how <see cref="T:System.Text.Json.JsonSerializer"/> handles numbers when serializing and deserializing.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.Strict">
+            <summary>
+            Numbers will only be read from <see cref="F:System.Text.Json.JsonTokenType.Number"/> tokens and will only be written as JSON numbers (without quotes).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.AllowReadingFromString">
+            <summary>
+            Numbers can be read from <see cref="F:System.Text.Json.JsonTokenType.String"/> tokens.
+            Does not prevent numbers from being read from <see cref="F:System.Text.Json.JsonTokenType.Number"/> token.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.WriteAsString">
+            <summary>
+            Numbers will be written as JSON strings (with quotes), not as JSON numbers.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.AllowNamedFloatingPointLiterals">
+            <summary>
+            The "NaN", "Infinity", and "-Infinity" <see cref="F:System.Text.Json.JsonTokenType.String"/> tokens can be read as
+            floating-point constants, and the <see cref="T:System.Single"/> and <see cref="T:System.Double"/> values for these
+            constants will be written as their corresponding JSON string representations.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttribute">
+            <summary>
+            When placed on a type, property, or field, indicates what <see cref="T:Json.Schema.Generation.JsonNumberHandling"/>
+            settings should be used when serializing or deserializing numbers.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.JsonNumberHandlingAttribute.Handling">
+            <summary>
+            Indicates what settings should be used when serializing or deserializing numbers.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor(Json.Schema.Generation.JsonNumberHandling)">
+            <summary>
+            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonNumberHandlingAttribute"/>.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
             <summary>
-            Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
+            Handler for the <see cref="T:Json.Schema.Generation.JsonNumberHandlingAttribute"/>.
             </summary>
         </member>
         <member name="M:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGeneratorContext)">
@@ -1184,7 +1244,7 @@
             The maximum.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.MaximumAttribute.#ctor(System.UInt32)">
+        <member name="M:Json.Schema.Generation.MaximumAttribute.#ctor(System.Double)">
             <summary>
             Creates a new <see cref="T:Json.Schema.Generation.MaximumAttribute"/> instance.
             </summary>
@@ -1232,7 +1292,7 @@
             The minimum.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.MinimumAttribute.#ctor(System.UInt32)">
+        <member name="M:Json.Schema.Generation.MinimumAttribute.#ctor(System.Double)">
             <summary>
             Creates a new <see cref="T:Json.Schema.Generation.MinimumAttribute"/> instance.
             </summary>
@@ -1346,88 +1406,7 @@
         </member>
         <member name="T:Json.Schema.Generation.PropertyNamingMethod">
             <summary>
-            Declares a property naming method which is used to alter property names.
-            </summary>
-            <param name="input">The property name.</param>
-            <returns>The altered property name.</returns>
-        </member>
-        <member name="T:Json.Schema.Generation.PropertyNamingMethods">
-            <summary>
-            Defines a set of predefined property naming methods.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.AsDeclared">
-            <summary>
-            Makes no changes.  Properties are generated as they are declared in code.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.CamelCase">
-            <summary>
-            Updates property names to camel case (e.g. `camelCase`).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.PascalCase">
-            <summary>
-            Updates property names to pascal case (e.g. `PascalCase`).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.SnakeCase">
-            <summary>
-            Updates property names to snake case (e.g. `Snake_Case`).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.LowerSnakeCase">
-            <summary>
-            Updates property names to lower snake case (e.g. `lower_snake_case`).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.UpperSnakeCase">
-            <summary>
-            Updates property names to upper snake case (e.g. `UPPER_SNAKE_CASE`).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.KebabCase">
-            <summary>
-            Updates property names to kebab case (e.g. `Kebab-Case`).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyNamingMethods.UpperKebabCase">
-            <summary>
-            Updates property names to lower kebab case (e.g. `UPPER-KEBAB-CASE`).
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.PropertyOrder">
-            <summary>
-            Indicates the sequence in which properties will be listed in the schema.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyOrder.AsDeclared">
-            <summary>
-            Properties will be listed in the order they're declared in code.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.PropertyOrder.ByName">
-            <summary>
-            Properties will be sorted by name, case-insensitive.
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.ReadOnlyAttribute">
-            <summary>
-            Applies a `readOnly` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.ReadOnlyAttribute.Value">
-            <summary>
-            Whether the property should be read-only.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance with a value of `true`.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor(System.Boolean)">
-            <summary>
+            Declares a pro     <summary>
             Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
@@ -1439,6 +1418,75 @@
             </summary>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGenerationContextCache">
+            <summary>
+            Gets the contexts for the current run.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute},Json.Schema.Generation.SchemaGeneratorConfiguration)">
+            <summary>
+            Gets or creates a <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/> based on the given
+            type and attribute set.
+            </summary>
+            <param name="type">The type to generate.</param>
+            <param name="attributes">The attribute set on the property.</param>
+            <param name="configuration">The generator configuration.</param>
+            <returns>
+            A generation context, from the cache if one exists with the specified
+            type and attribute set; otherwise a new one.  New contexts are automatically
+            cached.
+            </returns>
+            <remarks>
+            Use this in your generator if it needs to create keywords with subschemas.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute})">
+            <summary>
+            (Obsolete) Gets or creates a <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/> based on the given
+            type and attribute set.
+            </summary>
+            <param name="type">The type to generate.</param>
+            <param name="attributes">The attribute set on the property.</param>
+            <returns>
+            A generation context, from the cache if one exists with the specified
+            type and attribute set; otherwise a new one.  New contexts are automatically
+            cached.
+            </returns>
+            <remarks>
+            Use this in your generator if it needs to create keywords with subschemas.
+            </remarks>
+        </member>
+        <member name="T:Json.Schema.Generation.SchemaGeneratorConfiguration">
+            <summary>
+            Provides additional configuration for the generator.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners">
+            <summary>
+            A collection of refiners.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Generators">
+            <summary>
+            A collection of generators in addition to the global set.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder">
+            <summary>
+            Gets or sets the order in which properties will be listed in the schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod">
+            <summary>
+            Gets or sets the property naming method.  Default is <see cref="!:PropertyNamingMethod.AsDeclared"/>.
+            </summary>
+            <remarks>
+            This can be replaced with any `Func&lt;string, string&gt;`.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability">
+            <summary>
+            Gets or sets whether to include `null` in the `type` keyword.
+            Default is <see cref="F:Json.Schema.Generation.Nullability.Disabled"/> whieration.SchemaGenerationContextCache">
             <summary>
             Gets the contexts for the current run.
             </summary>

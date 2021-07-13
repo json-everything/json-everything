@@ -4314,6 +4314,11 @@
             This property replaces the now obsolete <see cref="P:Json.Schema.ValidationOptions.ValidateFormat"/>.
             </remarks>
         </member>
+        <member name="M:Json.Schema.ValidationOptions.#ctor">
+            <summary>
+            Create a new instance of the <see cref="T:Json.Schema.ValidationOptions"/> class.
+            </summary>
+        </member>
         <member name="T:Json.Schema.ValidationResults">
             <summary>
             The results object for validations.

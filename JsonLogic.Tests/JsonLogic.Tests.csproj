@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
 
-    <IsPackable>false</IsPackable>
+		<IsPackable>false</IsPackable>
 
     <RootNamespace>Json.Logic.Tests</RootNamespace>
 	  <SignAssembly>true</SignAssembly>
