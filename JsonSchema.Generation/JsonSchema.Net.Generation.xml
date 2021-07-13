@@ -1486,6 +1486,75 @@
         <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability">
             <summary>
             Gets or sets whether to include `null` in the `type` keyword.
+            Default is <see cref="F:Json.Schema.Generation.Nullability.Disabled"/> whieration.SchemaGenerationContextCache">
+            <summary>
+            Gets the contexts for the current run.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute},Json.Schema.Generation.SchemaGeneratorConfiguration)">
+            <summary>
+            Gets or creates a <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/> based on the given
+            type and attribute set.
+            </summary>
+            <param name="type">The type to generate.</param>
+            <param name="attributes">The attribute set on the property.</param>
+            <param name="configuration">The generator configuration.</param>
+            <returns>
+            A generation context, from the cache if one exists with the specified
+            type and attribute set; otherwise a new one.  New contexts are automatically
+            cached.
+            </returns>
+            <remarks>
+            Use this in your generator if it needs to create keywords with subschemas.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.SchemaGenerationContextCache.Get(System.Type,System.Collections.Generic.List{System.Attribute})">
+            <summary>
+            (Obsolete) Gets or creates a <see cref="T:Json.Schema.Generation.SchemaGeneratorContext"/> based on the given
+            type and attribute set.
+            </summary>
+            <param name="type">The type to generate.</param>
+            <param name="attributes">The attribute set on the property.</param>
+            <returns>
+            A generation context, from the cache if one exists with the specified
+            type and attribute set; otherwise a new one.  New contexts are automatically
+            cached.
+            </returns>
+            <remarks>
+            Use this in your generator if it needs to create keywords with subschemas.
+            </remarks>
+        </member>
+        <member name="T:Json.Schema.Generation.SchemaGeneratorConfiguration">
+            <summary>
+            Provides additional configuration for the generator.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Refiners">
+            <summary>
+            A collection of refiners.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Generators">
+            <summary>
+            A collection of generators in addition to the global set.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyOrder">
+            <summary>
+            Gets or sets the order in which properties will be listed in the schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod">
+            <summary>
+            Gets or sets the property naming method.  Default is <see cref="!:PropertyNamingMethod.AsDeclared"/>.
+            </summary>
+            <remarks>
+            This can be replaced with any `Func&lt;string, string&gt;`.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability">
+            <summary>
+            Gets or sets whether to include `null` in the `type` keyword.
             Default is <see cref="F:Json.Schema.Generation.Nullability.Disabled"/> which means that it will
             not ever be included.
             </summary>
@@ -1540,86 +1609,6 @@
             <summary>
             The title.
             </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.TitleAttribute.#ctor(System.String)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.TitleAttribute"/> instance.
-            </summary>
-            <param name="title">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.TypeExtensions">
-            <summary>
-            Provides informative methods for types.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.TypeExtensions.IsInteger(System.Type)">
-            <summary>
-            Determines whether the type is considered an integer.
-            </summary>
-            <param name="type">The type.</param>
-            <returns>true if it represents an integer; false otherwise.</returns>
-        </member>
-        <member name="M:Json.Schema.Generation.TypeExtensions.IsFloatingPoint(System.Type)">
-            <summary>
-            Determines whether the type is a non-integer floating point number.
-            </summary>
-            <param name="type">The type.</param>
-            <returns>true if it represents a floating-point number; false otherwise.</returns>
-        </member>
-        <member name="M:Json.Schema.Generation.TypeExtensions.IsNumber(System.Type)">
-            <summary>
-            Determines whether the type is a number.
-            </summary>
-            <param name="type">The type.</param>
-            <returns>true if it represents a number; false otherwise.</returns>
-        </member>
-        <member name="M:Json.Schema.Generation.TypeExtensions.IsArray(System.Type)">
-            <summary>
-            Determines whether the type is a simple, one-dimensional, non-keyed collection.
-            </summary>
-            <param name="type">The type.</param>
-            <returns>true if the type represents an array; false otherwise.</returns>
-        </member>
-        <member name="T:Json.Schema.Generation.UniqueItemsAttribute">
-            <summary>
-            Applies a `uniqueItems` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.UniqueItemsAttribute.Value">
-            <summary>
-            Whether the items should be unique.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.UniqueItemsAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.UniqueItemsAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.WriteOnlyAttribute">
-            <summary>
-            Applies a `writeOnly` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.WriteOnlyAttribute.Value">
-            <summary>
-            Whether the property should be write-only.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance with a value of `true`.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-    </members>
-</doc>
-ary>
         </member>
         <member name="M:Json.Schema.Generation.TitleAttribute.#ctor(System.String)">
             <summary>

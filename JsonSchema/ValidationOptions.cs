@@ -173,7 +173,7 @@ namespace Json.Schema
 		{
 			if (draft == Draft.Unspecified) return keywords;
 
-			return keywords.Where(k => k.GetType().GetCustomAttributes<SchemaDraftAttribute>().Any(a => a.Draft.HasFlag(draft)));
+			return keywords.Where(k => k.GetType().GetCustomAttributes<SchemaDraftAttribute>().Any(a => a.Draft == draft));
 		}
 	}
 }

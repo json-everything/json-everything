@@ -1,3 +1,7 @@
+# [1.10.7](https://github.com/gregsdennis/json-everything/pull/140)
+
+Revenge of [#138](https://github.com/gregsdennis/json-everything/issues/138) - [@yohny](https://github.com/yohny) found that the initialization issue still existed when not supplying custom validation options.
+
 # [1.10.6](https://github.com/gregsdennis/json-everything/pull/140)
 
 [#138](https://github.com/gregsdennis/json-everything/issues/138) - [@wazzamatazz](https://github.com/wazzamatazz) found an initialization issue that resulted in a `NullReferenceException`.
