@@ -499,5 +499,19 @@ namespace Json.Schema.Tests
 
 			schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
 		}
+
+		[Test]
+		public void Issue138_SchemaRegistryThrowsOnClassInitialization()
+		{
+			var schemaFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue138.json")
+				.AdjustForPlatform();
+
+			var jsonStr = @"{}";
+			var schema = JsonSchema.FromFile(schemaFile);
+			var json = JsonDocument.Parse(jsonStr).RootElement;
+			var validation = schema.Validate(json, new ValidationOptions {OutputFormat = OutputFormat.Detailed});
+
+			validation.AssertInvalid();
+		}
 	}
 }

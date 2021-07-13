@@ -42,9 +42,11 @@ namespace Json.Schema.Generation.Generators
 			foreach (var member in membersToGenerate)
 			{
 				var memberAttributes = member.GetCustomAttributes().ToList();
+#pragma warning disable 8600 // Assigning null to non-null
 				// ReSharper disable once AssignNullToNotNullAttribute
 				var ignoreAttribute = (Attribute) memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault() ??
 				                      memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
+#pragma warning restore 8600
 				if (ignoreAttribute != null) continue;
 
 				var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes, context.Configuration);
