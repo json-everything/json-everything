@@ -127,7 +127,7 @@ namespace Json.Path.Tests.Suite
 		{
 			var o = JsonDocument.Parse(jsonString).RootElement;
 			var selector = pathString;
-			if (!Json.Path.JsonPath.TryParse(selector, out var path))
+			if (!JsonPath.TryParse(selector, out var path))
 				return null;
 			var results = path.Evaluate(o);
 

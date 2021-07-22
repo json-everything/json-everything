@@ -35,12 +35,12 @@ namespace Json.Schema.Generation
 			get => _propertyNamingMethod ??= PropertyNamingMethods.AsDeclared;
 			set => _propertyNamingMethod = value;
 		}
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		/// <summary>
 		/// Gets or sets whether to include `null` in the `type` keyword.
 		/// Default is <see cref="Nullability.Disabled"/> which means that it will
 		/// not ever be included.
 		/// </summary>
 		public Nullability Nullability { get; set; }
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	}
 }

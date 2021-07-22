@@ -16,7 +16,7 @@ namespace Json.Logic.Tests.Suite
 		{
 			return Task.Run(async () =>
 			{
-				var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
+				var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
 
 				string content = null;
 				try
@@ -39,7 +39,7 @@ namespace Json.Logic.Tests.Suite
 
 				var testSuite = JsonSerializer.Deserialize<TestSuite>(content);
 
-				return testSuite.Tests.Select(t => new TestCaseData(t){TestName = $"{t.Logic}  |  {t.Data.ToJsonString()}  |  {t.Expected.ToJsonString()}"});
+				return testSuite!.Tests.Select(t => new TestCaseData(t){TestName = $"{t.Logic}  |  {t.Data.ToJsonString()}  |  {t.Expected.ToJsonString()}"});
 			}).Result;
 		}
 

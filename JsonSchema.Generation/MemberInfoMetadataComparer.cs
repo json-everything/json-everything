@@ -64,6 +64,7 @@ namespace Json.Schema.Generation
 #else
 			try
 			{
+				// ReSharper disable once UnusedVariable
 				var token = member.MetadataToken;
 				return true;
 			}

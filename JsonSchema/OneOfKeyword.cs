@@ -35,7 +35,7 @@ namespace Json.Schema
 		/// <param name="values">The keywords schema collection.</param>
 		public OneOfKeyword(params JsonSchema[] values)
 		{
-			Schemas = values?.ToList() ?? throw new ArgumentNullException(nameof(values));
+			Schemas = values.ToList() ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>

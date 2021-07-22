@@ -67,7 +67,7 @@ namespace Json.Path.Tests
 		public void GrammarExample()
 		{
 			var input = "$.store.book[0].title";
-			var path =Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -82,7 +82,7 @@ namespace Json.Path.Tests
 		public void Example1()
 		{
 			var input = "$.store.book[*].author";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -99,7 +99,7 @@ namespace Json.Path.Tests
 		public void Example2()
 		{
 			var input = "$..author";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -116,7 +116,7 @@ namespace Json.Path.Tests
 		public void Example3()
 		{
 			var input = "$.store.*";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -131,7 +131,7 @@ namespace Json.Path.Tests
 		public void Example4()
 		{
 			var input = "$.store..price";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -149,7 +149,7 @@ namespace Json.Path.Tests
 		public void Example5()
 		{
 			var input = "$..book[2]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -163,7 +163,7 @@ namespace Json.Path.Tests
 		public void Example6a()
 		{
 			var input = "$..book[(@.length-1)]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -177,7 +177,7 @@ namespace Json.Path.Tests
 		public void Example6b()
 		{
 			var input = "$..book[-1:]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -191,7 +191,7 @@ namespace Json.Path.Tests
 		public void Example7a()
 		{
 			var input = "$..book[0,1]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -206,7 +206,7 @@ namespace Json.Path.Tests
 		public void Example7b()
 		{
 			var input = "$..book[:2]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -221,7 +221,7 @@ namespace Json.Path.Tests
 		public void Example8()
 		{
 			var input = "$..book[?(@.isbn)]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -236,7 +236,7 @@ namespace Json.Path.Tests
 		public void Example9()
 		{
 			var input = "$..book[?(@.price<10)]";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 
@@ -251,7 +251,7 @@ namespace Json.Path.Tests
 		public void Example10()
 		{
 			var input = "$..*";
-			var path = Json.Path.JsonPath.Parse(input);
+			var path = JsonPath.Parse(input);
 
 			var result = path.Evaluate(_instance);
 

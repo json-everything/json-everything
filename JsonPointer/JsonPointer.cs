@@ -40,7 +40,7 @@ namespace Json.Pointer
 		/// <summary>
 		/// Gets the source string for the pointer.
 		/// </summary>
-		public string Source => _source ??= _BuildSource();
+		public string Source => _source ??= BuildSource();
 
 		/// <summary>
 		/// Gets the collection of pointer segments.
@@ -332,7 +332,7 @@ namespace Json.Pointer
 			return current;
 		}
 
-		private string _BuildSource()
+		private string BuildSource()
 		{
 			var builder = new StringBuilder();
 			if (IsUriEncoded)

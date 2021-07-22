@@ -101,7 +101,7 @@ namespace JsonPointer.Benchmark
 			if (pointerObj == null) return !isValid;
 			if (!isValid) return false;
 			var pointer = (Json.Pointer.JsonPointer)pointerObj;
-			if (expectedSegments.Length != (pointer.Segments?.Length ?? 0)) return false;
+			if (expectedSegments.Length != pointer.Segments.Length) return false;
 			if (expectedSegments.Where((t, i) => t != pointer.Segments[i].Value).Any()) return false;
 			if (pointer.ToString() != source) return false;
 

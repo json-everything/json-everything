@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Linq;
 using FluentAssertions;
-using Json.Pointer;
 using NUnit.Framework;
 
-namespace JsonPointer.Tests
+namespace Json.Pointer.Tests
 {
 	[TestFixture]
 	public class RelativeJsonPointerParseTests

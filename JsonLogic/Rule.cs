@@ -88,6 +88,8 @@ namespace Json.Logic
 			var ruleInfo = data.First();
 			
 			var ruleType = RuleRegistry.GetRule(ruleInfo.Key);
+			if (ruleType == null)
+				throw new JsonException($"Cannot identify rule for {ruleInfo.Key}");
 
 			var value = ruleInfo.Value ?? new ArgumentCollection((Rule?) null);
 

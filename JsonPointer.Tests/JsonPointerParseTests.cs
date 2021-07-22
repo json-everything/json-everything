@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Linq;
 using FluentAssertions;
-using Json.Pointer;
 using NUnit.Framework;
 
-namespace JsonPointer.Tests
+namespace Json.Pointer.Tests
 {
 	[TestFixture]
 	public class JsonPointerParseTests
@@ -70,7 +69,7 @@ namespace JsonPointer.Tests
 		[TestCaseSource(nameof(SpecificationExamples))]
 		public void Parse(string pointerString, string[] segments)
 		{
-			var pointer = Json.Pointer.JsonPointer.Parse(pointerString);
+			var pointer = JsonPointer.Parse(pointerString);
 
 			pointer.Segments.Length.Should().Be(segments.Length);
 			pointer.Segments.Select(s => s.Value).Should().BeEquivalentTo(segments);
@@ -79,7 +78,7 @@ namespace JsonPointer.Tests
 		[TestCaseSource(nameof(SpecificationExamples))]
 		public void TryParse(string pointerString, string[] segments)
 		{
-			Assert.IsTrue(Json.Pointer.JsonPointer.TryParse(pointerString, out var pointer));
+			Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
 
 			pointer.Segments.Length.Should().Be(segments.Length);
 			pointer.Segments.Select(s => s.Value).Should().BeEquivalentTo(segments);
@@ -88,13 +87,13 @@ namespace JsonPointer.Tests
 		[TestCaseSource(nameof(FailureCases))]
 		public void ParseFailure(string pointerString)
 		{
-			Assert.Throws<PointerParseException>(() => Json.Pointer.JsonPointer.Parse(pointerString));
+			Assert.Throws<PointerParseException>(() => JsonPointer.Parse(pointerString));
 		}
 
 		[TestCaseSource(nameof(FailureCases))]
 		public void TryParseFailure(string pointerString)
 		{
-			Assert.False(Json.Pointer.JsonPointer.TryParse(pointerString, out _));
+			Assert.False(JsonPointer.TryParse(pointerString, out _));
 		}
 
 		[Test]
@@ -102,7 +101,7 @@ namespace JsonPointer.Tests
 		{
 			Assert.Throws<PointerParseException>(() =>
 			{
-				Json.Pointer.JsonPointer.Parse("#/one/2/three", JsonPointerKind.Plain);
+				JsonPointer.Parse("#/one/2/three", JsonPointerKind.Plain);
 			});
 		}
 
@@ -111,20 +110,20 @@ namespace JsonPointer.Tests
 		{
 			Assert.Throws<PointerParseException>(() =>
 			{
-				Json.Pointer.JsonPointer.Parse("/one/2/three", JsonPointerKind.UriEncoded);
+				JsonPointer.Parse("/one/2/three", JsonPointerKind.UriEncoded);
 			});
 		}
 
 		[Test]
 		public void TryParseExpectPlainGetUriEncoded()
 		{
-			Assert.IsFalse(Json.Pointer.JsonPointer.TryParse("#/one/2/three", out _, JsonPointerKind.Plain));
+			Assert.IsFalse(JsonPointer.TryParse("#/one/2/three", out _, JsonPointerKind.Plain));
 		}
 
 		[Test]
 		public void TryParseExpectUriEncodedGetPlain()
 		{
-			Assert.IsFalse(Json.Pointer.JsonPointer.TryParse("/one/2/three", out _, JsonPointerKind.UriEncoded));
+			Assert.IsFalse(JsonPointer.TryParse("/one/2/three", out _, JsonPointerKind.UriEncoded));
 		}
 	}
 }

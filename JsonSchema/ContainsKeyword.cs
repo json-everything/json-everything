@@ -68,7 +68,7 @@ namespace Json.Schema
 					validIndices.Add(i);
 			}
 
-			var minContainsKeyword = context.LocalSchema.Keywords.OfType<MinContainsKeyword>().FirstOrDefault();
+			var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
 			if (minContainsKeyword != null && minContainsKeyword.Value == 0)
 				context.IsValid = true;
 			else

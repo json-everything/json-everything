@@ -137,6 +137,7 @@ namespace Json.Schema
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if (other.ArraySchemas == null) return false;
 
 			return ArraySchemas.ContentsEqual(other.ArraySchemas);

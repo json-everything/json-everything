@@ -10,7 +10,7 @@ namespace Json.Schema.Generation
 	{
 		private class Key
 		{
-			public Type Type { get; }
+			public Type? Type { get; }
 			public int Hash { get; }
 
 			public Key(Type type, int hash)
@@ -36,7 +36,7 @@ namespace Json.Schema.Generation
 			{
 				unchecked
 				{
-					return ((Type != null ? Type.GetHashCode() : 0) * 397) ^ Hash;
+					return ((Type?.GetHashCode() ?? 0) * 397) ^ Hash;
 				}
 			}
 		}

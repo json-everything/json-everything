@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -33,7 +32,7 @@ namespace Json.Schema
 		/// <param name="values">The required properties.</param>
 		public RequiredKeyword(params string[] values)
 		{
-			Properties = values?.ToList() ?? throw new ArgumentNullException(nameof(values));
+			Properties = values.ToList() ?? throw new ArgumentNullException(nameof(values));
 		}
 
 		/// <summary>

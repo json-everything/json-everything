@@ -17,6 +17,7 @@ namespace Json.Schema.Generation
 		/// <summary>
 		/// Initializes a new instance of <see cref="JsonExcludeAttribute"/>.
 		/// </summary>
+		// ReSharper disable once EmptyConstructor (it's not redundant if it defines new comments ;)
 		public JsonExcludeAttribute() { }
 	}
 }

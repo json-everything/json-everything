@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text.Json;
-using Json.More;
 
 namespace Json.Schema.UniqueKeys
 {

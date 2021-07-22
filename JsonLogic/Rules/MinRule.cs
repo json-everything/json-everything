@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using Json.More;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace Json.Logic.Rules
 {

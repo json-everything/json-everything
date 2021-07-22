@@ -76,9 +76,12 @@ namespace Json.Schema
 		{
 			return keyword switch
 			{
+				// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 				ISchemaContainer container => container.Schema == null ? Enumerable.Empty<JsonSchema>() : new[] {container.Schema},
+				// ReSharper disable ConstantNullCoalescingCondition
 				ISchemaCollector collector => collector.Schemas ?? Enumerable.Empty<JsonSchema>(),
 				IKeyedSchemaCollector collector => collector.Schemas.Values ?? Enumerable.Empty<JsonSchema>(),
+				// ReSharper restore ConstantNullCoalescingCondition
 				_ => Enumerable.Empty<JsonSchema>()
 			};
 		}

@@ -72,7 +72,8 @@ namespace Json.Schema
 			source = source.Trim();
 			if (string.IsNullOrWhiteSpace(source)) return false;
 
-			uint year = 0, month = 0, week = 0, day = 0, hour = 0, minute = 0, second = 0;
+			// ReSharper disable once InlineOutVariableDeclaration
+			uint year = 0, month = 0, week, day = 0, hour = 0, minute = 0, second = 0;
 			var index = 0;
 			if (!Require(source, ref index, 'P')) return false;
 			var gotDaily = TryGetComponent(source, ref index, out week, 'W');

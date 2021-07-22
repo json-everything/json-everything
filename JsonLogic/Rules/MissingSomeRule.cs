@@ -33,11 +33,11 @@ namespace Json.Logic.Rules
 
 			var paths = expected.Select(e => e.GetString())
 				.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
-				.Select(p => new { Path = p.Path, Value = p.Pointer.Evaluate(data) });
+				.Select(p => new { Path = p.Path, Value = p.Pointer.Evaluate(data) })
+				.ToList();
 
 			var missing = paths.Where(p => p.Value == null)
-				.Select(k => k.Path.AsJsonElement())
-				.ToList();
+				.Select(k => k.Path.AsJsonElement());
 			var found = paths.Count(p => p.Value != null);
 
 			if (found < requiredCount)

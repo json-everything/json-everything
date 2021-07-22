@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests
@@ -19,7 +16,6 @@ namespace Json.Schema.Generation.Tests
 			public int Third { get; set; }
 		}
 
-
 		[Test]
 		public void PropertiesAsDeclared()
 		{
@@ -36,7 +32,6 @@ namespace Json.Schema.Generation.Tests
 			Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.First());
 			Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.Last());
 		}
-
 
 		[Test]
 		public void PropertiesAsDeclaredByType()
@@ -56,7 +51,6 @@ namespace Json.Schema.Generation.Tests
 			Assert.AreEqual(nameof(SpecifiedOrderDerived.Third), properties.Properties.Keys.ElementAt(2));
 		}
 
-
 		[Test]
 		public void PropertiesByName()
 		{
@@ -73,6 +67,5 @@ namespace Json.Schema.Generation.Tests
 			Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.First());
 			Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.Last());
 		}
-
 	}
 }

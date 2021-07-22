@@ -17,9 +17,10 @@ namespace Json.Schema.Generation
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class JsonIncludeAttribute : JsonAttribute
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="JsonIncludeAttribute"/>.
-        /// </summary>
+		/// <summary>
+		/// Initializes a new instance of <see cref="JsonIncludeAttribute"/>.
+		/// </summary>
+		// ReSharper disable once EmptyConstructor (it's not redundant if it defines new comments ;)
         public JsonIncludeAttribute() { }
     }
 }

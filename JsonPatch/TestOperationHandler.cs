@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Json.More;
+﻿using Json.More;
 
 namespace Json.Patch
 {

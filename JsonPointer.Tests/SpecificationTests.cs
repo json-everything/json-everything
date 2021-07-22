@@ -3,7 +3,7 @@ using System.Text.Json;
 using Json.More;
 using NUnit.Framework;
 
-namespace JsonPointer.Tests
+namespace Json.Pointer.Tests
 {
 	[TestFixture]
 	public class SpecificationTests
@@ -79,7 +79,7 @@ namespace JsonPointer.Tests
 				""m~n"": 8
 			}");
 
-			var pointer = Json.Pointer.JsonPointer.Parse(pointerString);
+			var pointer = JsonPointer.Parse(pointerString);
 
 			var actual = pointer.Evaluate(target.RootElement);
 

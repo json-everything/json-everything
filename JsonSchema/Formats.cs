@@ -114,7 +114,7 @@ namespace Json.Schema
 		/// This is currently the same check as `uri`.  The infrastructure to check URI templates
 		/// [does not yet exist in .Net Standard/Core](https://github.com/dotnet/runtime/issues/41587).
 		/// </remarks>
-		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUri);
+		public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUriTemplate);
 		/// <summary>
 		/// Defines the `uuid` format.
 		/// </summary>

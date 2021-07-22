@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Json.More.Tests
@@ -10,6 +11,7 @@ namespace Json.More.Tests
 		class ConversionTest
 		{
 			[JsonConverter(typeof(EnumStringConverter<DayOfWeek>))]
+			[UsedImplicitly]
 			public DayOfWeek Day { get; set; }
 		}
 
