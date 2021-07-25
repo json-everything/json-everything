@@ -1092,7 +1092,7 @@
   "release-notes/json-patch.html": {
     "href": "release-notes/json-patch.html",
     "title": "1.0.6",
-    "keywords": "1.0.6 #132 - Fixed some memory management issues around JsonDocument and JsonElement . Thanks to @ddunkin for finding and fixing these. 1.0.5 Added support for nullable reference types. 1.0.4 Signed the DLL for strong name compatibility. 1.0.3 Bump for publish. No functional change. 1.0.2 Added debug symbols to package. No functional change. 1.0.1 Implemented patch equality. 1.0.0 Initial release."
+    "keywords": "1.0.6 #132 (Fixed on #133 ) - Fixed some memory management issues around JsonDocument and JsonElement . Thanks to @ddunkin for finding and fixing these. #146 - Fixed an issue during operation construction that appeared when attempting to use JSON Patch in an MVC controller. 1.0.5 Added support for nullable reference types. 1.0.4 Signed the DLL for strong name compatibility. 1.0.3 Bump for publish. No functional change. 1.0.2 Added debug symbols to package. No functional change. 1.0.1 Implemented patch equality. 1.0.0 Initial release."
   },
   "release-notes/json-path.html": {
     "href": "release-notes/json-path.html",
