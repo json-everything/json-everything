@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-#if NET5_0_OR_GREATER
 using System.Text.Json.Serialization;
-#endif
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation
