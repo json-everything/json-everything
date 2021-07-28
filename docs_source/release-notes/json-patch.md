@@ -1,6 +1,8 @@
-# [1.0.6](https://github.com/gregsdennis/json-everything/pull/133)
+# [1.0.6](https://github.com/gregsdennis/json-everything/pull/147)
 
-[#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+[#132](https://github.com/gregsdennis/json-everything/pull/132) (Fixed on [#133](https://github.com/gregsdennis/json-everything/pull/133)) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+
+[#146](https://github.com/gregsdennis/json-everything/issues/146) - Fixed an issue during operation construction that appeared when attempting to use JSON Patch in an MVC controller.
 
 # [1.0.5](https://github.com/gregsdennis/json-everything/pull/75)
 
