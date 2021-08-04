@@ -2,7 +2,7 @@
 
 JsonSchema.Net.Generation is an extension package to [JsonSchema.Net](https://www.nuget.org/packages/JsonSchema.Net/) that provides JSON Schema generation from .Net types.
 
-Using it is quite simple.  First you need a `JsonSchemaBulider`.  Then...
+Using it is quite simple.  First you need a `JsonSchemaBuilder`.  Then...
 
 ```c#
 var schema = schemaBuilder.FromType<MyType>().Build();
