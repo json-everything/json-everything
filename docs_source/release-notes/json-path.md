@@ -1,3 +1,7 @@
+# [0.1.8](https://github.com/gregsdennis/json-everything/pull/150)
+
+[#151](https://github.com/gregsdennis/json-everything/pull/151) - Parsing expressions with numeric values that contain `9` fails.
+
 # [0.1.7](https://github.com/gregsdennis/json-everything/pull/133)
 
 [#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.

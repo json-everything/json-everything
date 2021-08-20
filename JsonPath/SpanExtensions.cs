@@ -151,7 +151,7 @@ namespace Json.Path
 					case '7': case '8': case '9':
 						end = i;
 						var allowDash = false;
-						while (end < span.Length && (span[end].In('0'..'9') ||
+						while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
 						                             span[end].In('e', '.', '-')))
 						{
 							if (!allowDash && span[end] == '-') break;
