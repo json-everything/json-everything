@@ -19,7 +19,8 @@ namespace Json.Path.Tests
 		[TestCase("$.aggregations.data.buckets[0].grade.buckets[?(@.key==19)].doc_count")]
 		public void Issue150_ParseFailsWhenExpressionContainsLiteralNumberWith9(string pathText)
 		{
-			JsonPath.Parse(pathText);
+			var path = JsonPath.Parse(pathText);
+			Console.WriteLine(path);
 		}
 	}
 }
