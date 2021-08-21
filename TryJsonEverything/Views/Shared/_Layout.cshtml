@@ -3,29 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TryJsonEverything</title>
+    <title>@ViewData["Title"] - json-everything</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header id="header" class="brand-colors">
+	    <div class="position-absolute nav-fill brand-colors"></div>
+	    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TryJsonEverything</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+	            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="text-monospace">json-everything</span></a>
+	            <div>
+		            <a asp-controller="Redirect" asp-action="Slack" class="mr-3" data-toggle="tooltip" data-placement="bottom" title="Discuss in Slack">
+			            <img src="img/slack.png" alt="Discuss in Slack"/>
+		            </a>
+		            <a asp-controller="Redirect" asp-action="Github" data-toggle="tooltip" data-placement="bottom" title="View on GitHub">
+			            <img src="img/github.png" alt="View on GitHub" />
+		            </a>
+	            </div>
             </div>
         </nav>
     </header>
@@ -35,10 +30,21 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - TryJsonEverything - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <footer class="border-top footer brand-colors text-muted-light">
+	    <div class="container small">
+		    <div class="row">
+			    <div class="col text-muted-light">
+				    &copy; 2021 | <span class="text-monospace">json-everything</span> | <a class="text-muted-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+			    </div>
+			    <div class="col text-right">
+				    <a class="text-muted-light" asp-area="" asp-controller="Home" asp-action="Schema">JSON Schema</a> |
+				    <a class="text-muted-light" asp-area="" asp-controller="Home" asp-action="Path">JSON Path</a> |
+				    <a class="text-muted-light" asp-area="" asp-controller="Home" asp-action="Patch">JSON Patch</a> |
+				    <a class="text-muted-light" asp-area="" asp-controller="Home" asp-action="Logic">JSON Logic</a> |
+				    <a class="text-muted-light" asp-area="" asp-controller="Home" asp-action="Pointer">JSON Pointer</a>
+			    </div>
+		    </div>
+	    </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -23,6 +23,31 @@ namespace TryJsonEverything.Controllers
 			return View();
 		}
 
+		public IActionResult Schema()
+		{
+			return View();
+		}
+
+		public IActionResult Path()
+		{
+			return View();
+		}
+
+		public IActionResult Patch()
+		{
+			return View();
+		}
+
+		public IActionResult Logic()
+		{
+			return View();
+		}
+
+		public IActionResult Pointer()
+		{
+			return View();
+		}
+
 		public IActionResult Privacy()
 		{
 			return View();

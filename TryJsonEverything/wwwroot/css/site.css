@@ -7,21 +7,40 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #5B009F;
+  border-color: #5B009F;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.btn-primary:hover {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #6800B7;
+  border-color: #6800B7;
+}
+
+.btn-primary:focus, .btn-primary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(91, 0, 159, 0.5);
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+  color: #fff;
+  background-color: #6800B7;
+  border-color: #6800B7;
+  opacity: 0.5;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #6800B7;
+  border-color: #6800B7;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+}
 }
 
 /* Sticky footer styles
@@ -62,10 +81,33 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
+code {
+  font-size: 87.5%;
+  color: #444444;
+  word-break: break-word;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+.card {
+  height: 100%;
+  margin-bottom: 1rem;
+}
+
+
+.text-muted-light {
+  color: #CCBCD9 !important;
+}
+
+.brand-colors {
+  color: #fff;
+  background-color: #6800B7;
+  border-color: #5B009F;
 }
