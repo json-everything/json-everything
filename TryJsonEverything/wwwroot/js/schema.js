@@ -43,7 +43,7 @@ async function validate() {
 	const response = await requestValidation(schema, instance);
 
 	if (response.result.valid) {
-		outputElement.innerHTML = '<h3 class="schema-valid">Instance is valid!</h3>';
+		outputElement.innerHTML = '<h3 class="result-valid">Instance is valid!</h3>';
 		return;
 	}
 

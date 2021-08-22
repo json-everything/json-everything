@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "JSON Patch";
 }
 
 <div class="text-center">
@@ -7,6 +7,41 @@
 	<p>Describe and process alterations to JSON documents</p>
 	<a href="http://jsonpatch.com/" target="_blank">Learn more <partial name="_ExternalLink" /></a>
 	<div class="container">
+		<div class="row">
+			<div class="col-6 pr-4">
+				<h4 class="text-left">Data:</h4>
+			</div>
+			<div class="col-6 pl-3">
+				<h4 class="text-left">Patch:</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-6 editor-container">
+				<div class="editor-container pl-4">
+					<div id="editor-data" class="json-editor"></div>
+				</div>
+			</div>
+			<div class="col-6 editor-container">
+				<div class="editor-container pr-4">
+					<div id="editor-patch" class="json-editor"></div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<button type="submit" onclick="apply()" class="btn btn-primary m-4">Apply</button>
+		</div>
+		<div id="error-output">
 
+		</div>
+		<div class="col-12 editor-container">
+			<div class="editor-container">
+				<div id="editor-output" class="json-editor"></div>
+			</div>
+		</div>
 	</div>
 </div>
+
+@section Scripts{
+	<script src="~/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/js/patch.js" type="text/javascript" charset="utf-8"></script>
+}

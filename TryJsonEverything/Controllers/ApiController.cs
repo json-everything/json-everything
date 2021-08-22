@@ -43,5 +43,19 @@ namespace TryJsonEverything.Controllers
 			var result = path.Evaluate(data);
 			return Ok(new PathQueryOutput {Result = result});
 		}
+
+		[HttpPost("api/patch-apply")]
+		public ActionResult<PatchProcessOutput> ProcessPatch([FromBody] PatchProcessInput input)
+		{
+			if (input == null)
+				return BadRequest(new PathQueryOutput {Error = "No input provided"});
+			if (input.Data == null || input.Data.RootElement.ValueKind == JsonValueKind.Undefined)
+				return BadRequest(new PathQueryOutput {Error = "No data provided"});
+
+			var data = input.Data.RootElement;
+			var patch = input.Patch;
+			var result = patch.Apply(data);
+			return Ok(new PatchProcessOutput {Result = result});
+		}
 	}
 }

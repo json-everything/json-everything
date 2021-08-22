@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JsonPatch\JsonPatch.csproj" />
     <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
