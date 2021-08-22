@@ -109,7 +109,7 @@ code {
 .brand-colors {
   color: #fff;
   background-color: #6800B7;
-  border-color: #5B009F;
+  border-color: #6800B7;
 }
 
 .editor-container {
@@ -117,16 +117,8 @@ code {
   position: relative;
 }
 
-#editor-schema {
-  position: absolute; /* Added */
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-#editor-instance {
-  position: absolute; /* Added */
+.json-editor {
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -138,7 +130,7 @@ code {
   height: 1rem;
 }
 
-.schema-error {
+.result-error {
   color: red;
 }
 

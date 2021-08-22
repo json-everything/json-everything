@@ -1,4 +1,17 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function initializeEditor(name) {
+	const editor = ace.edit(name);
+	editor.setTheme('ace/theme/monokai');
+	editor.session.setMode('ace/mode/json');
+	editor.session.setTabSize(2);
+	editor.setShowPrintMargin(false);
+}
 
-// Write your JavaScript code.
+function getJsonFromEditor(editor) {
+	const annotations = editor.getSession().getAnnotations();
+	if (annotations.length !== 0) {
+		return null;
+	}
+	const text = editor.getValue();
+	return JSON.parse(text);
+}
+
