@@ -4,9 +4,37 @@
 
 <div class="text-center">
 	<h1 class="display-4">JSON Schema</h1>
-	<p>Constraints-based validation of JSON data</p>
-	<a href="https://json-schema.org">Learn more</a>
+	<p>
+		Constraints-based validation of JSON data
+		<br/>
+		<a href="https://json-schema.org" target="_blank">Learn more <partial name="_ExternalLink"/></a>
+	</p>
 	<div class="container">
-
+		<div class="row">
+			<div class="col-6 pr-4">
+				<h4 class="text-left">Schema:</h4>
+			</div>
+			<div class="col-6 pl-3">
+				<h4 class="text-left">Instance:</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-6 editor-container">
+				<div class="editor-container pl-4">
+					<div id="editor-schema"></div>
+				</div>
+			</div>
+			<div class="col-6 editor-container">
+				<div class="editor-container pr-4">
+					<div id="editor-instance"></div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+
+@section Scripts{
+	<script src="~/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/js/schema.js" type="text/javascript" charset="utf-8"></script>	
+}
+

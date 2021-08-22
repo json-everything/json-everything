@@ -111,3 +111,29 @@ code {
   background-color: #6800B7;
   border-color: #5B009F;
 }
+
+.editor-container {
+  height: 500px;
+  position: relative;
+}
+
+#editor-schema {
+  position: absolute; /* Added */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#editor-instance {
+  position: absolute; /* Added */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.img-text-icon {
+  max-width: 100%;
+  height: 1rem;
+}
