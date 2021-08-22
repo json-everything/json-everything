@@ -1,10 +1,11 @@
-﻿using Json.Schema;
+﻿using System.Text.Json.Serialization;
+using Json.Schema;
 
 namespace TryJsonEverything.Models
 {
 	public class SchemaValidationOutput
 	{
-		public ValidationResults MetaSchemaResult { get; set; }
+		[JsonPropertyName("result")]
 		public ValidationResults Result { get; set; }
 	}
 }

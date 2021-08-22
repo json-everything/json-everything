@@ -16,7 +16,7 @@ namespace TryJsonEverything.Controllers
 
 			var result = schema.Validate(instance, new ValidationOptions
 			{
-				OutputFormat = OutputFormat.Detailed
+				OutputFormat = OutputFormat.Basic
 			});
 			return Ok(new SchemaValidationOutput {Result = result});
 		}
