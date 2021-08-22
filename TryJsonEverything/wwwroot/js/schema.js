@@ -10,7 +10,7 @@ async function requestValidation(schema, instance) {
 		instance: instance
 	};
 
-	const response = await fetch('https://localhost:5001/api/schema-validation',
+	const response = await fetch(`${baseUri}api/schema-validation`,
 		{
 			method: 'POST',
 			body: JSON.stringify(body),

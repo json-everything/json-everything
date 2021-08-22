@@ -1,8 +1,10 @@
-﻿using System.Text.Json;
+﻿using System.Linq;
+using System.Text.Json;
 using Json.Path;
 using Json.Schema;
 using Microsoft.AspNetCore.Mvc;
 using TryJsonEverything.Models;
+using TryJsonEverything.Services;
 
 namespace TryJsonEverything.Controllers
 {
@@ -45,17 +47,24 @@ namespace TryJsonEverything.Controllers
 		}
 
 		[HttpPost("api/patch-apply")]
-		public ActionResult<PatchProcessOutput> ProcessPatch([FromBody] PatchProcessInput input)
+		public ActionResult<PatchProcessOutput> ApplyPatch([FromBody] PatchProcessInput input)
 		{
-			if (input == null)
-				return BadRequest(new PathQueryOutput {Error = "No input provided"});
-			if (input.Data == null || input.Data.RootElement.ValueKind == JsonValueKind.Undefined)
-				return BadRequest(new PathQueryOutput {Error = "No data provided"});
-
 			var data = input.Data.RootElement;
 			var patch = input.Patch;
 			var result = patch.Apply(data);
 			return Ok(new PatchProcessOutput {Result = result});
+		}
+
+		[HttpPost("api/logic-apply")]
+		public ActionResult<PatchProcessOutput> ApplyLogic([FromBody] LogicProcessInput input)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(new LogicProcessOutput {Errors = ModelState.Root.GetErrors().ToList()});
+
+			var data = input.Data.RootElement;
+			var patch = input.Logic;
+			var result = patch.Apply(data);
+			return Ok(new LogicProcessOutput {Result = result});
 		}
 	}
 }

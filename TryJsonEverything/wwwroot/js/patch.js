@@ -15,7 +15,7 @@ async function requestApplication(patch, data) {
 		data: data
 	};
 
-	const response = await fetch('https://localhost:5001/api/patch-apply',
+	const response = await fetch(`${baseUri}api/patch-apply`,
 		{
 			method: 'POST',
 			body: JSON.stringify(body),
