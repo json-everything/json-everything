@@ -66,5 +66,17 @@ namespace TryJsonEverything.Controllers
 			var result = patch.Apply(data);
 			return Ok(new LogicProcessOutput {Result = result});
 		}
+
+		[HttpPost("api/pointer-query")]
+		public ActionResult<PointerProcessOutput> QueryPointer([FromBody] PointerProcessInput input)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(new PointerProcessOutput { Errors = ModelState.Root.GetErrors().ToList()});
+
+			var data = input.Data.RootElement;
+			var pointer = input.Pointer;
+			var result = pointer.Evaluate(data);
+			return Ok(new PointerProcessOutput {Result = result});
+		}
 	}
 }

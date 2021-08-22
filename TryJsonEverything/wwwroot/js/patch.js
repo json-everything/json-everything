@@ -33,11 +33,13 @@ async function apply() {
 	const patchEditor = ace.edit(patchEditorName);
 	const dataEditor = ace.edit(dataEditorName);
 	const outputEditor = ace.edit(outputEditorName);
+	outputEditor.setValue('');
 
 	const patch = getJsonFromEditor(patchEditor);
 	const data = getJsonFromEditor(dataEditor);
 
 	const response = await requestApplication(patch, data);
+	console.log(response);
 
 	if (response.result.isSuccess) {
 		outputElement.innerHTML = '<h3 class="result-valid">Patch applied successfully!</h3>';

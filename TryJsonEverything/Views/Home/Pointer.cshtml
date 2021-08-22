@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
@@ -10,6 +10,29 @@
 		<a href="https://jsonlogic.com/" target="_blank">Learn more <partial name="_ExternalLink" /></a>
 	</p>
 	<div class="container">
+		<h4 class="text-left">Path:</h4>
+		<input id="editor-pointer" type="text" class="col-12 form-control text-monospace" />
+		<h4 class="text-left mt-3">Data:</h4>
+		<div class="editor-container">
+			<div class="editor-container">
+				<div id="editor-data" class="json-editor"></div>
+			</div>
+		</div>
+		<div>
+			<button type="submit" onclick="query()" class="btn btn-primary m-4">Query</button>
+		</div>
+		<div id="error-output">
 
+		</div>
+		<div class="editor-container">
+			<div class="editor-container">
+				<div id="editor-output" class="json-editor"></div>
+			</div>
+		</div>
 	</div>
 </div>
+
+@section Scripts{
+	<script src="~/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/js/pointer.js" type="text/javascript" charset="utf-8"></script>
+}
