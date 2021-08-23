@@ -67,6 +67,8 @@ namespace Json.Schema
 			}
 
 			context.IsValid = !requireValidation || Value.Validate(context.LocalInstance);
+			if (!context.IsValid) 
+				context.Message = $"Value does not match format '{Value.Key}'";
 			context.ExitKeyword(Name, context.IsValid);
 		}
 

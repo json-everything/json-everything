@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text.Json;
 using Json.Path;
 using Json.Schema;
 using Microsoft.AspNetCore.Mvc;
@@ -26,22 +25,9 @@ namespace TryJsonEverything.Controllers
 		[HttpPost("api/path-query")]
 		public ActionResult<PathQueryOutput> QueryPath([FromBody] PathQueryInput input)
 		{
-			if (input == null)
-				return BadRequest(new PathQueryOutput {Error = "No input provided"});
-			if (input.Data == null || input.Data.RootElement.ValueKind == JsonValueKind.Undefined)
-				return BadRequest(new PathQueryOutput {Error = "No data provided"});
-
-			JsonPath path;
-			try
-			{
-				path = JsonPath.Parse(input.Path);
-			}
-			catch (PathParseException e)
-			{
-				return BadRequest(new PathQueryOutput {Error = e.Message});
-			}
-
+			var path = JsonPath.Parse(input.Path);
 			var data = input.Data.RootElement;
+			
 			var result = path.Evaluate(data);
 			return Ok(new PathQueryOutput {Result = result});
 		}
@@ -51,6 +37,7 @@ namespace TryJsonEverything.Controllers
 		{
 			var data = input.Data.RootElement;
 			var patch = input.Patch;
+			
 			var result = patch.Apply(data);
 			return Ok(new PatchProcessOutput {Result = result});
 		}
@@ -59,10 +46,11 @@ namespace TryJsonEverything.Controllers
 		public ActionResult<PatchProcessOutput> ApplyLogic([FromBody] LogicProcessInput input)
 		{
 			if (!ModelState.IsValid)
-				return BadRequest(new LogicProcessOutput {Errors = ModelState.Root.GetErrors().ToList()});
+				return BadRequest(new LogicProcessOutput { Errors = ModelState.Root.GetErrors().ToList() });
 
 			var data = input.Data.RootElement;
 			var patch = input.Logic;
+
 			var result = patch.Apply(data);
 			return Ok(new LogicProcessOutput {Result = result});
 		}
@@ -70,11 +58,9 @@ namespace TryJsonEverything.Controllers
 		[HttpPost("api/pointer-query")]
 		public ActionResult<PointerProcessOutput> QueryPointer([FromBody] PointerProcessInput input)
 		{
-			if (!ModelState.IsValid)
-				return BadRequest(new PointerProcessOutput { Errors = ModelState.Root.GetErrors().ToList()});
-
 			var data = input.Data.RootElement;
-			var pointer = input.Pointer;
+			var pointer = input.Pointer.Value;
+
 			var result = pointer.Evaluate(data);
 			return Ok(new PointerProcessOutput {Result = result});
 		}

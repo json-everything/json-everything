@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TryJsonEverything.Services;
 
 namespace TryJsonEverything
 {
@@ -45,6 +46,8 @@ namespace TryJsonEverything
 			app.UseRouting();
 
 			app.UseAuthorization();
+
+			app.UseMiddleware<InputValidationMiddleware>();
 
 			app.UseEndpoints(endpoints =>
 			{
