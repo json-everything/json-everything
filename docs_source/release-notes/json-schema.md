@@ -1,3 +1,7 @@
+# [1.10.8](https://github.com/gregsdennis/json-everything/pull/152)
+
+`format` now adds an error message.
+
 # [1.10.7](https://github.com/gregsdennis/json-everything/pull/145)
 
 Revenge of [#138](https://github.com/gregsdennis/json-everything/issues/138) - [@yohny](https://github.com/yohny) found that the initialization issue still existed when not supplying custom validation options.
