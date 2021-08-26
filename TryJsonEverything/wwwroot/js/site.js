@@ -14,4 +14,3 @@ function getJsonFromEditor(editor) {
 	const text = editor.getValue();
 	return JSON.parse(text);
 }
-

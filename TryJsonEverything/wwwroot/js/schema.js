@@ -4,6 +4,22 @@ const instanceEditorName = 'editor-instance';
 initializeEditor(schemaEditorName);
 initializeEditor(instanceEditorName);
 
+const schemaEditor = ace.edit(schemaEditorName);
+var cookie = Cookies.get('schema.schema');
+if (cookie !== undefined) {
+	schemaEditor.setValue(cookie);
+}
+schemaEditor.clearSelection();
+schemaEditor.getSession().on('change', () => Cookies.set('schema.schema', schemaEditor.getValue()));
+
+const instanceEditor = ace.edit(instanceEditorName);
+cookie = Cookies.get('schema.instance');
+if (cookie !== undefined) {
+	instanceEditor.setValue(cookie);
+}
+instanceEditor.clearSelection();
+instanceEditor.getSession().on('change', () => Cookies.set('schema.instance', instanceEditor.getValue()));
+
 async function requestValidation(schema, instance) {
 	const body = {
 		schema: schema,
@@ -33,9 +49,6 @@ function getErrorElement(errorItem) {
 async function validate() {
 	const outputElement = document.getElementById("output");
 	outputElement.innerHTML = "";
-
-	const schemaEditor = ace.edit(schemaEditorName);
-	const instanceEditor = ace.edit(instanceEditorName);
 
 	const schema = getJsonFromEditor(schemaEditor);
 	const instance = getJsonFromEditor(instanceEditor);

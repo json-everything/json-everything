@@ -49,9 +49,11 @@ namespace TryJsonEverything.Services
 			    contentType == "application/json") return null;
 
 			var controllerActionDescriptor = context
-				.GetEndpoint()
+				.GetEndpoint()?
 				.Metadata
 				.GetMetadata<ControllerActionDescriptor>();
+
+			if (controllerActionDescriptor == null) return null;
 
 			var controllerName = controllerActionDescriptor.ControllerName;
 			var actionName = controllerActionDescriptor.ActionName;

@@ -7,9 +7,10 @@ using TryJsonEverything.Services;
 
 namespace TryJsonEverything.Controllers
 {
+	[Route("api")]
 	public class ApiController : Controller
 	{
-		[HttpPost("api/schema-validation")]
+		[HttpPost("schema-validation")]
 		public ActionResult<SchemaValidationOutput> Validate([FromBody] SchemaValidationInput input)
 		{
 			var schema = input.Schema;
@@ -22,7 +23,7 @@ namespace TryJsonEverything.Controllers
 			return Ok(new SchemaValidationOutput {Result = result});
 		}
 
-		[HttpPost("api/path-query")]
+		[HttpPost("path-query")]
 		public ActionResult<PathQueryOutput> QueryPath([FromBody] PathQueryInput input)
 		{
 			var path = JsonPath.Parse(input.Path);
@@ -32,7 +33,7 @@ namespace TryJsonEverything.Controllers
 			return Ok(new PathQueryOutput {Result = result});
 		}
 
-		[HttpPost("api/patch-apply")]
+		[HttpPost("patch-apply")]
 		public ActionResult<PatchProcessOutput> ApplyPatch([FromBody] PatchProcessInput input)
 		{
 			var data = input.Data.RootElement;
@@ -42,7 +43,7 @@ namespace TryJsonEverything.Controllers
 			return Ok(new PatchProcessOutput {Result = result});
 		}
 
-		[HttpPost("api/logic-apply")]
+		[HttpPost("logic-apply")]
 		public ActionResult<PatchProcessOutput> ApplyLogic([FromBody] LogicProcessInput input)
 		{
 			if (!ModelState.IsValid)
@@ -55,7 +56,7 @@ namespace TryJsonEverything.Controllers
 			return Ok(new LogicProcessOutput {Result = result});
 		}
 
-		[HttpPost("api/pointer-query")]
+		[HttpPost("pointer-query")]
 		public ActionResult<PointerProcessOutput> QueryPointer([FromBody] PointerProcessInput input)
 		{
 			var data = input.Data.RootElement;

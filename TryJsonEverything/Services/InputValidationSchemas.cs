@@ -49,13 +49,19 @@ namespace TryJsonEverything.Services
 			new JsonSchemaBuilder()
 				.Schema(MetaSchemas.Draft202012Id)
 				.Id("https://json-everything.net/schemas/patch")
-				.Type(SchemaValueType.Array)
-				.Items(new JsonSchemaBuilder().Ref("#/definitions/operation"))
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("patch", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Array)
+						.Items(new JsonSchemaBuilder().Ref("#/$defs/operation"))
+					)
+				)
+				.Required("patch", "data")
 				.Defs(
 					("operation", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
 						.Required("op", "path")
-						.AllOf(new JsonSchemaBuilder().Ref("#/definitions/path"))
+						.AllOf(new JsonSchemaBuilder().Ref("#/$defs/path"))
 						.OneOf(
 							new JsonSchemaBuilder()
 								.Properties(

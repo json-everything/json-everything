@@ -5,6 +5,23 @@ const outputEditorName = 'editor-output';
 initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
+const pointerEditor = document.getElementById(pointerEditorName);
+var cookie = Cookies.get('pointer.pointer');
+if (cookie !== undefined) {
+	pointerEditor.value = cookie;
+}
+pointerEditor.onkeyup = () => Cookies.set('pointer.pointer', pointerEditor.value);
+
+const dataEditor = ace.edit(dataEditorName);
+cookie = Cookies.get('pointer.data');
+if (cookie !== undefined) {
+	dataEditor.setValue(cookie);
+}
+dataEditor.clearSelection();
+dataEditor.getSession().on('change', () => Cookies.set('pointer.data', dataEditor.getValue()));
+
+const outputEditor = ace.edit(outputEditorName);
+
 async function requestQuery(pointer, data) {
 	const body = {
 		pointer: pointer,

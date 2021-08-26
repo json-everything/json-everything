@@ -6,8 +6,24 @@ initializeEditor(logicEditorName);
 initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
-var schemaEditor = ace.edit(outputEditorName);
-schemaEditor.setReadOnly(true);
+const logicEditor = ace.edit(logicEditorName);
+var cookie = Cookies.get('logic.logic');
+if (cookie !== undefined) {
+	logicEditor.setValue(cookie);
+}
+logicEditor.clearSelection();
+logicEditor.getSession().on('change', () => Cookies.set('logic.logic', logicEditor.getValue()));
+
+const dataEditor = ace.edit(dataEditorName);
+cookie = Cookies.get('logic.data');
+if (cookie !== undefined) {
+	dataEditor.setValue(cookie);
+}
+dataEditor.clearSelection();
+dataEditor.getSession().on('change', () => Cookies.set('logic.data', dataEditor.getValue()));
+
+const outputEditor = ace.edit(outputEditorName);
+outputEditor.setReadOnly(true);
 
 async function requestApplication(logic, data) {
 	const body = {
@@ -37,9 +53,6 @@ async function apply() {
 	const outputElement = document.getElementById("error-output");
 	outputElement.innerHTML = '';
 
-	const logicEditor = ace.edit(logicEditorName);
-	const dataEditor = ace.edit(dataEditorName);
-	const outputEditor = ace.edit(outputEditorName);
 	outputEditor.setValue('');
 
 	const logic = getJsonFromEditor(logicEditor);

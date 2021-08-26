@@ -3,6 +3,21 @@ const dataEditorName = 'editor-data';
 
 initializeEditor(dataEditorName);
 
+const pathEditor = document.getElementById(pathEditorName);
+var cookie = Cookies.get('path.path');
+if (cookie !== undefined) {
+	pathEditor.value = cookie;
+}
+pathEditor.onkeyup = () => Cookies.set('path.path', pathEditor.value);
+
+const dataEditor = ace.edit(dataEditorName);
+cookie = Cookies.get('path.data');
+if (cookie !== undefined) {
+	dataEditor.setValue(cookie);
+}
+dataEditor.clearSelection();
+dataEditor.getSession().on('change', () => Cookies.set('path.data', dataEditor.getValue()));
+
 async function requestQuery(path, data) {
 	const body = {
 		path: path,
@@ -30,10 +45,7 @@ function getMatchElement(matchItem) {
 
 async function query() {
 	const outputElement = document.getElementById('output');
-	outputElement.innerHTML = "";
-
-	const pathEditor = document.getElementById(pathEditorName);
-	const dataEditor = ace.edit(dataEditorName);
+	outputElement.innerHTML = '';
 
 	const path = pathEditor.value;
 	const instance = getJsonFromEditor(dataEditor);
