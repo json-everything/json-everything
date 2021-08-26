@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>@ViewData["Title"] - json-everything</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -51,7 +52,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript">
-		const baseUri = '@($"{Context.Request.Scheme}://{Context.Request.Host.Value}{Url.Content("~/")}")';
+		const baseUri = '@($"https://{Context.Request.Host.Value}{Url.Content("~/")}")';
 	</script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
