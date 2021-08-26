@@ -14,3 +14,7 @@ function getJsonFromEditor(editor) {
 	const text = editor.getValue();
 	return JSON.parse(text);
 }
+
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip();
+});

@@ -142,3 +142,7 @@ code {
 .result-valid {
   color: green;
 }
+
+.no-underline {
+  text-decoration: none;
+}
