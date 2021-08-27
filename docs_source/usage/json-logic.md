@@ -4,6 +4,8 @@
 
 [JsonLogic](https://jsonlogic.com) is a mechanism that can be used to apply logical transformations to JSON values and that is also itself expressed in JSON.
 
+<a href="https://json-everything.herokuapp.com/json-logic" target="_block" style="color: #fff; background-color: #0d47a1; display: inline-block; font-weight: 400; text-align: center; vertical-align: middle; padding: .375rem .6rem; font-size: 1rem; border-radius: .25rem; cursor: pointer; margin: 1.5rem!important; user-select: none; text-decoration: none;">Try it online!</a>
+
 ## The syntax
 
 JsonLogic is expressed using single-keyed objects called _rules_.  The key is the operator and the value is (usually) an array containing the parameters for the operation.  Here are a few examples:

@@ -6,6 +6,8 @@ More information about JSON Schema can be found at [json-schema.org](http://json
 
 To support JSON Schema, JsonSchema<nsp>.Net exposes the `JsonSchema` type.  This type is implemented as a list of keywords, each of which correspond to one of the keywords defined in the JSON Schema specifications.
 
+<a href="https://json-everything.herokuapp.com/json-schema" target="_block" style="color: #fff; background-color: #0d47a1; display: inline-block; font-weight: 400; text-align: center; vertical-align: middle; padding: .375rem .6rem; font-size: 1rem; border-radius: .25rem; cursor: pointer; margin: 1.5rem!important; user-select: none; text-decoration: none;">Try it online!</a>
+
 ## Drafts
 
 There are currently six active drafts of the JSON Schema specification:
