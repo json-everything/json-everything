@@ -7,20 +7,20 @@ initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
 const logicEditor = ace.edit(logicEditorName);
-var cookie = Cookies.get('logic.logic');
-if (cookie !== undefined) {
-	logicEditor.setValue(cookie);
+var value = localStorage.getItem('logic.logic');
+if (value) {
+	logicEditor.setValue(value);
 }
 logicEditor.clearSelection();
-logicEditor.getSession().on('change', () => Cookies.set('logic.logic', logicEditor.getValue()));
+logicEditor.getSession().on('change', () => localStorage.setItem('logic.logic', logicEditor.getValue()));
 
 const dataEditor = ace.edit(dataEditorName);
-cookie = Cookies.get('logic.data');
-if (cookie !== undefined) {
-	dataEditor.setValue(cookie);
+value = localStorage.getItem('logic.data');
+if (value) {
+	dataEditor.setValue(value);
 }
 dataEditor.clearSelection();
-dataEditor.getSession().on('change', () => Cookies.set('logic.data', dataEditor.getValue()));
+dataEditor.getSession().on('change', () => localStorage.setItem('logic.data', dataEditor.getValue()));
 
 const outputEditor = ace.edit(outputEditorName);
 outputEditor.setReadOnly(true);

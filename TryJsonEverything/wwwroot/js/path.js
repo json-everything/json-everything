@@ -4,19 +4,19 @@ const dataEditorName = 'editor-data';
 initializeEditor(dataEditorName);
 
 const pathEditor = document.getElementById(pathEditorName);
-var cookie = Cookies.get('path.path');
-if (cookie !== undefined) {
-	pathEditor.value = cookie;
+var value = localStorage.getItem('path.path');
+if (value) {
+	pathEditor.value = value;
 }
-pathEditor.onkeyup = () => Cookies.set('path.path', pathEditor.value);
+pathEditor.onkeyup = () => localStorage.setItem('path.path', pathEditor.value);
 
 const dataEditor = ace.edit(dataEditorName);
-cookie = Cookies.get('path.data');
-if (cookie !== undefined) {
-	dataEditor.setValue(cookie);
+value = localStorage.getItem('path.data');
+if (value) {
+	dataEditor.setValue(value);
 }
 dataEditor.clearSelection();
-dataEditor.getSession().on('change', () => Cookies.set('path.data', dataEditor.getValue()));
+dataEditor.getSession().on('change', () => localStorage.setItem('path.data', dataEditor.getValue()));
 
 async function requestQuery(path, data) {
 	const body = {

@@ -5,20 +5,20 @@ initializeEditor(schemaEditorName);
 initializeEditor(instanceEditorName);
 
 const schemaEditor = ace.edit(schemaEditorName);
-var cookie = Cookies.get('schema.schema');
-if (cookie !== undefined) {
-	schemaEditor.setValue(cookie);
+var value = localStorage.getItem('schema.schema');
+if (value) {
+	schemaEditor.setValue(value);
 }
 schemaEditor.clearSelection();
-schemaEditor.getSession().on('change', () => Cookies.set('schema.schema', schemaEditor.getValue()));
+schemaEditor.getSession().on('change', () => localStorage.setItem('schema.schema', schemaEditor.getValue()));
 
 const instanceEditor = ace.edit(instanceEditorName);
-cookie = Cookies.get('schema.instance');
-if (cookie !== undefined) {
-	instanceEditor.setValue(cookie);
+value = localStorage.getItem('schema.instance');
+if (value) {
+	instanceEditor.setValue(value);
 }
 instanceEditor.clearSelection();
-instanceEditor.getSession().on('change', () => Cookies.set('schema.instance', instanceEditor.getValue()));
+instanceEditor.getSession().on('change', () => localStorage.setItem('schema.instance', instanceEditor.getValue()));
 
 async function requestValidation(schema, instance) {
 	const body = {

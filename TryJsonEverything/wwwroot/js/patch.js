@@ -7,20 +7,20 @@ initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
 const patchEditor = ace.edit(patchEditorName);
-var cookie = Cookies.get('patch.patch');
-if (cookie !== undefined) {
-	patchEditor.setValue(cookie);
+var value = localStorage.getItem('patch.patch');
+if (value) {
+	patchEditor.setValue(value);
 }
 patchEditor.clearSelection();
-patchEditor.getSession().on('change', () => Cookies.set('patch.patch', patchEditor.getValue()));
+patchEditor.getSession().on('change', () => localStorage.setItem('patch.patch', patchEditor.getValue()));
 
 const dataEditor = ace.edit(dataEditorName);
-cookie = Cookies.get('patch.data');
-if (cookie !== undefined) {
-	dataEditor.setValue(cookie);
+value = localStorage.getItem('patch.data');
+if (value) {
+	dataEditor.setValue(value);
 }
 dataEditor.clearSelection();
-dataEditor.getSession().on('change', () => Cookies.set('patch.data', dataEditor.getValue()));
+dataEditor.getSession().on('change', () => localStorage.setItem('patch.data', dataEditor.getValue()));
 
 const outputEditor = ace.edit(outputEditorName);
 outputEditor.setReadOnly(true);

@@ -6,19 +6,19 @@ initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
 const pointerEditor = document.getElementById(pointerEditorName);
-var cookie = Cookies.get('pointer.pointer');
-if (cookie !== undefined) {
-	pointerEditor.value = cookie;
+var value = localStorage.getItem('pointer.pointer');
+if (value) {
+	pointerEditor.value = value;
 }
-pointerEditor.onkeyup = () => Cookies.set('pointer.pointer', pointerEditor.value);
+pointerEditor.onkeyup = () => localStorage.setItem('pointer.pointer', pointerEditor.value);
 
 const dataEditor = ace.edit(dataEditorName);
-cookie = Cookies.get('pointer.data');
-if (cookie !== undefined) {
-	dataEditor.setValue(cookie);
+value = localStorage.getItem('pointer.data');
+if (value) {
+	dataEditor.setValue(value);
 }
 dataEditor.clearSelection();
-dataEditor.getSession().on('change', () => Cookies.set('pointer.data', dataEditor.getValue()));
+dataEditor.getSession().on('change', () => localStorage.setItem('pointer.data', dataEditor.getValue()));
 
 const outputEditor = ace.edit(outputEditorName);
 

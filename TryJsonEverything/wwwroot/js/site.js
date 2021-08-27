@@ -18,3 +18,5 @@ function getJsonFromEditor(editor) {
 $(function () {
 	$('[data-toggle="tooltip"]').tooltip();
 });
+
+const localStorage = window.localStorage;
