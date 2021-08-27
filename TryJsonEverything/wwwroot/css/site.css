@@ -112,22 +112,12 @@ code {
   border-color: #6800B7;
 }
 
-.editor-container {
-  height: 500px;
-  position: relative;
+.height-300 {
+  height: 300px;
 }
 
-.editor-container-small {
-  height: 200px;
-  position: relative;
-}
-
-.json-editor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+.height-500 {
+  min-height: 500px;
 }
 
 .img-text-icon {
