@@ -1,0 +1,40 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+	<h1 class="display-4">JSON Logic</h1>
+	<p>
+		Complex rule definition and evaluation using JSON
+		<br />
+		Learn more about
+		<a href="https://jsonlogic.com/" target="_blank">JSON Patch <partial name="_ExternalLink" /></a>
+	</p>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-12">
+				<h4 class="text-left">Logic:</h4>
+				<div id="editor-logic" class="height-500"></div>
+			</div>
+			<div class="col-lg-6 col-md-12">
+				<h4 class="text-left">Data:</h4>
+				<div id="editor-data" class="height-500"></div>
+			</div>
+		</div>
+		<div>
+			<button type="submit" onclick="apply()" class="btn btn-primary m-4">Apply</button>
+		</div>
+		<div id="error-output">
+
+		</div>
+		<div class="col-12">
+			<div id="editor-output" class="height-300"></div>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/lib/js-cookie/dist/js.cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/js/logic.js" type="text/javascript" charset="utf-8"></script>
+}

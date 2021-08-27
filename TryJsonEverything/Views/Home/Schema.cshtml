@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "JSON Schema";
+}
+
+<div class="text-center">
+	<h1 class="display-4">JSON Schema</h1>
+	<p>
+		Constraints-based validation of JSON data
+		<br />
+		Learn more about
+		<a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink" /></a>
+	</p>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-12">
+				<h4 class="text-left">Schema:</h4>
+				<div id="editor-schema" class="height-500"></div>
+			</div>
+			<div class="col-lg-6 col-md-12">
+				<h4 class="text-left">Instance:</h4>
+				<div id="editor-instance" class="height-500"></div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<button type="submit" onclick="validate()" class="btn btn-primary m-4">Validate</button>
+	</div>
+	<div id="output">
+
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/lib/js-cookie/dist/js.cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/js/schema.js" type="text/javascript" charset="utf-8"></script>
+}
+

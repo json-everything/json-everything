@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "json-everything";
+}
+
+<div class="text-center">
+	<h1 class="display-4 mt-5 mb-4"><span class="text-monospace text-muted">json-everything</span></h1>
+	<p class="lead mb-5">Extended JSON support in .Net built on top of the System.Text.Json namespace</p>
+	<div class="container">
+		<div class="row mb-4">
+			<div class="col-sm">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">JSON Schema</h4>
+						<p class="card-text">Constraints-based validation of JSON data</p>
+					</div>
+					<a asp-area="" asp-controller="Home" asp-action="Schema" class="btn btn-primary mb-4 ml-4 mr-4">Try It!</a>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">JSON Path</h4>
+						<p class="card-text">Query JSON data - "XPath for JSON"</p>
+					</div>
+					<a asp-area="" asp-controller="Home" asp-action="Path" class="btn btn-primary mb-4 ml-4 mr-4">Try It!</a>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">JSON Patch</h4>
+						<p class="card-text">Describe and process alterations to JSON documents</p>
+					</div>
+					<a asp-area="" asp-controller="Home" asp-action="Patch" class="btn btn-primary mb-4 ml-4 mr-4">Try It!</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">JSON Logic</h4>
+						<p class="card-text">Complex rule definition and evaluation using JSON</p>
+					</div>
+					<a asp-area="" asp-controller="Home" asp-action="Logic" class="btn btn-primary mb-4 ml-4 mr-4">Try It!</a>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">JSON Pointer</h4>
+						<p class="card-text">Identify specific locations within JSON data</p>
+					</div>
+					<a asp-area="" asp-controller="Home" asp-action="Pointer" class="btn btn-primary mb-4 ml-4 mr-4">Try It!</a>
+				</div>
+			</div>
+			<div class="col-sm"></div>
+		</div>
+	</div>
+</div>

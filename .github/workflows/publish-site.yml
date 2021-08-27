@@ -1,0 +1,32 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: Publish TryJsonEverything
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - Json.More/**
+      - JsonLogic/**
+      - JsonPatch/**
+      - JsonPath/**
+      - JsonPointer/**
+      - JsonSchema/**
+      - TryJsonEverything/**
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "json-everything" #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_USERNAME}}
+          usedocker: true
+        
+
+

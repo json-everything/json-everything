@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+	"libraries": [
+		{
+			"library": "ace@1.4.12",
+			"destination": "wwwroot/lib/ace/"
+		},
+		{
+			"provider": "jsdelivr",
+			"library": "js-cookie@3.0.0",
+			"destination": "wwwroot/lib/js-cookie/"
+		}
+	]
+}

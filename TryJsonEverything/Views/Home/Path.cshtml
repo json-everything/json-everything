@@ -1,0 +1,32 @@
+﻿@{
+	ViewData["Title"] = "JSON Path";
+}
+
+<div class="text-center">
+	<h1 class="display-4">JSON Path</h1>
+	<p>
+		Query JSON data - "XPath for JSON"
+		<br />
+		Learn more about
+		<a href="https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base" target="_blank">JSON Path <partial name="_ExternalLink" /></a>
+	</p>
+	<h4 class="text-left">Path:</h4>
+	<input id="editor-path" type="text" class="col-12 form-control text-monospace" />
+	<h4 class="text-left">Data:</h4>
+	<div class="col-12">
+		<div id="editor-data" class="height-500"></div>
+	</div>
+	<div>
+		<button type="submit" onclick="query()" class="btn btn-primary m-4">Query</button>
+	</div>
+	<div id="output">
+
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/lib/js-cookie/dist/js.cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/js/path.js" type="text/javascript" charset="utf-8"></script>
+}
+
