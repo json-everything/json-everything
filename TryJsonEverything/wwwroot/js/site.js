@@ -15,6 +15,10 @@ function getJsonFromEditor(editor) {
 	return JSON.parse(text);
 }
 
+function scrollToEnd() {
+	$("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
+}
+
 $(function () {
 	$('[data-toggle="tooltip"]').tooltip();
 });

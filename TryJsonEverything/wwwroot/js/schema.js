@@ -4,10 +4,39 @@ const instanceEditorName = 'editor-instance';
 initializeEditor(schemaEditorName);
 initializeEditor(instanceEditorName);
 
+const schemaSample = {
+	"$id": "https://example.com/person.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Person",
+	"type": "object",
+	"properties": {
+		"firstName": {
+			"type": "string",
+			"description": "The person's first name."
+		},
+		"lastName": {
+			"type": "string",
+			"description": "The person's last name."
+		},
+		"age": {
+			"description": "Age in years which must be equal to or greater than zero.",
+			"type": "integer",
+			"minimum": 0
+		}
+	}
+};
+const instanceSample = {
+	"firstName": "John",
+	"lastName": "Doe",
+	"age": 21
+};
+
 const schemaEditor = ace.edit(schemaEditorName);
 var value = localStorage.getItem('schema.schema');
 if (value) {
 	schemaEditor.setValue(value);
+} else {
+	schemaEditor.setValue(JSON.stringify(schemaSample, null, '\t'));
 }
 schemaEditor.clearSelection();
 schemaEditor.getSession().on('change', () => localStorage.setItem('schema.schema', schemaEditor.getValue()));
@@ -16,6 +45,8 @@ const instanceEditor = ace.edit(instanceEditorName);
 value = localStorage.getItem('schema.instance');
 if (value) {
 	instanceEditor.setValue(value);
+} else {
+	instanceEditor.setValue(JSON.stringify(instanceSample, null, '\t'));
 }
 instanceEditor.clearSelection();
 instanceEditor.getSession().on('change', () => localStorage.setItem('schema.instance', instanceEditor.getValue()));
@@ -57,13 +88,11 @@ async function validate() {
 
 	if (response.result.valid) {
 		outputElement.innerHTML = '<h3 class="result-valid">Instance is valid!</h3>';
-		return;
-	}
-
-	if (!response.result.errors) {
+	} else if (!response.result.errors) {
 		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${getErrorElement(response.result)}</ol>`;
-		return;
+	} else {
+		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.result.errors.map(getErrorElement).join('')}</ol>`;
 	}
 
-	outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.result.errors.map(getErrorElement).join('')}</ol>`;
+	scrollToEnd();
 }

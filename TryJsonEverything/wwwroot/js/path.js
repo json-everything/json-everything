@@ -3,10 +3,50 @@ const dataEditorName = 'editor-data';
 
 initializeEditor(dataEditorName);
 
+const dataSample = {
+	"store": {
+		"book": [
+			{
+				"category": "reference",
+				"author": "Nigel Rees",
+				"title": "Sayings of the Century",
+				"price": 8.95
+			},
+			{
+				"category": "fiction",
+				"author": "Evelyn Waugh",
+				"title": "Sword of Honour",
+				"price": 12.99
+			},
+			{
+				"category": "fiction",
+				"author": "Herman Melville",
+				"title": "Moby Dick",
+				"isbn": "0-553-21311-3",
+				"price": 8.99
+			},
+			{
+				"category": "fiction",
+				"author": "J. R. R. Tolkien",
+				"title": "The Lord of the Rings",
+				"isbn": "0-395-19395-8",
+				"price": 22.99
+			}
+		],
+		"bicycle": {
+			"color": "red",
+			"price": 19.95
+		}
+	}
+};
+const pathSample = '$..book[?(@.price<10)]';
+
 const pathEditor = document.getElementById(pathEditorName);
 var value = localStorage.getItem('path.path');
 if (value) {
 	pathEditor.value = value;
+} else {
+	pathEditor.value = pathSample;
 }
 pathEditor.onkeyup = () => localStorage.setItem('path.path', pathEditor.value);
 
@@ -14,6 +54,8 @@ const dataEditor = ace.edit(dataEditorName);
 value = localStorage.getItem('path.data');
 if (value) {
 	dataEditor.setValue(value);
+} else {
+	dataEditor.setValue(JSON.stringify(dataSample, null, '\t'));
 }
 dataEditor.clearSelection();
 dataEditor.getSession().on('change', () => localStorage.setItem('path.data', dataEditor.getValue()));
@@ -55,8 +97,9 @@ async function query() {
 
 	if (response.error) {
 		outputElement.innerHTML = `<h3 class="result-error">Error: ${response.error}</h3>`;
-		return;
+	} else {
+		outputElement.innerHTML = `<ol type="1" class="text-left">${response.result.matches.map(getMatchElement).join('')}</ol>`;
 	}
 
-	outputElement.innerHTML = `<ol type="1" class="text-left">${response.result.matches.map(getMatchElement).join('')}</ol>`;
+	scrollToEnd();
 }

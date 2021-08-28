@@ -6,10 +6,26 @@ initializeEditor(logicEditorName);
 initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
+const logicSample = {
+	"if": [
+		{
+			"merge": [
+				{ "missing": ["first_name", "last_name"] },
+				{ "missing_some": [1, ["cell_phone", "home_phone"]] }
+			]
+		},
+		"We require first name, last name, and one phone number.",
+		"OK to proceed"
+	]
+}
+const dataSample = { "first_name": "Bruce", "last_name": "Wayne" }
+
 const logicEditor = ace.edit(logicEditorName);
 var value = localStorage.getItem('logic.logic');
 if (value) {
 	logicEditor.setValue(value);
+} else {
+	logicEditor.setValue(JSON.stringify(logicSample, null, '\t'))
 }
 logicEditor.clearSelection();
 logicEditor.getSession().on('change', () => localStorage.setItem('logic.logic', logicEditor.getValue()));
@@ -18,6 +34,8 @@ const dataEditor = ace.edit(dataEditorName);
 value = localStorage.getItem('logic.data');
 if (value) {
 	dataEditor.setValue(value);
+} else {
+	dataEditor.setValue(JSON.stringify(dataSample, null, '\t'))
 }
 dataEditor.clearSelection();
 dataEditor.getSession().on('change', () => localStorage.setItem('logic.data', dataEditor.getValue()));
@@ -62,11 +80,10 @@ async function apply() {
 
 	if (response.errors) {
 		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.errors.map(getErrorElement).join('')}</ol>`;
-		return;
-	}
-
-	if (response.result) {
+	} else if (response.result) {
 		outputEditor.setValue(JSON.stringify(response.result, null, '\t'));
 		outputEditor.clearSelection();
 	}
+
+	scrollToEnd();
 }

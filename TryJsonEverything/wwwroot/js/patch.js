@@ -6,10 +6,22 @@ initializeEditor(patchEditorName);
 initializeEditor(dataEditorName);
 initializeEditor(outputEditorName);
 
+const dataSample = {
+	"baz": "qux",
+	"foo": "bar"
+};
+const patchSample = [
+	{ "op": "replace", "path": "/baz", "value": "boo" },
+	{ "op": "add", "path": "/hello", "value": ["world"] },
+	{ "op": "remove", "path": "/foo" }
+];
+
 const patchEditor = ace.edit(patchEditorName);
 var value = localStorage.getItem('patch.patch');
 if (value) {
 	patchEditor.setValue(value);
+} else {
+	patchEditor.setValue(JSON.stringify(patchSample, null, '\t'));
 }
 patchEditor.clearSelection();
 patchEditor.getSession().on('change', () => localStorage.setItem('patch.patch', patchEditor.getValue()));
@@ -18,6 +30,8 @@ const dataEditor = ace.edit(dataEditorName);
 value = localStorage.getItem('patch.data');
 if (value) {
 	dataEditor.setValue(value);
+} else {
+	dataEditor.setValue(JSON.stringify(dataSample, null, '\t'));
 }
 dataEditor.clearSelection();
 dataEditor.getSession().on('change', () => localStorage.setItem('patch.data', dataEditor.getValue()));
@@ -64,4 +78,6 @@ async function apply() {
 		outputEditor.setValue(JSON.stringify(response.result.result, null, '\t'));
 		outputEditor.clearSelection();
 	}
+
+	scrollToEnd();
 }
