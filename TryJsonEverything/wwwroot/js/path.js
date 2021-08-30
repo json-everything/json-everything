@@ -97,6 +97,10 @@ async function query() {
 
 	if (response.error) {
 		outputElement.innerHTML = `<h3 class="result-error">Error: ${response.error}</h3>`;
+	} else if (response.validationErrors) {
+		outputElement.innerHTML = '<h3 class="result-error">The path contains a syntax error.</h3>';
+	} else if (response.result.matches.length === 0) {
+		outputElement.innerHTML = '<h3>No matches found</h3>';
 	} else {
 		outputElement.innerHTML = `<ol type="1" class="text-left">${response.result.matches.map(getMatchElement).join('')}</ol>`;
 	}
