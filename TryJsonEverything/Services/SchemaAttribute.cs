@@ -14,16 +14,18 @@ namespace TryJsonEverything.Services
 		{
 			var member = hostType.GetProperties()
 				             .FirstOrDefault(x => IsStatic(x) && x.Name == memberName) ??
-			             (MemberInfo) hostType.GetFields()
+			             (MemberInfo?) hostType.GetFields()
 				             .FirstOrDefault(x => x.IsStatic && x.Name == memberName) ??
 			             throw new InvalidOperationException($"Cannot find static property or field named '{memberName}' on type '{hostType}'");
 
-			Schema = (JsonSchema) (member switch
+			var schema = (JsonSchema?) (member switch
 			{
 				PropertyInfo property => property.GetValue(null),
 				FieldInfo field => field.GetValue(null),
-				_ => Schema
+				_ => null
 			});
+
+			Schema = schema ?? throw new InvalidOperationException($"Cannot find static property or field named '{memberName}' on type '{hostType}'");
 		}
 
 		private static bool IsStatic(PropertyInfo prop)

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,11 +13,11 @@ using TryJsonEverything.Controllers;
 
 namespace TryJsonEverything.Services
 {
-	public class InputValidationMiddleware
+	public class SchemaValidationMiddleware
 	{
 		private readonly RequestDelegate _next;
 
-		public InputValidationMiddleware(RequestDelegate next)
+		public SchemaValidationMiddleware(RequestDelegate next)
 		{
 			_next = next;
 		}
@@ -43,7 +42,7 @@ namespace TryJsonEverything.Services
 			await writer.FlushAsync();
 		}
 
-		private static async Task<ValidationResults> CheckParameters(HttpContext context)
+		private static async Task<ValidationResults?> CheckParameters(HttpContext context)
 		{
 			if (!context.Request.Headers.TryGetValue("Content-Type", out var contentType) &&
 			    contentType == "application/json") return null;
@@ -58,8 +57,8 @@ namespace TryJsonEverything.Services
 			var controllerName = controllerActionDescriptor.ControllerName;
 			var actionName = controllerActionDescriptor.ActionName;
 
-			var controllerType = Type.GetType(typeof(ApiController).AssemblyQualifiedName.Replace("Api", controllerName));
-			var method = controllerType.GetMethods().FirstOrDefault(x => x.Name == actionName && !x.IsStatic);
+			var controllerType = Type.GetType(typeof(ApiController).AssemblyQualifiedName!.Replace("Api", controllerName));
+			var method = controllerType!.GetMethods().FirstOrDefault(x => x.Name == actionName && !x.IsStatic);
 			if (method == null) return null;
 
 			var parameter = method.GetParameters().Where(IsBodyParameter).FirstOrDefault();

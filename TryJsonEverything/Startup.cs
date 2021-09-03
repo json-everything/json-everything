@@ -1,3 +1,5 @@
+using System;
+using Json.Schema;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -42,7 +44,7 @@ namespace TryJsonEverything
 
 			app.UseAuthorization();
 
-			app.UseMiddleware<InputValidationMiddleware>();
+			app.UseMiddleware<SchemaValidationMiddleware>();
 
 			app.UseEndpoints(endpoints =>
 			{
@@ -50,6 +52,14 @@ namespace TryJsonEverything
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
+
+			ConfigureDefaults();
+		}
+
+		private static void ConfigureDefaults()
+		{
+			ValidationOptions.Default.DefaultBaseUri = new Uri("https://json-everything.net");
+			ValidationOptions.Default.OutputFormat = OutputFormat.Basic;
 		}
 	}
 }
