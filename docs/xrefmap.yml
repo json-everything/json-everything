@@ -5310,6 +5310,15 @@ references:
   commentId: M:Json.Schema.Format.Validate(JsonElement)
   fullName: Json.Schema.Format.Validate(JsonElement)
   nameWithType: Format.Validate(JsonElement)
+- uid: Json.Schema.Format.Validate(JsonElement,System.Nullable{System.String}@)
+  name: Validate(JsonElement, out Nullable<String>)
+  href: api/Json.Schema.Format.html#Json_Schema_Format_Validate_JsonElement_System_Nullable_System_String___
+  commentId: M:Json.Schema.Format.Validate(JsonElement,System.Nullable{System.String}@)
+  name.vb: Validate(JsonElement, ByRef Nullable(Of String))
+  fullName: Json.Schema.Format.Validate(JsonElement, out System.Nullable<System.String>)
+  fullName.vb: Json.Schema.Format.Validate(JsonElement, ByRef System.Nullable(Of System.String))
+  nameWithType: Format.Validate(JsonElement, out Nullable<String>)
+  nameWithType.vb: Format.Validate(JsonElement, ByRef Nullable(Of String))
 - uid: Json.Schema.Format.Validate*
   name: Validate
   href: api/Json.Schema.Format.html#Json_Schema_Format_Validate_
@@ -12771,6 +12780,12 @@ references:
   fullName.vb: Json.Schema.PredicateFormat.PredicateFormat(System.String, Func(Of JsonElement, System.Boolean))
   nameWithType: PredicateFormat.PredicateFormat(String, Func<JsonElement, Boolean>)
   nameWithType.vb: PredicateFormat.PredicateFormat(String, Func(Of JsonElement, Boolean))
+- uid: Json.Schema.PredicateFormat.#ctor(System.String,Json.Schema.PredicateFormat.PredicateWithErrorMessage)
+  name: PredicateFormat(String, PredicateFormat.PredicateWithErrorMessage)
+  href: api/Json.Schema.PredicateFormat.html#Json_Schema_PredicateFormat__ctor_System_String_Json_Schema_PredicateFormat_PredicateWithErrorMessage_
+  commentId: M:Json.Schema.PredicateFormat.#ctor(System.String,Json.Schema.PredicateFormat.PredicateWithErrorMessage)
+  fullName: Json.Schema.PredicateFormat.PredicateFormat(System.String, Json.Schema.PredicateFormat.PredicateWithErrorMessage)
+  nameWithType: PredicateFormat.PredicateFormat(String, PredicateFormat.PredicateWithErrorMessage)
 - uid: Json.Schema.PredicateFormat.#ctor*
   name: PredicateFormat
   href: api/Json.Schema.PredicateFormat.html#Json_Schema_PredicateFormat__ctor_
@@ -12778,12 +12793,27 @@ references:
   isSpec: "True"
   fullName: Json.Schema.PredicateFormat.PredicateFormat
   nameWithType: PredicateFormat.PredicateFormat
+- uid: Json.Schema.PredicateFormat.PredicateWithErrorMessage
+  name: PredicateFormat.PredicateWithErrorMessage
+  href: api/Json.Schema.PredicateFormat.PredicateWithErrorMessage.html
+  commentId: T:Json.Schema.PredicateFormat.PredicateWithErrorMessage
+  fullName: Json.Schema.PredicateFormat.PredicateWithErrorMessage
+  nameWithType: PredicateFormat.PredicateWithErrorMessage
 - uid: Json.Schema.PredicateFormat.Validate(JsonElement)
   name: Validate(JsonElement)
   href: api/Json.Schema.PredicateFormat.html#Json_Schema_PredicateFormat_Validate_JsonElement_
   commentId: M:Json.Schema.PredicateFormat.Validate(JsonElement)
   fullName: Json.Schema.PredicateFormat.Validate(JsonElement)
   nameWithType: PredicateFormat.Validate(JsonElement)
+- uid: Json.Schema.PredicateFormat.Validate(JsonElement,System.Nullable{System.String}@)
+  name: Validate(JsonElement, out Nullable<String>)
+  href: api/Json.Schema.PredicateFormat.html#Json_Schema_PredicateFormat_Validate_JsonElement_System_Nullable_System_String___
+  commentId: M:Json.Schema.PredicateFormat.Validate(JsonElement,System.Nullable{System.String}@)
+  name.vb: Validate(JsonElement, ByRef Nullable(Of String))
+  fullName: Json.Schema.PredicateFormat.Validate(JsonElement, out System.Nullable<System.String>)
+  fullName.vb: Json.Schema.PredicateFormat.Validate(JsonElement, ByRef System.Nullable(Of System.String))
+  nameWithType: PredicateFormat.Validate(JsonElement, out Nullable<String>)
+  nameWithType.vb: PredicateFormat.Validate(JsonElement, ByRef Nullable(Of String))
 - uid: Json.Schema.PredicateFormat.Validate*
   name: Validate
   href: api/Json.Schema.PredicateFormat.html#Json_Schema_PredicateFormat_Validate_
