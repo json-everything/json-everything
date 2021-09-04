@@ -70,6 +70,14 @@ button.accept-policy {
   line-height: inherit;
 }
 
+.options-bar {
+  bottom: 80px;
+  right: 20px;
+  z-index: 10;
+  height: auto;
+  margin-bottom: auto;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -136,4 +144,9 @@ code {
 
 .no-underline {
   text-decoration: none;
+}
+
+.options-btn {
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 0.25rem !important;
 }

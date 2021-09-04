@@ -1,8 +1,10 @@
 ﻿const schemaEditorName = 'editor-schema';
 const instanceEditorName = 'editor-instance';
+const outputEditorName = 'editor-output';
 
 initializeEditor(schemaEditorName);
 initializeEditor(instanceEditorName);
+initializeEditor(outputEditorName);
 
 const schemaSample = {
 	"$id": "https://example.com/person.schema.json",
@@ -51,10 +53,14 @@ if (value) {
 instanceEditor.clearSelection();
 instanceEditor.getSession().on('change', () => localStorage.setItem('schema.instance', instanceEditor.getValue()));
 
-async function requestValidation(schema, instance) {
+const outputEditor = ace.edit(outputEditorName);
+outputEditor.setReadOnly(true);
+
+async function requestValidation(schema, instance, options) {
 	const body = {
 		schema: schema,
-		instance: instance
+		instance: instance,
+		options: options
 	};
 
 	const response = await fetch(`${baseUri}api/schema-validation`,
@@ -77,21 +83,59 @@ function getErrorElement(errorItem) {
 `;
 }
 
+function transformDraft(selection) {
+	return selection.replace('Draft ', '');
+}
+
+function transformOutputFormat(selection) {
+	switch (selection) {
+	case 'Flag (pass/fail)':
+		return 'Flag';
+	case 'Basic (list)':
+		return 'Basic';
+	case 'Detailed (condensed)':
+		return 'Detailed';
+	case 'Verbose (full)':
+		return 'Verbose';
+	default:
+		return null;
+	}
+}
+
 async function validate() {
-	const outputElement = document.getElementById("output");
-	outputElement.innerHTML = "";
+	const outputElement = document.getElementById('output');
+	outputElement.innerHTML = '';
+	const outputEditorContainer = document.getElementById('editor-output');
+
+	const draftElement = document.getElementById('validate-as');
+	const outputFormatElement = document.getElementById('output-format');
+	const baseUriElement = document.getElementById('base-uri');
+	const requireFormatElement = document.getElementById('require-format');
 
 	const schema = getJsonFromEditor(schemaEditor);
 	const instance = getJsonFromEditor(instanceEditor);
+	const options = {
+		validateAs: transformDraft(draftElement.value),
+		outputFormat: transformOutputFormat(outputFormatElement.value),
+		defaultBaseUri: baseUriElement.value === '' ? 'https://json-everything.net' : baseUriElement.value,
+		requireFormatValidation: requireFormatElement.checked
+	};
 
-	const response = await requestValidation(schema, instance);
+	const response = await requestValidation(schema, instance, options);
 
-	if (response.result.valid) {
-		outputElement.innerHTML = '<h3 class="result-valid">Instance is valid!</h3>';
-	} else if (!response.result.errors) {
-		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${getErrorElement(response.result)}</ol>`;
+	if (options.outputFormat === null) {
+		outputEditorContainer.classList.add('collapse');
+		if (response.result.valid) {
+			outputElement.innerHTML = '<h3 class="result-valid">Instance is valid!</h3>';
+		} else if (!response.result.errors) {
+			outputElement.innerHTML = `<ol type="1" class="result-error text-left">${getErrorElement(response.result)}</ol>`;
+		} else {
+			outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.result.errors.map(getErrorElement).join('')}</ol>`;
+		}
 	} else {
-		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.result.errors.map(getErrorElement).join('')}</ol>`;
+		outputEditorContainer.classList.remove('collapse');
+		outputEditor.setValue(JSON.stringify(response, null, '\t'));
+		outputEditor.clearSelection();
 	}
 
 	scrollToEnd();
