@@ -46,6 +46,7 @@ namespace Json.Path
 		{
 			if (span[i] != '(')
 			{
+				i = -1;
 				index = null;
 				return false;
 			}

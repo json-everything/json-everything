@@ -1,3 +1,7 @@
+# [0.1.8](https://github.com/gregsdennis/json-everything/pull/155)
+
+Better error reporting during parsing.
+
 # [0.1.8](https://github.com/gregsdennis/json-everything/pull/150)
 
 [#151](https://github.com/gregsdennis/json-everything/pull/151) - Parsing expressions with numeric values that contain `9` fails.

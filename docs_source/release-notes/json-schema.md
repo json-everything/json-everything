@@ -1,3 +1,7 @@
+# [1.11.0](https://github.com/gregsdennis/json-everything/pull/155)
+
+`format` incorporates error messages from custom format validation, when provided.
+
 # [1.10.8](https://github.com/gregsdennis/json-everything/pull/152)
 
 `format` now adds an error message.
