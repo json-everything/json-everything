@@ -294,7 +294,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Path.JsonPath.html",
-          "hash": "Wpva1PZROHrqXUhGkMTXTw=="
+          "hash": "wGG4WzhdXgpwKXfF+y9PTg=="
         }
       },
       "is_incremental": false,
@@ -822,7 +822,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.Format.html",
-          "hash": "xJtqWYYrtiHOg/3YhawLiQ=="
+          "hash": "te5kQXdecw+uWknWkuUKNA=="
         }
       },
       "is_incremental": false,
@@ -834,7 +834,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.FormatKeyword.html",
-          "hash": "g78sRC6/01Z4k6596DgGxw=="
+          "hash": "TlY28tIXbKWjmEx1yKEKfg=="
         }
       },
       "is_incremental": false,
@@ -2042,11 +2042,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Schema.PredicateFormat.PredicateWithErrorMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Schema.PredicateFormat.PredicateWithErrorMessage.html",
+          "hash": "iDl0sc+A2jESzrw6LkPhFQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Schema.PredicateFormat.yml",
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.PredicateFormat.html",
-          "hash": "2LA7dDjv8erbN702xBa3mA=="
+          "hash": "kVqj7+3W7H01nTsEJIpxoA=="
         }
       },
       "is_incremental": false,
@@ -2142,7 +2154,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.RegexFormat.html",
-          "hash": "43DYJgYHrxOQqhAlOmlYKQ=="
+          "hash": "dMkJ4g9tN421Tv4xXLDEVg=="
         }
       },
       "is_incremental": false,
@@ -2466,7 +2478,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.html",
-          "hash": "4oMjY1sav34Ly4ft2Y+hJw=="
+          "hash": "xN8yXXctR0TtyL+CdWm6og=="
         }
       },
       "is_incremental": false,
@@ -2490,7 +2502,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "7VWihYA6MSyGAajcm6mE6A=="
+          "hash": "a75p8LoccSpOiQ1g/DyCvA=="
         }
       },
       "is_incremental": false,
@@ -2736,7 +2748,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-path.html",
-          "hash": "aqJO1UM9Nap1rPyQTcDU4g=="
+          "hash": "7EDrWCws1fWhV0VpqceoNw=="
         }
       },
       "is_incremental": false,
@@ -2796,7 +2808,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-schema.html",
-          "hash": "zINvxnoyewY3WfOd2IT68w=="
+          "hash": "NIHNEkFiL3QgPutbBPFT/A=="
         }
       },
       "is_incremental": false,
@@ -3063,7 +3075,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 204,
+          "total_file_count": 205,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
