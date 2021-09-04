@@ -60,6 +60,9 @@ namespace Json.Path
 				if (node == null)
 					throw new PathParseException(i, "Could not identify selector");
 
+				if (node is ErrorSelector error)
+					throw new PathParseException(i, error.ErrorMessage);
+
 				nodes.Add(node);
 			}
 
@@ -96,7 +99,7 @@ namespace Json.Path
 					_ => null
 				};
 
-				if (node == null)
+				if (node == null || node is ErrorSelector)
 				{
 					if (allowTrailingContent) break;
 					path = null;
@@ -166,7 +169,7 @@ namespace Json.Path
 			       ch.In(0x80..0x10FFFF);
 		}
 
-		private static ISelector? AddIndex(ReadOnlySpan<char> span, ref int i)
+		private static ISelector AddIndex(ReadOnlySpan<char> span, ref int i)
 		{
 			var slice = span[i..];
 			// replace this with an actual index parser that returns null to handle spaces
@@ -183,7 +186,8 @@ namespace Json.Path
 			while (ch == ',')
 			{
 				span.ConsumeWhitespace(ref i);
-				if (!ParseIndex(span, ref i, out var index)) return null;
+				if (!ParseIndex(span, ref i, out var index))
+					return new ErrorSelector("Error parsing path index value");
 
 				indices.Add(index!);
 
@@ -194,7 +198,8 @@ namespace Json.Path
 				i++;
 			}
 
-			if (ch != ']') return null;
+			if (ch != ']')
+				return new ErrorSelector("Expected ']' or ','");
 			
 			return new IndexSelector(indices);
 		}
@@ -208,6 +213,13 @@ namespace Json.Path
 				{
 					i = j;
 					return true;
+				}
+
+				if (j != -1)
+				{
+					i = j;
+					index = null;
+					return false;
 				}
 			}
 

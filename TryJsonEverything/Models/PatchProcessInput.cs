@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Json.Patch;
 using TryJsonEverything.Services;
+#pragma warning disable 8618
 
 namespace TryJsonEverything.Models
 {

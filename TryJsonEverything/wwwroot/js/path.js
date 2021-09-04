@@ -85,6 +85,10 @@ function getMatchElement(matchItem) {
 `;
 }
 
+function getError(error) {
+	return error.replace("Value does not match format 'json-path': ", '');
+}
+
 async function query() {
 	const outputElement = document.getElementById('output');
 	outputElement.innerHTML = '';
@@ -98,7 +102,7 @@ async function query() {
 	if (response.error) {
 		outputElement.innerHTML = `<h3 class="result-error">Error: ${response.error}</h3>`;
 	} else if (response.validationErrors) {
-		outputElement.innerHTML = '<h3 class="result-error">The path contains a syntax error.</h3>';
+		outputElement.innerHTML = `<h3 class="result-error">${getError(response.validationErrors[0].error)}</h3>`;
 	} else if (response.result.matches.length === 0) {
 		outputElement.innerHTML = '<h3>No matches found</h3>';
 	} else {

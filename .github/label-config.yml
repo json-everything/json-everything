@@ -30,3 +30,6 @@
 
 "build pipeline":
   - .github/workflows/**/*
+
+"try-me-site":
+  - TryJsonEverything/**/*

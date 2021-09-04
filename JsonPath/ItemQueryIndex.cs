@@ -48,6 +48,7 @@ namespace Json.Path
 		{
 			if (span[i] != '?' || span[i+1] != '(')
 			{
+				i = -1;
 				index = null;
 				return false;
 			}
@@ -57,6 +58,7 @@ namespace Json.Path
 			    !(expression.OutputType == QueryExpressionType.Boolean ||
 			      expression.OutputType == QueryExpressionType.InstanceDependent))
 			{
+				i = localIndex;
 				index = null;
 				return false;
 			}

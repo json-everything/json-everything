@@ -89,6 +89,7 @@ namespace Json.Path
 				start = new Index(Math.Abs(v), v < 0);
 			if (span[i] != ':')
 			{
+				i = -1;
 				index = null;
 				return false;
 			}

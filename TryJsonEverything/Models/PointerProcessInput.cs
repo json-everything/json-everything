@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Json.Pointer;
 using TryJsonEverything.Services;
+#pragma warning disable 8618
 
 namespace TryJsonEverything.Models
 {
@@ -8,6 +9,6 @@ namespace TryJsonEverything.Models
 	public class PointerProcessInput
 	{
 		public JsonDocument Data { get; set; }
-		public JsonPointer? Pointer { get; set; }
+		public JsonPointer Pointer { get; set; }
 	}
 }

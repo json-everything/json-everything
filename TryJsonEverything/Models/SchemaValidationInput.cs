@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Json.Schema;
 using TryJsonEverything.Services;
+#pragma warning disable 8618
 
 namespace TryJsonEverything.Models
 {
@@ -11,6 +10,6 @@ namespace TryJsonEverything.Models
 	{
 		public JsonDocument Instance { get; set; }
 		public JsonSchema Schema { get; set; }
-		public OutputFormat OutputFormat { get; set; }
+		public ValidationOptionsInput? Options { get; set; }
 	}
 }

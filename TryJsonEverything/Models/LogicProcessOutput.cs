@@ -5,7 +5,7 @@ namespace TryJsonEverything.Models
 {
 	public class LogicProcessOutput
 	{
-		public JsonElement? Result { get; set; }
-		public IEnumerable<string> Errors { get; set; }
+		public JsonElement? Result { get; init; }
+		public IEnumerable<string>? Errors { get; init; }
 	}
 }

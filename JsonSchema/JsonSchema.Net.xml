@@ -1208,6 +1208,14 @@
             <param name="element">The element to validate.</param>
             <returns><code>true</code>.  Override to return another value.</returns>
         </member>
+        <member name="M:Json.Schema.Format.Validate(System.Text.Json.JsonElement,System.String@)">
+            <summary>
+            Validates an instance against a format and provides an error message.
+            </summary>
+            <param name="element">The element to validate.</param>
+            <param name="errorMessage">An error message.</param>
+            <returns><code>true</code>.  Override to return another value.</returns>
+        </member>
         <member name="T:Json.Schema.FormatKeyword">
             <summary>
             Handles `format`.
@@ -3291,7 +3299,22 @@
             A <see cref="T:Json.Schema.Format"/> that uses a predicate for evaluation.
             </summary>
         </member>
+        <member name="T:Json.Schema.PredicateFormat.PredicateWithErrorMessage">
+            <summary>
+            A predicate that also supplies an `out` error message parameter.
+            </summary>
+            <param name="element">The element to validate.</param>
+            <param name="errorMessage">An error message.</param>
+            <returns><code>true</code>.  Override to return another value.</returns>
+        </member>
         <member name="M:Json.Schema.PredicateFormat.#ctor(System.String,System.Func{System.Text.Json.JsonElement,System.Boolean})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.PredicateFormat"/>.
+            </summary>
+            <param name="key">The format key.</param>
+            <param name="predicate">The predicate.</param>
+        </member>
+        <member name="M:Json.Schema.PredicateFormat.#ctor(System.String,Json.Schema.PredicateFormat.PredicateWithErrorMessage)">
             <summary>
             Creates a new <see cref="T:Json.Schema.PredicateFormat"/>.
             </summary>
@@ -3304,6 +3327,14 @@
             </summary>
             <param name="element">The element to validate.</param>
             <returns>The result of the predicate.</returns>
+        </member>
+        <member name="M:Json.Schema.PredicateFormat.Validate(System.Text.Json.JsonElement,System.String@)">
+            <summary>
+            Validates an instance against a format and provides an error message.
+            </summary>
+            <param name="element">The element to validate.</param>
+            <param name="errorMessage"></param>
+            <returns><code>true</code>.  Override to return another value.</returns>
         </member>
         <member name="T:Json.Schema.PrefixItemsKeyword">
             <summary>

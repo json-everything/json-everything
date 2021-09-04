@@ -43,37 +43,36 @@ namespace Json.Path
 		// expects the full expression, including the ()
 		public static bool TryParseExpression(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode? expression)
 		{
-			var index = i;
-			if (span[index] != '(')
+			if (span[i] != '(')
 			{
 				expression = null;
 				return false;
 			}
 
-			index++;
-			span.ConsumeWhitespace(ref index);
-			if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out var left))
+			i++;
+			span.ConsumeWhitespace(ref i);
+			if (!QueryExpressionNode.TryParseSingleValue(span, ref i, out var left))
 			{
 				expression = null;
 				return false;
 			}
 
 			var followingNodes = new List<(IQueryExpressionOperator, QueryExpressionNode)>();
-			while (index < span.Length && span[index] != ')')
+			while (i < span.Length && span[i] != ')')
 			{
-				span.ConsumeWhitespace(ref index);
-				if (!Operators.TryParse(span, ref index, out var op))
+				span.ConsumeWhitespace(ref i);
+				if (!Operators.TryParse(span, ref i, out var op))
 				{
 					expression = null;
 					return false;
 				}
 
 				QueryExpressionNode? right;
-				span.ConsumeWhitespace(ref index);
-				if (span[index] == '(')
+				span.ConsumeWhitespace(ref i);
+				if (span[i] == '(')
 				{
-					span.ConsumeWhitespace(ref index);
-					if (!span.TryParseExpression(ref index, out right))
+					span.ConsumeWhitespace(ref i);
+					if (!span.TryParseExpression(ref i, out right))
 					{
 						expression = null;
 						return false;
@@ -81,8 +80,8 @@ namespace Json.Path
 				}
 				else
 				{
-					span.ConsumeWhitespace(ref index);
-					if (!QueryExpressionNode.TryParseSingleValue(span, ref index, out right))
+					span.ConsumeWhitespace(ref i);
+					if (!QueryExpressionNode.TryParseSingleValue(span, ref i, out right))
 					{
 						expression = null;
 						return false;
@@ -94,7 +93,6 @@ namespace Json.Path
 
 			if (!followingNodes.Any())
 			{
-				i = index;
 				expression = new QueryExpressionNode(left, Operators.Exists, null!);
 				return true;
 			}
@@ -125,7 +123,6 @@ namespace Json.Path
 				current.Push(root);
 			}
 
-			i = index;
 			expression = root;
 			return expression != null;
 		}

@@ -33,5 +33,17 @@ namespace Json.Schema
 		{
 			return true;
 		}
+
+		/// <summary>
+		/// Validates an instance against a format and provides an error message.
+		/// </summary>
+		/// <param name="element">The element to validate.</param>
+		/// <param name="errorMessage">An error message.</param>
+		/// <returns><code>true</code>.  Override to return another value.</returns>
+		public virtual bool Validate(JsonElement element, out string? errorMessage)
+		{
+			errorMessage = null;
+			return true;
+		}
 	}
 }
