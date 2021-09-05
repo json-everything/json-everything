@@ -1,3 +1,7 @@
+# [1.11.1](https://github.com/gregsdennis/json-everything/pull/156)
+
+Some `format` validations were incorrectly failing validations for incompatible types.  For example, `uri` would fail on integers, but should pass (ignore non-strings).
+
 # [1.11.0](https://github.com/gregsdennis/json-everything/pull/155)
 
 `format` incorporates error messages from custom format validation, when provided.

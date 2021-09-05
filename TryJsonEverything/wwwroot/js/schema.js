@@ -117,7 +117,7 @@ async function validate() {
 	const options = {
 		validateAs: transformDraft(draftElement.value),
 		outputFormat: transformOutputFormat(outputFormatElement.value),
-		defaultBaseUri: baseUriElement.value === '' ? 'https://json-everything.net' : baseUriElement.value,
+		defaultBaseUri: baseUriElement.value === '' ? null : baseUriElement.value,
 		requireFormatValidation: requireFormatElement.checked
 	};
 

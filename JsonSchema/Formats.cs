@@ -159,21 +159,21 @@ namespace Json.Schema
 
 		private static bool CheckAbsoluteUri(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return System.Uri.TryCreate(element.GetString(), UriKind.Absolute, out _);
 		}
 
 		private static bool CheckUri(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return System.Uri.TryCreate(element.GetString(), UriKind.RelativeOrAbsolute, out _);
 		}
 
 		private static bool CheckUriTemplate(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			throw new NotSupportedException("The UriTemplate class has not been ported to .Net Standard/Core yet.");
 			//return System.UriTemplate.Match(element.GetString());
@@ -181,14 +181,14 @@ namespace Json.Schema
 
 		private static bool CheckJsonPointer(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return Pointer.JsonPointer.TryParse(element.GetString(), out var p) && !p.IsUriEncoded;
 		}
 
 		private static bool CheckRelativeJsonPointer(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return Pointer.RelativeJsonPointer.TryParse(element.GetString(), out _);
 		}
@@ -196,7 +196,7 @@ namespace Json.Schema
 		// source: https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
 		private static bool CheckEmail(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			var email = element.GetString();
 
@@ -243,7 +243,7 @@ namespace Json.Schema
 
 		private static bool CheckUuid(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return Guid.TryParseExact(element.GetString(), "D", out _);
 		}
@@ -265,14 +265,14 @@ namespace Json.Schema
 
 		private static bool CheckDateFormat(JsonElement element, params string[] formats)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return System.DateTime.TryParseExact(element.GetString().ToUpperInvariant(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
 		}
 
 		private static bool CheckHostName(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			var type = System.Uri.CheckHostName(element.GetString());
 
@@ -291,7 +291,7 @@ namespace Json.Schema
 
 		private static bool CheckHostName(JsonElement element, UriHostNameType type)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			var actualType = System.Uri.CheckHostName(element.GetString());
 
@@ -300,14 +300,14 @@ namespace Json.Schema
 
 		private static bool CheckDuration(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			return Schema.Duration.TryParse(element.GetString(), out _);
 		}
 
 		private static bool CheckRegex(JsonElement element)
 		{
-			if (element.ValueKind != JsonValueKind.String) return false;
+			if (element.ValueKind != JsonValueKind.String) return true;
 
 			try
 			{
