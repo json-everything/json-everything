@@ -225,7 +225,7 @@ namespace Json.Schema
 				if (context.HasNestedContexts)
 					newContext.SiblingContexts.AddRange(context.NestedContexts);
 				keyword.Validate(newContext);
-				context.IsNewDynamicScope |= context.IsNewDynamicScope;
+				context.IsNewDynamicScope |= newContext.IsNewDynamicScope;
 				overallResult &= newContext.IsValid;
 				if (!overallResult && context.ApplyOptimizations) break;
 				if (!newContext.Ignore)
