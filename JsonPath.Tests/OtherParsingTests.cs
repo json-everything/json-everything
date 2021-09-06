@@ -8,7 +8,8 @@ namespace Json.Path.Tests
 		public static IEnumerable<TestCaseData> SuccessCases =>
 			new[]
 			{
-				new TestCaseData("$.baz")
+				new TestCaseData("$.baz"),
+				new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
 			};
 
 		[TestCaseSource(nameof(SuccessCases))]

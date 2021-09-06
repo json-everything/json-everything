@@ -110,13 +110,13 @@ namespace Json.Path.QueryExpressions
 			return _value?.ValueKind switch
 			{
 				JsonValueKind.Undefined => QueryExpressionType.Invalid,
-				JsonValueKind.Object => QueryExpressionType.Invalid,
-				JsonValueKind.Array => QueryExpressionType.Invalid,
+				JsonValueKind.Object => QueryExpressionType.Object,
+				JsonValueKind.Array => QueryExpressionType.Array,
 				JsonValueKind.String => QueryExpressionType.String,
 				JsonValueKind.Number => QueryExpressionType.Number,
 				JsonValueKind.True => QueryExpressionType.Boolean,
 				JsonValueKind.False => QueryExpressionType.Boolean,
-				JsonValueKind.Null => QueryExpressionType.Invalid,
+				JsonValueKind.Null => QueryExpressionType.Null,
 				_ => throw new ArgumentOutOfRangeException()
 			};
 		}

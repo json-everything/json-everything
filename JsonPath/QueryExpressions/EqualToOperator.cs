@@ -9,8 +9,9 @@ namespace Json.Path.QueryExpressions
 
 		public QueryExpressionType GetOutputType(QueryExpressionNode left, QueryExpressionNode right)
 		{
-			if (left.OutputType != right.OutputType) return QueryExpressionType.Invalid;
-			if (left.OutputType == QueryExpressionType.Invalid) return QueryExpressionType.Invalid;
+			if (left.OutputType == QueryExpressionType.Invalid ||
+			    right.OutputType == QueryExpressionType.Invalid)
+				return QueryExpressionType.Invalid;
 			return QueryExpressionType.Boolean;
 		}
 
