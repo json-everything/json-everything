@@ -9,6 +9,7 @@ namespace Json.Path.Tests
 			new[]
 			{
 				new TestCaseData("$.baz"),
+				new TestCaseData("$[?(@.foo==(4+5))]"),
 				new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
 			};
 

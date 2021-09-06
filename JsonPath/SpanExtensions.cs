@@ -91,6 +91,8 @@ namespace Json.Path
 				followingNodes.Add((op, right));
 			}
 
+			i++; // consume ')'
+
 			if (!followingNodes.Any())
 			{
 				expression = new QueryExpressionNode(left, Operators.Exists, null!);

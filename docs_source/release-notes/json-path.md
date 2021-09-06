@@ -1,6 +1,10 @@
+# [0.1.10](https://github.com/gregsdennis/json-everything/pull/158)
+
+Parenthetical support for nested expressions.
+
 # [0.1.10](https://github.com/gregsdennis/json-everything/pull/157)
 
-Better error reporting during parsing.
+Added support for comparisons against all JSON literals in expressions.
 
 # [0.1.9](https://github.com/gregsdennis/json-everything/pull/155)
 
