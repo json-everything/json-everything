@@ -1,4 +1,8 @@
-# [0.1.8](https://github.com/gregsdennis/json-everything/pull/155)
+# [0.1.10](https://github.com/gregsdennis/json-everything/pull/157)
+
+Better error reporting during parsing.
+
+# [0.1.9](https://github.com/gregsdennis/json-everything/pull/155)
 
 Better error reporting during parsing.
 

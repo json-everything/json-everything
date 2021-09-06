@@ -4,8 +4,11 @@
 	{
 		Invalid,
 		InstanceDependent,
+		Object,
+		Array,
 		Boolean,
 		Number,
-		String
+		String,
+		Null
 	}
 }
