@@ -40,7 +40,10 @@ namespace Json.Path.QueryExpressions
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)
 		{
-			return $"{left}>{right}";
+			var lString = left.MaybeAddParentheses(OrderOfOperation);
+			var rString = right.MaybeAddParentheses(OrderOfOperation);
+
+			return $"{lString}>{rString}";
 		}
 	}
 }

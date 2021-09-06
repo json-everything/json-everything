@@ -61,13 +61,12 @@ namespace Json.Path
 			}
 
 			i = localIndex;
-			if (i >= span.Length || span[i] != ')')
+			if (i >= span.Length)
 			{
 				index = null;
 				return false;
 			}
 
-			i++;
 			index = new ContainerQueryIndex(expression);
 			return true;
 		}
