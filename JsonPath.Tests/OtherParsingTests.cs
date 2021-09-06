@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Json.Path.Tests
@@ -10,13 +11,16 @@ namespace Json.Path.Tests
 			{
 				new TestCaseData("$.baz"),
 				new TestCaseData("$[?(@.foo==(4+5))]"),
+				new TestCaseData("$[?(@.foo==2*(4+5))]"),
+				new TestCaseData("$[?(@.foo==2+(4+5))]"),
+				new TestCaseData("$[?(@.foo==2-(4+5))]"),
 				new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
 			};
 
 		[TestCaseSource(nameof(SuccessCases))]
 		public void ParseSingleProperty(string path)
 		{
-			JsonPath.Parse(path);
+			Console.WriteLine(JsonPath.Parse(path));
 		}
 	}
 }
