@@ -133,8 +133,8 @@ namespace Json.Schema.UniqueKeys
 	{
 		public override UniqueKeysKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.StartObject)
-				throw new JsonException("Expected object");
+			if (reader.TokenType != JsonTokenType.StartArray)
+				throw new JsonException("Expected array");
 
 			var references = JsonSerializer.Deserialize<List<JsonPointer>>(ref reader, options);
 			return new UniqueKeysKeyword(references);

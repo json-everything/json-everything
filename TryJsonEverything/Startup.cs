@@ -60,6 +60,9 @@ namespace TryJsonEverything
 		{
 			ValidationOptions.Default.DefaultBaseUri = new Uri("https://json-everything.net");
 			ValidationOptions.Default.OutputFormat = OutputFormat.Basic;
+
+			Json.Schema.Data.Vocabularies.Register();
+			Json.Schema.UniqueKeys.Vocabularies.Register();
 		}
 	}
 }
