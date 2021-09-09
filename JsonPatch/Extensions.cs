@@ -15,11 +15,9 @@ namespace Json.Patch
 		/// <param name="originalObject">Original object</param>
 		/// <param name="modifiedObject">Modified object</param>
 		/// <param name="options">Json serializer options</param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static List<PatchOperation> CreatePatch<T>(this T originalObject,
-            T modifiedObject,
-            JsonSerializerOptions options = null)
+		/// <typeparam name="T">Any object</typeparam>
+		/// <returns>JsonPatch</returns>
+		public static JsonPatch CreatePatch<T>(this T originalObject, T modifiedObject, JsonSerializerOptions options = null)
         {
             var original = originalObject.ToJsonDocument(options);
             var modified = modifiedObject.ToJsonDocument(options);
@@ -32,8 +30,8 @@ namespace Json.Patch
 		/// </summary>
 		/// <param name="originalObject">Original object</param>
 		/// <param name="modifiedObject">Modified object</param>
-		/// <returns></returns>
-        public static List<PatchOperation> CreatePatch(this JsonDocument originalObject, JsonDocument modifiedObject)
+		/// <returns>JsonPatch</returns>
+        public static JsonPatch CreatePatch(this JsonDocument originalObject, JsonDocument modifiedObject)
         {
             return CreatePatch(originalObject.RootElement, modifiedObject.RootElement);
         }
@@ -43,8 +41,9 @@ namespace Json.Patch
 		/// </summary>
 		/// <param name="originalObject">Original object</param>
 		/// <param name="modifiedObject">Modified object</param>
-		/// <returns></returns>
-        public static List<PatchOperation> CreatePatch(this JsonElement originalObject, JsonElement modifiedObject)
+		/// <returns>JsonPatch</returns>
+		/// <exception cref="ArgumentException">Only Object and Array type json object allowed</exception>
+        public static JsonPatch CreatePatch(this JsonElement originalObject, JsonElement modifiedObject)
         {
             var patch = new List<PatchOperation>();
             if (originalObject.ValueKind == JsonValueKind.Object)
@@ -53,20 +52,10 @@ namespace Json.Patch
                 PatchForArray(originalObject, modifiedObject, patch, "/");
             else
                 throw new ArgumentException($"{nameof(originalObject)} should be Object or Array Type.");
-            return patch;
+            return new JsonPatch(patch);
         }
 
-		/// <summary>
-		/// Append PatchOperations between objects
-		/// </summary>
-		/// <param name="orig">Original object</param>
-		/// <param name="mod">Modified object</param>
-		/// <param name="patch">Existing list of PatchOperations</param>
-		/// <param name="path">Current JsonPointer path</param>
-        private static void PatchForObject(JsonElement orig,
-            JsonElement mod,
-            List<PatchOperation> patch,
-            string path)
+        private static void PatchForObject(JsonElement orig, JsonElement mod, List<PatchOperation> patch, string path)
         {
             var origNames = orig.EnumerateObject().Select(x => x.Name).ToArray();
             var modNames = mod.EnumerateObject().Select(x => x.Name).ToArray();
@@ -89,9 +78,7 @@ namespace Json.Patch
                 {
                     patch.Add(PatchOperation.Replace(JsonPointer.Parse(path + modProp.Name), modProp.Value));
                 }
-                else if (!string.Equals(
-                    origProp.Value.ToString(),
-                    modProp.Value.ToString()))
+                else if (!string.Equals(origProp.Value.ToString(), modProp.Value.ToString()))
                 {
                     if (origProp.Value.ValueKind == JsonValueKind.Object)
                         PatchForObject(origProp.Value, modProp.Value, patch, path + modProp.Name + "/");
@@ -102,18 +89,7 @@ namespace Json.Patch
                 }
             }
         }
-		
-		/// <summary>
-		/// Append PatchOperations between arrays
-		/// </summary>
-		/// <param name="orig">Original object</param>
-		/// <param name="mod">Modified object</param>
-		/// <param name="patch">Existing list of PatchOperations</param>
-		/// <param name="path">Current JsonPointer path</param>
-        private static void PatchForArray(JsonElement orig,
-            JsonElement mod,
-            List<PatchOperation> patch,
-            string path)
+        private static void PatchForArray(JsonElement orig, JsonElement mod, List<PatchOperation> patch, string path)
         {
             for (int i = 0; i < Math.Max(orig.GetArrayLength(), mod.GetArrayLength()); i++)
             {
@@ -136,9 +112,7 @@ namespace Json.Patch
                 {
                     patch.Add(PatchOperation.Replace(JsonPointer.Parse(path + "/" + i), modObject));
                 }
-                else if (!string.Equals(
-                    origObject.ToString(),
-                    modObject.ToString()))
+                else if (!string.Equals(origObject.ToString(), modObject.ToString()))
                 {
                     if (origObject.ValueKind == JsonValueKind.Object)
                         PatchForObject(origObject, modObject, patch, path + i + "/");
