@@ -154,6 +154,7 @@ namespace JsonPatch.Tests
 				Strings = new[] {"test1", "test2"},
 				InnerObjects = new List<TestModel>() {new TestModel() {Id = Guid.NewGuid(), Name = "TestNameInner1", Numbers = new[] {3, 2, 1}, Strings = new[] {"Test3", "test4"}}}
 			};
+			var e1Json = JsonSerializer.Serialize(e1);
 			var e2 = new TestModel()
 			{
 				Id = Guid.NewGuid(),
@@ -163,11 +164,16 @@ namespace JsonPatch.Tests
 				Strings = new[] {"test2", "test2"},
 				InnerObjects = new List<TestModel>() {new TestModel() {Id = Guid.NewGuid(), Name = "TestNameInner1", Numbers = new[] {1, 2, 1}, Strings = new[] {"Test3", "test4", "test5"}}}
 			};
+			var e2Json = JsonSerializer.Serialize(e2);
 			var op = e1.CreatePatch(e2, new JsonSerializerOptions() {IgnoreNullValues = true});
+			var opBack = e2.CreatePatch(e1, new JsonSerializerOptions() {IgnoreNullValues = true});
 
 			Assert.AreNotEqual(e1, e2);
 			e1 = op.ApplyPatch(e1);
 			Assert.AreEqual(e1, e2);
+			e1 = opBack.ApplyPatch(e1);
+			Assert.AreNotEqual(e1, e2);
+			Assert.AreEqual(JsonSerializer.Serialize(e1), e1Json);
 		}
 	}
 
