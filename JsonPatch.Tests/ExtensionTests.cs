@@ -97,6 +97,49 @@ namespace JsonPatch.Tests
 			e1 = op.ApplyPatch(e1);
 			Assert.AreEqual(e1.Id, e2.Id);
 		}
+		
+		
+		[Test]
+		public void AddArray_Test()
+		{
+			var e1 = JsonDocument.Parse("[1,2,3]");
+			var e2 = JsonDocument.Parse("[1,2,3,4]");
+			var op = e1.CreatePatch(e2, new JsonSerializerOptions() {IgnoreNullValues = true});
+			Assert.AreEqual(op.Operations.Count, 1);
+			Assert.AreEqual(op.Operations[0].Op, OperationType.Add);
+
+			Assert.AreNotEqual(e1.RootElement.ToString(),e2.RootElement.ToString());
+			e1 = op.ApplyPatch(e1);
+			Assert.AreEqual(e1.RootElement.ToString(),e2.RootElement.ToString());
+		}
+
+		[Test]
+		public void RemoveArray_Test()
+		{
+			var e1 = JsonDocument.Parse("[1,2,3]");
+			var e2 = JsonDocument.Parse("[1,2]");
+			var op = e1.CreatePatch(e2, new JsonSerializerOptions() {IgnoreNullValues = true});
+			Assert.AreEqual(op.Operations.Count, 1);
+			Assert.AreEqual(op.Operations[0].Op, OperationType.Remove);
+
+			Assert.AreNotEqual(e1.RootElement.ToString(),e2.RootElement.ToString());
+			e1 = op.ApplyPatch(e1);
+			Assert.AreEqual(e1.RootElement.ToString(),e2.RootElement.ToString());
+		}
+
+		[Test]
+		public void ReplaceArray_Test()
+		{
+			var e1 = JsonDocument.Parse("[1,2,3]");
+			var e2 = JsonDocument.Parse("[1,2,1]");
+			var op = e1.CreatePatch(e2, new JsonSerializerOptions() {IgnoreNullValues = true});
+			Assert.AreEqual(op.Operations.Count, 1);
+			Assert.AreEqual(op.Operations[0].Op, OperationType.Replace);
+
+			Assert.AreNotEqual(e1.RootElement.ToString(),e2.RootElement.ToString());
+			e1 = op.ApplyPatch(e1);
+			Assert.AreEqual(e1.RootElement.ToString(),e2.RootElement.ToString());
+		}
 
 
 		[Test]
