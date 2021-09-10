@@ -63,6 +63,18 @@ namespace Json.Path.QueryExpressions
 
 		public static bool TryParseSingleValue(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode? node)
 		{
+			if (span[i] == '!')
+			{
+				i++;
+				if (!TryParseSingleValue(span, ref i, out var singleValue))
+				{
+					node = null;
+					return false;
+				}
+				node = new QueryExpressionNode(singleValue, Operators.Not, null!);
+				return true;
+			}
+
 			if (JsonPath.TryParse(span, ref i, true, out var path))
 			{
 				node = new QueryExpressionNode(path);

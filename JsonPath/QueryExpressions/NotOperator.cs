@@ -3,7 +3,7 @@ using Json.More;
 
 namespace Json.Path.QueryExpressions
 {
-	internal class ExistsOperator : IQueryExpressionOperator
+	internal class NotOperator : IQueryExpressionOperator
 	{
 		public int OrderOfOperation => 1;
 
@@ -14,13 +14,15 @@ namespace Json.Path.QueryExpressions
 
 		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			if (left.Operator is NotOperator) return left.Evaluate(element);
-			return (left.Evaluate(element).ValueKind != JsonValueKind.Undefined).AsJsonElement();
+			var lElement = left.Evaluate(element);
+			return lElement.ValueKind.In(JsonValueKind.False, JsonValueKind.Null, JsonValueKind.Undefined).AsJsonElement();
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)
 		{
-			return left.ToString();
+			var lString = left.MaybeAddParentheses(OrderOfOperation);
+
+			return $"!{lString}";
 		}
 	}
 }
