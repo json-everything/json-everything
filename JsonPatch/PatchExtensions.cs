@@ -7,10 +7,25 @@ using Json.Pointer;
 
 namespace Json.Patch
 {
-	public static class Extensions
+	public static class PatchExtensions
 	{
 		/// <summary>
-		/// Create list of PatchOperation from difference between original and modified
+		/// Apply patch to object
+		/// </summary>
+		/// <param name="patch">JsonPatch object</param>
+		/// <param name="obj">Object to patch</param>
+		/// <param name="options">Options</param>
+		/// <typeparam name="T">Any object</typeparam>
+		/// <returns>New instance of patched object</returns>
+		public static T ApplyPatch<T>(this Json.Patch.JsonPatch patch, T obj, JsonSerializerOptions options = null)
+		{
+			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(obj, options));
+			var res = patch.Apply(doc.RootElement).Result;
+			var result = JsonSerializer.Deserialize<T>(res.GetRawText(), options);
+			return result;
+		}
+		/// <summary>
+		/// Create JsonPatch from difference between original and modified
 		/// </summary>
 		/// <param name="originalObject">Original object</param>
 		/// <param name="modifiedObject">Modified object</param>
@@ -26,7 +41,7 @@ namespace Json.Patch
         }
 
 		/// <summary>
-		/// Create list of PatchOperation from difference between original and modified
+		/// Create JsonPatch from difference between original and modified
 		/// </summary>
 		/// <param name="originalObject">Original object</param>
 		/// <param name="modifiedObject">Modified object</param>
@@ -37,7 +52,7 @@ namespace Json.Patch
         }
 
 		/// <summary>
-		/// Create list of PatchOperation from difference between original and modified
+		/// Create JsonPatch from difference between original and modified
 		/// </summary>
 		/// <param name="originalObject">Original object</param>
 		/// <param name="modifiedObject">Modified object</param>
