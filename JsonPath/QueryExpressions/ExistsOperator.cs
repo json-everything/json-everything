@@ -12,9 +12,9 @@ namespace Json.Path.QueryExpressions
 			return QueryExpressionType.Boolean;
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
+		public JsonElementProxy Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			return (left.Evaluate(element).ValueKind != JsonValueKind.Undefined).AsJsonElement();
+			return left.Evaluate(element).ValueKind != JsonValueKind.Undefined;
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)
