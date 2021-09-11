@@ -1,4 +1,4 @@
-# [0.1.11](https://github.com/gregsdennis/json-everything/pull/161)
+# [0.1.12](https://github.com/gregsdennis/json-everything/pull/161)
 
 Added support for unary-not operator, e.g.
 
