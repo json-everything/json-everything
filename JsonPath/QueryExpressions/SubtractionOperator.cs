@@ -14,14 +14,14 @@ namespace Json.Path.QueryExpressions
 			return QueryExpressionType.Invalid;
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
+		public JsonElementProxy Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
 			var lElement = left.Evaluate(element);
 			if (lElement.ValueKind != JsonValueKind.Number) return default;
 			var rElement = right.Evaluate(element);
 			if (rElement.ValueKind != JsonValueKind.Number) return default;
 
-			return (lElement.GetDecimal() - rElement.GetDecimal()).AsJsonElement();
+			return lElement.GetDecimal() - rElement.GetDecimal();
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)

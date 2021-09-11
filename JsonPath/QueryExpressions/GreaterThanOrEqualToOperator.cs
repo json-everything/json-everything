@@ -19,7 +19,7 @@ namespace Json.Path.QueryExpressions
 			};
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
+		public JsonElementProxy Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
 			var lElement = left.Evaluate(element);
 			var rElement = right.Evaluate(element);
@@ -28,11 +28,11 @@ namespace Json.Path.QueryExpressions
 				case JsonValueKind.Number:
 					if (lElement.ValueKind != JsonValueKind.Number ||
 					    rElement.ValueKind != JsonValueKind.Number) return default;
-					return (lElement.GetDecimal() >= rElement.GetDecimal()).AsJsonElement();
+					return lElement.GetDecimal() >= rElement.GetDecimal();
 				case JsonValueKind.String:
 					if (lElement.ValueKind != JsonValueKind.String ||
 					    rElement.ValueKind != JsonValueKind.String) return default;
-					return (string.Compare(lElement.GetString(), rElement.GetString(), StringComparison.Ordinal) >= 0).AsJsonElement();
+					return string.Compare(lElement.GetString(), rElement.GetString(), StringComparison.Ordinal) >= 0;
 				default:
 					return default;
 			}

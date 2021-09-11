@@ -15,9 +15,9 @@ namespace Json.Path.QueryExpressions
 			return QueryExpressionType.Boolean;
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
+		public JsonElementProxy Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			return (!left.Evaluate(element).IsEquivalentTo(right.Evaluate(element))).AsJsonElement();
+			return !left.Evaluate(element).IsEquivalentTo(right.Evaluate(element));
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)

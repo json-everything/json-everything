@@ -12,10 +12,11 @@ namespace Json.Path.QueryExpressions
 			return QueryExpressionType.Boolean;
 		}
 
-		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
+		public JsonElementProxy Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
 			var lElement = left.Evaluate(element);
-			return lElement.ValueKind.In(JsonValueKind.False, JsonValueKind.Null, JsonValueKind.Undefined).AsJsonElement();
+			return lElement.ValueKind == JsonValueKind.Undefined;
+			//return lElement.ValueKind.In(JsonValueKind.False, JsonValueKind.Null, JsonValueKind.Undefined);
 		}
 
 		public string ToString(QueryExpressionNode left, QueryExpressionNode right)
