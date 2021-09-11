@@ -1,4 +1,8 @@
-# [0.1.10](https://github.com/gregsdennis/json-everything/pull/159)
+# [0.1.11](https://github.com/gregsdennis/json-everything/pull/161)
+
+Added support for unary-not operator, e.g.
+
+# [0.1.11](https://github.com/gregsdennis/json-everything/pull/159)
 
 - Parenthetical support for nested expressions.
 - Better stringifying.
