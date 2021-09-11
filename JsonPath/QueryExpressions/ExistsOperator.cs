@@ -14,7 +14,6 @@ namespace Json.Path.QueryExpressions
 
 		public JsonElement Evaluate(QueryExpressionNode left, QueryExpressionNode right, JsonElement element)
 		{
-			if (left.Operator is NotOperator) return left.Evaluate(element);
 			return (left.Evaluate(element).ValueKind != JsonValueKind.Undefined).AsJsonElement();
 		}
 
