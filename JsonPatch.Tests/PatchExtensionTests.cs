@@ -50,8 +50,6 @@ namespace JsonPatch.Tests
 			var patchExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchExpectedStr);
 			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
 			
-			Assert.AreEqual(patch.Operations.Count, 1);
-			Assert.AreEqual(patch.Operations[0].Op, OperationType.Add);
 			Assert.AreEqual(patchExpected, patch);
 		}
 
@@ -72,8 +70,7 @@ namespace JsonPatch.Tests
 			
 			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
 			
-			Assert.AreEqual(patchExpectedStr, JsonSerializer.Serialize(patch));//workaround of remove not equals
-			//Assert.AreEqual(patchExpected, patch);
+			Assert.AreEqual(patchExpected, patch);
 		}
 
 		[Test]
@@ -116,8 +113,7 @@ namespace JsonPatch.Tests
 			var patchExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchExpectedStr);
 			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
 			
-			Assert.AreEqual(patchExpectedStr, JsonSerializer.Serialize(patch));
-			//Assert.AreEqual(patchExpected, patch);
+			Assert.AreEqual(patchExpected, patch);
 		}
 
 		[Test]
@@ -187,10 +183,8 @@ namespace JsonPatch.Tests
 			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
 			var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions() {IgnoreNullValues = true});
 			
-			Assert.AreEqual(patchExpectedStr, JsonSerializer.Serialize(patch));
-			Assert.AreEqual(patchBackExpectedStr, JsonSerializer.Serialize(patchBack));
-			//Assert.AreEqual(patchExpected, patch);
-			//Assert.AreEqual(patchBackExpected, patchBack);
+			Assert.AreEqual(patchExpected, patch);
+			Assert.AreEqual(patchBackExpected, patchBack);
 		}
 		private class TestModel
 		{
@@ -206,7 +200,6 @@ namespace JsonPatch.Tests
 				if (obj is TestModel m)
 				{
 					return JsonSerializer.Serialize(this) == JsonSerializer.Serialize(m);
-
 				}
 
 				return false;
