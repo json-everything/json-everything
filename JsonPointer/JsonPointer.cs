@@ -193,6 +193,21 @@ namespace Json.Pointer
 		/// Creates a new JSON Pointer from a collection of segments.
 		/// </summary>
 		/// <param name="segments">A collection of segments.</param>
+		/// <returns>The JSON Pointer.</returns>
+		/// <remarks>This method creates un-encoded pointers only.</remarks>
+		public static JsonPointer Create(params PointerSegment[] segments)
+		{
+			return new JsonPointer
+				{
+					_segments = segments.ToArray(),
+					Kind = JsonPointerKind.Plain
+				};
+		}
+
+		/// <summary>
+		/// Creates a new JSON Pointer from a collection of segments.
+		/// </summary>
+		/// <param name="segments">A collection of segments.</param>
 		/// <param name="isUriEncoded">Whether the pointer should be URL-encoded.</param>
 		/// <returns>The JSON Pointer.</returns>
 		public static JsonPointer Create(IEnumerable<PointerSegment> segments, bool isUriEncoded)

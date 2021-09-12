@@ -10,6 +10,12 @@ namespace Json.Path.Tests
 			new[]
 			{
 				new TestCaseData("$.baz"),
+				new TestCaseData("$[?(@.foo)]"),
+				new TestCaseData("$[?(@.foo && @.bar)]"),
+				new TestCaseData("$[?(!@.foo)]"),
+				new TestCaseData("$[?(@.foo && !@.bar)]"),
+				new TestCaseData("$[?(!@.foo == false)]"),
+				new TestCaseData("$[?(@.foo == !false)]"),
 				new TestCaseData("$[?(@.foo==(4+5))]"),
 				new TestCaseData("$[?(@.foo==2*(4+5))]"),
 				new TestCaseData("$[?(@.foo==2+(4+5))]"),
@@ -18,7 +24,7 @@ namespace Json.Path.Tests
 			};
 
 		[TestCaseSource(nameof(SuccessCases))]
-		public void ParseSingleProperty(string path)
+		public void Parse(string path)
 		{
 			Console.WriteLine(JsonPath.Parse(path));
 		}

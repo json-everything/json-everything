@@ -59,5 +59,13 @@ namespace Json.Pointer.Tests
 			// ReSharper disable once PossibleInvalidOperationException
 			Assert.AreEqual(JsonValueKind.Null, actual.Value.ValueKind);
 		}
+
+		[Test]
+		public void ImplicitCastTest()
+		{
+			var pointer = JsonPointer.Create("string", 1, "foo");
+
+			Assert.AreEqual("/string/1/foo", pointer.ToString());
+		}
 	}
 }

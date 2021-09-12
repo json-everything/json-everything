@@ -1,3 +1,8 @@
+# [1.3.3](https://github.com/gregsdennis/json-everything/pull/162)
+
+- Added implicit casts from `int` and `string` to `PointerSegment`
+- Added params overload for `JsonPointer.Create()`.
+
 # [1.3.3](https://github.com/gregsdennis/json-everything/pull/130)
 
 [#123](https://github.com/gregsdennis/json-everything/pull/123) - Removed a copy/paste error that shows up while deserializing relative pointers.  Thanks to [@bastiaantenklooster](https://github.com/bastiaantenklooster) for finding this and creating a PR to fix it.
@@ -10,7 +15,7 @@ Added support for nullable reference types.
 
 Signed the DLL for strong name compatibility.
 
-# [1.3.0](https://github.com/gregsdennis/json-everything/pull/???)
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/58)
 
 Added support pointer creation using lambda expressions, e.g. `x => x.foo[5].bar` to create `/foo/5/bar`.
 
