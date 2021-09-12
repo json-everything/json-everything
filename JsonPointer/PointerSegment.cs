@@ -220,11 +220,21 @@ namespace Json.Pointer
 		}
 
 		/// <summary>
-		/// Implicitly casts an <see cref="int"/> to a <see cref="PointerSegment"/>.
+		/// Implicitly casts an <see cref="uint"/> to a <see cref="PointerSegment"/>.
 		/// </summary>
 		/// <param name="value">A pointer segment that represents the value.</param>
 		/// <remarks>No URI encoding is performed for implicit casts.</remarks>
 		public static implicit operator PointerSegment(uint value)
+		{
+			return Create(value.ToString());
+		}
+		
+		/// <summary>
+		/// Implicitly casts an <see cref="int"/> to a <see cref="PointerSegment"/>.
+		/// </summary>
+		/// <param name="value">A pointer segment that represents the value.</param>
+		/// <remarks>No URI encoding is performed for implicit casts.</remarks>
+		public static implicit operator PointerSegment(int value)
 		{
 			return Create(value.ToString());
 		}
