@@ -62,26 +62,26 @@ namespace Json.Patch
         {
             var patch = new List<PatchOperation>();
             if (originalObject.ValueKind == JsonValueKind.Object)
-                PatchForObject(originalObject, modifiedObject, patch, "/");
+                PatchForObject(originalObject, modifiedObject, patch, JsonPointer.Empty);
             else if (originalObject.ValueKind == JsonValueKind.Array)
-                PatchForArray(originalObject, modifiedObject, patch, "/");
+                PatchForArray(originalObject, modifiedObject, patch, JsonPointer.Empty);
             else
                 throw new ArgumentException($"{nameof(originalObject)} should be Object or Array Type.");
             return new JsonPatch(patch);
         }
 
-        private static void PatchForObject(JsonElement orig, JsonElement mod, List<PatchOperation> patch, string path)
+        private static void PatchForObject(JsonElement orig, JsonElement mod, List<PatchOperation> patch, JsonPointer path)
         {
             var origNames = orig.EnumerateObject().Select(x => x.Name).ToArray();
             var modNames = mod.EnumerateObject().Select(x => x.Name).ToArray();
 
             foreach (var k in origNames.Except(modNames))
-                patch.Add(PatchOperation.Remove(JsonPointer.Parse(path + k)));
+                patch.Add(PatchOperation.Remove(path.Combine(k)));
 
             foreach (var k in modNames.Except(origNames))
             {
                 var prop = mod.EnumerateObject().First(p => p.NameEquals(k));
-                patch.Add(PatchOperation.Add(JsonPointer.Parse(path + k), prop.Value));
+                patch.Add(PatchOperation.Add(path.Combine(k), prop.Value));
             }
 
             foreach (var k in origNames.Intersect(modNames))
@@ -96,27 +96,27 @@ namespace Json.Patch
                 else if (!string.Equals(origProp.Value.ToString(), modProp.Value.ToString()))
                 {
                     if (origProp.Value.ValueKind == JsonValueKind.Object)
-                        PatchForObject(origProp.Value, modProp.Value, patch, path + modProp.Name + "/");
+                        PatchForObject(origProp.Value, modProp.Value, patch, path.Combine(modProp.Name));
                     else if (origProp.Value.ValueKind == JsonValueKind.Array)
-                        PatchForArray(origProp.Value, modProp.Value, patch, path + modProp.Name + "/");
+                        PatchForArray(origProp.Value, modProp.Value, patch, path.Combine(modProp.Name));
                     else
-                        patch.Add(PatchOperation.Replace(JsonPointer.Parse(path + modProp.Name), modProp.Value));
+                        patch.Add(PatchOperation.Replace(path.Combine(modProp.Name), modProp.Value));
                 }
             }
         }
-        private static void PatchForArray(JsonElement orig, JsonElement mod, List<PatchOperation> patch, string path)
+        private static void PatchForArray(JsonElement orig, JsonElement mod, List<PatchOperation> patch, JsonPointer path)
         {
             for (int i = 0; i < Math.Max(orig.GetArrayLength(), mod.GetArrayLength()); i++)
             {
                 if (i >= orig.GetArrayLength())
                 {
-                    patch.Add(PatchOperation.Add(JsonPointer.Parse(path + i), mod[i]));
+                    patch.Add(PatchOperation.Add(path.Combine(i), mod[i]));
                     continue;
                 }
 
                 if (i >= mod.GetArrayLength())
                 {
-                    patch.Add(PatchOperation.Remove(JsonPointer.Parse(path + i)));
+                    patch.Add(PatchOperation.Remove(path.Combine(i)));
                     continue;
                 }
 
@@ -125,16 +125,16 @@ namespace Json.Patch
 
                 if (origObject.ValueKind != modObject.ValueKind)
                 {
-                    patch.Add(PatchOperation.Replace(JsonPointer.Parse(path + "/" + i), modObject));
+                    patch.Add(PatchOperation.Replace(path.Combine("/" + i), modObject));
                 }
                 else if (!string.Equals(origObject.ToString(), modObject.ToString()))
                 {
                     if (origObject.ValueKind == JsonValueKind.Object)
-                        PatchForObject(origObject, modObject, patch, path + i + "/");
+                        PatchForObject(origObject, modObject, patch, path.Combine(i));
                     else if (origObject.ValueKind == JsonValueKind.Array)
-                        PatchForArray(origObject, modObject, patch, path + i + "/");
+                        PatchForArray(origObject, modObject, patch, path.Combine(i));
                     else
-                        patch.Add(PatchOperation.Replace(JsonPointer.Parse(path + i), modObject));
+                        patch.Add(PatchOperation.Replace(path.Combine(i), modObject));
                 }
             }
         }
