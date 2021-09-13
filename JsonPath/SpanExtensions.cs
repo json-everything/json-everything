@@ -95,7 +95,9 @@ namespace Json.Path
 
 			if (!followingNodes.Any())
 			{
-				expression = new QueryExpressionNode(left, Operators.Exists, null!);
+				expression = left.Operator is NotOperator
+					? left
+					: new QueryExpressionNode(left, Operators.Exists, null!);
 				return true;
 			}
 

@@ -1924,6 +1924,15 @@ references:
   fullName.vb: Json.Pointer.JsonPointer.Create(IEnumerable(Of Json.Pointer.PointerSegment), System.Boolean)
   nameWithType: JsonPointer.Create(IEnumerable<PointerSegment>, Boolean)
   nameWithType.vb: JsonPointer.Create(IEnumerable(Of PointerSegment), Boolean)
+- uid: Json.Pointer.JsonPointer.Create(Json.Pointer.PointerSegment[])
+  name: Create(PointerSegment[])
+  href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Create_Json_Pointer_PointerSegment___
+  commentId: M:Json.Pointer.JsonPointer.Create(Json.Pointer.PointerSegment[])
+  name.vb: Create(PointerSegment())
+  fullName: Json.Pointer.JsonPointer.Create(Json.Pointer.PointerSegment[])
+  fullName.vb: Json.Pointer.JsonPointer.Create(Json.Pointer.PointerSegment())
+  nameWithType: JsonPointer.Create(PointerSegment[])
+  nameWithType.vb: JsonPointer.Create(PointerSegment())
 - uid: Json.Pointer.JsonPointer.Create*
   name: Create
   href: api/Json.Pointer.JsonPointer.html#Json_Pointer_JsonPointer_Create_
@@ -2236,6 +2245,34 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.PointerSegment.Equality
   nameWithType: PointerSegment.Equality
+- uid: Json.Pointer.PointerSegment.op_Implicit(System.String)~Json.Pointer.PointerSegment
+  name: Implicit(String to PointerSegment)
+  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_op_Implicit_System_String__Json_Pointer_PointerSegment
+  commentId: M:Json.Pointer.PointerSegment.op_Implicit(System.String)~Json.Pointer.PointerSegment
+  name.vb: Widening(String to PointerSegment)
+  fullName: Json.Pointer.PointerSegment.Implicit(System.String to Json.Pointer.PointerSegment)
+  fullName.vb: Json.Pointer.PointerSegment.Widening(System.String to Json.Pointer.PointerSegment)
+  nameWithType: PointerSegment.Implicit(String to PointerSegment)
+  nameWithType.vb: PointerSegment.Widening(String to PointerSegment)
+- uid: Json.Pointer.PointerSegment.op_Implicit(System.UInt32)~Json.Pointer.PointerSegment
+  name: Implicit(UInt32 to PointerSegment)
+  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_op_Implicit_System_UInt32__Json_Pointer_PointerSegment
+  commentId: M:Json.Pointer.PointerSegment.op_Implicit(System.UInt32)~Json.Pointer.PointerSegment
+  name.vb: Widening(UInt32 to PointerSegment)
+  fullName: Json.Pointer.PointerSegment.Implicit(System.UInt32 to Json.Pointer.PointerSegment)
+  fullName.vb: Json.Pointer.PointerSegment.Widening(System.UInt32 to Json.Pointer.PointerSegment)
+  nameWithType: PointerSegment.Implicit(UInt32 to PointerSegment)
+  nameWithType.vb: PointerSegment.Widening(UInt32 to PointerSegment)
+- uid: Json.Pointer.PointerSegment.op_Implicit*
+  name: Implicit
+  href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_op_Implicit_
+  commentId: Overload:Json.Pointer.PointerSegment.op_Implicit
+  isSpec: "True"
+  name.vb: Widening
+  fullName: Json.Pointer.PointerSegment.Implicit
+  fullName.vb: Json.Pointer.PointerSegment.Widening
+  nameWithType: PointerSegment.Implicit
+  nameWithType.vb: PointerSegment.Widening
 - uid: Json.Pointer.PointerSegment.op_Inequality(Json.Pointer.PointerSegment,Json.Pointer.PointerSegment)
   name: Inequality(PointerSegment, PointerSegment)
   href: api/Json.Pointer.PointerSegment.html#Json_Pointer_PointerSegment_op_Inequality_Json_Pointer_PointerSegment_Json_Pointer_PointerSegment_

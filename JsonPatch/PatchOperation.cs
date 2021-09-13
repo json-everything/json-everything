@@ -118,7 +118,8 @@ namespace Json.Patch
 			return Op == other.Op &&
 			       From.Equals(other.From) &&
 			       Path.Equals(other.Path) &&
-			       Value.IsEquivalentTo(other.Value);
+			       (Value.ValueKind == JsonValueKind.Undefined && other.Value.ValueKind==JsonValueKind.Undefined||
+			       Value.IsEquivalentTo(other.Value));
 		}
 
 		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
