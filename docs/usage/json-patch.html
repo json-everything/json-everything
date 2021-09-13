@@ -81,7 +81,7 @@
 
 <p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> is a language for modifying JSON documents.  Like JSON Schema, it is also expressed in JSON.</p>
 <p style="text-align: center;">
-<a href="https://json-everything.herokuapp.com/json-patch" target="_block" style="color: rgb(255, 255, 255); background-color: rgb(13, 71, 161); display: inline-block; font-weight: 500; font-size: 2rem; text-align: center; vertical-align: middle; padding: 0.6rem 0.9rem; border-radius: 0.35rem; cursor: pointer; user-select: none; text-decoration: none; --darkreader-inline-color:#ffffff; --darkreader-inline-bgcolor:#06419c; margin-top: 1.5rem !important;">Try it online!</a>
+<a href="https://json-everything.net/json-patch" target="_block" style="color: rgb(255, 255, 255); background-color: rgb(13, 71, 161); display: inline-block; font-weight: 500; font-size: 2rem; text-align: center; vertical-align: middle; padding: 0.6rem 0.9rem; border-radius: 0.35rem; cursor: pointer; user-select: none; text-decoration: none; --darkreader-inline-color:#ffffff; --darkreader-inline-bgcolor:#06419c; margin-top: 1.5rem !important;">Try it online!</a>
 </p>
 <h2 id="syntax">Syntax</h2>
 <p>A patch consists of an array containing one or more operations.  Each operation may also contain one or more arguments.</p>
@@ -110,12 +110,38 @@
 var result = patch.Apply(doc.RootElement);
 </code></pre>
 <p>The result contains the altered document, either fully patched or up to the point an error occurred, and possibly an error message.</p>
+<p>You can even apply a patch from one object to another!  They don't even need to be of the same type!!</p>
+<pre><code class="lang-c#">var myPatchedObject = patch.Apply(myObject);
+var myDifferentTypeObject = patch.Apply&lt;MyObject, MyDifferentObject&gt;(myObject);
+</code></pre>
 <h2 id="inline-patching">Inline Patching</h2>
 <p>The <code>JsonPatch</code> class can also be built in code using by creating a series of <code>PatchOperation</code>s through its static constructor methods.  There's one for each operation.</p>
-<pre><code class="lang-c#">var patch = new JsonPatch(PatchOperation.Add(&quot;/foo/bar&quot;, &quot;baz&quot;.AsJsonElement()),
-                          PatchOperation.Test(&quot;/foo/biz&quot;, false.AsJsonElement()));
+<pre><code class="lang-c#">var patch = new JsonPatch(PatchOperation.Add(&quot;/foo/bar&quot;, &quot;baz&quot;),
+                          PatchOperation.Test(&quot;/foo/biz&quot;, false));
 </code></pre>
-<p>That's it.</p>
+<p>That's it!</p>
+<h2 id="generating-patches">Generating Patches</h2>
+<p>If you know what your start and end states are, but you want to find the differences, you can do that by generating a patch.</p>
+<pre><code class="lang-c#">var start = JsonDocument.Parse(&quot;[{\&quot;test\&quot;:\&quot;test123\&quot;},{\&quot;test\&quot;:\&quot;test321\&quot;},{\&quot;test\&quot;:[1,2,3]},{\&quot;test\&quot;:[1,2,4]}]&quot;);
+var target = JsonDocument.Parse(&quot;[{\&quot;test\&quot;:\&quot;test123\&quot;},{\&quot;test\&quot;:\&quot;test32132\&quot;},{\&quot;test1\&quot;:\&quot;test321\&quot;},{\&quot;test\&quot;:[1,2,3]},{\&quot;test\&quot;:[1,2,3]}]&quot;);
+
+var patch = start.CreatePatch(target);
+</code></pre>
+<p>This results in the JSON Patch</p>
+<pre><code class="lang-json">[
+  {&quot;op&quot;:&quot;replace&quot;,&quot;path&quot;:&quot;/1/test&quot;,&quot;value&quot;:&quot;test32132&quot;},
+  {&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/2/test&quot;},
+  {&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/2/test1&quot;,&quot;value&quot;:&quot;test321&quot;},
+  {&quot;op&quot;:&quot;replace&quot;,&quot;path&quot;:&quot;/3/test/2&quot;,&quot;value&quot;:3},
+  {&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/4&quot;,&quot;value&quot;:{&quot;test&quot;:[1,2,3]}}
+]
+</code></pre>
+<p>This patch can be tested on the first object and should generate the second.</p>
+<p>Other related features:</p>
+<ul>
+<li>Generate reverse patches: <code>target.CreatePatch(start)</code></li>
+<li>Generate patches between .Net objects: <code>myObject1.CreatePatch(myObject2)</code></li>
+</ul>
 </nsp></article>
           </div>
           
