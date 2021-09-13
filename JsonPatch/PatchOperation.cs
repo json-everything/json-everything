@@ -52,6 +52,17 @@ namespace Json.Patch
 		}
 
 		/// <summary>
+		/// Creates an `add` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <param name="value">The value to add.</param>
+		/// <returns>An `add` operation.</returns>
+		public static PatchOperation Add(JsonPointer path, JsonElementProxy value)
+		{
+			return new PatchOperation(OperationType.Add, JsonPointer.Empty, path, value, AddOperationHandler.Instance);
+		}
+
+		/// <summary>
 		/// Creates an `remove` operation.
 		/// </summary>
 		/// <param name="path">The source path.</param>
@@ -68,6 +79,17 @@ namespace Json.Patch
 		/// <param name="value">The value to add.</param>
 		/// <returns>An `replace` operation.</returns>
 		public static PatchOperation Replace(JsonPointer path, JsonElement value)
+		{
+			return new PatchOperation(OperationType.Replace, JsonPointer.Empty, path, value, ReplaceOperationHandler.Instance);
+		}
+
+		/// <summary>
+		/// Creates an `replace` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <param name="value">The value to add.</param>
+		/// <returns>An `replace` operation.</returns>
+		public static PatchOperation Replace(JsonPointer path, JsonElementProxy value)
 		{
 			return new PatchOperation(OperationType.Replace, JsonPointer.Empty, path, value, ReplaceOperationHandler.Instance);
 		}
@@ -101,6 +123,17 @@ namespace Json.Patch
 		/// <param name="value">The value to match.</param>
 		/// <returns>An `test` operation.</returns>
 		public static PatchOperation Test(JsonPointer path, JsonElement value)
+		{
+			return new PatchOperation(OperationType.Test, JsonPointer.Empty, path, value, TestOperationHandler.Instance);
+		}
+
+		/// <summary>
+		/// Creates an `test` operation.
+		/// </summary>
+		/// <param name="path">The source path.</param>
+		/// <param name="value">The value to match.</param>
+		/// <returns>An `test` operation.</returns>
+		public static PatchOperation Test(JsonPointer path, JsonElementProxy value)
 		{
 			return new PatchOperation(OperationType.Test, JsonPointer.Empty, path, value, TestOperationHandler.Instance);
 		}

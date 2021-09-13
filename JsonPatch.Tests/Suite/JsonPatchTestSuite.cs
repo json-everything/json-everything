@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Json.More;
-using Json.Patch;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-namespace JsonPatch.Tests.Suite
+namespace Json.Patch.Tests.Suite
 {
 	[TestFixture]
 	public class JsonPatchTestSuite

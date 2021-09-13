@@ -1,3 +1,7 @@
+# [1.4.4](https://github.com/gregsdennis/json-everything/pull/163)
+
+Added special case for `.ToJsonDocument()` that first checks to see if the value is already a `JsonDocument`.
+
 # [1.4.3](https://github.com/gregsdennis/json-everything/pull/133)
 
 [#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.

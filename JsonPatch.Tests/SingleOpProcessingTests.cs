@@ -1,10 +1,9 @@
 using System;
 using System.Text.Json;
 using Json.More;
-using Json.Patch;
 using NUnit.Framework;
 
-namespace JsonPatch.Tests
+namespace Json.Patch.Tests
 {
 	public class SingleOpProcessingTests
 	{

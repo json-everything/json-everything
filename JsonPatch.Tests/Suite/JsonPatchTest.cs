@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Json.More;
 using Json.Schema;
 
-namespace JsonPatch.Tests.Suite
+namespace Json.Patch.Tests.Suite
 {
 	[JsonConverter(typeof(JsonPatchTestJsonConverter))]
 	public class JsonPatchTest

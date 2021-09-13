@@ -30,13 +30,14 @@ namespace Json.Patch
 		/// </summary>
 		/// <param name="patch">The patch</param>
 		/// <param name="obj">The object</param>
+		/// <param name="options">Serializer options.</param>
 		/// <typeparam name="TOriginal">The type of the original object.</typeparam>
 		/// <typeparam name="TTarget">The type of the target object.</typeparam>
 		/// <returns>New instance of patched object</returns>
 		/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
-		public static TTarget Apply<TOriginal, TTarget>(this JsonPatch patch, TOriginal obj)
+		public static TTarget Apply<TOriginal, TTarget>(this JsonPatch patch, TOriginal obj, JsonSerializerOptions? options = null)
 		{
-			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(obj));
+			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(obj, options));
 			var patchResult = patch.Apply(doc.RootElement);
 			if (!patchResult.IsSuccess)
 				throw new InvalidOperationException($"{patchResult.Error} Operation: {patchResult.Operation}");
