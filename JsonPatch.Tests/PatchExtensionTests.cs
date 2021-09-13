@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using Json.More;
 using Json.Patch;
 using NUnit.Framework;
 
@@ -8,15 +10,47 @@ namespace JsonPatch.Tests
 {
 	public class PatchExtensionTests
 	{
+		private class TestModel : IEquatable<TestModel>
+		{
+			public Guid Id { get; set; }
+			public string Name { get; set; }
+			public int[] Numbers { get; set; }
+			public string[] Strings { get; set; }
+			public List<TestModel> InnerObjects { get; set; }
+			public JsonDocument Attributes { get; set; }
+
+			public override bool Equals(object? obj)
+			{
+				return obj is TestModel m && JsonSerializer.Serialize(this) == JsonSerializer.Serialize(m);
+			}
+
+			public bool Equals(TestModel? other)
+			{
+				if (ReferenceEquals(null, other)) return false;
+				if (ReferenceEquals(this, other)) return true;
+				return Id.Equals(other.Id) &&
+				       Name == other.Name &&
+				       Numbers.SequenceEqual(other.Numbers) &&
+				       Strings.SequenceEqual(other.Strings) &&
+				       InnerObjects.SequenceEqual(other.InnerObjects) &&
+				       Attributes.IsEquivalentTo(other.Attributes);
+			}
+
+			public override int GetHashCode()
+			{
+				return HashCode.Combine(Id, Name, Numbers, Strings, InnerObjects, Attributes);
+			}
+		}
+
 		[Test]
 		public void CreatePatch_Test()
 		{
-			var initial = new TestModel()
+			var initial = new TestModel
 			{
 				Id = Guid.NewGuid(),
 				Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]")
 			};
-			var expected = new TestModel()
+			var expected = new TestModel
 			{
 				Id = Guid.Parse("40664cc7-864f-4eed-939c-78076a252df0"),
 				Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
@@ -37,18 +71,18 @@ namespace JsonPatch.Tests
 		[Test]
 		public void Add_Test()
 		{
-			var initial = new TestModel()
+			var initial = new TestModel
 			{
 				Id = Guid.NewGuid()
 			};
-			var expected = new TestModel()
+			var expected = new TestModel
 			{
 				Id = initial.Id,
 				Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 			};
 			var patchExpectedStr = "[{\"op\":\"add\",\"path\":\"/Attributes\",\"value\":[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]}]";
 			var patchExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchExpectedStr);
-			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
+			var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
 			
 			Assert.AreEqual(patchExpected, patch);
 		}
@@ -56,19 +90,19 @@ namespace JsonPatch.Tests
 		[Test]
 		public void Remove_Test()
 		{
-			var initial = new TestModel()
+			var initial = new TestModel
 			{
 				Id = Guid.NewGuid(),
 				Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 			};
-			var expected = new TestModel()
+			var expected = new TestModel
 			{
 				Id = initial.Id
 			};
 			var patchExpectedStr = "[{\"op\":\"remove\",\"path\":\"/Attributes\"}]";
 			var patchExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchExpectedStr);
 			
-			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
+			var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
 			
 			Assert.AreEqual(patchExpected, patch);
 		}
@@ -76,11 +110,11 @@ namespace JsonPatch.Tests
 		[Test]
 		public void Replace_Test()
 		{
-			var initial = new TestModel()
+			var initial = new TestModel
 			{
 				Id = Guid.NewGuid()
 			};
-			var expected = new TestModel()
+			var expected = new TestModel
 			{
 				Id = Guid.Parse("a299e216-dbbe-40e4-b4d4-556d7e7e9c35")
 			};
@@ -111,7 +145,7 @@ namespace JsonPatch.Tests
 			var expected = JsonDocument.Parse("[1,2]");
 			var patchExpectedStr = "[{\"op\":\"remove\",\"path\":\"/2\"}]";
 			var patchExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchExpectedStr);
-			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
+			var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
 			
 			Assert.AreEqual(patchExpected, patch);
 		}
@@ -121,7 +155,7 @@ namespace JsonPatch.Tests
 		{
 			var initial = JsonDocument.Parse("[1,2,3]");
 			var expected = JsonDocument.Parse("[1,2,1]");
-			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
+			var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
 			var patchExpectedStr = "[{\"op\":\"replace\",\"path\":\"/2\",\"value\":1}]";
 			var patchExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchExpectedStr);
 			
@@ -133,14 +167,23 @@ namespace JsonPatch.Tests
 		[Test]
 		public void ComplexObject_Test()
 		{
-			var initial = new TestModel()
+			var initial = new TestModel
 			{
 				Id = Guid.Parse("aa7daced-c9fa-489b-9bc1-540b21d277a1"),
 				Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]"),
 				Name = "Test",
 				Numbers = new[] {1, 2, 3},
 				Strings = new[] {"test1", "test2"},
-				InnerObjects = new List<TestModel>() {new TestModel() {Id = Guid.Parse("b2cab2a0-ec23-405a-a5a8-975448a10334"), Name = "TestNameInner1", Numbers = new[] {3, 2, 1}, Strings = new[] {"Test3", "test4"}}}
+				InnerObjects = new List<TestModel>
+				{
+					new TestModel
+					{
+						Id = Guid.Parse("b2cab2a0-ec23-405a-a5a8-975448a10334"),
+						Name = "TestNameInner1",
+						Numbers = new[] {3, 2, 1},
+						Strings = new[] {"Test3", "test4"}
+					}
+				}
 			};
 			var initialJson = JsonSerializer.Serialize(initial);
 			var expected = new TestModel()
@@ -150,7 +193,16 @@ namespace JsonPatch.Tests
 				Name = "Test4",
 				Numbers = new[] {1, 2, 3, 4},
 				Strings = new[] {"test2", "test2"},
-				InnerObjects = new List<TestModel>() {new TestModel() {Id = Guid.Parse("bed584b0-7ccc-4336-adba-d0d7f7c3c3f2"), Name = "TestNameInner1", Numbers = new[] {1, 2, 1}, Strings = new[] {"Test3", "test4", "test5"}}}
+				InnerObjects = new List<TestModel>
+				{
+					new TestModel
+					{
+						Id = Guid.Parse("bed584b0-7ccc-4336-adba-d0d7f7c3c3f2"),
+						Name = "TestNameInner1",
+						Numbers = new[] {1, 2, 1},
+						Strings = new[] {"Test3", "test4", "test5"}
+					}
+				}
 			};
 			var expectedJson = JsonSerializer.Serialize(expected);
 			var patchExpectedStr =
@@ -180,30 +232,11 @@ namespace JsonPatch.Tests
 				"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":2},{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
 			var patchBackExpected = JsonSerializer.Deserialize<Json.Patch.JsonPatch>(patchBackExpectedStr);
 			
-			var patch = initial.CreatePatch(expected, new JsonSerializerOptions() {IgnoreNullValues = true});
-			var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions() {IgnoreNullValues = true});
+			var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
+			var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions {IgnoreNullValues = true});
 			
 			Assert.AreEqual(patchExpected, patch);
 			Assert.AreEqual(patchBackExpected, patchBack);
-		}
-		private class TestModel
-		{
-			public Guid Id { get; set; }
-			public string Name { get; set; }
-			public int[] Numbers { get; set; }
-			public string[] Strings { get; set; }
-			public List<TestModel> InnerObjects { get; set; }
-			public JsonDocument Attributes { get; set; }
-
-			public override bool Equals(object? obj)
-			{
-				if (obj is TestModel m)
-				{
-					return JsonSerializer.Serialize(this) == JsonSerializer.Serialize(m);
-				}
-
-				return false;
-			}
 		}
 	}
 }
