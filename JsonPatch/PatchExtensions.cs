@@ -41,7 +41,7 @@ namespace Json.Patch
 			var patchResult = patch.Apply(doc.RootElement);
 			if (!patchResult.IsSuccess)
 				throw new InvalidOperationException($"{patchResult.Error} Operation: {patchResult.Operation}");
-			var result = JsonSerializer.Deserialize<TTarget>(patchResult.Result.GetRawText());
+			var result = JsonSerializer.Deserialize<TTarget>(patchResult.Result.GetRawText(), options);
 			return result;
 		}
 
