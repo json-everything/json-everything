@@ -3,7 +3,7 @@
 [JSON Patch](https://tools.ietf.org/html/rfc6902) is a language for modifying JSON documents.  Like JSON Schema, it is also expressed in JSON.
 
 <p style="text-align: center;">
-<a href="https://json-everything.herokuapp.com/json-patch" target="_block" style="color: rgb(255, 255, 255); background-color: rgb(13, 71, 161); display: inline-block; font-weight: 500; font-size: 2rem; text-align: center; vertical-align: middle; padding: 0.6rem 0.9rem; border-radius: 0.35rem; cursor: pointer; user-select: none; text-decoration: none; --darkreader-inline-color:#ffffff; --darkreader-inline-bgcolor:#06419c; margin-top: 1.5rem !important;">Try it online!</a>
+<a href="https://json-everything.net/json-patch" target="_block" style="color: rgb(255, 255, 255); background-color: rgb(13, 71, 161); display: inline-block; font-weight: 500; font-size: 2rem; text-align: center; vertical-align: middle; padding: 0.6rem 0.9rem; border-radius: 0.35rem; cursor: pointer; user-select: none; text-decoration: none; --darkreader-inline-color:#ffffff; --darkreader-inline-bgcolor:#06419c; margin-top: 1.5rem !important;">Try it online!</a>
 </p>
 
 ## Syntax
@@ -43,13 +43,50 @@ var result = patch.Apply(doc.RootElement);
 
 The result contains the altered document, either fully patched or up to the point an error occurred, and possibly an error message.
 
+You can even apply a patch from one object to another!  They don't even need to be of the same type!!
+
+```c#
+var myPatchedObject = patch.Apply(myObject);
+var myDifferentTypeObject = patch.Apply<MyObject, MyDifferentObject>(myObject);
+```
+
 ## Inline Patching
 
 The `JsonPatch` class can also be built in code using by creating a series of `PatchOperation`s through its static constructor methods.  There's one for each operation.
 
 ```c#
-var patch = new JsonPatch(PatchOperation.Add("/foo/bar", "baz".AsJsonElement()),
-                          PatchOperation.Test("/foo/biz", false.AsJsonElement()));
+var patch = new JsonPatch(PatchOperation.Add("/foo/bar", "baz"),
+                          PatchOperation.Test("/foo/biz", false));
 ```
 
-That's it.
+That's it!
+
+## Generating Patches
+
+If you know what your start and end states are, but you want to find the differences, you can do that by generating a patch.
+
+```c#
+var start = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
+var target = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]");
+
+var patch = start.CreatePatch(target);
+```
+
+This results in the JSON Patch
+
+```json
+[
+  {"op":"replace","path":"/1/test","value":"test32132"},
+  {"op":"remove","path":"/2/test"},
+  {"op":"add","path":"/2/test1","value":"test321"},
+  {"op":"replace","path":"/3/test/2","value":3},
+  {"op":"add","path":"/4","value":{"test":[1,2,3]}}
+]
+```
+
+This patch can be tested on the first object and should generate the second.
+
+Other related features:
+
+- Generate reverse patches: `target.CreatePatch(start)`
+- Generate patches between .Net objects: `myObject1.CreatePatch(myObject2)`
