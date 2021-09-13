@@ -1448,6 +1448,65 @@ references:
   commentId: F:Json.Patch.OperationType.Unknown
   fullName: Json.Patch.OperationType.Unknown
   nameWithType: OperationType.Unknown
+- uid: Json.Patch.PatchExtensions
+  name: PatchExtensions
+  href: api/Json.Patch.PatchExtensions.html
+  commentId: T:Json.Patch.PatchExtensions
+  fullName: Json.Patch.PatchExtensions
+  nameWithType: PatchExtensions
+- uid: Json.Patch.PatchExtensions.Apply*
+  name: Apply
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_Apply_
+  commentId: Overload:Json.Patch.PatchExtensions.Apply
+  isSpec: "True"
+  fullName: Json.Patch.PatchExtensions.Apply
+  nameWithType: PatchExtensions.Apply
+- uid: Json.Patch.PatchExtensions.Apply``1(Json.Patch.JsonPatch,``0)
+  name: Apply<T>(JsonPatch, T)
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_Apply__1_Json_Patch_JsonPatch___0_
+  commentId: M:Json.Patch.PatchExtensions.Apply``1(Json.Patch.JsonPatch,``0)
+  name.vb: Apply(Of T)(JsonPatch, T)
+  fullName: Json.Patch.PatchExtensions.Apply<T>(Json.Patch.JsonPatch, T)
+  fullName.vb: Json.Patch.PatchExtensions.Apply(Of T)(Json.Patch.JsonPatch, T)
+  nameWithType: PatchExtensions.Apply<T>(JsonPatch, T)
+  nameWithType.vb: PatchExtensions.Apply(Of T)(JsonPatch, T)
+- uid: Json.Patch.PatchExtensions.Apply``2(Json.Patch.JsonPatch,``0,System.Nullable{JsonSerializerOptions})
+  name: Apply<TOriginal, TTarget>(JsonPatch, TOriginal, Nullable<JsonSerializerOptions>)
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_Apply__2_Json_Patch_JsonPatch___0_System_Nullable_JsonSerializerOptions__
+  commentId: M:Json.Patch.PatchExtensions.Apply``2(Json.Patch.JsonPatch,``0,System.Nullable{JsonSerializerOptions})
+  name.vb: Apply(Of TOriginal, TTarget)(JsonPatch, TOriginal, Nullable(Of JsonSerializerOptions))
+  fullName: Json.Patch.PatchExtensions.Apply<TOriginal, TTarget>(Json.Patch.JsonPatch, TOriginal, System.Nullable<JsonSerializerOptions>)
+  fullName.vb: Json.Patch.PatchExtensions.Apply(Of TOriginal, TTarget)(Json.Patch.JsonPatch, TOriginal, System.Nullable(Of JsonSerializerOptions))
+  nameWithType: PatchExtensions.Apply<TOriginal, TTarget>(JsonPatch, TOriginal, Nullable<JsonSerializerOptions>)
+  nameWithType.vb: PatchExtensions.Apply(Of TOriginal, TTarget)(JsonPatch, TOriginal, Nullable(Of JsonSerializerOptions))
+- uid: Json.Patch.PatchExtensions.CreatePatch(JsonDocument,JsonDocument)
+  name: CreatePatch(JsonDocument, JsonDocument)
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_CreatePatch_JsonDocument_JsonDocument_
+  commentId: M:Json.Patch.PatchExtensions.CreatePatch(JsonDocument,JsonDocument)
+  fullName: Json.Patch.PatchExtensions.CreatePatch(JsonDocument, JsonDocument)
+  nameWithType: PatchExtensions.CreatePatch(JsonDocument, JsonDocument)
+- uid: Json.Patch.PatchExtensions.CreatePatch(JsonElement,JsonElement)
+  name: CreatePatch(JsonElement, JsonElement)
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_CreatePatch_JsonElement_JsonElement_
+  commentId: M:Json.Patch.PatchExtensions.CreatePatch(JsonElement,JsonElement)
+  fullName: Json.Patch.PatchExtensions.CreatePatch(JsonElement, JsonElement)
+  nameWithType: PatchExtensions.CreatePatch(JsonElement, JsonElement)
+- uid: Json.Patch.PatchExtensions.CreatePatch*
+  name: CreatePatch
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_CreatePatch_
+  commentId: Overload:Json.Patch.PatchExtensions.CreatePatch
+  isSpec: "True"
+  fullName: Json.Patch.PatchExtensions.CreatePatch
+  nameWithType: PatchExtensions.CreatePatch
+- uid: Json.Patch.PatchExtensions.CreatePatch``2(``0,``1,System.Nullable{JsonSerializerOptions})
+  name: CreatePatch<TOriginal, TTarget>(TOriginal, TTarget, Nullable<JsonSerializerOptions>)
+  href: api/Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_CreatePatch__2___0___1_System_Nullable_JsonSerializerOptions__
+  commentId: M:Json.Patch.PatchExtensions.CreatePatch``2(``0,``1,System.Nullable{JsonSerializerOptions})
+  name.vb: CreatePatch(Of TOriginal, TTarget)(TOriginal, TTarget, Nullable(Of JsonSerializerOptions))
+  fullName: Json.Patch.PatchExtensions.CreatePatch<TOriginal, TTarget>(TOriginal, TTarget, System.Nullable<JsonSerializerOptions>)
+  fullName.vb: Json.Patch.PatchExtensions.CreatePatch(Of TOriginal, TTarget)(TOriginal, TTarget, System.Nullable(Of JsonSerializerOptions))
+  nameWithType: PatchExtensions.CreatePatch<TOriginal, TTarget>(TOriginal, TTarget, Nullable<JsonSerializerOptions>)
+  nameWithType.vb: PatchExtensions.CreatePatch(Of TOriginal, TTarget)(TOriginal, TTarget, Nullable(Of JsonSerializerOptions))
 - uid: Json.Patch.PatchOperation
   name: PatchOperation
   href: api/Json.Patch.PatchOperation.html
@@ -1460,6 +1519,12 @@ references:
   commentId: M:Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer,JsonElement)
   fullName: Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer, JsonElement)
   nameWithType: PatchOperation.Add(JsonPointer, JsonElement)
+- uid: Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer,JsonElementProxy)
+  name: Add(JsonPointer, JsonElementProxy)
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Add_Json_Pointer_JsonPointer_JsonElementProxy_
+  commentId: M:Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer,JsonElementProxy)
+  fullName: Json.Patch.PatchOperation.Add(Json.Pointer.JsonPointer, JsonElementProxy)
+  nameWithType: PatchOperation.Add(JsonPointer, JsonElementProxy)
 - uid: Json.Patch.PatchOperation.Add*
   name: Add
   href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Add_
@@ -1583,6 +1648,12 @@ references:
   commentId: M:Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer,JsonElement)
   fullName: Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer, JsonElement)
   nameWithType: PatchOperation.Replace(JsonPointer, JsonElement)
+- uid: Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer,JsonElementProxy)
+  name: Replace(JsonPointer, JsonElementProxy)
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Replace_Json_Pointer_JsonPointer_JsonElementProxy_
+  commentId: M:Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer,JsonElementProxy)
+  fullName: Json.Patch.PatchOperation.Replace(Json.Pointer.JsonPointer, JsonElementProxy)
+  nameWithType: PatchOperation.Replace(JsonPointer, JsonElementProxy)
 - uid: Json.Patch.PatchOperation.Replace*
   name: Replace
   href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Replace_
@@ -1596,6 +1667,12 @@ references:
   commentId: M:Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer,JsonElement)
   fullName: Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer, JsonElement)
   nameWithType: PatchOperation.Test(JsonPointer, JsonElement)
+- uid: Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer,JsonElementProxy)
+  name: Test(JsonPointer, JsonElementProxy)
+  href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Test_Json_Pointer_JsonPointer_JsonElementProxy_
+  commentId: M:Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer,JsonElementProxy)
+  fullName: Json.Patch.PatchOperation.Test(Json.Pointer.JsonPointer, JsonElementProxy)
+  nameWithType: PatchOperation.Test(JsonPointer, JsonElementProxy)
 - uid: Json.Patch.PatchOperation.Test*
   name: Test
   href: api/Json.Patch.PatchOperation.html#Json_Patch_PatchOperation_Test_
