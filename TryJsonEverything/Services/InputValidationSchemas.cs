@@ -73,7 +73,7 @@ namespace TryJsonEverything.Services
 				)
 				.Required("path", "data");
 
-		public static readonly JsonSchema PatchInputSchema =
+		public static readonly JsonSchema ApplyPatchInputSchema =
 			new JsonSchemaBuilder()
 				.Schema(MetaSchemas.Draft202012Id)
 				.Id("https://json-everything.net/schemas/patch")
@@ -131,6 +131,13 @@ namespace TryJsonEverything.Services
 						)
 					)
 				);
+
+		public static readonly JsonSchema GeneratePatchInputSchema =
+			new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft202012Id)
+				.Id("https://json-everything.net/schemas/patch-gen")
+				.Type(SchemaValueType.Object)
+				.Required("start", "target");
 
 		public static readonly JsonSchema LogicInputSchema =
 			new JsonSchemaBuilder()

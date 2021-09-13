@@ -81,3 +81,46 @@ async function apply() {
 
 	scrollToEnd();
 }
+
+async function requestGeneration(start, target) {
+	const body = {
+		start: start,
+		target: target
+	};
+
+	const response = await fetch(`${baseUri}api/patch-generate`,
+		{
+			method: 'POST',
+			body: JSON.stringify(body),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+	return await response.json();
+}
+
+async function generate() {
+	const outputElement = document.getElementById("error-output");
+	outputElement.innerHTML = "";
+
+	outputEditor.setValue('');
+
+	const start = getJsonFromEditor(dataEditor);
+	const target = getJsonFromEditor(patchEditor);
+
+	const response = await requestGeneration(start, target);
+	console.log(response);
+
+	if (response.error) {
+		outputElement.innerHTML = `<h3 class="result-error">Error: ${response.error}</h3>`;
+	} else {
+		outputElement.innerHTML = '<h3 class="result-valid">Patch generated successfully!</h3>';
+	}
+
+	if (response.patch) {
+		outputEditor.setValue(JSON.stringify(response.patch, null, '\t'));
+		outputEditor.clearSelection();
+	}
+
+	scrollToEnd();
+}

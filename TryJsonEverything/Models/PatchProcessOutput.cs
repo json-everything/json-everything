@@ -3,7 +3,7 @@
 
 namespace TryJsonEverything.Models
 {
-	public class PatchProcessOutput
+	public class PatchApplyOutput
 	{
 		public PatchResult Result { get; init; }
 	}

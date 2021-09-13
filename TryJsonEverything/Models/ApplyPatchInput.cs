@@ -5,8 +5,8 @@ using TryJsonEverything.Services;
 
 namespace TryJsonEverything.Models
 {
-	[Schema(typeof(InputValidationSchemas), nameof(InputValidationSchemas.PatchInputSchema))]
-	public class PatchProcessInput
+	[Schema(typeof(InputValidationSchemas), nameof(InputValidationSchemas.ApplyPatchInputSchema))]
+	public class ApplyPatchInput
 	{
 		public JsonDocument Data { get; set; }
 		public JsonPatch Patch { get; set; }

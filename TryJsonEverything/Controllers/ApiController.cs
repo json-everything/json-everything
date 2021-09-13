@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Json.Logic;
+using Json.Patch;
 using Json.Path;
 using Microsoft.AspNetCore.Mvc;
 using TryJsonEverything.Models;
@@ -38,7 +40,7 @@ namespace TryJsonEverything.Controllers
 		}
 
 		[HttpPost("patch-apply")]
-		public ActionResult<PatchProcessOutput> ApplyPatch([FromBody] PatchProcessInput input)
+		public ActionResult<PatchApplyOutput> ApplyPatch([FromBody] ApplyPatchInput input)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(new LogicProcessOutput {Errors = ModelState.Root.GetErrors().ToList()});
@@ -47,11 +49,31 @@ namespace TryJsonEverything.Controllers
 			var patch = input.Patch;
 			
 			var result = patch.Apply(data);
-			return Ok(new PatchProcessOutput {Result = result});
+			return Ok(new PatchApplyOutput {Result = result});
+		}
+
+		[HttpPost("patch-generate")]
+		public ActionResult<PatchGenerationOutput> GeneratePatch([FromBody] GeneratePatchInput input)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(new LogicProcessOutput {Errors = ModelState.Root.GetErrors().ToList()});
+
+			var start = input.Start.RootElement;
+			var target = input.Target.RootElement;
+
+			try
+			{
+				var result = start.CreatePatch(target);
+				return Ok(new PatchGenerationOutput {Patch = result});
+			}
+			catch (Exception e)
+			{
+				return Ok(new PatchGenerationOutput {Error = e.Message});
+			}
 		}
 
 		[HttpPost("logic-apply")]
-		public ActionResult<PatchProcessOutput> ApplyLogic([FromBody] LogicProcessInput input)
+		public ActionResult<PatchGenerationOutput> ApplyLogic([FromBody] LogicProcessInput input)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(new LogicProcessOutput {Errors = ModelState.Root.GetErrors().ToList()});
