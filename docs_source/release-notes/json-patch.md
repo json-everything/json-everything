@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/gregsdennis/json-everything/pull/163)
+
+[#160](https://github.com/gregsdennis/json-everything/pull/160) - Added JSON Patch creation via comparison of objects or JSON data.  Credit for implementation to [@LordXaosa](https://github.com/LordXaosa).
+
+Added `JsonElementProxy` overloads for `PatchOperation.Add()`, `PatchOperation.Replace()`, and `PatchOperation.Test()`.
+
 # [1.0.6](https://github.com/gregsdennis/json-everything/pull/147)
 
 [#132](https://github.com/gregsdennis/json-everything/pull/132) (Fixed on [#133](https://github.com/gregsdennis/json-everything/pull/133)) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.

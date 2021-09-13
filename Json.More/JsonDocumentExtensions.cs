@@ -27,6 +27,8 @@ namespace Json.More
 		/// <returns>A <see cref="JsonDocument"/> representing the vale.</returns>
 		public static JsonDocument ToJsonDocument<T>(this T value, JsonSerializerOptions? options = null)
 		{
+			if (value is JsonDocument doc) return doc;
+
 			return JsonDocument.Parse(JsonSerializer.Serialize(value, options));
 		}
 	}
