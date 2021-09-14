@@ -115,21 +115,29 @@
 <p>It also supports a URL format, which is essentially the same thing, except that it starts with a <code>#</code>, then followed by the standard pointer.  This format also will <code>%</code>-encode any URL-reserved characters, like <code>=</code> and <code>?</code>.</p>
 <h2 id="in-code">In code</h2>
 <p>The <code>JsonPointer</code> struct is the model for JSON Pointer.</p>
-<p>The easiest way to create one is to parse it with either <code>Parse()</code> or <code>TryParse()</code>.  This will give you an instance of the model that can be used to evaluate instances.</p>
-<p>Evaluating the above example might look something like this:</p>
+<p>There are three ways create pointers:</p>
+<ul>
+<li>parsing with either <code>Parse()</code> or <code>TryParse()</code>
+<pre><code class="lang-c#">var pointer = JsonPointer.Parse(&quot;/objects/and/3/arrays&quot;);
+</code></pre>
+</li>
+<li>building with <code>Create()</code> and supplying the segments explicitly
+<pre><code class="lang-c#">var pointer = JsonPointer.Create(&quot;object&quot;, &quot;and&quot;, 3, &quot;arrays&quot;);
+</code></pre>
+</li>
+<li>building with <code>Create&lt;T&gt;()</code> and supplying a LINQ expression
+<pre><code class="lang-c#">var pointer = JsonPointer.Create&lt;MyObject&gt;(x =&gt; x.objects.and[3].arrays);
+</code></pre>
+</li>
+</ul>
+<p>All of these options will give you an instance of the model that can be used to evaluate instances.</p>
 <pre><code class="lang-c#">var element = JsonDocument.Parse(&quot;{\&quot;objects\&quot;:{\&quot;and\&quot;:[\&quot;item zero\&quot;,null,2,{\&quot;arrays\&quot;:\&quot;found me\&quot;}]}}&quot;);
-var pointer = JsonPointer.Parse(&quot;/objects/and/3/arrays&quot;);
-
-var result = pointer.Evaluate(element); // contains a JsonElement with a &quot;found me&quot; value.
+var result = pointer.Evaluate(element); // contains a JsonElement with a &quot;found me&quot; value
 </code></pre>
-<p>You can also create pointers from objects using lambda expressions:</p>
-<pre><code class="lang-C#">var pointer = JsonPointer.Create(x =&gt; x.objects.and[3].arrays);
-</code></pre>
-<p>This yields the same pointe as the example above.</p>
 <h2 id="relative-json-pointers">Relative JSON Pointers</h2>
 <p><a href="https://datatracker.ietf.org/doc/draft-handrews-json-schema-hyperschema/">JSON Hyperschema</a> relies on a variation of JSON Pointers called <a href="https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html">Relative JSON Pointers</a> that also includes the number of parent navigations.  This allows the system to start at an internal node in the JSON document and navigate to another node potentially on another subtree.</p>
 <p>Relative JSON Pointers are implemented with the <code>RelativeJsonPointer</code> struct.  Interactions with this struct are very similar to <code>JsonPointer</code>.</p>
-<p>Unfortunately, since evaluation of these pointers require parent navigation, a feature which is <a href="https://github.com/dotnet/runtime/issues/40452">currently unsupported by <code>System.Text.Json</code></a>, only the model is functional at this time.</p>
+<p>Unfortunately, since evaluation of these pointers require parent navigation, a feature which is <a href="https://github.com/dotnet/runtime/issues/40452">currently unsupported by <code>System.Text.Json</code></a>, only the model is available at this time; evaluation is non-functional.</p>
 </article>
           </div>
           
