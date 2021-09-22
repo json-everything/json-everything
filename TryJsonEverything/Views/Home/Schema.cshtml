@@ -1,4 +1,6 @@
-﻿@{
+﻿@model LibraryVersionCollectionModel
+
+@{
 	ViewData["Title"] = "JSON Schema";
 }
 
@@ -10,6 +12,16 @@
 		Learn more about
 		<a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink" /></a>
 	</p>
+	<div class="container">
+		<div class="row justify-content-center">
+		@foreach (var library in Model)
+		{
+			<p class="btn version-callout">
+				<code>@library.Name</code><br/>@@ v@(library.Version)
+			</p>
+		}
+		</div>
+	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-6 col-md-12">

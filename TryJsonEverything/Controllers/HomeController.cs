@@ -1,6 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using Json.Logic;
+using Json.Patch;
+using Json.Path;
+using Json.Pointer;
+using Json.Schema;
+using Json.Schema.Data;
+using Json.Schema.UniqueKeys;
 using TryJsonEverything.Models;
 
 namespace TryJsonEverything.Controllers
@@ -22,31 +31,36 @@ namespace TryJsonEverything.Controllers
 		[Route("~/json-schema")]
 		public IActionResult Schema()
 		{
-			return View();
+			return View(new LibraryVersionCollectionModel
+			{
+				GetLibraryVersion<JsonSchema>(),
+				GetLibraryVersion<DataKeyword>(),
+				GetLibraryVersion<UniqueKeysKeyword>()
+			});
 		}
 
 		[Route("~/json-path")]
 		public IActionResult Path()
 		{
-			return View();
+			return View(GetLibraryVersion<JsonPath>());
 		}
 
 		[Route("~/json-patch")]
 		public IActionResult Patch()
 		{
-			return View();
+			return View(GetLibraryVersion<JsonPatch>());
 		}
 
 		[Route("~/json-logic")]
 		public IActionResult Logic()
 		{
-			return View();
+			return View(GetLibraryVersion<Rule>());
 		}
 
 		[Route("~/json-pointer")]
 		public IActionResult Pointer()
 		{
-			return View();
+			return View(GetLibraryVersion<JsonPointer>());
 		}
 
 		[Route("~/privacy")]
@@ -59,6 +73,17 @@ namespace TryJsonEverything.Controllers
 		public IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
+
+		private static LibraryVersionModel GetLibraryVersion<T>()
+		{
+			var attribute = typeof(T).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+			var version = Regex.Match(attribute.InformationalVersion, @"\d+\.\d+\.\d+").Value;
+			return new LibraryVersionModel
+			{
+				Name = typeof(T).Assembly.GetName().Name,
+				Version = version
+			};
 		}
 	}
 }
