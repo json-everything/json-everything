@@ -1,4 +1,6 @@
-﻿@{
+﻿@model LibraryVersionModel
+
+@{
 	ViewData["Title"] = "JSON Path";
 }
 
@@ -9,6 +11,9 @@
 		<br />
 		Learn more about
 		<a href="https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base" target="_blank">JSON Path <partial name="_ExternalLink" /></a>
+	</p>
+	<p class="btn version-callout">
+		<code>@Model.Name</code> @@ v@(Model.Version)
 	</p>
 	<h4 class="text-left">Path:</h4>
 	<input id="editor-path" type="text" class="col-12 form-control text-monospace" />

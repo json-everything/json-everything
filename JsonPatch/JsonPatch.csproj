@@ -8,7 +8,7 @@
     <PackageId>JsonPatch.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Company>Greg Dennis</Company>
-    <Product>JsonPatch.Net</Product>
+		<AssemblyName>JsonPatch.Net</AssemblyName>
     <Description>JSON Patch built on the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
