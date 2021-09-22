@@ -50,7 +50,7 @@ namespace Json.Schema
 			var number = context.LocalInstance.GetArrayLength();
 			context.IsValid = Value <= number;
 			if (!context.IsValid)
-				context.Message = $"Value has less than {Value} items";
+				context.Message = $"Value has fewer than {Value} items";
 			context.ExitKeyword(Name, context.IsValid);
 		}
 

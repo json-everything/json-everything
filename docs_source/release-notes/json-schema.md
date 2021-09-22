@@ -1,3 +1,7 @@
+# [1.11.3](https://github.com/gregsdennis/json-everything/pull/166)
+
+[#1165](https://github.com/gregsdennis/json-everything/issues/165) - [@pbajrak](https://github.com/pbajrak) discovered a copy/paste error in the message for `minProperties`.
+
 # [1.11.2](https://github.com/gregsdennis/json-everything/pull/157)
 
 Fixed minor issue with `$dynamicRef`/`$dynamicAnchor` and resolution within specific scopes.

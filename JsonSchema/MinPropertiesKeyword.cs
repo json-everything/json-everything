@@ -51,7 +51,7 @@ namespace Json.Schema
 			var number = context.LocalInstance.EnumerateObject().Count();
 			context.IsValid = Value <= number;
 			if (!context.IsValid)
-				context.Message = $"Value has more than {Value} properties";
+				context.Message = $"Value has fewer than {Value} properties";
 			context.ExitKeyword(Name, context.IsValid);
 		}
 
