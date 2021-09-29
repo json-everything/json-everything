@@ -1,0 +1,10 @@
+{
+	"destinationRequest": {
+		"station": 123,
+		"barcode": "string",
+		"uuid": "string",
+		"pocket": "string",
+		"inductMode": "string",
+		"userId": "string"
+	}
+}

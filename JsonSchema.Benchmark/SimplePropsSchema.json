@@ -1,0 +1,42 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema",
+	"type": "object",
+	"properties": {
+		"destinationRequest": {
+			"type": "object",
+			"properties": {
+				"station": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 999999
+				},
+				"barcode": {
+					"type": "string"
+				},
+				"uuid": {
+					"type": "string"
+				},
+				"pocket": {
+					"type": "string"
+				},
+				"inductMode": {
+					"type": "string"
+				},
+				"userId": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"station",
+				"barcode",
+				"uuid",
+				"pocket",
+				"inductMode",
+				"userId"
+			]
+		}
+	},
+	"required": [
+		"destinationRequest"
+	]
+}

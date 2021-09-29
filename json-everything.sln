@@ -88,7 +88,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryJsonEverything", "TryJsonEverything\TryJsonEverything.csproj", "{FF075E5E-F3FF-48E4-AFE2-0B51BA403D5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryJsonEverything", "TryJsonEverything\TryJsonEverything.csproj", "{FF075E5E-F3FF-48E4-AFE2-0B51BA403D5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchema.Benchmark", "JsonSchema.Benchmark\JsonSchema.Benchmark.csproj", "{354C3913-ED0D-41C3-A006-7740A98C8E27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,6 +178,10 @@ Global
 		{FF075E5E-F3FF-48E4-AFE2-0B51BA403D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF075E5E-F3FF-48E4-AFE2-0B51BA403D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF075E5E-F3FF-48E4-AFE2-0B51BA403D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -202,6 +208,7 @@ Global
 		{86873071-9A8D-458E-8FE9-41BA2DF50651} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{2C489C55-CDC4-47B6-BF94-B1D4755047A5} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 		{5844BA9B-31F6-4A34-A391-BE9016029BB6} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
+		{354C3913-ED0D-41C3-A006-7740A98C8E27} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
