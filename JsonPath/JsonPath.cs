@@ -239,6 +239,8 @@ namespace Json.Path
 			foreach (var node in _nodes)
 			{
 				node.Evaluate(context);
+
+				// TODO handle includes here
 			}
 
 			return context.BuildResult();
