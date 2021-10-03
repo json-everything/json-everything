@@ -60,10 +60,11 @@ if (value) {
 dataEditor.clearSelection();
 dataEditor.getSession().on('change', () => localStorage.setItem('path.data', dataEditor.getValue()));
 
-async function requestQuery(path, data) {
+async function requestQuery(path, data, options) {
 	const body = {
 		path: path,
-		data: data
+		data: data,
+		options: options
 	};
 
 	const response = await fetch(`${baseUri}api/path-query`,
@@ -93,10 +94,15 @@ async function query() {
 	const outputElement = document.getElementById('output');
 	outputElement.innerHTML = '';
 
+	const resolveReferencesElement = document.getElementById('resolve-references');
+
 	const path = pathEditor.value;
 	const instance = getJsonFromEditor(dataEditor);
+	const options = {
+		resolveReferences: resolveReferencesElement.checked
+	};
 
-	const response = await requestQuery(path, instance);
+	const response = await requestQuery(path, instance, options);
 	console.log(response);
 
 	if (response.error) {

@@ -232,6 +232,7 @@ namespace Json.Path
 		/// Evaluates the path against a JSON instance.
 		/// </summary>
 		/// <param name="root">The root of the JSON instance.</param>
+		/// <param name="options">Evaluation options.</param>
 		/// <returns>The results of the evaluation.</returns>
 		public PathResult Evaluate(JsonElement root, PathEvaluationOptions? options = null)
 		{
