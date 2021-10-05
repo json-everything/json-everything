@@ -9,5 +9,6 @@ namespace TryJsonEverything.Models
 	{
 		public JsonDocument Data { get; set; }
 		public string Path { get; set; }
+		public PathQueryOptionsInput? Options { get; set; }
 	}
 }

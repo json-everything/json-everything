@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -16,13 +15,6 @@ namespace TryJsonEverything.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
-
-		public HomeController(ILogger<HomeController> logger)
-		{
-			_logger = logger;
-		}
-
 		public IActionResult Index()
 		{
 			return View();
@@ -78,10 +70,10 @@ namespace TryJsonEverything.Controllers
 		private static LibraryVersionModel GetLibraryVersion<T>()
 		{
 			var attribute = typeof(T).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-			var version = Regex.Match(attribute.InformationalVersion, @"\d+\.\d+\.\d+").Value;
+			var version = Regex.Match(attribute!.InformationalVersion, @"\d+\.\d+\.\d+").Value;
 			return new LibraryVersionModel
 			{
-				Name = typeof(T).Assembly.GetName().Name,
+				Name = typeof(T).Assembly.GetName().Name!,
 				Version = version
 			};
 		}

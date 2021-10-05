@@ -34,8 +34,16 @@ namespace TryJsonEverything.Controllers
 
 			var path = JsonPath.Parse(input.Path);
 			var data = input.Data.RootElement;
-			
-			var result = path.Evaluate(data);
+			var options = new PathEvaluationOptions
+			{
+				ExperimentalFeatures =
+				{
+					ProcessDataReferences = input.Options?.ResolveReferences ?? false
+				}
+			};
+
+
+			var result = path.Evaluate(data, options);
 			return Ok(new PathQueryOutput {Result = result});
 		}
 

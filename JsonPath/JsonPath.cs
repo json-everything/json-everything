@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Json.Path
 {
@@ -231,14 +232,19 @@ namespace Json.Path
 		/// Evaluates the path against a JSON instance.
 		/// </summary>
 		/// <param name="root">The root of the JSON instance.</param>
+		/// <param name="options">Evaluation options.</param>
 		/// <returns>The results of the evaluation.</returns>
-		public PathResult Evaluate(in JsonElement root)
+		public PathResult Evaluate(JsonElement root, PathEvaluationOptions? options = null)
 		{
-			var context = new EvaluationContext(root);
+			options ??= new PathEvaluationOptions();
+
+			var context = new EvaluationContext(root, options);
 
 			foreach (var node in _nodes)
 			{
 				node.Evaluate(context);
+
+				ReferenceHandler.Handle(context);
 			}
 
 			return context.BuildResult();
