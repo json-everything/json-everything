@@ -234,7 +234,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Patch.JsonPatch.html",
-          "hash": "zbI3kTybe3dv/bd+WG5GnA=="
+          "hash": "YuFAgUBp7JshTIQt6ANzlA=="
         }
       },
       "is_incremental": false,
@@ -246,7 +246,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Patch.OperationType.html",
-          "hash": "5FQys7Ev2MuHDnZW7KVNQA=="
+          "hash": "27bLbWj1WYLdipqXHFka0Q=="
         }
       },
       "is_incremental": false,
@@ -258,7 +258,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Patch.PatchExtensions.html",
-          "hash": "BOU1pQzSTEwHTv7TlljevA=="
+          "hash": "TxCTxcik89y9tdMWt4qjOg=="
         }
       },
       "is_incremental": false,
@@ -270,7 +270,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Patch.PatchOperation.html",
-          "hash": "3b/+gSA/u80zYQQ/DW1LMw=="
+          "hash": "Xiw1zOOSy9lLbezSxvD4Bw=="
         }
       },
       "is_incremental": false,
@@ -282,7 +282,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Patch.PatchResult.html",
-          "hash": "7MsRXEvNHDFyKqZct/kS2A=="
+          "hash": "smwA1tin3Uh7hDr3CfLPzw=="
         }
       },
       "is_incremental": false,
@@ -302,11 +302,35 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.ExperimentalFeatures.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.ExperimentalFeatures.html",
+          "hash": "EdHNURuCsLMWKJErTyqEZA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Json.Path.JsonPath.yml",
       "output": {
         ".html": {
           "relative_path": "api/Json.Path.JsonPath.html",
-          "hash": "hsVsE8eYu8FeF+R1p82+mA=="
+          "hash": "zc99XvyFjixoehAKP4onPw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Json.Path.PathEvaluationOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Json.Path.PathEvaluationOptions.html",
+          "hash": "E4zn7T/A4MXGT94qrnYdhA=="
         }
       },
       "is_incremental": false,
@@ -354,7 +378,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Path.html",
-          "hash": "m9XTnTBakmQ63db1J7g4AA=="
+          "hash": "8m5pAR3IetTvQxO/rT1gkA=="
         }
       },
       "is_incremental": false,
@@ -2514,7 +2538,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "xdu+LGP6MaQfMvJm+SsPKg=="
+          "hash": "8cezwgxOjlxRnd9Jzx4Yow=="
         }
       },
       "is_incremental": false,
@@ -2760,7 +2784,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-path.html",
-          "hash": "8B2bb7VGpF8enV/anDYoaw=="
+          "hash": "G8284GEC39wbE7ltwM7uKg=="
         }
       },
       "is_incremental": false,
@@ -3087,7 +3111,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 206,
+          "total_file_count": 208,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

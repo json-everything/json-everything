@@ -1757,21 +1757,50 @@ references:
   commentId: N:Json.Path
   fullName: Json.Path
   nameWithType: Json.Path
+- uid: Json.Path.ExperimentalFeatures
+  name: ExperimentalFeatures
+  href: api/Json.Path.ExperimentalFeatures.html
+  commentId: T:Json.Path.ExperimentalFeatures
+  fullName: Json.Path.ExperimentalFeatures
+  nameWithType: ExperimentalFeatures
+- uid: Json.Path.ExperimentalFeatures.DataReferenceDownload
+  name: DataReferenceDownload
+  href: api/Json.Path.ExperimentalFeatures.html#Json_Path_ExperimentalFeatures_DataReferenceDownload
+  commentId: P:Json.Path.ExperimentalFeatures.DataReferenceDownload
+  fullName: Json.Path.ExperimentalFeatures.DataReferenceDownload
+  nameWithType: ExperimentalFeatures.DataReferenceDownload
+- uid: Json.Path.ExperimentalFeatures.DataReferenceDownload*
+  name: DataReferenceDownload
+  href: api/Json.Path.ExperimentalFeatures.html#Json_Path_ExperimentalFeatures_DataReferenceDownload_
+  commentId: Overload:Json.Path.ExperimentalFeatures.DataReferenceDownload
+  isSpec: "True"
+  fullName: Json.Path.ExperimentalFeatures.DataReferenceDownload
+  nameWithType: ExperimentalFeatures.DataReferenceDownload
+- uid: Json.Path.ExperimentalFeatures.ProcessDataReferences
+  name: ProcessDataReferences
+  href: api/Json.Path.ExperimentalFeatures.html#Json_Path_ExperimentalFeatures_ProcessDataReferences
+  commentId: P:Json.Path.ExperimentalFeatures.ProcessDataReferences
+  fullName: Json.Path.ExperimentalFeatures.ProcessDataReferences
+  nameWithType: ExperimentalFeatures.ProcessDataReferences
+- uid: Json.Path.ExperimentalFeatures.ProcessDataReferences*
+  name: ProcessDataReferences
+  href: api/Json.Path.ExperimentalFeatures.html#Json_Path_ExperimentalFeatures_ProcessDataReferences_
+  commentId: Overload:Json.Path.ExperimentalFeatures.ProcessDataReferences
+  isSpec: "True"
+  fullName: Json.Path.ExperimentalFeatures.ProcessDataReferences
+  nameWithType: ExperimentalFeatures.ProcessDataReferences
 - uid: Json.Path.JsonPath
   name: JsonPath
   href: api/Json.Path.JsonPath.html
   commentId: T:Json.Path.JsonPath
   fullName: Json.Path.JsonPath
   nameWithType: JsonPath
-- uid: Json.Path.JsonPath.Evaluate(JsonElement@)
-  name: Evaluate(JsonElement)
-  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_JsonElement__
-  commentId: M:Json.Path.JsonPath.Evaluate(JsonElement@)
-  name.vb: Evaluate(ByRef JsonElement)
-  fullName: Json.Path.JsonPath.Evaluate(JsonElement)
-  fullName.vb: Json.Path.JsonPath.Evaluate(ByRef JsonElement)
-  nameWithType: JsonPath.Evaluate(JsonElement)
-  nameWithType.vb: JsonPath.Evaluate(ByRef JsonElement)
+- uid: Json.Path.JsonPath.Evaluate(JsonElement,Json.Path.PathEvaluationOptions)
+  name: Evaluate(JsonElement, PathEvaluationOptions)
+  href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_JsonElement_Json_Path_PathEvaluationOptions_
+  commentId: M:Json.Path.JsonPath.Evaluate(JsonElement,Json.Path.PathEvaluationOptions)
+  fullName: Json.Path.JsonPath.Evaluate(JsonElement, Json.Path.PathEvaluationOptions)
+  nameWithType: JsonPath.Evaluate(JsonElement, PathEvaluationOptions)
 - uid: Json.Path.JsonPath.Evaluate*
   name: Evaluate
   href: api/Json.Path.JsonPath.html#Json_Path_JsonPath_Evaluate_
@@ -1821,6 +1850,25 @@ references:
   isSpec: "True"
   fullName: Json.Path.JsonPath.TryParse
   nameWithType: JsonPath.TryParse
+- uid: Json.Path.PathEvaluationOptions
+  name: PathEvaluationOptions
+  href: api/Json.Path.PathEvaluationOptions.html
+  commentId: T:Json.Path.PathEvaluationOptions
+  fullName: Json.Path.PathEvaluationOptions
+  nameWithType: PathEvaluationOptions
+- uid: Json.Path.PathEvaluationOptions.ExperimentalFeatures
+  name: ExperimentalFeatures
+  href: api/Json.Path.PathEvaluationOptions.html#Json_Path_PathEvaluationOptions_ExperimentalFeatures
+  commentId: P:Json.Path.PathEvaluationOptions.ExperimentalFeatures
+  fullName: Json.Path.PathEvaluationOptions.ExperimentalFeatures
+  nameWithType: PathEvaluationOptions.ExperimentalFeatures
+- uid: Json.Path.PathEvaluationOptions.ExperimentalFeatures*
+  name: ExperimentalFeatures
+  href: api/Json.Path.PathEvaluationOptions.html#Json_Path_PathEvaluationOptions_ExperimentalFeatures_
+  commentId: Overload:Json.Path.PathEvaluationOptions.ExperimentalFeatures
+  isSpec: "True"
+  fullName: Json.Path.PathEvaluationOptions.ExperimentalFeatures
+  nameWithType: PathEvaluationOptions.ExperimentalFeatures
 - uid: Json.Path.PathMatch
   name: PathMatch
   href: api/Json.Path.PathMatch.html
