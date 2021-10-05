@@ -1,3 +1,7 @@
+# [0.1.13](https://github.com/gregsdennis/json-everything/pull/161)
+
+Added experimential support for referencing data in secondary documents.
+
 # [0.1.12](https://github.com/gregsdennis/json-everything/pull/161)
 
 Added support for unary-not operator, e.g.
