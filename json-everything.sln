@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30320.27
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema", "JsonSchema\JsonSchema.csproj", "{B936A840-C0AC-4B19-9C8D-55A40F4C0022}"
 EndProject
@@ -90,7 +90,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryJsonEverything", "TryJsonEverything\TryJsonEverything.csproj", "{FF075E5E-F3FF-48E4-AFE2-0B51BA403D5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchema.Benchmark", "JsonSchema.Benchmark\JsonSchema.Benchmark.csproj", "{354C3913-ED0D-41C3-A006-7740A98C8E27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Benchmark", "JsonSchema.Benchmark\JsonSchema.Benchmark.csproj", "{354C3913-ED0D-41C3-A006-7740A98C8E27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchema.DataGeneration", "JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj", "{0776DED0-94A7-4034-BDDB-610C0197FE4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchema.DataGeneration.Tests", "JsonSchema.DataGeneration.Tests\JsonSchema.DataGeneration.Tests.csproj", "{FABD51FE-F729-4D02-8295-66A6687C6240}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -182,6 +186,14 @@ Global
 		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{354C3913-ED0D-41C3-A006-7740A98C8E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FABD51FE-F729-4D02-8295-66A6687C6240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FABD51FE-F729-4D02-8295-66A6687C6240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FABD51FE-F729-4D02-8295-66A6687C6240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FABD51FE-F729-4D02-8295-66A6687C6240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,6 +221,8 @@ Global
 		{2C489C55-CDC4-47B6-BF94-B1D4755047A5} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 		{5844BA9B-31F6-4A34-A391-BE9016029BB6} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 		{354C3913-ED0D-41C3-A006-7740A98C8E27} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
+		{0776DED0-94A7-4034-BDDB-610C0197FE4E} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
+		{FABD51FE-F729-4D02-8295-66A6687C6240} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
