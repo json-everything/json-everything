@@ -32,7 +32,7 @@ namespace Json.Schema
 		public static readonly JsonSchema False = new JsonSchema(false);
 
 		/// <summary>
-		/// Gets the keywords contained in the schema.
+		/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
 		/// </summary>
 		public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
 		/// <summary>
@@ -40,7 +40,11 @@ namespace Json.Schema
 		/// </summary>
 		public IReadOnlyDictionary<string, JsonElement>? OtherData { get; }
 
-		internal bool? BoolValue { get; }
+		/// <summary>
+		/// For boolean schemas, gets the value.  Null if 
+		/// </summary>
+		public bool? BoolValue { get; }
+
 		internal Uri? BaseUri { get; private set; }
 
 		private JsonSchema(bool value)
