@@ -11,8 +11,8 @@ public class BooleanGenerator : IDataGenerator
 
 	public SchemaValueType Type => SchemaValueType.Boolean;
 
-	public JsonElement Generate(JsonSchema schema)
+	public GenerationResult Generate(JsonSchema schema)
 	{
-		return JsonSchemaExtensions.Randomizer.Bool().AsJsonElement();
+		return GenerationResult.Success(JsonSchemaExtensions.Randomizer.Bool());
 	}
 }

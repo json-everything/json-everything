@@ -11,7 +11,7 @@ public class ObjectGenerator : IDataGenerator
 
 	public SchemaValueType Type => SchemaValueType.Object;
 
-	public JsonElement Generate(JsonSchema schema)
+	public GenerationResult Generate(JsonSchema schema)
 	{
 		throw new NotImplementedException();
 	}
