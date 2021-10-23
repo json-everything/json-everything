@@ -13,7 +13,7 @@ public class IntegerGenerator : IDataGenerator
 
 	public SchemaValueType Type => SchemaValueType.Integer;
 
-	public JsonElement Generate(JsonSchema schema)
+	public GenerationResult Generate(JsonSchema schema)
 	{
 
 		var minimum = schema.Keywords.OfType<MinimumKeyword>().FirstOrDefault()?.Value;
@@ -29,7 +29,7 @@ public class IntegerGenerator : IDataGenerator
 			value = Math.Round(value / factor, MidpointRounding.AwayFromZero) * factor;
 		}
 
-		return value.AsJsonElement();
+		return GenerationResult.Success(value);
 	}
 
 	private static decimal Gcf(decimal a, decimal b)

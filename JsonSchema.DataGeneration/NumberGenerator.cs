@@ -13,7 +13,7 @@ public class NumberGenerator : IDataGenerator
 
 	public SchemaValueType Type => SchemaValueType.Number;
 
-	public JsonElement Generate(JsonSchema schema)
+	public GenerationResult Generate(JsonSchema schema)
 	{
 		var minValue = schema.Keywords.OfType<MinimumKeyword>().FirstOrDefault()?.Value ?? (decimal.MinValue / 2);
 		var maxValue = schema.Keywords.OfType<MaximumKeyword>().FirstOrDefault()?.Value ?? (decimal.MaxValue / 2);
@@ -26,6 +26,6 @@ public class NumberGenerator : IDataGenerator
 			value = Math.Round(value / factor, MidpointRounding.AwayFromZero) * factor;
 		}
 
-		return value.AsJsonElement();
+		return GenerationResult.Success(value);
 	}
 }

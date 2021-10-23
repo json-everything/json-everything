@@ -6,5 +6,5 @@ public interface IDataGenerator
 {
 	SchemaValueType Type { get; }
 
-	JsonElement Generate(JsonSchema schema);
+	GenerationResult Generate(JsonSchema schema);
 }

@@ -12,8 +12,8 @@ public class NullGenerator : IDataGenerator
 
 	public SchemaValueType Type => SchemaValueType.Null;
 
-	public JsonElement Generate(JsonSchema schema)
+	public GenerationResult Generate(JsonSchema schema)
 	{
-		return _nullValue.Clone();
+		return GenerationResult.Success(_nullValue);
 	}
 }

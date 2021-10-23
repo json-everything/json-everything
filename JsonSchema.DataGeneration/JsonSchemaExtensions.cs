@@ -26,7 +26,7 @@ namespace Json.Schema.DataGeneration
 					return GenerationResult.Fail("boolean schema `false` allows no values");
 
 				var generator = Randomizer.ArrayElement(_generators);
-				return GenerationResult.Success(generator.Generate(schema));
+				return generator.Generate(schema);
 			}
 
 			var usableGenerators = _generators;
@@ -42,7 +42,7 @@ namespace Json.Schema.DataGeneration
 				return GenerationResult.Fail("`type` keyword indicates no types are valid"); // should never happen
 
 			var selectedGenerator = Randomizer.ArrayElement(usableGenerators);
-			return GenerationResult.Success(selectedGenerator.Generate(schema));
+			return selectedGenerator.Generate(schema);
 		}
 	}
 }

@@ -11,7 +11,7 @@ public class StringGenerator : IDataGenerator
 
 	public SchemaValueType Type => SchemaValueType.String;
 
-	public JsonElement Generate(JsonSchema schema)
+	public GenerationResult Generate(JsonSchema schema)
 	{
 		throw new NotImplementedException();
 	}
