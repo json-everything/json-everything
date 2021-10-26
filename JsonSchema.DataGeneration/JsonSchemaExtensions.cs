@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Bogus;
 
 namespace Json.Schema.DataGeneration
@@ -43,6 +46,88 @@ namespace Json.Schema.DataGeneration
 
 			var selectedGenerator = Randomizer.ArrayElement(usableGenerators);
 			return selectedGenerator.Generate(schema);
+		}
+
+		private static readonly IRequirementsGatherer[] _requirementGatherers =
+			typeof(JsonSchemaExtensions).Assembly
+				.DefinedTypes
+				.Where(x => typeof(IRequirementsGatherer).IsAssignableFrom(x) &&
+				            !x.IsAbstract && !x.IsInterface)
+				.Select(Activator.CreateInstance)
+				.Cast<IRequirementsGatherer>()
+				.ToArray();
+	}
+
+	internal interface IRequirementsGatherer
+	{
+		IEnumerable<IJsonSchemaKeyword> Gather(IJsonSchemaKeyword keyword);
+	}
+
+	internal interface IValueRequirement
+	{
+
+	}
+
+	internal class NumberRequirement : IValueRequirement
+	{
+		public IEnumerable<NumberRange> ValidRanges { get; }
+
+		public NumberRequirement()
+		{
+			ValidRanges = new[] {new NumberRange()};
+		}
+	}
+
+	public readonly struct NumberRange : IEquatable<NumberRange>
+	{
+		public decimal Minimum { get; }
+		public decimal Maximum { get; }
+
+		public NumberRange()
+		{
+			Minimum = decimal.MinValue / 2;
+			Maximum = decimal.MaxValue / 2;
+		}
+
+		public NumberRange(decimal minimum, decimal maximum)
+		{
+			Minimum = minimum;
+			Maximum = maximum;
+		}
+
+		public IEnumerable<NumberRange> Exclude(NumberRange range)
+		{
+			//this is wrong
+			if (Minimum <= range.Maximum) yield return new NumberRange(Minimum, range.Minimum);
+			if (range.Minimum <= Maximum) yield return new NumberRange(range.Maximum, Maximum);
+		}
+
+		public bool Equals(NumberRange other)
+		{
+			return Minimum == other.Minimum && Maximum == other.Maximum;
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is NumberRange other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (Minimum.GetHashCode() * 397) ^ Maximum.GetHashCode();
+			}
+		}
+
+		public static bool operator ==(NumberRange left, NumberRange right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(NumberRange left, NumberRange right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

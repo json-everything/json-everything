@@ -19,6 +19,8 @@ public class FlatSchemaTests
 		Assert.IsTrue(result.IsSuccess);
 		Console.WriteLine(result.Result.ToJsonString());
 		Assert.AreEqual(JsonValueKind.Null, result.Result.ValueKind);
+
+		Assert.IsTrue(schema.Validate(result.Result).IsValid);
 	}
 
 	[Test]
@@ -40,6 +42,8 @@ public class FlatSchemaTests
 		Assert.IsTrue(value >= 10);
 		Assert.IsTrue(value <= 20);
 		Assert.IsTrue(value % 0.2m == 0);
+
+		Assert.IsTrue(schema.Validate(result.Result).IsValid);
 	}
 
 	[Test]
@@ -62,6 +66,8 @@ public class FlatSchemaTests
 		Assert.IsTrue(value <= 20);
 		Assert.IsTrue(value % 3 == 0);
 		Assert.IsTrue((int) value == value);
+
+		Assert.IsTrue(schema.Validate(result.Result).IsValid);
 	}
 
 	[Test]
@@ -84,6 +90,8 @@ public class FlatSchemaTests
 		Assert.IsTrue(value <= 20);
 		Assert.IsTrue(value % 0.3m == 0);
 		Assert.IsTrue((int) value == value);
+
+		Assert.IsTrue(schema.Validate(result.Result).IsValid);
 	}
 
 	[Test]
@@ -116,5 +124,7 @@ public class FlatSchemaTests
 			Assert.IsTrue(value >= 10);
 			Assert.IsTrue(value <= 20);
 		}
+
+		Assert.IsTrue(schema.Validate(result.Result).IsValid);
 	}
 }
