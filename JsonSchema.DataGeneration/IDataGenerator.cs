@@ -1,10 +1,9 @@
-﻿using System.Text.Json;
-
-namespace Json.Schema.DataGeneration;
-
-public interface IDataGenerator
+﻿namespace Json.Schema.DataGeneration
 {
-	SchemaValueType Type { get; }
+	public interface IDataGenerator
+	{
+		SchemaValueType Type { get; }
 
-	GenerationResult Generate(JsonSchema schema);
+		GenerationResult Generate(JsonSchema schema);
+	}
 }

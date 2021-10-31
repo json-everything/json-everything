@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Bogus;
 
 namespace Json.Schema.DataGeneration
@@ -78,7 +77,7 @@ namespace Json.Schema.DataGeneration
 		}
 	}
 
-	public readonly struct NumberRange : IEquatable<NumberRange>
+	public class NumberRange : IEquatable<NumberRange>
 	{
 		public decimal Minimum { get; }
 		public decimal Maximum { get; }

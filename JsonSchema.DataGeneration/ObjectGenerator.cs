@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace Json.Schema.DataGeneration;
-
-public class ObjectGenerator : IDataGenerator
+namespace Json.Schema.DataGeneration
 {
-	public static ObjectGenerator Instance { get; } = new ObjectGenerator();
-
-	private ObjectGenerator() { }
-
-	public SchemaValueType Type => SchemaValueType.Object;
-
-	public GenerationResult Generate(JsonSchema schema)
+	public class ObjectGenerator : IDataGenerator
 	{
-		throw new NotImplementedException();
+		public static ObjectGenerator Instance { get; } = new ObjectGenerator();
+
+		private ObjectGenerator()
+		{
+		}
+
+		public SchemaValueType Type => SchemaValueType.Object;
+
+		public GenerationResult Generate(JsonSchema schema)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
