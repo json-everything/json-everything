@@ -1,24 +1,17 @@
-using System;
+﻿using System;
 using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.DataGeneration.Tests
 {
-	public class DevTests
+	public static class TestHelpers
 	{
-		[Test]
-		public void Test()
+		public static void Run(JsonSchema schema)
 		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Integer)
-				.Minimum(0)
-				.Maximum(100)
-				.Not(new JsonSchemaBuilder().MultipleOf(3));
-
 			var result = schema.GenerateData();
 
+			Assert.IsTrue(result.IsSuccess);
 			Console.WriteLine(result.Result.ToJsonString());
-
 			Assert.IsTrue(schema.Validate(result.Result).IsValid);
 		}
 	}
