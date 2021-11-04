@@ -37,7 +37,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The global registry.
 		/// </summary>
-		public static SchemaRegistry Global { get; }
+		public static SchemaRegistry Global => ValidationOptions.Default.SchemaRegistry;
 
 		/// <summary>
 		/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
@@ -50,48 +50,34 @@ namespace Json.Schema
 
 		internal Draft ValidatingAs => _options!.ValidatingAs;
 
-		static SchemaRegistry()
-		{
-			Global = new SchemaRegistry();
-		}
-
 		internal SchemaRegistry(ValidationOptions options)
 		{
 			_options = options;
 		}
-		private SchemaRegistry(){}
 
-		internal static void Initialize()
+		internal void InitializeMetaSchemas()
 		{
-			if (Global._options != null) return;
+			MetaSchemas.Draft6.RegisterSubschemas(this, MetaSchemas.Draft6Id);
 
-			lock (Global)
-			{
-				if (Global._options != null) return;
-				Global._options = ValidationOptions.Default;
+			MetaSchemas.Draft7.RegisterSubschemas(this, MetaSchemas.Draft7Id);
 
-				MetaSchemas.Draft6.RegisterSubschemas(Global, MetaSchemas.Draft6Id);
+			MetaSchemas.Draft201909.RegisterSubschemas(this, MetaSchemas.Draft201909Id);
+			MetaSchemas.Core201909.RegisterSubschemas(this, MetaSchemas.Core201909Id);
+			MetaSchemas.Applicator201909.RegisterSubschemas(this, MetaSchemas.Applicator201909Id);
+			MetaSchemas.Validation201909.RegisterSubschemas(this, MetaSchemas.Validation201909Id);
+			MetaSchemas.Metadata201909.RegisterSubschemas(this, MetaSchemas.Metadata201909Id);
+			MetaSchemas.Format201909.RegisterSubschemas(this, MetaSchemas.Format201909Id);
+			MetaSchemas.Content201909.RegisterSubschemas(this, MetaSchemas.Content201909Id);
 
-				MetaSchemas.Draft7.RegisterSubschemas(Global, MetaSchemas.Draft7Id);
-
-				MetaSchemas.Draft201909.RegisterSubschemas(Global, MetaSchemas.Draft201909Id);
-				MetaSchemas.Core201909.RegisterSubschemas(Global, MetaSchemas.Core201909Id);
-				MetaSchemas.Applicator201909.RegisterSubschemas(Global, MetaSchemas.Applicator201909Id);
-				MetaSchemas.Validation201909.RegisterSubschemas(Global, MetaSchemas.Validation201909Id);
-				MetaSchemas.Metadata201909.RegisterSubschemas(Global, MetaSchemas.Metadata201909Id);
-				MetaSchemas.Format201909.RegisterSubschemas(Global, MetaSchemas.Format201909Id);
-				MetaSchemas.Content201909.RegisterSubschemas(Global, MetaSchemas.Content201909Id);
-
-				MetaSchemas.Draft202012.RegisterSubschemas(Global, MetaSchemas.Draft202012Id);
-				MetaSchemas.Core202012.RegisterSubschemas(Global, MetaSchemas.Core202012Id);
-				MetaSchemas.Applicator202012.RegisterSubschemas(Global, MetaSchemas.Applicator202012Id);
-				MetaSchemas.Validation202012.RegisterSubschemas(Global, MetaSchemas.Validation202012Id);
-				MetaSchemas.Metadata202012.RegisterSubschemas(Global, MetaSchemas.Metadata202012Id);
-				MetaSchemas.Unevaluated202012.RegisterSubschemas(Global, MetaSchemas.Unevaluated202012Id);
-				MetaSchemas.FormatAnnotation202012.RegisterSubschemas(Global, MetaSchemas.FormatAnnotation202012Id);
-				MetaSchemas.FormatAssertion202012.RegisterSubschemas(Global, MetaSchemas.FormatAssertion202012Id);
-				MetaSchemas.Content202012.RegisterSubschemas(Global, MetaSchemas.Content202012Id);
-			}
+			MetaSchemas.Draft202012.RegisterSubschemas(this, MetaSchemas.Draft202012Id);
+			MetaSchemas.Core202012.RegisterSubschemas(this, MetaSchemas.Core202012Id);
+			MetaSchemas.Applicator202012.RegisterSubschemas(this, MetaSchemas.Applicator202012Id);
+			MetaSchemas.Validation202012.RegisterSubschemas(this, MetaSchemas.Validation202012Id);
+			MetaSchemas.Metadata202012.RegisterSubschemas(this, MetaSchemas.Metadata202012Id);
+			MetaSchemas.Unevaluated202012.RegisterSubschemas(this, MetaSchemas.Unevaluated202012Id);
+			MetaSchemas.FormatAnnotation202012.RegisterSubschemas(this, MetaSchemas.FormatAnnotation202012Id);
+			MetaSchemas.FormatAssertion202012.RegisterSubschemas(this, MetaSchemas.FormatAssertion202012Id);
+			MetaSchemas.Content202012.RegisterSubschemas(this, MetaSchemas.Content202012Id);
 		}
 
 		/// <summary>

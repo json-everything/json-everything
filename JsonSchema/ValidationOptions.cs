@@ -100,6 +100,11 @@ namespace Json.Schema
 			SchemaRegistry = new SchemaRegistry(this);
 		}
 
+		static ValidationOptions()
+		{
+			Default.SchemaRegistry.InitializeMetaSchemas();
+		}
+
 		internal static ValidationOptions From(ValidationOptions other)
 		{
 			var options = new ValidationOptions

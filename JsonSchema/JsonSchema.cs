@@ -98,7 +98,6 @@ namespace Json.Schema
 		public ValidationResults Validate(JsonElement root, ValidationOptions? options = null)
 		{
 			options = ValidationOptions.From(options ?? ValidationOptions.Default);
-			SchemaRegistry.Initialize();
 
 			var context = new ValidationContext(options)
 				{
