@@ -32,7 +32,7 @@ namespace Json.Schema
 		private Dictionary<Uri, Registration>? _registered;
 		private Func<Uri, JsonSchema?>? _fetch;
 		private Stack<Uri>? _scopes;
-		private ValidationOptions? _options;
+		private readonly ValidationOptions _options;
 
 		/// <summary>
 		/// The global registry.
@@ -48,7 +48,7 @@ namespace Json.Schema
 			set => _fetch = value;
 		}
 
-		internal Draft ValidatingAs => _options!.ValidatingAs;
+		internal Draft ValidatingAs => _options.ValidatingAs;
 
 		internal SchemaRegistry(ValidationOptions options)
 		{
