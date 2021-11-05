@@ -11,13 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
-    <PackageReference Include="JunitXml.TestLogger" Version="2.1.32" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Humanizer" Version="2.8.26" />
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Humanizer.Core" Version="2.11.10" />
+    <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
+    <PackageReference Include="FluentAssertions" Version="6.2.0" />
+    <PackageReference Include="nunit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
   </ItemGroup>
 
   <ItemGroup>

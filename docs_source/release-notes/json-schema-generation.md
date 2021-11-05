@@ -1,3 +1,7 @@
+# [1.8.1](https://github.com/gregsdennis/json-everything/pull/176)
+
+[#174](https://github.com/gregsdennis/json-everything/issues/174) - Switch top-level Humanizer package for more essential Humanizer.Core.  Supports English.  If other languages are required, the respective Humanizer package will need to be added to your application.
+
 # [1.8.0](https://github.com/gregsdennis/json-everything/pull/144)
 
 [#141](https://github.com/gregsdennis/json-everything/issues/141) - Added `[Title()]` and `[Description()]` attributes.
