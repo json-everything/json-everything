@@ -55,11 +55,33 @@ namespace Json.Schema.DataGeneration
 				.Select(Activator.CreateInstance)
 				.Cast<IRequirementsGatherer>()
 				.ToArray();
+
+		internal static IValueRequirement[] GetRequirements(JsonSchema schema)
+		{
+			// get requirements for current level
+			// this will include *Of, not, etc.
+			// keywords like if/then/else will need to be handled together
+			// oneOf/const may direct some other value
+
+			throw new NotImplementedException();
+		}
 	}
 
 	internal interface IRequirementsGatherer
 	{
-		IEnumerable<IJsonSchemaKeyword> Gather(IJsonSchemaKeyword keyword);
+		Type HandlerFor { get; }
+		IEnumerable<IValueRequirement> Gather(IJsonSchemaKeyword keyword);
+	}
+
+	internal class AllOfRequirementsGatherer : IRequirementsGatherer
+	{
+		public Type HandlerFor => typeof(AllOfKeyword);
+
+		public IEnumerable<IValueRequirement> Gather(IJsonSchemaKeyword keyword)
+		{
+			var allOfKeyword = (AllOfKeyword) keyword;
+			return allOfKeyword.Schemas.SelectMany(JsonSchemaExtensions.GetRequirements);
+		}
 	}
 
 	internal interface IValueRequirement
@@ -69,64 +91,109 @@ namespace Json.Schema.DataGeneration
 
 	internal class NumberRequirement : IValueRequirement
 	{
-		public IEnumerable<NumberRange> ValidRanges { get; }
+		public IEnumerable<NumberRange> ValidRanges { get; private set; }
+		public IEnumerable<decimal> Multiples { get; private set; }
+		public IEnumerable<decimal> Antimultiples { get; private set; }
 
-		public NumberRequirement()
+		public NumberRequirement Add(NumberRequirement other)
 		{
-			ValidRanges = new[] {new NumberRange()};
+			return new NumberRequirement
+			{
+			};
+		}
+
+		public NumberRequirement Remove(NumberRequirement other)
+		{
+			throw new NotImplementedException();
 		}
 	}
 
-	public class NumberRange : IEquatable<NumberRange>
+	public struct Bound
 	{
-		public decimal Minimum { get; }
-		public decimal Maximum { get; }
+		public decimal Value { get; }
+		public bool Inclusive { get; }
 
-		public NumberRange()
+		public Bound(decimal value, bool inclusive = true)
 		{
-			Minimum = decimal.MinValue / 2;
-			Maximum = decimal.MaxValue / 2;
+			Value = value;
+			Inclusive = inclusive;
 		}
 
-		public NumberRange(decimal minimum, decimal maximum)
+		public static implicit operator Bound(int value)
+		{
+			return new Bound(value);
+		}
+
+		public static implicit operator Bound(decimal value)
+		{
+			return new Bound(value);
+		}
+
+		public static implicit operator Bound((int value, bool inclusive) pair)
+		{
+			return new Bound(pair.value, pair.inclusive);
+		}
+
+		public static implicit operator Bound((decimal value, bool inclusive) pair)
+		{
+			return new Bound(pair.value, pair.inclusive);
+		}
+	}
+
+	public struct NumberRange
+	{
+		public Bound Minimum { get; }
+		public Bound Maximum { get; }
+		public bool Inverted { get; }
+
+		public NumberRange(Bound minimum, Bound maximum, bool inverted = false)
 		{
 			Minimum = minimum;
 			Maximum = maximum;
+			Inverted = inverted;
 		}
 
-		public IEnumerable<NumberRange> Exclude(NumberRange range)
+		public static IEnumerable<NumberRange> Intersection(NumberRange a, NumberRange b)
 		{
-			//this is wrong
-			if (Minimum <= range.Maximum) yield return new NumberRange(Minimum, range.Minimum);
-			if (range.Minimum <= Maximum) yield return new NumberRange(range.Maximum, Maximum);
+			throw new NotImplementedException();
 		}
 
-		public bool Equals(NumberRange other)
+		// contains: a1  b1  b2  a2 -> a1..a2
+		public static IEnumerable<NumberRange> Union(NumberRange a, NumberRange b)
 		{
-			return Minimum == other.Minimum && Maximum == other.Maximum;
-		}
+			// a should have the lower bound. if not, then swap
+			if (b.Minimum.Value < a.Minimum.Value)
+				return Union(b, a);
 
-		public override bool Equals(object? obj)
-		{
-			return obj is NumberRange other && Equals(other);
-		}
+			// disjoint: a1  a2  b1  b2 -> a1..a2, b1..b2
+			if (a.Maximum.Value < b.Minimum.Value)
+				return new[] {a, b};
 
-		public override int GetHashCode()
-		{
-			unchecked
+			// tangent:  a1  a2b1  b2
+			if (a.Maximum.Value == b.Minimum.Value)
 			{
-				return (Minimum.GetHashCode() * 397) ^ Maximum.GetHashCode();
+				// if either is inclusive -> a1..b2
+				if (a.Maximum.Inclusive || b.Minimum.Inclusive)
+					return new[] { new NumberRange(a.Minimum, b.Maximum) };
+
+				// otherwise disjoint
+				return new[] { a, b };
 			}
-		}
 
-		public static bool operator ==(NumberRange left, NumberRange right)
-		{
-			return left.Equals(right);
-		}
+			var minimum = a.Minimum.Value < b.Minimum.Value
+				? a.Minimum
+				: new Bound(a.Minimum.Value, a.Minimum.Inclusive || b.Minimum.Inclusive);
 
-		public static bool operator !=(NumberRange left, NumberRange right)
-		{
-			return !left.Equals(right);
+			// overlap:  a1  b1  a2b2 -> a1..(a2 | b2)
+			if (a.Maximum.Value == b.Maximum.Value)
+				return new[] {new NumberRange(minimum, new Bound(a.Maximum.Value, a.Maximum.Inclusive || b.Maximum.Inclusive))};
+
+			// overlap:  a1  b1  a2b2 -> a1..b2
+			if (a.Maximum.Value < b.Maximum.Value)
+				return new[] {new NumberRange(minimum, b.Maximum)};
+
+			// contains: a1  b1  b2  a2 -> a1..a2
+			return new[] {new NumberRange(minimum, a.Maximum)};
 		}
 	}
 }
