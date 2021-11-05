@@ -207,7 +207,7 @@ namespace Json.Schema.Data
 				throw new JsonException("Expected object");
 
 			var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)
-				.ToDictionary(kvp => kvp.Key, kvp => new Uri(kvp.Value));
+				.ToDictionary(kvp => kvp.Key, kvp => new Uri(kvp.Value, UriKind.RelativeOrAbsolute));
 			return new DataKeyword(references);
 		}
 
