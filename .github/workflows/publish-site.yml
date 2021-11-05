@@ -11,6 +11,9 @@ on:
       - JsonPath/**
       - JsonPointer/**
       - JsonSchema/**
+      - JsonSchema.Data/**
+      - JsonSchema.UniqueKeys/**
+      - JsonSchema.Generation/**
       - TryJsonEverything/**
   workflow_dispatch:
 
