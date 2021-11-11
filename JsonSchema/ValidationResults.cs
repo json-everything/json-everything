@@ -102,7 +102,7 @@ namespace Json.Schema
 		public void ToBasic()
 		{
 			ToDetailed();
-			var children = _GetAllChildren().ToList();
+			var children = GetAllChildren().ToList();
 			if (!children.Any()) return;
 
 			children.Remove(this);
@@ -135,6 +135,7 @@ namespace Json.Schema
 
 		internal Uri? BuildAbsoluteUri(JsonPointer pointer)
 		{
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
 			if (pointer.Segments.All(s => s.Value != RefKeyword.Name &&
 			                              s.Value != RecursiveRefKeyword.Name))
@@ -146,7 +147,7 @@ namespace Json.Schema
 			var absoluteSegments = pointer.Segments.Skip(lastIndexOfRef + 1);
 
 			if (_reference != null) 
-				absoluteSegments = _reference.Value.Segments.Concat(absoluteSegments);
+				absoluteSegments = _reference.Segments.Concat(absoluteSegments);
 
 			return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());
 		}
@@ -156,11 +157,11 @@ namespace Json.Schema
 			return BuildAbsoluteUri(SchemaLocation);
 		}
 
-		private IEnumerable<ValidationResults> _GetAllChildren()
+		private IEnumerable<ValidationResults> GetAllChildren()
 		{
 			var all = new List<ValidationResults>();
 			if (Annotations.Any() || Message != null) all.Add(this);
-			all.AddRange(NestedResults.SelectMany(r => r._GetAllChildren()));
+			all.AddRange(NestedResults.SelectMany(r => r.GetAllChildren()));
 
 			_nestedResults.Clear();
 

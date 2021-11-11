@@ -1,3 +1,7 @@
+# [1.11.4](https://github.com/gregsdennis/json-everything/pull/179)
+
+Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.
+
 # [1.11.3](https://github.com/gregsdennis/json-everything/pull/176)
 
 [#175](https://github.com/gregsdennis/json-everything/pull/175) - [@ranma42](https://github.com/ranma42) tidied up the schema registry initialization code, also resolving some concurrency issues.

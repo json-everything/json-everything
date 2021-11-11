@@ -12,27 +12,28 @@ namespace Json.Pointer
 	/// Represents a JSON Pointer IAW RFC 6901.
 	/// </summary>
 	[JsonConverter(typeof(JsonPointerJsonConverter))]
-	public struct JsonPointer : IEquatable<JsonPointer>
+	public class JsonPointer : IEquatable<JsonPointer>
 	{
 		/// <summary>
 		/// The empty pointer.
 		/// </summary>
 		public static readonly JsonPointer Empty =
-			new JsonPointer
-				{
+			new()
+			{
 					_source = string.Empty,
-					_segments = new PointerSegment[0]
+					_segments = Array.Empty<PointerSegment>()
 			};
+
 		/// <summary>
 		/// The empty pointer in URL-style.
 		/// </summary>
 		public static readonly JsonPointer UrlEmpty =
-			new JsonPointer
-				{
-					_source = "#",
-					Kind = JsonPointerKind.UriEncoded,
-					_segments = new PointerSegment[0]
-				};
+			new()
+			{
+				_source = "#",
+				Kind = JsonPointerKind.UriEncoded,
+				_segments = Array.Empty<PointerSegment>()
+			};
 
 		private string? _source;
 		private PointerSegment[]? _segments;
@@ -54,6 +55,8 @@ namespace Json.Pointer
 		/// Gets the kind of pointer.
 		/// </summary>
 		public JsonPointerKind Kind { get; private set; }
+
+		private JsonPointer(){}
 
 		/// <summary>
 		/// Parses a JSON Pointer from a string.
@@ -117,7 +120,7 @@ namespace Json.Pointer
 		/// <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="JsonPointerKind.Unspecified"/> (default) allows both.</param>
 		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-		public static bool TryParse(string source, out JsonPointer pointer, JsonPointerKind pointerKind = JsonPointerKind.Unspecified)
+		public static bool TryParse(string source, out JsonPointer? pointer, JsonPointerKind pointerKind = JsonPointerKind.Unspecified)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (source == string.Empty)
@@ -141,7 +144,7 @@ namespace Json.Pointer
 			}
 			else
 			{
-				pointer = default;
+				pointer = null;
 				return false;
 			}
 
@@ -152,14 +155,14 @@ namespace Json.Pointer
 				case JsonPointerKind.Plain:
 					if (isUriEncoded)
 					{
-						pointer = default;
+						pointer =  null;
 						return false;
 					}
 					break;
 				case JsonPointerKind.UriEncoded:
 					if (!isUriEncoded)
 					{
-						pointer = default;
+						pointer = null;
 						return false;
 					}
 					break;
@@ -173,11 +176,11 @@ namespace Json.Pointer
 				var part = parts[i];
 				if (!PointerSegment.TryParse(part, isUriEncoded, out var segment))
 				{
-					pointer = default;
+					pointer = null;
 					return false;
 				}
 
-				segments[i - 1] = segment;
+				segments[i - 1] = segment!;
 			}
 
 			pointer = new JsonPointer
@@ -404,9 +407,9 @@ namespace Json.Pointer
 		/// <param name="left">A JSON Pointer.</param>
 		/// <param name="right">A JSON Pointer.</param>
 		/// <returns><code>true</code> if the pointers are equal; <code>false</code> otherwise.</returns>
-		public static bool operator ==(JsonPointer left, JsonPointer right)
+		public static bool operator ==(JsonPointer? left, JsonPointer? right)
 		{
-			return left.Equals(right);
+			return Equals(left, right);
 		}
 
 		/// <summary>
@@ -415,9 +418,9 @@ namespace Json.Pointer
 		/// <param name="left">A JSON Pointer.</param>
 		/// <param name="right">A JSON Pointer.</param>
 		/// <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
-		public static bool operator !=(JsonPointer left, JsonPointer right)
+		public static bool operator !=(JsonPointer? left, JsonPointer? right)
 		{
-			return !left.Equals(right);
+			return !Equals(left, right);
 		}
 	}
 }
