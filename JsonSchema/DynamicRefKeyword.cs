@@ -99,7 +99,7 @@ namespace Json.Schema
 						return;
 					}
 
-					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
+					(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
 				}
 				else
 					schema = baseSchema;
@@ -145,7 +145,8 @@ namespace Json.Schema
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (Reference != null ? Reference.GetHashCode() : 0);
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+			return Reference != null ? Reference.GetHashCode() : 0;
 		}
 	}
 

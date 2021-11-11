@@ -3,7 +3,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Schema;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
+#pragma warning disable CS8618
 
 namespace Json.Patch.Tests.Suite
 {
@@ -73,8 +74,8 @@ namespace Json.Patch.Tests.Suite
 
 		public JsonElement Doc { get; set; }
 		public JsonElement ExpectedValue { get; set; }
-		public string Error { get; set; }
-		public string Comment { get; set; }
+		public string? Error { get; set; }
+		public string? Comment { get; set; }
 		public JsonPatch Patch { get; set; }
 		public bool Disabled { get; set; }
 
@@ -88,8 +89,8 @@ namespace Json.Patch.Tests.Suite
 		{
 			public JsonElement Doc { get; set; }
 			public JsonElement Expected { get; set; }
-			public string Error { get; set; }
-			public string Comment { get; set; }
+			public string? Error { get; set; }
+			public string? Comment { get; set; }
 			public JsonPatch Patch { get; set; }
 			public bool Disabled { get; set; }
 		}
@@ -105,7 +106,7 @@ namespace Json.Patch.Tests.Suite
 			});
 			if (results.IsValid)
 			{
-				var model = JsonSerializer.Deserialize<Model>(element.GetRawText(), options);
+				var model = JsonSerializer.Deserialize<Model>(element.GetRawText(), options)!;
 				return new JsonPatchTest
 				{
 					Doc = model.Doc.ValueKind == JsonValueKind.Undefined ? default : model.Doc.Clone(),
