@@ -14,5 +14,5 @@
   href: json-path.md
 - name: JsonPatch.Net
   href: json-patch.md
-- name: JsonLogic.Net
+- name: JsonLogic
   href: json-logic.md

@@ -1,3 +1,7 @@
+# [1.1.1](https://github.com/gregsdennis/json-everything/pull/179)
+
+Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.
+
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/163)
 
 [#160](https://github.com/gregsdennis/json-everything/pull/160) - Added JSON Patch creation via comparison of objects or JSON data.  Credit for implementation to [@LordXaosa](https://github.com/LordXaosa).

@@ -8,12 +8,12 @@ namespace Json.Pointer
 	/// Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02
 	/// </summary>
 	[JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
-	public readonly struct RelativeJsonPointer
+	public class RelativeJsonPointer
 	{
 		/// <summary>
 		/// The null pointer.  Indicates no navigation should occur.
 		/// </summary>
-		public static readonly RelativeJsonPointer Null = new RelativeJsonPointer(0, JsonPointer.Empty);
+		public static readonly RelativeJsonPointer Null = new(0, JsonPointer.Empty);
 
 		/// <summary>
 		/// Gets whether the pointer is an index query, which returns the index within the parent rather than the value.
@@ -147,12 +147,12 @@ namespace Json.Pointer
 		/// <param name="relativePointer">The resulting relative pointer.</param>
 		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-		public static bool TryParse(string source, out RelativeJsonPointer relativePointer)
+		public static bool TryParse(string source, out RelativeJsonPointer? relativePointer)
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (string.IsNullOrWhiteSpace(source))
 			{
-				relativePointer = default;
+				relativePointer = null;
 				return false;
 			}
 
@@ -162,7 +162,7 @@ namespace Json.Pointer
 
 			if (i == 0)
 			{
-				relativePointer = default;
+				relativePointer = null;
 				return false;
 			}
 
@@ -191,7 +191,7 @@ namespace Json.Pointer
 			{
 				if (i + 1 < span.Length)
 				{
-					relativePointer = default;
+					relativePointer = null;
 					return false;
 				}
 				relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation);
@@ -200,17 +200,17 @@ namespace Json.Pointer
 
 			if (span[i] != '/')
 			{
-				relativePointer = default;
+				relativePointer = null;
 				return false;
 			}
 
 			if (!JsonPointer.TryParse(span.Slice(i).ToString(), out var pointer))
 			{
-				relativePointer = default;
+				relativePointer = null;
 				return false;
 			}
 
-			relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, pointer);
+			relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, pointer!);
 			return true;
 		}
 

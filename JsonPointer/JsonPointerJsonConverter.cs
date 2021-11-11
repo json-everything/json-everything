@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Json.Pointer
 {
-	internal class JsonPointerJsonConverter : JsonConverter<JsonPointer>
+	internal class JsonPointerJsonConverter : JsonConverter<JsonPointer?>
 	{
-		public override JsonPointer Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override JsonPointer? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType != JsonTokenType.String)
 				throw new JsonException("Expected string");
@@ -14,12 +14,15 @@ namespace Json.Pointer
 			var str = reader.GetString();
 			return JsonPointer.TryParse(str, out var pointer)
 				? pointer
-				: JsonPointer.Parse("/something/definitely/not/in/test/data");
+				: throw new JsonException("Value does not represent a JSON Pointer");
 		}
 
-		public override void Write(Utf8JsonWriter writer, JsonPointer value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, JsonPointer? value, JsonSerializerOptions options)
 		{
-			writer.WriteStringValue(value.Source);
+			if (value == null)
+				writer.WriteNullValue();
+			else
+				writer.WriteStringValue(value.Source);
 		}
 	}
 }

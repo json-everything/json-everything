@@ -6,7 +6,7 @@ namespace Json.Pointer
 	/// <summary>
 	/// Represents a single segment of a JSON Pointer.
 	/// </summary>
-	public struct PointerSegment : IEquatable<PointerSegment>
+	public class PointerSegment : IEquatable<PointerSegment>
 	{
 		/// <summary>
 		/// Gets the source string.
@@ -19,6 +19,10 @@ namespace Json.Pointer
 		/// This may differ from <see cref="Source"/> in that the segment may be URL-encoded.  This contains the decoded value.
 		/// </remarks>
 		public string Value { get; private set; }
+
+#pragma warning disable CS8618
+		private PointerSegment(){}
+#pragma warning restore CS8618
 
 		/// <summary>
 		/// Parses a JSON Pointer segment from a string.
@@ -35,7 +39,7 @@ namespace Json.Pointer
 			return new PointerSegment
 				{
 					Source = source,
-					Value = _Decode(source, uriFormatted)
+					Value = Decode(source, uriFormatted)
 				};
 		}
 
@@ -46,11 +50,11 @@ namespace Json.Pointer
 		/// <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
 		/// <param name="segment">The resulting segments.</param>
 		/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
-		public static bool TryParse(string? source, bool uriFormatted, out PointerSegment segment)
+		public static bool TryParse(string? source, bool uriFormatted, out PointerSegment? segment)
 		{
 			if (source == null)
 			{
-				segment = default;
+				segment = null;
 				return false;
 			}
 
@@ -59,15 +63,15 @@ namespace Json.Pointer
 				segment = new PointerSegment
 					{
 						Source = source,
-						Value = _Decode(source, uriFormatted)
+						Value = Decode(source, uriFormatted)
 					};
+				return true;
 			}
 			catch (PointerParseException)
 			{
 				segment = default;
 				return false;
 			}
-			return true;
 		}
 
 		/// <summary>
@@ -83,11 +87,11 @@ namespace Json.Pointer
 			return new PointerSegment
 				{
 					Value = value,
-					Source = _Encode(value, uriFormatted)
+					Source = Encode(value, uriFormatted)
 				};
 		}
 
-		private static string _Encode(string value, bool uriFormatted)
+		private static string Encode(string value, bool uriFormatted)
 		{
 			var builder = new StringBuilder();
 			var chars = value.AsSpan();
@@ -128,7 +132,7 @@ namespace Json.Pointer
 			return builder.ToString();
 		}
 
-		private static string _Decode(string source, bool uriFormatted)
+		private static string Decode(string source, bool uriFormatted)
 		{
 			var builder = new StringBuilder();
 			var span = source.AsSpan();
@@ -177,9 +181,9 @@ namespace Json.Pointer
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 		/// <param name="other">An object to compare with this object.</param>
 		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(PointerSegment other)
+		public bool Equals(PointerSegment? other)
 		{
-			return string.Equals(Value, other.Value, StringComparison.InvariantCulture);
+			return string.Equals(Value, other?.Value, StringComparison.InvariantCulture);
 		}
 
 		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
@@ -194,7 +198,8 @@ namespace Json.Pointer
 		/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
 		public override int GetHashCode()
 		{
-			return Value == null ? 0 : StringComparer.InvariantCulture.GetHashCode(Value);
+			// ReSharper disable once NonReadonlyMemberInGetHashCode
+			return StringComparer.InvariantCulture.GetHashCode(Value);
 		}
 
 		/// <summary>

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Patch.Tests
 {
 	public class PatchExtensionTests
 	{
-		private class TestModel : IEquatable<TestModel>
+		private class TestModel
 		{
 			public Guid Id { get; set; }
 			public string? Name { get; set; }
@@ -17,33 +15,6 @@ namespace Json.Patch.Tests
 			public string[]? Strings { get; set; }
 			public List<TestModel>? InnerObjects { get; set; }
 			public JsonElement? Attributes { get; set; }
-
-			public override bool Equals(object? obj)
-			{
-				return obj is TestModel m && JsonSerializer.Serialize(this) == JsonSerializer.Serialize(m);
-			}
-
-			public bool Equals(TestModel? other)
-			{
-				if (ReferenceEquals(null, other)) return false;
-				if (ReferenceEquals(this, other)) return true;
-				// ReSharper disable AssignNullToNotNullAttribute
-				return Id.Equals(other.Id) &&
-				       Name == other.Name &&
-				       Numbers.SequenceEqual(other.Numbers) &&
-				       Strings.SequenceEqual(other.Strings) &&
-				       InnerObjects.SequenceEqual(other.InnerObjects) &&
-				       ((Attributes.HasValue && other.Attributes.HasValue && Attributes.Value.IsEquivalentTo(other.Attributes.Value)) ||
-				        (!Attributes.HasValue && !other.Attributes.HasValue));
-				// ReSharper restore AssignNullToNotNullAttribute
-			}
-
-			public override int GetHashCode()
-			{
-				// ReSharper disable NonReadonlyMemberInGetHashCode
-				return HashCode.Combine(Id, Name, Numbers, Strings, InnerObjects, Attributes);
-				// ReSharper restore NonReadonlyMemberInGetHashCode
-			}
 		}
 
 		[Test]
@@ -98,7 +69,7 @@ namespace Json.Patch.Tests
 				Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
 			};
 			var patchExpectedStr = "[{\"op\":\"add\",\"path\":\"/Attributes\",\"value\":[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]}]";
-			var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
+			var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
 			var patch = initial.CreatePatch(target, new JsonSerializerOptions {IgnoreNullValues = true});
 			
 			OutputPatch(expected);
@@ -119,7 +90,7 @@ namespace Json.Patch.Tests
 				Id = initial.Id
 			};
 			var patchExpectedStr = "[{\"op\":\"remove\",\"path\":\"/Attributes\"}]";
-			var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
+			var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
 			
 			var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
 			

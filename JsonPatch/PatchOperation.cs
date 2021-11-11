@@ -193,7 +193,7 @@ namespace Json.Patch
 		{
 			var model = JsonSerializer.Deserialize<Model>(ref reader, options);
 
-			if (!model.Path.HasValue)
+			if (model.Path == null)
 				throw new JsonException($"`{model.Op}` operation requires `path`");
 
 			switch (model.Op)
@@ -201,25 +201,25 @@ namespace Json.Patch
 				case OperationType.Add:
 					if (model.Value.ValueKind == JsonValueKind.Undefined)
 						throw new JsonException("`add` operation requires `value`");
-					return PatchOperation.Add(model.Path.Value, model.Value);
+					return PatchOperation.Add(model.Path, model.Value);
 				case OperationType.Remove:
-					return PatchOperation.Remove(model.Path.Value);
+					return PatchOperation.Remove(model.Path);
 				case OperationType.Replace:
 					if (model.Value.ValueKind == JsonValueKind.Undefined)
 						throw new JsonException("`replace` operation requires `value`");
-					return PatchOperation.Replace(model.Path.Value, model.Value);
+					return PatchOperation.Replace(model.Path, model.Value);
 				case OperationType.Move:
-					if (!model.From.HasValue)
+					if (model.From == null)
 						throw new JsonException("`move` operation requires `from`");
-					return PatchOperation.Move(model.From.Value, model.Path.Value);
+					return PatchOperation.Move(model.From, model.Path);
 				case OperationType.Copy:
-					if (!model.From.HasValue)
+					if (model.From == null)
 						throw new JsonException("`copy` operation requires `from`");
-					return PatchOperation.Copy(model.From.Value, model.Path.Value);
+					return PatchOperation.Copy(model.From, model.Path);
 				case OperationType.Test:
 					if (model.Value.ValueKind == JsonValueKind.Undefined)
 						throw new JsonException("`test` operation requires `value`");
-					return PatchOperation.Test(model.Path.Value, model.Value);
+					return PatchOperation.Test(model.Path, model.Value);
 				case OperationType.Unknown:
 				default:
 					throw new JsonException();
