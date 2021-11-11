@@ -2552,6 +2552,12 @@ references:
   isSpec: "True"
   fullName: Json.Pointer.RelativeJsonPointer.IsIndexQuery
   nameWithType: RelativeJsonPointer.IsIndexQuery
+- uid: Json.Pointer.RelativeJsonPointer.JsonPointer
+  name: JsonPointer
+  href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_JsonPointer
+  commentId: F:Json.Pointer.RelativeJsonPointer.JsonPointer
+  fullName: Json.Pointer.RelativeJsonPointer.JsonPointer
+  nameWithType: RelativeJsonPointer.JsonPointer
 - uid: Json.Pointer.RelativeJsonPointer.Null
   name: "Null"
   href: api/Json.Pointer.RelativeJsonPointer.html#Json_Pointer_RelativeJsonPointer_Null
@@ -14951,15 +14957,15 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.DynamicAnchors
   nameWithType: ValidationContext.DynamicAnchors
-- uid: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{Uri})
-  name: From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Nullable<Uri>)
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_Json_Schema_ValidationContext_System_Nullable_Json_Pointer_JsonPointer___System_Nullable_JsonElement___System_Nullable_Json_Pointer_JsonPointer___System_Nullable_Uri__
-  commentId: M:Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{JsonElement}@,System.Nullable{Json.Pointer.JsonPointer}@,System.Nullable{Uri})
-  name.vb: From(ValidationContext, ByRef Nullable(Of JsonPointer), ByRef Nullable(Of JsonElement), ByRef Nullable(Of JsonPointer), Nullable(Of Uri))
-  fullName: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, System.Nullable<Json.Pointer.JsonPointer>, System.Nullable<JsonElement>, System.Nullable<Json.Pointer.JsonPointer>, System.Nullable<Uri>)
-  fullName.vb: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, ByRef System.Nullable(Of Json.Pointer.JsonPointer), ByRef System.Nullable(Of JsonElement), ByRef System.Nullable(Of Json.Pointer.JsonPointer), System.Nullable(Of Uri))
-  nameWithType: ValidationContext.From(ValidationContext, Nullable<JsonPointer>, Nullable<JsonElement>, Nullable<JsonPointer>, Nullable<Uri>)
-  nameWithType.vb: ValidationContext.From(ValidationContext, ByRef Nullable(Of JsonPointer), ByRef Nullable(Of JsonElement), ByRef Nullable(Of JsonPointer), Nullable(Of Uri))
+- uid: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,Json.Pointer.JsonPointer@,System.Nullable{JsonElement}@,Json.Pointer.JsonPointer@,System.Nullable{Uri})
+  name: From(ValidationContext, JsonPointer, Nullable<JsonElement>, JsonPointer, Nullable<Uri>)
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_Json_Schema_ValidationContext_Json_Pointer_JsonPointer__System_Nullable_JsonElement___Json_Pointer_JsonPointer__System_Nullable_Uri__
+  commentId: M:Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,Json.Pointer.JsonPointer@,System.Nullable{JsonElement}@,Json.Pointer.JsonPointer@,System.Nullable{Uri})
+  name.vb: From(ValidationContext, ByRef JsonPointer, ByRef Nullable(Of JsonElement), ByRef JsonPointer, Nullable(Of Uri))
+  fullName: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, Json.Pointer.JsonPointer, System.Nullable<JsonElement>, Json.Pointer.JsonPointer, System.Nullable<Uri>)
+  fullName.vb: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, ByRef Json.Pointer.JsonPointer, ByRef System.Nullable(Of JsonElement), ByRef Json.Pointer.JsonPointer, System.Nullable(Of Uri))
+  nameWithType: ValidationContext.From(ValidationContext, JsonPointer, Nullable<JsonElement>, JsonPointer, Nullable<Uri>)
+  nameWithType.vb: ValidationContext.From(ValidationContext, ByRef JsonPointer, ByRef Nullable(Of JsonElement), ByRef JsonPointer, Nullable(Of Uri))
 - uid: Json.Schema.ValidationContext.From*
   name: From
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_
