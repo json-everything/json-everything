@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Schema;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 namespace Json.Patch.Tests.Suite
 {
@@ -10,7 +11,7 @@ namespace Json.Patch.Tests.Suite
 	public class JsonPatchTest
 	{
 		public static readonly JsonSchema TestSchema = new JsonSchemaBuilder()
-			.Schema(MetaSchemas.Draft201909Id)
+			.Schema(MetaSchemas.Draft202012Id)
 			.Defs(
 				("operationType", new JsonSchemaBuilder().Enum(
 						"add".AsJsonElement(),
@@ -32,8 +33,14 @@ namespace Json.Patch.Tests.Suite
 						.Type(SchemaValueType.Object)
 						.Properties(
 							("op", new JsonSchemaBuilder().Ref("#/$defs/operationType")),
-							("path", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-							("from", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+							("path", new JsonSchemaBuilder()
+								.Type(SchemaValueType.String)
+								.Format(Formats.JsonPointer)
+							),
+							("from", new JsonSchemaBuilder()
+								.Type(SchemaValueType.String)
+								.Format(Formats.JsonPointer)
+							),
 							("value", true)
 						)
 						.Required("op")
@@ -68,14 +75,14 @@ namespace Json.Patch.Tests.Suite
 		public JsonElement ExpectedValue { get; set; }
 		public string Error { get; set; }
 		public string Comment { get; set; }
-		public Json.Patch.JsonPatch Patch { get; set; }
+		public JsonPatch Patch { get; set; }
 		public bool Disabled { get; set; }
 
 		public bool ExpectsError => Error != null;
 		public bool HasExpectedValue => ExpectedValue.ValueKind != JsonValueKind.Undefined;
 	}
 
-	public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest>
+	public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 	{
 		private class Model
 		{
@@ -83,15 +90,19 @@ namespace Json.Patch.Tests.Suite
 			public JsonElement Expected { get; set; }
 			public string Error { get; set; }
 			public string Comment { get; set; }
-			public Json.Patch.JsonPatch Patch { get; set; }
+			public JsonPatch Patch { get; set; }
 			public bool Disabled { get; set; }
 		}
 
-		public override JsonPatchTest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override JsonPatchTest? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			var results = JsonPatchTest.TestSchema.Validate(element, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+			var results = JsonPatchTest.TestSchema.Validate(element, new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed,
+				RequireFormatValidation = true
+			});
 			if (results.IsValid)
 			{
 				var model = JsonSerializer.Deserialize<Model>(element.GetRawText(), options);
@@ -105,15 +116,16 @@ namespace Json.Patch.Tests.Suite
 					Disabled = model.Disabled
 				};
 			}
-			
+
+			Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions{WriteIndented = true}));
 			return null;
 		}
 
-		public override void Write(Utf8JsonWriter writer, JsonPatchTest value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, JsonPatchTest? value, JsonSerializerOptions options)
 		{
 			writer.WriteStartObject();
 
-			if (value.Doc.ValueKind != JsonValueKind.Undefined)
+			if (value!.Doc.ValueKind != JsonValueKind.Undefined)
 			{
 				writer.WritePropertyName("doc");
 				value.Doc.WriteTo(writer);
