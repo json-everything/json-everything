@@ -102,7 +102,7 @@ namespace Json.Schema
 						return;
 					}
 
-					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
+					(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
 					navigatedByDirectRef = false;
 				}
 				else

@@ -57,7 +57,7 @@ namespace Json.Path
 			if (document == null) return null;
 			if (string.IsNullOrWhiteSpace(fragment)) return document.RootElement;
 			if (!JsonPointer.TryParse(fragment, out var pointer)) return null;
-			return pointer.Evaluate(document.RootElement);
+			return pointer!.Evaluate(document.RootElement);
 		}
 
 		internal static async Task<JsonDocument?> DefaultDownload(Uri uri)

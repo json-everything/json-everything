@@ -183,7 +183,7 @@ namespace Json.Schema
 		{
 			if (element.ValueKind != JsonValueKind.String) return true;
 
-			return Pointer.JsonPointer.TryParse(element.GetString(), out var p) && !p.IsUriEncoded;
+			return Pointer.JsonPointer.TryParse(element.GetString(), out var p) && !p!.IsUriEncoded;
 		}
 
 		private static bool CheckRelativeJsonPointer(JsonElement element)

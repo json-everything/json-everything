@@ -101,7 +101,7 @@ namespace Json.Schema
 						return;
 					}
 
-					(schema, newUri) = baseSchema.FindSubschema(pointer, newUri);
+					(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
 				}
 				else
 					schema = baseSchema;
