@@ -1,3 +1,7 @@
+# [1.3.2](https://github.com/gregsdennis/json-everything/pull/182)
+
+Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.
+
 # [1.3.1](https://github.com/gregsdennis/json-everything/pull/133)
 
 [#132](https://github.com/gregsdennis/json-everything/pull/132) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
