@@ -24,6 +24,13 @@ namespace Json.Schema
 		/// The regular expression.
 		/// </summary>
 		public Regex Value { get; }
+		/// <summary>
+		/// If the pattern is invalid or unsupported by <see cref="Regex"/>, it will appear here.
+		/// </summary>
+		/// <remarks>
+		/// All validations will fail if this is populated.
+		/// </remarks>
+		public string? InvalidPattern { get; }
 
 		/// <summary>
 		/// Creates a new <see cref="PatternKeyword"/>.
@@ -34,6 +41,14 @@ namespace Json.Schema
 			Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
+		private PatternKeyword(string invalidPattern)
+		{
+			InvalidPattern = invalidPattern;
+			Value = new Regex($"^{Guid.NewGuid():N}$");
+		}
+
+		internal static PatternKeyword InvalidRegex(string pattern) => new(pattern);
+
 		/// <summary>
 		/// Provides validation for the keyword.
 		/// </summary>
@@ -41,6 +56,13 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
+			if (InvalidPattern != null)
+			{
+				context.Message = $"The regular expression `{InvalidPattern}` is either invalid or not supported";
+				context.IsValid = false;
+				return;
+			}
+
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
 				context.WrongValueKind(context.LocalInstance.ValueKind);
@@ -89,9 +111,16 @@ namespace Json.Schema
 				throw new JsonException("Expected string");
 
 			var str = reader.GetString();
-			var regex = new Regex(str, RegexOptions.ECMAScript | RegexOptions.Compiled);
+			try
+			{
+				var regex = new Regex(str, RegexOptions.ECMAScript | RegexOptions.Compiled);
 
-			return new PatternKeyword(regex);
+				return new PatternKeyword(regex);
+			}
+			catch
+			{
+				return PatternKeyword.InvalidRegex(str);
+			}
 		}
 		public override void Write(Utf8JsonWriter writer, PatternKeyword value, JsonSerializerOptions options)
 		{

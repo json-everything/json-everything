@@ -28,6 +28,13 @@ namespace Json.Schema
 		/// The pattern-keyed schemas.
 		/// </summary>
 		public IReadOnlyDictionary<Regex, JsonSchema> Patterns { get; }
+		/// <summary>
+		/// If any pattern is invalid or unsupported by <see cref="Regex"/>, it will appear here.
+		/// </summary>
+		/// <remarks>
+		/// All validations will fail if this is populated.
+		/// </remarks>
+		public IReadOnlyList<string>? InvalidPatterns { get; }
 
 		IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
 
@@ -44,6 +51,11 @@ namespace Json.Schema
 		{
 			Patterns = values ?? throw new ArgumentNullException(nameof(values));
 		}
+		internal PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values, IReadOnlyList<string> invalidPatterns)
+		{
+			Patterns = values ?? throw new ArgumentNullException(nameof(values));
+			InvalidPatterns = invalidPatterns;
+		}
 
 		/// <summary>
 		/// Provides validation for the keyword.
@@ -52,6 +64,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
+			
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
 				context.WrongValueKind(context.LocalInstance.ValueKind);
@@ -80,6 +93,20 @@ namespace Json.Schema
 					if (!overallResult && context.ApplyOptimizations) break;
 					context.NestedContexts.Add(subContext);
 					evaluatedProperties.Add(instanceProperty.Name);
+				}
+			}
+			if (InvalidPatterns?.Any() ?? false)
+			{
+				foreach (var pattern in InvalidPatterns)
+				{
+					var subContext = ValidationContext.From(context,
+						subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
+					subContext.Message = $"The regular expression `{pattern}` is either invalid or not supported";
+					subContext.IsValid = false;
+					overallResult &= subContext.IsValid;
+					context.Log(() => $"Discovered invalid pattern '{pattern}'.");
+					if (!overallResult && context.ApplyOptimizations) break;
+					context.NestedContexts.Add(subContext);
 				}
 			}
 			context.Options.LogIndentLevel--;
@@ -163,9 +190,22 @@ namespace Json.Schema
 			if (reader.TokenType != JsonTokenType.StartObject)
 				throw new JsonException("Expected object");
 
-			var schemas = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options)
-				.ToDictionary(kvp => new Regex(kvp.Key, RegexOptions.ECMAScript | RegexOptions.Compiled), kvp => kvp.Value);
-			return new PatternPropertiesKeyword(schemas);
+			var patternProps = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options);
+			var schemas = new Dictionary<Regex, JsonSchema>();
+			var invalidProps = new List<string>();
+			foreach (var prop in patternProps)
+			{
+				try
+				{
+					var regex = new Regex(prop.Key, RegexOptions.ECMAScript | RegexOptions.Compiled);	
+					schemas.Add(regex, prop.Value);
+				}
+				catch
+				{
+					invalidProps.Add(prop.Key);
+				}
+			}
+			return new PatternPropertiesKeyword(schemas, invalidProps);
 		}
 		public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)
 		{
