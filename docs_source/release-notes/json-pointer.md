@@ -1,3 +1,7 @@
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/185)
+
+[#184](https://github.com/gregsdennis/json-everything/issues/184) - [@JanKnipp](https://github.com/JanKnipp) added array (e.g. `int[]`) support to Linq expression construction of pointers.
+
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/179)
 
 [#171](https://github.com/gregsdennis/json-everything/issues/171) - Updated `JsonPointer`, `PointerSegment`, and `RelativeJsonPointer` from struct to class since it holds by-reference data anyway.  Removes parameterless constructor for these types.  These changes make them better immutable models.
