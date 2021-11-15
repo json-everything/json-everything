@@ -1,6 +1,6 @@
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/185)
 
-[#183](https://github.com/gregsdennis/json-everything/issues/183) - [@JanKnipp](https://github.com/JanKnipp) added array (e.g. `int[]`) support to Linq expression construction of pointers.
+[#184](https://github.com/gregsdennis/json-everything/issues/184) - [@JanKnipp](https://github.com/JanKnipp) added array (e.g. `int[]`) support to Linq expression construction of pointers.
 
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/179)
 
