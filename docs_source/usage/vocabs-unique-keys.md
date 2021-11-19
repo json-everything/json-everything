@@ -28,7 +28,7 @@ The following defines a schema to validate an array with items that have unique 
 
 ```json
 {
-  "$schema": "https://gregsdennis.github.io/json-everything/meta/unique-path",
+  "$schema": "https://gregsdennis.github.io/json-everything/meta/unique-keys",
   "type": "array",
   "items": {
     "type": "object",
