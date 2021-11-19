@@ -253,6 +253,12 @@ namespace Json.Pointer
 				{
 					segments.Insert(0, PointerSegment.Create(mce.Arguments[0].ToString()));
 					body = mce.Object;
+				} else if (body is BinaryExpression {Right: ConstantExpression arrayIndexExpression} binaryExpression
+				           and {NodeType: ExpressionType.ArrayIndex})
+				{
+					// Array index
+					segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value.ToString()));
+					body = binaryExpression.Left;
 				}
 				else if (body is ParameterExpression) break; // this is the param of the expression itself.
 				else throw new NotSupportedException($"Expression nodes of type {body.NodeType} are not currently supported.");

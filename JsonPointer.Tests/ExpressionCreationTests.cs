@@ -11,6 +11,7 @@ namespace Json.Pointer.Tests
 			public List<int> Ints { get; set; }
 			public TestClass Nest { get; set; }
 			public List<TestClass> NestMore { get; set; }
+			public string[] StringArray { get; set; }
 		}
 
 		[Test]
@@ -27,6 +28,15 @@ namespace Json.Pointer.Tests
 		{
 			var expected = "/Ints/1";
 			var actual = JsonPointer.Create<TestClass>(x => x.Ints[1]);
+			
+			Assert.AreEqual(expected, actual.ToString());
+		}
+
+		[Test]
+		public void SimpleArrayIndexWithAnActualArray()
+		{
+			var expected = "/StringArray/2";
+			var actual = JsonPointer.Create<TestClass>(x => x.StringArray[2]);
 			
 			Assert.AreEqual(expected, actual.ToString());
 		}
