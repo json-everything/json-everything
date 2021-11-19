@@ -79,6 +79,8 @@ namespace Json.Schema.Tests.Suite
 		[OneTimeSetUp]
 		public void LoadRemoteSchemas()
 		{
+			TestVocabularies.Register();
+
 			var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _remoteSchemasPath)
 				.AdjustForPlatform();
 			if (!Directory.Exists(remotesPath)) throw new Exception("Cannot find remotes folder");

@@ -15,6 +15,7 @@ namespace Json.Schema
 			public JsonSchema Schema { get; set; }
 #pragma warning restore 8618
 			public bool HasDynamic { get; set; }
+			public int DynamicSequence { get; set; } = int.MaxValue;
 			public bool HasStatic { get; set; }
 		}
 
@@ -121,7 +122,11 @@ namespace Json.Schema
 			if (registration == null)
 				_registered[uri] = registration = new Registration();
 			if (registration.Anchors.TryGetValue(anchor, out var existing))
+			{
 				existing.HasDynamic = true;
+				existing.DynamicSequence = _registered.SelectMany(x => x.Value.Anchors.Where(y => y.Key == anchor &&
+				                                                                                  y.Value.HasDynamic)).Count();
+			}
 			else
 				registration.Anchors[anchor] = new Anchor {Schema = schema, HasDynamic = true};
 		}
@@ -149,8 +154,15 @@ namespace Json.Schema
 
 		internal JsonSchema? GetDynamic(Uri? uri, string? anchor)
 		{
+			var firstAnchor = _registered?.SelectMany(x => x.Value.Anchors.Values)
+				.Where(x => x.HasDynamic)
+				.OrderBy(x => x.DynamicSequence)
+				.FirstOrDefault();
+			if (firstAnchor != null) return firstAnchor.Schema;
+
 			Registration? registration = null;
 			uri = MakeAbsolute(uri);
+
 			// check local
 			if (_registered != null)
 				registration = CheckRegistry(_registered, uri);
