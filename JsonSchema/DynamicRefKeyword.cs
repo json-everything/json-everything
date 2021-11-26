@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -9,8 +10,8 @@ namespace Json.Schema
 	/// Handles `$dynamicRef`.
 	/// </summary>
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909)]
-	[Vocabulary(Vocabularies.Core201909Id)]
+	[SchemaDraft(Draft.Draft202012)]
+	[Vocabulary(Vocabularies.Core202012Id)]
 	[JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
 	public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
 	{
@@ -37,6 +38,10 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
+			var hasSiblingDynamicAnchor = context.LocalSchema.Keywords!.OfType<DynamicAnchorKeyword>().Any();
+			Func<Uri?, string?, JsonSchema?> getSchema = hasSiblingDynamicAnchor
+				? context.Options.SchemaRegistry.GetDynamic
+				: context.Options.SchemaRegistry.Get;
 			var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
@@ -46,20 +51,20 @@ namespace Json.Schema
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-					baseSchema = context.Options.SchemaRegistry.GetDynamic(newUri, fragment);
+					baseSchema = getSchema(newUri, fragment);
 				else if (context.CurrentUri != null)
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
 						: context.CurrentUri.GetParentUri();
 					newUri = new Uri(uriFolder, baseUri);
-					baseSchema = context.Options.SchemaRegistry.GetDynamic(newUri, fragment);
+					baseSchema = getSchema(newUri, fragment);
 				}
 			}
 			else
 			{
 				newUri = context.CurrentUri;
-				baseSchema ??= context.Options.SchemaRegistry.GetDynamic(newUri, fragment) ?? context.SchemaRoot;
+				baseSchema ??= getSchema(newUri, fragment) ?? context.SchemaRoot;
 			}
 
 			var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
@@ -76,7 +81,7 @@ namespace Json.Schema
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
 			{
-				schema = baseSchema ?? context.Options.SchemaRegistry.GetDynamic(newUri, fragment);
+				schema = baseSchema ?? getSchema(newUri, fragment);
 			}
 			else
 			{

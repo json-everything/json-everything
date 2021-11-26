@@ -212,8 +212,12 @@ namespace Json.Schema
 
 			ValidationContext? newContext = null;
 			var overallResult = true;
+			List<Type>? keywordTypesToProcess = null;
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
+				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
+				if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
+		
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));

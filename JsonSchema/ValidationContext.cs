@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -163,7 +164,8 @@ namespace Json.Schema
 				UriChanged = source.UriChanged || source.CurrentUri != newUri,
 				_navigatedReferences = source._navigatedReferences == null || instance != null
 					? null
-					: new HashSet<string>(source._navigatedReferences)
+					: new HashSet<string>(source._navigatedReferences),
+				MetaSchemaVocabs = source.MetaSchemaVocabs
 			};
 		}
 
@@ -220,6 +222,13 @@ namespace Json.Schema
 		public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
 		{
 			_consolidationActions.Add(consolidateAnnotations);
+		}
+
+		internal IEnumerable<Type>? GetKeywordsToProcess()
+		{
+			return MetaSchemaVocabs?.Keys
+				.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
+				                 Enumerable.Empty<Type>());
 		}
 	}
 }
