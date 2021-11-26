@@ -295,7 +295,8 @@ namespace Json.Schema
 
 		private string ToDebugString()
 		{
-			var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
+			if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
+			var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
 			return idKeyword?.Id.OriginalString ?? ValidationOptions.Default.DefaultBaseUri.OriginalString;
 		}
 

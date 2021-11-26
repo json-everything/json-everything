@@ -12,6 +12,7 @@ namespace Json.Schema
 	{
 		private Uri? _defaultBaseUri;
 		private ILog? _log;
+		private List<Type>? _vocabKeywords;
 
 		/// <summary>
 		/// The default settings.
@@ -92,17 +93,17 @@ namespace Json.Schema
 		
 		internal Draft ValidatingAs { get; private set; }
 
+		static ValidationOptions()
+		{
+			Default.SchemaRegistry.InitializeMetaSchemas();
+		}
+
 		/// <summary>
 		/// Create a new instance of the <see cref="ValidationOptions"/> class.
 		/// </summary>
 		public ValidationOptions()
 		{
 			SchemaRegistry = new SchemaRegistry(this);
-		}
-
-		static ValidationOptions()
-		{
-			Default.SchemaRegistry.InitializeMetaSchemas();
 		}
 
 		internal static ValidationOptions From(ValidationOptions other)
@@ -125,6 +126,16 @@ namespace Json.Schema
 		internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri? metaSchemaId, SchemaRegistry registry)
 		{
 			ValidatingAs = Draft.Unspecified;
+			if (metaSchemaId != null)
+			{
+				var rootMetaSchema = registry.Get(metaSchemaId);
+				var vocabularyKeyword = rootMetaSchema?.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
+				if (vocabularyKeyword != null)
+				{
+					var keywordTypes = vocabularyKeyword.Vocabulary.Keys.SelectMany(x => VocabularyRegistry.Get(x)?.Keywords ?? Enumerable.Empty<Type>());
+					return keywords.Where(x => keywordTypes.Contains(x.GetType()));
+				}
+			}
 			while (metaSchemaId != null && ValidatingAs == Draft.Unspecified)
 			{
 				ValidatingAs = metaSchemaId.OriginalString switch
