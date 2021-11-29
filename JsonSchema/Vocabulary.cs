@@ -18,8 +18,6 @@ namespace Json.Schema
 		/// </summary>
 		public IReadOnlyCollection<Type> Keywords { get; }
 
-		public JsonSchema? MetaSchema { get; }
-
 		/// <summary>
 		/// Creates a new <see cref="Vocabulary"/>.
 		/// </summary>
@@ -39,30 +37,6 @@ namespace Json.Schema
 		public Vocabulary(string id, IEnumerable<Type> keywords)
 		{
 			Id = new Uri(id, UriKind.Absolute);
-			Keywords = keywords.ToList();
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="Vocabulary"/>.
-		/// </summary>
-		/// <param name="id">The vocabulary ID.</param>
-		/// <param name="keywords">The types of the keywords that are defined by the vocabulary.</param>
-		public Vocabulary(string id, JsonSchema metaSchema, params Type[] keywords)
-		{
-			Id = new Uri(id, UriKind.Absolute);
-			MetaSchema = metaSchema;
-			Keywords = keywords.ToList();
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="Vocabulary"/>.
-		/// </summary>
-		/// <param name="id">The vocabulary ID.</param>
-		/// <param name="keywords">The types of the keywords that are defined by the vocabulary.</param>
-		public Vocabulary(string id, JsonSchema metaSchema, IEnumerable<Type> keywords)
-		{
-			Id = new Uri(id, UriKind.Absolute);
-			MetaSchema = metaSchema;
 			Keywords = keywords.ToList();
 		}
 	}

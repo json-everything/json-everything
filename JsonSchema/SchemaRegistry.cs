@@ -16,7 +16,6 @@ namespace Json.Schema
 #pragma warning restore 8618
 			public bool HasDynamic { get; set; }
 			public int DynamicSequence { get; set; } = int.MaxValue;
-			public bool HasStatic { get; set; }
 		}
 
 		private class Registration
@@ -88,6 +87,13 @@ namespace Json.Schema
 		/// <param name="schema">The schema.</param>
 		public void Register(Uri? uri, JsonSchema schema)
 		{
+			RegisterSchema(uri, schema);
+			if (uri != null)
+				schema.RegisterSubschemas(this, uri);
+		}
+
+		internal void RegisterSchema(Uri? uri, JsonSchema schema)
+		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			uri = MakeAbsolute(uri);
 			var registration = CheckRegistry(_registered, uri);
@@ -109,10 +115,8 @@ namespace Json.Schema
 			var registration = CheckRegistry(_registered, uri);
 			if (registration == null)
 				_registered[uri] = registration = new Registration();
-			if (registration.Anchors.TryGetValue(anchor, out var existing))
-				existing.HasStatic = true;
-			else
-				registration.Anchors[anchor] = new Anchor {Schema = schema, HasStatic = true};
+			if (!registration.Anchors.ContainsKey(anchor))
+				registration.Anchors[anchor] = new Anchor {Schema = schema};
 		}
 
 		internal void RegisterDynamicAnchor(Uri uri, string anchor, JsonSchema schema)
@@ -122,16 +126,12 @@ namespace Json.Schema
 			if (registration == null)
 				_registered[uri] = registration = new Registration();
 			if (registration.Anchors.TryGetValue(anchor, out var existing))
-			{
 				existing.HasDynamic = true;
-				//existing.DynamicSequence = _registered.SelectMany(x => x.Value.Anchors.Where(y => y.Key == anchor &&
-				//                                                                                  y.Value.HasDynamic)).Count();
-			}
 			else
 				registration.Anchors[anchor] = new Anchor {Schema = schema, HasDynamic = true};
 		}
 
-		internal bool DynamicScopeDefinesAnchor(Uri? uri, string? anchor)
+		internal bool DynamicScopeDefinesAnchor(Uri uri, string anchor)
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			var registration = CheckRegistry(_registered, uri);
@@ -166,8 +166,9 @@ namespace Json.Schema
 
 		internal JsonSchema? GetDynamic(Uri? uri, string? anchor)
 		{
-			var firstAnchor = _registered?.SelectMany(x => x.Value.Anchors.Values)
-				.Where(x => x.HasDynamic)
+			var firstAnchor = _registered?.SelectMany(x => x.Value.Anchors)
+				.Where(x => x.Key == anchor && x.Value.HasDynamic)
+				.Select(x => x.Value)
 				.OrderBy(x => x.DynamicSequence)
 				.FirstOrDefault();
 			if (firstAnchor != null) return firstAnchor.Schema;
@@ -215,8 +216,8 @@ namespace Json.Schema
 				var schema = Fetch(uri) ?? Global.Fetch(uri);
 				if (schema == null) return null;
 
-				Register(uri, schema);
-				schema.RegisterSubschemas(this, uri);
+				RegisterSchema(uri, schema);
+				//schema.RegisterSubschemas(this, uri);
 				registration = CheckRegistry(_registered!, uri);
 			}
 
@@ -242,7 +243,7 @@ namespace Json.Schema
 				foreach (var anchor in registration.Anchors)
 				{
 					if (anchor.Value.HasDynamic)
-						anchor.Value.DynamicSequence = _registered.SelectMany(x =>
+						anchor.Value.DynamicSequence = _registered!.SelectMany(x =>
 							x.Value.Anchors.Where(y => y.Key == anchor.Key &&
 							                           y.Value.HasDynamic &&
 							                           y.Value.DynamicSequence != int.MaxValue)).Count();
@@ -252,7 +253,25 @@ namespace Json.Schema
 
 		internal void ExitingUriScope()
 		{
-			_scopes?.Pop();
+			var uri = _scopes?.Pop();
+
+			Registration? registration = null;
+			uri = MakeAbsolute(uri);
+			// check local
+			if (_registered != null)
+				registration = CheckRegistry(_registered, uri);
+			// if not found, check global
+			if (registration == null && !ReferenceEquals(Global, this))
+				registration = CheckRegistry(Global._registered!, uri);
+
+			if (registration != null)
+			{
+				foreach (var anchor in registration.Anchors)
+				{
+					if (anchor.Value.HasDynamic)
+						anchor.Value.DynamicSequence = int.MaxValue;
+				}
+			}
 		}
 
 		private static Registration? CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)

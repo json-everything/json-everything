@@ -42,30 +42,38 @@ namespace Json.Schema
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
-			var currentScopeDefinesDynamicAnchor = context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(context.CurrentUri, fragment);
-			Func<Uri?, string?, JsonSchema?> getSchema = currentScopeDefinesDynamicAnchor
-				? context.Options.SchemaRegistry.GetDynamic
-				: context.Options.SchemaRegistry.Get;
+
+			JsonSchema? GetSchema(Uri? uri, string? anchor)
+			{
+				var uriScope = uri ?? context.CurrentUri;
+				var currentScopeDefinesDynamicAnchor =
+					!string.IsNullOrEmpty(fragment) &&
+					context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(uriScope!, fragment!);
+
+				return currentScopeDefinesDynamicAnchor
+					? context.Options.SchemaRegistry.GetDynamic(uri, anchor)
+					: context.Options.SchemaRegistry.Get(uri, anchor);
+			}
 
 			Uri? newUri;
 			JsonSchema? baseSchema = null;
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-					baseSchema = getSchema(newUri, fragment);
+					baseSchema = GetSchema(newUri, fragment);
 				else if (context.CurrentUri != null)
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
 						: context.CurrentUri.GetParentUri();
 					newUri = new Uri(uriFolder, baseUri);
-					baseSchema = getSchema(newUri, fragment);
+					baseSchema = GetSchema(newUri, fragment);
 				}
 			}
 			else
 			{
 				newUri = context.CurrentUri;
-				baseSchema ??= getSchema(newUri, fragment) ?? context.SchemaRoot;
+				baseSchema ??= GetSchema(newUri, fragment) ?? context.SchemaRoot;
 			}
 
 			var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
@@ -82,7 +90,7 @@ namespace Json.Schema
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
 			{
-				schema = baseSchema ?? getSchema(newUri, fragment);
+				schema = baseSchema ?? GetSchema(newUri, fragment);
 			}
 			else
 			{

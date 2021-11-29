@@ -117,7 +117,7 @@ namespace Json.Schema
 				? BaseUri ?? baseUri
 				: baseUri;
 
-			context.Options.SchemaRegistry.Register(context.CurrentUri, this);
+			context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
 
 			options.Log.Write(() => "Beginning validation.");
 			ValidateSubschema(context);
@@ -171,7 +171,7 @@ namespace Json.Schema
 #pragma warning disable 8602
 				if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
 #pragma warning restore 8602
-					registry.Register(currentUri, this);
+					registry.RegisterSchema(currentUri, this);
 				else
 					registry.RegisterAnchor(currentUri, fragment, this);
 			}
