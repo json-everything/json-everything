@@ -38,13 +38,15 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			var hasSiblingDynamicAnchor = context.LocalSchema.Keywords!.OfType<DynamicAnchorKeyword>().Any();
-			Func<Uri?, string?, JsonSchema?> getSchema = hasSiblingDynamicAnchor
-				? context.Options.SchemaRegistry.GetDynamic
-				: context.Options.SchemaRegistry.Get;
 			var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
+
+			var currentScope = context.Options.SchemaRegistry.Get(context.CurrentUri);
+			var currentScopeDefinesDynamicAnchor = currentScope?.Keywords!.OfType<DynamicAnchorKeyword>().Any() ?? false;
+			Func<Uri?, string?, JsonSchema?> getSchema = currentScopeDefinesDynamicAnchor
+				? context.Options.SchemaRegistry.GetDynamic
+				: context.Options.SchemaRegistry.Get;
 
 			Uri? newUri;
 			JsonSchema? baseSchema = null;

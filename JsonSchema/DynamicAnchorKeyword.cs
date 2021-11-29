@@ -37,6 +37,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
+			context.Options.SchemaRegistry.RegisterDynamicAnchorSequence(context.CurrentUri!, Value, context.LocalSchema);
 			context.SetAnnotation(Name, Value);
 			context.IsValid = true;
 			context.ExitKeyword(Name, context.IsValid);
