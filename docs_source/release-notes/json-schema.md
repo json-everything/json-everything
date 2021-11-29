@@ -1,8 +1,17 @@
-# [1.11.4](https://github.com/gregsdennis/json-everything/pull/179)
+# [1.12.0](https://github.com/gregsdennis/json-everything/pull/179)
+
+Fixed bugs highlighted by updating test suite repository.
+
+- Advanced use cases for `$dynamicRef` and `$dynamicAnchor`
+- Added `PatternKeyword.InvalidPattern` and `PatternPropertiesKeyword.InvalidPatterns` to handle text that cannot be deserialized as a `RegEx`.  These will now generate validation failures rather than deserialization exceptions.
+- Keywords are now properly filtered by their vocabularies if the meta-schema declared by `$schema` includes a `$vocabulary` keyword.
+- Added `VocabularyRegistry.Get(Uri)`.
+
+# [1.11.5](https://github.com/gregsdennis/json-everything/pull/179)
 
 Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.
 
-# [1.11.3](https://github.com/gregsdennis/json-everything/pull/176)
+# [1.11.4](https://github.com/gregsdennis/json-everything/pull/176)
 
 [#175](https://github.com/gregsdennis/json-everything/pull/175) - [@ranma42](https://github.com/ranma42) tidied up the schema registry initialization code, also resolving some concurrency issues.
 

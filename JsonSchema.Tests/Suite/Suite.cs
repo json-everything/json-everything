@@ -96,6 +96,12 @@ namespace Json.Schema.Tests.Suite
 		[TestCaseSource(nameof(TestCases))]
 		public void Test(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
 		{
+			var serializerOptions = new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			};
+
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine(fileName);
@@ -103,22 +109,15 @@ namespace Json.Schema.Tests.Suite
 			Console.WriteLine(test.Description);
 			Console.WriteLine(test.Valid ? "valid" : "invalid");
 			Console.WriteLine();
+			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+			Console.WriteLine();
+			Console.WriteLine(test.Data.ToJsonString());
+			Console.WriteLine();
 
 			if (!InstanceIsDeserializable(test.Data))
 				Assert.Inconclusive("Instance not deserializable");
 
 			var result = collection.Schema.Validate(test.Data, options);
-
-			var serializerOptions = new JsonSerializerOptions
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			};
-			Console.WriteLine();
-			Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
-			Console.WriteLine();
-			Console.WriteLine(test.Data.ToJsonString());
-			Console.WriteLine();
 			result.ToDetailed();
 			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 

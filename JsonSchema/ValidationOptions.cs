@@ -92,17 +92,17 @@ namespace Json.Schema
 		
 		internal Draft ValidatingAs { get; private set; }
 
+		static ValidationOptions()
+		{
+			Default.SchemaRegistry.InitializeMetaSchemas();
+		}
+
 		/// <summary>
 		/// Create a new instance of the <see cref="ValidationOptions"/> class.
 		/// </summary>
 		public ValidationOptions()
 		{
 			SchemaRegistry = new SchemaRegistry(this);
-		}
-
-		static ValidationOptions()
-		{
-			Default.SchemaRegistry.InitializeMetaSchemas();
 		}
 
 		internal static ValidationOptions From(ValidationOptions other)

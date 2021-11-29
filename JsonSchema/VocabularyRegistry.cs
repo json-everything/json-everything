@@ -65,6 +65,21 @@ namespace Json.Schema
 			return false;
 		}
 
+		/// <summary>
+		/// Retrieves the vocabulary associated with the URI ID, if known.
+		/// </summary>
+		/// <param name="vocabularyId">The URI ID.</param>
+		/// <returns>The vocabulary, if known; otherwise null.</returns>
+		public Vocabulary? Get(Uri vocabularyId)
+		{
+			if (_vocabularies != null && _vocabularies.TryGetValue(vocabularyId, out var vocabulary)) return vocabulary;
+
+			if (!ReferenceEquals(this, Global))
+				return Global.Get(vocabularyId);
+
+			return null;
+		}
+
 		internal void CopyFrom(VocabularyRegistry other)
 		{
 			if (other._vocabularies == null) return;

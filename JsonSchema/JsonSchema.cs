@@ -117,7 +117,7 @@ namespace Json.Schema
 				? BaseUri ?? baseUri
 				: baseUri;
 
-			context.Options.SchemaRegistry.Register(context.CurrentUri, this);
+			context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
 
 			options.Log.Write(() => "Beginning validation.");
 			ValidateSubschema(context);
@@ -171,7 +171,7 @@ namespace Json.Schema
 #pragma warning disable 8602
 				if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
 #pragma warning restore 8602
-					registry.Register(currentUri, this);
+					registry.RegisterSchema(currentUri, this);
 				else
 					registry.RegisterAnchor(currentUri, fragment, this);
 			}
@@ -212,8 +212,12 @@ namespace Json.Schema
 
 			ValidationContext? newContext = null;
 			var overallResult = true;
+			List<Type>? keywordTypesToProcess = null;
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
+				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
+				if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
+		
 				var previousContext = newContext;
 				newContext = ValidationContext.From(context,
 					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
@@ -295,7 +299,8 @@ namespace Json.Schema
 
 		private string ToDebugString()
 		{
-			var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
+			if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
+			var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
 			return idKeyword?.Id.OriginalString ?? ValidationOptions.Default.DefaultBaseUri.OriginalString;
 		}
 

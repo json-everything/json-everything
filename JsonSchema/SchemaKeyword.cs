@@ -52,9 +52,9 @@ namespace Json.Schema
 				return;
 			}
 
-			var vocabularyKeyword = metaSchema.Keywords.OfType<VocabularyKeyword>().FirstOrDefault();
+			var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
 			if (vocabularyKeyword != null) 
-				context.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
+				context.ParentContext.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
 
 			if (!context.Options.ValidateMetaSchema)
 			{
