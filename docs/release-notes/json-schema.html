@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.11.4 </title>
+    <title>1.12.0 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.11.4 ">
+    <meta name="title" content="1.12.0 ">
     <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -77,12 +77,20 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="1114"><a href="https://github.com/gregsdennis/json-everything/pull/179">1.11.4</a></h1>
+<h1 id="1120"><a href="https://github.com/gregsdennis/json-everything/pull/179">1.12.0</a></h1>
 
+<p>Fixed bugs highlighted by updating test suite repository.</p>
+<ul>
+<li>Advanced use cases for <code>$dynamicRef</code> and <code>$dynamicAnchor</code></li>
+<li>Added <code>PatternKeyword.InvalidPattern</code> and <code>PatternPropertiesKeyword.InvalidPatterns</code> to handle text that cannot be deserialized as a <code>RegEx</code>.  These will now generate validation failures rather than deserialization exceptions.</li>
+<li>Keywords are now properly filtered by their vocabularies if the meta-schema declared by <code>$schema</code> includes a <code>$vocabulary</code> keyword.</li>
+<li>Added <code>VocabularyRegistry.Get(Uri)</code>.</li>
+</ul>
+<h1 id="1115"><a href="https://github.com/gregsdennis/json-everything/pull/179">1.11.5</a></h1>
 <p>Updated JsonPointer.Net to v2.0.0.  Please see <a href="json-pointer.html">release notes</a> for that library as it contains breaking changes.</p>
-<h1 id="1113"><a href="https://github.com/gregsdennis/json-everything/pull/176">1.11.3</a></h1>
+<h1 id="1114"><a href="https://github.com/gregsdennis/json-everything/pull/176">1.11.4</a></h1>
 <p><a href="https://github.com/gregsdennis/json-everything/pull/175">#175</a> - <a href="https://github.com/ranma42">@ranma42</a> tidied up the schema registry initialization code, also resolving some concurrency issues.</p>
-<h1 id="1113-1"><a href="https://github.com/gregsdennis/json-everything/pull/166">1.11.3</a></h1>
+<h1 id="1113"><a href="https://github.com/gregsdennis/json-everything/pull/166">1.11.3</a></h1>
 <p><a href="https://github.com/gregsdennis/json-everything/issues/165">#165</a> - <a href="https://github.com/pbajrak">@pbajrak</a> discovered a copy/paste error in the message for <code>minProperties</code>.</p>
 <h1 id="1112"><a href="https://github.com/gregsdennis/json-everything/pull/157">1.11.2</a></h1>
 <p>Fixed minor issue with <code>$dynamicRef</code>/<code>$dynamicAnchor</code> and resolution within specific scopes.</p>

@@ -12775,6 +12775,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.PatternKeyword.GetHashCode
   nameWithType: PatternKeyword.GetHashCode
+- uid: Json.Schema.PatternKeyword.InvalidPattern
+  name: InvalidPattern
+  href: api/Json.Schema.PatternKeyword.html#Json_Schema_PatternKeyword_InvalidPattern
+  commentId: P:Json.Schema.PatternKeyword.InvalidPattern
+  fullName: Json.Schema.PatternKeyword.InvalidPattern
+  nameWithType: PatternKeyword.InvalidPattern
+- uid: Json.Schema.PatternKeyword.InvalidPattern*
+  name: InvalidPattern
+  href: api/Json.Schema.PatternKeyword.html#Json_Schema_PatternKeyword_InvalidPattern_
+  commentId: Overload:Json.Schema.PatternKeyword.InvalidPattern
+  isSpec: "True"
+  fullName: Json.Schema.PatternKeyword.InvalidPattern
+  nameWithType: PatternKeyword.InvalidPattern
 - uid: Json.Schema.PatternKeyword.Validate(Json.Schema.ValidationContext)
   name: Validate(ValidationContext)
   href: api/Json.Schema.PatternKeyword.html#Json_Schema_PatternKeyword_Validate_Json_Schema_ValidationContext_
@@ -12855,6 +12868,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.PatternPropertiesKeyword.GetHashCode
   nameWithType: PatternPropertiesKeyword.GetHashCode
+- uid: Json.Schema.PatternPropertiesKeyword.InvalidPatterns
+  name: InvalidPatterns
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_InvalidPatterns
+  commentId: P:Json.Schema.PatternPropertiesKeyword.InvalidPatterns
+  fullName: Json.Schema.PatternPropertiesKeyword.InvalidPatterns
+  nameWithType: PatternPropertiesKeyword.InvalidPatterns
+- uid: Json.Schema.PatternPropertiesKeyword.InvalidPatterns*
+  name: InvalidPatterns
+  href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_InvalidPatterns_
+  commentId: Overload:Json.Schema.PatternPropertiesKeyword.InvalidPatterns
+  isSpec: "True"
+  fullName: Json.Schema.PatternPropertiesKeyword.InvalidPatterns
+  nameWithType: PatternPropertiesKeyword.InvalidPatterns
 - uid: Json.Schema.PatternPropertiesKeyword.Json#Schema#IKeyedSchemaCollector#Schemas
   name: IKeyedSchemaCollector.Schemas
   href: api/Json.Schema.PatternPropertiesKeyword.html#Json_Schema_PatternPropertiesKeyword_Json_Schema_IKeyedSchemaCollector_Schemas
@@ -15841,6 +15867,19 @@ references:
   commentId: T:Json.Schema.VocabularyRegistry
   fullName: Json.Schema.VocabularyRegistry
   nameWithType: VocabularyRegistry
+- uid: Json.Schema.VocabularyRegistry.Get(Uri)
+  name: Get(Uri)
+  href: api/Json.Schema.VocabularyRegistry.html#Json_Schema_VocabularyRegistry_Get_Uri_
+  commentId: M:Json.Schema.VocabularyRegistry.Get(Uri)
+  fullName: Json.Schema.VocabularyRegistry.Get(Uri)
+  nameWithType: VocabularyRegistry.Get(Uri)
+- uid: Json.Schema.VocabularyRegistry.Get*
+  name: Get
+  href: api/Json.Schema.VocabularyRegistry.html#Json_Schema_VocabularyRegistry_Get_
+  commentId: Overload:Json.Schema.VocabularyRegistry.Get
+  isSpec: "True"
+  fullName: Json.Schema.VocabularyRegistry.Get
+  nameWithType: VocabularyRegistry.Get
 - uid: Json.Schema.VocabularyRegistry.Global
   name: Global
   href: api/Json.Schema.VocabularyRegistry.html#Json_Schema_VocabularyRegistry_Global
