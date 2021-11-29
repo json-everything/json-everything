@@ -1,4 +1,4 @@
-# [1.12.0](https://github.com/gregsdennis/json-everything/pull/179)
+# [1.11.6](https://github.com/gregsdennis/json-everything/pull/189)
 
 Fixed bugs highlighted by updating test suite repository.
 
