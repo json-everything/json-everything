@@ -80,17 +80,6 @@ namespace Json.Schema
 			return null;
 		}
 
-		//public JsonSchema GetMetaschema(Uri vocabularyId)
-		//{
-		//	if (_vocabularies != null && _vocabularies.TryGetValue(vocabularyId, out var vocabulary))
-		//		return vocabulary.;
-
-		//	if (!ReferenceEquals(this, Global))
-		//		return Global.IsKnown(vocabularyId);
-
-		//	return false;
-		//}
-
 		internal void CopyFrom(VocabularyRegistry other)
 		{
 			if (other._vocabularies == null) return;
