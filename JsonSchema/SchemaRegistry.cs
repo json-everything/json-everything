@@ -131,21 +131,16 @@ namespace Json.Schema
 				registration.Anchors[anchor] = new Anchor {Schema = schema, HasDynamic = true};
 		}
 
-		internal void RegisterDynamicAnchorSequence(Uri uri, string anchor, JsonSchema schema)
+		internal bool DynamicScopeDefinesAnchor(Uri? uri, string? anchor)
 		{
 			_registered ??= new Dictionary<Uri, Registration>();
 			var registration = CheckRegistry(_registered, uri);
 			if (registration == null && !ReferenceEquals(Global, this))
 				registration = CheckRegistry(Global._registered!, uri);
-			if (registration == null)
-				throw new InvalidOperationException("Attempted to dynamic-sequence an unregistered uri");
-			if (!registration.Anchors.TryGetValue(anchor, out var existing))
-				throw new InvalidOperationException("Attempted to dynamic-sequence an unregistered anchor");
-			existing.HasDynamic = true;
-			existing.DynamicSequence = _registered.SelectMany(x =>
-				x.Value.Anchors.Where(y => y.Key == anchor &&
-				                           y.Value.HasDynamic &&
-				                           y.Value.DynamicSequence != int.MaxValue)).Count();
+			if (registration == null) return false;
+			if (!registration.Anchors.TryGetValue(anchor, out var existing)) return false;
+
+			return existing.HasDynamic;
 		}
 
 		/// <summary>
@@ -243,8 +238,16 @@ namespace Json.Schema
 			{
 				_scopes ??= new Stack<Uri>();
 				_scopes.Push(MakeAbsolute(uri));
-			}
 
+				foreach (var anchor in registration.Anchors)
+				{
+					if (anchor.Value.HasDynamic)
+						anchor.Value.DynamicSequence = _registered.SelectMany(x =>
+							x.Value.Anchors.Where(y => y.Key == anchor.Key &&
+							                           y.Value.HasDynamic &&
+							                           y.Value.DynamicSequence != int.MaxValue)).Count();
+				}
+			}
 		}
 
 		internal void ExitingUriScope()

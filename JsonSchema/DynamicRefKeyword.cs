@@ -42,8 +42,7 @@ namespace Json.Schema
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
-			var currentScope = context.Options.SchemaRegistry.Get(context.CurrentUri);
-			var currentScopeDefinesDynamicAnchor = currentScope?.Keywords!.OfType<DynamicAnchorKeyword>().Any() ?? false;
+			var currentScopeDefinesDynamicAnchor = context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(context.CurrentUri, fragment);
 			Func<Uri?, string?, JsonSchema?> getSchema = currentScopeDefinesDynamicAnchor
 				? context.Options.SchemaRegistry.GetDynamic
 				: context.Options.SchemaRegistry.Get;
