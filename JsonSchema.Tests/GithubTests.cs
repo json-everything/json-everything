@@ -543,7 +543,7 @@ namespace Json.Schema.Tests
 
 			var result = JsonSerializer.Deserialize<JsonElement>(Issue191_GetResource("Data"));
 
-			schema.Validate(result);
+			Assert.Throws<InvalidOperationException>(() => schema.Validate(result));
 		}
 	}
 }
