@@ -40,7 +40,7 @@ namespace Json.Schema.Tests
 					(Vocabularies.Core202012Id, true),
 					(Vocabularies.Applicator202012Id, true),
 					(Vocabularies.Metadata202012Id, true),
-					(Vocabularies.FormatAnnotation202012Id, false)
+					(Vocabularies.FormatAssertion202012Id, false)
 				)
 				.DynamicAnchor("meta")
 				.Title("format assertion meta-schema")
