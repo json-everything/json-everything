@@ -1,0 +1,9 @@
+﻿{
+    "$schema": "https://myserver.net/meta-schema",
+    "$id": "https://myserver.net/schema",
+    "properties": {
+        "publishedOnDate": {
+            "minDate": "2019-01-01"
+        }
+    }
+}
