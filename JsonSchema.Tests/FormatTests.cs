@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests
@@ -33,11 +31,11 @@ namespace Json.Schema.Tests
 			Assert.False(result.IsValid);
 		}
 
-		private static Uri FormatAssertionMetaSchemaId = new Uri("https://json-everything/test/format-assertion");
-		private static JsonSchema FormatAssertionMetaSchema =
+		private static readonly Uri _formatAssertionMetaSchemaId = new Uri("https://json-everything/test/format-assertion");
+		private static readonly JsonSchema _formatAssertionMetaSchema =
 						new JsonSchemaBuilder()
 				.Schema(MetaSchemas.Draft202012Id)
-				.Id(FormatAssertionMetaSchemaId)
+				.Id(_formatAssertionMetaSchemaId)
 				.Vocabulary(
 					(Vocabularies.Core202012Id, true),
 					(Vocabularies.Applicator202012Id, true),
@@ -68,16 +66,18 @@ namespace Json.Schema.Tests
 			var results = schema.Validate(instance, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
 
 			results.AssertValid();
+			var serialized = JsonSerializer.Serialize(results);
+			Assert.IsTrue(serialized.Contains("something-dumb"));
 		}
 
 		[Test]
 		public void UnknownFormat_Assertion_FailsValidation()
 		{
 			var options = new ValidationOptions {OutputFormat = OutputFormat.Detailed};
-			options.SchemaRegistry.Register(FormatAssertionMetaSchemaId, FormatAssertionMetaSchema);
+			options.SchemaRegistry.Register(_formatAssertionMetaSchemaId, _formatAssertionMetaSchema);
 
 			var schemaText = $@"{{
-	""$schema"": ""{FormatAssertionMetaSchemaId}"",
+	""$schema"": ""{_formatAssertionMetaSchemaId}"",
 	""type"": ""string"",
 	""format"": ""something-dumb""
 }}";
@@ -87,6 +87,8 @@ namespace Json.Schema.Tests
 			var results = schema.Validate(instance, options);
 
 			results.AssertInvalid();
+			var serialized = JsonSerializer.Serialize(results);
+			Assert.IsTrue(serialized.Contains("something-dumb"));
 		}
 
 		[Test]
@@ -107,6 +109,8 @@ namespace Json.Schema.Tests
 			});
 
 			results.AssertInvalid();
+			var serialized = JsonSerializer.Serialize(results);
+			Assert.IsTrue(serialized.Contains("something-dumb"));
 		}
 	}
 }

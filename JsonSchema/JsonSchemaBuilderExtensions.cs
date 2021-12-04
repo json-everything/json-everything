@@ -487,6 +487,18 @@ namespace Json.Schema
 		/// <param name="builder">The builder.</param>
 		/// <param name="format">The format.</param>
 		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder Format(this JsonSchemaBuilder builder, string format)
+		{
+			builder.Add(new FormatKeyword(Formats.Get(format)));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add a `format` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="format">The format.</param>
+		/// <returns>The builder.</returns>
 		public static JsonSchemaBuilder Format(this JsonSchemaBuilder builder, Format format)
 		{
 			builder.Add(new FormatKeyword(format));
