@@ -114,7 +114,7 @@ namespace Json.Patch
 				var modProp = mod.EnumerateObject().First(p => p.NameEquals(k));
 
 				if (origProp.Value.ValueKind != modProp.Value.ValueKind)
-					patch.Add(PatchOperation.Replace(JsonPointer.Parse(path + modProp.Name), modProp.Value));
+					patch.Add(PatchOperation.Replace(path.Combine(modProp.Name), modProp.Value));
 				else if (!string.Equals(origProp.Value.ToString(), modProp.Value.ToString())) // TODO
 				{
 					if (origProp.Value.ValueKind == JsonValueKind.Object)
