@@ -1,3 +1,7 @@
+# [1.1.1](https://github.com/gregsdennis/json-everything/pull/196)
+
+[#192](https://github.com/gregsdennis/json-everything/pull/192) - [@LordXaosa](https://github.com/LordXaosa) found some issues with patch generation.
+
 # [1.1.1](https://github.com/gregsdennis/json-everything/pull/179)
 
 Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.

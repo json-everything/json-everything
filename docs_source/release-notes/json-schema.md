@@ -1,3 +1,12 @@
+# [1.12.0](https://github.com/gregsdennis/json-everything/pull/196)
+
+[#191](https://github.com/gregsdennis/json-everything/issues/191) - Self-referencing meta-schemas cause an infinite loop during validation.
+
+[#193](https://github.com/gregsdennis/json-everything/issues/193) - Custom format validations don't provide sufficient information and don't cause validation to fail when assertion is required.
+
+- Added `UnknownFormat` and `Format.CreateUnknown`.
+- Added `JsonSchemaBuilder.Format(string)` which looks up the format key.
+
 # [1.11.6](https://github.com/gregsdennis/json-everything/pull/189)
 
 Fixed bugs highlighted by updating test suite repository.

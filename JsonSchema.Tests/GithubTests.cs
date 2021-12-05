@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 
@@ -498,6 +499,51 @@ namespace Json.Schema.Tests
 			var json = JsonDocument.Parse("\"value\"").RootElement;
 
 			schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
+		}
+
+		[SchemaKeyword(Name)]
+		private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
+		{
+			private const string Name = "minDate";
+
+			public bool Equals(MinDateKeyword other)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void Validate(ValidationContext context)
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		private static string Issue191_GetResource(string name)
+		{
+			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", $"Issue191_{name}.json")
+				.AdjustForPlatform();
+
+			return File.ReadAllText(path);
+		}
+
+		[Test]
+		public void Issue191_SelfReferentialCustomMetaschemaShouldError()
+		{
+			var metaSchemaId = new Uri("https://myserver.net/meta-schema");
+
+			var vocabId = "https://myserver.net/my-vocab";
+
+			var metaSchema = JsonSchema.FromText(Issue191_GetResource("MetaSchema"));
+
+			var schema = JsonSchema.FromText(Issue191_GetResource("Schema"));
+
+			SchemaKeywordRegistry.Register<MinDateKeyword>();
+
+			VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
+			SchemaRegistry.Global.Register(metaSchemaId, metaSchema);
+
+			var result = JsonSerializer.Deserialize<JsonElement>(Issue191_GetResource("Data"));
+
+			Assert.Throws<InvalidOperationException>(() => schema.Validate(result));
 		}
 	}
 }

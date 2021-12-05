@@ -57,9 +57,13 @@ namespace Json.Schema
 				{
 					foreach (var formatAssertionId in _formatAssertionIds)
 					{
-						if (vocabRequirements.TryGetValue(formatAssertionId, out var formatAssertionRequirement))
+						if (vocabRequirements.ContainsKey(formatAssertionId))
 						{
-							requireValidation = formatAssertionRequirement;
+							// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
+							// for why we don't take the vocab value.
+							// tl;dr - This implementation understands the assertion vocab, so we apply it,
+							// even when the meta-schema says we're not required to.
+							requireValidation = true;
 							break;
 						}
 					}
@@ -69,9 +73,11 @@ namespace Json.Schema
 			string? errorMessage = null;
 			context.IsValid = !requireValidation || Value.Validate(context.LocalInstance, out errorMessage);
 			if (!context.IsValid)
-				context.Message = errorMessage == null
-					? $"Value does not match format '{Value.Key}'"
-					: $"Value does not match format '{Value.Key}': {errorMessage}";
+				context.Message = Value is UnknownFormat
+					? errorMessage
+					: errorMessage == null
+						? $"Value does not match format '{Value.Key}'"
+						: $"Value does not match format '{Value.Key}': {errorMessage}";
 			context.ExitKeyword(Name, context.IsValid);
 		}
 

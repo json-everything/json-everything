@@ -55,6 +55,32 @@ namespace Json.Patch.Tests
 			
 			Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
 		}
+		
+		[Test]
+		public void CreatePatch_ChangeTypeInArray()
+		{
+			var initial = JsonDocument.Parse("[{\"test\":true},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]},{\"test\":[1,2,3]}]");
+			var expected = JsonDocument.Parse("[{\"test\":false},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":{\"test\":123}},{\"test\":[1,2,3]}]");
+			var patchExpected =
+				"[{\"op\":\"replace\",\"path\":\"/0/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"replace\",\"path\":\"/4/test\",\"value\":{\"test\":123}},{\"op\":\"add\",\"path\":\"/5\",\"value\":{\"test\":[1,2,3]}}]";
+			
+			var patch = initial.CreatePatch(expected);
+			
+			Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
+		}
+		
+		[Test]
+		public void CreatePatch_ChangeTypeInObject()
+		{
+			var initial = JsonDocument.Parse("{\"test\":true, \"test2\":\"string\", \"test3\":{\"test123\":123}}");
+			var expected = JsonDocument.Parse("{\"test\":false, \"test2\":123, \"test3\":[123]}");
+			var patchExpected =
+				"[{\"op\":\"replace\",\"path\":\"/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/test2\",\"value\":123},{\"op\":\"replace\",\"path\":\"/test3\",\"value\":[123]}]";
+			
+			var patch = initial.CreatePatch(expected);
+			
+			Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
+		}
 
 		[Test]
 		public void Add_Test()

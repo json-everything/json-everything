@@ -123,6 +123,7 @@ namespace Json.Schema
 		/// <summary>
 		/// A placeholder for an unknown format.
 		/// </summary>
+		[Obsolete("Use method CreateUnknown(string) to create an unknown format.")]
 		public static readonly Format Unknown = new Format();
 
 		static Formats()
@@ -142,19 +143,29 @@ namespace Json.Schema
 		/// <returns>The specified format, if known; otherwise null.</returns>
 		public static Format Get(string key)
 		{
-			return _registry.TryGetValue(key, out var format) ? format : Unknown;
+			return _registry.TryGetValue(key, out var format) ? format : CreateUnknown(key);
 		}
 
 		/// <summary>
 		/// Registers a new format.
 		/// </summary>
-		/// <param name="format"></param>
+		/// <param name="format">The format.</param>
 		public static void Register(Format format)
 		{
 			if (format == null)
 				throw new ArgumentNullException(nameof(format));
 
 			_registry[format.Key] = format;
+		}
+
+		/// <summary>
+		/// Creates an unknown format.
+		/// </summary>
+		/// <param name="name">The format key.</param>
+		/// <returns>A <see cref="Format"/> instance.</returns>
+		public static Format CreateUnknown(string name)
+		{
+			return new UnknownFormat(name);
 		}
 
 		private static bool CheckAbsoluteUri(JsonElement element)
