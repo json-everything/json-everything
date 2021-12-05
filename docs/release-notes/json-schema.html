@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.11.6 </title>
+    <title>1.12.0 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.11.6 ">
+    <meta name="title" content="1.12.0 ">
     <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -77,8 +77,15 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="1116"><a href="https://github.com/gregsdennis/json-everything/pull/189">1.11.6</a></h1>
+<h1 id="1120"><a href="https://github.com/gregsdennis/json-everything/pull/196">1.12.0</a></h1>
 
+<p><a href="https://github.com/gregsdennis/json-everything/issues/191">#191</a> - Self-referencing meta-schemas cause an infinite loop during validation.</p>
+<p><a href="https://github.com/gregsdennis/json-everything/issues/193">#193</a> - Custom format validations don't provide sufficient information and don't cause validation to fail when assertion is required.</p>
+<ul>
+<li>Added <code>UnknownFormat</code> and <code>Format.CreateUnknown</code>.</li>
+<li>Added <code>JsonSchemaBuilder.Format(string)</code> which looks up the format key.</li>
+</ul>
+<h1 id="1116"><a href="https://github.com/gregsdennis/json-everything/pull/189">1.11.6</a></h1>
 <p>Fixed bugs highlighted by updating test suite repository.</p>
 <ul>
 <li>Advanced use cases for <code>$dynamicRef</code> and <code>$dynamicAnchor</code></li>

@@ -5577,6 +5577,19 @@ references:
   commentId: T:Json.Schema.Formats
   fullName: Json.Schema.Formats
   nameWithType: Formats
+- uid: Json.Schema.Formats.CreateUnknown(System.String)
+  name: CreateUnknown(String)
+  href: api/Json.Schema.Formats.html#Json_Schema_Formats_CreateUnknown_System_String_
+  commentId: M:Json.Schema.Formats.CreateUnknown(System.String)
+  fullName: Json.Schema.Formats.CreateUnknown(System.String)
+  nameWithType: Formats.CreateUnknown(String)
+- uid: Json.Schema.Formats.CreateUnknown*
+  name: CreateUnknown
+  href: api/Json.Schema.Formats.html#Json_Schema_Formats_CreateUnknown_
+  commentId: Overload:Json.Schema.Formats.CreateUnknown
+  isSpec: "True"
+  fullName: Json.Schema.Formats.CreateUnknown
+  nameWithType: Formats.CreateUnknown
 - uid: Json.Schema.Formats.Date
   name: Date
   href: api/Json.Schema.Formats.html#Json_Schema_Formats_Date
@@ -10635,6 +10648,12 @@ references:
   commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Format(Json.Schema.JsonSchemaBuilder,Json.Schema.Format)
   fullName: Json.Schema.JsonSchemaBuilderExtensions.Format(Json.Schema.JsonSchemaBuilder, Json.Schema.Format)
   nameWithType: JsonSchemaBuilderExtensions.Format(JsonSchemaBuilder, Format)
+- uid: Json.Schema.JsonSchemaBuilderExtensions.Format(Json.Schema.JsonSchemaBuilder,System.String)
+  name: Format(JsonSchemaBuilder, String)
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Format_Json_Schema_JsonSchemaBuilder_System_String_
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.Format(Json.Schema.JsonSchemaBuilder,System.String)
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.Format(Json.Schema.JsonSchemaBuilder, System.String)
+  nameWithType: JsonSchemaBuilderExtensions.Format(JsonSchemaBuilder, String)
 - uid: Json.Schema.JsonSchemaBuilderExtensions.Format*
   name: Format
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_Format_
@@ -14874,6 +14893,47 @@ references:
   isSpec: "True"
   fullName: Json.Schema.UniqueItemsKeyword.Value
   nameWithType: UniqueItemsKeyword.Value
+- uid: Json.Schema.UnknownFormat
+  name: UnknownFormat
+  href: api/Json.Schema.UnknownFormat.html
+  commentId: T:Json.Schema.UnknownFormat
+  fullName: Json.Schema.UnknownFormat
+  nameWithType: UnknownFormat
+- uid: Json.Schema.UnknownFormat.#ctor(System.String)
+  name: UnknownFormat(String)
+  href: api/Json.Schema.UnknownFormat.html#Json_Schema_UnknownFormat__ctor_System_String_
+  commentId: M:Json.Schema.UnknownFormat.#ctor(System.String)
+  fullName: Json.Schema.UnknownFormat.UnknownFormat(System.String)
+  nameWithType: UnknownFormat.UnknownFormat(String)
+- uid: Json.Schema.UnknownFormat.#ctor*
+  name: UnknownFormat
+  href: api/Json.Schema.UnknownFormat.html#Json_Schema_UnknownFormat__ctor_
+  commentId: Overload:Json.Schema.UnknownFormat.#ctor
+  isSpec: "True"
+  fullName: Json.Schema.UnknownFormat.UnknownFormat
+  nameWithType: UnknownFormat.UnknownFormat
+- uid: Json.Schema.UnknownFormat.Validate(JsonElement)
+  name: Validate(JsonElement)
+  href: api/Json.Schema.UnknownFormat.html#Json_Schema_UnknownFormat_Validate_JsonElement_
+  commentId: M:Json.Schema.UnknownFormat.Validate(JsonElement)
+  fullName: Json.Schema.UnknownFormat.Validate(JsonElement)
+  nameWithType: UnknownFormat.Validate(JsonElement)
+- uid: Json.Schema.UnknownFormat.Validate(JsonElement,System.Nullable{System.String}@)
+  name: Validate(JsonElement, out Nullable<String>)
+  href: api/Json.Schema.UnknownFormat.html#Json_Schema_UnknownFormat_Validate_JsonElement_System_Nullable_System_String___
+  commentId: M:Json.Schema.UnknownFormat.Validate(JsonElement,System.Nullable{System.String}@)
+  name.vb: Validate(JsonElement, ByRef Nullable(Of String))
+  fullName: Json.Schema.UnknownFormat.Validate(JsonElement, out System.Nullable<System.String>)
+  fullName.vb: Json.Schema.UnknownFormat.Validate(JsonElement, ByRef System.Nullable(Of System.String))
+  nameWithType: UnknownFormat.Validate(JsonElement, out Nullable<String>)
+  nameWithType.vb: UnknownFormat.Validate(JsonElement, ByRef Nullable(Of String))
+- uid: Json.Schema.UnknownFormat.Validate*
+  name: Validate
+  href: api/Json.Schema.UnknownFormat.html#Json_Schema_UnknownFormat_Validate_
+  commentId: Overload:Json.Schema.UnknownFormat.Validate
+  isSpec: "True"
+  fullName: Json.Schema.UnknownFormat.Validate
+  nameWithType: UnknownFormat.Validate
 - uid: Json.Schema.UriExtensions
   name: UriExtensions
   href: api/Json.Schema.UriExtensions.html
