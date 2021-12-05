@@ -141,7 +141,10 @@ namespace Json.Schema
 					return AllowSiblingRef(keywords, ValidatingAs);
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null) return ByOption(keywords);
-				metaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+				var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+				if (newMetaSchemaId == metaSchemaId)
+					throw new InvalidOperationException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
+				metaSchemaId = newMetaSchemaId;
 			}
 
 			return ByOption(keywords);
