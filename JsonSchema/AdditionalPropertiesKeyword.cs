@@ -31,7 +31,7 @@ namespace Json.Schema
 
 		static AdditionalPropertiesKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="AdditionalPropertiesKeyword"/>.
@@ -58,7 +58,7 @@ namespace Json.Schema
 
 			context.Options.LogIndentLevel++;
 			var overallResult = true;
-			var annotation = (context.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
+			var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 			List<string> evaluatedProperties;
 			if (annotation == null)
 			{
@@ -70,7 +70,7 @@ namespace Json.Schema
 				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
 				evaluatedProperties = annotation;
 			}
-			annotation = (context.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
+			annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
 			if (annotation == null)
 				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
 			else
@@ -103,10 +103,10 @@ namespace Json.Schema
 
 			if (overallResult)
 			{
-				if (context.TryGetAnnotation(Name) is List<string> list)
+				if (context.LocalResult.TryGetAnnotation(Name) is List<string> list)
 					list.AddRange(evaluatedProperties);
 				else
-					context.SetAnnotation(Name, evaluatedProperties);
+					context.LocalResult.SetAnnotation(Name, evaluatedProperties);
 				context.LocalResult.Pass();
 			}
 			else
@@ -114,18 +114,18 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allProperties = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<string>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allProperties);
 			else if (allProperties.Any())
-				destContext.SetAnnotation(Name, allProperties);
+				localResults.SetAnnotation(Name, allProperties);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

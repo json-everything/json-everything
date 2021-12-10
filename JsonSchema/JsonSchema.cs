@@ -211,8 +211,8 @@ namespace Json.Schema
 				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
 				if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 		
-				context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()),
-					subschema: this);
+				context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);
+				context.LocalResult.ConsiderAnnotations(previousAnnotationSet);
 				keyword.Validate(context); // adds a new result
 				overallResult &= context.LocalResult.IsValid;
 
@@ -240,7 +240,7 @@ namespace Json.Schema
 			if (overallResult)
 			{
 				context.LocalResult.Pass();
-				context.ImportAnnotations(previousAnnotationSet);
+				context.LocalResult.ImportAnnotations(previousAnnotationSet);
 			}
 			else
 				context.LocalResult.Fail();

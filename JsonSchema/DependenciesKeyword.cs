@@ -30,7 +30,7 @@ namespace Json.Schema
 
 		static DependenciesKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="DependenciesKeyword"/>.
@@ -112,18 +112,18 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allDependencies = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allDependencies = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<string>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependencies);
 			else if (allDependencies.Any())
-				destContext.SetAnnotation(Name, allDependencies);
+				localResults.SetAnnotation(Name, allDependencies);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

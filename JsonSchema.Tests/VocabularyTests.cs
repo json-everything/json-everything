@@ -27,10 +27,10 @@ namespace Json.Schema.Tests
 				var dateString = context.LocalInstance.GetString();
 				var date = DateTime.Parse(dateString);
 
-				context.IsValid = date >= Date;
-
-				if (!context.IsValid)
-					context.Message = $"{date:O} must be on or after {Date:O}";
+				if (date >= Date)
+					context.LocalResult.Pass();
+				else
+					context.LocalResult.Fail($"{date:O} must be on or after {Date:O}");
 			}
 
 			public bool Equals(MinDateKeyword other)
@@ -88,10 +88,10 @@ namespace Json.Schema.Tests
 				var dateString = context.LocalInstance.GetString();
 				var date = DateTime.Parse(dateString);
 
-				context.IsValid = date <= Date;
-
-				if (!context.IsValid)
-					context.Message = $"{date:O} must be on or before {Date:O}";
+				if (date <= Date)
+					context.LocalResult.Pass();
+				else
+					context.LocalResult.Fail($"{date:O} must be on or before {Date:O}");
 			}
 
 			public bool Equals(MaxDateKeyword other)

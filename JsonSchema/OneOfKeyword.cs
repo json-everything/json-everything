@@ -67,7 +67,7 @@ namespace Json.Schema
 				if (validCount > 1 && context.ApplyOptimizations) break;
 			}
 
-			context.ConsolidateAnnotations();
+			context.LocalResult.ConsolidateAnnotations();
 			if (validCount == 1)
 				context.LocalResult.Pass();
 			else

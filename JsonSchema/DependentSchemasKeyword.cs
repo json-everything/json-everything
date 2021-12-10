@@ -76,7 +76,7 @@ namespace Json.Schema
 				context.Pop();
 			}
 
-			context.ConsolidateAnnotations();
+			context.LocalResult.ConsolidateAnnotations();
 			if (overallResult)
 				context.LocalResult.Pass();
 			else

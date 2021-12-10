@@ -47,7 +47,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.SetAnnotation(Name, Value.Key);
+			context.LocalResult.SetAnnotation(Name, Value.Key);
 
             if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
             {

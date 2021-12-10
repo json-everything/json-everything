@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		static PrefixItemsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace Json.Schema
 				return;
 			}
 
-			bool overwriteAnnotation = !(context.TryGetAnnotation(Name) is bool);
+			bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 			var overallResult = true;
 			var maxEvaluations = Math.Min(ArraySchemas.Count, context.LocalInstance.GetArrayLength());
 			for (int i = 0; i < maxEvaluations; i++)
@@ -88,9 +88,9 @@ namespace Json.Schema
 				if (overallResult)
 				{
 					if (maxEvaluations == context.LocalInstance.GetArrayLength())
-						context.SetAnnotation(Name, true);
+						context.LocalResult.SetAnnotation(Name, true);
 					else
-						context.SetAnnotation(Name, maxEvaluations);
+						context.LocalResult.SetAnnotation(Name, maxEvaluations);
 				}
 			}
 
@@ -101,10 +101,10 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
 			object value;
-			var allAnnotations = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.ToList();
 			if (allAnnotations.OfType<bool>().Any())
@@ -112,7 +112,7 @@ namespace Json.Schema
 			else
 				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 			if (!Equals(value, -1))
-				destContext.SetAnnotation(Name, value);
+				localResults.SetAnnotation(Name, value);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

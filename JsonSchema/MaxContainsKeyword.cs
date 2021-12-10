@@ -47,7 +47,7 @@ namespace Json.Schema
 				return;
 			}
 
-			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
+			var annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
 			if (annotation is not List<int> validatedIndices)
 			{
 				context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");

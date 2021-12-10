@@ -74,8 +74,6 @@ namespace Json.Schema
 				return;
 			}
 
-			context.NavigatedReferences.Add(absoluteReference);
-
 			JsonSchema? schema;
 			var navigatedByDirectRef = true;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
@@ -112,7 +110,9 @@ namespace Json.Schema
 				context.ExitKeyword(Name, false);
 				return;
 			}
-			
+
+			context.NavigatedReferences.Add(absoluteReference);
+
 			context.Push(newUri: newUri);
 			context.NavigatedByDirectRef = navigatedByDirectRef;
 			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
@@ -122,7 +122,7 @@ namespace Json.Schema
 				context.PushSchemaRoot(baseSchema!);
 			schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			context.ConsolidateAnnotations();
+			context.LocalResult.ConsolidateAnnotations();
 			if (pushSchemaRoot)
 				context.PopSchemaRoot();
 			context.Pop();

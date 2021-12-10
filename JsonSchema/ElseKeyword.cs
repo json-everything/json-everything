@@ -41,7 +41,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			var annotation = context.TryGetAnnotation(IfKeyword.Name);
+			var annotation = context.LocalResult.TryGetAnnotation(IfKeyword.Name);
 			if (annotation == null)
 			{
 				context.LocalResult.Pass();
@@ -60,7 +60,7 @@ namespace Json.Schema
 			Schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
 			context.Pop();
-			context.ConsolidateAnnotations();
+			context.LocalResult.ConsolidateAnnotations();
 			if (result)
 				context.LocalResult.Pass();
 			else

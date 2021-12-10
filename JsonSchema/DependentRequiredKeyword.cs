@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		static DependentRequiredKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="DependentRequiredKeyword"/>.
@@ -96,18 +96,18 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allDependentRequired = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allDependentRequired = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<string>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependentRequired);
 			else if (allDependentRequired.Any())
-				destContext.SetAnnotation(Name, allDependentRequired);
+				localResults.SetAnnotation(Name, allDependentRequired);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

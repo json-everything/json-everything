@@ -29,7 +29,7 @@ namespace Json.Schema
 
 		static UnevaluatedItemsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="UnevaluatedItemsKeyword"/>.
@@ -60,7 +60,7 @@ namespace Json.Schema
 			object? annotation;
 			if (context.Options.ValidatingAs == Draft.Unspecified || context.Options.ValidatingAs.HasFlag(Draft.Draft202012))
 			{
-				annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
+				annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
 				if (annotation != null)
 				{
 					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
@@ -75,7 +75,7 @@ namespace Json.Schema
 				else
 					context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
 			}
-			annotation = context.TryGetAnnotation(ItemsKeyword.Name);
+			annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation != null)
 			{
 				context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
@@ -89,7 +89,7 @@ namespace Json.Schema
 			}
 			else
 				context.Log(() => $"No annotations from {ItemsKeyword.Name}.");
-			annotation = context.TryGetAnnotation(AdditionalItemsKeyword.Name);
+			annotation = context.LocalResult.TryGetAnnotation(AdditionalItemsKeyword.Name);
 			if (annotation is bool) // is only ever true
 			{
 				context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
@@ -98,7 +98,7 @@ namespace Json.Schema
 				return;
 			}
 			context.Log(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
-			annotation = context.TryGetAnnotation(Name);
+			annotation = context.LocalResult.TryGetAnnotation(Name);
 			if (annotation is bool) // is only ever true
 			{
 				context.Log(() => $"Annotation from {Name}: {annotation}.");
@@ -110,7 +110,7 @@ namespace Json.Schema
 			var indicesToValidate = Enumerable.Range(startIndex, context.LocalInstance.GetArrayLength() - startIndex);
 			if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
 			{
-				annotation = context.TryGetAnnotation(ContainsKeyword.Name);
+				annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
 				if (annotation is List<int> validatedByContains)
 				{
 					context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
@@ -134,7 +134,7 @@ namespace Json.Schema
 
 			if (overallResult)
 			{
-				context.SetAnnotation(Name, true);
+				context.LocalResult.SetAnnotation(Name, true);
 				context.LocalResult.Pass();
 			}
 			else
@@ -142,10 +142,10 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-				destContext.SetAnnotation(Name, true);
+			if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
+				localResults.SetAnnotation(Name, true);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

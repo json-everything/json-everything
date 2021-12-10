@@ -43,17 +43,10 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (Value == 0)
 			{
+				var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
+				if (containsResult != null)
+					context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
 				context.LocalResult.Pass();
-				if (context.HasSiblingContexts)
-				{
-					// use context.LocalResult instead (will need to get parent somehow to get siblings)
-					var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
-					if (containsResult != null)
-					{
-						context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
-						containsResult.Pass();
-					}
-				}
 				context.ExitKeyword(Name, true);
 				return;
 			}
@@ -65,7 +58,7 @@ namespace Json.Schema
 				return;
 			}
 
-			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
+			var annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
 			if (!(annotation is List<int> validatedIndices))
 			{
 				context.LocalResult.Pass();

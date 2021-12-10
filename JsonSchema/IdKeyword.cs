@@ -51,14 +51,13 @@ namespace Json.Schema
 			}
 
 			var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
-			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
-			if (context.ParentContext.UriChanged) 
-				context.ParentContext.CurrentAnchor = null;
+			context.UriChanged |= context.CurrentUri != newUri;
+			if (context.UriChanged) 
+				context.CurrentAnchor = null;
 			context.Options.SchemaRegistry.EnteringUriScope(newUri!);
-			context.IsNewDynamicScope = true;
-			context.ParentContext.CurrentUri = newUri;
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.UpdateCurrentUri(newUri);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		internal Uri UpdateUri(Uri? currentUri)

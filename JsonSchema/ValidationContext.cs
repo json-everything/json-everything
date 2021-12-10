@@ -11,23 +11,7 @@ namespace Json.Schema
 	/// </summary>
 	public class ValidationContext
 	{
-		/// <summary>
-		/// Consolidates properties from multiple child contexts onto a single parent context.
-		/// Generally, a keyword will define how it handles its own consolidation.  This action
-		/// must be registered on startup.
-		/// </summary>
-		/// <param name="sourceContexts">the source (child) contexts.</param>
-		/// <param name="destContext">The destination (parent) context.</param>
-		public delegate void ContextConsolidator(IList<ValidationContext> sourceContexts, ValidationContext destContext);
-
-		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
-
-		private List<ValidationContext>? _nestedContexts;
-		private List<ValidationContext>? _siblingContexts;
-		private Dictionary<string, JsonSchema>? _dynamicAnchors;
 		private JsonSchema? _currentAnchorBackup;
-		private bool _isConsolidating;
-		private HashSet<string>? _navigatedReferences;
 
 		private readonly Stack<Uri> _currentUris = new Stack<Uri>();
 		private readonly Stack<JsonElement> _localInstances = new Stack<JsonElement>();
@@ -37,15 +21,7 @@ namespace Json.Schema
 		private readonly Stack<ValidationResults> _localResults = new Stack<ValidationResults>();
 		private readonly Stack<bool> _dynamicScopeFlags = new Stack<bool>();
 		private readonly Stack<JsonSchema> _schemaRoots = new Stack<JsonSchema>();
-
-		/// <summary>
-		/// The collection of validation contexts of sibling keywords that have already been processed.
-		/// </summary>
-		/// <remarks>
-		/// This property is lazy and will create a value upon first access.  To check
-		/// whether there are any nested contexts, use <see cref="HasSiblingContexts"/>.
-		/// </remarks>
-		public List<ValidationContext> SiblingContexts => _siblingContexts ??= new List<ValidationContext>();
+		private readonly Stack<HashSet<string>> _navigatedReferences = new Stack<HashSet<string>>();
 
 		/// <summary>
 		/// The option set for the validation.
@@ -89,11 +65,6 @@ namespace Json.Schema
 		/// The current URI anchor.
 		/// </summary>
 		public JsonSchema? CurrentAnchor { get; internal set; }
-		/// <summary>
-		/// (Obsolete) Get the set of defined dynamic anchors.
-		/// </summary>
-		[Obsolete("This is no longer used. Dynamic anchors are tracked with the registry now.")]
-		public Dictionary<string, JsonSchema> DynamicAnchors => _dynamicAnchors ??= new Dictionary<string, JsonSchema>();
 
 		public ValidationResults LocalResult => _localResults.Peek();
 
@@ -101,22 +72,14 @@ namespace Json.Schema
 		//internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
 		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
-		internal bool IsNewDynamicScope { get; set; }
-		internal HashSet<string> NavigatedReferences => _navigatedReferences ??= new HashSet<string>();
+		internal bool IsNewDynamicScope => _dynamicScopeFlags.Peek();
+		internal HashSet<string> NavigatedReferences => _navigatedReferences.Peek();
 		internal bool NavigatedByDirectRef { get; set; }
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).
 		/// </summary>
 		public bool ApplyOptimizations => Options.OutputFormat == OutputFormat.Flag;
-		/// <summary>
-		/// Whether the context has any nested contexts.
-		/// </summary>
-		public bool HasNestedContexts => _nestedContexts != null && _nestedContexts.Count != 0;
-		/// <summary>
-		/// Whether the context has any sibling contexts.
-		/// </summary>
-		public bool HasSiblingContexts => _siblingContexts != null && _siblingContexts.Count != 0;
 
 #pragma warning disable 8618
 		internal ValidationContext(ValidationOptions options,
@@ -129,47 +92,15 @@ namespace Json.Schema
 			var instanceClone = instanceRoot.Clone();
 			InstanceRoot = instanceClone;
 			_localInstances.Push(instanceClone);
+			_instanceLocations.Push(JsonPointer.Empty);
 			_schemaRoots.Push(schemaRoot);
 			_localSchemas.Push(schemaRoot);
+			_schemaLocations.Push(JsonPointer.Empty);
 			_localResults.Push(new ValidationResults(this));
-			_dynamicScopeFlags.Push(IsNewDynamicScope);
+			_dynamicScopeFlags.Push(true);
+			_navigatedReferences.Push(new HashSet<string>());
 		}
 #pragma warning restore 8618
-
-		///// <summary>
-		///// Creates a new context from an existing one.  Use this for subschema validations.
-		///// </summary>
-		///// <param name="source">The source context.</param>
-		///// <param name="instanceLocation">(optional) Updates the instance location.</param>
-		///// <param name="instance">(optional) Updates the instance location.</param>
-		///// <param name="subschemaLocation">(optional) Updates the subschema location.</param>
-		///// <param name="newUri">(optional) Updates the current URI.</param>
-		///// <returns></returns>
-		//public static ValidationContext From(ValidationContext source,
-		//                                     in JsonPointer? instanceLocation = null,
-		//                                     in JsonElement? instance = null,
-		//                                     in JsonPointer? subschemaLocation = null,
-		//                                     Uri? newUri = null)
-		//{
-		//	return new ValidationContext(source.Options)
-		//	{
-		//		InstanceRoot = source.InstanceRoot,
-		//		SchemaRoot = source.SchemaRoot,
-		//		SchemaLocation = subschemaLocation ?? source.SchemaLocation,
-		//		LocalSchema = source.LocalSchema,
-		//		InstanceLocation = instanceLocation ?? source.InstanceLocation,
-		//		LocalInstance = instance?.Clone() ?? source.LocalInstance.Clone(),
-		//		_currentAnchorBackup = source.CurrentAnchor,
-		//		CurrentAnchor = source.CurrentAnchor,
-		//		CurrentUri = newUri ?? source.CurrentUri,
-		//		Reference = source.Reference,
-		//		UriChanged = source.UriChanged || source.CurrentUri != newUri,
-		//		_navigatedReferences = source._navigatedReferences == null || instance != null
-		//			? null
-		//			: new HashSet<string>(source._navigatedReferences),
-		//		MetaSchemaVocabs = source.MetaSchemaVocabs
-		//	};
-		//}
 
 		public void Push(in JsonPointer? instanceLocation = null,
 			in JsonElement? instance = null,
@@ -185,6 +116,8 @@ namespace Json.Schema
 			var newResult = new ValidationResults(this);
 			LocalResult.AddNestedResult(newResult);
 			_localResults.Push(newResult);
+			_dynamicScopeFlags.Push(false);
+			_navigatedReferences.Push(new HashSet<string>(NavigatedReferences));
 		}
 
 		public void Pop()
@@ -195,18 +128,16 @@ namespace Json.Schema
 			_schemaLocations.Pop();
 			_localSchemas.Pop();
 			_localResults.Pop();
-			IsNewDynamicScope = _dynamicScopeFlags.Pop();
+			_dynamicScopeFlags.Pop();
+			_navigatedReferences.Pop();
 		}
 
-		public void AddResult(ValidationResults results)
+		internal void UpdateCurrentUri(Uri newUri)
 		{
-			LocalResult.AddNestedResult(results);
-		}
-
-		internal void ImportAnnotations(List<Annotation> annotations)
-		{
-			if (annotations.Count == 0) return;
-			LocalResult.AddAnnotations(annotations);
+			_currentUris.Pop();
+			_currentUris.Push(newUri);
+			_dynamicScopeFlags.Pop();
+			_dynamicScopeFlags.Push(true);
 		}
 
 		internal void ValidateAnchor()
@@ -222,50 +153,6 @@ namespace Json.Schema
 		internal void PopSchemaRoot()
 		{
 			_schemaRoots.Pop();
-		}
-
-		/// <summary>
-		/// Invokes all consolidation actions.  Should be called at the end of processing an applicator keyword.
-		/// </summary>
-		public void ConsolidateAnnotations()
-		{
-			if (!HasNestedContexts) return;
-			foreach (var consolidationAction in _consolidationActions)
-			{
-				_isConsolidating = true;
-				consolidationAction(NestedContexts, this);
-				_isConsolidating = false;
-			}
-		}
-
-		/// <summary>
-		/// Sets an annotation.
-		/// </summary>
-		/// <param name="owner">The annotation key.  Typically the name of the keyword.</param>
-		/// <param name="value">The annotation value.</param>
-		public void SetAnnotation(string owner, object value)
-		{
-			LocalResult.AddAnnotation(new Annotation(owner, value, SchemaLocation) {WasConsolidated = _isConsolidating});
-		}
-
-		/// <summary>
-		/// Tries to get an annotation.
-		/// </summary>
-		/// <param name="key">The annotation key.</param>
-		/// <returns>The annotation or null.</returns>
-		public object? TryGetAnnotation(string key)
-		{
-			if (!LocalResult.HasAnnotations) return null;
-			return LocalResult.Annotations.FirstOrDefault(x => x.Owner == key)?.Value;
-		}
-
-		/// <summary>
-		/// Registers a consolidation action.
-		/// </summary>
-		/// <param name="consolidateAnnotations">The action.</param>
-		public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
-		{
-			_consolidationActions.Add(consolidateAnnotations);
 		}
 
 		internal IEnumerable<Type>? GetKeywordsToProcess()

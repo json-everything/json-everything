@@ -68,7 +68,7 @@ namespace Json.Schema
 			}
 
 			if (overallResult)
-				context.ConsolidateAnnotations();
+				context.LocalResult.ConsolidateAnnotations();
 			if (overallResult)
 				context.LocalResult.Pass();
 			else

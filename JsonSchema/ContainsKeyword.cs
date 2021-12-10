@@ -30,7 +30,7 @@ namespace Json.Schema
 
 		static ContainsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="ContainsKeyword"/>.
@@ -76,7 +76,7 @@ namespace Json.Schema
 
 			if (validIndices.Any())
 			{
-				context.SetAnnotation(Name, validIndices);
+				context.LocalResult.SetAnnotation(Name, validIndices);
 				context.LocalResult.Pass();
 			}
 			else
@@ -84,18 +84,18 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allIndices = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allIndices = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<int>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<int> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<int> annotation)
 				annotation.AddRange(allIndices);
 			else if (allIndices.Any())
-				destContext.SetAnnotation(Name, allIndices);
+				localResults.SetAnnotation(Name, allIndices);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

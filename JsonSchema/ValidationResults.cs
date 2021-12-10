@@ -13,12 +13,23 @@ namespace Json.Schema
 	[JsonConverter(typeof(ValidationResultsJsonConverter))]
 	public class ValidationResults
 	{
+		/// <summary>
+		/// Consolidates annotations from multiple child results onto a single parent result.
+		/// Generally, a keyword will define how it handles its own consolidation.  This action
+		/// must be registered on startup.
+		/// </summary>
+		/// <param name="context">The validation context.</param>
+		public delegate void ContextConsolidator(ValidationResults results);
+
+		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
+
 		private Uri _currentUri;
 		private Uri? _absoluteUri;
 		private JsonPointer? _reference;
 		private List<Annotation>? _annotations;
 		private List<ValidationResults>? _nestedResults;
 		private bool _ignore;
+		private bool _isConsolidating;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
@@ -46,17 +57,17 @@ namespace Json.Schema
 		/// The collection of nested results.
 		/// </summary>
 		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults ??= new List<ValidationResults>();
+	
+		public bool HasNestedResults => _nestedResults is not { Count: 0 };
 
 		/// <summary>
 		/// The collection of annotations from this node.
 		/// </summary>
-		public IEnumerable<Annotation> Annotations => IsValid
-			? _annotations ??= new List<Annotation>()
-			: Enumerable.Empty<Annotation>();
+		public IEnumerable<Annotation> Annotations => _annotations ??= new List<Annotation>();
+
+		public bool HasAnnotations => _annotations is not { Count: 0 };
 
 		public ValidationResults? Parent { get; private set; }
-
-		internal bool HasAnnotations => _annotations is not {Count: 0};
 
 		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep);
 
@@ -124,6 +135,75 @@ namespace Json.Schema
 			_annotations?.Clear();
 		}
 
+		/// <summary>
+		/// Invokes all consolidation actions.  Should be called at the end of processing an applicator keyword.
+		/// </summary>
+		public void ConsolidateAnnotations()
+		{
+			if (!HasNestedResults) return;
+			foreach (var consolidationAction in _consolidationActions)
+			{
+				_isConsolidating = true;
+				consolidationAction(this);
+				_isConsolidating = false;
+			}
+		}
+
+		/// <summary>
+		/// Sets an annotation.
+		/// </summary>
+		/// <param name="owner">The annotation key.  Typically the name of the keyword.</param>
+		/// <param name="value">The annotation value.</param>
+		public void SetAnnotation(string owner, object value)
+		{
+			AddAnnotation(new Annotation(owner, value, SchemaLocation) { WasConsolidated = _isConsolidating });
+		}
+
+
+		/// <summary>
+		/// Registers a consolidation action.
+		/// </summary>
+		/// <param name="consolidateAnnotations">The action.</param>
+		public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
+		{
+			_consolidationActions.Add(consolidateAnnotations);
+		}
+
+		/// <summary>
+		/// Tries to get an annotation.
+		/// </summary>
+		/// <param name="key">The annotation key.</param>
+		/// <returns>The annotation or null.</returns>
+		public object? TryGetAnnotation(string key)
+		{
+			if (!HasAnnotations) return null;
+			return Annotations.FirstOrDefault(x => x.Owner == key)?.Value;
+		}
+
+		internal void ImportAnnotations(List<Annotation> annotations)
+		{
+			if (annotations.Count == 0) return;
+			AddAnnotations(annotations);
+		}
+
+		private void AddAnnotation(Annotation annotation)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.Add(annotation);
+		}
+
+		internal void AddAnnotations(IEnumerable<Annotation> annotations)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.AddRange(annotations);
+		}
+
+		internal void ConsiderAnnotations(IEnumerable<Annotation> annotations)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.AddRange(annotations.Select(Annotation.CreateConsolidated));
+		}
+
 		private void CopyFrom(ValidationResults other)
 		{
 			//IsValid = other.IsValid;
@@ -159,18 +239,6 @@ namespace Json.Schema
 		{
 			IsValid = true;
 			_ignore = true;
-		}
-
-		internal void AddAnnotation(Annotation annotation)
-		{
-			_annotations ??= new List<Annotation>();
-			_annotations.Add(annotation);
-		}
-
-		internal void AddAnnotations(IEnumerable<Annotation> annotations)
-		{
-			_annotations ??= new List<Annotation>();
-			_annotations.AddRange(annotations);
 		}
 
 		internal Uri? BuildAbsoluteUri(JsonPointer pointer)

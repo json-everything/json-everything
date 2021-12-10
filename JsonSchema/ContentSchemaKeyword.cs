@@ -51,7 +51,7 @@ namespace Json.Schema
 			Schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
 			context.Pop();
-			context.ConsolidateAnnotations();
+			context.LocalResult.ConsolidateAnnotations();
 			if (result)
 				context.LocalResult.Pass();
 			else

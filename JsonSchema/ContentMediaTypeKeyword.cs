@@ -46,7 +46,7 @@ namespace Json.Schema
 				return;
 			}
 
-			context.SetAnnotation(Name, Value);
+			context.LocalResult.SetAnnotation(Name, Value);
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 		}

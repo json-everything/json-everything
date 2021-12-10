@@ -117,7 +117,7 @@ namespace Json.Schema
 				context.PushSchemaRoot(baseSchema!);
 			schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			context.ConsolidateAnnotations();
+			context.LocalResult.ConsolidateAnnotations();
 			if (pushSchemaRoot)
 				context.PopSchemaRoot();
 			context.Pop();

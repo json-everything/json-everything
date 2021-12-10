@@ -52,7 +52,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.SetAnnotation(Name, Values);
+			context.LocalResult.SetAnnotation(Name, Values);
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 		}

@@ -29,7 +29,7 @@ namespace Json.Schema
 
 		static AdditionalItemsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="AdditionalItemsKeyword"/>.
@@ -56,7 +56,7 @@ namespace Json.Schema
 
 			context.Options.LogIndentLevel++;
 			var overallResult = true;
-			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
+			var annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation == null)
 			{
 				context.LocalResult.Pass();
@@ -70,7 +70,7 @@ namespace Json.Schema
 				context.ExitKeyword(Name, context.LocalResult.IsValid);
 				return;
 			}
-			var startIndex = (int) annotation;
+			var startIndex = (int) annotation!;
 
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
@@ -87,7 +87,7 @@ namespace Json.Schema
 
 			if (overallResult)
 			{
-				context.SetAnnotation(Name, true);
+				context.LocalResult.SetAnnotation(Name, true);
 				context.LocalResult.Pass();
 			}
 			else
@@ -95,10 +95,10 @@ namespace Json.Schema
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-				destContext.SetAnnotation(Name, true);
+			if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
+				localResults.SetAnnotation(Name, true);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

@@ -41,7 +41,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.SetAnnotation(Name, Value);
+			context.LocalResult.SetAnnotation(Name, Value);
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 		}

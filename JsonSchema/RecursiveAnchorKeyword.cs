@@ -51,7 +51,7 @@ namespace Json.Schema
 			if (Value)
 			{
 				context.CurrentAnchor ??= context.LocalSchema;
-				context.SetAnnotation(Name, Value);
+				context.LocalResult.SetAnnotation(Name, Value);
 			}
 
 			context.LocalResult.Pass();
