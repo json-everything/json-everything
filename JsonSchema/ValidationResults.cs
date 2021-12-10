@@ -13,11 +13,12 @@ namespace Json.Schema
 	[JsonConverter(typeof(ValidationResultsJsonConverter))]
 	public class ValidationResults
 	{
-		private List<ValidationResults> _nestedResults;
-		private List<Annotation> _annotations;
 		private Uri _currentUri;
 		private Uri? _absoluteUri;
 		private JsonPointer? _reference;
+		private List<Annotation>? _annotations;
+		private List<ValidationResults>? _nestedResults;
+		private bool _ignore;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
@@ -26,7 +27,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The error message, if any.
 		/// </summary>
-		public string? Message { get; private set; }
+		public string? Message { get; set; }
 		/// <summary>
 		/// The schema location that generated this node.
 		/// </summary>
@@ -40,30 +41,30 @@ namespace Json.Schema
 		/// The absolute schema location.  Only available if the schema had an absolute URI ID.
 		/// </summary>
 		public Uri? AbsoluteSchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
+
 		/// <summary>
 		/// The collection of nested results.
 		/// </summary>
-		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults;
+		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults ??= new List<ValidationResults>();
+
 		/// <summary>
 		/// The collection of annotations from this node.
 		/// </summary>
-		public IReadOnlyList<Annotation> Annotations => _annotations;
+		public IEnumerable<Annotation> Annotations => IsValid
+			? _annotations ??= new List<Annotation>()
+			: Enumerable.Empty<Annotation>();
+
+		public ValidationResults? Parent { get; private set; }
+
+		internal bool HasAnnotations => _annotations is not {Count: 0};
 
 		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep);
 
 		internal ValidationResults(ValidationContext context)
 		{
-			IsValid = context.IsValid;
-			_annotations = context.IsValid
-				? context.Annotations.ToList()
-				: new List<Annotation>();
-			Message = context.Message;
 			SchemaLocation = context.SchemaLocation;
-			_currentUri = context.CurrentUri!;
+			_currentUri = context.CurrentUri;
 			InstanceLocation = context.InstanceLocation;
-			_nestedResults = context.HasNestedContexts
-				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
-				: new List<ValidationResults>();
 			_reference = context.Reference;
 		}
 
@@ -88,12 +89,15 @@ namespace Json.Schema
 					condensed.Add(result);
 			}
 
-			_nestedResults.Clear();
+			_nestedResults?.Clear();
 
 			if (condensed.Count == 1)
 				CopyFrom(condensed[0]);
 			else
+			{
+				_nestedResults ??= new List<ValidationResults>();
 				_nestedResults.AddRange(condensed);
+			}
 		}
 
 		/// <summary>
@@ -106,9 +110,9 @@ namespace Json.Schema
 			if (!children.Any()) return;
 
 			children.Remove(this);
-			children.ForEach(r => r._annotations.Clear());
-			_nestedResults.Clear();
-			_nestedResults.AddRange(children.Where(c => c.Keep));
+			children.ForEach(r => r._annotations?.Clear());
+			Prep(ref _nestedResults);
+			_nestedResults!.AddRange(children.Where(c => c.Keep));
 		}
 
 		/// <summary>
@@ -116,8 +120,8 @@ namespace Json.Schema
 		/// </summary>
 		public void ToFlag()
 		{
-			_nestedResults.Clear();
-			_annotations.Clear();
+			_nestedResults?.Clear();
+			_annotations?.Clear();
 		}
 
 		private void CopyFrom(ValidationResults other)
@@ -131,6 +135,42 @@ namespace Json.Schema
 			_nestedResults = other._nestedResults;
 			_absoluteUri = other._absoluteUri;
 			_reference = other._reference;
+		}
+
+		internal void AddNestedResult(ValidationResults results)
+		{
+			_nestedResults ??= new List<ValidationResults>();
+			_nestedResults.Add(results);
+			results.Parent = this;
+		}
+
+		internal void Pass()
+		{
+			IsValid = true;
+		}
+
+		internal void Fail(string? message = null)
+		{
+			IsValid = false;
+			Message = message;
+		}
+
+		internal void Ignore()
+		{
+			IsValid = true;
+			_ignore = true;
+		}
+
+		internal void AddAnnotation(Annotation annotation)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.Add(annotation);
+		}
+
+		internal void AddAnnotations(IEnumerable<Annotation> annotations)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.AddRange(annotations);
 		}
 
 		internal Uri? BuildAbsoluteUri(JsonPointer pointer)
@@ -163,9 +203,15 @@ namespace Json.Schema
 			if (Annotations.Any() || Message != null) all.Add(this);
 			all.AddRange(NestedResults.SelectMany(r => r.GetAllChildren()));
 
-			_nestedResults.Clear();
+			_nestedResults?.Clear();
 
 			return all;
+		}
+
+		private void Prep<T>(ref List<T>? list)
+		{
+			if (list != null) list.Clear();
+			else list = new List<T>();
 		}
 	}
 
@@ -178,6 +224,8 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
 		{
+			// TODO handle ignored results
+
 			writer.WriteStartObject();
 
 			writer.WriteBoolean("valid", value.IsValid);

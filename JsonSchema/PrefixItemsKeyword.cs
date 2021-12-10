@@ -62,8 +62,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -74,14 +74,13 @@ namespace Json.Schema
 			{
 				var schema = ArraySchemas[i];
 				var item = context.LocalInstance[i];
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-				schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
+				schema.ValidateSubschema(context);
+				overallResult &= context.LocalResult.IsValid;
+				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
 			}
 
 			if (overwriteAnnotation)
@@ -95,8 +94,11 @@ namespace Json.Schema
 				}
 			}
 
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

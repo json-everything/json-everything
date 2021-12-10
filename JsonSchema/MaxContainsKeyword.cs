@@ -43,24 +43,27 @@ namespace Json.Schema
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
+				context.LocalResult.Pass();
 				return;
 			}
 
 			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
-			if (!(annotation is List<int> validatedIndices))
+			if (annotation is not List<int> validatedIndices)
 			{
 				context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
-				context.IsValid = true;
+				context.LocalResult.Pass();
 				return;
 			}
 
 			context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
 			var containsCount = validatedIndices.Count;
-			context.IsValid = Value >= containsCount;
-			if (!context.IsValid)
-				context.Message = $"Value has more than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Value >= containsCount)
+				context.LocalResult.Pass();
+			else
+			{
+				context.LocalResult.Fail($"Value has more than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword");
+			}
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

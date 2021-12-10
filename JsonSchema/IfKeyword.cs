@@ -40,14 +40,14 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			var subContext = ValidationContext.From(context);
-			Schema.ValidateSubschema(subContext);
-			context.NestedContexts.Add(subContext);
+			context.Push();
+			Schema.ValidateSubschema(context);
 
-			context.SetAnnotation(Name, subContext.IsValid);
+			context.SetAnnotation(Name, context.LocalResult.IsValid);
+			context.Pop();
 			context.ConsolidateAnnotations();
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

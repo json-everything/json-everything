@@ -82,8 +82,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -101,8 +101,8 @@ namespace Json.Schema
 					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
 					if (annotation is bool)
 					{
-						context.IsValid = true;
-						context.ExitKeyword(Name, context.IsValid);
+						context.LocalResult.Fail();
+						context.ExitKeyword(Name, false);
 						return;
 					}
 
@@ -113,15 +113,13 @@ namespace Json.Schema
 				{
 					context.Log(() => $"Validating item at index {i}.");
 					var item = context.LocalInstance[i];
-					var subContext = ValidationContext.From(context,
-						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-						item);
-					SingleSchema.ValidateSubschema(subContext);
-					context.CurrentUri ??= subContext.CurrentUri;
-					overallResult &= subContext.IsValid;
-					context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
+					context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
+					SingleSchema.ValidateSubschema(context);
+					//context.CurrentUri ??= subContext.CurrentUri;
+					overallResult &= context.LocalResult.IsValid;
+					context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+					context.Pop();
 					if (!overallResult && context.ApplyOptimizations) break;
-					context.NestedContexts.Add(subContext);
 				}
 				context.Options.LogIndentLevel--;
 
@@ -135,10 +133,9 @@ namespace Json.Schema
 			{
 				if (context.Options.ValidatingAs == Draft.Draft202012)
 				{
-					context.IsValid = false;
-					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
+					context.LocalResult.Fail($"Array form of {Name} is invalid for draft 2020-12 and later");
 					context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
-					context.ExitKeyword(Name, context.IsValid);
+					context.ExitKeyword(Name, false);
 					return;
 				}
 				context.Options.LogIndentLevel++;
@@ -148,15 +145,14 @@ namespace Json.Schema
 					context.Log(() => $"Validating item at index {i}.");
 					var schema = ArraySchemas[i];
 					var item = context.LocalInstance[i];
-					var subContext = ValidationContext.From(context,
-						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+					context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 						item,
 						context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-					schema.ValidateSubschema(subContext);
-					overallResult &= subContext.IsValid;
-					context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
+					schema.ValidateSubschema(context);
+					overallResult &= context.LocalResult.IsValid;
+					context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+					context.Pop();
 					if (!overallResult && context.ApplyOptimizations) break;
-					context.NestedContexts.Add(subContext);
 				}
 				context.Options.LogIndentLevel--;
 
@@ -173,8 +169,11 @@ namespace Json.Schema
 				}
 			}
 
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

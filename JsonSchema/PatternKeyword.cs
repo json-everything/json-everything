@@ -58,23 +58,24 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (InvalidPattern != null)
 			{
-				context.Message = $"The regular expression `{InvalidPattern}` is either invalid or not supported";
-				context.IsValid = false;
+				context.LocalResult.Fail($"The regular expression `{InvalidPattern}` is either invalid or not supported");
+				context.ExitKeyword(Name, false);
 				return;
 			}
 
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			var str = context.LocalInstance.GetString();
-			context.IsValid = Value.IsMatch(str);
-			if (!context.IsValid)
-				context.Message = "The string value was not a match for the indicated regular expression";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Value.IsMatch(str))
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail("The string value was not a match for the indicated regular expression");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

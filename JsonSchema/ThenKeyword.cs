@@ -44,25 +44,28 @@ namespace Json.Schema
 			var annotation = context.TryGetAnnotation(IfKeyword.Name);
 			if (annotation == null)
 			{
+				context.LocalResult.Pass();
 				context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
-				context.IsValid = true;
 				return;
 			}
 
 			if (!(bool) annotation)
 			{
+				context.LocalResult.Pass();
 				context.NotApplicable(() => $"Annotation for {IfKeyword.Name} is {annotation}.");
-				context.IsValid = true;
 				return;
 			}
 
-			var subContext = ValidationContext.From(context);
-			Schema.ValidateSubschema(subContext);
-			context.NestedContexts.Add(subContext);
-
+			context.Push();
+			Schema.ValidateSubschema(context);
+			var result = context.LocalResult.IsValid;
 			context.ConsolidateAnnotations();
-			context.IsValid = subContext.IsValid;
-			context.ExitKeyword(Name, context.IsValid);
+			context.Pop();
+			if (result)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

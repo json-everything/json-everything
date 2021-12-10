@@ -99,23 +99,16 @@ namespace Json.Schema
 		{
 			options = ValidationOptions.From(options ?? ValidationOptions.Default);
 
-			var context = new ValidationContext(options)
-				{
-					LocalInstance = root,
-					InstanceLocation = JsonPointer.UrlEmpty,
-					InstanceRoot = root,
-					SchemaLocation = JsonPointer.UrlEmpty,
-					SchemaRoot = this
-				};
-
 			options.Log.Write(() => "Registering subschemas.");
-			var baseUri = RegisterSubschemasAndGetBaseUri(context.Options.SchemaRegistry, BaseUri ?? context.Options.DefaultBaseUri);
-			if (baseUri != null && baseUri.IsAbsoluteUri)
+			var baseUri = RegisterSubschemasAndGetBaseUri(options.SchemaRegistry, BaseUri ?? options.DefaultBaseUri);
+			if (baseUri != null! && baseUri.IsAbsoluteUri)
 				BaseUri = baseUri;
 
-			context.CurrentUri = baseUri == context.Options.DefaultBaseUri
+			var currentUri = baseUri == options.DefaultBaseUri
 				? BaseUri ?? baseUri
-				: baseUri;
+				: baseUri!;
+
+			var context = new ValidationContext(options, currentUri, root, this);
 
 			context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
 
@@ -123,7 +116,7 @@ namespace Json.Schema
 			ValidateSubschema(context);
 
 			options.Log.Write(() => "Transforming output.");
-			var results = new ValidationResults(context);
+			var results = context.LocalResult;
 			switch (options.OutputFormat)
 			{
 				case OutputFormat.Flag:
@@ -200,47 +193,57 @@ namespace Json.Schema
 			if (BoolValue.HasValue)
 			{
 				context.Log(() => $"Found {(BoolValue.Value ? "true" : "false")} schema: {BoolValue.Value.GetValidityString()}");
-				context.IsValid = BoolValue.Value;
-				context.SchemaLocation = context.SchemaLocation.Combine(PointerSegment.Create($"${BoolValue}".ToLowerInvariant()));
-				if (!context.IsValid)
-					context.Message = "All values fail against the false schema";
+				if (BoolValue.Value)
+					context.LocalResult.Pass();
+				else
+					context.LocalResult.Fail("All values fail against the false schema");
 				return;
 			}
 
 			var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
 			var keywords = context.Options.FilterKeywords(Keywords!, metaSchemaUri, context.Options.SchemaRegistry);
 
-			ValidationContext? newContext = null;
 			var overallResult = true;
 			List<Type>? keywordTypesToProcess = null;
+			var previousAnnotationSet = new List<Annotation>();
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
 				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
 				if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 		
-				var previousContext = newContext;
-				newContext = ValidationContext.From(context,
-					subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
-				newContext.NavigatedByDirectRef = context.NavigatedByDirectRef;
-				newContext.ParentContext = context;
-				newContext.LocalSchema = this;
-				newContext.ImportAnnotations(previousContext);
-				if (context.HasNestedContexts)
-					newContext.SiblingContexts.AddRange(context.NestedContexts);
-				keyword.Validate(newContext);
-				context.IsNewDynamicScope |= newContext.IsNewDynamicScope;
-				overallResult &= newContext.IsValid;
+				context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()),
+					subschema: this);
+				keyword.Validate(context); // adds a new result
+				overallResult &= context.LocalResult.IsValid;
+
+				//var previousContext = newContext;
+				//newContext = ValidationContext.From(context,
+				//	subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
+				//newContext.NavigatedByDirectRef = context.NavigatedByDirectRef;
+				//newContext.ParentContext = context;
+				//newContext.LocalSchema = this;
+				//newContext.ImportAnnotations(previousContext);
+				//if (context.HasNestedContexts)
+				//	newContext.SiblingContexts.AddRange(context.NestedContexts);
+				//keyword.Validate(newContext);
+				//context.IsNewDynamicScope |= newContext.IsNewDynamicScope;
+				//overallResult &= newContext.IsValid;
+
 				if (!overallResult && context.ApplyOptimizations) break;
-				if (!newContext.Ignore)
-					context.NestedContexts.Add(newContext);
+				previousAnnotationSet.AddRange(context.LocalResult.Annotations);
+				context.Pop();
 			}
 
 			if (context.IsNewDynamicScope)
 				context.Options.SchemaRegistry.ExitingUriScope();
 
-			context.IsValid = overallResult;
-			if (context.IsValid)
-				context.ImportAnnotations(newContext);
+			if (overallResult)
+			{
+				context.LocalResult.Pass();
+				context.ImportAnnotations(previousAnnotationSet);
+			}
+			else
+				context.LocalResult.Fail();
 		}
 
 		internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)

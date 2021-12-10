@@ -69,9 +69,8 @@ namespace Json.Schema
 			var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
 			if (context.NavigatedReferences.Contains(absoluteReference))
 			{
-				context.IsValid = false;
-				context.Message = "Encountered recursive reference";
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail("Encountered recursive reference");
+				context.ExitKeyword(Name, false);
 				return;
 			}
 
@@ -85,9 +84,8 @@ namespace Json.Schema
 			{
 				if (baseSchema == null)
 				{
-					context.IsValid = false;
-					context.Message = $"Could not resolve base URI `{newUri}`";
-					context.ExitKeyword(Name, context.IsValid);
+					context.LocalResult.Fail($"Could not resolve base URI `{newUri}`");
+					context.ExitKeyword(Name, false);
 					return;
 				}
 
@@ -96,9 +94,8 @@ namespace Json.Schema
 					fragment = $"#{fragment}";
 					if (!JsonPointer.TryParse(fragment, out var pointer))
 					{
-						context.IsValid = false;
-						context.Message = $"Could not parse pointer `{fragment}`";
-						context.ExitKeyword(Name, context.IsValid);
+						context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+						context.ExitKeyword(Name, false);
 						return;
 					}
 
@@ -111,23 +108,29 @@ namespace Json.Schema
 
 			if (schema == null)
 			{
-				context.IsValid = false;
-				context.Message = $"Could not resolve reference `{Reference}`";
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail($"Could not resolve reference `{Reference}`");
+				context.ExitKeyword(Name, false);
 				return;
 			}
-
-			var subContext = ValidationContext.From(context, newUri: newUri);
-			subContext.NavigatedByDirectRef = navigatedByDirectRef;
+			
+			context.Push(newUri: newUri);
+			context.NavigatedByDirectRef = navigatedByDirectRef;
 			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
-				subContext.Reference = reference;
-			if (!ReferenceEquals(baseSchema, context.SchemaRoot))
-				subContext.SchemaRoot = baseSchema!;
-			schema.ValidateSubschema(subContext);
-			context.NestedContexts.Add(subContext);
+				context.Reference = reference;
+			var pushSchemaRoot = !ReferenceEquals(baseSchema, context.SchemaRoot);
+			if (pushSchemaRoot)
+				context.PushSchemaRoot(baseSchema!);
+			schema.ValidateSubschema(context);
+			var result = context.LocalResult.IsValid;
 			context.ConsolidateAnnotations();
-			context.IsValid = subContext.IsValid;
-			context.ExitKeyword(Name, context.IsValid);
+			if (pushSchemaRoot)
+				context.PopSchemaRoot();
+			context.Pop();
+			if (result)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

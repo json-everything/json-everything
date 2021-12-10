@@ -45,21 +45,20 @@ namespace Json.Schema
 			var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 			if (metaSchema == null)
 			{
-				context.Message = $"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation";
-				context.IsValid = false;
-				context.Log(() => context.Message);
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail($"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation");
+				context.Log(() => context.LocalResult.Message!);
+				context.ExitKeyword(Name, false);
 				return;
 			}
 
 			var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
 			if (vocabularyKeyword != null) 
-				context.ParentContext.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
+				context.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
 
 			if (!context.Options.ValidateMetaSchema)
 			{
-				context.IsValid = true;
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Pass();
+				context.ExitKeyword(Name, true);
 				return;
 			}
 
@@ -70,10 +69,11 @@ namespace Json.Schema
 			newOptions.ValidateMetaSchema = false;
 			var results = metaSchema.Validate(schemaAsJson, newOptions);
 
-			context.IsValid = results.IsValid;
-			if (!context.IsValid)
-				context.Message = $"Cannot validate current schema against meta-schema `{Schema.OriginalString}`";
-			context.ExitKeyword(Name, context.IsValid);
+			if (results.IsValid)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Cannot validate current schema against meta-schema `{Schema.OriginalString}`");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

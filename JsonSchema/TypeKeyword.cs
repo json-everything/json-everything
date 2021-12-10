@@ -64,43 +64,46 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
+			bool isValid;
 			switch (context.LocalInstance.ValueKind)
 			{
 				case JsonValueKind.Object:
-					context.IsValid = Type.HasFlag(SchemaValueType.Object);
+					isValid = Type.HasFlag(SchemaValueType.Object);
 					break;
 				case JsonValueKind.Array:
-					context.IsValid = Type.HasFlag(SchemaValueType.Array);
+					isValid = Type.HasFlag(SchemaValueType.Array);
 					break;
 				case JsonValueKind.String:
-					context.IsValid = Type.HasFlag(SchemaValueType.String);
+					isValid = Type.HasFlag(SchemaValueType.String);
 					break;
 				case JsonValueKind.Number:
 					if (Type.HasFlag(SchemaValueType.Number))
-						context.IsValid = true;
+						isValid = true;
 					else if (Type.HasFlag(SchemaValueType.Integer))
 					{
 						var number = context.LocalInstance.GetDecimal();
-						context.IsValid = number == Math.Truncate(number);
+						isValid = number == Math.Truncate(number);
 					}
 					else
-						context.IsValid = false;
+						isValid = false;
 					break;
 				case JsonValueKind.True:
 				case JsonValueKind.False:
-					context.IsValid = Type.HasFlag(SchemaValueType.Boolean);
+					isValid = Type.HasFlag(SchemaValueType.Boolean);
 					break;
 				case JsonValueKind.Null:
-					context.IsValid = Type.HasFlag(SchemaValueType.Null);
+					isValid = Type.HasFlag(SchemaValueType.Null);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 			var found = context.LocalInstance.ValueKind.ToString().ToLower();
 			var expected = Type.ToString().ToLower();
-			if (!context.IsValid)
-				context.Message = $"Value is {found} but should be {expected}";
-			context.ExitKeyword(Name, context.IsValid);
+			if (isValid)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Value is {found} but should be {expected}");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

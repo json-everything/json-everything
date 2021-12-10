@@ -53,8 +53,8 @@ namespace Json.Schema
 		{
 			context.EnterKeyword(Name);
 			context.SetAnnotation(Name, Values);
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

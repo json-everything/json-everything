@@ -48,8 +48,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -86,13 +86,14 @@ namespace Json.Schema
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
-			context.IsValid = overallResult;
-			if (!context.IsValid)
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
 			{
 				var missing = JsonSerializer.Serialize(missingDependencies);
-				context.Message = $"Some required property dependencies are missing: {missing}";
+				context.LocalResult.Fail($"Some required property dependencies are missing: {missing}");
 			}
-			context.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

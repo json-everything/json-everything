@@ -50,8 +50,16 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
+				return;
+			}
+
+			var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
+			if (minContainsKeyword is {Value: 0})
+			{
+				context.LocalResult.Pass();
+				context.NotApplicable(() => $"{MinContainsKeyword.Name} is 0.");
 				return;
 			}
 
@@ -59,25 +67,21 @@ namespace Json.Schema
 			var validIndices = new List<int>();
 			for (int i = 0; i < count; i++)
 			{
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-					context.LocalInstance[i]);
-				Schema.ValidateSubschema(subContext);
-				context.NestedContexts.Add(subContext);
-				if (subContext.IsValid)
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), context.LocalInstance[i]);
+				Schema.ValidateSubschema(context);
+				if (context.LocalResult.IsValid)
 					validIndices.Add(i);
+				context.Pop();
 			}
 
-			var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
-			if (minContainsKeyword != null && minContainsKeyword.Value == 0)
-				context.IsValid = true;
-			else
-				context.IsValid = validIndices.Any();
-			if (context.IsValid)
+			if (validIndices.Any())
+			{
 				context.SetAnnotation(Name, validIndices);
+				context.LocalResult.Pass();
+			}
 			else
-				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
-			context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail("Expected array to contain at least one item that matched the schema, but it did not");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

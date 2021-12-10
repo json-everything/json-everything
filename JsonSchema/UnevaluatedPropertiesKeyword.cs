@@ -49,8 +49,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -102,25 +102,28 @@ namespace Json.Schema
 					continue;
 				}
 
-				context.Log(() => $"Validating property '{property.Name}'.");
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")),
-					item);
-				Schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
-				context.Log(() => $"Property '{property.Name}' {subContext.IsValid.GetValidityString()}.");
+				context.Log(() => $"Validating property '{property.Name}'."); 
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")), item);
+				Schema.ValidateSubschema(context);
+				var localResult = context.LocalResult.IsValid;
+				overallResult &= localResult;
+				context.Log(() => $"Property '{property.Name}' {localResult.GetValidityString()}.");
+				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
-				if (subContext.IsValid)
+				if (localResult)
 					evaluatedProperties.Add(property.Name);
 			}
 			context.Options.LogIndentLevel--;
 
 			if (overallResult)
+			{
 				context.SetAnnotation(Name, evaluatedProperties);
-			context.IsValid = overallResult;
+				context.LocalResult.Pass();
+			}
+			else
+				context.LocalResult.Fail();
 			context.ConsolidateAnnotations();
-			context.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

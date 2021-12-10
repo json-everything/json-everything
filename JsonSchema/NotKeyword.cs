@@ -43,16 +43,18 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			var subContext = ValidationContext.From(context,
-				subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
-			Schema.ValidateSubschema(subContext);
-			context.NestedContexts.Add(subContext);
-			context.IsValid = !subContext.IsValid;
+			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
+			Schema.ValidateSubschema(context);
+			var result = context.LocalResult.IsValid;
 			context.ConsolidateAnnotations();
 			context.Options.LogIndentLevel++;
-			context.Log(() => $"Subschema {subContext.IsValid.GetValidityString()}.");
+			context.Log(() => $"Subschema {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Options.LogIndentLevel--;
-			context.ExitKeyword(Name, context.IsValid);
+			if (result)
+				context.LocalResult.Fail();
+			else
+				context.LocalResult.Pass();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

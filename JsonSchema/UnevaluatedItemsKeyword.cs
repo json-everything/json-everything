@@ -49,8 +49,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -66,7 +66,8 @@ namespace Json.Schema
 					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
 					if (annotation is bool) // is only ever true or a number
 					{
-						context.IsValid = true;
+						context.LocalResult.Pass();
+						context.ExitKeyword(Name, true);
 						return;
 					}
 					startIndex = (int)annotation;
@@ -80,7 +81,8 @@ namespace Json.Schema
 				context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 				if (annotation is bool) // is only ever true or a number
 				{
-					context.IsValid = true;
+					context.LocalResult.Pass();
+					context.ExitKeyword(Name, true);
 					return;
 				}
 				startIndex = (int) annotation;
@@ -91,7 +93,8 @@ namespace Json.Schema
 			if (annotation is bool) // is only ever true
 			{
 				context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
-				context.IsValid = true;
+				context.LocalResult.Pass();
+				context.ExitKeyword(Name, true);
 				return;
 			}
 			context.Log(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
@@ -99,7 +102,8 @@ namespace Json.Schema
 			if (annotation is bool) // is only ever true
 			{
 				context.Log(() => $"Annotation from {Name}: {annotation}.");
-				context.IsValid = true;
+				context.LocalResult.Pass();
+				context.ExitKeyword(Name, true);
 				return;
 			}
 			context.Log(() => $"No annotations from {Name}.");
@@ -119,21 +123,23 @@ namespace Json.Schema
 			{
 				context.Log(() => $"Validating item at index {i}.");
 				var item = context.LocalInstance[i];
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-					item);
-				Schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
-				context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
+				Schema.ValidateSubschema(context);
+				overallResult &= context.LocalResult.IsValid;
+				context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
 			}
 			context.Options.LogIndentLevel--;
 
 			if (overallResult)
+			{
 				context.SetAnnotation(Name, true);
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Pass();
+			}
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)

@@ -53,8 +53,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -72,10 +72,11 @@ namespace Json.Schema
 				context.Log(() => $"Missing properties: [{string.Join(",", notFound.Select(x => $"'{x}'"))}]");
 			context.Options.LogIndentLevel--;
 
-			context.IsValid = notFound.Count == 0;
-			if (!context.IsValid)
-				context.Message = $"Required properties [{string.Join(", ", notFound)}] were not present";
-			context.ExitKeyword(Name, context.IsValid);
+			if (notFound.Count == 0)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Required properties [{string.Join(", ", notFound)}] were not present");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

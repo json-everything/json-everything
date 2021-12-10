@@ -67,8 +67,8 @@ namespace Json.Schema
 			
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -83,15 +83,14 @@ namespace Json.Schema
 				foreach (var instanceProperty in instanceProperties.Where(p => pattern.IsMatch(p.Name)))
 				{
 					context.Log(() => $"Validating property '{instanceProperty.Name}'.");
-					var subContext = ValidationContext.From(context,
-						context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Name}")),
+					context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Name}")),
 						instanceProperty.Value,
 						context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-					schema.ValidateSubschema(subContext);
-					overallResult &= subContext.IsValid;
-					context.Log(() => $"Property '{instanceProperty.Name}' {subContext.IsValid.GetValidityString()}.");
+					schema.ValidateSubschema(context);
+					overallResult &= context.LocalResult.IsValid;
+					context.Log(() => $"Property '{instanceProperty.Name}' {context.LocalResult.IsValid.GetValidityString()}.");
+					context.Pop();
 					if (!overallResult && context.ApplyOptimizations) break;
-					context.NestedContexts.Add(subContext);
 					evaluatedProperties.Add(instanceProperty.Name);
 				}
 			}
@@ -99,14 +98,12 @@ namespace Json.Schema
 			{
 				foreach (var pattern in InvalidPatterns)
 				{
-					var subContext = ValidationContext.From(context,
-						subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-					subContext.Message = $"The regular expression `{pattern}` is either invalid or not supported";
-					subContext.IsValid = false;
-					overallResult &= subContext.IsValid;
+					context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
+					context.LocalResult.Fail($"The regular expression `{pattern}` is either invalid or not supported");
+					overallResult = false;
 					context.Log(() => $"Discovered invalid pattern '{pattern}'.");
+					context.Pop();
 					if (!overallResult && context.ApplyOptimizations) break;
-					context.NestedContexts.Add(subContext);
 				}
 			}
 			context.Options.LogIndentLevel--;
@@ -117,9 +114,11 @@ namespace Json.Schema
 					annotation.AddRange(evaluatedProperties);
 				else
 					context.SetAnnotation(Name, evaluatedProperties);
+				context.LocalResult.Pass();
 			}
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

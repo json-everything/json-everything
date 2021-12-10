@@ -45,10 +45,11 @@ namespace Json.Schema
 			if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
 			    context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7)
 			{
+				context.LocalResult.Pass();
 				context.NotApplicable(() => "$ref present; ignoring");
-				context.IsValid = true;
 				return;
 			}
+
 			var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
 			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
 			if (context.ParentContext.UriChanged) 

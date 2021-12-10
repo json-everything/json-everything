@@ -41,8 +41,8 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)

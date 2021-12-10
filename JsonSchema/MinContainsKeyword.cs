@@ -43,41 +43,43 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (Value == 0)
 			{
-				context.IsValid = true;
+				context.LocalResult.Pass();
 				if (context.HasSiblingContexts)
 				{
-					var containsContext = context.SiblingContexts.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault().Value == ContainsKeyword.Name);
-					if (containsContext != null)
+					// use context.LocalResult instead (will need to get parent somehow to get siblings)
+					var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
+					if (containsResult != null)
 					{
 						context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
-						containsContext.IsValid = true;
+						containsResult.Pass();
 					}
 				}
-				context.ExitKeyword(Name, context.IsValid);
+				context.ExitKeyword(Name, true);
 				return;
 			}
 
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			var annotation = context.TryGetAnnotation(ContainsKeyword.Name);
 			if (!(annotation is List<int> validatedIndices))
 			{
+				context.LocalResult.Pass();
 				context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
-				context.IsValid = true;
 				return;
 			}
 
 			context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
 			var containsCount = validatedIndices.Count;
-			context.IsValid = Value <= containsCount;
-			if (!context.IsValid)
-				context.Message = $"Value has less than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Value <= containsCount)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Value has less than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

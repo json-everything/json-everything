@@ -59,19 +59,20 @@ namespace Json.Schema
 			{
 				context.Log(() => $"Processing {Name}[{i}]...");
 				var schema = Schemas[i];
-				var subContext = ValidationContext.From(context, subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-				schema.ValidateSubschema(subContext);
-				validCount += subContext.IsValid ? 1 : 0;
-				context.Log(() => $"{Name}[{i}] {subContext.IsValid.GetValidityString()}.");
+				context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+				schema.ValidateSubschema(context);
+				validCount += context.LocalResult.IsValid ? 1 : 0;
+				context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Pop();
 				if (validCount > 1 && context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
 			}
 
 			context.ConsolidateAnnotations();
-			context.IsValid = validCount == 1;
-			if (!context.IsValid)
-				context.Message = $"Expected 1 matching subschema but found {validCount}";
-			context.ExitKeyword(Name, context.IsValid);
+			if (validCount == 1)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Expected 1 matching subschema but found {validCount}");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

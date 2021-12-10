@@ -52,10 +52,11 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.IsValid = Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance);
-			if (!context.IsValid)
-				context.Message = "Expected value to match one of the values specified by the enum";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance))
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail("Expected value to match one of the values specified by the enum");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
