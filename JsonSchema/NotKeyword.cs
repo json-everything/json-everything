@@ -43,10 +43,8 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
 			Schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			context.LocalResult.ConsolidateAnnotations();
 			context.Options.LogIndentLevel++;
 			context.Log(() => $"Subschema {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Options.LogIndentLevel--;

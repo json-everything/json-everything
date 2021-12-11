@@ -40,12 +40,8 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			//context.Push();
 			Schema.ValidateSubschema(context);
-
 			context.LocalResult.SetAnnotation(Name, context.LocalResult.IsValid);
-			//context.Pop();
-			//context.LocalResult.ConsolidateAnnotations();
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 		}

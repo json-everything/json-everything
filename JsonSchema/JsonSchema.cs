@@ -229,9 +229,10 @@ namespace Json.Schema
 				//context.IsNewDynamicScope |= newContext.IsNewDynamicScope;
 				//overallResult &= newContext.IsValid;
 
-				if (!overallResult && context.ApplyOptimizations) break;
-				previousAnnotationSet.AddRange(context.LocalResult.Annotations);
+				var localAnnotation = context.LocalResult.Annotations;
 				context.Pop();
+				if (!overallResult && context.ApplyOptimizations) break;
+				previousAnnotationSet.AddRange(localAnnotation);
 			}
 
 			if (context.IsNewDynamicScope)

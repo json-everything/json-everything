@@ -42,12 +42,12 @@ namespace Json.Schema
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
 			Uri? newUri;
-			JsonSchema? baseSchema = null;
+			JsonSchema? baseSchema;
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
 					baseSchema = context.Options.SchemaRegistry.Get(newUri);
-				else if (context.CurrentUri != null)
+				else
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
@@ -67,14 +67,13 @@ namespace Json.Schema
 
 			var refFragment = string.IsNullOrEmpty(fragment) ? $"__{nameof(RecursiveRefKeyword)}__" : fragment;
 			var absoluteReference = SchemaRegistry.GetFullReference(newUri, refFragment);
-			if (context.NavigatedReferences.Contains(absoluteReference))
+			var navigation = (absoluteReference, context.InstanceLocation);
+			if (context.NavigatedReferences.Contains(navigation))
 			{
 				context.LocalResult.Fail("Encountered recursive reference");
 				context.ExitKeyword(Name, false);
 				return;
 			}
-
-			context.NavigatedReferences.Add(absoluteReference);
 
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
@@ -111,16 +110,18 @@ namespace Json.Schema
 				return;
 			}
 
+			context.NavigatedReferences.Add(navigation);
+
 			context.Push(newUri: newUri);
 			var pushSchemaRoot = !ReferenceEquals(baseSchema, context.SchemaRoot);
 			if (pushSchemaRoot)
 				context.PushSchemaRoot(baseSchema!);
 			schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			context.LocalResult.ConsolidateAnnotations();
 			if (pushSchemaRoot)
 				context.PopSchemaRoot();
 			context.Pop();
+			context.LocalResult.ConsolidateAnnotations();
 			if (result)
 				context.LocalResult.Pass();
 			else

@@ -47,11 +47,8 @@ namespace Json.Schema
 				return;
 			}
 
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
 			Schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			context.Pop();
-			context.LocalResult.ConsolidateAnnotations();
 			if (result)
 				context.LocalResult.Pass();
 			else

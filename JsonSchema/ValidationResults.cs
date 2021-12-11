@@ -18,7 +18,7 @@ namespace Json.Schema
 		/// Generally, a keyword will define how it handles its own consolidation.  This action
 		/// must be registered on startup.
 		/// </summary>
-		/// <param name="context">The validation context.</param>
+		/// <param name="results">The validation results.</param>
 		public delegate void ContextConsolidator(ValidationResults results);
 
 		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
@@ -28,7 +28,6 @@ namespace Json.Schema
 		private JsonPointer? _reference;
 		private List<Annotation>? _annotations;
 		private List<ValidationResults>? _nestedResults;
-		private bool _ignore;
 		private bool _isConsolidating;
 
 		/// <summary>
@@ -68,6 +67,8 @@ namespace Json.Schema
 		public bool HasAnnotations => _annotations is not { Count: 0 };
 
 		public ValidationResults? Parent { get; private set; }
+
+		internal bool Exclude { get; private set; }
 
 		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep);
 
@@ -238,7 +239,7 @@ namespace Json.Schema
 		internal void Ignore()
 		{
 			IsValid = true;
-			_ignore = true;
+			Exclude = true;
 		}
 
 		internal Uri? BuildAbsoluteUri(JsonPointer pointer)
@@ -292,7 +293,7 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
 		{
-			// TODO handle ignored results
+			if (value.Exclude) return;
 
 			writer.WriteStartObject();
 

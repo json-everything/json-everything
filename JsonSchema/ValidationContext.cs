@@ -21,7 +21,6 @@ namespace Json.Schema
 		private readonly Stack<ValidationResults> _localResults = new Stack<ValidationResults>();
 		private readonly Stack<bool> _dynamicScopeFlags = new Stack<bool>();
 		private readonly Stack<JsonSchema> _schemaRoots = new Stack<JsonSchema>();
-		private readonly Stack<HashSet<string>> _navigatedReferences = new Stack<HashSet<string>>();
 
 		/// <summary>
 		/// The option set for the validation.
@@ -31,7 +30,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The root schema.
 		/// </summary>
-		public JsonSchema SchemaRoot => _schemaRoots.Peek();
+		public JsonSchema SchemaRoot { get; set; }
 
 		/// <summary>
 		/// The current subschema location relative to the schema root.
@@ -73,7 +72,7 @@ namespace Json.Schema
 		internal JsonPointer? Reference { get; set; }
 		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
 		internal bool IsNewDynamicScope => _dynamicScopeFlags.Peek();
-		internal HashSet<string> NavigatedReferences => _navigatedReferences.Peek();
+		internal HashSet<(string, JsonPointer)> NavigatedReferences { get; } = new HashSet<(string, JsonPointer)>();
 		internal bool NavigatedByDirectRef { get; set; }
 
 		/// <summary>
@@ -91,6 +90,7 @@ namespace Json.Schema
 			_currentUris.Push(currentUri);
 			var instanceClone = instanceRoot.Clone();
 			InstanceRoot = instanceClone;
+			SchemaRoot = schemaRoot;
 			_localInstances.Push(instanceClone);
 			_instanceLocations.Push(JsonPointer.Empty);
 			_schemaRoots.Push(schemaRoot);
@@ -98,7 +98,6 @@ namespace Json.Schema
 			_schemaLocations.Push(JsonPointer.Empty);
 			_localResults.Push(new ValidationResults(this));
 			_dynamicScopeFlags.Push(true);
-			_navigatedReferences.Push(new HashSet<string>());
 		}
 #pragma warning restore 8618
 
@@ -117,7 +116,6 @@ namespace Json.Schema
 			LocalResult.AddNestedResult(newResult);
 			_localResults.Push(newResult);
 			_dynamicScopeFlags.Push(false);
-			_navigatedReferences.Push(new HashSet<string>(NavigatedReferences));
 		}
 
 		public void Pop()
@@ -129,7 +127,6 @@ namespace Json.Schema
 			_localSchemas.Pop();
 			_localResults.Pop();
 			_dynamicScopeFlags.Pop();
-			_navigatedReferences.Pop();
 		}
 
 		internal void UpdateCurrentUri(Uri newUri)

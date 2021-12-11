@@ -56,15 +56,7 @@ namespace Json.Schema
 				return;
 			}
 
-			context.Push();
 			Schema.ValidateSubschema(context);
-			var result = context.LocalResult.IsValid;
-			context.Pop();
-			context.LocalResult.ConsolidateAnnotations();
-			if (result)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
