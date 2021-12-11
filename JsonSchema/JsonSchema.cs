@@ -213,21 +213,8 @@ namespace Json.Schema
 		
 				context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);
 				context.LocalResult.ConsiderAnnotations(previousAnnotationSet);
-				keyword.Validate(context); // adds a new result
+				keyword.Validate(context);
 				overallResult &= context.LocalResult.IsValid;
-
-				//var previousContext = newContext;
-				//newContext = ValidationContext.From(context,
-				//	subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(keyword.Keyword())));
-				//newContext.NavigatedByDirectRef = context.NavigatedByDirectRef;
-				//newContext.ParentContext = context;
-				//newContext.LocalSchema = this;
-				//newContext.ImportAnnotations(previousContext);
-				//if (context.HasNestedContexts)
-				//	newContext.SiblingContexts.AddRange(context.NestedContexts);
-				//keyword.Validate(newContext);
-				//context.IsNewDynamicScope |= newContext.IsNewDynamicScope;
-				//overallResult &= newContext.IsValid;
 
 				var localAnnotation = context.LocalResult.Annotations;
 				context.Pop();
@@ -284,6 +271,11 @@ namespace Json.Schema
 				resolvable = resolvable.ResolvePointerSegment(null);
 
 			return (resolvable as JsonSchema, currentUri);
+		}
+
+		internal void UpdateBaseUri(Uri newUri)
+		{
+			BaseUri = newUri;
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

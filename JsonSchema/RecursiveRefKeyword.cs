@@ -63,6 +63,7 @@ namespace Json.Schema
 			{
 				newUri = context.CurrentUri;
 				baseSchema = context.CurrentAnchor ?? context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
+				newUri = baseSchema.BaseUri;
 			}
 
 			var refFragment = string.IsNullOrEmpty(fragment) ? $"__{nameof(RecursiveRefKeyword)}__" : fragment;

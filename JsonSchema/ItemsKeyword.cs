@@ -115,7 +115,6 @@ namespace Json.Schema
 					var item = context.LocalInstance[i];
 					context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
 					SingleSchema.ValidateSubschema(context);
-					//context.CurrentUri ??= subContext.CurrentUri;
 					overallResult &= context.LocalResult.IsValid;
 					context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
 					context.Pop();

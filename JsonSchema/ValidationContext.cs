@@ -20,6 +20,7 @@ namespace Json.Schema
 		private readonly Stack<JsonPointer> _schemaLocations = new Stack<JsonPointer>();
 		private readonly Stack<ValidationResults> _localResults = new Stack<ValidationResults>();
 		private readonly Stack<bool> _dynamicScopeFlags = new Stack<bool>();
+		private JsonSchema? _currentAnchor;
 
 		/// <summary>
 		/// The option set for the validation.
@@ -59,10 +60,19 @@ namespace Json.Schema
 		/// The current URI, based on `$id` and `$anchor` keywords present in the schema.
 		/// </summary>
 		public Uri CurrentUri => _currentUris.Peek();
+
 		/// <summary>
 		/// The current URI anchor.
 		/// </summary>
-		public JsonSchema? CurrentAnchor { get; internal set; }
+		public JsonSchema? CurrentAnchor
+		{
+			get { return _currentAnchor; }
+			internal set
+			{
+				_currentAnchorBackup = _currentAnchor ?? value;
+				_currentAnchor = value;
+			}
+		}
 
 		public ValidationResults LocalResult => _localResults.Peek();
 

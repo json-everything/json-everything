@@ -56,6 +56,7 @@ namespace Json.Schema
 				context.CurrentAnchor = null;
 			context.Options.SchemaRegistry.EnteringUriScope(newUri!);
 			context.UpdateCurrentUri(newUri);
+			context.LocalSchema.UpdateBaseUri(newUri);
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 		}
