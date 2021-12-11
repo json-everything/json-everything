@@ -157,9 +157,8 @@ namespace Json.Schema
 		/// <param name="value">The annotation value.</param>
 		public void SetAnnotation(string owner, object value)
 		{
-			AddAnnotation(new Annotation(owner, value, SchemaLocation) { WasConsolidated = _isConsolidating });
+			AddAnnotation(new Annotation(owner, value, SchemaLocation) {WasConsolidated = _isConsolidating});
 		}
-
 
 		/// <summary>
 		/// Registers a consolidation action.
@@ -179,6 +178,13 @@ namespace Json.Schema
 		{
 			if (!HasAnnotations) return null;
 			return Annotations.LastOrDefault(x => x.Owner == key)?.Value;
+		}
+
+		public IEnumerable<T> GetAllAnnotations<T>(string key)
+		{
+			if (!HasAnnotations) return Enumerable.Empty<T>();
+			return Annotations.Where(x => x.Owner == key && x.Value is T)
+				.Select(x => (T) x.Value);
 		}
 
 		internal void ImportAnnotations(List<Annotation> annotations)

@@ -216,10 +216,12 @@ namespace Json.Schema
 				keyword.Validate(context);
 				overallResult &= context.LocalResult.IsValid;
 
-				var localAnnotation = context.LocalResult.Annotations;
+				var localAnnotations = context.LocalResult.Annotations
+					.Where(x => x.Source.StartsWith(context.SchemaLocation))
+					.ToList();
 				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				previousAnnotationSet.AddRange(localAnnotation);
+				previousAnnotationSet.AddRange(localAnnotations);
 			}
 
 			if (context.IsNewDynamicScope)

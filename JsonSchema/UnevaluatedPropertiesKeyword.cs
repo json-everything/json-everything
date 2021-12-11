@@ -57,8 +57,8 @@ namespace Json.Schema
 			context.Options.LogIndentLevel++;
 			var overallResult = true;
 			List<string> evaluatedProperties;
-			var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
-			if (annotation == null)
+			var annotation = context.LocalResult.GetAllAnnotations<List<string>>(PropertiesKeyword.Name).SelectMany(x => x).ToList();
+			if (!annotation.Any())
 			{
 				context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
 				evaluatedProperties = new List<string>();
@@ -68,24 +68,24 @@ namespace Json.Schema
 				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
 				evaluatedProperties = annotation;
 			}
-			annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
-			if (annotation == null)
+			annotation = context.LocalResult.GetAllAnnotations<List<string>>(PatternPropertiesKeyword.Name).SelectMany(x => x).ToList();
+			if (!annotation.Any())
 				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
 			else
 			{
 				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
 				evaluatedProperties.AddRange(annotation);
 			}
-			annotation = (context.LocalResult.TryGetAnnotation(AdditionalPropertiesKeyword.Name) as List<string>)?.ToList();
-			if (annotation == null)
+			annotation = context.LocalResult.GetAllAnnotations<List<string>>(AdditionalPropertiesKeyword.Name).SelectMany(x => x).ToList();
+			if (!annotation.Any())
 				context.Log(() => $"No annotation from {AdditionalPropertiesKeyword.Name}.");
 			else
 			{
 				context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
 				evaluatedProperties.AddRange(annotation);
 			}
-			annotation = (context.LocalResult.TryGetAnnotation(Name) as List<string>)?.ToList();
-			if (annotation == null)
+			annotation = context.LocalResult.GetAllAnnotations<List<string>>(Name).SelectMany(x => x).ToList();
+			if (!annotation.Any())
 				context.Log(() => $"No annotation from {Name}.");
 			else
 			{
