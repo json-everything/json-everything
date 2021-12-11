@@ -74,7 +74,7 @@ namespace Json.Schema.Tests
 			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Basic);
 			var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""keywordLocation"": ""#/properties/fails"",
   ""instanceLocation"": ""#/fails"",
   ""error"": ""All values fail against the false schema""
 }";
@@ -98,7 +98,7 @@ namespace Json.Schema.Tests
 			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Detailed);
 			var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""keywordLocation"": ""#/properties/fails"",
   ""instanceLocation"": ""#/fails"",
   ""error"": ""All values fail against the false schema""
 }";
@@ -164,7 +164,7 @@ namespace Json.Schema.Tests
 			var result = Validate("{\"fails\":8.5}", OutputFormat.Detailed);
 			var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""keywordLocation"": ""#/properties/fails"",
   ""instanceLocation"": ""#/fails"",
   ""error"": ""All values fail against the false schema""
 }";
@@ -178,7 +178,7 @@ namespace Json.Schema.Tests
 			var result = Validate("{\"fails\":3}", OutputFormat.Detailed);
 			var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails/$false"",
+  ""keywordLocation"": ""#/properties/fails"",
   ""instanceLocation"": ""#/fails"",
   ""error"": ""All values fail against the false schema""
 }";
@@ -200,7 +200,7 @@ namespace Json.Schema.Tests
 
 			result.AssertInvalid(expected);
 			Assert.AreEqual("#/properties/refs/$ref/type", result.SchemaLocation.ToString());
-			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.AbsoluteSchemaLocation.ToString());
+			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.AbsoluteSchemaLocation?.ToString());
 		}
 
 		private static ValidationResults Validate(string json, OutputFormat format)

@@ -101,9 +101,9 @@ namespace Json.Schema
 			InstanceRoot = instanceClone;
 			SchemaRoot = schemaRoot;
 			_localInstances.Push(instanceClone);
-			_instanceLocations.Push(JsonPointer.Empty);
+			_instanceLocations.Push(JsonPointer.UrlEmpty);
 			_localSchemas.Push(schemaRoot);
-			_schemaLocations.Push(JsonPointer.Empty);
+			_schemaLocations.Push(JsonPointer.UrlEmpty);
 			_localResults.Push(new ValidationResults(this));
 			_dynamicScopeFlags.Push(false);
 		}

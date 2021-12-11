@@ -62,8 +62,8 @@ namespace Json.Schema.UniqueKeys
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -86,8 +86,7 @@ namespace Json.Schema.UniqueKeys
 					{
 						if (context.Options.OutputFormat == OutputFormat.Flag)
 						{
-							context.IsValid = false;
-							context.Message = $"Found duplicate items at indices {i} and {j}";
+							context.LocalResult.Fail($"Found duplicate items at indices {i} and {j}");
 							context.ExitKeyword(Name);
 							return;
 						}
@@ -96,9 +95,10 @@ namespace Json.Schema.UniqueKeys
 				}
 			}
 
-			context.IsValid = !matchedIndexPairs.Any();
-			if (!context.IsValid)
-				context.Message = $"Found duplicate items at index pairs {string.Join(", ", matchedIndexPairs.Select(x => $"({x.Item1}, {x.Item2})"))}";
+			if (!matchedIndexPairs.Any())
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Found duplicate items at index pairs {string.Join(", ", matchedIndexPairs.Select(x => $"({x.Item1}, {x.Item2})"))}");
 			context.ExitKeyword(Name);
 		}
 

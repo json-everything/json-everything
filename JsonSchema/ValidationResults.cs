@@ -187,10 +187,27 @@ namespace Json.Schema
 				.Select(x => (T) x.Value);
 		}
 
+		public void Pass()
+		{
+			IsValid = true;
+		}
+
+		public void Fail(string? message = null)
+		{
+			IsValid = false;
+			Message = message;
+		}
+
 		internal void ImportAnnotations(List<Annotation> annotations)
 		{
 			if (annotations.Count == 0) return;
 			AddAnnotations(annotations);
+		}
+
+		internal void ConsiderAnnotations(IEnumerable<Annotation> annotations)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.AddRange(annotations.Select(Annotation.CreateConsolidated));
 		}
 
 		private void AddAnnotation(Annotation annotation)
@@ -199,16 +216,10 @@ namespace Json.Schema
 			_annotations.Add(annotation);
 		}
 
-		internal void AddAnnotations(IEnumerable<Annotation> annotations)
+		private void AddAnnotations(IEnumerable<Annotation> annotations)
 		{
 			_annotations ??= new List<Annotation>();
 			_annotations.AddRange(annotations);
-		}
-
-		internal void ConsiderAnnotations(IEnumerable<Annotation> annotations)
-		{
-			_annotations ??= new List<Annotation>();
-			_annotations.AddRange(annotations.Select(Annotation.CreateConsolidated));
 		}
 
 		private void CopyFrom(ValidationResults other)
@@ -229,17 +240,6 @@ namespace Json.Schema
 			_nestedResults ??= new List<ValidationResults>();
 			_nestedResults.Add(results);
 			results.Parent = this;
-		}
-
-		internal void Pass()
-		{
-			IsValid = true;
-		}
-
-		internal void Fail(string? message = null)
-		{
-			IsValid = false;
-			Message = message;
 		}
 
 		internal void Ignore()
@@ -283,7 +283,7 @@ namespace Json.Schema
 			return all;
 		}
 
-		private void Prep<T>(ref List<T>? list)
+		private static void Prep<T>(ref List<T>? list)
 		{
 			if (list != null) list.Clear();
 			else list = new List<T>();
