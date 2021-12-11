@@ -101,8 +101,8 @@ namespace Json.Schema
 					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
 					if (annotation is bool)
 					{
-						context.LocalResult.Fail();
-						context.ExitKeyword(Name, false);
+						context.LocalResult.Pass();
+						context.ExitKeyword(Name, true);
 						return;
 					}
 

@@ -178,7 +178,7 @@ namespace Json.Schema
 		public object? TryGetAnnotation(string key)
 		{
 			if (!HasAnnotations) return null;
-			return Annotations.FirstOrDefault(x => x.Owner == key)?.Value;
+			return Annotations.LastOrDefault(x => x.Owner == key)?.Value;
 		}
 
 		internal void ImportAnnotations(List<Annotation> annotations)

@@ -20,7 +20,6 @@ namespace Json.Schema
 		private readonly Stack<JsonPointer> _schemaLocations = new Stack<JsonPointer>();
 		private readonly Stack<ValidationResults> _localResults = new Stack<ValidationResults>();
 		private readonly Stack<bool> _dynamicScopeFlags = new Stack<bool>();
-		private readonly Stack<JsonSchema> _schemaRoots = new Stack<JsonSchema>();
 
 		/// <summary>
 		/// The option set for the validation.
@@ -93,7 +92,6 @@ namespace Json.Schema
 			SchemaRoot = schemaRoot;
 			_localInstances.Push(instanceClone);
 			_instanceLocations.Push(JsonPointer.Empty);
-			_schemaRoots.Push(schemaRoot);
 			_localSchemas.Push(schemaRoot);
 			_schemaLocations.Push(JsonPointer.Empty);
 			_localResults.Push(new ValidationResults(this));
@@ -132,6 +130,8 @@ namespace Json.Schema
 		internal void UpdateCurrentUri(Uri newUri)
 		{
 			_currentUris.Pop();
+			_currentUris.Pop();
+			_currentUris.Push(newUri);
 			_currentUris.Push(newUri);
 			_dynamicScopeFlags.Pop();
 			_dynamicScopeFlags.Push(true);
@@ -140,16 +140,6 @@ namespace Json.Schema
 		internal void ValidateAnchor()
 		{
 			CurrentAnchor = _currentAnchorBackup;
-		}
-
-		internal void PushSchemaRoot(JsonSchema schema)
-		{
-			_schemaRoots.Push(schema);
-		}
-
-		internal void PopSchemaRoot()
-		{
-			_schemaRoots.Pop();
 		}
 
 		internal IEnumerable<Type>? GetKeywordsToProcess()

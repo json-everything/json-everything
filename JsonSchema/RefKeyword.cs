@@ -118,13 +118,8 @@ namespace Json.Schema
 			context.NavigatedByDirectRef = navigatedByDirectRef;
 			if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
 				context.Reference = reference;
-			var pushSchemaRoot = !ReferenceEquals(baseSchema, context.SchemaRoot);
-			if (pushSchemaRoot)
-				context.PushSchemaRoot(baseSchema!);
 			schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			if (pushSchemaRoot)
-				context.PopSchemaRoot();
 			context.Pop();
 			context.LocalResult.ConsolidateAnnotations();
 			if (result)

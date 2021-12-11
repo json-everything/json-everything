@@ -123,13 +123,8 @@ namespace Json.Schema
 
 			context.NavigatedReferences.Add(navigation);
 			context.Push(newUri: newUri);
-			var pushSchemaRoot = !ReferenceEquals(baseSchema, context.SchemaRoot);
-			if (pushSchemaRoot)
-				context.PushSchemaRoot(baseSchema!);
 			schema.ValidateSubschema(context);
 			var result = context.LocalResult.IsValid;
-			if (pushSchemaRoot)
-				context.PopSchemaRoot();
 			context.Pop();
 			context.LocalResult.ConsolidateAnnotations();
 			if (result)

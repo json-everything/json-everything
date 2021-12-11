@@ -55,14 +55,6 @@ namespace Json.Schema
 				return;
 			}
 
-			var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
-			if (minContainsKeyword is {Value: 0})
-			{
-				context.LocalResult.Pass();
-				context.NotApplicable(() => $"{MinContainsKeyword.Name} is 0.");
-				return;
-			}
-
 			var count = context.LocalInstance.GetArrayLength();
 			var validIndices = new List<int>();
 			for (int i = 0; i < count; i++)
@@ -72,6 +64,15 @@ namespace Json.Schema
 				if (context.LocalResult.IsValid)
 					validIndices.Add(i);
 				context.Pop();
+			}
+
+			var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
+			if (minContainsKeyword is { Value: 0 })
+			{
+				context.LocalResult.SetAnnotation(Name, validIndices);
+				context.LocalResult.Pass();
+				context.NotApplicable(() => $"{MinContainsKeyword.Name} is 0.");
+				return;
 			}
 
 			if (validIndices.Any())
