@@ -110,8 +110,8 @@ namespace Json.Schema
 			var indicesToValidate = Enumerable.Range(startIndex, context.LocalInstance.GetArrayLength() - startIndex);
 			if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
 			{
-				annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
-				if (annotation is List<int> validatedByContains)
+				var validatedByContains = context.LocalResult.GetAllAnnotations<List<int>>(ContainsKeyword.Name).SelectMany(x => x).ToList();
+				if (validatedByContains.Any())
 				{
 					context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
 					indicesToValidate = indicesToValidate.Except(validatedByContains);
