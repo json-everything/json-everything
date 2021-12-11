@@ -105,7 +105,7 @@ namespace Json.Schema
 			_localSchemas.Push(schemaRoot);
 			_schemaLocations.Push(JsonPointer.Empty);
 			_localResults.Push(new ValidationResults(this));
-			_dynamicScopeFlags.Push(true);
+			_dynamicScopeFlags.Push(false);
 		}
 #pragma warning restore 8618
 
@@ -144,6 +144,8 @@ namespace Json.Schema
 			_currentUris.Push(newUri);
 			_currentUris.Push(newUri);
 			_dynamicScopeFlags.Pop();
+			_dynamicScopeFlags.Pop();
+			_dynamicScopeFlags.Push(true);
 			_dynamicScopeFlags.Push(true);
 		}
 
