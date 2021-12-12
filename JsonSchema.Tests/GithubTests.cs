@@ -500,6 +500,7 @@ namespace Json.Schema.Tests
 		}
 
 		[SchemaKeyword(Name)]
+		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
 			private const string Name = "minDate";

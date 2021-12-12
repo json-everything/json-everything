@@ -74,6 +74,9 @@ namespace Json.Schema
 			}
 		}
 
+		/// <summary>
+		/// The result object for the current validation.
+		/// </summary>
 		public ValidationResults LocalResult => _localResults.Peek();
 
 		internal bool UriChanged { get; set; }
@@ -109,6 +112,14 @@ namespace Json.Schema
 		}
 #pragma warning restore 8618
 
+		/// <summary>
+		/// Pushes the state onto the stack and sets up for a nested layer of validation.
+		/// </summary>
+		/// <param name="instanceLocation">The location within the data instance root.</param>
+		/// <param name="instance">The data instance.</param>
+		/// <param name="subschemaLocation">The location within the schema root.</param>
+		/// <param name="subschema">The subschema.</param>
+		/// <param name="newUri">The URI of the subschema.</param>
 		public void Push(in JsonPointer? instanceLocation = null,
 			in JsonElement? instance = null,
 			in JsonPointer? subschemaLocation = null,
@@ -126,6 +137,9 @@ namespace Json.Schema
 			_dynamicScopeFlags.Push(false);
 		}
 
+		/// <summary>
+		/// Pops the state from the stack to return to a previous layer of validation.
+		/// </summary>
 		public void Pop()
 		{
 			_currentUris.Pop();

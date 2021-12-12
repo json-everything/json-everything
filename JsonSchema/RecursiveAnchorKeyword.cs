@@ -22,14 +22,6 @@ namespace Json.Schema
 		public bool Value { get; }
 
 		/// <summary>
-		/// Creates a new <see cref="RecursiveAnchorKeyword"/> defaulting the value to `true`.
-		/// </summary>
-		[Obsolete("This constructor is deprecated. Use the constructor that takes a bool argument instead.")]
-		public RecursiveAnchorKeyword()
-			: this(true)
-		{
-		}
-		/// <summary>
 		/// Creates a new <see cref="RecursiveAnchorKeyword"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>

@@ -10,6 +10,7 @@ namespace Json.Schema.Tests
 	public class VocabularyTests
 	{
 		[SchemaKeyword(Name)]
+		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		[JsonConverter(typeof(MinDateJsonConverter))]
 		public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
@@ -71,6 +72,7 @@ namespace Json.Schema.Tests
 		}
 
 		[SchemaKeyword(Name)]
+		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		[JsonConverter(typeof(MaxDateJsonConverter))]
 		public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
 		{

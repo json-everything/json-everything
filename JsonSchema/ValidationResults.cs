@@ -57,6 +57,13 @@ namespace Json.Schema
 		/// </summary>
 		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults ??= new List<ValidationResults>();
 	
+		/// <summary>
+		/// Gets whether there are nested results.
+		/// </summary>
+		/// <remarks>
+		/// Because <see cref="NestedResults"/> is lazily loaded, this property allows the check without
+		/// the side effect of allocating a list object.
+		/// </remarks>
 		public bool HasNestedResults => _nestedResults is not { Count: 0 };
 
 		/// <summary>
@@ -64,8 +71,18 @@ namespace Json.Schema
 		/// </summary>
 		public IEnumerable<Annotation> Annotations => _annotations ??= new List<Annotation>();
 
+		/// <summary>
+		/// Gets whether there are annotation.
+		/// </summary>
+		/// <remarks>
+		/// Because <see cref="Annotations"/> is lazily loaded, this property allows the check without
+		/// the side effect of allocating a list object.
+		/// </remarks>
 		public bool HasAnnotations => _annotations is not { Count: 0 };
 
+		/// <summary>
+		/// Gets the parent result.
+		/// </summary>
 		public ValidationResults? Parent { get; private set; }
 
 		internal bool Exclude { get; private set; }
@@ -180,6 +197,12 @@ namespace Json.Schema
 			return Annotations.LastOrDefault(x => x.Owner == key)?.Value;
 		}
 
+		/// <summary>
+		/// Gets all annotations of a particular data type for the current validation level.
+		/// </summary>
+		/// <typeparam name="T">The data type.</typeparam>
+		/// <param name="key">The key under which the annotation is stored.  Typically a keyword.</param>
+		/// <returns>The set of all annotations for the current validation level.</returns>
 		public IEnumerable<T> GetAllAnnotations<T>(string key)
 		{
 			if (!HasAnnotations) return Enumerable.Empty<T>();
@@ -187,11 +210,18 @@ namespace Json.Schema
 				.Select(x => (T) x.Value);
 		}
 
+		/// <summary>
+		/// Marks the result as valid.
+		/// </summary>
 		public void Pass()
 		{
 			IsValid = true;
 		}
 
+		/// <summary>
+		/// Marks the result as invalid.
+		/// </summary>
+		/// <param name="message"></param>
 		public void Fail(string? message = null)
 		{
 			IsValid = false;
