@@ -1,3 +1,11 @@
+# [1.0.5](https://github.com/gregsdennis/json-everything/pull/200)
+
+Updated JsonSchema.Net reference to v2.0.0.  Please see [release notes](./json-schema.md) for that library as it contains breaking changes.
+
+# [1.0.4](https://github.com/gregsdennis/json-everything/pull/???)
+
+???
+
 # [1.0.3](https://github.com/gregsdennis/json-everything/pull/182)
 
 Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.

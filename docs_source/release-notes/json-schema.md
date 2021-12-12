@@ -1,3 +1,7 @@
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/200)
+
+
+
 # [1.13.0](https://github.com/gregsdennis/json-everything/pull/204)
 
 [#203](https://github.com/gregsdennis/json-everything/issues/203) - [@coderpatros](https://github.com/coderpatros) discovered a regression in `format` validation when the format is unkonwn.
