@@ -1,14 +1,15 @@
 ﻿using System.Linq;
 using Json.Pointer;
 
-namespace Json.Schema;
-
-internal static class JsonPointerExtensions
+namespace Json.Schema
 {
-	public static bool StartsWith(this JsonPointer pointer, JsonPointer other)
+	internal static class JsonPointerExtensions
 	{
-		if (!other.Segments.Any()) return true;
-		if (pointer.Segments.Length < other.Segments.Length) return false;
-		return !other.Segments.Where((t, i) => pointer.Segments[i] != t).Any();
+		public static bool StartsWith(this JsonPointer pointer, JsonPointer other)
+		{
+			if (!other.Segments.Any()) return true;
+			if (pointer.Segments.Length < other.Segments.Length) return false;
+			return !other.Segments.Where((t, i) => pointer.Segments[i] != t).Any();
+		}
 	}
 }
