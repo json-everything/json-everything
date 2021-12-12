@@ -37,7 +37,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The error message, if any.
 		/// </summary>
-		public string? Message { get; set; }
+		public string? Message { get; private set; }
 		/// <summary>
 		/// The schema location that generated this node.
 		/// </summary>

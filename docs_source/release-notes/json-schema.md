@@ -1,5 +1,57 @@
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/200)
 
+Primary change is around how `ValidationContext` is handled throughout the validation process in order to significantly reduce memory footprint.  Thanks to [@dazerdude](https://github.com/dazerdude) for reporting the issue and making suggestions that led to resolving this.
+
+The majority of this change affects how keywords are implemented.  Unless you're implementing your own keywords, it's unlikely that this change will break your code.
+
+The validation context now only contains data required for validation.  The validation result is now set directly on the validation result, which is also now exposed by the context.
+
+## Removed
+
+- `ValidationContext`
+  - `IsValid`
+  - `Ignore`
+  - `Message`
+  - `Annotations`
+  - `NestedContexts`
+  - `HasNestedContexts`
+  - `SiblingContexts`
+  - `HasSiblingContexts`
+  - `DynamicAnchors` (was marked obsolete)
+  - `From()` static method
+  - `ConsolidateAnnotations()` (moved to `ValidationResults`)
+  - `SetAnnotation()` (moved to `ValidationResults`)
+  - `TryGetAnntation()` (moved to `ValidationResults`)
+  - `RegisterConsolidationMethod()` (moved to `ValidationResults`)
+  - `ContextConsolidator` delegate (moved to `ValidationResults`)
+- `ValidationOptions`
+  - `ValidationFormat` (was marked obsolete)
+
+
+## Changed
+
+- Keywords now _require_ a `[SchemaDraft()]` attribute to declare compatible drafts.
+- `Draft` is now a `[Flags]` enum and can be combined with the bitwise OR `|` operator.
+
+## Added
+
+- `KeywordExtentions`
+  - `SupportsDraft()`
+- `ValidationContext`
+  - `Push()`
+  - `Pop()`
+- `ValidationResults`
+  - `HasNestedResults`
+  - `HasAnnotations`
+  - `Parent`
+  - `ConsolidateAnnotations()` (moved from `ValidationContext`)
+  - `SetAnnotation()` (moved from `ValidationContext`)
+  - `TryGetAnntation()` (moved from `ValidationContext`)
+  - `RegisterConsolidationMethod()` (moved from `ValidationContext`)
+  - `ContextConsolidator` delegate (moved from `ValidationContext`)
+  - `GetAllAnnotations<T>()`
+  - `Pass()`
+  - `Fail()`
 
 
 # [1.13.0](https://github.com/gregsdennis/json-everything/pull/204)
