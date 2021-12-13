@@ -12,7 +12,7 @@ function getJsonFromEditor(editor) {
 		return null;
 	}
 	const text = editor.getValue();
-	return JSON.parse(text);
+	return text ? JSON.parse(text) : null;
 }
 
 function scrollToEnd() {

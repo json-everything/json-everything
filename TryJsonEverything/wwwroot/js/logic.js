@@ -25,20 +25,36 @@ var value = localStorage.getItem('logic.logic');
 if (value) {
 	logicEditor.setValue(value);
 } else {
-	logicEditor.setValue(JSON.stringify(logicSample, null, '\t'))
+	logicEditor.setValue(JSON.stringify(logicSample, null, '\t'));
 }
 logicEditor.clearSelection();
-logicEditor.getSession().on('change', () => localStorage.setItem('logic.logic', logicEditor.getValue()));
+logicEditor.getSession().on('change',
+	() => {
+		var text = logicEditor.getValue();
+		if (text) {
+			localStorage.setItem('logic.logic', text);
+		} else {
+			localStorage.removeItem('logic.logic');
+		}
+	});
 
 const dataEditor = ace.edit(dataEditorName);
 value = localStorage.getItem('logic.data');
 if (value) {
 	dataEditor.setValue(value);
 } else {
-	dataEditor.setValue(JSON.stringify(dataSample, null, '\t'))
+	dataEditor.setValue(JSON.stringify(dataSample, null, '\t'));
 }
 dataEditor.clearSelection();
-dataEditor.getSession().on('change', () => localStorage.setItem('logic.data', dataEditor.getValue()));
+dataEditor.getSession().on('change',
+	() => {
+		var text = dataEditor.getValue();
+		if (text) {
+			localStorage.setItem('logic.data', text);
+		} else {
+			localStorage.removeItem('logic.data');
+		}
+	});
 
 const outputEditor = ace.edit(outputEditorName);
 outputEditor.setReadOnly(true);
@@ -80,7 +96,7 @@ async function apply() {
 
 	if (response.errors) {
 		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.errors.map(getErrorElement).join('')}</ol>`;
-	} else if (response.result) {
+	} else if (response.result !== undefined) {
 		outputEditor.setValue(JSON.stringify(response.result, null, '\t'));
 		outputEditor.clearSelection();
 	}

@@ -117,7 +117,7 @@ async function generate() {
 		outputElement.innerHTML = '<h3 class="result-valid">Patch generated successfully!</h3>';
 	}
 
-	if (response.patch) {
+	if (response.patch !== undefined) {
 		outputEditor.setValue(JSON.stringify(response.patch, null, '\t'));
 		outputEditor.clearSelection();
 	}

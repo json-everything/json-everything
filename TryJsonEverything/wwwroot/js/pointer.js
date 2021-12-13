@@ -98,7 +98,7 @@ async function query() {
 
 	if (response.errors) {
 		outputElement.innerHTML = `<ol type="1" class="result-error text-left">${response.errors.map(getErrorElement).join('')}</ol>`;
-	} else if (response.result) {
+	} else if (response.result !== undefined) {
 		outputEditor.setValue(JSON.stringify(response.result, null, '\t'));
 		outputEditor.clearSelection();
 	}
