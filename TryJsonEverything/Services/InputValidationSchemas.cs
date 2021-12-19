@@ -148,9 +148,7 @@ namespace TryJsonEverything.Services
 					("logic", new JsonSchemaBuilder()
 						.Type(SchemaValueType.Object)
 					),
-					("data", new JsonSchemaBuilder()
-						.Type(SchemaValueType.Object | SchemaValueType.Null)
-					)
+					("data", true)
 				)
 				.Required("logic", "data");
 	}
