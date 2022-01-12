@@ -125,7 +125,8 @@ namespace Json.Schema
 				ValidateMetaSchema = other.ValidateMetaSchema,
 				RequireFormatValidation = other.RequireFormatValidation,
 				LogIndentLevel = other.LogIndentLevel,
-				Log = other._log ?? Default.Log
+				Log = other._log ?? Default.Log,
+				OnlyKnownFormats = other.OnlyKnownFormats,
 			};
 			options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 			options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);

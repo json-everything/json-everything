@@ -51,7 +51,7 @@ namespace Json.Schema
 
             if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
             {
-                context.Message = "Cannot validate unknown format `{Key}`";
+                context.Message = $"Cannot validate unknown format `{Value.Key}`";
                 context.IsValid = false;
                 return;
             }
