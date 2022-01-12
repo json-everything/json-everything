@@ -15351,6 +15351,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationOptions.LogIndentLevel
   nameWithType: ValidationOptions.LogIndentLevel
+- uid: Json.Schema.ValidationOptions.OnlyKnownFormats
+  name: OnlyKnownFormats
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_OnlyKnownFormats
+  commentId: P:Json.Schema.ValidationOptions.OnlyKnownFormats
+  fullName: Json.Schema.ValidationOptions.OnlyKnownFormats
+  nameWithType: ValidationOptions.OnlyKnownFormats
+- uid: Json.Schema.ValidationOptions.OnlyKnownFormats*
+  name: OnlyKnownFormats
+  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_OnlyKnownFormats_
+  commentId: Overload:Json.Schema.ValidationOptions.OnlyKnownFormats
+  isSpec: "True"
+  fullName: Json.Schema.ValidationOptions.OnlyKnownFormats
+  nameWithType: ValidationOptions.OnlyKnownFormats
 - uid: Json.Schema.ValidationOptions.OutputFormat
   name: OutputFormat
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_OutputFormat
