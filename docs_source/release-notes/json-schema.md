@@ -1,3 +1,7 @@
+# [1.12.1](https://github.com/gregsdennis/json-everything/pull/204)
+
+[#203](https://github.com/gregsdennis/json-everything/issues/203) - [@coderpatros](https://github.com/coderpatros) discovered a regression in `format` validation when the format is unkonwn.
+
 # [1.12.0](https://github.com/gregsdennis/json-everything/pull/196)
 
 [#191](https://github.com/gregsdennis/json-everything/issues/191) - Self-referencing meta-schemas cause an infinite loop during validation.

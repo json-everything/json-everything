@@ -20,7 +20,7 @@ namespace Json.Schema
 		/// <returns><code>true</code>.  Override to return another value.</returns>
 		public override bool Validate(JsonElement element)
 		{
-			return false;
+			return true;
 		}
 
 		/// <summary>
@@ -31,8 +31,8 @@ namespace Json.Schema
 		/// <returns><code>true</code>.  Override to return another value.</returns>
 		public override bool Validate(JsonElement element, out string? errorMessage)
 		{
-			errorMessage = $"Cannot validate unknown format `{Key}`";
-			return false;
+			errorMessage = null;
+			return true;
 		}
 	}
 }
