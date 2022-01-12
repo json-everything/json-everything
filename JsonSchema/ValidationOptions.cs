@@ -79,7 +79,7 @@ namespace Json.Schema
 		}
 
 		/// <summary>
-		/// Specifies whether the `format` keyword should ber required to provide
+		/// Specifies whether the `format` keyword should be required to provide
 		/// validation results.  Default is false, which just produces annotations
 		/// for drafts 2019-09 and prior or follows the behavior set forth by the
 		/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
@@ -89,6 +89,16 @@ namespace Json.Schema
 		/// This property replaces the now obsolete <see cref="ValidateFormat"/>.
 		/// </remarks>
 		public bool RequireFormatValidation { get; set; }
+
+		/// <summary>
+		/// Specifies whether the `format` keyword should fail validations for
+		/// unknown formats.  Default is false.
+		/// </summary>
+		/// <remarks>
+		///	This option is applied whether `format` is using annotation or
+		/// assertion behavior.
+		/// </remarks>
+		public bool OnlyKnownFormats { get; set; }
 		
 		internal Draft ValidatingAs { get; private set; }
 
