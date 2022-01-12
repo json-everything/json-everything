@@ -1,6 +1,10 @@
-# [1.12.1](https://github.com/gregsdennis/json-everything/pull/204)
+# [1.13.0](https://github.com/gregsdennis/json-everything/pull/204)
 
 [#203](https://github.com/gregsdennis/json-everything/issues/203) - [@coderpatros](https://github.com/coderpatros) discovered a regression in `format` validation when the format is unkonwn.
+
+Added option `OnlyKnownKeywords` to support validation failures on unknown keywords.
+
+***NOTE** Since this is fixing a regression, I'm only bumping the minor version.
 
 # [1.12.0](https://github.com/gregsdennis/json-everything/pull/196)
 
