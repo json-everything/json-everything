@@ -73,7 +73,11 @@ namespace Json.Schema.Tests
 		[Test]
 		public void UnknownFormat_Assertion_FailsValidation()
 		{
-			var options = new ValidationOptions {OutputFormat = OutputFormat.Detailed};
+			var options = new ValidationOptions
+            {
+                OutputFormat = OutputFormat.Detailed,
+				OnlyKnownFormats = true
+            };
 			options.SchemaRegistry.Register(_formatAssertionMetaSchemaId, _formatAssertionMetaSchema);
 
 			var schemaText = $@"{{
@@ -105,7 +109,8 @@ namespace Json.Schema.Tests
 			var results = schema.Validate(instance, new ValidationOptions
 			{
 				OutputFormat = OutputFormat.Detailed,
-				RequireFormatValidation = true
+				RequireFormatValidation = true,
+                OnlyKnownFormats = true
 			});
 
 			results.AssertInvalid();

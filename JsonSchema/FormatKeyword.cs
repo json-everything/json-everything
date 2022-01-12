@@ -49,6 +49,13 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			context.SetAnnotation(Name, Value.Key);
 
+            if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
+            {
+                context.Message = $"Cannot validate unknown format `{Value.Key}`";
+                context.IsValid = false;
+                return;
+            }
+
 			var requireValidation = context.Options.RequireFormatValidation;
 			if (!requireValidation)
 			{
