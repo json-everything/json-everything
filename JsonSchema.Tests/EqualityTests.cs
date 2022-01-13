@@ -126,7 +126,7 @@ namespace Json.Schema.Tests
 				yield return new TestCaseData("{\"description\":\"schema\"}", "{\"description\":\"other\"}");
 				yield return new TestCaseData("{\"else\":true}", "{\"else\":false}");
 				yield return new TestCaseData("{\"enum\":[true,\"string\",5]}", "{\"enum\":[6,true,\"string\"]}");
-				yield return new TestCaseData("{\"enum\":[true,\"string\",5]}", "{\"enum\":[5,true,\"string\",5]}");
+				yield return new TestCaseData("{\"enum\":[true,\"string\",5]}", "{\"enum\":[5,true,\"string\",\"5\"]}");
 				yield return new TestCaseData("{\"examples\":[true,\"string\",5]}", "{\"examples\":[5,false,\"string\"]}");
 				yield return new TestCaseData("{\"examples\":[true,\"string\",5]}", "{\"examples\":[5,true,\"string\",true]}");
 				yield return new TestCaseData("{\"exclusiveMaximum\":1}", "{\"exclusiveMaximum\":2}");
