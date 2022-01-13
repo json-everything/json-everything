@@ -38,11 +38,12 @@ class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
         var date = DateTime.Parse(dateString);
 
         // Check if the date is less than or equal to what we expect.
-        context.IsValid = date <= Date;
-
-        // If not, add an error message.
-        if (!context.IsValid)
-            context.Message = $"{date:O} must be on or before {Date:O}";
+        if (date <= Date)
+            // if so, pass validation.
+            context.Pass();
+        else
+            // If not, fail validation and an error message.
+            context.Fail($"{date:O} must be on or before {Date:O}")
     }
 
     // Equality stuff
