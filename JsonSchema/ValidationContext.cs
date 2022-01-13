@@ -30,7 +30,7 @@ namespace Json.Schema
 		/// <summary>
 		/// The root schema.
 		/// </summary>
-		public JsonSchema SchemaRoot { get; set; }
+		public JsonSchema SchemaRoot { get; }
 
 		/// <summary>
 		/// The current subschema location relative to the schema root.

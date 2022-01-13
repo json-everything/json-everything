@@ -33,6 +33,7 @@ The validation context now only contains data required for validation.  The vali
 - Keywords now _require_ a `[SchemaDraft()]` attribute to declare compatible drafts.
 - `Draft` is now a `[Flags]` enum and can be combined with the bitwise OR `|` operator.
 - `EnumKeyword` now uses a hash set to store values (improves performance).  This means that it requires unique values.  An `ArgumentException` will now be thrown if attempting to deserialize a schema with duplicate values inside an `enum`.
+- `ValidationContext.SchemaRoot` is now read-only.  This is set by the initial call to `.Validate()` and shouldn't need to be set by the client.
 
 ## Added
 
