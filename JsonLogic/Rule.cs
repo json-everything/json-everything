@@ -74,30 +74,36 @@ namespace Json.Logic
 		/// <returns>The converted value.</returns>
 		public override Rule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			if (reader.TokenType != JsonTokenType.StartObject)
-			{
-				using var doc = JsonDocument.ParseValue(ref reader);
-				return new LiteralRule(doc.RootElement.Clone());
-			}
+            if (reader.TokenType == JsonTokenType.StartObject)
+            {
+                var data = JsonSerializer.Deserialize<Dictionary<string, ArgumentCollection>>(ref reader, options);
 
-			var data = JsonSerializer.Deserialize<Dictionary<string, ArgumentCollection>>(ref reader, options);
-			
-			if (data.Count != 1)
-				throw new JsonException("Rules must contain exactly one operator key with an array of arguments.");
+                if (data.Count != 1)
+                    throw new JsonException("Rules must contain exactly one operator key with an array of arguments.");
 
-			var ruleInfo = data.First();
-			
-			var ruleType = RuleRegistry.GetRule(ruleInfo.Key);
-			if (ruleType == null)
-				throw new JsonException($"Cannot identify rule for {ruleInfo.Key}");
+                var ruleInfo = data.First();
 
-			var value = ruleInfo.Value ?? new ArgumentCollection((Rule?) null);
+                var ruleType = RuleRegistry.GetRule(ruleInfo.Key);
+                if (ruleType == null)
+                    throw new JsonException($"Cannot identify rule for {ruleInfo.Key}");
 
-			return (Rule) Activator.CreateInstance(ruleType,
-				value.Cast<object>()
-					.Select(o => o ?? new LiteralRule(null))
-					.ToArray());
-		}
+                var value = ruleInfo.Value ?? new ArgumentCollection((Rule?) null);
+
+                return (Rule) Activator.CreateInstance(ruleType,
+                    value.Cast<object>()
+                        .Select(o => o ?? new LiteralRule(null))
+                        .ToArray());
+            }
+
+            if (reader.TokenType == JsonTokenType.StartArray)
+            {
+                var data = JsonSerializer.Deserialize<List<Rule>>(ref reader, options);
+                return new RuleCollection(data);
+            }
+
+            using var doc = JsonDocument.ParseValue(ref reader);
+            return new LiteralRule(doc.RootElement.Clone());
+        }
 
 		/// <summary>Writes a specified value as JSON.</summary>
 		/// <param name="writer">The writer to write to.</param>
