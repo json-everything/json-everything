@@ -5706,12 +5706,6 @@ references:
   commentId: F:Json.Schema.Formats.Time
   fullName: Json.Schema.Formats.Time
   nameWithType: Formats.Time
-- uid: Json.Schema.Formats.Unknown
-  name: Unknown
-  href: api/Json.Schema.Formats.html#Json_Schema_Formats_Unknown
-  commentId: F:Json.Schema.Formats.Unknown
-  fullName: Json.Schema.Formats.Unknown
-  nameWithType: Formats.Unknown
 - uid: Json.Schema.Formats.Uri
   name: Uri
   href: api/Json.Schema.Formats.html#Json_Schema_Formats_Uri
@@ -11312,6 +11306,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.KeywordExtensions.Priority
   nameWithType: KeywordExtensions.Priority
+- uid: Json.Schema.KeywordExtensions.SupportsDraft(Json.Schema.IJsonSchemaKeyword,Json.Schema.Draft)
+  name: SupportsDraft(IJsonSchemaKeyword, Draft)
+  href: api/Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_SupportsDraft_Json_Schema_IJsonSchemaKeyword_Json_Schema_Draft_
+  commentId: M:Json.Schema.KeywordExtensions.SupportsDraft(Json.Schema.IJsonSchemaKeyword,Json.Schema.Draft)
+  fullName: Json.Schema.KeywordExtensions.SupportsDraft(Json.Schema.IJsonSchemaKeyword, Json.Schema.Draft)
+  nameWithType: KeywordExtensions.SupportsDraft(IJsonSchemaKeyword, Draft)
+- uid: Json.Schema.KeywordExtensions.SupportsDraft*
+  name: SupportsDraft
+  href: api/Json.Schema.KeywordExtensions.html#Json_Schema_KeywordExtensions_SupportsDraft_
+  commentId: Overload:Json.Schema.KeywordExtensions.SupportsDraft
+  isSpec: "True"
+  fullName: Json.Schema.KeywordExtensions.SupportsDraft
+  nameWithType: KeywordExtensions.SupportsDraft
 - uid: Json.Schema.LogExtensions
   name: LogExtensions
   href: api/Json.Schema.LogExtensions.html
@@ -13502,12 +13509,6 @@ references:
   commentId: T:Json.Schema.RecursiveAnchorKeyword
   fullName: Json.Schema.RecursiveAnchorKeyword
   nameWithType: RecursiveAnchorKeyword
-- uid: Json.Schema.RecursiveAnchorKeyword.#ctor
-  name: RecursiveAnchorKeyword()
-  href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword__ctor
-  commentId: M:Json.Schema.RecursiveAnchorKeyword.#ctor
-  fullName: Json.Schema.RecursiveAnchorKeyword.RecursiveAnchorKeyword()
-  nameWithType: RecursiveAnchorKeyword.RecursiveAnchorKeyword()
 - uid: Json.Schema.RecursiveAnchorKeyword.#ctor(System.Boolean)
   name: RecursiveAnchorKeyword(Boolean)
   href: api/Json.Schema.RecursiveAnchorKeyword.html#Json_Schema_RecursiveAnchorKeyword__ctor_System_Boolean_
@@ -14959,19 +14960,6 @@ references:
   commentId: T:Json.Schema.ValidationContext
   fullName: Json.Schema.ValidationContext
   nameWithType: ValidationContext
-- uid: Json.Schema.ValidationContext.Annotations
-  name: Annotations
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Annotations
-  commentId: P:Json.Schema.ValidationContext.Annotations
-  fullName: Json.Schema.ValidationContext.Annotations
-  nameWithType: ValidationContext.Annotations
-- uid: Json.Schema.ValidationContext.Annotations*
-  name: Annotations
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Annotations_
-  commentId: Overload:Json.Schema.ValidationContext.Annotations
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.Annotations
-  nameWithType: ValidationContext.Annotations
 - uid: Json.Schema.ValidationContext.ApplyOptimizations
   name: ApplyOptimizations
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_ApplyOptimizations
@@ -14985,25 +14973,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.ApplyOptimizations
   nameWithType: ValidationContext.ApplyOptimizations
-- uid: Json.Schema.ValidationContext.ConsolidateAnnotations
-  name: ConsolidateAnnotations()
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_ConsolidateAnnotations
-  commentId: M:Json.Schema.ValidationContext.ConsolidateAnnotations
-  fullName: Json.Schema.ValidationContext.ConsolidateAnnotations()
-  nameWithType: ValidationContext.ConsolidateAnnotations()
-- uid: Json.Schema.ValidationContext.ConsolidateAnnotations*
-  name: ConsolidateAnnotations
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_ConsolidateAnnotations_
-  commentId: Overload:Json.Schema.ValidationContext.ConsolidateAnnotations
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.ConsolidateAnnotations
-  nameWithType: ValidationContext.ConsolidateAnnotations
-- uid: Json.Schema.ValidationContext.ContextConsolidator
-  name: ValidationContext.ContextConsolidator
-  href: api/Json.Schema.ValidationContext.ContextConsolidator.html
-  commentId: T:Json.Schema.ValidationContext.ContextConsolidator
-  fullName: Json.Schema.ValidationContext.ContextConsolidator
-  nameWithType: ValidationContext.ContextConsolidator
 - uid: Json.Schema.ValidationContext.CurrentAnchor
   name: CurrentAnchor
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_CurrentAnchor
@@ -15030,74 +14999,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.CurrentUri
   nameWithType: ValidationContext.CurrentUri
-- uid: Json.Schema.ValidationContext.DynamicAnchors
-  name: DynamicAnchors
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_DynamicAnchors
-  commentId: P:Json.Schema.ValidationContext.DynamicAnchors
-  fullName: Json.Schema.ValidationContext.DynamicAnchors
-  nameWithType: ValidationContext.DynamicAnchors
-- uid: Json.Schema.ValidationContext.DynamicAnchors*
-  name: DynamicAnchors
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_DynamicAnchors_
-  commentId: Overload:Json.Schema.ValidationContext.DynamicAnchors
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.DynamicAnchors
-  nameWithType: ValidationContext.DynamicAnchors
-- uid: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,Json.Pointer.JsonPointer@,System.Nullable{JsonElement}@,Json.Pointer.JsonPointer@,System.Nullable{Uri})
-  name: From(ValidationContext, JsonPointer, Nullable<JsonElement>, JsonPointer, Nullable<Uri>)
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_Json_Schema_ValidationContext_Json_Pointer_JsonPointer__System_Nullable_JsonElement___Json_Pointer_JsonPointer__System_Nullable_Uri__
-  commentId: M:Json.Schema.ValidationContext.From(Json.Schema.ValidationContext,Json.Pointer.JsonPointer@,System.Nullable{JsonElement}@,Json.Pointer.JsonPointer@,System.Nullable{Uri})
-  name.vb: From(ValidationContext, ByRef JsonPointer, ByRef Nullable(Of JsonElement), ByRef JsonPointer, Nullable(Of Uri))
-  fullName: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, Json.Pointer.JsonPointer, System.Nullable<JsonElement>, Json.Pointer.JsonPointer, System.Nullable<Uri>)
-  fullName.vb: Json.Schema.ValidationContext.From(Json.Schema.ValidationContext, ByRef Json.Pointer.JsonPointer, ByRef System.Nullable(Of JsonElement), ByRef Json.Pointer.JsonPointer, System.Nullable(Of Uri))
-  nameWithType: ValidationContext.From(ValidationContext, JsonPointer, Nullable<JsonElement>, JsonPointer, Nullable<Uri>)
-  nameWithType.vb: ValidationContext.From(ValidationContext, ByRef JsonPointer, ByRef Nullable(Of JsonElement), ByRef JsonPointer, Nullable(Of Uri))
-- uid: Json.Schema.ValidationContext.From*
-  name: From
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_From_
-  commentId: Overload:Json.Schema.ValidationContext.From
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.From
-  nameWithType: ValidationContext.From
-- uid: Json.Schema.ValidationContext.HasNestedContexts
-  name: HasNestedContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_HasNestedContexts
-  commentId: P:Json.Schema.ValidationContext.HasNestedContexts
-  fullName: Json.Schema.ValidationContext.HasNestedContexts
-  nameWithType: ValidationContext.HasNestedContexts
-- uid: Json.Schema.ValidationContext.HasNestedContexts*
-  name: HasNestedContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_HasNestedContexts_
-  commentId: Overload:Json.Schema.ValidationContext.HasNestedContexts
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.HasNestedContexts
-  nameWithType: ValidationContext.HasNestedContexts
-- uid: Json.Schema.ValidationContext.HasSiblingContexts
-  name: HasSiblingContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_HasSiblingContexts
-  commentId: P:Json.Schema.ValidationContext.HasSiblingContexts
-  fullName: Json.Schema.ValidationContext.HasSiblingContexts
-  nameWithType: ValidationContext.HasSiblingContexts
-- uid: Json.Schema.ValidationContext.HasSiblingContexts*
-  name: HasSiblingContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_HasSiblingContexts_
-  commentId: Overload:Json.Schema.ValidationContext.HasSiblingContexts
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.HasSiblingContexts
-  nameWithType: ValidationContext.HasSiblingContexts
-- uid: Json.Schema.ValidationContext.Ignore
-  name: Ignore
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Ignore
-  commentId: P:Json.Schema.ValidationContext.Ignore
-  fullName: Json.Schema.ValidationContext.Ignore
-  nameWithType: ValidationContext.Ignore
-- uid: Json.Schema.ValidationContext.Ignore*
-  name: Ignore
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Ignore_
-  commentId: Overload:Json.Schema.ValidationContext.Ignore
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.Ignore
-  nameWithType: ValidationContext.Ignore
 - uid: Json.Schema.ValidationContext.InstanceLocation
   name: InstanceLocation
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_InstanceLocation
@@ -15124,19 +15025,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.InstanceRoot
   nameWithType: ValidationContext.InstanceRoot
-- uid: Json.Schema.ValidationContext.IsValid
-  name: IsValid
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_IsValid
-  commentId: P:Json.Schema.ValidationContext.IsValid
-  fullName: Json.Schema.ValidationContext.IsValid
-  nameWithType: ValidationContext.IsValid
-- uid: Json.Schema.ValidationContext.IsValid*
-  name: IsValid
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_IsValid_
-  commentId: Overload:Json.Schema.ValidationContext.IsValid
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.IsValid
-  nameWithType: ValidationContext.IsValid
 - uid: Json.Schema.ValidationContext.LocalInstance
   name: LocalInstance
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_LocalInstance
@@ -15150,6 +15038,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.LocalInstance
   nameWithType: ValidationContext.LocalInstance
+- uid: Json.Schema.ValidationContext.LocalResult
+  name: LocalResult
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_LocalResult
+  commentId: P:Json.Schema.ValidationContext.LocalResult
+  fullName: Json.Schema.ValidationContext.LocalResult
+  nameWithType: ValidationContext.LocalResult
+- uid: Json.Schema.ValidationContext.LocalResult*
+  name: LocalResult
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_LocalResult_
+  commentId: Overload:Json.Schema.ValidationContext.LocalResult
+  isSpec: "True"
+  fullName: Json.Schema.ValidationContext.LocalResult
+  nameWithType: ValidationContext.LocalResult
 - uid: Json.Schema.ValidationContext.LocalSchema
   name: LocalSchema
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_LocalSchema
@@ -15163,32 +15064,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.LocalSchema
   nameWithType: ValidationContext.LocalSchema
-- uid: Json.Schema.ValidationContext.Message
-  name: Message
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Message
-  commentId: P:Json.Schema.ValidationContext.Message
-  fullName: Json.Schema.ValidationContext.Message
-  nameWithType: ValidationContext.Message
-- uid: Json.Schema.ValidationContext.Message*
-  name: Message
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Message_
-  commentId: Overload:Json.Schema.ValidationContext.Message
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.Message
-  nameWithType: ValidationContext.Message
-- uid: Json.Schema.ValidationContext.NestedContexts
-  name: NestedContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_NestedContexts
-  commentId: P:Json.Schema.ValidationContext.NestedContexts
-  fullName: Json.Schema.ValidationContext.NestedContexts
-  nameWithType: ValidationContext.NestedContexts
-- uid: Json.Schema.ValidationContext.NestedContexts*
-  name: NestedContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_NestedContexts_
-  commentId: Overload:Json.Schema.ValidationContext.NestedContexts
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.NestedContexts
-  nameWithType: ValidationContext.NestedContexts
 - uid: Json.Schema.ValidationContext.Options
   name: Options
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Options
@@ -15202,19 +15077,35 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.Options
   nameWithType: ValidationContext.Options
-- uid: Json.Schema.ValidationContext.RegisterConsolidationMethod(Json.Schema.ValidationContext.ContextConsolidator)
-  name: RegisterConsolidationMethod(ValidationContext.ContextConsolidator)
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_RegisterConsolidationMethod_Json_Schema_ValidationContext_ContextConsolidator_
-  commentId: M:Json.Schema.ValidationContext.RegisterConsolidationMethod(Json.Schema.ValidationContext.ContextConsolidator)
-  fullName: Json.Schema.ValidationContext.RegisterConsolidationMethod(Json.Schema.ValidationContext.ContextConsolidator)
-  nameWithType: ValidationContext.RegisterConsolidationMethod(ValidationContext.ContextConsolidator)
-- uid: Json.Schema.ValidationContext.RegisterConsolidationMethod*
-  name: RegisterConsolidationMethod
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_RegisterConsolidationMethod_
-  commentId: Overload:Json.Schema.ValidationContext.RegisterConsolidationMethod
+- uid: Json.Schema.ValidationContext.Pop
+  name: Pop()
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Pop
+  commentId: M:Json.Schema.ValidationContext.Pop
+  fullName: Json.Schema.ValidationContext.Pop()
+  nameWithType: ValidationContext.Pop()
+- uid: Json.Schema.ValidationContext.Pop*
+  name: Pop
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Pop_
+  commentId: Overload:Json.Schema.ValidationContext.Pop
   isSpec: "True"
-  fullName: Json.Schema.ValidationContext.RegisterConsolidationMethod
-  nameWithType: ValidationContext.RegisterConsolidationMethod
+  fullName: Json.Schema.ValidationContext.Pop
+  nameWithType: ValidationContext.Pop
+- uid: Json.Schema.ValidationContext.Push(Json.Pointer.JsonPointer@,System.Nullable{JsonElement}@,Json.Pointer.JsonPointer@,Json.Schema.JsonSchema@,System.Nullable{Uri})
+  name: Push(JsonPointer, Nullable<JsonElement>, JsonPointer, JsonSchema, Nullable<Uri>)
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Push_Json_Pointer_JsonPointer__System_Nullable_JsonElement___Json_Pointer_JsonPointer__Json_Schema_JsonSchema__System_Nullable_Uri__
+  commentId: M:Json.Schema.ValidationContext.Push(Json.Pointer.JsonPointer@,System.Nullable{JsonElement}@,Json.Pointer.JsonPointer@,Json.Schema.JsonSchema@,System.Nullable{Uri})
+  name.vb: Push(ByRef JsonPointer, ByRef Nullable(Of JsonElement), ByRef JsonPointer, ByRef JsonSchema, Nullable(Of Uri))
+  fullName: Json.Schema.ValidationContext.Push(Json.Pointer.JsonPointer, System.Nullable<JsonElement>, Json.Pointer.JsonPointer, Json.Schema.JsonSchema, System.Nullable<Uri>)
+  fullName.vb: Json.Schema.ValidationContext.Push(ByRef Json.Pointer.JsonPointer, ByRef System.Nullable(Of JsonElement), ByRef Json.Pointer.JsonPointer, ByRef Json.Schema.JsonSchema, System.Nullable(Of Uri))
+  nameWithType: ValidationContext.Push(JsonPointer, Nullable<JsonElement>, JsonPointer, JsonSchema, Nullable<Uri>)
+  nameWithType.vb: ValidationContext.Push(ByRef JsonPointer, ByRef Nullable(Of JsonElement), ByRef JsonPointer, ByRef JsonSchema, Nullable(Of Uri))
+- uid: Json.Schema.ValidationContext.Push*
+  name: Push
+  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_Push_
+  commentId: Overload:Json.Schema.ValidationContext.Push
+  isSpec: "True"
+  fullName: Json.Schema.ValidationContext.Push
+  nameWithType: ValidationContext.Push
 - uid: Json.Schema.ValidationContext.SchemaLocation
   name: SchemaLocation
   href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_SchemaLocation
@@ -15241,45 +15132,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationContext.SchemaRoot
   nameWithType: ValidationContext.SchemaRoot
-- uid: Json.Schema.ValidationContext.SetAnnotation(System.String,System.Object)
-  name: SetAnnotation(String, Object)
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_SetAnnotation_System_String_System_Object_
-  commentId: M:Json.Schema.ValidationContext.SetAnnotation(System.String,System.Object)
-  fullName: Json.Schema.ValidationContext.SetAnnotation(System.String, System.Object)
-  nameWithType: ValidationContext.SetAnnotation(String, Object)
-- uid: Json.Schema.ValidationContext.SetAnnotation*
-  name: SetAnnotation
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_SetAnnotation_
-  commentId: Overload:Json.Schema.ValidationContext.SetAnnotation
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.SetAnnotation
-  nameWithType: ValidationContext.SetAnnotation
-- uid: Json.Schema.ValidationContext.SiblingContexts
-  name: SiblingContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_SiblingContexts
-  commentId: P:Json.Schema.ValidationContext.SiblingContexts
-  fullName: Json.Schema.ValidationContext.SiblingContexts
-  nameWithType: ValidationContext.SiblingContexts
-- uid: Json.Schema.ValidationContext.SiblingContexts*
-  name: SiblingContexts
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_SiblingContexts_
-  commentId: Overload:Json.Schema.ValidationContext.SiblingContexts
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.SiblingContexts
-  nameWithType: ValidationContext.SiblingContexts
-- uid: Json.Schema.ValidationContext.TryGetAnnotation(System.String)
-  name: TryGetAnnotation(String)
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_TryGetAnnotation_System_String_
-  commentId: M:Json.Schema.ValidationContext.TryGetAnnotation(System.String)
-  fullName: Json.Schema.ValidationContext.TryGetAnnotation(System.String)
-  nameWithType: ValidationContext.TryGetAnnotation(String)
-- uid: Json.Schema.ValidationContext.TryGetAnnotation*
-  name: TryGetAnnotation
-  href: api/Json.Schema.ValidationContext.html#Json_Schema_ValidationContext_TryGetAnnotation_
-  commentId: Overload:Json.Schema.ValidationContext.TryGetAnnotation
-  isSpec: "True"
-  fullName: Json.Schema.ValidationContext.TryGetAnnotation
-  nameWithType: ValidationContext.TryGetAnnotation
 - uid: Json.Schema.ValidationOptions
   name: ValidationOptions
   href: api/Json.Schema.ValidationOptions.html
@@ -15416,19 +15268,6 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationOptions.ValidateAs
   nameWithType: ValidationOptions.ValidateAs
-- uid: Json.Schema.ValidationOptions.ValidateFormat
-  name: ValidateFormat
-  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_ValidateFormat
-  commentId: P:Json.Schema.ValidationOptions.ValidateFormat
-  fullName: Json.Schema.ValidationOptions.ValidateFormat
-  nameWithType: ValidationOptions.ValidateFormat
-- uid: Json.Schema.ValidationOptions.ValidateFormat*
-  name: ValidateFormat
-  href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_ValidateFormat_
-  commentId: Overload:Json.Schema.ValidationOptions.ValidateFormat
-  isSpec: "True"
-  fullName: Json.Schema.ValidationOptions.ValidateFormat
-  nameWithType: ValidationOptions.ValidateFormat
 - uid: Json.Schema.ValidationOptions.ValidateMetaSchema
   name: ValidateMetaSchema
   href: api/Json.Schema.ValidationOptions.html#Json_Schema_ValidationOptions_ValidateMetaSchema
@@ -15487,6 +15326,83 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationResults.Annotations
   nameWithType: ValidationResults.Annotations
+- uid: Json.Schema.ValidationResults.ConsolidateAnnotations
+  name: ConsolidateAnnotations()
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_ConsolidateAnnotations
+  commentId: M:Json.Schema.ValidationResults.ConsolidateAnnotations
+  fullName: Json.Schema.ValidationResults.ConsolidateAnnotations()
+  nameWithType: ValidationResults.ConsolidateAnnotations()
+- uid: Json.Schema.ValidationResults.ConsolidateAnnotations*
+  name: ConsolidateAnnotations
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_ConsolidateAnnotations_
+  commentId: Overload:Json.Schema.ValidationResults.ConsolidateAnnotations
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.ConsolidateAnnotations
+  nameWithType: ValidationResults.ConsolidateAnnotations
+- uid: Json.Schema.ValidationResults.ContextConsolidator
+  name: ValidationResults.ContextConsolidator
+  href: api/Json.Schema.ValidationResults.ContextConsolidator.html
+  commentId: T:Json.Schema.ValidationResults.ContextConsolidator
+  fullName: Json.Schema.ValidationResults.ContextConsolidator
+  nameWithType: ValidationResults.ContextConsolidator
+- uid: Json.Schema.ValidationResults.Fail(System.Nullable{System.String})
+  name: Fail(Nullable<String>)
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Fail_System_Nullable_System_String__
+  commentId: M:Json.Schema.ValidationResults.Fail(System.Nullable{System.String})
+  name.vb: Fail(Nullable(Of String))
+  fullName: Json.Schema.ValidationResults.Fail(System.Nullable<System.String>)
+  fullName.vb: Json.Schema.ValidationResults.Fail(System.Nullable(Of System.String))
+  nameWithType: ValidationResults.Fail(Nullable<String>)
+  nameWithType.vb: ValidationResults.Fail(Nullable(Of String))
+- uid: Json.Schema.ValidationResults.Fail*
+  name: Fail
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Fail_
+  commentId: Overload:Json.Schema.ValidationResults.Fail
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.Fail
+  nameWithType: ValidationResults.Fail
+- uid: Json.Schema.ValidationResults.GetAllAnnotations*
+  name: GetAllAnnotations
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_GetAllAnnotations_
+  commentId: Overload:Json.Schema.ValidationResults.GetAllAnnotations
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.GetAllAnnotations
+  nameWithType: ValidationResults.GetAllAnnotations
+- uid: Json.Schema.ValidationResults.GetAllAnnotations``1(System.String)
+  name: GetAllAnnotations<T>(String)
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_GetAllAnnotations__1_System_String_
+  commentId: M:Json.Schema.ValidationResults.GetAllAnnotations``1(System.String)
+  name.vb: GetAllAnnotations(Of T)(String)
+  fullName: Json.Schema.ValidationResults.GetAllAnnotations<T>(System.String)
+  fullName.vb: Json.Schema.ValidationResults.GetAllAnnotations(Of T)(System.String)
+  nameWithType: ValidationResults.GetAllAnnotations<T>(String)
+  nameWithType.vb: ValidationResults.GetAllAnnotations(Of T)(String)
+- uid: Json.Schema.ValidationResults.HasAnnotations
+  name: HasAnnotations
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_HasAnnotations
+  commentId: P:Json.Schema.ValidationResults.HasAnnotations
+  fullName: Json.Schema.ValidationResults.HasAnnotations
+  nameWithType: ValidationResults.HasAnnotations
+- uid: Json.Schema.ValidationResults.HasAnnotations*
+  name: HasAnnotations
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_HasAnnotations_
+  commentId: Overload:Json.Schema.ValidationResults.HasAnnotations
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.HasAnnotations
+  nameWithType: ValidationResults.HasAnnotations
+- uid: Json.Schema.ValidationResults.HasNestedResults
+  name: HasNestedResults
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_HasNestedResults
+  commentId: P:Json.Schema.ValidationResults.HasNestedResults
+  fullName: Json.Schema.ValidationResults.HasNestedResults
+  nameWithType: ValidationResults.HasNestedResults
+- uid: Json.Schema.ValidationResults.HasNestedResults*
+  name: HasNestedResults
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_HasNestedResults_
+  commentId: Overload:Json.Schema.ValidationResults.HasNestedResults
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.HasNestedResults
+  nameWithType: ValidationResults.HasNestedResults
 - uid: Json.Schema.ValidationResults.InstanceLocation
   name: InstanceLocation
   href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_InstanceLocation
@@ -15539,6 +15455,45 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationResults.NestedResults
   nameWithType: ValidationResults.NestedResults
+- uid: Json.Schema.ValidationResults.Parent
+  name: Parent
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Parent
+  commentId: P:Json.Schema.ValidationResults.Parent
+  fullName: Json.Schema.ValidationResults.Parent
+  nameWithType: ValidationResults.Parent
+- uid: Json.Schema.ValidationResults.Parent*
+  name: Parent
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Parent_
+  commentId: Overload:Json.Schema.ValidationResults.Parent
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.Parent
+  nameWithType: ValidationResults.Parent
+- uid: Json.Schema.ValidationResults.Pass
+  name: Pass()
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Pass
+  commentId: M:Json.Schema.ValidationResults.Pass
+  fullName: Json.Schema.ValidationResults.Pass()
+  nameWithType: ValidationResults.Pass()
+- uid: Json.Schema.ValidationResults.Pass*
+  name: Pass
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Pass_
+  commentId: Overload:Json.Schema.ValidationResults.Pass
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.Pass
+  nameWithType: ValidationResults.Pass
+- uid: Json.Schema.ValidationResults.RegisterConsolidationMethod(Json.Schema.ValidationResults.ContextConsolidator)
+  name: RegisterConsolidationMethod(ValidationResults.ContextConsolidator)
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_RegisterConsolidationMethod_Json_Schema_ValidationResults_ContextConsolidator_
+  commentId: M:Json.Schema.ValidationResults.RegisterConsolidationMethod(Json.Schema.ValidationResults.ContextConsolidator)
+  fullName: Json.Schema.ValidationResults.RegisterConsolidationMethod(Json.Schema.ValidationResults.ContextConsolidator)
+  nameWithType: ValidationResults.RegisterConsolidationMethod(ValidationResults.ContextConsolidator)
+- uid: Json.Schema.ValidationResults.RegisterConsolidationMethod*
+  name: RegisterConsolidationMethod
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_RegisterConsolidationMethod_
+  commentId: Overload:Json.Schema.ValidationResults.RegisterConsolidationMethod
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.RegisterConsolidationMethod
+  nameWithType: ValidationResults.RegisterConsolidationMethod
 - uid: Json.Schema.ValidationResults.SchemaLocation
   name: SchemaLocation
   href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_SchemaLocation
@@ -15552,6 +15507,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationResults.SchemaLocation
   nameWithType: ValidationResults.SchemaLocation
+- uid: Json.Schema.ValidationResults.SetAnnotation(System.String,System.Object)
+  name: SetAnnotation(String, Object)
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_SetAnnotation_System_String_System_Object_
+  commentId: M:Json.Schema.ValidationResults.SetAnnotation(System.String,System.Object)
+  fullName: Json.Schema.ValidationResults.SetAnnotation(System.String, System.Object)
+  nameWithType: ValidationResults.SetAnnotation(String, Object)
+- uid: Json.Schema.ValidationResults.SetAnnotation*
+  name: SetAnnotation
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_SetAnnotation_
+  commentId: Overload:Json.Schema.ValidationResults.SetAnnotation
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.SetAnnotation
+  nameWithType: ValidationResults.SetAnnotation
 - uid: Json.Schema.ValidationResults.ToBasic
   name: ToBasic()
   href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_ToBasic
@@ -15591,6 +15559,19 @@ references:
   isSpec: "True"
   fullName: Json.Schema.ValidationResults.ToFlag
   nameWithType: ValidationResults.ToFlag
+- uid: Json.Schema.ValidationResults.TryGetAnnotation(System.String)
+  name: TryGetAnnotation(String)
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_TryGetAnnotation_System_String_
+  commentId: M:Json.Schema.ValidationResults.TryGetAnnotation(System.String)
+  fullName: Json.Schema.ValidationResults.TryGetAnnotation(System.String)
+  nameWithType: ValidationResults.TryGetAnnotation(String)
+- uid: Json.Schema.ValidationResults.TryGetAnnotation*
+  name: TryGetAnnotation
+  href: api/Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_TryGetAnnotation_
+  commentId: Overload:Json.Schema.ValidationResults.TryGetAnnotation
+  isSpec: "True"
+  fullName: Json.Schema.ValidationResults.TryGetAnnotation
+  nameWithType: ValidationResults.TryGetAnnotation
 - uid: Json.Schema.Vocabularies
   name: Vocabularies
   href: api/Json.Schema.Vocabularies.html

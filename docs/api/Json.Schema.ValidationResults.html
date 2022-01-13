@@ -104,7 +104,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_AbsoluteSchemaLocation.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.AbsoluteSchemaLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L42">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L53">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_AbsoluteSchemaLocation_" data-uid="Json.Schema.ValidationResults.AbsoluteSchemaLocation*"></a>
   <h4 id="Json_Schema_ValidationResults_AbsoluteSchemaLocation" data-uid="Json.Schema.ValidationResults.AbsoluteSchemaLocation">AbsoluteSchemaLocation</h4>
@@ -135,7 +135,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_Annotations.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.Annotations%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L50">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L72">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_Annotations_" data-uid="Json.Schema.ValidationResults.Annotations*"></a>
   <h4 id="Json_Schema_ValidationResults_Annotations" data-uid="Json.Schema.ValidationResults.Annotations">Annotations</h4>
@@ -144,7 +144,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;Annotation&gt; Annotations { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Annotation&gt; Annotations { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,17 +156,87 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="Json.Schema.Annotation.html">Annotation</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Json.Schema.Annotation.html">Annotation</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_HasAnnotations.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.HasAnnotations%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L81">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_HasAnnotations_" data-uid="Json.Schema.ValidationResults.HasAnnotations*"></a>
+  <h4 id="Json_Schema_ValidationResults_HasAnnotations" data-uid="Json.Schema.ValidationResults.HasAnnotations">HasAnnotations</h4>
+  <div class="markdown level1 summary"><p>Gets whether there are annotation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasAnnotations { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Json_Schema_ValidationResults_HasAnnotations_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Because <a class="xref" href="Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_Annotations">Annotations</a> is lazily loaded, this property allows the check without
+the side effect of allocating a list object.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_HasNestedResults.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.HasNestedResults%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L67">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_HasNestedResults_" data-uid="Json.Schema.ValidationResults.HasNestedResults*"></a>
+  <h4 id="Json_Schema_ValidationResults_HasNestedResults" data-uid="Json.Schema.ValidationResults.HasNestedResults">HasNestedResults</h4>
+  <div class="markdown level1 summary"><p>Gets whether there are nested results.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasNestedResults { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Json_Schema_ValidationResults_HasNestedResults_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Because <a class="xref" href="Json.Schema.ValidationResults.html#Json_Schema_ValidationResults_NestedResults">NestedResults</a> is lazily loaded, this property allows the check without
+the side effect of allocating a list object.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_InstanceLocation.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.InstanceLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L37">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L48">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_InstanceLocation_" data-uid="Json.Schema.ValidationResults.InstanceLocation*"></a>
   <h4 id="Json_Schema_ValidationResults_InstanceLocation" data-uid="Json.Schema.ValidationResults.InstanceLocation">InstanceLocation</h4>
@@ -197,7 +267,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_IsValid.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.IsValid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L25">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L36">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_IsValid_" data-uid="Json.Schema.ValidationResults.IsValid*"></a>
   <h4 id="Json_Schema_ValidationResults_IsValid" data-uid="Json.Schema.ValidationResults.IsValid">IsValid</h4>
@@ -228,7 +298,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_Message.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.Message%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L29">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L40">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_Message_" data-uid="Json.Schema.ValidationResults.Message*"></a>
   <h4 id="Json_Schema_ValidationResults_Message" data-uid="Json.Schema.ValidationResults.Message">Message</h4>
@@ -259,7 +329,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_NestedResults.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.NestedResults%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L46">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L58">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_NestedResults_" data-uid="Json.Schema.ValidationResults.NestedResults*"></a>
   <h4 id="Json_Schema_ValidationResults_NestedResults" data-uid="Json.Schema.ValidationResults.NestedResults">NestedResults</h4>
@@ -287,10 +357,41 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_Parent.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.Parent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L86">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_Parent_" data-uid="Json.Schema.ValidationResults.Parent*"></a>
+  <h4 id="Json_Schema_ValidationResults_Parent" data-uid="Json.Schema.ValidationResults.Parent">Parent</h4>
+  <div class="markdown level1 summary"><p>Gets the parent result.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ValidationResults Parent { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.ValidationResults.html">ValidationResults</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_SchemaLocation.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.SchemaLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L33">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L44">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_SchemaLocation_" data-uid="Json.Schema.ValidationResults.SchemaLocation*"></a>
   <h4 id="Json_Schema_ValidationResults_SchemaLocation" data-uid="Json.Schema.ValidationResults.SchemaLocation">SchemaLocation</h4>
@@ -320,10 +421,215 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_ConsolidateAnnotations.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.ConsolidateAnnotations%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L159">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_ConsolidateAnnotations_" data-uid="Json.Schema.ValidationResults.ConsolidateAnnotations*"></a>
+  <h4 id="Json_Schema_ValidationResults_ConsolidateAnnotations" data-uid="Json.Schema.ValidationResults.ConsolidateAnnotations">ConsolidateAnnotations()</h4>
+  <div class="markdown level1 summary"><p>Invokes all consolidation actions.  Should be called at the end of processing an applicator keyword.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ConsolidateAnnotations()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_Fail_System_Nullable_System_String__.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.Fail(System.Nullable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L225">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_Fail_" data-uid="Json.Schema.ValidationResults.Fail*"></a>
+  <h4 id="Json_Schema_ValidationResults_Fail_System_Nullable_System_String__" data-uid="Json.Schema.ValidationResults.Fail(System.Nullable{System.String})">Fail(Nullable&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"><p>Marks the result as invalid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Fail(string? message = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_GetAllAnnotations__1_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.GetAllAnnotations%60%601(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L206">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_GetAllAnnotations_" data-uid="Json.Schema.ValidationResults.GetAllAnnotations*"></a>
+  <h4 id="Json_Schema_ValidationResults_GetAllAnnotations__1_System_String_" data-uid="Json.Schema.ValidationResults.GetAllAnnotations``1(System.String)">GetAllAnnotations&lt;T&gt;(String)</h4>
+  <div class="markdown level1 summary"><p>Gets all annotations of a particular data type for the current validation level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; GetAllAnnotations&lt;T&gt;(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>The key under which the annotation is stored.  Typically a keyword.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;T&gt;</td>
+        <td><p>The set of all annotations for the current validation level.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The data type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_Pass.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.Pass%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L216">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_Pass_" data-uid="Json.Schema.ValidationResults.Pass*"></a>
+  <h4 id="Json_Schema_ValidationResults_Pass" data-uid="Json.Schema.ValidationResults.Pass">Pass()</h4>
+  <div class="markdown level1 summary"><p>Marks the result as valid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Pass()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_RegisterConsolidationMethod_Json_Schema_ValidationResults_ContextConsolidator_.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.RegisterConsolidationMethod(Json.Schema.ValidationResults.ContextConsolidator)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L184">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_RegisterConsolidationMethod_" data-uid="Json.Schema.ValidationResults.RegisterConsolidationMethod*"></a>
+  <h4 id="Json_Schema_ValidationResults_RegisterConsolidationMethod_Json_Schema_ValidationResults_ContextConsolidator_" data-uid="Json.Schema.ValidationResults.RegisterConsolidationMethod(Json.Schema.ValidationResults.ContextConsolidator)">RegisterConsolidationMethod(ValidationResults.ContextConsolidator)</h4>
+  <div class="markdown level1 summary"><p>Registers a consolidation action.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterConsolidationMethod(ValidationResults.ContextConsolidator consolidateAnnotations)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Json.Schema.ValidationResults.ContextConsolidator.html">ValidationResults.ContextConsolidator</a></td>
+        <td><span class="parametername">consolidateAnnotations</span></td>
+        <td><p>The action.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_SetAnnotation_System_String_System_Object_.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.SetAnnotation(System.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L175">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_SetAnnotation_" data-uid="Json.Schema.ValidationResults.SetAnnotation*"></a>
+  <h4 id="Json_Schema_ValidationResults_SetAnnotation_System_String_System_Object_" data-uid="Json.Schema.ValidationResults.SetAnnotation(System.String,System.Object)">SetAnnotation(String, Object)</h4>
+  <div class="markdown level1 summary"><p>Sets an annotation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetAnnotation(string owner, object value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">owner</span></td>
+        <td><p>The annotation key.  Typically the name of the keyword.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The annotation value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_ToBasic.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.ToBasic%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L102">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L135">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_ToBasic_" data-uid="Json.Schema.ValidationResults.ToBasic*"></a>
   <h4 id="Json_Schema_ValidationResults_ToBasic" data-uid="Json.Schema.ValidationResults.ToBasic">ToBasic()</h4>
@@ -339,7 +645,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_ToDetailed.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.ToDetailed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L73">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L103">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_ToDetailed_" data-uid="Json.Schema.ValidationResults.ToDetailed*"></a>
   <h4 id="Json_Schema_ValidationResults_ToDetailed" data-uid="Json.Schema.ValidationResults.ToDetailed">ToDetailed()</h4>
@@ -355,7 +661,7 @@
     <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_ToFlag.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.ToFlag%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L117">View Source</a>
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L150">View Source</a>
   </span>
   <a id="Json_Schema_ValidationResults_ToFlag_" data-uid="Json.Schema.ValidationResults.ToFlag*"></a>
   <h4 id="Json_Schema_ValidationResults_ToFlag" data-uid="Json.Schema.ValidationResults.ToFlag">ToFlag()</h4>
@@ -366,6 +672,56 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void ToFlag()</code></pre>
   </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gregsdennis/json-everything/new/master/apiSpec/new?filename=Json_Schema_ValidationResults_TryGetAnnotation_System_String_.md&amp;value=---%0Auid%3A%20Json.Schema.ValidationResults.TryGetAnnotation(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/ValidationResults.cs/#L194">View Source</a>
+  </span>
+  <a id="Json_Schema_ValidationResults_TryGetAnnotation_" data-uid="Json.Schema.ValidationResults.TryGetAnnotation*"></a>
+  <h4 id="Json_Schema_ValidationResults_TryGetAnnotation_System_String_" data-uid="Json.Schema.ValidationResults.TryGetAnnotation(System.String)">TryGetAnnotation(String)</h4>
+  <div class="markdown level1 summary"><p>Tries to get an annotation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object? TryGetAnnotation(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>The annotation key.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><p>The annotation or null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="Json.Patch.PatchExtensions.html#Json_Patch_PatchExtensions_CreatePatch__2___0___1_System_Nullable_JsonSerializerOptions__">PatchExtensions.CreatePatch&lt;TOriginal, TTarget&gt;(TOriginal, TTarget, Nullable&lt;JsonSerializerOptions&gt;)</a>

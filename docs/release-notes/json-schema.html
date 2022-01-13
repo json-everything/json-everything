@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>1.13.0 </title>
+    <title>2.0.0 </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="1.13.0 ">
+    <meta name="title" content="2.0.0 ">
     <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -77,8 +77,75 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="1130"><a href="https://github.com/gregsdennis/json-everything/pull/204">1.13.0</a></h1>
+<h1 id="200"><a href="https://github.com/gregsdennis/json-everything/pull/200">2.0.0</a></h1>
 
+<p>Primary change is around how <code>ValidationContext</code> is handled throughout the validation process in order to significantly reduce memory footprint.  Thanks to <a href="https://github.com/dazerdude">@dazerdude</a> for reporting the issue and making suggestions that led to resolving this.</p>
+<p>The majority of this change affects how keywords are implemented.  Unless you're implementing your own keywords, it's unlikely that this change will break your code.</p>
+<p>The validation context now only contains data required for validation.  The validation result is now set directly on the validation result, which is also now exposed by the context.</p>
+<h2 id="removed">Removed</h2>
+<ul>
+<li><code>ValidationContext</code>
+<ul>
+<li><code>IsValid</code></li>
+<li><code>Ignore</code></li>
+<li><code>Message</code></li>
+<li><code>Annotations</code></li>
+<li><code>NestedContexts</code></li>
+<li><code>HasNestedContexts</code></li>
+<li><code>SiblingContexts</code></li>
+<li><code>HasSiblingContexts</code></li>
+<li><code>DynamicAnchors</code> (was marked obsolete)</li>
+<li><code>From()</code> static method</li>
+<li><code>ConsolidateAnnotations()</code> (moved to <code>ValidationResults</code>)</li>
+<li><code>SetAnnotation()</code> (moved to <code>ValidationResults</code>)</li>
+<li><code>TryGetAnntation()</code> (moved to <code>ValidationResults</code>)</li>
+<li><code>RegisterConsolidationMethod()</code> (moved to <code>ValidationResults</code>)</li>
+<li><code>ContextConsolidator</code> delegate (moved to <code>ValidationResults</code>)</li>
+</ul>
+</li>
+<li><code>ValidationOptions</code>
+<ul>
+<li><code>ValidationFormat</code> (was marked obsolete)</li>
+</ul>
+</li>
+</ul>
+<h2 id="changed">Changed</h2>
+<ul>
+<li>Keywords now <em>require</em> a <code>[SchemaDraft()]</code> attribute to declare compatible drafts.</li>
+<li><code>Draft</code> is now a <code>[Flags]</code> enum and can be combined with the bitwise OR <code>|</code> operator.</li>
+<li><code>EnumKeyword</code> now uses a hash set to store values (improves performance).  This means that it requires unique values.  An <code>ArgumentException</code> will now be thrown if attempting to deserialize a schema with duplicate values inside an <code>enum</code>.</li>
+<li><code>ValidationContext.SchemaRoot</code> is now read-only.  This is set by the initial call to <code>.Validate()</code> and shouldn't need to be set by the client.</li>
+</ul>
+<h2 id="added">Added</h2>
+<ul>
+<li><code>KeywordExtentions</code>
+<ul>
+<li><code>SupportsDraft()</code></li>
+</ul>
+</li>
+<li><code>ValidationContext</code>
+<ul>
+<li><code>Push()</code></li>
+<li><code>Pop()</code></li>
+</ul>
+</li>
+<li><code>ValidationResults</code>
+<ul>
+<li><code>HasNestedResults</code></li>
+<li><code>HasAnnotations</code></li>
+<li><code>Parent</code></li>
+<li><code>ConsolidateAnnotations()</code> (moved from <code>ValidationContext</code>)</li>
+<li><code>SetAnnotation()</code> (moved from <code>ValidationContext</code>)</li>
+<li><code>TryGetAnntation()</code> (moved from <code>ValidationContext</code>)</li>
+<li><code>RegisterConsolidationMethod()</code> (moved from <code>ValidationContext</code>)</li>
+<li><code>ContextConsolidator</code> delegate (moved from <code>ValidationContext</code>)</li>
+<li><code>GetAllAnnotations&lt;T&gt;()</code></li>
+<li><code>Pass()</code></li>
+<li><code>Fail()</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="1130"><a href="https://github.com/gregsdennis/json-everything/pull/204">1.13.0</a></h1>
 <p><a href="https://github.com/gregsdennis/json-everything/issues/203">#203</a> - <a href="https://github.com/coderpatros">@coderpatros</a> discovered a regression in <code>format</code> validation when the format is unkonwn.</p>
 <p>Added option <code>OnlyKnownKeywords</code> to support validation failures on unknown keywords.</p>
 <p>*<strong>NOTE</strong> Since this is fixing a regression, I'm only bumping the minor version.</p>

@@ -94,6 +94,7 @@
 <h3 id="the-validationcontext">The <code>ValidationContext</code></h3>
 <p>The validation context contains all of the data that you need to perform the validation:</p>
 <ul>
+<li>validation options (set by caller)</li>
 <li>root schema</li>
 <li>current keyword's location relative to the schema root</li>
 <li>local schema</li>
@@ -102,30 +103,30 @@
 <li>local instance</li>
 <li>current schema's URI</li>
 <li>current schema's anchor label (e.g. <code>#label</code>)</li>
-<li>context objects from sibling keywords that have already validated</li>
-<li>annotations from sibling keywords that have already been validated</li>
+<li>local result object</li>
 </ul>
-<p>Once you have validated the instance, you'll need to record the results.</p>
+<p>Once you have validated the instance, you'll need to record the results.  These methods are available on the local result object.</p>
 <ul>
-<li><code>IsValid</code> - Indicates whether the validation succeeded.  This property must be set.</li>
-<li><code>NestedContexts</code> - This contains any context objects you created and used in order to validate the instance.  This is typically used when your keyword contains a schema (e.g. <code>allOf</code> or <code>contains</code>).</li>
-<li><code>Ignore</code> - Set this to exclude these results from the output.  This used for keywords such as <code>$id</code> or <code>$defs</code>.  You probably won't need to set this.</li>
-<li><code>Message</code> - Set this to return an error message.</li>
+<li><code>Pass()</code> - Sets a successful validation.</li>
+<li><code>Fail(string? message)</code> - Sets a failed validation along with an optional error message.</li>
+<li><code>Ignore()</code> - Marks the resultss from this keyword to be excluded from the output.  This used for keywords such as <code>$defs</code>.  You probably won't need to set this.</li>
 </ul>
-<p>If your keyword contains a schema, you'll need to create a context to validate it.  To do this, use the <code>.From()</code> method.  This will copy a context while allowing you to update some of the properties.</p>
+<p>If your keyword contains one or more subschemas, you may need to push a new context onto the stack.  This takes the data from the current context and applies changes based on the optional inputs.  To do this, use the <code>.Push()</code> method, which will allow you to update some of the properties.</p>
 <ul>
 <li>instance location</li>
 <li>instance</li>
 <li>subschema location</li>
+<li>subschema</li>
+<li>new base URI</li>
 </ul>
-<p>Not all of these need to be updated, however.  Most keywords focus on the instance that is passed to them, however some, like <code>properties</code> need to build contexts for each property.  To do this, it <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/PropertiesKeyword.cs#L64-L67">updates all of these properties</a>.</p>
-<p>If the instance passed validation, set any annotations by using <code>.SetAnnotation()</code>.  This is stored as a key-value pair.  The convention is to use the keyword name as the key.</p>
+<p>Not all of these need to be updated, however.  Most keywords focus on the instance that is passed to them, however some keywords, like <code>properties</code>, need to provide updates for each subschema.  To do this, it <a href="https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/PropertiesKeyword.cs#L75-77">updates several of these properties</a>.</p>
+<p>If the instance passed validation, set any annotations by using <code>.SetAnnotation()</code> on the local result object.  This is stored as a key-value pair.  The convention is to use the keyword name as the key.  The value can be anything, but it <em>should</em> be JSON-serializable in order to be rendered properly in the output.</p>
 <h3 id="annotation-consolidation">Annotation consolidation</h3>
 <p>With the introduction of keywords like <code>unevaluatedItems</code> and <code>unevaluatedProperties</code> from draft 2019-09, it's now necessary for applicator keywords (e.g. <code>anyOf</code>) to aggregate annotations.  To do this, some keywords define a consolidation method.</p>
 <p>To have this consolidation method called, it needs to be registered.  This can be done via the <code>.RegisterConsolidationMethod()</code> method.</p>
 <p>If you're implementing an applicator keyword, you'll need to invoke this consolidation before returning.  To this this call <code>.ConsolidateAnnotations()</code> on the context.</p>
 <h2 id="2-implement-irefresolvable">2. Implement <code>IRefResolvable</code></h2>
-<p>If your keyword contains a schema, you'll want to implement this.  It allows <code>JsonSchema</code> to search within the keyword when resolving <code>$ref</code> and <code>$recursiveRef</code>.</p>
+<p>If your keyword contains one or more subschemas, you'll want to implement this.  It allows <code>JsonSchema</code> to search within the keyword when resolving <code>$ref</code>, <code>$recursiveRef</code>, and <code>$dynamicRef</code>.</p>
 <p>For <code>.ResolvePointerSegment()</code>, if the pointer segment matches a path where a schema might be found, return it.  Otherwise return null.</p>
 <p>For <code>.RegisterSubschemas()</code>, just use this:</p>
 <pre><code class="lang-c#">void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
@@ -133,6 +134,7 @@
 	Schema.RegisterSubschemas(registry, currentUri);
 }
 </code></pre>
+<p>The internals of this library handle everything, but they need support via a callback in the keyword.</p>
 <h2 id="3-apply-some-attributes">3. Apply some attributes</h2>
 <p>JsonSchema<nsp>.Net contains several attributes that you should use to specify some metadata about your keyword.<p>
 <ul>
