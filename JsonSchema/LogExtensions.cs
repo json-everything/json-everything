@@ -36,7 +36,7 @@ namespace Json.Schema
 		/// <param name="keyword">The keyword name</param>
 		public static void ExitKeyword(this ValidationContext context, string keyword)
 		{
-			context.Log(() => $"{keyword} complete: {(context.IsValid ? "valid" : "invalid")}");
+			context.Log(() => $"{keyword} complete: {(context.LocalResult.IsValid ? "valid" : "invalid")}");
 			context.Options.LogIndentLevel--;
 		}
 

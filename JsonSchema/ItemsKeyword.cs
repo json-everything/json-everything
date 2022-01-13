@@ -40,7 +40,7 @@ namespace Json.Schema
 
 		static ItemsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="ItemsKeyword"/>.
@@ -82,18 +82,18 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
-			bool overwriteAnnotation = !(context.TryGetAnnotation(Name) is bool);
+			bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 			var overallResult = true;
 			if (SingleSchema != null)
 			{
 				context.Options.LogIndentLevel++;
 				int startIndex;
-				var annotation = context.TryGetAnnotation(PrefixItemsKeyword.Name);
+				var annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
 				if (annotation == null)
 					startIndex = 0;
 				else
@@ -101,8 +101,8 @@ namespace Json.Schema
 					context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
 					if (annotation is bool)
 					{
-						context.IsValid = true;
-						context.ExitKeyword(Name, context.IsValid);
+						context.LocalResult.Pass();
+						context.ExitKeyword(Name, true);
 						return;
 					}
 
@@ -113,32 +113,28 @@ namespace Json.Schema
 				{
 					context.Log(() => $"Validating item at index {i}.");
 					var item = context.LocalInstance[i];
-					var subContext = ValidationContext.From(context,
-						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-						item);
-					SingleSchema.ValidateSubschema(subContext);
-					context.CurrentUri ??= subContext.CurrentUri;
-					overallResult &= subContext.IsValid;
-					context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
+					context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
+					SingleSchema.ValidateSubschema(context);
+					overallResult &= context.LocalResult.IsValid;
+					context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+					context.Pop();
 					if (!overallResult && context.ApplyOptimizations) break;
-					context.NestedContexts.Add(subContext);
 				}
 				context.Options.LogIndentLevel--;
 
 				if (overwriteAnnotation)
 				{
 					// TODO: add message
-					if (overallResult) context.SetAnnotation(Name, true);
+					if (overallResult) context.LocalResult.SetAnnotation(Name, true);
 				}
 			}
 			else // array
 			{
 				if (context.Options.ValidatingAs == Draft.Draft202012)
 				{
-					context.IsValid = false;
-					context.Message = $"Array form of {Name} is invalid for draft 2020-12 and later";
+					context.LocalResult.Fail($"Array form of {Name} is invalid for draft 2020-12 and later");
 					context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
-					context.ExitKeyword(Name, context.IsValid);
+					context.ExitKeyword(Name, false);
 					return;
 				}
 				context.Options.LogIndentLevel++;
@@ -148,15 +144,14 @@ namespace Json.Schema
 					context.Log(() => $"Validating item at index {i}.");
 					var schema = ArraySchemas[i];
 					var item = context.LocalInstance[i];
-					var subContext = ValidationContext.From(context,
-						context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+					context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 						item,
 						context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-					schema.ValidateSubschema(subContext);
-					overallResult &= subContext.IsValid;
-					context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
+					schema.ValidateSubschema(context);
+					overallResult &= context.LocalResult.IsValid;
+					context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+					context.Pop();
 					if (!overallResult && context.ApplyOptimizations) break;
-					context.NestedContexts.Add(subContext);
 				}
 				context.Options.LogIndentLevel--;
 
@@ -166,21 +161,24 @@ namespace Json.Schema
 					if (overallResult)
 					{
 						if (maxEvaluations == context.LocalInstance.GetArrayLength())
-							context.SetAnnotation(Name, true);
+							context.LocalResult.SetAnnotation(Name, true);
 						else
-							context.SetAnnotation(Name, maxEvaluations);
+							context.LocalResult.SetAnnotation(Name, maxEvaluations);
 					}
 				}
 			}
 
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
 			object value;
-			var allAnnotations = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.ToList();
 			if (allAnnotations.OfType<bool>().Any())
@@ -188,7 +186,7 @@ namespace Json.Schema
 			else
 				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 			if (!Equals(value, -1))
-				destContext.SetAnnotation(Name, value);
+				localResults.SetAnnotation(Name, value);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

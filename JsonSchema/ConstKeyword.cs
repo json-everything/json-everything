@@ -41,10 +41,11 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.IsValid = Value.IsEquivalentTo(context.LocalInstance);
-			if (!context.IsValid)
-				context.Message = "Expected value to match given value";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Value.IsEquivalentTo(context.LocalInstance))
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail("Expected value to match given value");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

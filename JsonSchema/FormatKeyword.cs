@@ -47,7 +47,7 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.SetAnnotation(Name, Value.Key);
+			context.LocalResult.SetAnnotation(Name, Value.Key);
 
             if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
             {
@@ -76,15 +76,15 @@ namespace Json.Schema
 				}
 			}
 
-			string? errorMessage = null;
-			context.IsValid = !requireValidation || Value.Validate(context.LocalInstance, out errorMessage);
-			if (!context.IsValid)
-				context.Message = Value is UnknownFormat
+			if (!requireValidation || Value.Validate(context.LocalInstance, out var errorMessage))
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail(Value is UnknownFormat
 					? errorMessage
 					: errorMessage == null
 						? $"Value does not match format '{Value.Key}'"
-						: $"Value does not match format '{Value.Key}': {errorMessage}";
-			context.ExitKeyword(Name, context.IsValid);
+						: $"Value does not match format '{Value.Key}': {errorMessage}");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

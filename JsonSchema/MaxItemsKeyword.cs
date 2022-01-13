@@ -42,16 +42,17 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			var number = context.LocalInstance.GetArrayLength();
-			context.IsValid = Value >= number;
-			if (!context.IsValid)
-				context.Message = $"Value has more than {Value} items";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Value >= number)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Value has more than {Value} items");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

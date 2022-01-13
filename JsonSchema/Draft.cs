@@ -1,8 +1,11 @@
-﻿namespace Json.Schema
+﻿using System;
+
+namespace Json.Schema
 {
 	/// <summary>
 	/// Enumerates the supported JSON Schema drafts.
 	/// </summary>
+	[Flags]
 	public enum Draft
 	{
 		/// <summary>
@@ -12,18 +15,18 @@
 		/// <summary>
 		/// JSON Schema Draft 6.
 		/// </summary>
-		Draft6,
+		Draft6 = 1,
 		/// <summary>
 		/// JSON Schema Draft 7.
 		/// </summary>
-		Draft7,
+		Draft7 = 1 << 1,
 		/// <summary>
 		/// JSON Schema Draft 2019-09.
 		/// </summary>
-		Draft201909,
+		Draft201909 = 1 << 2,
 		/// <summary>
 		/// JSON Schema Draft 2020-12.
 		/// </summary>
-		Draft202012
+		Draft202012 = 1 << 3
 	}
 }

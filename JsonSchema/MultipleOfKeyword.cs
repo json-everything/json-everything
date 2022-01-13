@@ -42,16 +42,17 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Number)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			var number = context.LocalInstance.GetDecimal();
-			context.IsValid = number % Value == 0;
-			if (!context.IsValid)
-				context.Message = $"{number} a multiple of {Value}";
-			context.ExitKeyword(Name, context.IsValid);
+			if (number % Value == 0)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"{number} a multiple of {Value}");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
