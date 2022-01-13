@@ -23,8 +23,11 @@ namespace Json.Schema
 		internal const string Name = "enum";
 
 		/// <summary>
-		/// The collection of enum values (they don't need to be strings).
+		/// The collection of enum values.
 		/// </summary>
+		/// <remarks>
+		/// Enum values aren't necessarily strings; they can be of any JSON value.
+		/// </remarks>
 		public IReadOnlyList<JsonElement> Values { get; }
 
 		/// <summary>

@@ -48,7 +48,7 @@ namespace Json.Schema
                 .Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
                             !t.IsAbstract &&
                             !t.IsInterface)
-                .ToDictionary(t => t, t => t.GetCustomAttribute<SchemaPriorityAttribute>().ActualPriority);
+                .ToDictionary(t => t, t => t.GetCustomAttribute<SchemaPriorityAttribute>()?.ActualPriority ?? 0);
 
 		/// <summary>
 		/// Gets the keyword priority.
