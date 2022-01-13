@@ -45,19 +45,20 @@ namespace Json.Schema
 			if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
 			    context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7)
 			{
+				context.LocalResult.Pass();
 				context.NotApplicable(() => "$ref present; ignoring");
-				context.IsValid = true;
 				return;
 			}
+
 			var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
-			context.ParentContext.UriChanged |= context.ParentContext.CurrentUri != newUri;
-			if (context.ParentContext.UriChanged) 
-				context.ParentContext.CurrentAnchor = null;
+			context.UriChanged |= context.CurrentUri != newUri;
+			if (context.UriChanged) 
+				context.CurrentAnchor = null;
 			context.Options.SchemaRegistry.EnteringUriScope(newUri!);
-			context.IsNewDynamicScope = true;
-			context.ParentContext.CurrentUri = newUri;
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.UpdateCurrentUri(newUri);
+			context.LocalSchema.UpdateBaseUri(newUri);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		internal Uri UpdateUri(Uri? currentUri)

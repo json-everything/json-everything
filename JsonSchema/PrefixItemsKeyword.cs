@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		static PrefixItemsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 
 		/// <summary>
@@ -62,26 +62,25 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
-			bool overwriteAnnotation = !(context.TryGetAnnotation(Name) is bool);
+			bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 			var overallResult = true;
 			var maxEvaluations = Math.Min(ArraySchemas.Count, context.LocalInstance.GetArrayLength());
 			for (int i = 0; i < maxEvaluations; i++)
 			{
 				var schema = ArraySchemas[i];
 				var item = context.LocalInstance[i];
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-				schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
+				schema.ValidateSubschema(context);
+				overallResult &= context.LocalResult.IsValid;
+				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
 			}
 
 			if (overwriteAnnotation)
@@ -89,20 +88,23 @@ namespace Json.Schema
 				if (overallResult)
 				{
 					if (maxEvaluations == context.LocalInstance.GetArrayLength())
-						context.SetAnnotation(Name, true);
+						context.LocalResult.SetAnnotation(Name, true);
 					else
-						context.SetAnnotation(Name, maxEvaluations);
+						context.LocalResult.SetAnnotation(Name, maxEvaluations);
 				}
 			}
 
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
 			object value;
-			var allAnnotations = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.ToList();
 			if (allAnnotations.OfType<bool>().Any())
@@ -110,7 +112,7 @@ namespace Json.Schema
 			else
 				value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 			if (!Equals(value, -1))
-				destContext.SetAnnotation(Name, value);
+				localResults.SetAnnotation(Name, value);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

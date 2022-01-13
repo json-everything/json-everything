@@ -75,8 +75,7 @@ namespace Json.Schema.Data
 			}
 			catch (JsonException e)
 			{
-				context.IsValid = false;
-				context.Message = e.Message;
+				context.LocalResult.Fail(e.Message);
 				return;
 			}
 
@@ -90,12 +89,12 @@ namespace Json.Schema.Data
 			var baseUri = parts[0];
 			var fragment = parts.Length > 1 ? parts[1] : null;
 
-			JsonElement data = default;
+			JsonElement data;
 			if (!string.IsNullOrEmpty(baseUri))
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newUri))
 					data = Download(newUri);
-				else if (context.CurrentUri != null)
+				else
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
@@ -109,8 +108,7 @@ namespace Json.Schema.Data
 
 			if (Equals(data, default(JsonElement)))
 			{
-				context.IsValid = false;
-				context.Message = $"Could not resolve base URI `{baseUri}`";
+				context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
 				return null;
 			}
 
@@ -119,16 +117,14 @@ namespace Json.Schema.Data
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.IsValid = false;
-					context.Message = $"Could not parse pointer `{fragment}`";
+					context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
 					return null;
 				}
 
-				var resolved = pointer.Evaluate(data);
+				var resolved = pointer!.Evaluate(data);
 				if (resolved == null)
 				{
-					context.IsValid = false;
-					context.Message = $"Could not resolve pointer `{fragment}`";
+					context.LocalResult.Fail($"Could not resolve pointer `{fragment}`");
 					return null;
 				}
 				data = resolved.Value;
@@ -136,8 +132,7 @@ namespace Json.Schema.Data
 
 			if (Equals(data, default(JsonElement)))
 			{
-				context.IsValid = false;
-				context.Message = $"Could not resolve URI `{baseUri}`";
+				context.LocalResult.Fail($"Could not resolve URI `{baseUri}`");
 				return null;
 			}
 

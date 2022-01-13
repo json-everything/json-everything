@@ -29,7 +29,7 @@ namespace Json.Schema
 
 		static AdditionalItemsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="AdditionalItemsKeyword"/>.
@@ -49,53 +49,56 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			context.Options.LogIndentLevel++;
 			var overallResult = true;
-			var annotation = context.TryGetAnnotation(ItemsKeyword.Name);
+			var annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
 			if (annotation == null)
 			{
+				context.LocalResult.Pass();
 				context.NotApplicable(() => $"No annotations from {ItemsKeyword.Name}.");
-				context.IsValid = true;
 				return;
 			}
 			context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 			if (annotation is bool)
 			{
-				context.IsValid = true;
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Pass();
+				context.ExitKeyword(Name, context.LocalResult.IsValid);
 				return;
 			}
-			var startIndex = (int) annotation;
+			var startIndex = (int) annotation!;
 
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
 				context.Log(() => $"Validating item at index {i}.");
 				var item = context.LocalInstance[i];
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-					item);
-				Schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
-				context.Log(() => $"Item at index {i} {subContext.IsValid.GetValidityString()}.");
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
+				Schema.ValidateSubschema(context);
+				overallResult &= context.LocalResult.IsValid;
+				context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 			context.Options.LogIndentLevel--;
 
 			if (overallResult)
-				context.SetAnnotation(Name, true);
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			{
+				context.LocalResult.SetAnnotation(Name, true);
+				context.LocalResult.Pass();
+			}
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			if (sourceContexts.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-				destContext.SetAnnotation(Name, true);
+			if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
+				localResults.SetAnnotation(Name, true);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

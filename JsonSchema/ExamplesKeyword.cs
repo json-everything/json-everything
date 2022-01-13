@@ -52,9 +52,9 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.SetAnnotation(Name, Values);
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.SetAnnotation(Name, Values);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

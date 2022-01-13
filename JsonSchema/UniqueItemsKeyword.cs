@@ -45,15 +45,15 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			if (!Value)
 			{
-				context.IsValid = true;
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Pass();
+				context.ExitKeyword(Name, true);
 				return;
 			}
 
@@ -66,14 +66,14 @@ namespace Json.Schema
 					duplicates.Add((i, j));
 			}
 
-			context.IsValid = !duplicates.Any();
-			if (!context.IsValid)
+			if (!duplicates.Any())
+				context.LocalResult.Pass();
+			else
 			{
-				context.IsValid = false;
 				var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-				context.Message = $"Found duplicates at the following index pairs: {pairs}";
+				context.LocalResult.Fail($"Found duplicates at the following index pairs: {pairs}");
 			}
-			context.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

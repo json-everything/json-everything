@@ -67,17 +67,6 @@ namespace Json.Schema
 			set => _log = value;
 		}
 
-
-		/// <summary>
-		/// Obsolete.  Use <see cref="RequireFormatValidation"/> instead with the same semantics.
-		/// </summary>
-		[Obsolete("Use RequireFormatValidation instead.")]
-		public bool ValidateFormat
-		{
-			get => RequireFormatValidation;
-			set => RequireFormatValidation = value;
-		}
-
 		/// <summary>
 		/// Specifies whether the `format` keyword should be required to provide
 		/// validation results.  Default is false, which just produces annotations
@@ -85,9 +74,6 @@ namespace Json.Schema
 		/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
 		/// a meta-schema declaring draft 2020-12.
 		/// </summary>
-		/// <remarks>
-		/// This property replaces the now obsolete <see cref="ValidateFormat"/>.
-		/// </remarks>
 		public bool RequireFormatValidation { get; set; }
 
 		/// <summary>
@@ -192,7 +178,7 @@ namespace Json.Schema
 		{
 			if (draft == Draft.Unspecified) return keywords;
 
-			return keywords.Where(k => k.GetType().GetCustomAttributes<SchemaDraftAttribute>().Any(a => a.Draft == draft));
+			return keywords.Where(k => k.SupportsDraft(draft));
 		}
 	}
 }

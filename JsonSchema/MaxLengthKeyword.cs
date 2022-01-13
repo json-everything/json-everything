@@ -43,16 +43,17 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			var length = new StringInfo(context.LocalInstance.GetString()).LengthInTextElements;
-			context.IsValid = Value >= length;
-			if (!context.IsValid)
-				context.Message = $"Value is not shorter than or equal to {Value} characters";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Value >= length)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Value is not shorter than or equal to {Value} characters");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

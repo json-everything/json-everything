@@ -42,18 +42,18 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
-			var subContext = ValidationContext.From(context,
-				subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create(Name)));
-			Schema.ValidateSubschema(subContext);
-			context.NestedContexts.Add(subContext);
-			context.IsValid = subContext.IsValid;
-			context.ConsolidateAnnotations();
-			context.ExitKeyword(Name, context.IsValid);
+			Schema.ValidateSubschema(context);
+			var result = context.LocalResult.IsValid;
+			if (result)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
