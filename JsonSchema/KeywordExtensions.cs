@@ -42,6 +42,14 @@ namespace Json.Schema
 			return name;
 		}
 
+		private static readonly Dictionary<Type, long> _priorities =
+            typeof(IJsonSchemaKeyword).Assembly
+                .GetTypes()
+                .Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
+                            !t.IsAbstract &&
+                            !t.IsInterface)
+                .ToDictionary(t => t, t => t.GetCustomAttribute<SchemaPriorityAttribute>().ActualPriority);
+
 		/// <summary>
 		/// Gets the keyword priority.
 		/// </summary>
@@ -51,10 +59,15 @@ namespace Json.Schema
 		{
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
-			var priorityAttribute = keyword.GetType().GetCustomAttribute<SchemaPriorityAttribute>();
-			if (priorityAttribute == null) return 0;
-			
-			return priorityAttribute.ActualPriority;
+            var keywordType = keyword.GetType();
+            if (!_priorities.TryGetValue(keywordType, out var priority))
+            {
+                var priorityAttribute = keywordType.GetCustomAttribute<SchemaPriorityAttribute>();
+                priority = priorityAttribute?.ActualPriority ?? 0;
+				_priorities[keywordType] = priority;
+            }
+
+			return priority;
 		}
 
 		private static readonly Dictionary<Type, Draft> _draftDeclarations =
