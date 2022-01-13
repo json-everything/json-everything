@@ -30,6 +30,7 @@ namespace Json.Logic
 		{
 			return element.ValueKind switch
 			{
+				JsonValueKind.Object => element.EnumerateObject().Count() != 0,
 				JsonValueKind.Array => element.GetArrayLength() != 0,
 				JsonValueKind.String => element.GetString() != string.Empty,
 				JsonValueKind.Number => element.GetDecimal() != 0,
