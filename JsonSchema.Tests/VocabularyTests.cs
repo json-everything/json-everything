@@ -10,6 +10,7 @@ namespace Json.Schema.Tests
 	public class VocabularyTests
 	{
 		[SchemaKeyword(Name)]
+		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		[JsonConverter(typeof(MinDateJsonConverter))]
 		public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
@@ -27,10 +28,10 @@ namespace Json.Schema.Tests
 				var dateString = context.LocalInstance.GetString();
 				var date = DateTime.Parse(dateString);
 
-				context.IsValid = date >= Date;
-
-				if (!context.IsValid)
-					context.Message = $"{date:O} must be on or after {Date:O}";
+				if (date >= Date)
+					context.LocalResult.Pass();
+				else
+					context.LocalResult.Fail($"{date:O} must be on or after {Date:O}");
 			}
 
 			public bool Equals(MinDateKeyword other)
@@ -71,6 +72,7 @@ namespace Json.Schema.Tests
 		}
 
 		[SchemaKeyword(Name)]
+		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		[JsonConverter(typeof(MaxDateJsonConverter))]
 		public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
 		{
@@ -88,10 +90,10 @@ namespace Json.Schema.Tests
 				var dateString = context.LocalInstance.GetString();
 				var date = DateTime.Parse(dateString);
 
-				context.IsValid = date <= Date;
-
-				if (!context.IsValid)
-					context.Message = $"{date:O} must be on or before {Date:O}";
+				if (date <= Date)
+					context.LocalResult.Pass();
+				else
+					context.LocalResult.Fail($"{date:O} must be on or before {Date:O}");
 			}
 
 			public bool Equals(MaxDateKeyword other)

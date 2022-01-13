@@ -22,19 +22,28 @@ namespace Json.Schema
 	{
 		internal const string Name = "enum";
 
-		/// <summary>
-		/// The collection of enum values (they don't need to be strings).
-		/// </summary>
-		public IReadOnlyList<JsonElement> Values { get; }
+        private readonly HashSet<JsonElement> _values;
+
+        /// <summary>
+        /// The collection of enum values.
+        /// </summary>
+        /// <remarks>
+        /// Enum values aren't necessarily strings; they can be of any JSON value.
+        /// </remarks>
+        public IReadOnlyCollection<JsonElement> Values => _values;
 
 		/// <summary>
 		/// Creates a new <see cref="EnumKeyword"/>.
 		/// </summary>
 		/// <param name="values">The collection of enum values.</param>
 		public EnumKeyword(params JsonElement[] values)
-		{
-			Values = values?.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values));
-		}
+        {
+            _values = new HashSet<JsonElement>(values?.Select(e => e.Clone()) ?? throw new ArgumentNullException(nameof(values)),
+                JsonElementEqualityComparer.Instance);
+
+            if (_values.Count != values.Length)
+                throw new ArgumentException("`enum` requires unique values");
+        }
 
 		/// <summary>
 		/// Creates a new <see cref="EnumKeyword"/>.
@@ -42,8 +51,12 @@ namespace Json.Schema
 		/// <param name="values">The collection of enum values.</param>
 		public EnumKeyword(IEnumerable<JsonElement> values)
 		{
-			Values = values?.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values));
-		}
+            _values = new HashSet<JsonElement>(values?.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values)),
+                JsonElementEqualityComparer.Instance);
+
+            if (_values.Count != values.Count())
+                throw new ArgumentException("`enum` requires unique values");
+        }
 
 		/// <summary>
 		/// Provides validation for the keyword.
@@ -52,10 +65,11 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.IsValid = Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance);
-			if (!context.IsValid)
-				context.Message = "Expected value to match one of the values specified by the enum";
-			context.ExitKeyword(Name, context.IsValid);
+			if (Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance))
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail("Expected value to match one of the values specified by the enum");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -65,8 +79,11 @@ namespace Json.Schema
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return Values.ContentsEqual(other.Values, JsonElementEqualityComparer.Instance);
-		}
+			// Don't need ContentsEqual here because that method considers counts.
+			// We know that with a hash set, all counts are 1.
+            return Values.Count == other.Values.Count &&
+                   Values.All(x => other.Values.Contains(x, JsonElementEqualityComparer.Instance));
+        }
 
 		/// <summary>Determines whether the specified object is equal to the current object.</summary>
 		/// <param name="obj">The object to compare with the current object.</param>

@@ -62,10 +62,11 @@ namespace Json.Schema
 				overallResult &= isValid;
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
-			context.IsValid = overallResult;
-			if (!overallResult)
-				context.Message = $"Validator does not know about these required vocabularies: [{string.Join(", ", violations)}]";
-			context.ExitKeyword(Name, context.IsValid);
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"Validator does not know about these required vocabularies: [{string.Join(", ", violations)}]");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

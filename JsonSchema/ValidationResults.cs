@@ -13,11 +13,22 @@ namespace Json.Schema
 	[JsonConverter(typeof(ValidationResultsJsonConverter))]
 	public class ValidationResults
 	{
-		private List<ValidationResults> _nestedResults;
-		private List<Annotation> _annotations;
+		/// <summary>
+		/// Consolidates annotations from multiple child results onto a single parent result.
+		/// Generally, a keyword will define how it handles its own consolidation.  This action
+		/// must be registered on startup.
+		/// </summary>
+		/// <param name="results">The validation results.</param>
+		public delegate void ContextConsolidator(ValidationResults results);
+
+		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
+
 		private Uri _currentUri;
 		private Uri? _absoluteUri;
 		private JsonPointer? _reference;
+		private List<Annotation>? _annotations;
+		private List<ValidationResults>? _nestedResults;
+		private bool _isConsolidating;
 
 		/// <summary>
 		/// Indicates whether the validation passed or failed.
@@ -40,30 +51,49 @@ namespace Json.Schema
 		/// The absolute schema location.  Only available if the schema had an absolute URI ID.
 		/// </summary>
 		public Uri? AbsoluteSchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
+
 		/// <summary>
 		/// The collection of nested results.
 		/// </summary>
-		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults;
+		public IReadOnlyList<ValidationResults> NestedResults => _nestedResults ??= new List<ValidationResults>();
+	
+		/// <summary>
+		/// Gets whether there are nested results.
+		/// </summary>
+		/// <remarks>
+		/// Because <see cref="NestedResults"/> is lazily loaded, this property allows the check without
+		/// the side effect of allocating a list object.
+		/// </remarks>
+		public bool HasNestedResults => _nestedResults is not { Count: 0 };
+
 		/// <summary>
 		/// The collection of annotations from this node.
 		/// </summary>
-		public IReadOnlyList<Annotation> Annotations => _annotations;
+		public IEnumerable<Annotation> Annotations => _annotations ??= new List<Annotation>();
+
+		/// <summary>
+		/// Gets whether there are annotation.
+		/// </summary>
+		/// <remarks>
+		/// Because <see cref="Annotations"/> is lazily loaded, this property allows the check without
+		/// the side effect of allocating a list object.
+		/// </remarks>
+		public bool HasAnnotations => _annotations is not { Count: 0 };
+
+		/// <summary>
+		/// Gets the parent result.
+		/// </summary>
+		public ValidationResults? Parent { get; private set; }
+
+		internal bool Exclude { get; private set; }
 
 		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep);
 
 		internal ValidationResults(ValidationContext context)
 		{
-			IsValid = context.IsValid;
-			_annotations = context.IsValid
-				? context.Annotations.ToList()
-				: new List<Annotation>();
-			Message = context.Message;
 			SchemaLocation = context.SchemaLocation;
-			_currentUri = context.CurrentUri!;
+			_currentUri = context.CurrentUri;
 			InstanceLocation = context.InstanceLocation;
-			_nestedResults = context.HasNestedContexts
-				? context.NestedContexts.Select(c => new ValidationResults(c)).ToList()
-				: new List<ValidationResults>();
 			_reference = context.Reference;
 		}
 
@@ -88,12 +118,15 @@ namespace Json.Schema
 					condensed.Add(result);
 			}
 
-			_nestedResults.Clear();
+			_nestedResults?.Clear();
 
 			if (condensed.Count == 1)
 				CopyFrom(condensed[0]);
 			else
+			{
+				_nestedResults ??= new List<ValidationResults>();
 				_nestedResults.AddRange(condensed);
+			}
 		}
 
 		/// <summary>
@@ -106,9 +139,9 @@ namespace Json.Schema
 			if (!children.Any()) return;
 
 			children.Remove(this);
-			children.ForEach(r => r._annotations.Clear());
-			_nestedResults.Clear();
-			_nestedResults.AddRange(children.Where(c => c.Keep));
+			children.ForEach(r => r._annotations?.Clear());
+			Prep(ref _nestedResults);
+			_nestedResults!.AddRange(children.Where(c => c.Keep));
 		}
 
 		/// <summary>
@@ -116,8 +149,107 @@ namespace Json.Schema
 		/// </summary>
 		public void ToFlag()
 		{
-			_nestedResults.Clear();
-			_annotations.Clear();
+			_nestedResults?.Clear();
+			_annotations?.Clear();
+		}
+
+		/// <summary>
+		/// Invokes all consolidation actions.  Should be called at the end of processing an applicator keyword.
+		/// </summary>
+		public void ConsolidateAnnotations()
+		{
+			if (!HasNestedResults) return;
+			foreach (var consolidationAction in _consolidationActions)
+			{
+				_isConsolidating = true;
+				consolidationAction(this);
+				_isConsolidating = false;
+			}
+		}
+
+		/// <summary>
+		/// Sets an annotation.
+		/// </summary>
+		/// <param name="owner">The annotation key.  Typically the name of the keyword.</param>
+		/// <param name="value">The annotation value.</param>
+		public void SetAnnotation(string owner, object value)
+		{
+			AddAnnotation(new Annotation(owner, value, SchemaLocation) {WasConsolidated = _isConsolidating});
+		}
+
+		/// <summary>
+		/// Registers a consolidation action.
+		/// </summary>
+		/// <param name="consolidateAnnotations">The action.</param>
+		public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
+		{
+			_consolidationActions.Add(consolidateAnnotations);
+		}
+
+		/// <summary>
+		/// Tries to get an annotation.
+		/// </summary>
+		/// <param name="key">The annotation key.</param>
+		/// <returns>The annotation or null.</returns>
+		public object? TryGetAnnotation(string key)
+		{
+			if (!HasAnnotations) return null;
+			return Annotations.LastOrDefault(x => x.Owner == key)?.Value;
+		}
+
+		/// <summary>
+		/// Gets all annotations of a particular data type for the current validation level.
+		/// </summary>
+		/// <typeparam name="T">The data type.</typeparam>
+		/// <param name="key">The key under which the annotation is stored.  Typically a keyword.</param>
+		/// <returns>The set of all annotations for the current validation level.</returns>
+		public IEnumerable<T> GetAllAnnotations<T>(string key)
+		{
+			if (!HasAnnotations) return Enumerable.Empty<T>();
+			return Annotations.Where(x => x.Owner == key && x.Value is T)
+				.Select(x => (T) x.Value);
+		}
+
+		/// <summary>
+		/// Marks the result as valid.
+		/// </summary>
+		public void Pass()
+		{
+			IsValid = true;
+		}
+
+		/// <summary>
+		/// Marks the result as invalid.
+		/// </summary>
+		/// <param name="message"></param>
+		public void Fail(string? message = null)
+		{
+			IsValid = false;
+			Message = message;
+		}
+
+		internal void ImportAnnotations(List<Annotation> annotations)
+		{
+			if (annotations.Count == 0) return;
+			AddAnnotations(annotations);
+		}
+
+		internal void ConsiderAnnotations(IEnumerable<Annotation> annotations)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.AddRange(annotations.Select(Annotation.CreateConsolidated));
+		}
+
+		private void AddAnnotation(Annotation annotation)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.Add(annotation);
+		}
+
+		private void AddAnnotations(IEnumerable<Annotation> annotations)
+		{
+			_annotations ??= new List<Annotation>();
+			_annotations.AddRange(annotations);
 		}
 
 		private void CopyFrom(ValidationResults other)
@@ -131,6 +263,19 @@ namespace Json.Schema
 			_nestedResults = other._nestedResults;
 			_absoluteUri = other._absoluteUri;
 			_reference = other._reference;
+		}
+
+		internal void AddNestedResult(ValidationResults results)
+		{
+			_nestedResults ??= new List<ValidationResults>();
+			_nestedResults.Add(results);
+			results.Parent = this;
+		}
+
+		internal void Ignore()
+		{
+			IsValid = true;
+			Exclude = true;
 		}
 
 		internal Uri? BuildAbsoluteUri(JsonPointer pointer)
@@ -163,9 +308,15 @@ namespace Json.Schema
 			if (Annotations.Any() || Message != null) all.Add(this);
 			all.AddRange(NestedResults.SelectMany(r => r.GetAllChildren()));
 
-			_nestedResults.Clear();
+			_nestedResults?.Clear();
 
 			return all;
+		}
+
+		private static void Prep<T>(ref List<T>? list)
+		{
+			if (list != null) list.Clear();
+			else list = new List<T>();
 		}
 	}
 
@@ -178,6 +329,8 @@ namespace Json.Schema
 
 		public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
 		{
+			if (value.Exclude) return;
+
 			writer.WriteStartObject();
 
 			writer.WriteBoolean("valid", value.IsValid);

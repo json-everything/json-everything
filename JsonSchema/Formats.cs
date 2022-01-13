@@ -120,19 +120,12 @@ namespace Json.Schema
 		/// </summary>
 		public static readonly Format Uuid = new PredicateFormat("uuid", CheckUuid);
 
-		/// <summary>
-		/// A placeholder for an unknown format.
-		/// </summary>
-		[Obsolete("Use method CreateUnknown(string) to create an unknown format.")]
-		public static readonly Format Unknown = new Format();
-
 		static Formats()
 		{
 			_registry = new ConcurrentDictionary<string, Format>(
 				typeof(Formats)
 					.GetFields(BindingFlags.Static | BindingFlags.Public)
 					.Select(f => (Format) f.GetValue(null))
-					.Where(f => !ReferenceEquals(f, Unknown))
 					.ToDictionary(f => f.Key));
 		}
 

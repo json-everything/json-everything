@@ -28,6 +28,7 @@ namespace Json.Path.Tests.Suite
 			{
 				// expect these to be out of spec soon
 				"$.key-dash",
+				"$.-1",
 				"$.length",
 
 				// big numbers not supported

@@ -41,9 +41,8 @@ namespace Json.Schema
 		public void Validate(ValidationContext context)
 		{
 			context.EnterKeyword(Name);
-			context.IsValid = true;
-			context.Ignore = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.Ignore();
+			context.ExitKeyword(Name, true);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

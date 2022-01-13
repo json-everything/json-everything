@@ -31,7 +31,7 @@ namespace Json.Schema
 
 		static AdditionalPropertiesKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="AdditionalPropertiesKeyword"/>.
@@ -51,14 +51,14 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
 			context.Options.LogIndentLevel++;
 			var overallResult = true;
-			var annotation = (context.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
+			var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 			List<string> evaluatedProperties;
 			if (annotation == null)
 			{
@@ -70,7 +70,7 @@ namespace Json.Schema
 				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
 				evaluatedProperties = annotation;
 			}
-			annotation = (context.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
+			annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
 			if (annotation == null)
 				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
 			else
@@ -89,42 +89,43 @@ namespace Json.Schema
 				}
 
 				context.Log(() => $"Validating property '{property.Name}'.");
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")),
-					item);
-				Schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
-				context.Log(() => $"Property '{property.Name}' {subContext.IsValid.GetValidityString()}.");
-				if (subContext.IsValid)
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")), item);
+				Schema.ValidateSubschema(context);
+				var localResult = context.LocalResult.IsValid;
+				overallResult &= localResult;
+				context.Log(() => $"Property '{property.Name}' {localResult.GetValidityString()}.");
+				context.Pop();
+				if (!overallResult && context.ApplyOptimizations) break;
+				if (localResult)
 					evaluatedProperties.Add(property.Name);
-				else if (context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
 			}
 			context.Options.LogIndentLevel--;
 
 			if (overallResult)
 			{
-				if (context.TryGetAnnotation(Name) is List<string> list)
+				if (context.LocalResult.TryGetAnnotation(Name) is List<string> list)
 					list.AddRange(evaluatedProperties);
 				else
-					context.SetAnnotation(Name, evaluatedProperties);
+					context.LocalResult.SetAnnotation(Name, evaluatedProperties);
+				context.LocalResult.Pass();
 			}
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allProperties = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<string>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allProperties);
 			else if (allProperties.Any())
-				destContext.SetAnnotation(Name, allProperties);
+				localResults.SetAnnotation(Name, allProperties);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

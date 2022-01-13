@@ -30,7 +30,7 @@ namespace Json.Schema
 
 		static ContainsKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="ContainsKeyword"/>.
@@ -50,8 +50,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -59,39 +59,44 @@ namespace Json.Schema
 			var validIndices = new List<int>();
 			for (int i = 0; i < count; i++)
 			{
-				var subContext = ValidationContext.From(context,
-					context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-					context.LocalInstance[i]);
-				Schema.ValidateSubschema(subContext);
-				context.NestedContexts.Add(subContext);
-				if (subContext.IsValid)
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), context.LocalInstance[i]);
+				Schema.ValidateSubschema(context);
+				if (context.LocalResult.IsValid)
 					validIndices.Add(i);
+				context.Pop();
 			}
 
 			var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
-			if (minContainsKeyword != null && minContainsKeyword.Value == 0)
-				context.IsValid = true;
+			if (minContainsKeyword is { Value: 0 })
+			{
+				context.LocalResult.SetAnnotation(Name, validIndices);
+				context.LocalResult.Pass();
+				context.NotApplicable(() => $"{MinContainsKeyword.Name} is 0.");
+				return;
+			}
+
+			if (validIndices.Any())
+			{
+				context.LocalResult.SetAnnotation(Name, validIndices);
+				context.LocalResult.Pass();
+			}
 			else
-				context.IsValid = validIndices.Any();
-			if (context.IsValid)
-				context.SetAnnotation(Name, validIndices);
-			else
-				context.Message = "Expected array to contain at least one item that matched the schema, but it did not";
-			context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail("Expected array to contain at least one item that matched the schema, but it did not");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allIndices = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allIndices = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<int>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<int> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<int> annotation)
 				annotation.AddRange(allIndices);
 			else if (allIndices.Any())
-				destContext.SetAnnotation(Name, allIndices);
+				localResults.SetAnnotation(Name, allIndices);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

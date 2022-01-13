@@ -22,14 +22,6 @@ namespace Json.Schema
 		public bool Value { get; }
 
 		/// <summary>
-		/// Creates a new <see cref="RecursiveAnchorKeyword"/> defaulting the value to `true`.
-		/// </summary>
-		[Obsolete("This constructor is deprecated. Use the constructor that takes a bool argument instead.")]
-		public RecursiveAnchorKeyword()
-			: this(true)
-		{
-		}
-		/// <summary>
 		/// Creates a new <see cref="RecursiveAnchorKeyword"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>
@@ -46,16 +38,16 @@ namespace Json.Schema
 		{
 			context.EnterKeyword(Name);
 			if (!context.UriChanged || Value)
-				context.ParentContext.ValidateAnchor();
+				context.ValidateAnchor();
 
 			if (Value)
 			{
-				context.ParentContext.CurrentAnchor ??= context.LocalSchema;
-				context.SetAnnotation(Name, Value);
+				context.CurrentAnchor ??= context.LocalSchema;
+				context.LocalResult.SetAnnotation(Name, Value);
 			}
 
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

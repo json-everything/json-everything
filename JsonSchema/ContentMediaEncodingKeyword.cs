@@ -41,14 +41,14 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.String)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
-			context.SetAnnotation(Name, Value);
-			context.IsValid = true;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.SetAnnotation(Name, Value);
+			context.LocalResult.Pass();
+			context.ExitKeyword(Name, true);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

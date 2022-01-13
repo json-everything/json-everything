@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -61,7 +60,7 @@ namespace Json.Schema
 			{
 				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
 					baseSchema = GetSchema(newUri, fragment);
-				else if (context.CurrentUri != null)
+				else
 				{
 					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
 						? context.CurrentUri
@@ -74,31 +73,27 @@ namespace Json.Schema
 			{
 				newUri = context.CurrentUri;
 				baseSchema ??= GetSchema(newUri, fragment) ?? context.SchemaRoot;
+				newUri = baseSchema.BaseUri;
 			}
 
 			var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
-			if (context.NavigatedReferences.Contains(absoluteReference))
+			var navigation = (absoluteReference, context.InstanceLocation);
+			if (context.NavigatedReferences.Contains(navigation))
 			{
-				context.IsValid = false;
-				context.Message = "Encountered recursive reference";
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail("Encountered recursive reference");
+				context.ExitKeyword(Name, false);
 				return;
 			}
 
-			context.NavigatedReferences.Add(absoluteReference);
-
 			JsonSchema? schema;
 			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-			{
 				schema = baseSchema ?? GetSchema(newUri, fragment);
-			}
 			else
 			{
 				if (baseSchema == null)
 				{
-					context.IsValid = false;
-					context.Message = $"Could not resolve base URI `{baseUri}`";
-					context.ExitKeyword(Name, context.IsValid);
+					context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
+					context.ExitKeyword(Name, false);
 					return;
 				}
 
@@ -107,9 +102,8 @@ namespace Json.Schema
 					fragment = $"#{fragment}";
 					if (!JsonPointer.TryParse(fragment, out var pointer))
 					{
-						context.IsValid = false;
-						context.Message = $"Could not parse pointer `{fragment}`";
-						context.ExitKeyword(Name, context.IsValid);
+						context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+						context.ExitKeyword(Name, false);
 						return;
 					}
 
@@ -121,20 +115,22 @@ namespace Json.Schema
 
 			if (schema == null)
 			{
-				context.IsValid = false;
-				context.Message = $"Could not resolve DynamicReference `{Reference}`";
-				context.ExitKeyword(Name, context.IsValid);
+				context.LocalResult.Fail($"Could not resolve DynamicReference `{Reference}`");
+				context.ExitKeyword(Name, false);
 				return;
 			}
 
-			var subContext = ValidationContext.From(context, newUri: newUri);
-			if (!ReferenceEquals(baseSchema, context.SchemaRoot))
-				subContext.SchemaRoot = baseSchema!;
-			schema.ValidateSubschema(subContext);
-			context.NestedContexts.Add(subContext);
-			context.ConsolidateAnnotations();
-			context.IsValid = subContext.IsValid;
-			context.ExitKeyword(Name, context.IsValid);
+			context.NavigatedReferences.Add(navigation);
+			context.Push(newUri: newUri);
+			schema.ValidateSubschema(context);
+			var result = context.LocalResult.IsValid;
+			context.Pop();
+			context.LocalResult.ConsolidateAnnotations();
+			if (result)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

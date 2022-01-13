@@ -30,7 +30,7 @@ namespace Json.Schema
 
 		static DependenciesKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="DependenciesKeyword"/>.
@@ -50,8 +50,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -72,14 +72,13 @@ namespace Json.Schema
 				if (requirements.Schema != null)
 				{
 					context.Log(() => "Found schema requirement.");
-					var subContext = ValidationContext.From(context,
-						subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
-					requirements.Schema.ValidateSubschema(subContext);
-					overallResult &= subContext.IsValid;
-					context.NestedContexts.Add(subContext);
-					if (subContext.IsValid)
+					context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
+					requirements.Schema.ValidateSubschema(context);
+					overallResult &= context.LocalResult.IsValid;
+					if (context.LocalResult.IsValid)
 						evaluatedProperties.Add(name);
-					context.Log(() => $"Property '{property.Key}' {subContext.IsValid.GetValidityString()}.");
+					context.Log(() => $"Property '{property.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
+					context.Pop();
 				}
 				else
 				{
@@ -106,24 +105,25 @@ namespace Json.Schema
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
-			context.IsValid = overallResult;
-			if (!context.IsValid)
-				context.Message = $"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}";
-			context.ExitKeyword(Name, context.IsValid);
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail($"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}");
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allDependencies = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allDependencies = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<string>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependencies);
 			else if (allDependencies.Any())
-				destContext.SetAnnotation(Name, allDependencies);
+				localResults.SetAnnotation(Name, allDependencies);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)

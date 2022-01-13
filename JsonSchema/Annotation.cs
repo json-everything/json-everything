@@ -34,5 +34,10 @@ namespace Json.Schema
 			Value = value;
 			Source = source;
 		}
+
+		internal static Annotation CreateConsolidated(Annotation source)
+		{
+			return new Annotation(source.Owner, source.Value, source.Source) {WasConsolidated = true};
+		}
 	}
 }

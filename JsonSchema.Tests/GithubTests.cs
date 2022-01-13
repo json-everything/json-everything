@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests
@@ -502,6 +500,7 @@ namespace Json.Schema.Tests
 		}
 
 		[SchemaKeyword(Name)]
+		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
 			private const string Name = "minDate";

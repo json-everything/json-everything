@@ -28,7 +28,7 @@ namespace Json.Schema
 
 		static DependentRequiredKeyword()
 		{
-			ValidationContext.RegisterConsolidationMethod(ConsolidateAnnotations);
+			ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
 		}
 		/// <summary>
 		/// Creates a new <see cref="DependentRequiredKeyword"/>.
@@ -48,8 +48,8 @@ namespace Json.Schema
 			context.EnterKeyword(Name);
 			if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 			{
+				context.LocalResult.Pass();
 				context.WrongValueKind(context.LocalInstance.ValueKind);
-				context.IsValid = true;
 				return;
 			}
 
@@ -86,27 +86,28 @@ namespace Json.Schema
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 
-			context.IsValid = overallResult;
-			if (!context.IsValid)
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
 			{
 				var missing = JsonSerializer.Serialize(missingDependencies);
-				context.Message = $"Some required property dependencies are missing: {missing}";
+				context.LocalResult.Fail($"Some required property dependencies are missing: {missing}");
 			}
-			context.ExitKeyword(Name, context.IsValid);
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
-		private static void ConsolidateAnnotations(IEnumerable<ValidationContext> sourceContexts, ValidationContext destContext)
+		private static void ConsolidateAnnotations(ValidationResults localResults)
 		{
-			var allDependentRequired = sourceContexts.Select(c => c.TryGetAnnotation(Name))
+			var allDependentRequired = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
 				.Where(a => a != null)
 				.Cast<List<string>>()
 				.SelectMany(a => a)
 				.Distinct()
 				.ToList();
-			if (destContext.TryGetAnnotation(Name) is List<string> annotation)
+			if (localResults.TryGetAnnotation(Name) is List<string> annotation)
 				annotation.AddRange(allDependentRequired);
 			else if (allDependentRequired.Any())
-				destContext.SetAnnotation(Name, allDependentRequired);
+				localResults.SetAnnotation(Name, allDependentRequired);
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

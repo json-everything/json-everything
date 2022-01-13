@@ -59,17 +59,20 @@ namespace Json.Schema
 			{
 				context.Log(() => $"Processing {Name}[{i}]...");
 				var schema = Schemas[i];
-				var subContext = ValidationContext.From(context, subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-				schema.ValidateSubschema(subContext);
-				overallResult &= subContext.IsValid;
-				context.Log(() => $"{Name}[{i}] {subContext.IsValid.GetValidityString()}.");
+				context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+				schema.ValidateSubschema(context);
+				overallResult &= context.LocalResult.IsValid;
+				context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				context.NestedContexts.Add(subContext);
 			}
 
-			context.ConsolidateAnnotations();
-			context.IsValid = overallResult;
-			context.ExitKeyword(Name, context.IsValid);
+			context.LocalResult.ConsolidateAnnotations();
+			if (overallResult)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail();
+			context.ExitKeyword(Name, context.LocalResult.IsValid);
 		}
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
