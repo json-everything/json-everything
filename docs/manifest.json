@@ -30,7 +30,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Logic.JsonElementExtensions.html",
-          "hash": "KNo5w8zD+aOhDbxv2N40Dg=="
+          "hash": "y9rgSf7ELX8MZKQaPVgODQ=="
         }
       },
       "is_incremental": false,
@@ -66,7 +66,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Logic.LogicComponentConverter.html",
-          "hash": "udexfBu+raoXJDFKvtdyIw=="
+          "hash": "Fc28TRGV2dFjOazX+sj4QA=="
         }
       },
       "is_incremental": false,
@@ -2760,7 +2760,7 @@
       "output": {
         ".html": {
           "relative_path": "release-notes/json-logic.html",
-          "hash": "rlyJI/31GvYLHBMD4ITqpQ=="
+          "hash": "gJMkMrY4NpYoT1EwVcnTUw=="
         }
       },
       "is_incremental": false,
