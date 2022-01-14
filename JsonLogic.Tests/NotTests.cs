@@ -79,11 +79,19 @@ namespace Json.Logic.Tests
 		}
 
 		[Test]
-		public void ObjectThrowsError()
+		public void EmptyObjectIsTrue()
 		{
 			var rule = new NotRule(JsonDocument.Parse("{}").RootElement);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
+            JsonAssert.IsTrue(rule.Apply());
+		}
+
+		[Test]
+		public void NonEmptyObjectIsFalse()
+		{
+			var rule = new NotRule(JsonDocument.Parse("{\"foo\":5}").RootElement);
+
+            JsonAssert.IsFalse(rule.Apply());
 		}
 	}
 }

@@ -54,6 +54,13 @@ namespace Json.Logic.Tests
 				Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 		}
 
+		public static void AreEquivalent(bool expected, JsonElement actual)
+		{
+			var expectedJson = expected.AsJsonElement();
+			if (!expectedJson.IsEquivalentTo(actual)) 
+				Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
+		}
+
 		public static void IsNull(JsonElement actual)
 		{
 			if (actual.ValueKind != JsonValueKind.Null)
