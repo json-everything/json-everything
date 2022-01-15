@@ -33,6 +33,5 @@ namespace Json.Schema.DataGeneration
 				? GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement())
 				: GenerationResult.Fail(itemGenerationResults);
 		}
-
 	}
 }
