@@ -1,9 +1,6 @@
-﻿using System.Text.Json;
-using Json.More;
-
-namespace Json.Schema.DataGeneration
+﻿namespace Json.Schema.DataGeneration.Generators
 {
-	public class BooleanGenerator : IDataGenerator
+	internal class BooleanGenerator : IDataGenerator
 	{
 		public static BooleanGenerator Instance { get; } = new BooleanGenerator();
 
@@ -13,7 +10,7 @@ namespace Json.Schema.DataGeneration
 
 		public SchemaValueType Type => SchemaValueType.Boolean;
 
-		public GenerationResult Generate(JsonSchema schema)
+		public GenerationResult Generate(RequirementContext context)
 		{
 			return GenerationResult.Success(JsonSchemaExtensions.Randomizer.Bool());
 		}

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace Json.Schema.DataGeneration
+namespace Json.Schema.DataGeneration.Generators
 {
-	public class IntegerGenerator : IDataGenerator
+	internal class IntegerGenerator : IDataGenerator
 	{
 		public static IntegerGenerator Instance { get; } = new IntegerGenerator();
 
@@ -13,8 +13,10 @@ namespace Json.Schema.DataGeneration
 
 		public SchemaValueType Type => SchemaValueType.Integer;
 
-		public GenerationResult Generate(JsonSchema schema)
+		public GenerationResult Generate(RequirementContext context)
 		{
+			JsonSchema schema = null;
+
 			var minimum = schema.Keywords?.OfType<MinimumKeyword>().FirstOrDefault()?.Value;
 			var minValue = minimum.HasValue ? (long) Math.Ceiling(minimum.Value) : -1000;
 			var maximum = schema.Keywords?.OfType<MaximumKeyword>().FirstOrDefault()?.Value;

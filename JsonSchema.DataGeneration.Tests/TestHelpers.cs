@@ -10,9 +10,9 @@ namespace Json.Schema.DataGeneration.Tests
 		{
 			var result = schema.GenerateData();
 
-			Assert.IsTrue(result.IsSuccess);
+			Assert.IsTrue(result.IsSuccess, "failed generation");
 			Console.WriteLine(result.Result.ToJsonString());
-			Assert.IsTrue(schema.Validate(result.Result).IsValid);
+			Assert.IsTrue(schema.Validate(result.Result).IsValid, "failed validation");
 		}
 	}
 }

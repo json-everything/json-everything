@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Json.Schema.DataGeneration
+namespace Json.Schema.DataGeneration.Generators
 {
-	public class StringGenerator : IDataGenerator
+	internal class StringGenerator : IDataGenerator
 	{
 		public static StringGenerator Instance { get; } = new StringGenerator();
 
@@ -12,7 +12,7 @@ namespace Json.Schema.DataGeneration
 
 		public SchemaValueType Type => SchemaValueType.String;
 
-		public GenerationResult Generate(JsonSchema schema)
+		public GenerationResult Generate(RequirementContext context)
 		{
 			throw new NotImplementedException();
 		}

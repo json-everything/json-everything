@@ -101,6 +101,11 @@ namespace Json.Schema.DataGeneration
 		{
 			return a.CompareTo(b) == -1 ? b : a;
 		}
+
+		public static Bound Complement(Bound b)
+		{
+			return new Bound(b.Value, !b.Inclusive);
+		}
 	}
 
 	public sealed class BoundEqualityComparer : IEqualityComparer<Bound>

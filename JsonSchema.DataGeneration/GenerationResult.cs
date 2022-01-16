@@ -6,6 +6,8 @@ namespace Json.Schema.DataGeneration
 {
 	public class GenerationResult
 	{
+		public static GenerationResult NotApplicable { get; } = new GenerationResult(null, null, null);
+
 		public JsonElement Result { get; }
 		public string? ErrorMessage { get; }
 		public IEnumerable<GenerationResult>? InnerResults { get; }

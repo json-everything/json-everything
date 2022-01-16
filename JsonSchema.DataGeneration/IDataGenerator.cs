@@ -1,9 +1,9 @@
 ﻿namespace Json.Schema.DataGeneration
 {
-	public interface IDataGenerator
+	internal interface IDataGenerator
 	{
 		SchemaValueType Type { get; }
 
-		GenerationResult Generate(JsonSchema schema);
+		GenerationResult Generate(RequirementContext context);
 	}
 }

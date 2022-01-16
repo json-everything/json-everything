@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace Json.Schema.DataGeneration
+namespace Json.Schema.DataGeneration.Generators
 {
-	public class NullGenerator : IDataGenerator
+	internal class NullGenerator : IDataGenerator
 	{
 		private static readonly JsonElement _nullValue = JsonDocument.Parse("null").RootElement.Clone();
 
@@ -14,7 +14,7 @@ namespace Json.Schema.DataGeneration
 
 		public SchemaValueType Type => SchemaValueType.Null;
 
-		public GenerationResult Generate(JsonSchema schema)
+		public GenerationResult Generate(RequirementContext context)
 		{
 			return GenerationResult.Success(_nullValue);
 		}

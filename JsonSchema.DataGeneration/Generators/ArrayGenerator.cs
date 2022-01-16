@@ -2,9 +2,9 @@
 using System.Linq;
 using Json.More;
 
-namespace Json.Schema.DataGeneration
+namespace Json.Schema.DataGeneration.Generators
 {
-	public class ArrayGenerator : IDataGenerator
+	internal class ArrayGenerator : IDataGenerator
 	{
 		public static ArrayGenerator Instance { get; } = new ArrayGenerator();
 
@@ -15,8 +15,10 @@ namespace Json.Schema.DataGeneration
 
 		public SchemaValueType Type => SchemaValueType.Array;
 
-		public GenerationResult Generate(JsonSchema schema)
+		public GenerationResult Generate(RequirementContext context)
 		{
+			JsonSchema schema = null;
+
 			var itemsKeyword = schema.Keywords.OfType<ItemsKeyword>().FirstOrDefault();
 			if (itemsKeyword?.ArraySchemas != null)
 			{
