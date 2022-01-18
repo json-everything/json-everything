@@ -23,7 +23,13 @@ namespace Json.Schema.DataGeneration
 			Full = new NumberRangeSet(new[] {new NumberRange(_min, _max)});
 		}
 
-		private NumberRangeSet(IEnumerable<NumberRange> other)
+		public NumberRangeSet(NumberRange range)
+			: this(new[] {range}) { }
+
+		public NumberRangeSet(NumberRangeSet other)
+			: this(other._ranges) { }
+
+		public NumberRangeSet(IEnumerable<NumberRange> other)
 		{
 			_ranges = other.ToArray();
 		}
@@ -127,16 +133,21 @@ namespace Json.Schema.DataGeneration
 			return Intersect(new NumberRange(floor, _max));
 		}
 
+		public NumberRangeSet Clone()
+		{
+			return new NumberRangeSet(_ranges);
+		}
+
 		private List<NumberRange> GetIntersectingRanges(NumberRange range)
 		{
 			return _ranges.Where(x => (x.Minimum <= range.Minimum && range.Minimum <= x.Maximum) ||
-			                          (x.Maximum <= range.Maximum && range.Maximum <= x.Maximum))
+			                          (x.Minimum <= range.Maximum && range.Maximum <= x.Maximum))
 				.ToList();
 		}
 
 		public static implicit operator NumberRangeSet(NumberRange range)
 		{
-			return new NumberRangeSet(new[] {range});
+			return new NumberRangeSet(range);
 		}
 
 		public static NumberRangeSet operator +(NumberRangeSet left, NumberRangeSet right)

@@ -11,17 +11,7 @@ namespace Json.Schema.DataGeneration.Requirements
 
 			var subRequirements = notKeyword.Schema.GetRequirements();
 			
-			context.And(Invert(subRequirements));
-		}
-
-		private static RequirementContext Invert(RequirementContext context)
-		{
-			return new RequirementContext
-			{
-				NumberRanges = context.NumberRanges?.Invert(),
-				Multiples = context.Antimultiples,
-				Antimultiples = context.Multiples
-			};
+			context.And(subRequirements.Break());
 		}
 	}
 }

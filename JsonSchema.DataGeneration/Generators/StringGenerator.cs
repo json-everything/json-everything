@@ -14,7 +14,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public GenerationResult Generate(RequirementContext context)
 		{
-			throw new NotImplementedException();
+			return GenerationResult.Success("string");
 		}
 	}
 }

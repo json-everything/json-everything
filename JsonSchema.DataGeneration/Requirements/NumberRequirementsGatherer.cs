@@ -19,10 +19,10 @@ namespace Json.Schema.DataGeneration.Requirements
 			}
 
 			var range = NumberRangeSet.Full;
-			var minimum = schema.Keywords.OfType<MinimumKeyword>().FirstOrDefault()?.Value;
+			var minimum = schema.Keywords!.OfType<MinimumKeyword>().FirstOrDefault()?.Value;
 			if (minimum != null)
 				range = range.Floor(minimum.Value);
-			var maximum = schema.Keywords.OfType<MaximumKeyword>().FirstOrDefault()?.Value;
+			var maximum = schema.Keywords!.OfType<MaximumKeyword>().FirstOrDefault()?.Value;
 			if (maximum != null)
 				range = range.Ceiling(maximum.Value);
 			if (range != NumberRangeSet.Full)
@@ -33,9 +33,9 @@ namespace Json.Schema.DataGeneration.Requirements
 					context.NumberRanges = range;
 			}
 			else
-				context.NumberRanges = NumberRangeSet.None;
+				context.NumberRanges ??= NumberRangeSet.None;
 
-			var multipleOf = schema.Keywords.OfType<MultipleOfKeyword>().FirstOrDefault()?.Value;
+			var multipleOf = schema.Keywords!.OfType<MultipleOfKeyword>().FirstOrDefault()?.Value;
 			if (multipleOf != null)
 			{
 				if (context.Multiples != null)
@@ -43,17 +43,6 @@ namespace Json.Schema.DataGeneration.Requirements
 				else
 					context.Multiples = new List<decimal> {multipleOf.Value};
 			}
-		}
-	}
-
-	internal class TypeRequirementsGatherer : IRequirementsGatherer
-	{
-		public void AddRequirements(RequirementContext context, JsonSchema schema)
-		{
-			var typeKeyword = schema.Keywords?.OfType<TypeKeyword>().FirstOrDefault();
-			if (typeKeyword == null) return;
-
-			context.Type &= typeKeyword.Type;
 		}
 	}
 }

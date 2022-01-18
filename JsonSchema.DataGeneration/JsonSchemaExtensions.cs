@@ -23,7 +23,6 @@ namespace Json.Schema.DataGeneration
 
 		public static GenerationResult GenerateData(this JsonSchema schema)
 		{
-			IDataGenerator? generator;
 			RequirementContext requirements;
 			if (schema.BoolValue.HasValue)
 			{
@@ -31,18 +30,23 @@ namespace Json.Schema.DataGeneration
 					return GenerationResult.Fail("Boolean schema `false` allows no values");
 
 				requirements = new RequirementContext();
-				generator = Randomizer.ArrayElement(_generators);
 			}
 			else
-			{
 				requirements = GetRequirements(schema);
+
+			foreach (var variation in Randomizer.Shuffle(requirements.GetAllVariations()))
+			{
 				var applicableGenerators = _generators
-					.Where(x => requirements.Type.HasFlag(x.Type))
+					.Where(x => !variation.Type.HasValue || variation.Type.Value.HasFlag(x.Type))
 					.ToArray();
-				generator = Randomizer.ArrayElement(applicableGenerators);
+				if (applicableGenerators.Length == 0) continue;
+
+				var generator = Randomizer.ArrayElement(applicableGenerators);
+				var result = generator.Generate(variation);
+				if (result.IsSuccess) return result;
 			}
 
-			return generator.Generate(requirements);
+			return GenerationResult.Fail("Could not generate data that validates against the schema.");
 		}
 
 		private static readonly IEnumerable<IRequirementsGatherer> _requirementsGatherers =

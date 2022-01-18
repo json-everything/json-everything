@@ -15,15 +15,18 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public GenerationResult Generate(RequirementContext context)
 		{
-			JsonSchema schema = null;
+			if (context.NumberRanges == null)
+				return GenerationResult.NotApplicable;
 
-			var minimum = schema.Keywords?.OfType<MinimumKeyword>().FirstOrDefault()?.Value;
-			var minValue = minimum.HasValue ? (long) Math.Ceiling(minimum.Value) : -1000;
-			var maximum = schema.Keywords?.OfType<MaximumKeyword>().FirstOrDefault()?.Value;
-			var maxValue = maximum.HasValue ? (long) Math.Floor(maximum.Value) : 1000;
-			var multipleOf = schema.Keywords?.OfType<MultipleOfKeyword>().FirstOrDefault()?.Value ?? 1;
+			var range = context.NumberRanges.Ranges.Any() 
+				? JsonSchemaExtensions.Randomizer.ArrayElement(context.NumberRanges.Ranges.ToArray())
+				: NumberRangeSet.Full.Ranges[0];
 
-			var value = GetValue(minValue, maxValue, new[] {multipleOf}, new decimal[] { });
+			var minValue = (long) Math.Ceiling(range.Minimum.Value);
+			var maxValue = (long) Math.Floor(range.Maximum.Value);
+
+			var value = GetValue(minValue, maxValue, context.Multiples?.ToArray() ?? Array.Empty<decimal>(),
+				context.Antimultiples?.ToArray() ?? Array.Empty<decimal>());
 
 			return value.HasValue
 				? GenerationResult.Success(value.Value)
