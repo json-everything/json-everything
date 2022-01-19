@@ -14,6 +14,7 @@ namespace Json.Schema.DataGeneration
 
 		public static NumberRangeSet None { get; }
 		public static NumberRangeSet Full { get; }
+		public static NumberRangeSet NonNegative { get; }
 
 		public IReadOnlyList<NumberRange> Ranges => _ranges;
 
@@ -21,6 +22,7 @@ namespace Json.Schema.DataGeneration
 		{
 			None = new NumberRangeSet(Array.Empty<NumberRange>());
 			Full = new NumberRangeSet(new[] {new NumberRange(_min, _max)});
+			NonNegative = new NumberRangeSet(new[] {new NumberRange(0, _max)});
 		}
 
 		public NumberRangeSet(NumberRange range)

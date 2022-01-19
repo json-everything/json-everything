@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Json.Schema.DataGeneration
 {
@@ -20,6 +21,12 @@ namespace Json.Schema.DataGeneration
 		public NumberRangeSet? NumberRanges { get; set; }
 		public List<decimal>? Multiples { get; set; }
 		public List<decimal>? Antimultiples { get; set; }
+
+		public NumberRangeSet? StringLengths { get; set; }
+		// https://www.ocpsoft.org/tutorials/regular-expressions/and-in-regex/
+		public Regex? Pattern { get; set; }
+		public string Format { get; set; }
+
 		public List<RequirementContext>? Options { get; set; }
 
 		public RequirementContext(){}
