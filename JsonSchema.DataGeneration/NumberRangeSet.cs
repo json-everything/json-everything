@@ -133,15 +133,11 @@ namespace Json.Schema.DataGeneration
 			return Intersect(new NumberRange(floor, _max));
 		}
 
-		public NumberRangeSet Clone()
-		{
-			return new NumberRangeSet(_ranges);
-		}
-
 		private List<NumberRange> GetIntersectingRanges(NumberRange range)
 		{
 			return _ranges.Where(x => (x.Minimum <= range.Minimum && range.Minimum <= x.Maximum) ||
-			                          (x.Minimum <= range.Maximum && range.Maximum <= x.Maximum))
+			                          (x.Minimum <= range.Maximum && range.Maximum <= x.Maximum) ||
+			                          (range.Minimum <= x.Minimum && x.Maximum <= range.Maximum))
 				.ToList();
 		}
 

@@ -1,6 +1,6 @@
-using System;
-using Json.More;
 using NUnit.Framework;
+
+using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
 namespace Json.Schema.DataGeneration.Tests
 {
@@ -10,16 +10,12 @@ namespace Json.Schema.DataGeneration.Tests
 		public void Test()
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Integer)
+				.Type(SchemaValueType.Number)
 				.Minimum(0)
 				.Maximum(100)
 				.Not(new JsonSchemaBuilder().MultipleOf(3));
 
-			var result = schema.GenerateData();
-
-			Console.WriteLine(result.Result.ToJsonString());
-
-			Assert.IsTrue(schema.Validate(result.Result).IsValid);
+			Run(schema);
 		}
 	}
 }

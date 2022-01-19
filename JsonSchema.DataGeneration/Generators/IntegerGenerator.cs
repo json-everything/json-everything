@@ -15,12 +15,14 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public GenerationResult Generate(RequirementContext context)
 		{
-			if (context.NumberRanges == null)
-				return GenerationResult.NotApplicable;
+			context.NumberRanges ??= NumberRangeSet.Full;
 
-			var range = context.NumberRanges.Ranges.Any() 
-				? JsonSchemaExtensions.Randomizer.ArrayElement(context.NumberRanges.Ranges.ToArray())
-				: NumberRangeSet.Full.Ranges[0];
+			var rangeSet = context.NumberRanges.Ranges.Any()
+				? context.NumberRanges
+				: NumberRangeSet.Full;
+			rangeSet = rangeSet.Ceiling(long.MaxValue >> 3).Floor(long.MinValue >> 3);
+
+			var range = JsonSchemaExtensions.Randomizer.ArrayElement(rangeSet.Ranges.ToArray());
 
 			var minValue = (long) Math.Ceiling(range.Minimum.Value);
 			var maxValue = (long) Math.Floor(range.Maximum.Value);
@@ -54,9 +56,9 @@ namespace Json.Schema.DataGeneration.Generators
 				offset = nonMultiples[JsonSchemaExtensions.Randomizer.Int(0, nonMultiples.Length - 1)];
 			}
 
-			var scaledRange = (int) (upperBound - lowerBound) / period;
-			var lowOffset = (int) (lowerBound / period) * period;
-			var value = JsonSchemaExtensions.Randomizer.Int(0, scaledRange) * period + lowOffset + offset;
+			var scaledRange = (upperBound - lowerBound) / period;
+			var lowOffset = (lowerBound / period) * period;
+			var value = JsonSchemaExtensions.Randomizer.Long(0, scaledRange) * period + lowOffset + offset;
 			if (value > upperBound) value -= period;
 			if (lowerBound > value) value += period;
 

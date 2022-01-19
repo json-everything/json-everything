@@ -32,8 +32,8 @@ namespace Json.Schema.DataGeneration.Requirements
 				else
 					context.NumberRanges = range;
 			}
-			else
-				context.NumberRanges ??= NumberRangeSet.None;
+			//else
+			//	context.NumberRanges ??= NumberRangeSet.None;
 
 			var multipleOf = schema.Keywords!.OfType<MultipleOfKeyword>().FirstOrDefault()?.Value;
 			if (multipleOf != null)

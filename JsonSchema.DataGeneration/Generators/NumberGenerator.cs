@@ -16,8 +16,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public GenerationResult Generate(RequirementContext context)
 		{
-			if (context.NumberRanges == null)
-				return GenerationResult.NotApplicable;
+			context.NumberRanges ??= NumberRangeSet.Full;
 			
 			// we have no requirements, so use the full range
 			if (!context.NumberRanges.Ranges.Any())
