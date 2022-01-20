@@ -2,6 +2,6 @@
 {
 	internal interface IRequirementsGatherer
 	{
-		void AddRequirements(RequirementContext context, JsonSchema schema);
+		void AddRequirements(RequirementsContext context, JsonSchema schema);
 	}
 }

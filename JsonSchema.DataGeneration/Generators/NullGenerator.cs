@@ -14,7 +14,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public SchemaValueType Type => SchemaValueType.Null;
 
-		public GenerationResult Generate(RequirementContext context)
+		public GenerationResult Generate(RequirementsContext context)
 		{
 			return GenerationResult.Success(_nullValue);
 		}

@@ -6,7 +6,7 @@ namespace Json.Schema.DataGeneration.Requirements
 {
 	internal class NumberRequirementsGatherer : IRequirementsGatherer
 	{
-		public void AddRequirements(RequirementContext context, JsonSchema schema)
+		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var range = NumberRangeSet.Full;
 			var minimum = schema.Keywords!.OfType<MinimumKeyword>().FirstOrDefault()?.Value;

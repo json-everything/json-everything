@@ -15,7 +15,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public SchemaValueType Type => SchemaValueType.Array;
 
-		public GenerationResult Generate(RequirementContext context)
+		public GenerationResult Generate(RequirementsContext context)
 		{
 			JsonSchema schema = null;
 

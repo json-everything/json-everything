@@ -12,7 +12,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public SchemaValueType Type => SchemaValueType.Object;
 
-		public GenerationResult Generate(RequirementContext context)
+		public GenerationResult Generate(RequirementsContext context)
 		{
 			throw new NotImplementedException();
 		}

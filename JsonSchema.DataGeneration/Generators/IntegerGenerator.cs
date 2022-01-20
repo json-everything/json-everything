@@ -13,7 +13,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public SchemaValueType Type => SchemaValueType.Integer;
 
-		public GenerationResult Generate(RequirementContext context)
+		public GenerationResult Generate(RequirementsContext context)
 		{
 			context.NumberRanges ??= NumberRangeSet.Full;
 

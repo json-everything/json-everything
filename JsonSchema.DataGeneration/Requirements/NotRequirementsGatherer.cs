@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements
 {
 	internal class NotRequirementsGatherer : IRequirementsGatherer
 	{
-		public void AddRequirements(RequirementContext context, JsonSchema schema)
+		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var notKeyword = schema.Keywords?.OfType<NotKeyword>().FirstOrDefault();
 			if (notKeyword == null) return;

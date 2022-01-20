@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Json.Schema.DataGeneration
 {
-	internal class RequirementContext
+	internal class RequirementsContext
 	{
 		public const SchemaValueType AllTypes =
 			SchemaValueType.Array |
@@ -24,14 +24,15 @@ namespace Json.Schema.DataGeneration
 
 		public NumberRangeSet? StringLengths { get; set; }
 		// https://www.ocpsoft.org/tutorials/regular-expressions/and-in-regex/
-		public Regex? Pattern { get; set; }
-		public string Format { get; set; }
+		public List<Regex>? Patterns { get; set; }
+		public List<Regex>? AntiPatterns { get; set; }
+		public string? Format { get; set; }
 
-		public List<RequirementContext>? Options { get; set; }
+		public List<RequirementsContext>? Options { get; set; }
 
-		public RequirementContext(){}
+		public RequirementsContext(){}
 
-		public RequirementContext(RequirementContext other)
+		public RequirementsContext(RequirementsContext other)
 		{
 			Type = other.Type;
 			if (other.NumberRanges != null)
@@ -42,11 +43,11 @@ namespace Json.Schema.DataGeneration
 				Antimultiples = other.Antimultiples.ToList();
 		}
 
-		public IEnumerable<RequirementContext> GetAllVariations()
+		public IEnumerable<RequirementsContext> GetAllVariations()
 		{
-			RequirementContext CreateVariation(RequirementContext option)
+			RequirementsContext CreateVariation(RequirementsContext option)
 			{
-				var variation = new RequirementContext(this);
+				var variation = new RequirementsContext(this);
 				variation.And(option);
 				return variation;
 			}
@@ -73,23 +74,23 @@ namespace Json.Schema.DataGeneration
 
 		// Create a requirements object that doesn't meet this context's requirement
 		// Only need to break one requirement for this to work, not all
-		public RequirementContext Break()
+		public RequirementsContext Break()
 		{
-			bool BreakType(RequirementContext context)
+			bool BreakType(RequirementsContext context)
 			{
 				if (Type == null) return false;
 				context.Type = ~AllTypes ^ ~Type;
 				return true;
 			}
 
-			bool BreakNumberRange(RequirementContext context)
+			bool BreakNumberRange(RequirementsContext context)
 			{
 				if (NumberRanges == null || !NumberRanges.Ranges.Any()) return false;
 				context.NumberRanges = NumberRanges?.Invert();
 				return true;
 			}
 
-			bool BreakMultiples(RequirementContext context)
+			bool BreakMultiples(RequirementsContext context)
 			{
 				if (context.Multiples == null && context.Antimultiples == null) return false;
 				context.Multiples = Antimultiples;
@@ -97,17 +98,17 @@ namespace Json.Schema.DataGeneration
 				return true;
 			}
 
-			var allBreakers = new Func<RequirementContext, bool>[] {BreakType, BreakNumberRange, BreakMultiples};
+			var allBreakers = new Func<RequirementsContext, bool>[] {BreakType, BreakNumberRange, BreakMultiples};
 			var breakers = JsonSchemaExtensions.Randomizer.Shuffle(allBreakers);
 
-			var broken = new RequirementContext(this);
+			var broken = new RequirementsContext(this);
 			using var enumerator = breakers.GetEnumerator();
 			while (enumerator.MoveNext() && !enumerator.Current(broken)) ;
 
 			return broken;
 		}
 
-		public void And(RequirementContext other)
+		public void And(RequirementsContext other)
 		{
 			if (Type == null)
 				Type = other.Type;

@@ -73,7 +73,7 @@ namespace Json.Schema.Tests
 		[TestCase("{\"multipleOf\":1}")]
 		[TestCase("{\"not\":{\"$id\":\"http://some.site/schema\"}}")]
 		[TestCase("{\"oneOf\":[]}")]
-		[TestCase("{\"pattern\":\"$yes{1,3}^\"}")]
+		[TestCase("{\"pattern\":\"^yes{1,3}$\"}")]
 		[TestCase("{\"patternProperties\":{\"foo\":{}}}")]
 		[TestCase("{\"prefixItems\":[{\"$id\":\"http://some.site/schema\"}]}")]
 		[TestCase("{\"properties\":{\"foo\":{}}}")]

@@ -45,5 +45,65 @@ namespace Json.Schema.DataGeneration.Tests
 
 			Run(schema);
 		}
+
+		[Test]
+		public void ContainsDog()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Pattern("dog");
+
+			Run(schema);
+		}
+
+		[Test]
+		public void ContainsDogWithSizeConstraints()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Pattern("dog")
+				.MinLength(10)
+				.MaxLength(20);
+
+			Run(schema);
+		}
+
+		[Test]
+		public void DoesNotContainDog()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Not(new JsonSchemaBuilder()
+					.Pattern("dog"));
+
+			Run(schema);
+		}
+
+		[Test]
+		public void DoesNotContainDogWithSizeConstraints()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Not(new JsonSchemaBuilder()
+					.Pattern("dog"))
+				.MinLength(10)
+				.MaxLength(20);
+
+			Run(schema);
+		}
+
+		[Test]
+		public void ContainsCatAndDoesNotContainDogWithSizeConstraints()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.Not(new JsonSchemaBuilder()
+					.Pattern("dog"))
+				.Pattern("cat")
+				.MinLength(10)
+				.MaxLength(20);
+
+			Run(schema);
+		}
 	}
 }

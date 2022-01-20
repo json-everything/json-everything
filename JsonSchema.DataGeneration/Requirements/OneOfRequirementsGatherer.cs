@@ -5,19 +5,19 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class OneOfRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema)
 	{
 		var keyword = schema.Keywords?.OfType<OneOfKeyword>().FirstOrDefault();
 		if (keyword == null) return;
 
-		context.Options ??= new List<RequirementContext>();
+		context.Options ??= new List<RequirementsContext>();
 		var allRequirements = keyword.Schemas.Select(x => x.GetRequirements()).ToList();
 		var inverted = allRequirements.Select(x => x.Break()).ToList();
 
 		var i = 0;
 		while (i < allRequirements.Count)
 		{
-			var subRequirement = new RequirementContext(allRequirements[i]);
+			var subRequirement = new RequirementsContext(allRequirements[i]);
 			var othersInverted = inverted.Where((_, j) => i != j);
 
 			foreach (var inversion in othersInverted)

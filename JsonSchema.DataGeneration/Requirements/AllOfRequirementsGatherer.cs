@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements
 {
 	internal class AllOfRequirementsGatherer : IRequirementsGatherer
 	{
-		public void AddRequirements(RequirementContext context, JsonSchema schema)
+		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var allOfKeyword = schema.Keywords?.OfType<AllOfKeyword>().FirstOrDefault();
 			if (allOfKeyword == null) return;

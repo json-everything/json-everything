@@ -23,13 +23,13 @@ namespace Json.Schema.DataGeneration
 
 		public static GenerationResult GenerateData(this JsonSchema schema)
 		{
-			RequirementContext requirements;
+			RequirementsContext requirements;
 			if (schema.BoolValue.HasValue)
 			{
 				if (schema.BoolValue == false)
 					return GenerationResult.Fail("Boolean schema `false` allows no values");
 
-				requirements = new RequirementContext();
+				requirements = new RequirementsContext();
 			}
 			else
 				requirements = GetRequirements(schema);
@@ -59,9 +59,9 @@ namespace Json.Schema.DataGeneration
 				.Cast<IRequirementsGatherer>()
 				.ToList();
 
-		internal static RequirementContext GetRequirements(this JsonSchema schema)
+		internal static RequirementsContext GetRequirements(this JsonSchema schema)
 		{
-			var context = new RequirementContext();
+			var context = new RequirementsContext();
 			foreach (var gatherer in _requirementsGatherers)
 			{
 				gatherer.AddRequirements(context, schema);

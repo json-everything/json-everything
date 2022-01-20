@@ -5,7 +5,7 @@ namespace Json.Schema.DataGeneration.Requirements
 {
 	internal class TypeRequirementsGatherer : IRequirementsGatherer
 	{
-		public void AddRequirements(RequirementContext context, JsonSchema schema)
+		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var typeKeyword = schema.Keywords?.OfType<TypeKeyword>().FirstOrDefault();
 			if (typeKeyword == null) return;

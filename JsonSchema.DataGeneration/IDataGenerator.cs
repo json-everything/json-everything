@@ -4,6 +4,6 @@
 	{
 		SchemaValueType Type { get; }
 
-		GenerationResult Generate(RequirementContext context);
+		GenerationResult Generate(RequirementsContext context);
 	}
 }

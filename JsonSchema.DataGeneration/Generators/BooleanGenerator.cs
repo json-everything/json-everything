@@ -10,7 +10,7 @@
 
 		public SchemaValueType Type => SchemaValueType.Boolean;
 
-		public GenerationResult Generate(RequirementContext context)
+		public GenerationResult Generate(RequirementsContext context)
 		{
 			return GenerationResult.Success(JsonSchemaExtensions.Randomizer.Bool());
 		}

@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Fare;
 
 namespace Json.Schema.DataGeneration.Generators
 {
 	internal class StringGenerator : IDataGenerator
 	{
+		private const int _maxStringLength = 1000;
+
 		public static StringGenerator Instance { get; } = new StringGenerator();
 
 		private StringGenerator()
@@ -13,42 +16,25 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public SchemaValueType Type => SchemaValueType.String;
 
-		public GenerationResult Generate(RequirementContext context)
+		public GenerationResult Generate(RequirementsContext context)
 		{
 			var ranges = context.StringLengths ?? NumberRangeSet.NonNegative;
-
+			ranges = ranges.Floor(0).Ceiling(_maxStringLength);
 			var range = JsonSchemaExtensions.Randomizer.ArrayElement(ranges.Ranges.ToArray());
-			var totalLength = 0;
-			var words = new List<string>();
-			var attempts = 0;
-			while (totalLength + words.Count - 1 < range.Minimum)
-			{
-				var word = JsonSchemaExtensions.Randomizer.Word();
-				if (totalLength + words.Count + word.Length > range.Maximum)
-				{
-					attempts++;
-					if (attempts > 10) break;
-					continue;
-				}
-				
-				totalLength += word.Length;
-				words.Add(word);				
-			}
+			var rangeRegex = $".{{{range.Minimum.Value},{range.Maximum.Value}}}";
+			
+			string overallRegex = string.Empty;
 
-			while (totalLength + words.Count - 1 < range.Maximum)
-			{
-				var word = JsonSchemaExtensions.Randomizer.Word();
-				if (totalLength + words.Count + word.Length >= range.Maximum) break;
+			if (context.Patterns != null)
+				overallRegex += HelperExtensions.Require(context.Patterns.Select(x => x.ToString()));
 
-				if (JsonSchemaExtensions.Randomizer.Int() % 10 == 0) break;
+			if (context.AntiPatterns != null)
+				overallRegex += HelperExtensions.Forbid(context.AntiPatterns.Select(x => x.ToString()));
 
-				totalLength += word.Length;
-				words.Add(word);
-			}
+			overallRegex += rangeRegex;
+			overallRegex = $"^{overallRegex}$";
 
-			var value = string.Join(" ", words);
-
-			return GenerationResult.Success(value);
+			return GenerationResult.Success(new Xeger(overallRegex).Generate());
 		}
 	}
 }

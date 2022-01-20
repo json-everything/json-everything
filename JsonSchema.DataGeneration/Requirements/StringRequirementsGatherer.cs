@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Json.Schema.DataGeneration.Requirements
 {
 	internal class StringRequirementsGatherer : IRequirementsGatherer
 	{
-		public void AddRequirements(RequirementContext context, JsonSchema schema)
+		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var range = NumberRangeSet.NonNegative;
 			var minLength = schema.Keywords!.OfType<MinLengthKeyword>().FirstOrDefault()?.Value;
@@ -23,6 +25,12 @@ namespace Json.Schema.DataGeneration.Requirements
 				}
 			}
 
+			var pattern = schema.Keywords!.OfType<PatternKeyword>().FirstOrDefault()?.Value;
+			if (pattern != null)
+			{
+				context.Patterns ??= new List<Regex>();
+				context.Patterns.Add(pattern);
+			}
 		}
 	}
 }
