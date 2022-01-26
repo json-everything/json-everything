@@ -787,6 +787,18 @@ namespace Json.Schema
 		/// <param name="builder">The builder.</param>
 		/// <param name="schemas">The schemas for `prefixItems`.</param>
 		/// <returns>The builder.</returns>
+		public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, params JsonSchema[] schemas)
+		{
+			builder.Add(new PrefixItemsKeyword(schemas));
+			return builder;
+		}
+
+		/// <summary>
+		/// Add a `prefixItems` keyword.
+		/// </summary>
+		/// <param name="builder">The builder.</param>
+		/// <param name="schemas">The schemas for `prefixItems`.</param>
+		/// <returns>The builder.</returns>
 		public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
 		{
 			builder.Add(new PrefixItemsKeyword(schemas));
