@@ -51,7 +51,7 @@ namespace Json.Schema.DataGeneration.Generators
 						var factor = multipleOf.Value;
 						value = Math.Round(value / factor, MidpointRounding.AwayFromZero) * factor;
 					}
-				} while (context.Antimultiples != null && context.Antimultiples.Any(x => value % x == 0));
+				} while (context.AntiMultiples != null && context.AntiMultiples.Any(x => value % x == 0));
 
 				var meetsMinimum = isInclusiveMin ? minValue <= value : minValue < value;
 				var meetsMaximum = isInclusiveMax ? value <= maxValue : value < maxValue;

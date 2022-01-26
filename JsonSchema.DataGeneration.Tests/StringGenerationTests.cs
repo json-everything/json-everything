@@ -73,8 +73,7 @@ namespace Json.Schema.DataGeneration.Tests
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.String)
-				.Not(new JsonSchemaBuilder()
-					.Pattern("dog"));
+				.Not(new JsonSchemaBuilder().Pattern("dog"));
 
 			Run(schema);
 		}
@@ -84,8 +83,7 @@ namespace Json.Schema.DataGeneration.Tests
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.String)
-				.Not(new JsonSchemaBuilder()
-					.Pattern("dog"))
+				.Not(new JsonSchemaBuilder().Pattern("dog"))
 				.MinLength(10)
 				.MaxLength(20);
 
@@ -97,9 +95,38 @@ namespace Json.Schema.DataGeneration.Tests
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.String)
-				.Not(new JsonSchemaBuilder()
-					.Pattern("dog"))
+				.Not(new JsonSchemaBuilder().Pattern("dog"))
 				.Pattern("cat")
+				.MinLength(10)
+				.MaxLength(20);
+
+			Run(schema);
+		}
+
+		[Test]
+		public void ContainsEitherCatOrDog()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.AnyOf(
+					new JsonSchemaBuilder().Pattern("dog"),
+					new JsonSchemaBuilder().Pattern("cat")
+				)
+				.MinLength(10)
+				.MaxLength(20);
+
+			Run(schema);
+		}
+
+		[Test]
+		public void ContainsExclusivelyEitherCatOrDog()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.String)
+				.OneOf(
+					new JsonSchemaBuilder().Pattern("dog"),
+					new JsonSchemaBuilder().Pattern("cat")
+				)
 				.MinLength(10)
 				.MaxLength(20);
 

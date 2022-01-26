@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using Fare;
 
@@ -33,6 +33,8 @@ namespace Json.Schema.DataGeneration.Generators
 
 			overallRegex += rangeRegex;
 			overallRegex = $"^{overallRegex}$";
+
+			Console.WriteLine(overallRegex);
 
 			return GenerationResult.Success(new Xeger(overallRegex).Generate());
 		}

@@ -20,7 +20,7 @@ namespace Json.Schema.DataGeneration
 
 		public NumberRangeSet? NumberRanges { get; set; }
 		public List<decimal>? Multiples { get; set; }
-		public List<decimal>? Antimultiples { get; set; }
+		public List<decimal>? AntiMultiples { get; set; }
 
 		public NumberRangeSet? StringLengths { get; set; }
 		// https://www.ocpsoft.org/tutorials/regular-expressions/and-in-regex/
@@ -35,12 +35,20 @@ namespace Json.Schema.DataGeneration
 		public RequirementsContext(RequirementsContext other)
 		{
 			Type = other.Type;
+
 			if (other.NumberRanges != null)
 				NumberRanges = new NumberRangeSet(other.NumberRanges);
 			if (other.Multiples != null)
 				Multiples = other.Multiples.ToList();
-			if (other.Antimultiples != null)
-				Antimultiples = other.Antimultiples.ToList();
+			if (other.AntiMultiples != null)
+				AntiMultiples = other.AntiMultiples.ToList();
+
+			if (other.StringLengths != null)
+				StringLengths = new NumberRangeSet(other.StringLengths);
+			if (other.Patterns != null)
+				Patterns = other.Patterns.ToList();
+			if (other.AntiPatterns != null)
+				AntiPatterns = other.AntiPatterns.ToList();
 		}
 
 		public IEnumerable<RequirementsContext> GetAllVariations()
@@ -92,13 +100,35 @@ namespace Json.Schema.DataGeneration
 
 			bool BreakMultiples(RequirementsContext context)
 			{
-				if (context.Multiples == null && context.Antimultiples == null) return false;
-				context.Multiples = Antimultiples;
-				context.Antimultiples = Multiples;
+				if (Multiples == null && AntiMultiples == null) return false;
+				context.Multiples = AntiMultiples;
+				context.AntiMultiples = Multiples;
 				return true;
 			}
 
-			var allBreakers = new Func<RequirementsContext, bool>[] {BreakType, BreakNumberRange, BreakMultiples};
+			bool BreakStringLength(RequirementsContext context)
+			{
+				if (StringLengths == null || !StringLengths.Ranges.Any()) return false;
+				context.StringLengths = StringLengths?.Invert();
+				return true;
+			}
+
+			bool BreakPatterns(RequirementsContext context)
+			{
+				if (Patterns == null && AntiPatterns == null) return false;
+				context.Patterns = AntiPatterns;
+				context.AntiPatterns = Patterns;
+				return true;
+			}
+
+			var allBreakers = new Func<RequirementsContext, bool>[]
+			{
+				BreakType,
+				BreakNumberRange,
+				BreakMultiples,
+				BreakStringLength,
+				BreakPatterns
+			};
 			var breakers = JsonSchemaExtensions.Randomizer.Shuffle(allBreakers);
 
 			var broken = new RequirementsContext(this);
@@ -125,10 +155,25 @@ namespace Json.Schema.DataGeneration
 			else if (other.Multiples != null)
 				Multiples.AddRange(other.Multiples);
 
-			if (Antimultiples == null)
-				Antimultiples = other.Antimultiples;
-			else if (other.Antimultiples != null)
-				Antimultiples.AddRange(other.Antimultiples);
+			if (AntiMultiples == null)
+				AntiMultiples = other.AntiMultiples;
+			else if (other.AntiMultiples != null)
+				AntiMultiples.AddRange(other.AntiMultiples);
+
+			if (StringLengths == null || !StringLengths.Ranges.Any())
+				StringLengths = other.StringLengths;
+			else if (other.StringLengths != null)
+				StringLengths *= other.StringLengths;
+
+			if (Patterns == null)
+				Patterns = other.Patterns;
+			else if (other.Patterns != null)
+				Patterns.AddRange(other.Patterns);
+
+			if (AntiPatterns == null)
+				AntiPatterns = other.AntiPatterns;
+			else if (other.AntiPatterns != null)
+				AntiPatterns.AddRange(other.AntiPatterns);
 		}
 	}
 }
