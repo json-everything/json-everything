@@ -1,3 +1,7 @@
+# [2.0.1](https://github.com/gregsdennis/json-everything/pull/210)
+
+[#207](https://github.com/gregsdennis/json-everything/issues/207) - [@ItsVeryWindy](https://github.com/ItsVeryWindy) discovered a regression where bundling (embedding a schema of one draft inside a schema of another) fails to process the required keyword set.
+
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/200)
 
 Primary change is around how `ValidationContext` is handled throughout the validation process in order to significantly reduce memory footprint.  Thanks to [@dazerdude](https://github.com/dazerdude) for reporting the issue and making suggestions that led to resolving this.

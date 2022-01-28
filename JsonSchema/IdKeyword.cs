@@ -43,7 +43,7 @@ namespace Json.Schema
 		{
 			context.EnterKeyword(Name);
 			if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
-			    context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7)
+			    (context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7))
 			{
 				context.LocalResult.Pass();
 				context.NotApplicable(() => "$ref present; ignoring");

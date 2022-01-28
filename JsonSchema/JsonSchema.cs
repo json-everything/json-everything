@@ -208,7 +208,10 @@ namespace Json.Schema
 			var previousAnnotationSet = new List<Annotation>();
 			foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 			{
-				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
+				// $schema is always processed first, and this should only be set
+				// after $schema has been evaluated.
+				if (keyword is not SchemaKeyword)
+					keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
 				if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 		
 				context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);

@@ -20,6 +20,7 @@ namespace Json.Schema
 		private readonly Stack<JsonPointer> _schemaLocations = new Stack<JsonPointer>();
 		private readonly Stack<ValidationResults> _localResults = new Stack<ValidationResults>();
 		private readonly Stack<bool> _dynamicScopeFlags = new Stack<bool>();
+		private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new Stack<IReadOnlyDictionary<Uri, bool>?>();
 		private JsonSchema? _currentAnchor;
 
 		/// <summary>
@@ -82,7 +83,9 @@ namespace Json.Schema
 		internal bool UriChanged { get; set; }
 		//internal ValidationContext ParentContext { get; set; }
 		internal JsonPointer? Reference { get; set; }
-		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs { get; set; }
+
+		internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs => _metaSchemaVocabs.Peek();
+
 		internal bool IsNewDynamicScope => _dynamicScopeFlags.Peek();
 		internal HashSet<(string, JsonPointer)> NavigatedReferences { get; } = new HashSet<(string, JsonPointer)>();
 		internal bool NavigatedByDirectRef { get; set; }
@@ -109,6 +112,7 @@ namespace Json.Schema
 			_schemaLocations.Push(JsonPointer.UrlEmpty);
 			_localResults.Push(new ValidationResults(this));
 			_dynamicScopeFlags.Push(false);
+			_metaSchemaVocabs.Push(null);
 		}
 #pragma warning restore 8618
 
@@ -135,6 +139,7 @@ namespace Json.Schema
 			LocalResult.AddNestedResult(newResult);
 			_localResults.Push(newResult);
 			_dynamicScopeFlags.Push(false);
+			_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
 		}
 
 		/// <summary>
@@ -149,6 +154,7 @@ namespace Json.Schema
 			_localSchemas.Pop();
 			_localResults.Pop();
 			_dynamicScopeFlags.Pop();
+			_metaSchemaVocabs.Pop();
 		}
 
 		internal void UpdateCurrentUri(Uri newUri)
@@ -161,6 +167,14 @@ namespace Json.Schema
 			_dynamicScopeFlags.Pop();
 			_dynamicScopeFlags.Push(true);
 			_dynamicScopeFlags.Push(true);
+		}
+
+		internal void UpdateMetaSchemaVocabs(IReadOnlyDictionary<Uri, bool> newVocabSet)
+		{
+			_metaSchemaVocabs.Pop();
+			_metaSchemaVocabs.Pop();
+			_metaSchemaVocabs.Push(newVocabSet);
+			_metaSchemaVocabs.Push(newVocabSet);
 		}
 
 		internal void ValidateAnchor()

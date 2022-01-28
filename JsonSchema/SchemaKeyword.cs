@@ -53,7 +53,7 @@ namespace Json.Schema
 
 			var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
 			if (vocabularyKeyword != null) 
-				context.MetaSchemaVocabs = vocabularyKeyword.Vocabulary;
+				context.UpdateMetaSchemaVocabs(vocabularyKeyword.Vocabulary);
 
 			if (!context.Options.ValidateMetaSchema)
 			{
