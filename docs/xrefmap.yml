@@ -10943,6 +10943,15 @@ references:
   fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder, IEnumerable(Of Json.Schema.JsonSchema))
   nameWithType: JsonSchemaBuilderExtensions.PrefixItems(JsonSchemaBuilder, IEnumerable<JsonSchema>)
   nameWithType.vb: JsonSchemaBuilderExtensions.PrefixItems(JsonSchemaBuilder, IEnumerable(Of JsonSchema))
+- uid: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema[])
+  name: PrefixItems(JsonSchemaBuilder, JsonSchema[])
+  href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PrefixItems_Json_Schema_JsonSchemaBuilder_Json_Schema_JsonSchema___
+  commentId: M:Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema[])
+  name.vb: PrefixItems(JsonSchemaBuilder, JsonSchema())
+  fullName: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder, Json.Schema.JsonSchema[])
+  fullName.vb: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder, Json.Schema.JsonSchema())
+  nameWithType: JsonSchemaBuilderExtensions.PrefixItems(JsonSchemaBuilder, JsonSchema[])
+  nameWithType.vb: JsonSchemaBuilderExtensions.PrefixItems(JsonSchemaBuilder, JsonSchema())
 - uid: Json.Schema.JsonSchemaBuilderExtensions.PrefixItems*
   name: PrefixItems
   href: api/Json.Schema.JsonSchemaBuilderExtensions.html#Json_Schema_JsonSchemaBuilderExtensions_PrefixItems_
