@@ -504,7 +504,10 @@ namespace Json.Schema.Tests
 		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
+			// ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006 // Naming Styles
 			private const string Name = "minDate";
+#pragma warning restore IDE1006 // Naming Styles
 
 			public bool Equals(MinDateKeyword other)
 			{
