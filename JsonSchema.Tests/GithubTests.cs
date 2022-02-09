@@ -593,7 +593,7 @@ namespace Json.Schema.Tests
 		{
 			// This validation fails because the file uses `id` instead of `$id`.
 			// See https://github.com/gregsdennis/json-everything/issues/212#issuecomment-1033423550
-			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "Issue212_schema.json")
+			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue212_schema.json")
 				.AdjustForPlatform();
 			var schema = JsonSchema.FromFile(path);
 
