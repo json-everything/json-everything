@@ -504,7 +504,10 @@ namespace Json.Schema.Tests
 		[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 		private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 		{
+			// ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006 // Naming Styles
 			private const string Name = "minDate";
+#pragma warning restore IDE1006 // Naming Styles
 
 			public bool Equals(MinDateKeyword other)
 			{
@@ -547,11 +550,53 @@ namespace Json.Schema.Tests
 		}
 
 		[Test]
+		public void Issue208_BundlingNotWorking()
+		{
+			JsonSchema externalSchema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft202012Id)
+				.Id("https://my-external-schema")
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("first", new JsonSchemaBuilder().Type(SchemaValueType.String))
+				);
+
+			var options = new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed
+			};
+			options.SchemaRegistry.Register(new Uri("https://my-external-schema"), externalSchema);
+
+			JsonSchema mySchema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft202012Id)
+				.Id("https://my-schema")
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("first", new JsonSchemaBuilder().Ref("https://my-external-schema")),
+					("second", new JsonSchemaBuilder()
+						.Schema(MetaSchemas.Draft202012Id)
+						.Id("https://my-inner-schema")
+						.Type(SchemaValueType.Object)
+						.Properties(
+							("second", new JsonSchemaBuilder().Ref("#/$defs/my-inner-ref"))
+						)
+						.Defs(
+							("my-inner-ref", new JsonSchemaBuilder().Type(SchemaValueType.String))
+						)
+					)
+				);
+
+			var instance = JsonDocument.Parse("{\"first\":{\"first\":\"first\"},\"second\":{\"second\":\"second\"}}").RootElement;
+
+			mySchema.Validate(instance, options).AssertValid();
+
+		}
+
+		[Test]
 		public void Issue212_CouldNotResolveAnchorReference_FromFile()
 		{
 			// This validation fails because the file uses `id` instead of `$id`.
 			// See https://github.com/gregsdennis/json-everything/issues/212#issuecomment-1033423550
-			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "Issue212_schema.json")
+			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue212_schema.json")
 				.AdjustForPlatform();
 			var schema = JsonSchema.FromFile(path);
 
