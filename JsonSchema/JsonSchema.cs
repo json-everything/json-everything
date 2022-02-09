@@ -215,6 +215,7 @@ namespace Json.Schema
 				if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 		
 				context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);
+				context.PullDirectRefNavigation();
 				context.LocalResult.ConsiderAnnotations(previousAnnotationSet);
 				keyword.Validate(context);
 				overallResult &= context.LocalResult.IsValid;
