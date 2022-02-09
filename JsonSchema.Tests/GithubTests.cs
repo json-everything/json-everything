@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -548,6 +549,8 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Issue212_CouldNotResolveAnchorReference_FromFile()
 		{
+			// This validation fails because the file uses `id` instead of `$id`.
+			// See https://github.com/gregsdennis/json-everything/issues/212#issuecomment-1033423550
 			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "Issue212_schema.json")
 				.AdjustForPlatform();
 			var schema = JsonSchema.FromFile(path);
@@ -561,7 +564,7 @@ namespace Json.Schema.Tests
 				ValidateMetaSchema = true
 			});
 
-			res.AssertValid();
+			res.AssertInvalid();
 		}
 
 		[Test]
@@ -604,6 +607,11 @@ namespace Json.Schema.Tests
 				ValidateMetaSchema = true
 			});
 
+			Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			}));
 			res.AssertValid();
 		}
 	}
