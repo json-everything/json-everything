@@ -544,5 +544,67 @@ namespace Json.Schema.Tests
 
 			Assert.Throws<InvalidOperationException>(() => schema.Validate(result));
 		}
+
+		[Test]
+		public void Issue212_CouldNotResolveAnchorReference_FromFile()
+		{
+			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "Issue212_schema.json")
+				.AdjustForPlatform();
+			var schema = JsonSchema.FromFile(path);
+
+			var instance = JsonDocument.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}").RootElement;
+
+			var res = schema.Validate(instance, new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed,
+				//ValidateAs = Draft.Draft7,
+				ValidateMetaSchema = true
+			});
+
+			res.AssertValid();
+		}
+
+		[Test]
+		public void Issue212_CouldNotResolveAnchorReference_Inline()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft7Id)
+				.Id("http://messagebroker.fff.pl/rpn/dci/kkt.json")
+				.Type(SchemaValueType.Object)
+				.Title("JSON Schema ")
+				.Definitions(
+					("#guid", new JsonSchemaBuilder()
+						.Id("#guid")
+						.Title("Definicja obligatoryjnego GUID (regex)")
+						.Type(SchemaValueType.String)
+						.Examples(
+							"09C9A8DA-B40F-4E3A-9746-7B10AFEC2C4F",
+							"2d9bbb00-878f-49b0-9d48-767ce3e12dee"
+						)
+						.MinLength(36)
+						.MaxLength(36)
+						.Pattern("^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$")
+					)
+				)
+				.Required("ContentDefinitionId")
+				.Properties(
+					("ContentDefinitionId", new JsonSchemaBuilder()
+						.Ref("#guid")
+						.Title("Identyfikator definicji ")
+					)
+				)
+				.AdditionalProperties(false);
+
+			var instance = JsonDocument.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}").RootElement;
+
+			var res = schema.Validate(instance, new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed,
+				//ValidateAs = Draft.Draft7,
+				ValidateMetaSchema = true
+			});
+
+			res.AssertValid();
+		}
 	}
 }

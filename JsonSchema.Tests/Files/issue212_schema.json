@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://messagebroker.fff.pl/rpn/dci/kkt.json",
+  "type": "object",
+  "title": "JSON Schema ",
+  "definitions": {
+    "#guid": {
+      "id": "#guid",
+      "title": "Definicja obligatoryjnego GUID (regex)",
+      "type": "string",
+      "examples": [
+        "09C9A8DA-B40F-4E3A-9746-7B10AFEC2C4F",
+        "2d9bbb00-878f-49b0-9d48-767ce3e12dee"
+      ],
+      "minLength": 36,
+      "maxLength": 36,
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+  },
+  "required": [
+    "ContentDefinitionId"
+  ],
+  "properties": {
+    "ContentDefinitionId": {
+      "$ref": "#guid",
+      "title": "Identyfikator definicji "
+    }
+  },
+  "additionalProperties": false
+}
