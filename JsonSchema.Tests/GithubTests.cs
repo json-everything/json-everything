@@ -544,5 +544,47 @@ namespace Json.Schema.Tests
 
 			Assert.Throws<InvalidOperationException>(() => schema.Validate(result));
 		}
+
+		[Test]
+		public void Issue208_BundlingNotWorking()
+		{
+			JsonSchema externalSchema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft202012Id)
+				.Id("https://my-external-schema")
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("first", new JsonSchemaBuilder().Type(SchemaValueType.String))
+				);
+
+			var options = new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed
+			};
+			options.SchemaRegistry.Register(new Uri("https://my-external-schema"), externalSchema);
+
+			JsonSchema mySchema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft202012Id)
+				.Id("https://my-schema")
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("first", new JsonSchemaBuilder().Ref("https://my-external-schema")),
+					("second", new JsonSchemaBuilder()
+						.Schema(MetaSchemas.Draft202012Id)
+						.Id("https://my-inner-schema")
+						.Type(SchemaValueType.Object)
+						.Properties(
+							("second", new JsonSchemaBuilder().Ref("#/$defs/my-inner-ref"))
+						)
+						.Defs(
+							("my-inner-ref", new JsonSchemaBuilder().Type(SchemaValueType.String))
+						)
+					)
+				);
+
+			var instance = JsonDocument.Parse("{\"first\":{\"first\":\"first\"},\"second\":{\"second\":\"second\"}}").RootElement;
+
+			mySchema.Validate(instance, options).AssertValid();
+
+		}
 	}
 }
