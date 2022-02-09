@@ -21,6 +21,7 @@ namespace Json.Schema
 		private readonly Stack<ValidationResults> _localResults = new Stack<ValidationResults>();
 		private readonly Stack<bool> _dynamicScopeFlags = new Stack<bool>();
 		private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new Stack<IReadOnlyDictionary<Uri, bool>?>();
+		private readonly Stack<bool> _directRefNavigation = new Stack<bool>();
 		private JsonSchema? _currentAnchor;
 
 		/// <summary>
@@ -88,7 +89,16 @@ namespace Json.Schema
 
 		internal bool IsNewDynamicScope => _dynamicScopeFlags.Peek();
 		internal HashSet<(string, JsonPointer)> NavigatedReferences { get; } = new HashSet<(string, JsonPointer)>();
-		internal bool NavigatedByDirectRef { get; set; }
+		internal bool NavigatedByDirectRef
+		{
+			get { return  _directRefNavigation.Peek(); }
+			set
+			{
+				//UpdateCurrentValue(_directRefNavigation, value);
+				_directRefNavigation.Pop();
+				_directRefNavigation.Push(value);
+			}
+		}
 
 		/// <summary>
 		/// Whether processing optimizations can be applied (output format = flag).
@@ -113,6 +123,7 @@ namespace Json.Schema
 			_localResults.Push(new ValidationResults(this));
 			_dynamicScopeFlags.Push(false);
 			_metaSchemaVocabs.Push(null);
+			_directRefNavigation.Push(false);
 		}
 #pragma warning restore 8618
 
@@ -140,6 +151,7 @@ namespace Json.Schema
 			_localResults.Push(newResult);
 			_dynamicScopeFlags.Push(false);
 			_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
+			_directRefNavigation.Push(false);
 		}
 
 		/// <summary>
@@ -155,26 +167,32 @@ namespace Json.Schema
 			_localResults.Pop();
 			_dynamicScopeFlags.Pop();
 			_metaSchemaVocabs.Pop();
+			_directRefNavigation.Pop();
 		}
 
 		internal void UpdateCurrentUri(Uri newUri)
 		{
-			_currentUris.Pop();
-			_currentUris.Pop();
-			_currentUris.Push(newUri);
-			_currentUris.Push(newUri);
-			_dynamicScopeFlags.Pop();
-			_dynamicScopeFlags.Pop();
-			_dynamicScopeFlags.Push(true);
-			_dynamicScopeFlags.Push(true);
+			UpdateCurrentValue(_currentUris, newUri);
+			UpdateCurrentValue(_dynamicScopeFlags, true);
 		}
 
 		internal void UpdateMetaSchemaVocabs(IReadOnlyDictionary<Uri, bool> newVocabSet)
 		{
-			_metaSchemaVocabs.Pop();
-			_metaSchemaVocabs.Pop();
-			_metaSchemaVocabs.Push(newVocabSet);
-			_metaSchemaVocabs.Push(newVocabSet);
+			UpdateCurrentValue(_metaSchemaVocabs, newVocabSet);
+		}
+
+		internal void PullDirectRefNavigation()
+		{
+			_directRefNavigation.Pop();
+			_directRefNavigation.Push(_directRefNavigation.Peek());
+		}
+
+		private static void UpdateCurrentValue<T>(Stack<T> stack, T newValue)
+		{
+			stack.Pop();
+			stack.Pop();
+			stack.Push(newValue);
+			stack.Push(newValue);
 		}
 
 		internal void ValidateAnchor()
