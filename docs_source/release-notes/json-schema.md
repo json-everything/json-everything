@@ -1,3 +1,5 @@
+# [2.0.2](https://github.com/gregsdennis/json-everything/pull/213)
+
 # [2.0.1](https://github.com/gregsdennis/json-everything/pull/210)
 
 [#207](https://github.com/gregsdennis/json-everything/issues/207) - [@ItsVeryWindy](https://github.com/ItsVeryWindy) discovered a regression where bundling (embedding a schema of one draft inside a schema of another) fails to process the required keyword set.
