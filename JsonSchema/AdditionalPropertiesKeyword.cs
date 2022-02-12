@@ -60,23 +60,38 @@ namespace Json.Schema
 			var overallResult = true;
 			var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 			List<string> evaluatedProperties;
-			if (annotation == null)
+			if (context.Options.ValidatingAs is Draft.Draft6 or Draft.Draft7)
 			{
-				context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
 				evaluatedProperties = new List<string>();
+				var propertiesKeyword = context.LocalSchema.Keywords!.OfType<PropertiesKeyword>().FirstOrDefault();
+				if (propertiesKeyword != null)
+					evaluatedProperties.AddRange(propertiesKeyword.Properties.Keys);
+				var patternPropertiesKeyword = context.LocalSchema.Keywords!.OfType<PatternPropertiesKeyword>().FirstOrDefault();
+				if (patternPropertiesKeyword != null)
+					evaluatedProperties.AddRange(context.LocalInstance.EnumerateObject()
+						.Select(x => x.Name)
+						.Where(x => patternPropertiesKeyword.Patterns.All(p => !p.Key.IsMatch(x))));
 			}
 			else
 			{
-				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-				evaluatedProperties = annotation;
-			}
-			annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
-			if (annotation == null)
-				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
-			else
-			{
-				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-				evaluatedProperties.AddRange(annotation);
+				if (annotation == null)
+				{
+					context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
+					evaluatedProperties = new List<string>();
+				}
+				else
+				{
+					context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
+					evaluatedProperties = annotation;
+				}
+				annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
+				if (annotation == null)
+					context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
+				else
+				{
+					context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
+					evaluatedProperties.AddRange(annotation);
+				}
 			}
 			var additionalProperties = context.LocalInstance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
 			evaluatedProperties.Clear();
