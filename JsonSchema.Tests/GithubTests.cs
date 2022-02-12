@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
@@ -651,13 +652,34 @@ namespace Json.Schema.Tests
 				//ValidateAs = Draft.Draft7,
 				ValidateMetaSchema = true
 			});
-
-			Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}));
 			res.AssertValid();
+		}
+
+		[Test]
+		public void Issue216_AdditionalPropertiesShouldRelyOnDeclarationsForDraft7()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft7Id)
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("foo", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+					("bar", new JsonSchemaBuilder().Type(SchemaValueType.String))
+				)
+				.AdditionalProperties(false);
+
+			var instance = JsonDocument.Parse("{\"foo\":1,\"bar\":false}").RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+
+			result.AssertInvalid();
+			var nodes = new List<ValidationResults>{result};
+			while (nodes.Any())
+			{
+				var node = nodes.First();
+				nodes.Remove(node);
+				Assert.AreNotEqual("#/additionalProperties", node.SchemaLocation.ToString());
+				nodes.AddRange(node.NestedResults);
+			}
 		}
 	}
 }
