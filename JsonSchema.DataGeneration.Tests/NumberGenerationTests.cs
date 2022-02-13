@@ -65,5 +65,21 @@ namespace Json.Schema.DataGeneration.Tests
 
 			Run(schema);
 		}
+
+		[Test]
+		public void MultipleOfWithRange()
+		{
+			// This test highlights an issue with the number generation:
+			// Periodically, the rounding can cause the generation to be
+			// out of the range.  Generation is tried 5 times per range.
+			// If it fails all 5 times, this test will fail.
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Number)
+				.Minimum(10)
+				.Maximum(20)
+				.MultipleOf(2.3m);
+
+			Run(schema);
+		}
 	}
 }

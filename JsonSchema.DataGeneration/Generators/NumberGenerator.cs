@@ -43,6 +43,7 @@ namespace Json.Schema.DataGeneration.Generators
 				}
 
 				decimal value;
+				int attempts = 0;
 				do
 				{
 					value = JsonSchemaExtensions.Randomizer.Decimal(minValue, maxValue);
@@ -51,6 +52,13 @@ namespace Json.Schema.DataGeneration.Generators
 						var factor = multipleOf.Value;
 						value = Math.Round(value / factor, MidpointRounding.AwayFromZero) * factor;
 					}
+
+					if (!selectedRange.Contains(value))
+					{
+						attempts++;
+						if (attempts > 5) break;
+					}
+
 				} while (context.AntiMultiples != null && context.AntiMultiples.Any(x => value % x == 0));
 
 				var meetsMinimum = isInclusiveMin ? minValue <= value : minValue < value;

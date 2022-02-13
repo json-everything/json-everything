@@ -112,6 +112,14 @@ namespace Json.Schema.DataGeneration
 			return new NumberRange[] { };
 		}
 
+		public bool Contains(decimal value)
+		{
+			var meetsMinimum = Minimum.Inclusive ? Minimum.Value <= value : Minimum.Value < value;
+			var meetsMaximum = Maximum.Inclusive ? value <= Maximum.Value : value < Maximum.Value;
+
+			return meetsMinimum && meetsMaximum;
+		}
+
 		public override string ToString()
 		{
 			var minBound = Minimum.Inclusive ? '[' : '(';

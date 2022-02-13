@@ -6,7 +6,7 @@ namespace Json.Schema.DataGeneration.Generators
 {
 	internal class StringGenerator : IDataGenerator
 	{
-		private const int _maxStringLength = 1000;
+		private const int _maxStringLength = 100;
 
 		public static StringGenerator Instance { get; } = new StringGenerator();
 
