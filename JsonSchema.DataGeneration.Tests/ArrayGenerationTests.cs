@@ -162,5 +162,41 @@ namespace Json.Schema.DataGeneration.Tests
 
 			Run(schema);
 		}
+
+		[Test]
+		public void GenerateArrayWhereMinContainsIsMoreThanMaxItems_Fails()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Array)
+				.Items(new JsonSchemaBuilder()
+					.Type(SchemaValueType.Integer)
+					.Minimum(10)
+					.Maximum(100)
+				)
+				.Contains(new JsonSchemaBuilder()
+					.Minimum(100)
+				)
+				.MinContains(20)
+				.MinItems(3)
+				.MaxItems(10);
+
+			RunFailure(schema);
+		}
+
+		[Test]
+		public void GenerateSequentialArray()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Array)
+				.Items(new JsonSchemaBuilder()
+					.Type(SchemaValueType.Integer)
+					.Minimum(10)
+					.Maximum(20)
+					.MultipleOf(2)
+				)
+				.MinItems(3);
+
+			Run(schema);
+		}
 	}
 }

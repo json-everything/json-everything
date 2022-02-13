@@ -23,6 +23,23 @@ namespace Json.Schema.DataGeneration.Tests
 			Assert.IsTrue(schema.Validate(result.Result, options).IsValid, "failed validation");
 		}
 
+		public static void RunFailure(JsonSchema schema, ValidationOptions? options = null)
+		{
+			var result = schema.GenerateData();
+
+			options ??= ValidationOptions.Default;
+
+			Console.WriteLine(result.ErrorMessage);
+			if (result.Result.ValueKind != JsonValueKind.Undefined)
+				Console.WriteLine(JsonSerializer.Serialize(result.Result,
+					new JsonSerializerOptions
+					{
+						WriteIndented = true,
+						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+					}));
+			Assert.IsFalse(result.IsSuccess, "generation succeeded");
+		}
+
 		public static void RunInLoopForDebugging(JsonSchema schema)
 		{
 			while (true)

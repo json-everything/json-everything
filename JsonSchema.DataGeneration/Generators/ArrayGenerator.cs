@@ -38,7 +38,7 @@ namespace Json.Schema.DataGeneration.Generators
 			if (context.Contains != null)
 			{
 				var minContains = DefaultMinContains;
-				var maxContains = Math.Min(maxItems, DefaultMaxContains);
+				var maxContains = Math.Min(maxItems, DefaultMaxContains + minContains);
 				if (context.ContainsCounts != null)
 				{
 					var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ContainsCounts.Ranges.ToArray());
@@ -48,18 +48,15 @@ namespace Json.Schema.DataGeneration.Generators
 						maxContains = (uint) numberRange.Maximum.Value;
 				}
 
+				// some simple checks to ensure an instance can be generated
+				if (minContains > maxContains)
+					return GenerationResult.Fail("minContains is greater than maxContains");
+				if (minContains > maxItems)
+					return GenerationResult.Fail("minContains is greater than maxItems");
+
 				containsCount = (int) JsonSchemaExtensions.Randomizer.UInt(minContains, maxContains);
-				if (containsCount > itemCount)
-				{
-					if (itemCount < minContains)
-					{
-						if (minContains > minItems)
-							return GenerationResult.Fail("minContains is greater than minItems");
-						itemCount = containsCount;
-					}
-					else
-						containsCount = itemCount;
-				}
+				if (itemCount < containsCount) 
+					itemCount = containsCount;
 			}
 
 			var containsIndices = JsonSchemaExtensions.Randomizer
@@ -69,11 +66,26 @@ namespace Json.Schema.DataGeneration.Generators
 
 			var itemGenerationResults = new List<GenerationResult>();
 
-			// check sequential items
 			var sequenceCount = 0;
+			int currentContainsIndex = 0;
+			if (context.SequentialItems != null)
+			{
+				while (sequenceCount < itemCount && sequenceCount < context.SequentialItems.Count)
+				{
+					var itemRequirement = context.SequentialItems[sequenceCount];
+					if (containsCount > 0 && currentContainsIndex < containsIndices.Length && sequenceCount == containsIndices[currentContainsIndex])
+					{
+						itemRequirement = new RequirementsContext(itemRequirement);
+						itemRequirement.And(context.Contains!);
+						currentContainsIndex++;
+					}
+
+					itemGenerationResults.Add(itemRequirement.GenerateData());
+					sequenceCount++;
+				}
+			}
 
 			var remainingRequirements = context.RemainingItems ?? new RequirementsContext();
-			int currentContainsIndex = 0;
 			for (int i = sequenceCount; i < itemCount; i++)
 			{
 				var itemRequirement = remainingRequirements;
