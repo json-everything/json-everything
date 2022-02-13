@@ -16,6 +16,8 @@ namespace Json.Schema.DataGeneration
 			SchemaValueType.Object |
 			SchemaValueType.String;
 
+		public static RequirementsContext False = new RequirementsContext {IsFalse = true};
+
 		public SchemaValueType? Type { get; set; }
 
 		public NumberRangeSet? NumberRanges { get; set; }
@@ -28,7 +30,14 @@ namespace Json.Schema.DataGeneration
 		public List<Regex>? AntiPatterns { get; set; }
 		public string? Format { get; set; }
 
+		public List<RequirementsContext>? SequentialItems { get; set; }
+		public RequirementsContext? RemainingItems { get; set; }
+		public NumberRangeSet? ItemCounts { get; set; }
+		public List<RequirementsContext>? Contains { get; set; }
+
 		public List<RequirementsContext>? Options { get; set; }
+
+		public bool IsFalse { get; private set; }
 
 		public RequirementsContext(){}
 
@@ -174,6 +183,11 @@ namespace Json.Schema.DataGeneration
 				AntiPatterns = other.AntiPatterns;
 			else if (other.AntiPatterns != null)
 				AntiPatterns.AddRange(other.AntiPatterns);
+
+			if (RemainingItems == null)
+				RemainingItems = other.RemainingItems;
+			else if (other.RemainingItems != null)
+				RemainingItems.And(other.RemainingItems);
 		}
 	}
 }

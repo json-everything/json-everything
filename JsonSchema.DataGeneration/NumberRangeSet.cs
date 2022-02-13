@@ -7,8 +7,8 @@ namespace Json.Schema.DataGeneration
 	public class NumberRangeSet
 	{
 		// The full range causes problems with random generation.  Dividing by 10 shouldn't be a big deal.
-		private const decimal _min = decimal.MinValue / 10;
-		private const decimal _max = decimal.MaxValue / 10;
+		internal const decimal MinRangeValue = decimal.MinValue / 10;
+		internal const decimal MaxRangeValue = decimal.MaxValue / 10;
 
 		private readonly NumberRange[] _ranges;
 
@@ -21,8 +21,8 @@ namespace Json.Schema.DataGeneration
 		static NumberRangeSet()
 		{
 			None = new NumberRangeSet(Array.Empty<NumberRange>());
-			Full = new NumberRangeSet(new[] {new NumberRange(_min, _max)});
-			NonNegative = new NumberRangeSet(new[] {new NumberRange(0, _max)});
+			Full = new NumberRangeSet(new[] {new NumberRange(MinRangeValue, MaxRangeValue)});
+			NonNegative = new NumberRangeSet(new[] {new NumberRange(0, MaxRangeValue)});
 		}
 
 		public NumberRangeSet(NumberRange range)
@@ -127,12 +127,12 @@ namespace Json.Schema.DataGeneration
 
 		public NumberRangeSet Ceiling(decimal ceiling)
 		{
-			return Intersect(new NumberRange(_min, ceiling));
+			return Intersect(new NumberRange(MinRangeValue, ceiling));
 		}
 
 		public NumberRangeSet Floor(decimal floor)
 		{
-			return Intersect(new NumberRange(floor, _max));
+			return Intersect(new NumberRange(floor, MaxRangeValue));
 		}
 
 		private List<NumberRange> GetIntersectingRanges(NumberRange range)

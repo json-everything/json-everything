@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Json.More;
 
 namespace Json.Schema.DataGeneration.Generators
@@ -17,23 +16,28 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public GenerationResult Generate(RequirementsContext context)
 		{
-			JsonSchema schema = null;
-
-			var itemsKeyword = schema.Keywords.OfType<ItemsKeyword>().FirstOrDefault();
-			if (itemsKeyword?.ArraySchemas != null)
+			var minItems = DefaultMinItems;
+			var maxItems = DefaultMaxItems;
+			if (context.ItemCounts != null)
 			{
-				throw new NotImplementedException();
+				var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ItemCounts.Ranges.ToArray());
+				if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
+					minItems = (uint) numberRange.Minimum.Value;
+				if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
+					maxItems = (uint) numberRange.Maximum.Value;
 			}
-
-			var itemsSchema = itemsKeyword?.SingleSchema ?? true;
-			var minItems = schema.Keywords?.OfType<MinItemsKeyword>().FirstOrDefault()?.Value ?? DefaultMinItems;
-			var maxItems = schema.Keywords?.OfType<MaxItemsKeyword>().FirstOrDefault()?.Value ?? DefaultMaxItems;
 			var itemCount = (int) JsonSchemaExtensions.Randomizer.UInt(minItems, maxItems);
 
-			var itemGenerationResults = Enumerable.Range(0, itemCount).Select(x => itemsSchema.GenerateData()).ToArray();
-			return itemGenerationResults.All(x => x.IsSuccess)
-				? GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement())
-				: GenerationResult.Fail(itemGenerationResults);
+			if (context.RemainingItems != null)
+			{
+				var itemGenerationResults = Enumerable.Range(0, itemCount).Select(x => context.RemainingItems.GenerateData()).ToArray();
+				if (itemGenerationResults.All(x => x.IsSuccess))
+					return GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement());
+				else
+					return GenerationResult.Fail(itemGenerationResults);
+			}
+
+			return GenerationResult.Fail("Could not generate items for an array");
 		}
 	}
 }

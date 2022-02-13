@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Bogus;
 using Json.Schema.DataGeneration.Generators;
 
@@ -34,6 +36,11 @@ namespace Json.Schema.DataGeneration
 			else
 				requirements = GetRequirements(schema);
 
+			return requirements.GenerateData();
+		}
+
+		internal static GenerationResult GenerateData(this RequirementsContext requirements)
+		{
 			foreach (var variation in Randomizer.Shuffle(requirements.GetAllVariations()))
 			{
 				var applicableGenerators = _generators
@@ -44,6 +51,7 @@ namespace Json.Schema.DataGeneration
 				var generator = Randomizer.ArrayElement(applicableGenerators);
 				var result = generator.Generate(variation);
 				if (result.IsSuccess) return result;
+				else Debugger.Break();
 			}
 
 			return GenerationResult.Fail("Could not generate data that validates against the schema.");
