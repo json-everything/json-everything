@@ -15,8 +15,6 @@ namespace Json.Schema.DataGeneration
 			SchemaValueType.Object |
 			SchemaValueType.String;
 
-		public static RequirementsContext False = new RequirementsContext {IsFalse = true};
-
 		public SchemaValueType? Type { get; set; }
 
 		public NumberRangeSet? NumberRanges { get; set; }
@@ -32,12 +30,12 @@ namespace Json.Schema.DataGeneration
 		public List<RequirementsContext>? SequentialItems { get; set; }
 		public RequirementsContext? RemainingItems { get; set; }
 		public NumberRangeSet? ItemCounts { get; set; }
-		public List<RequirementsContext>? Contains { get; set; }
+		public RequirementsContext? Contains { get; set; }
+		public NumberRangeSet? ContainsCounts { get; set; }
 
 		public List<RequirementsContext>? Options { get; set; }
 
 		public bool HasConflict { get; private set; }
-		public bool IsFalse { get; private set; }
 
 		public RequirementsContext(){}
 

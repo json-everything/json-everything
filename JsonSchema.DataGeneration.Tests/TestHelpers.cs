@@ -23,7 +23,7 @@ namespace Json.Schema.DataGeneration.Tests
 			Assert.IsTrue(schema.Validate(result.Result, options).IsValid, "failed validation");
 		}
 
-		public static void RunInLoopForDebuggin(JsonSchema schema)
+		public static void RunInLoopForDebugging(JsonSchema schema)
 		{
 			while (true)
 			{
