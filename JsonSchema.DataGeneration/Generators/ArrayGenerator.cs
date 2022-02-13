@@ -32,10 +32,9 @@ namespace Json.Schema.DataGeneration.Generators
 			if (context.RemainingItems != null)
 			{
 				var itemGenerationResults = Enumerable.Range(0, itemCount).Select(x => context.RemainingItems.GenerateData()).ToArray();
-				if (itemGenerationResults.All(x => x.IsSuccess))
-					return GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement());
-				else
-					return GenerationResult.Fail(itemGenerationResults);
+				return itemGenerationResults.All(x => x.IsSuccess)
+					? GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement())
+					: GenerationResult.Fail(itemGenerationResults);
 			}
 
 			return GenerationResult.Fail("Could not generate items for an array");

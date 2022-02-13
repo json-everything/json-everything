@@ -58,6 +58,15 @@ namespace Json.Schema.DataGeneration
 			//	Patterns = other.Patterns.ToList();
 			//if (other.AntiPatterns != null)
 			//	AntiPatterns = other.AntiPatterns.ToList();
+
+			if (other.ItemCounts != null)
+				ItemCounts = new NumberRangeSet(other.ItemCounts);
+			if (other.RemainingItems != null)
+				RemainingItems = new RequirementsContext(other.RemainingItems);
+
+			if (other.Options != null)
+				Options = other.Options.Select(x => new RequirementsContext(x)).ToList();
+
 			HasConflict = other.HasConflict;
 		}
 
@@ -185,6 +194,11 @@ namespace Json.Schema.DataGeneration
 			//	AntiPatterns = other.AntiPatterns;
 			//else if (other.AntiPatterns != null)
 			//	AntiPatterns.AddRange(other.AntiPatterns);
+
+			if (ItemCounts == null || !ItemCounts.Ranges.Any())
+				ItemCounts = other.ItemCounts;
+			else if (other.ItemCounts != null)
+				ItemCounts *= other.ItemCounts;
 
 			if (RemainingItems == null)
 				RemainingItems = other.RemainingItems;
