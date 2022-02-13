@@ -9,8 +9,8 @@ namespace Json.Schema.DataGeneration.Tests
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
 				.OneOf(
-					new JsonSchemaBuilder().Type(SchemaValueType.Number),
-					new JsonSchemaBuilder().Type(SchemaValueType.Number),
+					new JsonSchemaBuilder().Type(SchemaValueType.Integer),
+					new JsonSchemaBuilder().Type(SchemaValueType.Integer),
 					new JsonSchemaBuilder().Type(SchemaValueType.String)
 				);
 
@@ -21,7 +21,7 @@ namespace Json.Schema.DataGeneration.Tests
 		public void OneOfWithMultipleOfCannotBeMultipleOfBoth()
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Number)
+				.Type(SchemaValueType.Integer)
 				.OneOf(
 					new JsonSchemaBuilder()
 						.MultipleOf(2),

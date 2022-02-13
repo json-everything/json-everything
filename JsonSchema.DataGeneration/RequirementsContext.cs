@@ -128,7 +128,8 @@ namespace Json.Schema.DataGeneration
 				//if (Patterns == null && AntiPatterns == null) return false;
 				//context.Patterns = AntiPatterns;
 				//context.AntiPatterns = Patterns;
-				return true;
+				//return true;
+				return false;
 			}
 
 			var allBreakers = new Func<RequirementsContext, bool>[]
@@ -145,7 +146,7 @@ namespace Json.Schema.DataGeneration
 			using var enumerator = breakers.GetEnumerator();
 			while (enumerator.MoveNext() && !enumerator.Current(broken)) ;
 
-			return broken;
+			 return broken;
 		}
 
 		public void And(RequirementsContext other)

@@ -12,10 +12,10 @@ namespace Json.Schema.DataGeneration.Tests
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Array)
 				.Items(new JsonSchemaBuilder()
-					.Type(SchemaValueType.Number)
+					.Type(SchemaValueType.Integer)
 					.Minimum(10)
 					.Maximum(20)
-					.MultipleOf(2.3m))
+					.MultipleOf(2))
 				.MinItems(3)
 				.MaxItems(10);
 
@@ -28,10 +28,10 @@ namespace Json.Schema.DataGeneration.Tests
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Array)
 				.Items(new JsonSchemaBuilder()
-					.Type(SchemaValueType.Number)
+					.Type(SchemaValueType.Integer)
 					.Minimum(10)
 					.Maximum(20)
-					.MultipleOf(2.3m))
+					.MultipleOf(2))
 				.MinItems(3);
 
 			Run(schema);
