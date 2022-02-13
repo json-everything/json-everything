@@ -1,32 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Json.Schema.DataGeneration.Requirements;
-
-internal class OneOfRequirementsGatherer : IRequirementsGatherer
+namespace Json.Schema.DataGeneration.Requirements
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	internal class OneOfRequirementsGatherer : IRequirementsGatherer
 	{
-		var keyword = schema.Keywords?.OfType<OneOfKeyword>().FirstOrDefault();
-		if (keyword == null) return;
-
-		context.Options ??= new List<RequirementsContext>();
-		var allRequirements = keyword.Schemas.Select(x => x.GetRequirements()).ToList();
-		var inverted = allRequirements.Select(x => x.Break()).ToList();
-
-		var i = 0;
-		while (i < allRequirements.Count)
+		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
-			var subRequirement = new RequirementsContext(allRequirements[i]);
-			var othersInverted = inverted.Where((_, j) => i != j);
+			var keyword = schema.Keywords?.OfType<OneOfKeyword>().FirstOrDefault();
+			if (keyword == null) return;
 
-			foreach (var inversion in othersInverted)
+			context.Options ??= new List<RequirementsContext>();
+			var allRequirements = keyword.Schemas.Select(x => x.GetRequirements()).ToList();
+			var inverted = allRequirements.Select(x => x.Break()).ToList();
+
+			var i = 0;
+			while (i < allRequirements.Count)
 			{
-				subRequirement.And(inversion);
-			}
+				var subRequirement = new RequirementsContext(allRequirements[i]);
+				var othersInverted = inverted.Where((_, j) => i != j);
 
-			context.Options.Add(subRequirement);
-			i++;
+				foreach (var inversion in othersInverted)
+				{
+					subRequirement.And(inversion);
+				}
+
+				context.Options.Add(subRequirement);
+				i++;
+			}
 		}
 	}
 }
