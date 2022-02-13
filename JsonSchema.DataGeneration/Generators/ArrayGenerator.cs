@@ -7,6 +7,7 @@ namespace Json.Schema.DataGeneration.Generators
 	{
 		public static ArrayGenerator Instance { get; } = new ArrayGenerator();
 
+		// TODO: move these to a public settings object
 		public static uint DefaultMinItems { get; set; } = 0;
 		public static uint DefaultMaxItems { get; set; } = 10;
 

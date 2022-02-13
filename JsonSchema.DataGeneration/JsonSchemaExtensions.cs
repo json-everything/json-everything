@@ -41,6 +41,8 @@ namespace Json.Schema.DataGeneration
 		{
 			foreach (var variation in Randomizer.Shuffle(requirements.GetAllVariations()))
 			{
+				if (variation.HasConflict) continue;
+
 				var applicableGenerators = _generators
 					.Where(x => !variation.Type.HasValue || variation.Type.Value.HasFlag(x.Type))
 					.ToArray();

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Linq;
 
 namespace Json.Schema.DataGeneration.Requirements
 {
@@ -25,12 +23,14 @@ namespace Json.Schema.DataGeneration.Requirements
 				}
 			}
 
-			var pattern = schema.Keywords!.OfType<PatternKeyword>().FirstOrDefault()?.Value;
-			if (pattern != null)
-			{
-				context.Patterns ??= new List<Regex>();
-				context.Patterns.Add(pattern);
-			}
+			//var pattern = schema.Keywords!.OfType<PatternKeyword>().FirstOrDefault()?.Value;
+			//if (pattern != null)
+			//{
+			//	context.Patterns ??= new List<Regex>();
+			//	context.Patterns.Add(pattern);
+			//}
+
+			context.Format = schema.Keywords!.OfType<FormatKeyword>().FirstOrDefault()?.Value.Key;
 		}
 	}
 }

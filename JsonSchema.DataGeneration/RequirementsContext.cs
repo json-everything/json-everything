@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Json.Schema.DataGeneration
 {
@@ -26,8 +25,8 @@ namespace Json.Schema.DataGeneration
 
 		public NumberRangeSet? StringLengths { get; set; }
 		// https://www.ocpsoft.org/tutorials/regular-expressions/and-in-regex/
-		public List<Regex>? Patterns { get; set; }
-		public List<Regex>? AntiPatterns { get; set; }
+		//public List<Regex>? Patterns { get; set; }
+		//public List<Regex>? AntiPatterns { get; set; }
 		public string? Format { get; set; }
 
 		public List<RequirementsContext>? SequentialItems { get; set; }
@@ -37,6 +36,7 @@ namespace Json.Schema.DataGeneration
 
 		public List<RequirementsContext>? Options { get; set; }
 
+		public bool HasConflict { get; private set; }
 		public bool IsFalse { get; private set; }
 
 		public RequirementsContext(){}
@@ -54,10 +54,11 @@ namespace Json.Schema.DataGeneration
 
 			if (other.StringLengths != null)
 				StringLengths = new NumberRangeSet(other.StringLengths);
-			if (other.Patterns != null)
-				Patterns = other.Patterns.ToList();
-			if (other.AntiPatterns != null)
-				AntiPatterns = other.AntiPatterns.ToList();
+			//if (other.Patterns != null)
+			//	Patterns = other.Patterns.ToList();
+			//if (other.AntiPatterns != null)
+			//	AntiPatterns = other.AntiPatterns.ToList();
+			HasConflict = other.HasConflict;
 		}
 
 		public IEnumerable<RequirementsContext> GetAllVariations()
@@ -124,9 +125,9 @@ namespace Json.Schema.DataGeneration
 
 			bool BreakPatterns(RequirementsContext context)
 			{
-				if (Patterns == null && AntiPatterns == null) return false;
-				context.Patterns = AntiPatterns;
-				context.AntiPatterns = Patterns;
+				//if (Patterns == null && AntiPatterns == null) return false;
+				//context.Patterns = AntiPatterns;
+				//context.AntiPatterns = Patterns;
 				return true;
 			}
 
@@ -174,20 +175,25 @@ namespace Json.Schema.DataGeneration
 			else if (other.StringLengths != null)
 				StringLengths *= other.StringLengths;
 
-			if (Patterns == null)
-				Patterns = other.Patterns;
-			else if (other.Patterns != null)
-				Patterns.AddRange(other.Patterns);
+			//if (Patterns == null)
+			//	Patterns = other.Patterns;
+			//else if (other.Patterns != null)
+			//	Patterns.AddRange(other.Patterns);
 
-			if (AntiPatterns == null)
-				AntiPatterns = other.AntiPatterns;
-			else if (other.AntiPatterns != null)
-				AntiPatterns.AddRange(other.AntiPatterns);
+			//if (AntiPatterns == null)
+			//	AntiPatterns = other.AntiPatterns;
+			//else if (other.AntiPatterns != null)
+			//	AntiPatterns.AddRange(other.AntiPatterns);
 
 			if (RemainingItems == null)
 				RemainingItems = other.RemainingItems;
 			else if (other.RemainingItems != null)
 				RemainingItems.And(other.RemainingItems);
+
+			if (Format == null)
+				Format = other.Format;
+			else if (other.Format != null)
+				HasConflict = true;
 		}
 	}
 }

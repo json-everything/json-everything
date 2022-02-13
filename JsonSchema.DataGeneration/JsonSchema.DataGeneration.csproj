@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="33.1.1" />
-    <PackageReference Include="Fare" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
