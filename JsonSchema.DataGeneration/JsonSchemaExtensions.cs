@@ -10,7 +10,7 @@ namespace Json.Schema.DataGeneration
 	{
 		private static readonly IDataGenerator[] _generators =
 		{
-			ObjectGenerator.Instance,
+			//ObjectGenerator.Instance,
 			ArrayGenerator.Instance,
 			IntegerGenerator.Instance,
 			NumberGenerator.Instance,

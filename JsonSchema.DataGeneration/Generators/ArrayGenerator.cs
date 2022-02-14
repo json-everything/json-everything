@@ -33,12 +33,12 @@ namespace Json.Schema.DataGeneration.Generators
 			}
 
 			var itemCount = (int) JsonSchemaExtensions.Randomizer.UInt(minItems, maxItems);
-
+			var sequenceCount = (uint?) context.SequentialItems?.Count ?? 0;
 			var containsCount = 0;
 			if (context.Contains != null)
 			{
 				var minContains = DefaultMinContains;
-				var maxContains = Math.Min(maxItems, DefaultMaxContains + minContains);
+				var maxContains = Math.Min(maxItems - sequenceCount, DefaultMaxContains + minContains);
 				if (context.ContainsCounts != null)
 				{
 					var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ContainsCounts.Ranges.ToArray());
@@ -51,42 +51,35 @@ namespace Json.Schema.DataGeneration.Generators
 				// some simple checks to ensure an instance can be generated
 				if (minContains > maxContains)
 					return GenerationResult.Fail("minContains is greater than maxContains");
-				if (minContains > maxItems)
-					return GenerationResult.Fail("minContains is greater than maxItems");
+				if (minContains > maxItems - sequenceCount)
+					return GenerationResult.Fail("minContains is greater than maxItems less sequential items count");
 
 				containsCount = (int) JsonSchemaExtensions.Randomizer.UInt(minContains, maxContains);
 				if (itemCount < containsCount) 
 					itemCount = containsCount;
 			}
 
-			var containsIndices = JsonSchemaExtensions.Randomizer
-				.ArrayElements(Enumerable.Range(0, itemCount).ToArray(), containsCount)
-				.OrderBy(x => x)
-				.ToArray();
-
 			var itemGenerationResults = new List<GenerationResult>();
 
-			var sequenceCount = 0;
-			int currentContainsIndex = 0;
+			var currentSequenceIndex = 0;
 			if (context.SequentialItems != null)
 			{
-				while (sequenceCount < itemCount && sequenceCount < context.SequentialItems.Count)
+				while (currentSequenceIndex < itemCount && currentSequenceIndex < context.SequentialItems.Count)
 				{
-					var itemRequirement = context.SequentialItems[sequenceCount];
-					if (containsCount > 0 && currentContainsIndex < containsIndices.Length && sequenceCount == containsIndices[currentContainsIndex])
-					{
-						itemRequirement = new RequirementsContext(itemRequirement);
-						itemRequirement.And(context.Contains!);
-						currentContainsIndex++;
-					}
-
+					var itemRequirement = context.SequentialItems[currentSequenceIndex];
 					itemGenerationResults.Add(itemRequirement.GenerateData());
-					sequenceCount++;
+					currentSequenceIndex++;
 				}
 			}
 
+			var containsIndices = JsonSchemaExtensions.Randomizer
+				.ArrayElements(Enumerable.Range(currentSequenceIndex, itemCount - currentSequenceIndex).ToArray(), containsCount)
+				.OrderBy(x => x)
+				.ToArray();
+
 			var remainingRequirements = context.RemainingItems ?? new RequirementsContext();
-			for (int i = sequenceCount; i < itemCount; i++)
+			int currentContainsIndex = 0;
+			for (int i = currentSequenceIndex; i < itemCount; i++)
 			{
 				var itemRequirement = remainingRequirements;
 				if (containsCount > 0 && currentContainsIndex < containsIndices.Length && i == containsIndices[currentContainsIndex])
