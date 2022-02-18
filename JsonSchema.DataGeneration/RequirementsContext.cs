@@ -30,8 +30,16 @@ namespace Json.Schema.DataGeneration
 		public List<RequirementsContext>? SequentialItems { get; set; }
 		public RequirementsContext? RemainingItems { get; set; }
 		public NumberRangeSet? ItemCounts { get; set; }
+		// TODO: unevaluatedItems
+
 		public RequirementsContext? Contains { get; set; }
 		public NumberRangeSet? ContainsCounts { get; set; }
+
+		public Dictionary<string, RequirementsContext>? Properties { get; set; }
+		public RequirementsContext? RemainingProperties { get; set; }
+		public NumberRangeSet? PropertyCounts { get; set; }
+		public List<string>? RequiredProperties { get; set; }
+		// TODO: unevaluatedItems
 
 		public List<RequirementsContext>? Options { get; set; }
 
@@ -66,6 +74,15 @@ namespace Json.Schema.DataGeneration
 				Options = other.Options.Select(x => new RequirementsContext(x)).ToList();
 
 			HasConflict = other.HasConflict;
+
+			if (other.Properties != null)
+				Properties = other.Properties.ToDictionary(x => x.Key, x => x.Value);
+			if (other.RemainingProperties != null)
+				RemainingProperties = new RequirementsContext(other.RemainingProperties);
+			if (other.PropertyCounts != null)
+				PropertyCounts = other.PropertyCounts;
+			if (other.RequiredProperties != null)
+				RequiredProperties = other.RequiredProperties.ToList();
 		}
 
 		public IEnumerable<RequirementsContext> GetAllVariations()
@@ -139,13 +156,45 @@ namespace Json.Schema.DataGeneration
 				return false;
 			}
 
+			bool BreakItems(RequirementsContext context)
+			{
+				if (RemainingItems == null) return false;
+				context.RemainingItems = RemainingItems.Break();
+				return true;
+			}
+
+			bool BreakItemCount(RequirementsContext context)
+			{
+				if (ItemCounts == null) return false;
+				context.ItemCounts = ItemCounts?.Invert();
+				return true;
+			}
+
+			bool BreakContains(RequirementsContext context)
+			{
+				if (Contains == null) return false;
+				context.Contains = Contains.Break();
+				return true;
+			}
+
+			bool BreakContainsCount(RequirementsContext context)
+			{
+				if (ContainsCounts == null) return false;
+				context.ContainsCounts = ContainsCounts?.Invert();
+				return true;
+			}
+
 			var allBreakers = new Func<RequirementsContext, bool>[]
 			{
 				BreakType,
 				BreakNumberRange,
 				BreakMultiples,
 				BreakStringLength,
-				BreakPatterns
+				BreakPatterns,
+				BreakItems,
+				BreakItemCount,
+				BreakContains,
+				BreakContainsCount
 			};
 			var breakers = JsonSchemaExtensions.Randomizer.Shuffle(allBreakers);
 
@@ -183,6 +232,11 @@ namespace Json.Schema.DataGeneration
 			else if (other.StringLengths != null)
 				StringLengths *= other.StringLengths;
 
+			if (Format == null)
+				Format = other.Format;
+			else if (other.Format != null)
+				HasConflict = true;
+
 			//if (Patterns == null)
 			//	Patterns = other.Patterns;
 			//else if (other.Patterns != null)
@@ -203,10 +257,16 @@ namespace Json.Schema.DataGeneration
 			else if (other.RemainingItems != null)
 				RemainingItems.And(other.RemainingItems);
 
-			if (Format == null)
-				Format = other.Format;
-			else if (other.Format != null)
-				HasConflict = true;
+			if (Contains == null)
+				Contains = other.Contains;
+			else if (other.Contains != null)
+				// is this right?
+				Contains.And(other.Contains);
+
+			if (ContainsCounts == null || !ContainsCounts.Ranges.Any())
+				ContainsCounts = other.ContainsCounts;
+			else if (other.ContainsCounts != null)
+				ContainsCounts *= other.ContainsCounts;
 		}
 	}
 }

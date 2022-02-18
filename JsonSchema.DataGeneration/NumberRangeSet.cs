@@ -117,7 +117,13 @@ namespace Json.Schema.DataGeneration
 
 		public static NumberRangeSet Intersect(NumberRangeSet left, NumberRangeSet right)
 		{
-			return right._ranges.Aggregate(left, (current, range) => current.Intersect(range));
+			var ranges = left._ranges.Join(right._ranges,
+				l => true,
+				r => true,
+				NumberRange.Intersection)
+				.SelectMany(x => x);
+			return new NumberRangeSet(ranges);
+			//return right._ranges.Aggregate(left, (current, range) => current.Intersect(range));
 		}
 
 		public NumberRangeSet Invert()

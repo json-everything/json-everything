@@ -25,6 +25,9 @@ namespace Json.Schema.DataGeneration.Generators
 			var maxItems = DefaultMaxItems;
 			if (context.ItemCounts != null)
 			{
+				if (!context.ItemCounts.Ranges.Any())
+					return GenerationResult.Fail("No valid item counts possible");
+
 				var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ItemCounts.Ranges.ToArray());
 				if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
 					minItems = (uint) numberRange.Minimum.Value;
@@ -72,8 +75,9 @@ namespace Json.Schema.DataGeneration.Generators
 				}
 			}
 
+			var possibleIndices = Enumerable.Range(currentSequenceIndex, itemCount - currentSequenceIndex).ToArray();
 			var containsIndices = JsonSchemaExtensions.Randomizer
-				.ArrayElements(Enumerable.Range(currentSequenceIndex, itemCount - currentSequenceIndex).ToArray(), containsCount)
+				.ArrayElements(possibleIndices, Math.Min(possibleIndices.Length, containsCount))
 				.OrderBy(x => x)
 				.ToArray();
 

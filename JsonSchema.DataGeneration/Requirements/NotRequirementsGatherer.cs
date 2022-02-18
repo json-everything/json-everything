@@ -10,8 +10,9 @@ namespace Json.Schema.DataGeneration.Requirements
 			if (notKeyword == null) return;
 
 			var subRequirements = notKeyword.Schema.GetRequirements();
-			
-			context.And(subRequirements.Break());
+
+			var broken = subRequirements.Break();
+			context.And(broken);
 		}
 	}
 }

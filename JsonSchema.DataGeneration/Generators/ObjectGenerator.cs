@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using Json.More;
 
 namespace Json.Schema.DataGeneration.Generators
 {
@@ -14,7 +16,7 @@ namespace Json.Schema.DataGeneration.Generators
 
 		public GenerationResult Generate(RequirementsContext context)
 		{
-			throw new NotImplementedException();
+			return GenerationResult.Success(new Dictionary<string, JsonElement>().AsJsonElement());
 		}
 	}
 }

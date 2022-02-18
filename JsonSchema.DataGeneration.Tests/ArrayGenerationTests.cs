@@ -135,7 +135,7 @@ namespace Json.Schema.DataGeneration.Tests
 				.Contains(new JsonSchemaBuilder()
 					.Minimum(100)
 				)
-				.MaxContains(2)
+				.MaxContains(3)
 				.MinItems(3)
 				.MaxItems(10);
 

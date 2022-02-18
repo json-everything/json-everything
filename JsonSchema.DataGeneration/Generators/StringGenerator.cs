@@ -86,9 +86,7 @@ namespace Json.Schema.DataGeneration.Generators
 				return GenerationResult.Success(generate(range));
 			}
 
-			var length = JsonSchemaExtensions.Randomizer.UInt(minimum, maximum);
-			var count = length / 7;
-			var data = string.Concat(Enumerable.Repeat("string ", (int) count)).ClampLength((int) minimum, (int) maximum);
+			var data = _faker.Lorem.Text().ClampLength((int) minimum, (int) maximum);
 			return GenerationResult.Success(data);
 		}
 
