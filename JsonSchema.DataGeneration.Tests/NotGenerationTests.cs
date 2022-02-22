@@ -78,8 +78,10 @@ namespace Json.Schema.DataGeneration.Tests
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Array)
+				.MinItems(1)
 				.Not(new JsonSchemaBuilder()
-					.Items(new JsonSchemaBuilder().Type(SchemaValueType.String)));
+					.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+				);
 
 			Run(schema);
 		}
@@ -90,8 +92,7 @@ namespace Json.Schema.DataGeneration.Tests
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Array)
 				.Not(new JsonSchemaBuilder()
-					.Contains(new JsonSchemaBuilder().Type(SchemaValueType.String)
-					)
+					.Contains(new JsonSchemaBuilder().Type(SchemaValueType.String))
 				);
 
 			Run(schema);

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using JetBrains.Annotations;
 
 namespace Json.Schema.DataGeneration.Requirements
 {
+	[UsedImplicitly]
 	internal class TypeRequirementsGatherer : IRequirementsGatherer
 	{
 		public void AddRequirements(RequirementsContext context, JsonSchema schema)

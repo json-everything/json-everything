@@ -8,15 +8,21 @@ namespace Json.Schema.DataGeneration
 {
 	public static class JsonSchemaExtensions
 	{
+		// simplest weighting is just to duplicate entries
 		private static readonly IDataGenerator[] _generators =
 		{
 			ObjectGenerator.Instance,
 			ArrayGenerator.Instance,
 			IntegerGenerator.Instance,
+			IntegerGenerator.Instance,
+			NumberGenerator.Instance,
 			NumberGenerator.Instance,
 			StringGenerator.Instance,
+			StringGenerator.Instance,
 			BooleanGenerator.Instance,
-			NullGenerator.Instance
+			BooleanGenerator.Instance,
+			NullGenerator.Instance,
+			NullGenerator.Instance,
 		};
 
 		internal static readonly Randomizer Randomizer = new Randomizer();
