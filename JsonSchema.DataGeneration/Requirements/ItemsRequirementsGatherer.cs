@@ -63,6 +63,15 @@ namespace Json.Schema.DataGeneration.Requirements
 				else
 					context.RemainingItems = additionalItems.GetRequirements();
 			}
+
+			additionalItems = schema.Keywords?.OfType<UnevaluatedItemsKeyword>().FirstOrDefault()?.Schema;
+			if (additionalItems != null)
+			{
+				if (context.RemainingItems != null)
+					context.RemainingItems.And(additionalItems.GetRequirements());
+				else
+					context.RemainingItems = additionalItems.GetRequirements();
+			}
 		}
 	}
 }

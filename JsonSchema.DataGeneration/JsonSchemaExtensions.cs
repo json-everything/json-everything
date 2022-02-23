@@ -11,7 +11,7 @@ namespace Json.Schema.DataGeneration
 		private static readonly IPrioritizedDataGenerator[] _priorityGenerators =
 		{
 			ConstGenerator.Instance,
-			//EnumGenerator.Instance
+			EnumGenerator.Instance
 		};
 		// simplest weighting is just to duplicate entries
 		private static readonly IDataGenerator[] _generators =

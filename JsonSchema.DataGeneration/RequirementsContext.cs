@@ -45,6 +45,7 @@ namespace Json.Schema.DataGeneration
 		// TODO: unevaluatedItems
 
 		public JsonElement? Const { get; set; }
+		public List<JsonElement>? EnumOptions { get; set; }
 
 		public List<RequirementsContext>? Options { get; set; }
 
@@ -228,6 +229,8 @@ namespace Json.Schema.DataGeneration
 
 		public void And(RequirementsContext other)
 		{
+			IsFalse |= other.IsFalse;
+
 			if (Type == null)
 				Type = other.Type;
 			else if (other.Type != null)

@@ -24,6 +24,15 @@ namespace Json.Schema.DataGeneration.Requirements
 					context.PropertyCounts = range;
 			}
 
+			var requiredProperties = schema.Keywords?.OfType<RequiredKeyword>().FirstOrDefault()?.Properties;
+			if (requiredProperties != null)
+			{
+				if (context.RequiredProperties != null)
+					context.RequiredProperties.AddRange(requiredProperties);
+				else
+					context.RequiredProperties = requiredProperties.ToList();
+			}
+
 			var properties = schema.Keywords?.OfType<PropertiesKeyword>().FirstOrDefault();
 			if (properties != null)
 			{
@@ -46,13 +55,13 @@ namespace Json.Schema.DataGeneration.Requirements
 					context.RemainingProperties = additionalProperties.GetRequirements();
 			}
 
-			var requiredProperties = schema.Keywords?.OfType<RequiredKeyword>().FirstOrDefault()?.Properties;
-			if (requiredProperties != null)
+			additionalProperties = schema.Keywords?.OfType<UnevaluatedPropertiesKeyword>().FirstOrDefault()?.Schema;
+			if (additionalProperties != null)
 			{
-				if (context.RequiredProperties != null)
-					context.RequiredProperties.AddRange(requiredProperties);
+				if (context.RemainingProperties != null)
+					context.RemainingProperties.And(additionalProperties.GetRequirements());
 				else
-					context.RequiredProperties = requiredProperties.ToList();
+					context.RemainingProperties = additionalProperties.GetRequirements();
 			}
 		}
 	}
