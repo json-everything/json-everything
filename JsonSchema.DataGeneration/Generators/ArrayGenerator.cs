@@ -30,9 +30,13 @@ namespace Json.Schema.DataGeneration.Generators
 
 				var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ItemCounts.Ranges.ToArray());
 				if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
-					minItems = (uint) numberRange.Minimum.Value;
+					minItems = (uint) (numberRange.Minimum.Inclusive
+						? numberRange.Minimum.Value
+						: numberRange.Minimum.Value + 1);
 				if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
-					maxItems = (uint) numberRange.Maximum.Value;
+					maxItems = (uint) (numberRange.Maximum.Inclusive
+						? numberRange.Maximum.Value
+						: numberRange.Maximum.Value - 1);
 			}
 
 			var itemCount = (int) JsonSchemaExtensions.Randomizer.UInt(minItems, maxItems);
@@ -82,19 +86,24 @@ namespace Json.Schema.DataGeneration.Generators
 				.ToArray();
 
 			var remainingRequirements = context.RemainingItems ?? new RequirementsContext();
-			int currentContainsIndex = 0;
-			for (int i = currentSequenceIndex; i < itemCount; i++)
+			if (!remainingRequirements.IsFalse)
 			{
-				var itemRequirement = remainingRequirements;
-				if (containsCount > 0 && currentContainsIndex < containsIndices.Length && i == containsIndices[currentContainsIndex])
+				int currentContainsIndex = 0;
+				for (int i = currentSequenceIndex; i < itemCount; i++)
 				{
-					itemRequirement = new RequirementsContext(itemRequirement);
-					itemRequirement.And(context.Contains!);
-					currentContainsIndex++;
-				}
+					var itemRequirement = remainingRequirements;
+					if (containsCount > 0 && currentContainsIndex < containsIndices.Length && i == containsIndices[currentContainsIndex])
+					{
+						itemRequirement = new RequirementsContext(itemRequirement);
+						itemRequirement.And(context.Contains!);
+						currentContainsIndex++;
+					}
 
-				itemGenerationResults.Add(itemRequirement.GenerateData());
+					itemGenerationResults.Add(itemRequirement.GenerateData());
+				}
 			}
+			else if (itemGenerationResults.Count < minItems)
+				return GenerationResult.Fail("Could not generate sufficient items to meet requirements");
 
 			return itemGenerationResults.All(x => x.IsSuccess)
 				? GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement())

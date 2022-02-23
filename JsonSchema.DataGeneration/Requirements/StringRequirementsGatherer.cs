@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace Json.Schema.DataGeneration.Requirements
@@ -9,10 +10,10 @@ namespace Json.Schema.DataGeneration.Requirements
 		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var range = NumberRangeSet.NonNegative;
-			var minLength = schema.Keywords!.OfType<MinLengthKeyword>().FirstOrDefault()?.Value;
+			var minLength = schema.Keywords?.OfType<MinLengthKeyword>().FirstOrDefault()?.Value;
 			if (minLength != null)
 				range = range.Floor(minLength.Value);
-			var maxLength = schema.Keywords!.OfType<MaxLengthKeyword>().FirstOrDefault()?.Value;
+			var maxLength = schema.Keywords?.OfType<MaxLengthKeyword>().FirstOrDefault()?.Value;
 			if (maxLength != null)
 				range = range.Ceiling(maxLength.Value);
 			if (range != NumberRangeSet.NonNegative)
@@ -32,7 +33,10 @@ namespace Json.Schema.DataGeneration.Requirements
 			//	context.Patterns.Add(pattern);
 			//}
 
-			context.Format = schema.Keywords!.OfType<FormatKeyword>().FirstOrDefault()?.Value.Key;
+			if (context.Format != null)
+				context.HasConflict = true;
+			else
+				context.Format = schema.Keywords?.OfType<FormatKeyword>().FirstOrDefault()?.Value.Key;
 		}
 	}
 }

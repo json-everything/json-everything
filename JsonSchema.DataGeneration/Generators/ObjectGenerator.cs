@@ -32,9 +32,13 @@ namespace Json.Schema.DataGeneration.Generators
 
 				var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.PropertyCounts.Ranges.ToArray());
 				if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
-					minProperties = (uint) numberRange.Minimum.Value;
+					minProperties = (uint) (numberRange.Minimum.Inclusive
+						? numberRange.Minimum.Value
+						: numberRange.Minimum.Value + 1);
 				if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
-					maxProperties = (uint) numberRange.Maximum.Value;
+					maxProperties = (uint) (numberRange.Maximum.Inclusive
+						? numberRange.Maximum.Value
+						: numberRange.Maximum.Value - 1);
 			}
 
 			var propertyCount = (int) JsonSchemaExtensions.Randomizer.UInt(minProperties, maxProperties);
@@ -64,14 +68,30 @@ namespace Json.Schema.DataGeneration.Generators
 			}
 
 			var propertyGenerationResults = new Dictionary<string, GenerationResult>();
+			var definedPropertyNames = new List<string>();
+			var remainingPropertyCount = propertyCount;
+			if (context.RequiredProperties != null)
+			{
+				definedPropertyNames.AddRange(context.RequiredProperties);
+				remainingPropertyCount -= context.RequiredProperties.Count;
+			}
+			if (context.Properties != null)
+			{
+				var propertyNames = context.Properties.Keys.Except(definedPropertyNames).ToArray();
+				propertyNames = JsonSchemaExtensions.Randomizer.ArrayElements(propertyNames, Math.Min(definedPropertyNames.Count, remainingPropertyCount));
+				definedPropertyNames.AddRange(propertyNames);
+				remainingPropertyCount -= propertyNames.Length;
+			}
 
-			var definedPropertyNames = context.Properties?.Keys.ToList() ?? new List<string>();
-			var otherPropertyCount = propertyCount - definedPropertyNames.Count;
-			var otherPropertyNames = otherPropertyCount == 0
+			var remainingProperties = context.RemainingProperties ?? new RequirementsContext();
+			if (remainingProperties.IsFalse)
+				remainingPropertyCount = 0;
+			remainingPropertyCount = Math.Max(0, remainingPropertyCount);
+			var otherPropertyNames = remainingPropertyCount == 0
 				? Array.Empty<string>()
-				: _faker.Lorem.Sentence(otherPropertyCount * 2).Split(' ')
+				: _faker.Lorem.Sentence(remainingPropertyCount * 2).Split(' ')
 					.Distinct()
-					.Take(otherPropertyCount)
+					.Take(remainingPropertyCount)
 					.ToArray();
 			var allPropertyNames = definedPropertyNames.Concat(otherPropertyNames).ToArray();
 			var containsProperties = JsonSchemaExtensions.Randomizer

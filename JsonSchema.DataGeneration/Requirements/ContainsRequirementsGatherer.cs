@@ -8,7 +8,7 @@ namespace Json.Schema.DataGeneration.Requirements
 	{
 		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
-			var contains = schema.Keywords!.OfType<ContainsKeyword>().FirstOrDefault()?.Schema;
+			var contains = schema.Keywords?.OfType<ContainsKeyword>().FirstOrDefault()?.Schema;
 			if (contains != null)
 			{
 				if (context.Contains != null)
@@ -18,10 +18,10 @@ namespace Json.Schema.DataGeneration.Requirements
 			}
 
 			var range = NumberRangeSet.Full;
-			var minimum = schema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault()?.Value;
+			var minimum = schema.Keywords?.OfType<MinContainsKeyword>().FirstOrDefault()?.Value;
 			if (minimum != null)
 				range = range.Floor(minimum.Value);
-			var maximum = schema.Keywords!.OfType<MaxContainsKeyword>().FirstOrDefault()?.Value;
+			var maximum = schema.Keywords?.OfType<MaxContainsKeyword>().FirstOrDefault()?.Value;
 			if (maximum != null)
 				range = range.Ceiling(maximum.Value);
 			if (range != NumberRangeSet.Full)

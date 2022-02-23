@@ -27,6 +27,9 @@ namespace Json.Schema.DataGeneration.Generators
 			var minValue = (long) Math.Ceiling(range.Minimum.Value);
 			var maxValue = (long) Math.Floor(range.Maximum.Value);
 
+			if (!range.Minimum.Inclusive) minValue++;
+			if (!range.Maximum.Inclusive) maxValue--;
+
 			var value = GetValue(minValue, maxValue, context.Multiples?.ToArray() ?? Array.Empty<decimal>(),
 				context.AntiMultiples?.ToArray() ?? Array.Empty<decimal>());
 

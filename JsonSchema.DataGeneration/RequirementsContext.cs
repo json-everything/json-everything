@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Json.Schema.DataGeneration
 {
@@ -14,6 +15,8 @@ namespace Json.Schema.DataGeneration
 			SchemaValueType.Number |
 			SchemaValueType.Object |
 			SchemaValueType.String;
+
+		public bool IsFalse { get; set; }
 
 		public SchemaValueType? Type { get; set; }
 
@@ -41,9 +44,11 @@ namespace Json.Schema.DataGeneration
 		public List<string>? RequiredProperties { get; set; }
 		// TODO: unevaluatedItems
 
+		public JsonElement? Const { get; set; }
+
 		public List<RequirementsContext>? Options { get; set; }
 
-		public bool HasConflict { get; private set; }
+		public bool HasConflict { get; set; }
 
 		public RequirementsContext(){}
 
@@ -170,6 +175,20 @@ namespace Json.Schema.DataGeneration
 				return true;
 			}
 
+			bool BreakProperties(RequirementsContext context)
+			{
+				if (RemainingProperties == null) return false;
+				context.RemainingProperties = RemainingProperties.Break();
+				return true;
+			}
+
+			bool BreakPropertyCounts(RequirementsContext context)
+			{
+				if (PropertyCounts == null) return false;
+				context.PropertyCounts = PropertyCounts?.Invert();
+				return true;
+			}
+
 			bool BreakContains(RequirementsContext context)
 			{
 				if (Contains == null) return false;
@@ -193,6 +212,8 @@ namespace Json.Schema.DataGeneration
 				BreakPatterns,
 				BreakItems,
 				BreakItemCount,
+				BreakProperties,
+				BreakPropertyCounts,
 				BreakContains,
 				BreakContainsCount
 			};
@@ -252,10 +273,29 @@ namespace Json.Schema.DataGeneration
 			else if (other.ItemCounts != null)
 				ItemCounts *= other.ItemCounts;
 
+			// sequentialItems?
+
 			if (RemainingItems == null)
 				RemainingItems = other.RemainingItems;
 			else if (other.RemainingItems != null)
 				RemainingItems.And(other.RemainingItems);
+
+			if (PropertyCounts == null || !PropertyCounts.Ranges.Any())
+				PropertyCounts = other.PropertyCounts;
+			else if (other.PropertyCounts != null)
+				PropertyCounts *= other.PropertyCounts;
+
+			// properties?
+
+			if (RemainingProperties == null)
+				RemainingProperties = other.RemainingProperties;
+			else if (other.RemainingProperties != null)
+				RemainingProperties.And(other.RemainingProperties);
+
+			if (RequiredProperties == null)
+				RequiredProperties = other.RequiredProperties;
+			else if (other.RequiredProperties != null)
+				RequiredProperties.AddRange(other.RequiredProperties);
 
 			if (Contains == null)
 				Contains = other.Contains;

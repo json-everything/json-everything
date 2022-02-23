@@ -10,10 +10,10 @@ namespace Json.Schema.DataGeneration.Requirements
 		public void AddRequirements(RequirementsContext context, JsonSchema schema)
 		{
 			var range = NumberRangeSet.Full;
-			var minimum = schema.Keywords!.OfType<MinPropertiesKeyword>().FirstOrDefault()?.Value;
+			var minimum = schema.Keywords?.OfType<MinPropertiesKeyword>().FirstOrDefault()?.Value;
 			if (minimum != null)
 				range = range.Floor(minimum.Value);
-			var maximum = schema.Keywords!.OfType<MaxPropertiesKeyword>().FirstOrDefault()?.Value;
+			var maximum = schema.Keywords?.OfType<MaxPropertiesKeyword>().FirstOrDefault()?.Value;
 			if (maximum != null)
 				range = range.Ceiling(maximum.Value);
 			if (range != NumberRangeSet.Full)
@@ -24,7 +24,7 @@ namespace Json.Schema.DataGeneration.Requirements
 					context.PropertyCounts = range;
 			}
 
-			var properties = schema.Keywords!.OfType<PropertiesKeyword>().FirstOrDefault();
+			var properties = schema.Keywords?.OfType<PropertiesKeyword>().FirstOrDefault();
 			if (properties != null)
 			{
 				context.Properties ??= new Dictionary<string, RequirementsContext>();
@@ -37,13 +37,22 @@ namespace Json.Schema.DataGeneration.Requirements
 				}
 			}
 
-			var additionalProperties = schema.Keywords!.OfType<AdditionalPropertiesKeyword>().FirstOrDefault()?.Schema;
+			var additionalProperties = schema.Keywords?.OfType<AdditionalPropertiesKeyword>().FirstOrDefault()?.Schema;
 			if (additionalProperties != null)
 			{
 				if (context.RemainingProperties != null)
 					context.RemainingProperties.And(additionalProperties.GetRequirements());
 				else
 					context.RemainingProperties = additionalProperties.GetRequirements();
+			}
+
+			var requiredProperties = schema.Keywords?.OfType<RequiredKeyword>().FirstOrDefault()?.Properties;
+			if (requiredProperties != null)
+			{
+				if (context.RequiredProperties != null)
+					context.RequiredProperties.AddRange(requiredProperties);
+				else
+					context.RequiredProperties = requiredProperties.ToList();
 			}
 		}
 	}
