@@ -93,7 +93,7 @@
   &quot;foo&quot;: &quot;bar&quot;
 }
 </code></pre>
-<p>Under the covers, the library uses the fabulous <a href="">Bogus</a> library, which is commonly used to generate random test data, and a few other tricks.</p>
+<p>Under the covers, the library uses the fabulous <a href="https://github.com/bchavez/Bogus">Bogus</a> library, which is commonly used to generate random test data, and a few other tricks.</p>
 <h2 id="capabilities">Capabilities</h2>
 <p>This library is quite powerful.  It supports most JSON Schema keywords, including <code>if</code>/<code>then</code>/<code>else</code> and aggregation keywords (<code>oneOf</code>, <code>allOf</code>, etc.).</p>
 <p>It currently does not support:</p>
@@ -105,7 +105,7 @@
 <li><code>dependencies</code> / <code>dependent*</code> keywords</li>
 </ul>
 <p><em>* There are some libraries which provide limited RegEx-based string generation, but these do not support look-aheads which are required to combine multiple RegEx's with boolean logic.  This functionality is required to support them alongside the aggregation keywords.  I opted to just not support them at all until I can find a sufficient library.</em></p>
-<p>Everything else <em>should</em> be mostly supported.  Feel free to <a href="">open an issue</a> if you find something isn't working as you expect.</p>
+<p>Everything else <em>should</em> be mostly supported.  Feel free to <a href="https://github.com/gregsdennis/json-everything/issues/new/choose">open an issue</a> if you find something isn't working as you expect.</p>
 <h3 id="strings--format">Strings &amp; <code>format</code></h3>
 <p>All of the formats listed in the draft 2020-12 specification are supported, at least to the extent that they can be validated by JsonSchema.Net.</p>
 <p>If a format is specified, it will be used.</p>
@@ -152,7 +152,7 @@
 <li>Arrays and objects have a lower chance of generating than the simpler types (null, integer, number, string).</li>
 </ul>
 <h1 id="generating-data">Generating Data</h1>
-<p>All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the <a href="">Building a Schema</a> page.</p>
+<p>All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the <a href="schema-building.html">Building a Schema</a> page.</p>
 <p>Once you have your schema object, simply call the <code>.GenerateData()</code> extension method, and it will return a result to you.</p>
 <pre><code class="lang-c#">var schema = JsonSchema.FromFile(&quot;myFile.json&quot;);
 var generationResult = schema.GenerateData();
