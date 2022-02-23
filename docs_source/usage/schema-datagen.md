@@ -21,7 +21,7 @@ it can generate a JSON document like
 }
 ```
 
-Under the covers, the library uses the fabulous [Bogus]() library, which is commonly used to generate random test data, and a few other tricks.
+Under the covers, the library uses the fabulous [Bogus](https://github.com/bchavez/Bogus) library, which is commonly used to generate random test data, and a few other tricks.
 
 ## Capabilities
 
@@ -37,7 +37,7 @@ It currently does not support:
 
 *\* There are some libraries which provide limited RegEx-based string generation, but these do not support look-aheads which are required to combine multiple RegEx's with boolean logic.  This functionality is required to support them alongside the aggregation keywords.  I opted to just not support them at all until I can find a sufficient library.*
 
-Everything else _should_ be mostly supported.  Feel free to [open an issue]() if you find something isn't working as you expect.
+Everything else _should_ be mostly supported.  Feel free to [open an issue](https://github.com/gregsdennis/json-everything/issues/new/choose) if you find something isn't working as you expect.
 
 ### Strings & `format`
 
@@ -102,7 +102,7 @@ To combat this, there are some built-in limitations:
 
 # Generating Data
 
-All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the [Building a Schema]() page.
+All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the [Building a Schema](./schema-building.md) page.
 
 Once you have your schema object, simply call the `.GenerateData()` extension method, and it will return a result to you.
 
