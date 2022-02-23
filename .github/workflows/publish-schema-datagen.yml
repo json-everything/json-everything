@@ -17,11 +17,11 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 6.0.x
       # Publish
       - name: publish schema data generation
         id: publish_schema_datageneration
-        uses: rohith/publish-nuget@v2
+        uses: rohith/publish-nuget@master
         with:
           PROJECT_FILE_PATH: JsonSchema.DataGeneration/JsonSchema.DataGeneration.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
