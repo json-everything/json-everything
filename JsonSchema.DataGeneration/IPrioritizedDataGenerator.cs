@@ -1,9 +1,8 @@
 ﻿namespace Json.Schema.DataGeneration
 {
-	internal interface IDataGenerator
+	internal interface IPrioritizedDataGenerator
 	{
-		SchemaValueType Type { get; }
-
+		bool Applies(RequirementsContext context);
 		GenerationResult Generate(RequirementsContext context);
 	}
 }

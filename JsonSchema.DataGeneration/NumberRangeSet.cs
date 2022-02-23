@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Json.Schema.DataGeneration
 {
+	/// <summary>
+	/// Managees a collection of number ranges as a single entity.
+	/// </summary>
 	public class NumberRangeSet
 	{
 		// The full range causes problems with random generation.  Dividing by 10 shouldn't be a big deal.
@@ -12,10 +15,26 @@ namespace Json.Schema.DataGeneration
 
 		private readonly NumberRange[] _ranges;
 
+		/// <summary>
+		/// Represent the empty set.
+		/// </summary>
 		public static NumberRangeSet None { get; }
+		/// <summary>
+		/// Represents the full range of representable values.
+		/// </summary>
+		/// <remarks>
+		/// The full range has been limited to [decimal.MinValue / 10 .. decimal.MaxValue / 10] because
+		/// the _actual_ full range causes problems with the random value generation algorithms.
+		/// </remarks>
 		public static NumberRangeSet Full { get; }
+		/// <summary>
+		/// Represents the range of 0 and all positive numbers.
+		/// </summary>
 		public static NumberRangeSet NonNegative { get; }
 
+		/// <summary>
+		/// Gets the ranges.
+		/// </summary>
 		public IReadOnlyList<NumberRange> Ranges => _ranges;
 
 		static NumberRangeSet()
@@ -25,17 +44,31 @@ namespace Json.Schema.DataGeneration
 			NonNegative = new NumberRangeSet(new[] {new NumberRange(0, MaxRangeValue)});
 		}
 
+		/// <summary>
+		/// Creates a new set from a single range.
+		/// </summary>
 		public NumberRangeSet(NumberRange range)
 			: this(new[] {range}) { }
 
+		/// <summary>
+		/// Copies a range set.
+		/// </summary>
 		public NumberRangeSet(NumberRangeSet other)
 			: this(other._ranges) { }
 
+		/// <summary>
+		/// Creates a new set from a collection of ranges.
+		/// </summary>
+		/// <param name="other"></param>
 		public NumberRangeSet(IEnumerable<NumberRange> other)
 		{
 			_ranges = other.ToArray();
 		}
 
+		/// <summary>
+		/// Calculates the union of two sets.
+		/// </summary>
+		/// <returns>The resulting set of ranges that exist in either parameters.</returns>
 		public NumberRangeSet Union(NumberRange range)
 		{
 			int index;
@@ -61,11 +94,20 @@ namespace Json.Schema.DataGeneration
 			return new NumberRangeSet(newRanges);
 		}
 
+		/// <summary>
+		/// Calculates the union of two sets.
+		/// </summary>
+		/// <returns>The resulting set of ranges that exist in either parameters.</returns>
 		public static NumberRangeSet Union(NumberRangeSet left, NumberRangeSet right)
 		{
 			return right._ranges.Aggregate(left, (current, range) => current.Union(range));
 		}
 
+		/// <summary>
+		/// Calculates the set of one set omitting another.
+		/// </summary>
+		/// <param name="range">The operating set.</param>
+		/// <returns>The resulting set of ranges that exist in this set but not the operating set.</returns>
 		public NumberRangeSet Subtract(NumberRange range)
 		{
 			var intersecting = GetIntersectingRanges(range);
@@ -85,11 +127,21 @@ namespace Json.Schema.DataGeneration
 			return new NumberRangeSet(newRanges);
 		}
 
+		/// <summary>
+		/// Calculates the set of one set omitting another.
+		/// </summary>
+		/// <param name="left">The source set.</param>
+		/// <param name="right">The operating set.</param>
+		/// <returns>The resulting set of ranges that exist in the source set but not the operating set.</returns>
 		public static NumberRangeSet Subtract(NumberRangeSet left, NumberRangeSet right)
 		{
 			return right._ranges.Aggregate(left, (current, range) => current.Subtract(range));
 		}
 
+		/// <summary>
+		/// Calculates the intersection of two sets.
+		/// </summary>
+		/// <returns>The resulting set of ranges that exist in both parameters.</returns>
 		private NumberRangeSet Intersect(NumberRange range)
 		{
 			var intersecting = GetIntersectingRanges(range);
@@ -115,6 +167,10 @@ namespace Json.Schema.DataGeneration
 			return new NumberRangeSet(newRanges);
 		}
 
+		/// <summary>
+		/// Calculates the intersection of two sets.
+		/// </summary>
+		/// <returns>The resulting set of ranges that exist in both parameters.</returns>
 		public static NumberRangeSet Intersect(NumberRangeSet left, NumberRangeSet right)
 		{
 			var ranges = left._ranges.Join(right._ranges,
@@ -126,16 +182,27 @@ namespace Json.Schema.DataGeneration
 			//return right._ranges.Aggregate(left, (current, range) => current.Intersect(range));
 		}
 
-		public NumberRangeSet Invert()
+		/// <summary>
+		/// Gets the complement, or inversion, of the set.
+		/// </summary>
+		public NumberRangeSet GetComplement()
 		{
 			return Full - this;
 		}
 
+		/// <summary>
+		/// Applies a ceiling (upper bound).
+		/// </summary>
 		public NumberRangeSet Ceiling(decimal ceiling)
 		{
 			return Intersect(new NumberRange(MinRangeValue, ceiling));
 		}
 
+		/// <summary>
+		/// Applies a floor (lower bound).
+		/// </summary>
+		/// <param name="floor"></param>
+		/// <returns></returns>
 		public NumberRangeSet Floor(decimal floor)
 		{
 			return Intersect(new NumberRange(floor, MaxRangeValue));
@@ -149,31 +216,51 @@ namespace Json.Schema.DataGeneration
 				.ToList();
 		}
 
+		/// <summary>
+		/// Implicitly converts a single range to a set.
+		/// </summary>
+		/// <param name="range"></param>
 		public static implicit operator NumberRangeSet(NumberRange range)
 		{
 			return new NumberRangeSet(range);
 		}
 
+		/// <summary>
+		/// Unions two sets.
+		/// </summary>
 		public static NumberRangeSet operator +(NumberRangeSet left, NumberRangeSet right)
 		{
 			return Union(left, right);
 		}
 
+		/// <summary>
+		/// Omits one set from another.
+		/// </summary>
 		public static NumberRangeSet operator -(NumberRangeSet left, NumberRangeSet right)
 		{
 			return Subtract(left, right);
 		}
 
+		/// <summary>
+		/// Intersects two sets.
+		/// </summary>
 		public static NumberRangeSet operator *(NumberRangeSet left, NumberRangeSet right)
 		{
 			return Intersect(left, right);
 		}
 
+		/// <summary>
+		/// Calculates the complement (inversion) of a set.
+		/// </summary>
+		/// <param name="set"></param>
+		/// <returns></returns>
 		public static NumberRangeSet operator !(NumberRangeSet set)
 		{
-			return set.Invert();
+			return set.GetComplement();
 		}
 
+		/// <summary>Returns a string that represents the current object.</summary>
+		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
 			return string.Join(", ", _ranges);

@@ -134,7 +134,7 @@ namespace Json.Schema.DataGeneration
 			bool BreakNumberRange(RequirementsContext context)
 			{
 				if (NumberRanges == null || !NumberRanges.Ranges.Any()) return false;
-				context.NumberRanges = NumberRanges?.Invert();
+				context.NumberRanges = NumberRanges?.GetComplement();
 				return true;
 			}
 
@@ -149,7 +149,7 @@ namespace Json.Schema.DataGeneration
 			bool BreakStringLength(RequirementsContext context)
 			{
 				if (StringLengths == null || !StringLengths.Ranges.Any()) return false;
-				context.StringLengths = StringLengths?.Invert();
+				context.StringLengths = StringLengths?.GetComplement();
 				return true;
 			}
 
@@ -172,7 +172,7 @@ namespace Json.Schema.DataGeneration
 			bool BreakItemCount(RequirementsContext context)
 			{
 				if (ItemCounts == null) return false;
-				context.ItemCounts = ItemCounts?.Invert();
+				context.ItemCounts = ItemCounts?.GetComplement();
 				return true;
 			}
 
@@ -186,7 +186,7 @@ namespace Json.Schema.DataGeneration
 			bool BreakPropertyCounts(RequirementsContext context)
 			{
 				if (PropertyCounts == null) return false;
-				context.PropertyCounts = PropertyCounts?.Invert();
+				context.PropertyCounts = PropertyCounts?.GetComplement();
 				return true;
 			}
 
@@ -200,7 +200,7 @@ namespace Json.Schema.DataGeneration
 			bool BreakContainsCount(RequirementsContext context)
 			{
 				if (ContainsCounts == null) return false;
-				context.ContainsCounts = ContainsCounts?.Invert();
+				context.ContainsCounts = ContainsCounts?.GetComplement();
 				return true;
 			}
 

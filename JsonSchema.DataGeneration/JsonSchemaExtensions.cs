@@ -6,6 +6,9 @@ using Json.Schema.DataGeneration.Generators;
 
 namespace Json.Schema.DataGeneration
 {
+	/// <summary>
+	/// Provides extension methods for <see cref="JsonSchema"/> to generate sample data.
+	/// </summary>
 	public static class JsonSchemaExtensions
 	{
 		private static readonly IPrioritizedDataGenerator[] _priorityGenerators =
@@ -32,6 +35,11 @@ namespace Json.Schema.DataGeneration
 
 		internal static readonly Randomizer Randomizer = new Randomizer();
 
+		/// <summary>
+		/// Attempts to generate sample data that meets the requirements of the schema.
+		/// </summary>
+		/// <param name="schema">The schema.</param>
+		/// <returns>A result object indicating success and containing the result or error message.</returns>
 		public static GenerationResult GenerateData(this JsonSchema schema)
 		{
 			var requirements = GetRequirements(schema);

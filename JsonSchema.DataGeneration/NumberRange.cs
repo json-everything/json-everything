@@ -1,14 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Json.Schema.DataGeneration
 {
+	/// <summary>
+	/// Defines a number range.
+	/// </summary>
 	public struct NumberRange : IEquatable<NumberRange>
 	{
+		/// <summary>
+		/// Gets the minimum (lower bound).
+		/// </summary>
 		public Bound Minimum { get; }
+		/// <summary>
+		/// Gets the maximum (upper bound).
+		/// </summary>
 		public Bound Maximum { get; }
 
+		/// <summary>
+		/// Creates a new number range.
+		/// </summary>
+		/// <param name="minimum">The minimum</param>
+		/// <param name="maximum">The maximum</param>
 		public NumberRange(Bound minimum, Bound maximum)
 		{
 			if (minimum > maximum)
@@ -23,6 +36,10 @@ namespace Json.Schema.DataGeneration
 			}
 		}
 
+		/// <summary>
+		/// Calculates the intersection of two number ranges.  May be multiple ranges.
+		/// </summary>
+		/// <returns>The resulting set of ranges that exist in both parameters.</returns>
 		public static IEnumerable<NumberRange> Intersection(NumberRange a, NumberRange b)
 		{
 			// a should have the lower bound. if not, then swap
@@ -50,6 +67,10 @@ namespace Json.Schema.DataGeneration
 			return new[] {new NumberRange(largestMinimum, smallestMaximum)};
 		}
 
+		/// <summary>
+		/// Calculates the union of two number ranges.  May be multiple ranges.
+		/// </summary>
+		/// <returns>The resulting set of ranges that exist in either parameters.</returns>
 		public static IEnumerable<NumberRange> Union(NumberRange a, NumberRange b)
 		{
 			// a should have the lower bound. if not, then swap
@@ -77,6 +98,12 @@ namespace Json.Schema.DataGeneration
 			return new[] {new NumberRange(minimum, maximum)};
 		}
 
+		/// <summary>
+		/// Calculates the set of one range omitting another.  May be multiple ranges.
+		/// </summary>
+		/// <param name="a">The source range</param>
+		/// <param name="b">The operating range.</param>
+		/// <returns>The resulting set of ranges that exist in the source range but not the operating range.</returns>
 		public static IEnumerable<NumberRange> Difference(NumberRange a, NumberRange b)
 		{
 			if (b.Minimum < a.Minimum)
@@ -112,6 +139,10 @@ namespace Json.Schema.DataGeneration
 			return new NumberRange[] { };
 		}
 
+		/// <summary>
+		/// Calculates whether a single value is contained in the range.
+		/// </summary>
+		/// <returns>True if the range contains the value; false otherwise.</returns>
 		public bool Contains(decimal value)
 		{
 			var meetsMinimum = Minimum.Inclusive ? Minimum.Value <= value : Minimum.Value < value;
@@ -120,6 +151,8 @@ namespace Json.Schema.DataGeneration
 			return meetsMinimum && meetsMaximum;
 		}
 
+		/// <summary>Returns the fully qualified type name of this instance.</summary>
+		/// <returns>The fully qualified type name.</returns>
 		public override string ToString()
 		{
 			var minBound = Minimum.Inclusive ? '[' : '(';
@@ -128,16 +161,24 @@ namespace Json.Schema.DataGeneration
 			return $"{minBound}{Minimum.Value}..{Maximum.Value}{maxBound}";
 		}
 
+		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 		public bool Equals(NumberRange other)
 		{
 			return Minimum.Equals(other.Minimum) && Maximum.Equals(other.Maximum);
 		}
 
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare with the current instance.</param>
+		/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
 		public override bool Equals(object? obj)
 		{
 			return obj is NumberRange other && Equals(other);
 		}
 
+		/// <summary>Returns the hash code for this instance.</summary>
+		/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
 		public override int GetHashCode()
 		{
 			unchecked
@@ -146,11 +187,19 @@ namespace Json.Schema.DataGeneration
 			}
 		}
 
+		/// <summary>
+		/// Compares two ranges for equality.
+		/// </summary>
+		/// <returns>True if the ranges are the same; false otherwise.</returns>
 		public static bool operator ==(NumberRange left, NumberRange right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		/// Compares two ranges for non-equality.
+		/// </summary>
+		/// <returns>False if the ranges are the same; true otherwise.</returns>
 		public static bool operator !=(NumberRange left, NumberRange right)
 		{
 			return !left.Equals(right);
