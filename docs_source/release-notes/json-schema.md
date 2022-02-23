@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/218)
+
+Added `JsonSchema.BoolValue` to easily detect boolean schemas.  Previously required checking `JsonSchema.Keywords` for null.
+
+Fixed an issue with `duration` format parsing.
+
 # [2.0.3](https://github.com/gregsdennis/json-everything/pull/217)
 
 [#216](https://github.com/gregsdennis/json-everything/issues/208) - `additionalProperties` does not determine the correct property set to evaluate for drafts 6 and 7. Reported by [@joyse1](https://github.com/joyse1).
