@@ -21,7 +21,7 @@ jobs:
       # Publish
       - name: publish schema unique keys
         id: publish_schema_unique_keys
-        uses: rohith/publish-nuget@v2
+        uses: alirezanet/publish-nuget@v3.0.0
         with:
           PROJECT_FILE_PATH: JsonSchema.UniqueKeys/JsonSchema.UniqueKeys.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}

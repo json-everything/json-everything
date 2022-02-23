@@ -21,7 +21,7 @@ jobs:
       # Publish
       - name: publish schema data
         id: publish_schema_data
-        uses: rohith/publish-nuget@v2
+        uses: alirezanet/publish-nuget@v3.0.0
         with:
           PROJECT_FILE_PATH: JsonSchema.Data/JsonSchema.Data.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}

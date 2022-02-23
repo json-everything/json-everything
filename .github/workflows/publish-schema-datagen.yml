@@ -21,7 +21,7 @@ jobs:
       # Publish
       - name: publish schema data generation
         id: publish_schema_datageneration
-        uses: rohith/publish-nuget@master
+        uses: alirezanet/publish-nuget@v3.0.0
         with:
           PROJECT_FILE_PATH: JsonSchema.DataGeneration/JsonSchema.DataGeneration.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
