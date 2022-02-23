@@ -1818,7 +1818,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Json.Schema.JsonSchema.html",
-          "hash": "S+nrlsbff1QZ8P+JAZZ9uw=="
+          "hash": "gaLIc0SDQRiT112q+kFDmQ=="
         }
       },
       "is_incremental": false,
@@ -2714,7 +2714,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "a6MA4dY4lzJ238PRNXh8Mg=="
+          "hash": "b26E5VZkhgsnEIt/nzB/yg=="
         }
       },
       "is_incremental": false,
@@ -2821,6 +2821,18 @@
         ".html": {
           "relative_path": "release-notes/json-schema-data.html",
           "hash": "VW2s+obZI8ucvPlYRcJtqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "release-notes/json-schema-datageneration.md",
+      "output": {
+        ".html": {
+          "relative_path": "release-notes/json-schema-datageneration.html",
+          "hash": "yLhAEQkiEcCyy3v8+7iTzQ=="
         }
       },
       "is_incremental": false,
@@ -2996,6 +3008,18 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "usage/schema-datagen.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/schema-datagen.html",
+          "hash": "4oIdC29wzhKLYX8XIuleHA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "usage/schema-generation.md",
       "output": {
         ".html": {
@@ -3072,7 +3096,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "USq0/OKw8ksFzthSJQSThg=="
+          "hash": "omv9QhRRG1GJfLv/17fTeQ=="
         }
       },
       "is_incremental": false,
@@ -3117,7 +3141,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 38,
+          "total_file_count": 40,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {

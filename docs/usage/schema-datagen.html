@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Generation Sample JSON Data from a Schema </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Generation Sample JSON Data from a Schema ">
+    <meta name="generator" content="docfx 2.56.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="generation-sample-json-data-from-a-schema">Generation Sample JSON Data from a Schema</h1>
+
+<p>JsonSchema.Net.DataGeneration is a tool that can create JSON data instances using a JSON schema as a framework.</p>
+<p>For example, given the schema:</p>
+<pre><code class="lang-json">{
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;foo&quot;: { &quot;type&quot;: &quot;string&quot; }
+  }
+}
+</code></pre>
+<p>it can generate a JSON document like</p>
+<pre><code class="lang-json">{
+  &quot;foo&quot;: &quot;bar&quot;
+}
+</code></pre>
+<p>Under the covers, the library uses the fabulous <a href="">Bogus</a> library, which is commonly used to generate random test data, and a few other tricks.</p>
+<h2 id="capabilities">Capabilities</h2>
+<p>This library is quite powerful.  It supports most JSON Schema keywords, including <code>if</code>/<code>then</code>/<code>else</code> and aggregation keywords (<code>oneOf</code>, <code>allOf</code>, etc.).</p>
+<p>It currently does not support:</p>
+<ul>
+<li>anything involving RegEx*</li>
+<li>reference keywords (e.g. <code>$ref</code>, <code>$dynamicRef</code>, etc)</li>
+<li>annotation / metadata keywords (e.g. <code>title</code>, <code>description</code>)</li>
+<li><code>content*</code> keywords</li>
+<li><code>dependencies</code> / <code>dependent*</code> keywords</li>
+</ul>
+<p><em>* There are some libraries which provide limited RegEx-based string generation, but these do not support look-aheads which are required to combine multiple RegEx's with boolean logic.  This functionality is required to support them alongside the aggregation keywords.  I opted to just not support them at all until I can find a sufficient library.</em></p>
+<p>Everything else <em>should</em> be mostly supported.  Feel free to <a href="">open an issue</a> if you find something isn't working as you expect.</p>
+<h3 id="strings--format">Strings &amp; <code>format</code></h3>
+<p>All of the formats listed in the draft 2020-12 specification are supported, at least to the extent that they can be validated by JsonSchema.Net.</p>
+<p>If a format is specified, it will be used.</p>
+<p>If a format is not specified, Bogus's Lorem Ipsum generator is used to create some nice garbage (but oddly readable) garbage text.</p>
+<h3 id="numerics">Numerics</h3>
+<p>Integer and number generation each have custom algorithms that produce values that align with minimums, maximums, multiples, and even anti-multiples (numbers that should <em>not</em> be divisors).</p>
+<p>For this schema,</p>
+<pre><code class="lang-json">{
+  &quot;type&quot;: &quot;integer&quot;,
+  &quot;minimum&quot;: 0,
+  &quot;maximum&quot;: 100,
+  &quot;multipleOf&quot;: 4,
+  &quot;allOf&quot;: [
+    {
+      &quot;not&quot;: {
+        &quot;minimum&quot;: 40,
+        &quot;maximum&quot;: 60
+      },
+      &quot;not&quot;: {
+        &quot;multipleOf&quot;: 3
+      }
+    }
+  ]
+}
+</code></pre>
+<p>the only valid integers are</p>
+<ul>
+<li>either in [0-39] or [61-100]</li>
+<li>a multiple of 4</li>
+<li>not a multiple of 3</li>
+</ul>
+<p>The library will generate such values with ease.</p>
+<h3 id="arrays--objects">Arrays &amp; Objects</h3>
+<p>Care needs to be taken when specifying arrays that can have additional items or objects that can have additional properties.  This library will unsubtly create moderatly deep trees of data if allowed.</p>
+<p>For example, this schema doesn't specify what the items should look like:</p>
+<pre><code class="lang-json">{
+  &quot;type&quot;: &quot;array&quot;
+}
+</code></pre>
+<p>So, the generator will happily create literally any JSON value for the items, including unconstrained objects and arrays.</p>
+<p>To combat this, there are some built-in limitations:</p>
+<ul>
+<li>Item and property counts default to 0-10.</li>
+<li>Arrays and objects have a lower chance of generating than the simpler types (null, integer, number, string).</li>
+</ul>
+<h1 id="generating-data">Generating Data</h1>
+<p>All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the <a href="">Building a Schema</a> page.</p>
+<p>Once you have your schema object, simply call the <code>.GenerateData()</code> extension method, and it will return a result to you.</p>
+<pre><code class="lang-c#">var schema = JsonSchema.FromFile(&quot;myFile.json&quot;);
+var generationResult = schema.GenerateData();
+var sampleData = generationResult.Result;
+</code></pre>
+<p>The result object has several properties:</p>
+<ul>
+<li><code>IsSuccess</code> indicates whether the system was able to generate a value</li>
+<li><code>Result</code> holds the value as a <code>JsonElement</code>, if successful</li>
+<li><code>ErrorMessage</code> holds any error message, if unsuccessful</li>
+<li><code>InnerResults</code> holds result objects from nested generations.  This can be useful for debugging.</li>
+</ul>
+<h1 id="summary">Summary</h1>
+<p>So, uh, yeah.  I guess that's it really.</p>
+<p>The generation isn't 100%, but most of the time it will succeed in producing a value for schemas that can have one.  You may want to validate the value against the schema as a sanity check.</p>
+<p>Happy generating.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/usage/schema-datagen.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

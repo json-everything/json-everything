@@ -9885,6 +9885,19 @@ references:
   commentId: T:Json.Schema.JsonSchema
   fullName: Json.Schema.JsonSchema
   nameWithType: JsonSchema
+- uid: Json.Schema.JsonSchema.BoolValue
+  name: BoolValue
+  href: api/Json.Schema.JsonSchema.html#Json_Schema_JsonSchema_BoolValue
+  commentId: P:Json.Schema.JsonSchema.BoolValue
+  fullName: Json.Schema.JsonSchema.BoolValue
+  nameWithType: JsonSchema.BoolValue
+- uid: Json.Schema.JsonSchema.BoolValue*
+  name: BoolValue
+  href: api/Json.Schema.JsonSchema.html#Json_Schema_JsonSchema_BoolValue_
+  commentId: Overload:Json.Schema.JsonSchema.BoolValue
+  isSpec: "True"
+  fullName: Json.Schema.JsonSchema.BoolValue
+  nameWithType: JsonSchema.BoolValue
 - uid: Json.Schema.JsonSchema.Empty
   name: Empty
   href: api/Json.Schema.JsonSchema.html#Json_Schema_JsonSchema_Empty
