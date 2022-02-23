@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+	  <RootNamespace>Json.Schema.DataGeneration.Tests</RootNamespace>
+
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+		<IsPackable>false</IsPackable>
+
+	  <SignAssembly>true</SignAssembly>
+	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
+    <PackageReference Include="FluentAssertions" Version="6.2.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
+  </ItemGroup>
+
+</Project>

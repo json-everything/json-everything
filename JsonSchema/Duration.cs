@@ -79,8 +79,8 @@ namespace Json.Schema
 			var gotDaily = TryGetComponent(source, ref index, out week, 'W');
 			if (!gotDaily)
 			{
-				gotDaily = TryGetComponent(source, ref index, out year, 'Y') ||
-				           TryGetComponent(source, ref index, out month, 'M') ||
+				gotDaily = TryGetComponent(source, ref index, out year, 'Y') |
+				           TryGetComponent(source, ref index, out month, 'M') |
 				           TryGetComponent(source, ref index, out day, 'D');
 			}
 
@@ -91,8 +91,8 @@ namespace Json.Schema
 			}
 			else
 			{
-				var gotTime = TryGetComponent(source, ref index, out hour, 'H') ||
-				              TryGetComponent(source, ref index, out minute, 'M') ||
+				var gotTime = TryGetComponent(source, ref index, out hour, 'H') |
+				              TryGetComponent(source, ref index, out minute, 'M') |
 				              TryGetComponent(source, ref index, out second, 'S');
 
 				if (!gotTime) return false;

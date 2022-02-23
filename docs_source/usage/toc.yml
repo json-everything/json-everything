@@ -15,8 +15,10 @@
     href: schema-keywords.md
   - name: Vocabularies
     href: schema-vocabs.md
-  - name: Generation
+  - name: Schema Generation
     href: schema-generation.md
+  - name: Data Generation
+    href: schema-datagen.md
   - name: Custom Vocabularies
     href: custom-vocabs.md
     items:

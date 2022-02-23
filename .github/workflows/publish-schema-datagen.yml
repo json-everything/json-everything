@@ -1,0 +1,36 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: Publish JsonSchema.Net.DataGeneration
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - JsonSchema.DataGeneration/**
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+      # Publish
+      - name: publish schema data generation
+        id: publish_schema_datageneration
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: JsonSchema.DataGeneration/JsonSchema.DataGeneration.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+          TAG_FORMAT: schema-datageneration-v*
+      - name: archive packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive-packages
+          path: |
+            **/*.nupkg
+            **/*.snupkg
