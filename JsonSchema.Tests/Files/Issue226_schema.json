@@ -1,0 +1,123 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$ref": "#/definitions/TestSequence",
+  "definitions": {
+    "TestSequence": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "tests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Test"
+          }
+        }
+      },
+      "required": [
+        "tests"
+      ],
+      "title": "TestSequence"
+    },
+    "Test": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Result"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "results"
+      ],
+      "title": "Test"
+    },
+    "Result": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "result": {
+          "default": ""
+        },
+        "lowerLimit": {
+          "default": ""
+        },
+        "upperLimit": {
+          "default": ""
+        }
+      },
+      "title": "Result",
+      "required": [
+        "result"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "type": "number"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "lowerLimit": {
+                "type": "number"
+              },
+              "upperLimit": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "type": "string"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "lowerLimit": {
+                "type": "string"
+              },
+              "upperLimit": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "type": "boolean"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "lowerLimit": {
+                "type": "boolean"
+              },
+              "upperLimit": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

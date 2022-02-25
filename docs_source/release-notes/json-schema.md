@@ -1,3 +1,7 @@
+# [2.1.1](https://github.com/gregsdennis/json-everything/pull/227)
+
+[#226](https://github.com/gregsdennis/json-everything/issues/226) - Fixed an issue with including unneeded nodes in Basic output.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/218)
 
 Added `JsonSchema.BoolValue` to easily detect boolean schemas.  Previously required checking `JsonSchema.Keywords` for null.
