@@ -87,7 +87,7 @@ namespace Json.Schema
 
 		internal bool Exclude { get; private set; }
 
-		private bool Keep => Message != null || Annotations.Any() || NestedResults.Any(r => r.Keep);
+		private bool Keep => (Message != null && !IsValid) || Annotations.Any() || NestedResults.Any(r => r.Keep);
 
 		internal ValidationResults(ValidationContext context)
 		{

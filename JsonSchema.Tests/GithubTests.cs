@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests
@@ -521,9 +522,9 @@ namespace Json.Schema.Tests
 			}
 		}
 
-		private static string Issue191_GetResource(string name)
+		private static string GetResource(int issue, string name)
 		{
-			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", $"Issue191_{name}.json")
+			var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", $"Issue{issue}_{name}.json")
 				.AdjustForPlatform();
 
 			return File.ReadAllText(path);
@@ -536,16 +537,16 @@ namespace Json.Schema.Tests
 
 			var vocabId = "https://myserver.net/my-vocab";
 
-			var metaSchema = JsonSchema.FromText(Issue191_GetResource("MetaSchema"));
+			var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-			var schema = JsonSchema.FromText(Issue191_GetResource("Schema"));
+			var schema = JsonSchema.FromText(GetResource(191, "Schema"));
 
 			SchemaKeywordRegistry.Register<MinDateKeyword>();
 
 			VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
 			SchemaRegistry.Global.Register(metaSchemaId, metaSchema);
 
-			var result = JsonSerializer.Deserialize<JsonElement>(Issue191_GetResource("Data"));
+			var result = JsonSerializer.Deserialize<JsonElement>(GetResource(191, "Data"));
 
 			Assert.Throws<InvalidOperationException>(() => schema.Validate(result));
 		}
@@ -680,6 +681,20 @@ namespace Json.Schema.Tests
 				Assert.AreNotEqual("#/additionalProperties", node.SchemaLocation.ToString());
 				nodes.AddRange(node.NestedResults);
 			}
+		}
+
+		[Test]
+		public void Issue226_MessageInValidResult()
+		{
+			var schemaText = GetResource(226, "schema");
+			var instanceText = GetResource(226, "instance");
+
+			var schema = JsonSchema.FromText(schemaText);
+			var instance = JsonDocument.Parse(instanceText).RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions{OutputFormat = OutputFormat.Basic});
+
+			Assert.AreEqual(0, result.NestedResults.Count);
 		}
 	}
 }
