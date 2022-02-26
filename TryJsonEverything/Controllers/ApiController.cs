@@ -3,6 +3,7 @@ using System.Linq;
 using Json.Logic;
 using Json.Patch;
 using Json.Path;
+using Json.Schema.DataGeneration;
 using Microsoft.AspNetCore.Mvc;
 using TryJsonEverything.Models;
 using TryJsonEverything.Services;
@@ -24,6 +25,22 @@ namespace TryJsonEverything.Controllers
 
 			var result = schema.Validate(instance, options);
 			return Ok(new SchemaValidationOutput {Result = result});
+		}
+
+		[HttpPost("schema-data-generation")]
+		public ActionResult<SchemaValidationOutput> GenerateData([FromBody] SchemaDataGenerationInput input)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(new LogicProcessOutput {Errors = ModelState.Root.GetErrors().ToList()});
+
+			var schema = input.Schema;
+
+			var result = schema.GenerateData();
+			return Ok(new SchemaDataGenerationOutput
+			{
+				Result = result.Result,
+				ErrorMessage = result.ErrorMessage
+			});
 		}
 
 		[HttpPost("path-query")]

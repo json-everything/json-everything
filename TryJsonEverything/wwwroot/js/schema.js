@@ -74,6 +74,22 @@ async function requestValidation(schema, instance, options) {
 	return await response.json();
 }
 
+async function requestDataGeneration(schema) {
+    const body = {
+        schema: schema
+	};
+
+    const response = await fetch(`${baseUri}api/schema-data-generation`,
+        {
+            method: 'POST',
+			body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+		});
+    return await response.json();
+}
+
 function getErrorElement(errorItem) {
 	return `<li>
 	<span class="font-weight-bold">${errorItem.error}</span>
@@ -139,4 +155,20 @@ async function validate() {
 	}
 
 	scrollToEnd();
+}
+
+async function generateData() {
+    const outputElement = document.getElementById('output');
+    outputElement.innerHTML = '';
+
+    const schema = getJsonFromEditor(schemaEditor);
+
+	const response = await requestDataGeneration(schema);
+
+	if (response.error) {
+        outputElement.innerHTML = `<h3 class="result-valid">${response.error}</h3>`;
+    } else {
+        instanceEditor.setValue(JSON.stringify(response.result, null, '\t'));
+        instanceEditor.clearSelection();
+    }
 }

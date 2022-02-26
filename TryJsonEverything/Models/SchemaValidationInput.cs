@@ -12,4 +12,10 @@ namespace TryJsonEverything.Models
 		public JsonSchema Schema { get; set; }
 		public ValidationOptionsInput? Options { get; set; }
 	}
+
+	[Schema(typeof(InputValidationSchemas), nameof(InputValidationSchemas.SchemaDataGenerationInputSchema))]
+	public class SchemaDataGenerationInput
+	{
+		public JsonSchema Schema { get; set; }
+	}
 }

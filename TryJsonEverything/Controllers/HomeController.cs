@@ -8,6 +8,7 @@ using Json.Path;
 using Json.Pointer;
 using Json.Schema;
 using Json.Schema.Data;
+using Json.Schema.DataGeneration;
 using Json.Schema.UniqueKeys;
 using TryJsonEverything.Models;
 
@@ -27,7 +28,8 @@ namespace TryJsonEverything.Controllers
 			{
 				GetLibraryVersion<JsonSchema>(),
 				GetLibraryVersion<DataKeyword>(),
-				GetLibraryVersion<UniqueKeysKeyword>()
+				GetLibraryVersion<UniqueKeysKeyword>(),
+				GetLibraryVersion<Bound>()
 			});
 		}
 

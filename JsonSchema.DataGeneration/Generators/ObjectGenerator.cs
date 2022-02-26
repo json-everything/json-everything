@@ -78,9 +78,12 @@ namespace Json.Schema.DataGeneration.Generators
 			if (context.Properties != null)
 			{
 				var propertyNames = context.Properties.Keys.Except(definedPropertyNames).ToArray();
-				propertyNames = JsonSchemaExtensions.Randomizer.ArrayElements(propertyNames, Math.Min(definedPropertyNames.Count, remainingPropertyCount));
-				definedPropertyNames.AddRange(propertyNames);
-				remainingPropertyCount -= propertyNames.Length;
+				if (propertyNames.Length != 0)
+				{
+					propertyNames = JsonSchemaExtensions.Randomizer.ArrayElements(propertyNames, Math.Min(definedPropertyNames.Count, remainingPropertyCount));
+					definedPropertyNames.AddRange(propertyNames);
+					remainingPropertyCount -= propertyNames.Length;
+				}
 			}
 
 			var remainingProperties = context.RemainingProperties ?? new RequirementsContext();

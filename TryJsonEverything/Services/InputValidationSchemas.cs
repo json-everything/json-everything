@@ -47,6 +47,18 @@ namespace TryJsonEverything.Services
 				)
 				.Required("schema", "instance");
 
+		public static readonly JsonSchema SchemaDataGenerationInputSchema =
+			new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft202012Id)
+				.Id("https://json-everything.net/schemas/schema-datagen")
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("schema", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+					)
+				)
+				.Required("schema");
+
 		public static readonly JsonSchema PointerInputSchema =
 			new JsonSchemaBuilder()
 				.Schema(MetaSchemas.Draft202012Id)

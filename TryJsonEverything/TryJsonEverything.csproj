@@ -9,6 +9,7 @@
     <ProjectReference Include="..\JsonLogic\JsonLogic.csproj" />
     <ProjectReference Include="..\JsonPatch\JsonPatch.csproj" />
     <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
+    <ProjectReference Include="..\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
     <ProjectReference Include="..\JsonSchema.Data\JsonSchema.Data.csproj" />
     <ProjectReference Include="..\JsonSchema.UniqueKeys\JsonSchema.UniqueKeys.csproj" />
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
