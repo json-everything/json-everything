@@ -14,6 +14,7 @@ on:
       - JsonSchema.Data/**
       - JsonSchema.UniqueKeys/**
       - JsonSchema.Generation/**
+      - JsonSchema.DataGeneration/**
       - TryJsonEverything/**
   workflow_dispatch:
 
