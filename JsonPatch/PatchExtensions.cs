@@ -17,12 +17,13 @@ namespace Json.Patch
 		/// </summary>
 		/// <param name="patch">The patch</param>
 		/// <param name="obj">The object</param>
+		/// <param name="options">Serializer options.</param>		
 		/// <typeparam name="T">The type of the object.</typeparam>
 		/// <returns>New instance of patched object</returns>
 		/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
-		public static T Apply<T>(this JsonPatch patch, T obj)
+		public static T Apply<T>(this JsonPatch patch, T obj, JsonSerializerOptions? options = null)
 		{
-			return Apply<T, T>(patch, obj);
+			return Apply<T, T>(patch, obj, options);
 		}
 
 		/// <summary>
