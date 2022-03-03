@@ -61,7 +61,7 @@ If you're implementing an applicator keyword, you'll need to invoke this consoli
 
 If your keyword contains one or more subschemas, you'll want to implement this.  It allows `JsonSchema` to search within the keyword when resolving `$ref`, `$recursiveRef`, and `$dynamicRef`.
 
-For `.ResolvePointerSegment()`, if the pointer segment matches a path where a schema might be found, return it.  Otherwise return null.
+As of v2.1.2, `.ResolvePointerSegment()` is obsolete.  You can leave this as throwing a `NotImplementedException`.  It won't be called.  This method will be removed in the next major version.
 
 For `.RegisterSubschemas()`, just use this:
 
