@@ -40,11 +40,9 @@ namespace Json.Schema
 			if (!context.UriChanged || Value)
 				context.ValidateAnchor();
 
-			if (Value)
-			{
+			context.LocalResult.SetAnnotation(Name, Value);
+			if (Value) 
 				context.CurrentAnchor ??= context.LocalSchema;
-				context.LocalResult.SetAnnotation(Name, Value);
-			}
 
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);

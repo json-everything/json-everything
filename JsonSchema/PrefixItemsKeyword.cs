@@ -85,13 +85,10 @@ namespace Json.Schema
 
 			if (overwriteAnnotation)
 			{
-				if (overallResult)
-				{
-					if (maxEvaluations == context.LocalInstance.GetArrayLength())
-						context.LocalResult.SetAnnotation(Name, true);
-					else
-						context.LocalResult.SetAnnotation(Name, maxEvaluations);
-				}
+				if (maxEvaluations == context.LocalInstance.GetArrayLength())
+					context.LocalResult.SetAnnotation(Name, true);
+				else
+					context.LocalResult.SetAnnotation(Name, maxEvaluations);
 			}
 
 			if (overallResult)
