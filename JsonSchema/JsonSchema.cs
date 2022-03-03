@@ -246,16 +246,57 @@ namespace Json.Schema
 
 		internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)
 		{
-			IRefResolvable? resolvable = this;
+			object resolvable = this;
 			for (var i = 0; i < pointer.Segments.Length; i++)
 			{
 				var segment = pointer.Segments[i];
-				var newResolvable = resolvable.ResolvePointerSegment(segment.Value);
+				object? newResolvable = null;
+
+				int index;
+				switch (resolvable)
+				{
+					case ISchemaContainer container and ISchemaCollector collector:
+						if (container.Schema != null)
+						{
+							newResolvable = container.Schema;
+							i--;
+						}
+						else if (int.TryParse(segment.Value, out index) &&
+						         index >= 0 && index < collector.Schemas.Count)
+							newResolvable = collector.Schemas[index];
+
+						break;
+					case ISchemaContainer container:
+						newResolvable = container.Schema;
+						// need to reprocess the segment
+						i--;
+						break;
+					case ISchemaCollector collector:
+						if (int.TryParse(segment.Value, out index) &&
+						    index >= 0 && index < collector.Schemas.Count)
+							newResolvable = collector.Schemas[index];
+						break;
+					case IKeyedSchemaCollector keyedCollector:
+						if (keyedCollector.Schemas.TryGetValue(segment.Value, out var subschema))
+							newResolvable = subschema;
+						break;
+					case JsonSchema {Keywords: { }} schema:
+						if (!ReferenceEquals(schema, this))
+						{
+							// the assumption here is that if the schema is this schema, the $ref
+							// navigated directly to this schema, and we don't need to update the uri
+							var idKeyword = schema.Keywords.OfType<IdKeyword>().SingleOrDefault();
+							if (idKeyword != null && i != pointer.Segments.Length - 1)
+								currentUri = idKeyword.UpdateUri(currentUri);
+						}
+						newResolvable = schema.Keywords?.FirstOrDefault(k => k.Keyword() == segment.Value);
+						break;
+				}
+
 				if (newResolvable == null)
 				{
 					// TODO: document that this process does not consider `$id` in extraneous data
-					if (resolvable is JsonSchema subSchema &&
-					    subSchema.OtherData != null &&
+					if (resolvable is JsonSchema {OtherData: { }} subSchema &&
 					    subSchema.OtherData.TryGetValue(segment.Value, out var element))
 					{
 						var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
@@ -267,18 +308,8 @@ namespace Json.Schema
 					return (null, currentUri);
 				}
 
-				if (newResolvable is JsonSchema schema && schema.Keywords != null)
-				{
-					var idKeyword = schema.Keywords.OfType<IdKeyword>().SingleOrDefault();
-					if (idKeyword != null && i != pointer.Segments.Length - 1)
-						currentUri = idKeyword.UpdateUri(currentUri);
-				}
-
 				resolvable = newResolvable;
 			}
-
-			if (!(resolvable is JsonSchema))
-				resolvable = resolvable.ResolvePointerSegment(null);
 
 			return (resolvable as JsonSchema, currentUri);
 		}
@@ -307,7 +338,7 @@ namespace Json.Schema
 		{
 			if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 			var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
-			return idKeyword?.Id.OriginalString ?? ValidationOptions.Default.DefaultBaseUri.OriginalString;
+			return idKeyword?.Id.OriginalString ?? BaseUri?.OriginalString ?? "subschema";
 		}
 
 		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

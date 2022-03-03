@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Json.More;
 using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 
@@ -681,6 +682,28 @@ namespace Json.Schema.Tests
 				Assert.AreNotEqual("#/additionalProperties", node.SchemaLocation.ToString());
 				nodes.AddRange(node.NestedResults);
 			}
+		}
+
+		[Test]
+		public void Issue220_DeeplyNestedReferences()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Schema(MetaSchemas.Draft201909Id)
+				.Ref("#/$defs/test/items/properties/test")
+				.Defs(
+					("test", new JsonSchemaBuilder()
+						.Items(new JsonSchemaBuilder()
+							.Properties(
+								("test", new JsonSchemaBuilder().Type(SchemaValueType.String))
+							)
+						)
+					)
+				);
+
+			var result = schema.Validate(3.AsJsonElement(), new ValidationOptions {OutputFormat = OutputFormat.Detailed});
+
+			result.AssertInvalid();
+			Assert.IsFalse(JsonSerializer.Serialize(result).Contains("Could not resolve reference"));
 		}
 
 		[Test]
