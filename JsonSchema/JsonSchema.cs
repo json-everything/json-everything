@@ -321,8 +321,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			var keyword = Keywords?.FirstOrDefault(k => k.Keyword() == value);
-			return keyword as IRefResolvable;
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
