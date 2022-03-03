@@ -1,3 +1,5 @@
+# [2.1.2](https://github.com/gregsdennis/json-everything/pull/227)
+
 # [2.1.1](https://github.com/gregsdennis/json-everything/pull/227)
 
 [#226](https://github.com/gregsdennis/json-everything/issues/226) - Fixed an issue with including unneeded nodes in Basic output.
