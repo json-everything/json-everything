@@ -117,11 +117,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			if (value == null) return null;
-			if (!int.TryParse(value, out var index)) return null;
-			if (index < 0 || ArraySchemas.Count <= index) return null;
-
-			return ArraySchemas[index];
+			throw new NotImplementedException();
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
