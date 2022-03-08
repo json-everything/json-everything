@@ -4,7 +4,8 @@
 		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
 
 		<IsPackable>false</IsPackable>
-
+	    <SignAssembly>true</SignAssembly>
+	    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<RootNamespace>Json.Schema.Data.Tests</RootNamespace>
 	</PropertyGroup>
 
