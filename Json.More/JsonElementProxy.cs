@@ -19,42 +19,42 @@ public readonly struct JsonElementProxy
 	/// Converts an `int` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(int value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(int value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `long` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(long value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(long value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `short` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(short value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(short value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `float` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(float value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(float value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `double` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(double value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(double value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `decimal` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(decimal value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(decimal value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `string` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(string value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(string value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `bool` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator JsonElementProxy(bool value) => new JsonElementProxy(value.AsJsonElement());
+	public static implicit operator JsonElementProxy(bool value) => new(value.AsJsonElement());
 
 	/// <summary>
 	/// Converts a <see cref="JsonElementProxy"/> to a <see cref="JsonElement"/>.

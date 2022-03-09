@@ -17,7 +17,7 @@ public class JsonDocumentEqualityComparer : IEqualityComparer<JsonDocument>
 	/// <summary>
 	/// A singleton instance for convenience.
 	/// </summary>
-	public static JsonDocumentEqualityComparer Instance { get; } = new JsonDocumentEqualityComparer();
+	public static JsonDocumentEqualityComparer Instance { get; } = new();
 
 	/// <summary>Determines whether the specified objects are equal.</summary>
 	/// <param name="x">The first object of type T to compare.</param>
