@@ -3,30 +3,29 @@ using System.Linq;
 using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic.Rules
+namespace Json.Logic.Rules;
+
+[Operator("or")]
+internal class OrRule : Rule
 {
-	[Operator("or")]
-	internal class OrRule : Rule
+	private readonly List<Rule> _items;
+
+	public OrRule(Rule a, params Rule[] more)
 	{
-		private readonly List<Rule> _items;
+		_items = new List<Rule> {a};
+		_items.AddRange(more);
+	}
 
-		public OrRule(Rule a, params Rule[] more)
+	public override JsonElement Apply(JsonElement data)
+	{
+		var items = _items.Select(i => i.Apply(data));
+		var first = false.AsJsonElement();
+		foreach (var x in items)
 		{
-			_items = new List<Rule> { a };
-			_items.AddRange(more);
+			first = x;
+			if (x.IsTruthy()) break;
 		}
-
-		public override JsonElement Apply(JsonElement data)
-		{
-			var items = _items.Select(i => i.Apply(data));
-			var first = false.AsJsonElement();
-			foreach (var x in items)
-			{
-				first = x;
-				if (x.IsTruthy()) break;
-			}
 			
-			return first;
-		}
+		return first;
 	}
 }

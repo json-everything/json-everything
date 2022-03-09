@@ -1,23 +1,22 @@
 ﻿using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic.Rules
+namespace Json.Logic.Rules;
+
+[Operator("!==")]
+internal class StrictNotEqualsRule : Rule
 {
-	[Operator("!==")]
-	internal class StrictNotEqualsRule : Rule
+	private readonly Rule _a;
+	private readonly Rule _b;
+
+	public StrictNotEqualsRule(Rule a, Rule b)
 	{
-		private readonly Rule _a;
-		private readonly Rule _b;
+		_a = a;
+		_b = b;
+	}
 
-		public StrictNotEqualsRule(Rule a, Rule b)
-		{
-			_a = a;
-			_b = b;
-		}
-
-		public override JsonElement Apply(JsonElement data)
-		{
-			return (!_a.Apply(data).IsEquivalentTo(_b.Apply(data))).AsJsonElement();
-		}
+	public override JsonElement Apply(JsonElement data)
+	{
+		return (!_a.Apply(data).IsEquivalentTo(_b.Apply(data))).AsJsonElement();
 	}
 }

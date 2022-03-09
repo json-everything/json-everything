@@ -3,72 +3,71 @@ using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
 
-namespace Json.Logic.Tests
+namespace Json.Logic.Tests;
+
+public class MoreThanEqualTests
 {
-	public class MoreThanEqualTests
+	[Test]
+	public void MoreThanEqualTwoNumbersReturnsTrue()
 	{
-		[Test]
-		public void MoreThanEqualTwoNumbersReturnsTrue()
-		{
-			var rule = new MoreThanEqualRule(2, 1);
+		var rule = new MoreThanEqualRule(2, 1);
 
-			JsonAssert.IsTrue(rule.Apply());
-		}
+		JsonAssert.IsTrue(rule.Apply());
+	}
 		
-		[Test]
-		public void EqualTwoNumbersReturnsTrue()
-		{
-			var rule = new MoreThanEqualRule(1, 1);
+	[Test]
+	public void EqualTwoNumbersReturnsTrue()
+	{
+		var rule = new MoreThanEqualRule(1, 1);
 
-			JsonAssert.IsTrue(rule.Apply());
-		}
+		JsonAssert.IsTrue(rule.Apply());
+	}
 		
-		[Test]
-		public void MoreThanEqualTwoNumbersReturnsFalse()
-		{
-			var rule = new MoreThanEqualRule(2, 3);
+	[Test]
+	public void MoreThanEqualTwoNumbersReturnsFalse()
+	{
+		var rule = new MoreThanEqualRule(2, 3);
 
-			JsonAssert.IsFalse(rule.Apply());
-		}
+		JsonAssert.IsFalse(rule.Apply());
+	}
 		
-		[Test]
-		public void MoreThanEqualStringThrowsError()
-		{
-			var rule = new MoreThanEqualRule("foo", 2);
+	[Test]
+	public void MoreThanEqualStringThrowsError()
+	{
+		var rule = new MoreThanEqualRule("foo", 2);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
-		}
+		Assert.Throws<JsonLogicException>(() => rule.Apply());
+	}
 		
-		[Test]
-		public void MoreThanEqualBooleanThrowsError()
-		{
-			var rule = new MoreThanEqualRule(false, 2);
+	[Test]
+	public void MoreThanEqualBooleanThrowsError()
+	{
+		var rule = new MoreThanEqualRule(false, 2);
 
-			JsonAssert.IsFalse(rule.Apply());
-		}
+		JsonAssert.IsFalse(rule.Apply());
+	}
 
-		[Test]
-		public void MoreThanEqualArrayThrowsError()
-		{
-			var rule = new MoreThanEqualRule(new JsonElement[]{}.AsJsonElement(), 2);
+	[Test]
+	public void MoreThanEqualArrayThrowsError()
+	{
+		var rule = new MoreThanEqualRule(new JsonElement[]{}.AsJsonElement(), 2);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
-		}
+		Assert.Throws<JsonLogicException>(() => rule.Apply());
+	}
 		
-		[Test]
-		public void MoreThanEqualObjectThrowsError()
-		{
-			var rule = new MoreThanEqualRule(JsonDocument.Parse("{}").RootElement, 2);
+	[Test]
+	public void MoreThanEqualObjectThrowsError()
+	{
+		var rule = new MoreThanEqualRule(JsonDocument.Parse("{}").RootElement, 2);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
-		}
+		Assert.Throws<JsonLogicException>(() => rule.Apply());
+	}
 		
-		[Test]
-		public void MoreThanEqualNullThrowsError()
-		{
-			var rule = new MoreThanEqualRule(LiteralRule.Null, 2);
+	[Test]
+	public void MoreThanEqualNullThrowsError()
+	{
+		var rule = new MoreThanEqualRule(LiteralRule.Null, 2);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
-		}
+		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
 }

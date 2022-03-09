@@ -2,26 +2,25 @@
 using Json.Logic.Rules;
 using NUnit.Framework;
 
-namespace Json.Logic.Tests
+namespace Json.Logic.Tests;
+
+public class NoneTests
 {
-	public class NoneTests
+	[Test]
+	public void NoneMatchCondition()
 	{
-		[Test]
-		public void NoneMatchCondition()
-		{
-			var rule = new NoneRule(JsonDocument.Parse("[1,2,3]").RootElement,
-				new StrictEqualsRule(new VariableRule(""), 2));
+		var rule = new NoneRule(JsonDocument.Parse("[1,2,3]").RootElement,
+			new StrictEqualsRule(new VariableRule(""), 2));
 
-			JsonAssert.IsFalse(rule.Apply());
-		}
+		JsonAssert.IsFalse(rule.Apply());
+	}
 
-		[Test]
-		public void SomeDoNotMatchCondition()
-		{
-			var rule = new NoneRule(JsonDocument.Parse("[1,2,3]").RootElement,
-				new StrictEqualsRule(new VariableRule(""), 0));
+	[Test]
+	public void SomeDoNotMatchCondition()
+	{
+		var rule = new NoneRule(JsonDocument.Parse("[1,2,3]").RootElement,
+			new StrictEqualsRule(new VariableRule(""), 0));
 
-			JsonAssert.IsTrue(rule.Apply());
-		}
+		JsonAssert.IsTrue(rule.Apply());
 	}
 }

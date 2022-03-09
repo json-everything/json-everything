@@ -2,19 +2,18 @@ using NUnit.Framework;
 
 using static Json.Logic.JsonLogic;
 
-namespace Json.Logic.Tests
+namespace Json.Logic.Tests;
+
+public class DevTest
 {
-	public class DevTest
+	[Test]
+	public void Check()
 	{
-		[Test]
-		public void Check()
-		{
-			var rule = And(
-				StrictEquals(
-					Literal(5),
-					Literal(10)),
-				Literal(true)
-			);
-		}
+		var rule = And(
+			StrictEquals(
+				Literal(5),
+				Literal(10)),
+			Literal(true)
+		);
 	}
 }

@@ -1,25 +1,24 @@
 using Json.Logic.Rules;
 using NUnit.Framework;
 
-namespace Json.Logic.Tests
+namespace Json.Logic.Tests;
+
+public class SubtractTests
 {
-	public class SubtractTests
+	[Test]
+	public void SubtractNumbersReturnsSum()
 	{
-		[Test]
-		public void SubtractNumbersReturnsSum()
-		{
-			var rule = new SubtractRule(4, 5);
+		var rule = new SubtractRule(4, 5);
 
-			var actual = rule.Apply();
-			JsonAssert.AreEquivalent(-1, actual);
-		}
+		var actual = rule.Apply();
+		JsonAssert.AreEquivalent(-1, actual);
+	}
 
-		[Test]
-		public void SubtractNonNumberThrowsError()
-		{
-			var rule = new SubtractRule("test", 5);
+	[Test]
+	public void SubtractNonNumberThrowsError()
+	{
+		var rule = new SubtractRule("test", 5);
 
-			Assert.Throws<JsonLogicException>(() => rule.Apply());
-		}
+		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
 }
