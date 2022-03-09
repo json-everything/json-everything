@@ -1,26 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
 
 		<RootNamespace>Json.Patch.Tests</RootNamespace>
-	  	<SignAssembly>true</SignAssembly>
-	  	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<IsPackable>false</IsPackable>
 
-	  <Nullable>enable</Nullable>
-  </PropertyGroup>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
-    <PackageReference Include="nunit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
+		<PackageReference Include="nunit" Version="3.13.2" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JsonPatch\JsonPatch.csproj" />
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JsonPatch\JsonPatch.csproj" />
+		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+	</ItemGroup>
 
 </Project>

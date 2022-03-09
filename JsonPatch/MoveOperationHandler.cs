@@ -1,114 +1,113 @@
 ﻿using System.Linq;
 using Json.Pointer;
 
-namespace Json.Patch
+namespace Json.Patch;
+
+internal class MoveOperationHandler : IPatchOperationHandler
 {
-	internal class MoveOperationHandler : IPatchOperationHandler
+	public static IPatchOperationHandler Instance { get; } = new MoveOperationHandler();
+
+	private MoveOperationHandler() { }
+
+	public void Process(PatchContext context, PatchOperation operation)
 	{
-		public static IPatchOperationHandler Instance { get; } = new MoveOperationHandler();
+		if (Equals(operation.Path, operation.From)) return;
 
-		private MoveOperationHandler() { }
+		var current = context.Source;
+		var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
 
-		public void Process(PatchContext context, PatchOperation operation)
+		if (message != null)
 		{
-			if (Equals(operation.Path, operation.From)) return;
+			context.Message = message;
+			return;
+		}
 
-			var current = context.Source;
-			var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
+		var from = context.Source;
+		message = EditableJsonElementHelpers.FindTarget(ref from, operation.From);
 
-			if (message != null)
-			{
-				context.Message = message;
-				return;
-			}
+		if (message != null)
+		{
+			context.Message = message;
+			return;
+		}
 
-			var from = context.Source;
-			message = EditableJsonElementHelpers.FindTarget(ref from, operation.From);
+		if (operation.Path.Segments.Length == 0)
+		{
+			context.Source = from;
+			return;
+		}
 
-			if (message != null)
-			{
-				context.Message = message;
-				return;
-			}
+		var fromParent = context.Source;
+		EditableJsonElementHelpers.FindParentOfTarget(ref fromParent, operation.From);
 
-			if (operation.Path.Segments.Length == 0)
-			{
-				context.Source = from;
-				return;
-			}
+		var last = operation.Path.Segments.Last();
+		var fromLast = operation.From.Segments.Last();
+		if (current.Object != null)
+		{
+			context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
+			if (context.Message != null) return;
 
-			var fromParent = context.Source;
-			EditableJsonElementHelpers.FindParentOfTarget(ref fromParent, operation.From);
-
-			var last = operation.Path.Segments.Last();
-			var fromLast = operation.From.Segments.Last();
-			if (current.Object != null)
+			current.Object[last.Value] = from;
+			return;
+		}
+		if (current.Array != null)
+		{
+			if (last.Value == "-")
 			{
 				context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
 				if (context.Message != null) return;
 
-				current.Object[last.Value] = from;
+				current.Array.Add(from);
 				return;
 			}
-			if (current.Array != null)
+
+			if (!int.TryParse(last.Value, out var index) || 0 > index || index > current.Array.Count)
 			{
-				if (last.Value == "-")
-				{
-					context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
-					if (context.Message != null) return;
-
-					current.Array.Add(from);
-					return;
-				}
-
-				if (!int.TryParse(last.Value, out var index) || 0 > index || index > current.Array.Count)
-				{
-					context.Message = $"Path `{operation.Path}` is not present in the instance.";
-					return;
-				}
-				if ((index != 0 && last.Value[0] == '0') ||
-				    (index == 0 && last.Value.Length > 1))
-				{
-					context.Message = $"Path `{operation.Path}` is not present in the instance.";
-					return;
-				}
-
-				context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
-				if (context.Message != null) return;
-
-				current.Array.Insert(index, from);
+				context.Message = $"Path `{operation.Path}` is not present in the instance.";
+				return;
+			}
+			if ((index != 0 && last.Value[0] == '0') ||
+			    (index == 0 && last.Value.Length > 1))
+			{
+				context.Message = $"Path `{operation.Path}` is not present in the instance.";
 				return;
 			}
 
-			context.Message = $"Path `{operation.Path}` is not present in the instance.";
+			context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
+			if (context.Message != null) return;
+
+			current.Array.Insert(index, from);
+			return;
 		}
 
-		private static string? RemoveSource(EditableJsonElement fromParent, string lastSegment, JsonPointer path)
+		context.Message = $"Path `{operation.Path}` is not present in the instance.";
+	}
+
+	private static string? RemoveSource(EditableJsonElement fromParent, string lastSegment, JsonPointer path)
+	{
+		if (fromParent.Object != null)
 		{
-			if (fromParent.Object != null)
+			if (fromParent.Object.TryGetValue(lastSegment, out _))
 			{
-				if (fromParent.Object.TryGetValue(lastSegment, out _))
-				{
-					fromParent.Object.Remove(lastSegment);
-					return null;
-				}
+				fromParent.Object.Remove(lastSegment);
+				return null;
 			}
-			else if (fromParent.Array != null)
-			{
-				if (lastSegment == "-")
-				{
-					fromParent.Array.RemoveAt(fromParent.Array.Count - 1);
-					return null;
-				}
-
-				if (int.TryParse(lastSegment, out var index) && -1 <= index && index < fromParent.Array.Count)
-				{
-					fromParent.Array.RemoveAt(index);
-					return null;
-				}
-			}
-
-			return $"Path `{path}` is not present in the instance.";
 		}
+		else if (fromParent.Array != null)
+		{
+			if (lastSegment == "-")
+			{
+				fromParent.Array.RemoveAt(fromParent.Array.Count - 1);
+				return null;
+			}
+
+			if (int.TryParse(lastSegment, out var index) && -1 <= index && index < fromParent.Array.Count)
+			{
+				fromParent.Array.RemoveAt(index);
+				return null;
+			}
+		}
+
+		return $"Path `{path}` is not present in the instance.";
 	}
 }
