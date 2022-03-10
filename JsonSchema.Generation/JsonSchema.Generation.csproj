@@ -1,51 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <AssemblyName>JsonSchema.Net.Generation</AssemblyName>
-    <RootNamespace>Json.Schema.Generation</RootNamespace>
-    <Authors>Greg Dennis</Authors>
-    <Description>Extends JsonSchema.Net to provide schema generation functionality.</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-    <PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
-    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-generation.html</PackageReleaseNotes>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
-    <LangVersion>latest</LangVersion>
-    <Version>1.8.3</Version>
-    <FileVersion>1.8.3.0</FileVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	  <SignAssembly>true</SignAssembly>
-	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+		<AssemblyName>JsonSchema.Net.Generation</AssemblyName>
+		<RootNamespace>Json.Schema.Generation</RootNamespace>
+		<Authors>Greg Dennis</Authors>
+		<Description>Extends JsonSchema.Net to provide schema generation functionality.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+		<PackageIcon>json-logo-256.png</PackageIcon>
+		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+		<PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
+		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-generation.html</PackageReleaseNotes>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
+		<LangVersion>latest</LangVersion>
+		<Version>1.8.3</Version>
+		<FileVersion>1.8.3.0</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
-   </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.11.10" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Humanizer.Core" Version="2.11.10" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\docs_source\release-notes\json-schema-generation.md" Link="json-schema-generation.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\docs_source\release-notes\json-schema-generation.md" Link="json-schema-generation.md" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\Resources\json-logo-256.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>
