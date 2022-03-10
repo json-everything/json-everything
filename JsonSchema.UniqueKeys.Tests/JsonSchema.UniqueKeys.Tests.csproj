@@ -2,12 +2,12 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-
+		<LangVersion>latest</LangVersion>
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>Json.Schema.UniqueKeys.Tests</RootNamespace>
 		<SignAssembly>true</SignAssembly>
-	    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 	<ItemGroup>
