@@ -27,6 +27,7 @@ namespace Json.Schema.Benchmark
 				return !schema.Validate(instanceText).Any();
 			}, iterations);
 
+#pragma warning disable CS1998
 			await Time($"json-everything {iterations} runs", async () =>
 			{
 				var schema = JsonSchema.FromText(schemaText);
@@ -34,6 +35,7 @@ namespace Json.Schema.Benchmark
 
 				return schema.Validate(instance.RootElement).IsValid;
 			}, iterations);
+#pragma warning restore CS1998
 		}
 
 		private static async Task Time(string testName, Func<Task<bool>> action, int iterations)

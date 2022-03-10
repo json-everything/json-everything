@@ -11,21 +11,21 @@ namespace JsonPointer.Benchmark
 			Console.WriteLine("Parsing Tests");
 			Console.WriteLine("=============");
 			Console.WriteLine();
-			_InitializeTypes();
-			_RunParse("JsonPointer", _ParseLocal, _CheckLocal);
-			_RunParse("Manatee.Json", _ParseManatee, _CheckManatee);
+			InitializeTypes();
+			RunParse("JsonPointer", ParseLocal, CheckLocal);
+			RunParse("Manatee.Json", ParseManatee, CheckManatee);
 			Console.WriteLine();
 			Console.WriteLine();
 		}
 
-		private static void _InitializeTypes()
+		private static void InitializeTypes()
 		{
 			var pointer = "/this/is/definitely/valid";
 			Json.Pointer.JsonPointer.Parse(pointer);
 			Manatee.Json.Pointer.JsonPointer.Parse(pointer);
 		}
 
-		private static void _RunParse(string testName, Func<string, object> runParse, Func<string, object, bool, string[], bool, bool> check)
+		private static void RunParse(string testName, Func<string, object> runParse, Func<string, object, bool, string[], bool, bool> check)
 		{
 			Console.WriteLine(testName);
 			Console.WriteLine(new string('-', testName.Length));
@@ -91,12 +91,12 @@ namespace JsonPointer.Benchmark
 			Console.WriteLine($"  Score: {score*100/testCount}%");
 		}
 
-		private static object _ParseLocal(string source)
+		private static object ParseLocal(string source)
 		{
 			return Json.Pointer.JsonPointer.TryParse(source, out var pointer) ? (object)pointer : null;
 		}
 
-		private static bool _CheckLocal(string source, object pointerObj, bool isValid, string[] expectedSegments, bool isUriEncoded)
+		private static bool CheckLocal(string source, object pointerObj, bool isValid, string[] expectedSegments, bool isUriEncoded)
 		{
 			if (pointerObj == null) return !isValid;
 			if (!isValid) return false;
@@ -108,7 +108,7 @@ namespace JsonPointer.Benchmark
 			return pointer.IsUriEncoded == isUriEncoded;
 		}
 
-		private static object _ParseManatee(string source)
+		private static object ParseManatee(string source)
 		{
 			try
 			{
@@ -121,7 +121,7 @@ namespace JsonPointer.Benchmark
 
 		}
 
-		private static bool _CheckManatee(string source, object pointerObj, bool isValid, string[] expectedSegments, bool isUriEncoded)
+		private static bool CheckManatee(string source, object pointerObj, bool isValid, string[] expectedSegments, bool isUriEncoded)
 		{
 			if (pointerObj == null) return !isValid;
 			if (!isValid) return false;

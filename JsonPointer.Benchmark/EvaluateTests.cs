@@ -14,19 +14,19 @@ namespace JsonPointer.Benchmark
 			Console.WriteLine("Evaluation Tests");
 			Console.WriteLine("=============");
 			Console.WriteLine();
-			_InitializeTypes();
-			_RunEvaluate("JsonPointer", _EvalLocal);
-			_RunEvaluate("Manatee.Json", _EvalManatee);
+			InitializeTypes();
+			RunEvaluate("JsonPointer", EvalLocal);
+			RunEvaluate("Manatee.Json", EvalManatee);
 			Console.WriteLine();
 			Console.WriteLine();
 		}
 
-		private static void _InitializeTypes()
+		private static void InitializeTypes()
 		{
 			 
 		}
 
-		private static void _RunEvaluate(string testName, Func<string, string, string> runEval)
+		private static void RunEvaluate(string testName, Func<string, string, string> runEval)
 		{
 			Console.WriteLine(testName);
 			Console.WriteLine(new string('-', testName.Length));
@@ -76,14 +76,14 @@ namespace JsonPointer.Benchmark
 				stopwatch.Start();
 				var result = runEval(item.pointer, item.json);
 				stopwatch.Stop();
-				score += _Check(result, item.expected) ? 1 : 0;
+				score += Check(result, item.expected) ? 1 : 0;
 			}
 
 			Console.WriteLine($"  Time: {stopwatch.ElapsedMilliseconds}ms");
 			Console.WriteLine($"  Score: {score * 100 / testCount}%");
 		}
 
-		private static string _EvalLocal(string pointerString, string jsonString)
+		private static string EvalLocal(string pointerString, string jsonString)
 		{
 			using var document = JsonDocument.Parse(jsonString);
 			var pointer = Json.Pointer.JsonPointer.Parse(pointerString);
@@ -94,7 +94,7 @@ namespace JsonPointer.Benchmark
 			return evalLocal;
 		}
 
-		private static string _EvalManatee(string pointerString, string jsonString)
+		private static string EvalManatee(string pointerString, string jsonString)
 		{
 			var json = JsonValue.Parse(jsonString);
 			var pointer = Manatee.Json.Pointer.JsonPointer.Parse(pointerString);
@@ -104,7 +104,7 @@ namespace JsonPointer.Benchmark
 			return result.Result?.ToString();
 		}
 		
-		private static bool _Check(string actual, string expected)
+		private static bool Check(string actual, string expected)
 		{
 			if (actual != null)
 			{

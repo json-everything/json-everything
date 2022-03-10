@@ -27,6 +27,7 @@ public static partial class Vocabularies
 	/// </summary>
 	public const string Content201909Id = "https://json-schema.org/draft/2019-09/vocab/content";
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>
 	/// The Draft 2019-09 Core vocabulary.
 	/// </summary>
@@ -51,4 +52,5 @@ public static partial class Vocabularies
 	/// The Draft 2019-09 Content vocabulary.
 	/// </summary>
 	public static readonly Vocabulary Content201909;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

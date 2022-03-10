@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
@@ -9,6 +9,7 @@
 		<RootNamespace>Json.Schema.Generation.Tests</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<NoWarn>IDE1006</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
