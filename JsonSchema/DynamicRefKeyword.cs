@@ -3,176 +3,175 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
-namespace Json.Schema
+namespace Json.Schema;
+
+/// <summary>
+/// Handles `$dynamicRef`.
+/// </summary>
+[SchemaKeyword(Name)]
+[SchemaDraft(Draft.Draft202012)]
+[Vocabulary(Vocabularies.Core202012Id)]
+[JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
+public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
 {
+	internal const string Name = "$dynamicRef";
+
 	/// <summary>
-	/// Handles `$dynamicRef`.
+	/// The URI reference.
 	/// </summary>
-	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft202012)]
-	[Vocabulary(Vocabularies.Core202012Id)]
-	[JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
-	public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
+	public Uri Reference { get; }
+
+	/// <summary>
+	/// Creates a new <see cref="DynamicRefKeyword"/>.
+	/// </summary>
+	/// <param name="value"></param>
+	public DynamicRefKeyword(Uri value)
 	{
-		internal const string Name = "$dynamicRef";
+		Reference = value ?? throw new ArgumentNullException(nameof(value));
+	}
 
-		/// <summary>
-		/// The URI reference.
-		/// </summary>
-		public Uri Reference { get; }
+	/// <summary>
+	/// Provides validation for the keyword.
+	/// </summary>
+	/// <param name="context">Contextual details for the validation process.</param>
+	public void Validate(ValidationContext context)
+	{
+		context.EnterKeyword(Name);
+		var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
+		var baseUri = parts[0];
+		var fragment = parts.Length > 1 ? parts[1] : null;
 
-		/// <summary>
-		/// Creates a new <see cref="DynamicRefKeyword"/>.
-		/// </summary>
-		/// <param name="value"></param>
-		public DynamicRefKeyword(Uri value)
+
+		JsonSchema? GetSchema(Uri? uri, string? anchor)
 		{
-			Reference = value ?? throw new ArgumentNullException(nameof(value));
+			var uriScope = uri ?? context.CurrentUri;
+			var currentScopeDefinesDynamicAnchor =
+				!string.IsNullOrEmpty(fragment) &&
+				context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(uriScope, fragment!);
+
+			return currentScopeDefinesDynamicAnchor
+				? context.Options.SchemaRegistry.GetDynamic(uri, anchor)
+				: context.Options.SchemaRegistry.Get(uri, anchor);
 		}
 
-		/// <summary>
-		/// Provides validation for the keyword.
-		/// </summary>
-		/// <param name="context">Contextual details for the validation process.</param>
-		public void Validate(ValidationContext context)
+		Uri? newUri;
+		JsonSchema? baseSchema = null;
+		if (!string.IsNullOrEmpty(baseUri))
 		{
-			context.EnterKeyword(Name);
-			var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
-			var baseUri = parts[0];
-			var fragment = parts.Length > 1 ? parts[1] : null;
-
-
-			JsonSchema? GetSchema(Uri? uri, string? anchor)
-			{
-				var uriScope = uri ?? context.CurrentUri;
-				var currentScopeDefinesDynamicAnchor =
-					!string.IsNullOrEmpty(fragment) &&
-					context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(uriScope!, fragment!);
-
-				return currentScopeDefinesDynamicAnchor
-					? context.Options.SchemaRegistry.GetDynamic(uri, anchor)
-					: context.Options.SchemaRegistry.Get(uri, anchor);
-			}
-
-			Uri? newUri;
-			JsonSchema? baseSchema = null;
-			if (!string.IsNullOrEmpty(baseUri))
-			{
-				if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-					baseSchema = GetSchema(newUri, fragment);
-				else
-				{
-					var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-						? context.CurrentUri
-						: context.CurrentUri.GetParentUri();
-					newUri = new Uri(uriFolder, baseUri);
-					baseSchema = GetSchema(newUri, fragment);
-				}
-			}
+			if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
+				baseSchema = GetSchema(newUri, fragment);
 			else
 			{
-				newUri = context.CurrentUri;
-				baseSchema ??= GetSchema(newUri, fragment) ?? context.SchemaRoot;
-				newUri = baseSchema.BaseUri;
+				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
+					? context.CurrentUri
+					: context.CurrentUri.GetParentUri();
+				newUri = new Uri(uriFolder, baseUri);
+				baseSchema = GetSchema(newUri, fragment);
 			}
+		}
+		else
+		{
+			newUri = context.CurrentUri;
+			baseSchema ??= GetSchema(newUri, fragment) ?? context.SchemaRoot;
+			newUri = baseSchema.BaseUri;
+		}
 
-			var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
-			var navigation = (absoluteReference, context.InstanceLocation);
-			if (context.NavigatedReferences.Contains(navigation))
+		var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
+		var navigation = (absoluteReference, context.InstanceLocation);
+		if (context.NavigatedReferences.Contains(navigation))
+		{
+			context.LocalResult.Fail("Encountered recursive reference");
+			context.ExitKeyword(Name, false);
+			return;
+		}
+
+		JsonSchema? schema;
+		if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
+			schema = baseSchema ?? GetSchema(newUri, fragment);
+		else
+		{
+			if (baseSchema == null)
 			{
-				context.LocalResult.Fail("Encountered recursive reference");
+				context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
 				context.ExitKeyword(Name, false);
 				return;
 			}
 
-			JsonSchema? schema;
-			if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-				schema = baseSchema ?? GetSchema(newUri, fragment);
-			else
+			if (!string.IsNullOrEmpty(fragment))
 			{
-				if (baseSchema == null)
+				fragment = $"#{fragment}";
+				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
+					context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
 					context.ExitKeyword(Name, false);
 					return;
 				}
 
-				if (!string.IsNullOrEmpty(fragment))
-				{
-					fragment = $"#{fragment}";
-					if (!JsonPointer.TryParse(fragment, out var pointer))
-					{
-						context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
-						context.ExitKeyword(Name, false);
-						return;
-					}
-
-					(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
-				}
-				else
-					schema = baseSchema;
+				(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
 			}
-
-			if (schema == null)
-			{
-				context.LocalResult.Fail($"Could not resolve DynamicReference `{Reference}`");
-				context.ExitKeyword(Name, false);
-				return;
-			}
-
-			context.NavigatedReferences.Add(navigation);
-			context.Push(newUri: newUri);
-			schema.ValidateSubschema(context);
-			var result = context.LocalResult.IsValid;
-			context.Pop();
-			context.LocalResult.ConsolidateAnnotations();
-			if (result)
-				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail();
-			context.ExitKeyword(Name, context.LocalResult.IsValid);
+				schema = baseSchema;
 		}
 
-		/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-		/// <param name="other">An object to compare with this object.</param>
-		/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-		public bool Equals(DynamicRefKeyword? other)
+		if (schema == null)
 		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Equals(Reference, other.Reference);
+			context.LocalResult.Fail($"Could not resolve DynamicReference `{Reference}`");
+			context.ExitKeyword(Name, false);
+			return;
 		}
 
-		/// <summary>Determines whether the specified object is equal to the current object.</summary>
-		/// <param name="obj">The object to compare with the current object.</param>
-		/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-		public override bool Equals(object obj)
-		{
-			return Equals(obj as DynamicRefKeyword);
-		}
-
-		/// <summary>Serves as the default hash function.</summary>
-		/// <returns>A hash code for the current object.</returns>
-		public override int GetHashCode()
-		{
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			return Reference != null ? Reference.GetHashCode() : 0;
-		}
+		context.NavigatedReferences.Add(navigation);
+		context.Push(newUri: newUri);
+		schema.ValidateSubschema(context);
+		var result = context.LocalResult.IsValid;
+		context.Pop();
+		context.LocalResult.ConsolidateAnnotations();
+		if (result)
+			context.LocalResult.Pass();
+		else
+			context.LocalResult.Fail();
+		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	/// <param name="other">An object to compare with this object.</param>
+	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+	public bool Equals(DynamicRefKeyword? other)
 	{
-		public override DynamicRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			var uri = reader.GetString(); 
-			return new DynamicRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
+		if (ReferenceEquals(null, other)) return false;
+		if (ReferenceEquals(this, other)) return true;
+		return Equals(Reference, other.Reference);
+	}
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	/// <param name="obj">The object to compare with the current object.</param>
+	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+	public override bool Equals(object obj)
+	{
+		return Equals(obj as DynamicRefKeyword);
+	}
+
+	/// <summary>Serves as the default hash function.</summary>
+	/// <returns>A hash code for the current object.</returns>
+	public override int GetHashCode()
+	{
+		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+		return Reference != null ? Reference.GetHashCode() : 0;
+	}
+}
+
+internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
+{
+	public override DynamicRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var uri = reader.GetString(); 
+		return new DynamicRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
 
 
-		}
-		public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
-		{
-			writer.WritePropertyName(DynamicRefKeyword.Name);
-			JsonSerializer.Serialize(writer, value.Reference, options);
-		}
+	}
+	public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
+	{
+		writer.WritePropertyName(DynamicRefKeyword.Name);
+		JsonSerializer.Serialize(writer, value.Reference, options);
 	}
 }

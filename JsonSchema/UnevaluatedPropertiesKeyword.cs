@@ -102,7 +102,7 @@ namespace Json.Schema
 					continue;
 				}
 
-				context.Log(() => $"Validating property '{property.Name}'."); 
+				context.Log(() => $"Validating property '{property.Name}'.");
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")), item);
 				Schema.ValidateSubschema(context);
 				var localResult = context.LocalResult.IsValid;

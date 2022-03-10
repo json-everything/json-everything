@@ -21,7 +21,7 @@ namespace Json.Schema
 		/// <param name="results">The validation results.</param>
 		public delegate void ContextConsolidator(ValidationResults results);
 
-		private static readonly List<ContextConsolidator> _consolidationActions = new List<ContextConsolidator>();
+		private static readonly List<ContextConsolidator> _consolidationActions = new();
 
 		private Uri _currentUri;
 		private Uri? _absoluteUri;
