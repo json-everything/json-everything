@@ -1,6 +1,5 @@
-﻿namespace Json.Path
+﻿namespace Json.Path;
+
+internal interface IIndexExpression
 {
-	internal interface IIndexExpression
-	{
-	}
 }

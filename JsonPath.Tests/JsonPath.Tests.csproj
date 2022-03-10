@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
 
 		<IsPackable>false</IsPackable>
 
-    <RootNamespace>Json.Path.Tests</RootNamespace>
-	  <SignAssembly>true</SignAssembly>
-	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+		<RootNamespace>Json.Path.Tests</RootNamespace>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.2.0" />
-    <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
-    <PackageReference Include="nunit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="6.2.0" />
+		<PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
+		<PackageReference Include="nunit" Version="3.13.2" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JsonPath\JsonPath.csproj" />
+	</ItemGroup>
 
 </Project>

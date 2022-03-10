@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Json.Path.Tests.Suite
+namespace Json.Path.Tests.Suite;
+
+public class ComplianceTestSuite
 {
-	public class ComplianceTestSuite
-	{
-		public List<ComplianceTestCase> Tests { get; set; }
-	}
+	public List<ComplianceTestCase> Tests { get; set; }
 }
