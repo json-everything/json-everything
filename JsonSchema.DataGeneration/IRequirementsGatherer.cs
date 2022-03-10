@@ -1,7 +1,6 @@
-﻿namespace Json.Schema.DataGeneration
+﻿namespace Json.Schema.DataGeneration;
+
+internal interface IRequirementsGatherer
 {
-	internal interface IRequirementsGatherer
-	{
-		void AddRequirements(RequirementsContext context, JsonSchema schema);
-	}
+	void AddRequirements(RequirementsContext context, JsonSchema schema);
 }

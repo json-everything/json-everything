@@ -1,53 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	  <AssemblyName>JsonSchema.Net.DataGeneration</AssemblyName>
-	  <RootNamespace>Json.Schema.DataGeneration</RootNamespace>
-	  <Nullable>enable</Nullable>
-	  <LangVersion>latest</LangVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>JsonSchema.Net.DataGeneration</PackageId>
-    <Authors>Greg Dennis</Authors>
-    <Company />
-    <Product>JsonSchema.Net</Product>
-    <Description>JSON Schema built on the System.Text.Json namespace.</Description>
-    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-    <PackageTags>json-schema schema json generation</PackageTags>
-    <Version>0.1.1</Version>
-    <FileVersion>0.1.1.0</FileVersion>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
-    <DocumentationFile>JsonSchema.Net.DataGeneration.xml</DocumentationFile>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>JsonSchema.Net.DataGeneration</AssemblyName>
+		<RootNamespace>Json.Schema.DataGeneration</RootNamespace>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>JsonSchema.Net.DataGeneration</PackageId>
+		<Authors>Greg Dennis</Authors>
+		<Company />
+		<Product>JsonSchema.Net</Product>
+		<Description>JSON Schema built on the System.Text.Json namespace.</Description>
+		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+		<PackageTags>json-schema schema json generation</PackageTags>
+		<Version>0.1.1</Version>
+		<FileVersion>0.1.1.0</FileVersion>
+		<AssemblyVersion>0.0.0.0</AssemblyVersion>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>json-logo-256.png</PackageIcon>
+		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
+		<DocumentationFile>JsonSchema.Net.DataGeneration.xml</DocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Bogus" Version="33.1.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Bogus" Version="33.1.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\docs_source\release-notes\json-schema.md" Link="json-schema.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\docs_source\release-notes\json-schema.md" Link="json-schema.md" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\Resources\json-logo-256.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

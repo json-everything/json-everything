@@ -1,20 +1,19 @@
-﻿namespace Json.Schema.DataGeneration.Generators
+﻿namespace Json.Schema.DataGeneration.Generators;
+
+internal class EnumGenerator : IPrioritizedDataGenerator
 {
-	internal class EnumGenerator : IPrioritizedDataGenerator
+	public static EnumGenerator Instance { get; } = new();
+
+	private EnumGenerator() { }
+
+	public bool Applies(RequirementsContext context)
 	{
-		public static EnumGenerator Instance { get; } = new EnumGenerator();
+		return context.EnumOptions != null;
+	}
 
-		private EnumGenerator() { }
-
-		public bool Applies(RequirementsContext context)
-		{
-			return context.EnumOptions != null;
-		}
-
-		public GenerationResult Generate(RequirementsContext context)
-		{
-			var value = JsonSchemaExtensions.Randomizer.ListItem(context.EnumOptions);
-			return GenerationResult.Success(value);
-		}
+	public GenerationResult Generate(RequirementsContext context)
+	{
+		var value = JsonSchemaExtensions.Randomizer.ListItem(context.EnumOptions);
+		return GenerationResult.Success(value);
 	}
 }
