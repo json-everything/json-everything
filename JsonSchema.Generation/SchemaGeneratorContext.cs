@@ -202,7 +202,8 @@ public class SchemaGeneratorContext
 		unchecked
 		{
 			var hashCode = Type.GetHashCode();
-			hashCode = (hashCode * 397) ^ Attributes.GetAttributeSetHashCode();
+			// ReSharper disable once ConstantConditionalAccessQualifier
+			hashCode = (hashCode * 397) ^ (Attributes?.GetAttributeSetHashCode() ?? 0);
 			return hashCode;
 		}
 	}

@@ -64,9 +64,7 @@ public static class TypeExtensions
 
 	internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
 	{
-		var eligible = items.Where(
-			a => !(a is JsonPropertyNameAttribute) &&
-			     !(a is RequiredAttribute));
+		var eligible = items.Where(a => a is not JsonPropertyNameAttribute and not RequiredAttribute);
 		unchecked
 		{
 			int hashCode = 0;
