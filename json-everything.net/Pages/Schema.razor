@@ -1,0 +1,68 @@
+﻿@page "/json-schema"
+@using System.Text.Json
+
+@using Json.Schema
+
+@using BlazorMonaco
+
+<PageTitle>JSON Schema - json-everything.net</PageTitle>
+
+<h1 class="display-4">JSON Schema</h1>
+<p>
+    Constraints-based validation of JSON data
+    <br />
+    Learn more about
+    <a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink" /></a>
+</p>
+
+<div>
+    <MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="EditorConstructionOptions"/>
+    <MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="EditorConstructionOptions"/>
+
+    <button class="btn btn-primary" @onclick="Validate">Validate</button>
+</div>
+
+<div>
+    <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadonlyEditorConstructionOptions"/>
+</div>
+
+@code {
+#pragma warning disable CS8618
+    private MonacoEditor _schemaEditor;
+    private MonacoEditor _instanceEditor;
+    private MonacoEditor _outputEditor;
+#pragma warning restore CS8618
+
+    private async Task Validate()
+    {
+        var schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+        var instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+
+        var results = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Detailed});
+
+        var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
+
+        await _outputEditor.SetValue(resultText);
+    }
+
+    private static StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "json",
+            Theme = "vs-dark"
+        };
+    }
+
+    private static StandaloneEditorConstructionOptions ReadonlyEditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "json",
+            ReadOnly = true,
+            Theme = "vs-dark"
+        };
+    }
+}
