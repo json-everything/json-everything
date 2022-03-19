@@ -28,6 +28,12 @@ a, .btn-link {
   color: red;
 }
 
+.brand-colors {
+	color: #fff;
+	background-color: #6800B7;
+	border-color: #6800B7;
+}
+
 #blazor-error-ui {
   background-color: #1e1e1e;
   bottom: 0;
@@ -57,11 +63,10 @@ a, .btn-link {
     content: "An error has occurred."
   }
 
-
 a.navbar-brand {
-  text-align: center;
-  white-space: normal;
-  word-break: break-all;
+	white-space: normal;
+	word-break: break-all;
+	color: #ffffff;
 }
 
 .text-muted-light {
@@ -104,3 +109,11 @@ a.navbar-brand {
     .show > .btn-primary.dropdown-toggle:focus {
       box-shadow: 0 0 0 0.2rem rgba(91, 0, 159, 0.5);
     }
+
+/*--- OPTIONS ---*/
+
+.options-border {
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
+}

@@ -96,7 +96,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration.Tests", "JsonSchema.DataGeneration.Tests\JsonSchema.DataGeneration.Tests.csproj", "{FABD51FE-F729-4D02-8295-66A6687C6240}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "json-everything.net", "json-everything.net\json-everything.net.csproj", "{38C3F2AF-B356-456D-BC5F-C382085F3798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json-everything.net", "json-everything.net\json-everything.net.csproj", "{38C3F2AF-B356-456D-BC5F-C382085F3798}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

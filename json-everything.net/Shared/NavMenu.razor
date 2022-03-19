@@ -1,65 +1,46 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand text-monospace" href="">json-everything</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-row">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="json-schema">
-                <div>
-                    <div>JSON Schema</div>
-                    <div class="feature-description">Constraints-based validation of JSON data</div>
-                </div>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="json-path">
-                <div>
-                    <div>JSON Path</div>
-                    <div class="feature-description">Query JSON data - "XPath for JSON"</div>
-                </div>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="json-patch">
-                <div>
-                    <div>JSON Patch</div>
-                    <div class="feature-description">Describe and process alterations to JSON documents</div>
-                </div>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="json-logic">
-                <div>
-                    <div>JSON Logic</div>
-                    <div class="feature-description">Complex rule definition and evaluation using JSON</div>
-                </div>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="json-pointer">
-                <div>
-                    <div>JSON Pointer</div>
-                    <div class="feature-description">Identify specific locations within JSON data</div>
-                </div>
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-}
+﻿<nav class="mx-3 navbar">
+	<div class="container-fluid width-auto">
+		<div class="row justify-content-center">
+			<div class="col px-3">
+				<NavLink class="nav-link text-center" href="json-schema">
+					<div class="brand-colors">
+						<div>JSON Schema</div>
+						<div class="feature-description">Constraints-based validation of JSON data</div>
+					</div>
+				</NavLink>
+			</div>
+			<div class="col px-3">
+				<NavLink class="nav-link text-center" href="json-path">
+					<div class="brand-colors">
+						<div>JSON Path</div>
+						<div class="feature-description">Query JSON data - "XPath for JSON"</div>
+					</div>
+				</NavLink>
+			</div>
+			<div class="col px-3">
+				<NavLink class="nav-link text-center" href="json-patch">
+					<div class="brand-colors">
+						<div>JSON Patch</div>
+						<div class="feature-description">Describe and process alterations to JSON documents</div>
+					</div>
+				</NavLink>
+			</div>
+			<div class="col px-3">
+				<NavLink class="nav-link text-center" href="json-logic">
+					<div class="brand-colors">
+						<div>JSON Logic</div>
+						<div class="feature-description">Complex rule definition and evaluation using JSON</div>
+					</div>
+				</NavLink>
+			</div>
+			<div class="col px-3">
+				<NavLink class="nav-link text-center" href="json-pointer">
+					<div class="brand-colors">
+						<div>JSON Pointer</div>
+						<div class="feature-description">Identify specific locations within JSON data</div>
+					</div>
+				</NavLink>
+			</div>
+		</div>
+	</div>
+</nav>

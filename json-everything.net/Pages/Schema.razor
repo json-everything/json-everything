@@ -25,7 +25,36 @@
 			</div>
 			<div class="col mx-3">
 				<div class="vstack gap-3">
+					<EditForm Model="_options">
+						<label>
+							Output format:<br/>
+							<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format">
+								@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
+								{
+									<option value="@format">@format</option>
+								}
+							</InputSelect>
+						</label>
+						<label>
+							Draft:<br/>
+							<InputSelect @bind-Value="_options.Draft" DisplayName="Draft">
+								@foreach (Draft draft in Enum.GetValues(typeof(Draft)))
+								{
+									<option value="@draft">@GetDescription(draft)</option>
+								}
+							</InputSelect>
+						</label>
+						<label>
+							Default base URI:<br/>
+							<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI"/>
+						</label>
+						<label>
+							<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
+							Validate <code>format</code>
+						</label>
+					</EditForm>
 					<button class="btn btn-primary" @onclick="Validate">Validate</button>
+					<hr/>
 					<button class="btn btn-primary" @onclick="Generate">Generate Data</button>
 				</div>
 			</div>
@@ -49,14 +78,44 @@
     private MonacoEditor _schemaEditor;
     private MonacoEditor _instanceEditor;
     private MonacoEditor _outputEditor;
+	// ReSharper disable once FieldCanBeMadeReadOnly.Local
+	private SchemaOptionsModel _options = new();
 #pragma warning restore CS8618
 
-    private async Task Validate()
+	private class SchemaOptionsModel
+	{
+		public OutputFormat OutputFormat { get; set; } = OutputFormat.Detailed;
+		public Draft Draft { get; set; } = Draft.Draft202012;
+		public string? DefaultBaseUri { get; set; }
+		public bool ValidateFormat { get; set; }
+
+		public ValidationOptions ToValidationOptions() => new()
+		{
+			OutputFormat = OutputFormat,
+			ValidateAs = Draft,
+			DefaultBaseUri = Uri.TryCreate(DefaultBaseUri, UriKind.Absolute, out var uri)
+				? uri
+				: null!,
+			RequireFormatValidation = ValidateFormat
+		};
+	}
+
+	private static string GetDescription(Draft draft) => draft switch
+	{
+		Draft.Draft6 => "Draft 6",
+		Draft.Draft7 => "Draft 7",
+		Draft.Draft201909 => "Draft 2019-09",
+		Draft.Unspecified => "Draft 2020-12",
+		Draft.Draft202012 => "Draft 2020-12",
+		_ => "Draft 2020-12"
+	};
+
+	private async Task Validate()
     {
         var schema = JsonSchema.FromText(await _schemaEditor.GetValue());
         var instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
 
-        var results = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Detailed});
+        var results = schema.Validate(instance, _options.ToValidationOptions());
 
         var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
 
