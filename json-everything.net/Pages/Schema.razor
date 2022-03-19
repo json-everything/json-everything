@@ -1,29 +1,47 @@
 ﻿@page "/json-schema"
-@using System.Text.Json
-
-@using Json.Schema
-
+@using Json.Schema.DataGeneration
 @using BlazorMonaco
+@using Json.Schema
+@using System.Text.Json
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
 <h1 class="display-4">JSON Schema</h1>
 <p>
     Constraints-based validation of JSON data
-    <br />
+    <br/>
     Learn more about
-    <a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink" /></a>
+    <a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink"/></a>
 </p>
 
-<div>
-    <MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="EditorConstructionOptions"/>
-    <MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="EditorConstructionOptions"/>
+<div class="vstack gap-5">
+	<div>
+		<div class="row">
+			<div class="col-5">
+				<div class="editor-input">
+					<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="EditorConstructionOptions"
+					              CssClass="h-100"/>
+				</div>
+			</div>
+			<div class="col mx-3">
+				<div class="vstack gap-3">
+					<button class="btn btn-primary" @onclick="Validate">Validate</button>
+					<button class="btn btn-primary" @onclick="Generate">Generate Data</button>
+				</div>
+			</div>
+			<div class="col-5">
+				<div class="editor-input">
+					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="EditorConstructionOptions"
+					              CssClass="h-100"/>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <button class="btn btn-primary" @onclick="Validate">Validate</button>
-</div>
-
-<div>
-    <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadonlyEditorConstructionOptions"/>
+	<div class="editor-input">
+		<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadonlyEditorConstructionOptions"
+		              CssClass="h-100"/>
+	</div>
 </div>
 
 @code {
@@ -45,24 +63,44 @@
         await _outputEditor.SetValue(resultText);
     }
 
+    private async Task Generate()
+    {
+        var schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+
+        var generationResults = schema.GenerateData();
+
+        if (generationResults.IsSuccess)
+        {
+            var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
+            await _instanceEditor.SetValue(instance);
+        }
+        else
+        {
+            await _outputEditor.SetValue(generationResults.ErrorMessage);
+        }
+    }
+
     private static StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
         return new StandaloneEditorConstructionOptions
         {
             AutomaticLayout = true,
             Language = "json",
-            Theme = "vs-dark"
+            Theme = "vs-dark",
+            SelectOnLineNumbers = true,
+            Scrollbar = new EditorScrollbarOptions
+            {
+                AlwaysConsumeMouseWheel = false
+            }
         };
     }
 
     private static StandaloneEditorConstructionOptions ReadonlyEditorConstructionOptions(MonacoEditor editor)
     {
-        return new StandaloneEditorConstructionOptions
-        {
-            AutomaticLayout = true,
-            Language = "json",
-            ReadOnly = true,
-            Theme = "vs-dark"
-        };
+	    var options = EditorConstructionOptions(editor);
+	    options.ReadOnly = true;
+
+	    return options;
     }
+
 }

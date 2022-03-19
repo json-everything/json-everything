@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 

@@ -1,8 +1,9 @@
 .page {
-    position: relative;
-    display: flex;
+/*    background-color: #2e2e2e;
+    color: white;
+*/    display: flex;
     flex-direction: column;
-    background-color: #1e1e1e;
+    position: relative;
 }
 
 main {
@@ -14,18 +15,18 @@ main {
 }
 
 .top-row {
+    align-items: center;
     background-color: #5B009F;
     border-bottom: 1px solid #5B009F;
-    justify-content: flex-end;
-    height: 3.5rem;
     display: flex;
-    align-items: center;
+    height: 3.5rem;
+    justify-content: flex-end;
 }
 
 .top-row ::deep a, .top-row ::deep .btn-link {
-    white-space: nowrap;
     margin-left: 1.5rem;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
@@ -57,10 +58,10 @@ main {
     }
 
     .sidebar {
-        width: 250px;
         height: 100vh;
         position: sticky;
         top: 0;
+        width: 250px;
     }
 
     .top-row {
