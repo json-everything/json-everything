@@ -1,23 +1,23 @@
-﻿@page "/json-pointer"
+﻿@page "/json-path"
 @using BlazorMonaco
 @using System.Text.Json
-@using Json.Pointer
+@using Json.Path
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 
 @inject CookieManager _cookieManager;
 
-<PageTitle>JSON Pointer - json-everything.net</PageTitle>
+<PageTitle>JSON Path - json-everything.net</PageTitle>
 
 <div class="navbar">
 	<div class="align-items-center hstack mx-2">
-		<h1 class="display-4">JSON Pointer</h1>
+		<h1 class="display-4">JSON Path</h1>
 		<div class="align-items-center mx-3">
 			<div>
-				Identify specific locations within JSON data
+				Query JSON data - "XPath for JSON"
 				<br/>
 				Learn more about
-				<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
+				<a href="https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base" target="_blank">JSON Path <ExternalLinkIcon/></a>
 			</div>
 		</div>
 	</div>
@@ -34,7 +34,7 @@
 <EditForm Model="_input" class="col-12 mb-4">
 	<label class="my-2 w-100">
 		Path
-		<InputText @bind-Value="_input.Pointer" DisplayName="Default base URI" class="form-control"
+		<InputText @bind-Value="_input.Path" DisplayName="Default base URI" class="form-control"
 		           @oninput="SavePath"/>
 	</label>
 </EditForm>
@@ -70,13 +70,13 @@
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
-		LibraryVersion.GetFor<JsonPointer>(),
+		LibraryVersion.GetFor<JsonPath>(),
 	};
 #pragma warning restore CS8618
 
 	private class InputModel
 	{
-		public string? Pointer { get; set; }
+		public string? Path { get; set; }
 	}
 
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
@@ -92,14 +92,14 @@
 
 	private async Task Evaluate()
 	{
-		JsonPointer pointer;
+		JsonPath path;
 		try
 		{
-			pointer = JsonPointer.Parse(_input.Pointer!);
+			path = JsonPath.Parse(_input.Path!);
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Pointer is invalid");
+			Console.WriteLine("Path is invalid");
 			return;
 		}
 		JsonElement instance;
@@ -113,10 +113,10 @@
 			return;
 		}
 
-		var results = pointer.Evaluate(instance);
+		var results = path.Evaluate(instance);
 
-		var resultText = results.HasValue
-			? JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true})
+		var resultText = results.Error == null
+			? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions {WriteIndented = true})
 			: string.Empty;
 
 		await _outputEditor.SetValue(resultText);
@@ -124,29 +124,29 @@
 
 	private async Task SavePath(ChangeEventArgs args)
 	{
-		var pointerText = args.Value as string;
+		var pathText = args.Value as string;
 
-		await _cookieManager.Set("pointer", pointerText ?? string.Empty);
+		await _cookieManager.Set("path", pathText ?? string.Empty);
 	}
 
 	private void LoadSavedPath()
 	{
-		var pointerText = _cookieManager.Get("pointer");
-		if (pointerText == null) return;
+		var pathText = _cookieManager.Get("path");
+		if (pathText == null) return;
 
-		_input.Pointer = pointerText;
+		_input.Path = pathText;
 	}
 
 	private async Task SaveInstance()
 	{
 		var instanceText = await _instanceEditor.GetValue();
 
-		await _cookieManager.Set("pointer-instance", instanceText);
+		await _cookieManager.Set("path-instance", instanceText);
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var instanceText = _cookieManager.Get("pointer-instance");
+		var instanceText = _cookieManager.Get("path-instance");
 		if (instanceText == null) return;
 
 		await _instanceEditor.SetValue(instanceText);
