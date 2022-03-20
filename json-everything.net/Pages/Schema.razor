@@ -224,29 +224,29 @@
 	{
 		var schemaText = await _schemaEditor.GetValue();
 
-		await _cookieManager.Set(new Cookie {Key = "schema", Value = schemaText});
+		await _cookieManager.Set("schema", schemaText);
 	}
 
 	private async Task LoadSavedSchema()
 	{
-		var schemaText = await _cookieManager.Get("schema");
+		var schemaText = _cookieManager.Get("schema");
 		if (schemaText == null) return;
 
-		await _schemaEditor.SetValue(schemaText.Value);
+		await _schemaEditor.SetValue(schemaText);
 	}
 
 	private async Task SaveInstance()
 	{
 		var schemaText = await _instanceEditor.GetValue();
 
-		await _cookieManager.Set(new Cookie {Key = "instance", Value = schemaText});
+		await _cookieManager.Set("instance", schemaText);
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = await _cookieManager.Get("instance");
+		var schemaText = _cookieManager.Get("instance");
 		if (schemaText == null) return;
 
-		await _instanceEditor.SetValue(schemaText.Value);
+		await _instanceEditor.SetValue(schemaText);
 	}
 }

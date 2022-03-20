@@ -14,19 +14,19 @@ public class CookieManager
 		_cache = new Dictionary<string, string>();
 	}
 
-	public async Task Set(Cookie cookie)
+	public async Task Set(string key, string value)
 	{
-		var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(cookie.Value), Base64FormattingOptions.None);
-		await SetValue(cookie.Key, base64, cookie.LifetimeInDays);
+		var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(value), Base64FormattingOptions.None);
+		await SetValue(key, base64, 30);
 	}
 
-	public async Task<Cookie?> Get(string key)
+	public string? Get(string key)
 	{
-		var base64 = await GetValue(key, null);
+		var base64 = GetValue(key, null);
 		if (base64 == null) return null;
 
 		var value = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
-		return new Cookie {Key = key, Value = value};
+		return value;
 	}
 
 	public async Task Initialize()
@@ -50,7 +50,7 @@ public class CookieManager
 
 	private async Task SetValue(string key, string value, int? days = null)
 	{
-		_cache![key] = value;
+		_cache[key] = value;
 
 		var curExp = days is > 0
 			? DateToUtc(days.Value)
@@ -59,9 +59,9 @@ public class CookieManager
 		await SetCookie($"{key}={value}; expires={curExp}; path=/");
 	}
 
-	private async Task<string?> GetValue(string key, string? defaultValue = "")
+	private string? GetValue(string key, string? defaultValue = "")
 	{
-		if (_cache!.TryGetValue(key, out var value)) return value;
+		if (_cache.TryGetValue(key, out var value)) return value;
 
 		return defaultValue;
 	}
