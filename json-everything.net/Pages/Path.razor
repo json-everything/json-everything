@@ -131,8 +131,7 @@
 
 	private void LoadSavedPath()
 	{
-		var pathText = _cookieManager.Get("path");
-		if (pathText == null) return;
+		var pathText = _cookieManager.Get("path") ?? string.Empty;
 
 		_input.Path = pathText;
 	}
@@ -146,8 +145,7 @@
 
 	private async Task LoadSavedInstance()
 	{
-		var instanceText = _cookieManager.Get("path-instance");
-		if (instanceText == null) return;
+		var instanceText = _cookieManager.Get("path-instance") ?? string.Empty;
 
 		await _instanceEditor.SetValue(instanceText);
 	}

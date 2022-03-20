@@ -1,23 +1,24 @@
-﻿@page "/json-patch"
+﻿@page "/json-logic"
 @using BlazorMonaco
 @using System.Text.Json
+@using Json.Logic
 @using Json.Patch
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 
 @inject CookieManager _cookieManager;
 
-<PageTitle>JSON Patch - json-everything.net</PageTitle>
+<PageTitle>JSON Logic - json-everything.net</PageTitle>
 
 <div class="navbar">
 	<div class="align-items-center hstack mx-2">
-		<h1 class="display-4">JSON Patch</h1>
+		<h1 class="display-4">JSON Logic</h1>
 		<div class="align-items-center mx-3">
 			<div>
-				Describe and process alterations to JSON documents
+				Complex rule definition and evaluation using JSON
 				<br/>
 				Learn more about
-				<a href="http://jsonpatch.com/" target="_blank">JSON Patch <ExternalLinkIcon/></a>
+				<a href="https://jsonlogic.com/" target="_blank">JSON Logic <ExternalLinkIcon/></a>
 			</div>
 		</div>
 	</div>
@@ -36,10 +37,10 @@
 		<div class="row">
 			<div class="col-5">
 				<label class="w-100">
-					Patch / Source data
+					Logic
 					<div class="editor-input">
-						<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
-						              CssClass="h-100" OnKeyUp="SavePatch"/>
+						<MonacoEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveLogic"/>
 					</div>
 				</label>
 			</div>
@@ -52,7 +53,7 @@
 			</div>
 			<div class="col-5">
 				<label class="w-100">
-					Data / Target data
+					Data
 					<div class="editor-input">
 						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 						              CssClass="h-100" OnKeyUp="SaveInstance"/>
@@ -70,13 +71,13 @@
 
 @code {
 #pragma warning disable CS8618
-	private MonacoEditor _patchEditor;
+	private MonacoEditor _logicEditor;
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
-		LibraryVersion.GetFor<JsonPatch>(),
+		LibraryVersion.GetFor<Rule>(),
 	};
 #pragma warning restore CS8618
 
@@ -85,14 +86,14 @@
 
 	private async Task Apply()
 	{
-		JsonPatch patch;
+		Rule rule;
 		try
 		{
-			patch = JsonSerializer.Deserialize<JsonPatch>(await _patchEditor.GetValue())!;
+			rule = JsonSerializer.Deserialize<Rule>(await _logicEditor.GetValue())!;
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Patch is invalid");
+			Console.WriteLine("Rule is invalid");
 			return;
 		}
 		JsonElement instance;
@@ -102,15 +103,13 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Instance is invalid");
+			Console.WriteLine("Data is invalid");
 			return;
 		}
 
-		var results = patch.Apply(instance);
+		var results = rule.Apply(instance);
 
-		var resultText = results.IsSuccess
-			? JsonSerializer.Serialize(results.Result, new JsonSerializerOptions {WriteIndented = true})
-			: results.Error;
+		var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
 
 		await _outputEditor.SetValue(resultText);
 	}
@@ -120,7 +119,7 @@
 		JsonElement source;
 		try
 		{
-			source = JsonDocument.Parse(await _patchEditor.GetValue()).RootElement;
+			source = JsonDocument.Parse(await _logicEditor.GetValue()).RootElement;
 		}
 		catch (Exception e)
 		{
@@ -149,30 +148,30 @@
 			await _outputEditor.SetValue("Unable to create patch");
 	}
 
-	private async Task SavePatch()
+	private async Task SaveLogic()
 	{
-		var schemaText = await _patchEditor.GetValue();
+		var schemaText = await _logicEditor.GetValue();
 
-		await _cookieManager.Set("patch", schemaText);
+		await _cookieManager.Set("logic", schemaText);
 	}
 
-	private async Task LoadSavedPatch()
+	private async Task LoadSavedLogic()
 	{
-		var schemaText = _cookieManager.Get("patch") ?? string.Empty;
+		var schemaText = _cookieManager.Get("logic") ?? string.Empty;
 
-		await _patchEditor.SetValue(schemaText);
+		await _logicEditor.SetValue(schemaText);
 	}
 
 	private async Task SaveInstance()
 	{
 		var schemaText = await _instanceEditor.GetValue();
 
-		await _cookieManager.Set("patch-instance", schemaText);
+		await _cookieManager.Set("logic-instance", schemaText);
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = _cookieManager.Get("patch-instance") ?? string.Empty;
+		var schemaText = _cookieManager.Get("logic-instance") ?? string.Empty;
 
 		await _instanceEditor.SetValue(schemaText);
 	}
@@ -181,7 +180,7 @@
 	{
 		await _cookieManager.Initialize();
 
-		await LoadSavedPatch();
+		await LoadSavedLogic();
 		await LoadSavedInstance();
 	}
 

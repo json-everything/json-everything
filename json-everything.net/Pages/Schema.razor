@@ -39,10 +39,13 @@
 	<div>
 		<div class="row">
 			<div class="col-5">
-				<div class="editor-input">
-					<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-					              CssClass="h-100" OnKeyUp="SaveSchema"/>
-				</div>
+				<label class="w-100">
+					Schema
+					<div class="editor-input">
+						<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveSchema"/>
+					</div>
+				</label>
 			</div>
 			<div class="col mx-3">
 				<div class="vstack gap-3">
@@ -82,10 +85,13 @@
 				</div>
 			</div>
 			<div class="col-5">
-				<div class="editor-input">
-					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-					              CssClass="h-100" OnKeyUp="SaveInstance"/>
-				</div>
+				<label class="w-100">
+					Instance
+					<div class="editor-input">
+						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveInstance"/>
+					</div>
+				</label>
 			</div>
 		</div>
 	</div>
@@ -211,8 +217,7 @@
 
 	private async Task LoadSavedSchema()
 	{
-		var schemaText = _cookieManager.Get("schema");
-		if (schemaText == null) return;
+		var schemaText = _cookieManager.Get("schema") ?? string.Empty;
 
 		await _schemaEditor.SetValue(schemaText);
 	}
@@ -226,8 +231,7 @@
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = _cookieManager.Get("schema-instance");
-		if (schemaText == null) return;
+		var schemaText = _cookieManager.Get("schema-instance") ?? string.Empty;
 
 		await _instanceEditor.SetValue(schemaText);
 	}

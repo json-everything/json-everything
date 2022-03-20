@@ -131,8 +131,7 @@
 
 	private void LoadSavedPath()
 	{
-		var pointerText = _cookieManager.Get("pointer");
-		if (pointerText == null) return;
+		var pointerText = _cookieManager.Get("pointer") ?? string.Empty;
 
 		_input.Pointer = pointerText;
 	}
@@ -146,8 +145,7 @@
 
 	private async Task LoadSavedInstance()
 	{
-		var instanceText = _cookieManager.Get("pointer-instance");
-		if (instanceText == null) return;
+		var instanceText = _cookieManager.Get("pointer-instance") ?? string.Empty;
 
 		await _instanceEditor.SetValue(instanceText);
 	}

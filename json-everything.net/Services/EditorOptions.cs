@@ -14,7 +14,8 @@ namespace JsonEverythingNet.Services
 				Scrollbar = new EditorScrollbarOptions
 				{
 					AlwaysConsumeMouseWheel = false
-				}
+				},
+				ScrollBeyondLastLine = false
 			};
 
 		public static StandaloneEditorConstructionOptions Readonly()
