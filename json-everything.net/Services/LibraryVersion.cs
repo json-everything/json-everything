@@ -9,15 +9,18 @@ public class LibraryVersion
 {
 	public string Name { get; private init; }
 	public string Version { get; private init; }
+	public string NugetLink { get; private init; }
 
 	public static LibraryVersion GetFor<T>()
 	{
 		var attribute = typeof(T).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 		var version = Regex.Match(attribute!.InformationalVersion, @"\d+\.\d+\.\d+").Value;
-		return new LibraryVersion
+        var name = typeof(T).Assembly.GetName().Name!;
+        return new LibraryVersion
 		{
-			Name = typeof(T).Assembly.GetName().Name!,
-			Version = version
+			Name = name,
+			Version = version,
+			NugetLink = $"https://nuget.org/packages/{name}"
 		};
 	}
 }

@@ -1,5 +1,5 @@
-# https://github.com/marketplace/actions/publish-nuget
-name: Publish TryJsonEverything
+# https://github.com/marketplace/actions/deploy-to-heroku
+name: Publish json-everything.net
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ on:
       - JsonSchema.UniqueKeys/**
       - JsonSchema.Generation/**
       - JsonSchema.DataGeneration/**
-      - TryJsonEverything/**
+      - json-everything.net/**
   workflow_dispatch:
 
 jobs:

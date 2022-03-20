@@ -28,14 +28,12 @@
 	<div class="align-items-center mt-1">
 		@foreach (var library in _libraries)
 		{
-			<div class="btn version-callout mx-2">
-				<span class="font-monospace fw-bold">@library.Name</span><br/>@@ v@(library.Version)
-			</div>
+		    <NugetLibrary Library="library"/>
 		}
 	</div>
 </div>
 
-<div class="vstack gap-5 mt-4">
+<div class="vstack gap-3 mt-4">
 	<div>
 		<div class="row">
 			<div class="col-5">
@@ -95,11 +93,14 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="editor-input">
-		<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
-		              CssClass="h-100"/>
-	</div>
+    
+    <label>
+        Results
+        <div class="editor-input">
+            <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+                          CssClass="h-100"/>
+        </div>
+    </label>
 </div>
 
 @code {
@@ -231,6 +232,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await _cookieManager.Initialize();
+	    await _outputEditor.SetValue(string.Empty);
 
 		await LoadSavedSchema();
 		await LoadSavedInstance();

@@ -1,0 +1,14 @@
+﻿@using JsonEverythingNet.Services
+
+<a href="@Library.NugetLink" target="_blank">
+    <div class="btn version-callout mx-2 highlight">
+        <span class="font-monospace fw-bold">@Library.Name</span><br/>@@ v@(Library.Version)
+    </div>
+</a>
+
+@code{
+
+    [Parameter]
+    public LibraryVersion Library { get; set; }
+
+}

@@ -24,16 +24,14 @@
 	<div class="align-items-center mt-1">
 		@foreach (var library in _libraries)
 		{
-			<div class="btn version-callout mx-2">
-				<span class="font-monospace fw-bold">@library.Name</span><br/>@@ v@(library.Version)
-			</div>
+		    <NugetLibrary Library="library"/>
 		}
 	</div>
 </div>
 
 <EditForm Model="_input" class="col-12 mb-4">
 	<label class="my-2 w-100">
-		Path
+		Pointer
 		<InputText @bind-Value="_input.Pointer" DisplayName="Default base URI" class="form-control"
 		           @oninput="SavePath"/>
 	</label>
@@ -42,21 +40,23 @@
 <div class="vstack gap-5">
 	<div>
 		<div class="row">
-			<div class="col-5">
-				<div class="editor-input">
-					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-					              CssClass="h-100" OnKeyUp="SaveInstance"/>
-				</div>
-			</div>
+            <label class="col-5">
+                Data
+                <div class="editor-input">
+                    <MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+                                  CssClass="h-100" OnKeyUp="SaveInstance"/>
+                </div>
+            </label>
 			<div class="col mx-2 align-items-center row">
 				<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
 			</div>
-			<div class="col-5">
-				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-					              CssClass="h-100"/>
-				</div>
-			</div>
+            <label class="col-5">
+                Result
+                <div class="editor-input">
+                    <MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+                                  CssClass="h-100"/>
+                </div>
+            </label>
 		</div>
 	</div>
 </div>
@@ -85,6 +85,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await _cookieManager.Initialize();
+	    await _outputEditor.SetValue(string.Empty);
 
 		LoadSavedPath();
 		await LoadSavedInstance();
@@ -117,7 +118,7 @@
 
 		var resultText = results.HasValue
 			? JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true})
-			: string.Empty;
+			: "No value found at that location";
 
 		await _outputEditor.SetValue(resultText);
 	}
