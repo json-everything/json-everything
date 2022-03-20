@@ -7,6 +7,7 @@
 @using Json.Schema.Generation
 @using Json.Schema.UniqueKeys
 @using JsonEverythingNet.Services
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
 
 @inject CookieManager _cookieManager;
 
@@ -20,7 +21,7 @@
 				Constraints-based validation of JSON data
 				<br/>
 				Learn more about
-				<a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink"/></a>
+				<a href="https://json-schema.org" target="_blank">JSON Schema <ExternalLinkIcon/></a>
 			</div>
 		</div>
 	</div>
@@ -34,13 +35,13 @@
 	</div>
 </div>
 
-<div class="vstack gap-5">
+<div class="vstack gap-5 mt-4">
 	<div>
 		<div class="row">
 			<div class="col-5">
 				<div class="editor-input">
-					<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="EditorConstructionOptions"
-					              CssClass="h-100" OnKeyUp="SaveSchema" OnDidInit="LoadSavedSchema"/>
+					<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+					              CssClass="h-100" OnKeyUp="SaveSchema"/>
 				</div>
 			</div>
 			<div class="col mx-3">
@@ -82,15 +83,15 @@
 			</div>
 			<div class="col-5">
 				<div class="editor-input">
-					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="EditorConstructionOptions"
-					              CssClass="h-100" OnKeyUp="SaveInstance" OnDidInit="LoadSavedInstance"/>
+					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+					              CssClass="h-100" OnKeyUp="SaveInstance"/>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="editor-input">
-		<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadonlyEditorConstructionOptions"
+		<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
 		              CssClass="h-100"/>
 	</div>
 </div>
@@ -131,6 +132,9 @@
 		};
 	}
 
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
 	private static string GetDescription(Draft draft) => draft switch
 	{
 		Draft.Draft6 => "Draft 6",
@@ -139,7 +143,7 @@
 		Draft.Unspecified => "Draft 2020-12",
 		Draft.Draft202012 => "Draft 2020-12",
 		_ => "Draft 2020-12"
-		};
+	};
 
 	private async Task Validate()
 	{
@@ -190,34 +194,12 @@
 		{
 			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
 			await _instanceEditor.SetValue(instance);
+			await SaveInstance();
 		}
 		else
 		{
 			await _outputEditor.SetValue(generationResults.ErrorMessage);
 		}
-	}
-
-	private static StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
-	{
-		return new StandaloneEditorConstructionOptions
-		{
-			AutomaticLayout = true,
-			Language = "json",
-			Theme = "vs-dark",
-			SelectOnLineNumbers = true,
-			Scrollbar = new EditorScrollbarOptions
-			{
-				AlwaysConsumeMouseWheel = false
-			}
-		};
-	}
-
-	private static StandaloneEditorConstructionOptions ReadonlyEditorConstructionOptions(MonacoEditor editor)
-	{
-		var options = EditorConstructionOptions(editor);
-		options.ReadOnly = true;
-
-		return options;
 	}
 
 	private async Task SaveSchema()
@@ -239,14 +221,23 @@
 	{
 		var schemaText = await _instanceEditor.GetValue();
 
-		await _cookieManager.Set("instance", schemaText);
+		await _cookieManager.Set("schema-instance", schemaText);
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = _cookieManager.Get("instance");
+		var schemaText = _cookieManager.Get("schema-instance");
 		if (schemaText == null) return;
 
 		await _instanceEditor.SetValue(schemaText);
 	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+
+		await LoadSavedSchema();
+		await LoadSavedInstance();
+	}
+
 }

@@ -1,0 +1,154 @@
+﻿@page "/json-pointer"
+@using BlazorMonaco
+@using System.Text.Json
+@using Json.Pointer
+@using JsonEverythingNet.Services
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
+
+@inject CookieManager _cookieManager;
+
+<PageTitle>JSON Pointer - json-everything.net</PageTitle>
+
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON Pointer</h1>
+		<div class="align-items-center mx-3">
+			<div>
+				Identify specific locations within JSON data
+				<br/>
+				Learn more about
+				<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
+			</div>
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+			<div class="btn version-callout mx-2">
+				<span class="font-monospace fw-bold">@library.Name</span><br/>@@ v@(library.Version)
+			</div>
+		}
+	</div>
+</div>
+
+<EditForm Model="_input" class="col-12 mb-4">
+	<label class="my-2 w-100">
+		Path
+		<InputText @bind-Value="_input.Pointer" DisplayName="Default base URI" class="form-control"
+		           @oninput="SavePath"/>
+	</label>
+</EditForm>
+
+<div class="vstack gap-5">
+	<div>
+		<div class="row">
+			<div class="col-5">
+				<div class="editor-input">
+					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+					              CssClass="h-100" OnKeyUp="SaveInstance"/>
+				</div>
+			</div>
+			<div class="col mx-2 align-items-center row">
+				<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
+			</div>
+			<div class="col-5">
+				<div class="editor-input">
+					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+					              CssClass="h-100"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	#pragma warning disable CS8618
+	private MonacoEditor _instanceEditor;
+	private MonacoEditor _outputEditor;
+
+	private readonly InputModel _input = new();
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonPointer>(),
+	};
+#pragma warning restore CS8618
+
+	private class InputModel
+	{
+		public string? Pointer { get; set; }
+	}
+
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+
+		LoadSavedPath();
+		await LoadSavedInstance();
+	}
+
+	private async Task Evaluate()
+	{
+		JsonPointer pointer;
+		try
+		{
+			pointer = JsonPointer.Parse(_input.Pointer!);
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Pointer is invalid");
+			return;
+		}
+		JsonElement instance;
+		try
+		{
+			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Data is invalid");
+			return;
+		}
+
+		var results = pointer.Evaluate(instance);
+
+		var resultText = results.HasValue
+			? JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true})
+			: string.Empty;
+
+		await _outputEditor.SetValue(resultText);
+	}
+
+	private async Task SavePath(ChangeEventArgs args)
+	{
+		var pointerText = args.Value as string;
+
+		await _cookieManager.Set("pointer", pointerText ?? string.Empty);
+	}
+
+	private void LoadSavedPath()
+	{
+		var schemaText = _cookieManager.Get("pointer");
+		if (schemaText == null) return;
+
+		_input.Pointer = schemaText;
+	}
+
+	private async Task SaveInstance()
+	{
+		var schemaText = await _instanceEditor.GetValue();
+
+		await _cookieManager.Set("pointer-instance", schemaText);
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		var schemaText = _cookieManager.Get("pointer-instance");
+		if (schemaText == null) return;
+
+		await _instanceEditor.SetValue(schemaText);
+	}
+}
