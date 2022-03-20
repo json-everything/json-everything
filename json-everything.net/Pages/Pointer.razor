@@ -99,7 +99,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Pointer is invalid");
+			await _outputEditor.SetValue($"Pointer is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement instance;
@@ -109,7 +109,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Data is invalid");
+			await _outputEditor.SetValue($"Data is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -138,15 +138,11 @@
 
 	private async Task SaveInstance()
 	{
-		var instanceText = await _instanceEditor.GetValue();
-
-		await _cookieManager.Set("pointer-instance", instanceText);
+		await _cookieManager.SaveEditorValue(_instanceEditor, "pointer-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var instanceText = _cookieManager.Get("pointer-instance") ?? string.Empty;
-
-		await _instanceEditor.SetValue(instanceText);
+		await _cookieManager.LoadEditorValue(_instanceEditor, "pointer-instance");
 	}
 }

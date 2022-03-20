@@ -77,9 +77,4 @@ public class CookieManager
 	}
 
 	private static string DateToUtc(int days) => DateTime.Now.AddDays(days).ToUniversalTime().ToString("R");
-
-	private void ObtainLock()
-	{
-		if (_cache != null) return;
-	}
 }

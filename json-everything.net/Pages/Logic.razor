@@ -45,11 +45,7 @@
 				</label>
 			</div>
 			<div class="col mx-2 align-items-center row">
-				<div class="vstack gap-3 align-self-center">
-					<button class="btn btn-primary" @onclick="Apply">Apply</button>
-					<hr/>
-					<button class="btn btn-primary" @onclick="Generate">Generate</button>
-				</div>
+				<button class="btn btn-primary w-100" @onclick="Apply">Apply</button>
 			</div>
 			<div class="col-5">
 				<label class="w-100">
@@ -93,7 +89,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Rule is invalid");
+			await _outputEditor.SetValue($"Rule is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement instance;
@@ -103,7 +99,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Data is invalid");
+			await _outputEditor.SetValue($"Data is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -114,66 +110,24 @@
 		await _outputEditor.SetValue(resultText);
 	}
 
-	private async Task Generate()
-	{
-		JsonElement source;
-		try
-		{
-			source = JsonDocument.Parse(await _logicEditor.GetValue()).RootElement;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine("Source data is invalid");
-			return;
-		}
-		JsonElement target;
-		try
-		{
-			target = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine("Target data is invalid");
-			return;
-		}
-
-		var patch = source.CreatePatch(target);
-
-		if (patch != null)
-		{
-			var instance = JsonSerializer.Serialize(patch, new JsonSerializerOptions {WriteIndented = true});
-			await _outputEditor.SetValue(instance);
-		}
-		else
-			await _outputEditor.SetValue("Unable to create patch");
-	}
-
 	private async Task SaveLogic()
 	{
-		var schemaText = await _logicEditor.GetValue();
-
-		await _cookieManager.Set("logic", schemaText);
+		await _cookieManager.SaveEditorValue(_logicEditor, "logic");
 	}
 
 	private async Task LoadSavedLogic()
 	{
-		var schemaText = _cookieManager.Get("logic") ?? string.Empty;
-
-		await _logicEditor.SetValue(schemaText);
+		await _cookieManager.LoadEditorValue(_logicEditor, "logic");
 	}
 
 	private async Task SaveInstance()
 	{
-		var schemaText = await _instanceEditor.GetValue();
-
-		await _cookieManager.Set("logic-instance", schemaText);
+		await _cookieManager.SaveEditorValue(_instanceEditor, "logic-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = _cookieManager.Get("logic-instance") ?? string.Empty;
-
-		await _instanceEditor.SetValue(schemaText);
+		await _cookieManager.LoadEditorValue(_instanceEditor, "logic-instance");
 	}
 
 	protected override async Task OnInitializedAsync()

@@ -92,7 +92,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Patch is invalid");
+			await _outputEditor.SetValue($"Patch is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement instance;
@@ -102,7 +102,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Instance is invalid");
+			await _outputEditor.SetValue($"Instance is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -124,7 +124,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Source data is invalid");
+			await _outputEditor.SetValue($"Source data is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement target;
@@ -134,7 +134,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Target data is invalid");
+			await _outputEditor.SetValue($"Target data is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -151,30 +151,22 @@
 
 	private async Task SavePatch()
 	{
-		var schemaText = await _patchEditor.GetValue();
-
-		await _cookieManager.Set("patch", schemaText);
+		await _cookieManager.SaveEditorValue(_patchEditor, "patch");
 	}
 
 	private async Task LoadSavedPatch()
 	{
-		var schemaText = _cookieManager.Get("patch") ?? string.Empty;
-
-		await _patchEditor.SetValue(schemaText);
+		await _cookieManager.LoadEditorValue(_patchEditor, "patch");
 	}
 
 	private async Task SaveInstance()
 	{
-		var schemaText = await _instanceEditor.GetValue();
-
-		await _cookieManager.Set("patch-instance", schemaText);
+		await _cookieManager.SaveEditorValue(_instanceEditor, "patch-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = _cookieManager.Get("patch-instance") ?? string.Empty;
-
-		await _instanceEditor.SetValue(schemaText);
+		await _cookieManager.LoadEditorValue(_instanceEditor, "patch-instance");
 	}
 
 	protected override async Task OnInitializedAsync()

@@ -43,7 +43,7 @@
 					Schema
 					<div class="editor-input">
 						<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-						              CssClass="h-100" OnKeyUp="SaveSchema"/>
+						              CssClass="h-100" OnKeyUp="HandleSchemaChanged"/>
 					</div>
 				</label>
 			</div>
@@ -89,7 +89,7 @@
 					Instance
 					<div class="editor-input">
 						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-						              CssClass="h-100" OnKeyUp="SaveInstance"/>
+						              CssClass="h-100" OnKeyUp="HandleInstanceChanged"/>
 					</div>
 				</label>
 			</div>
@@ -160,7 +160,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Schema is invalid");
+			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement instance;
@@ -170,7 +170,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Instance is invalid");
+			await _outputEditor.SetValue($"Instance is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -190,7 +190,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Schema is invalid");
+			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -200,7 +200,7 @@
 		{
 			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
 			await _instanceEditor.SetValue(instance);
-			await SaveInstance();
+			await HandleInstanceChanged();
 		}
 		else
 		{
@@ -208,32 +208,24 @@
 		}
 	}
 
-	private async Task SaveSchema()
+	private async Task HandleSchemaChanged()
 	{
-		var schemaText = await _schemaEditor.GetValue();
-
-		await _cookieManager.Set("schema", schemaText);
+		await _cookieManager.SaveEditorValue(_schemaEditor, "schema");
 	}
 
 	private async Task LoadSavedSchema()
 	{
-		var schemaText = _cookieManager.Get("schema") ?? string.Empty;
-
-		await _schemaEditor.SetValue(schemaText);
+		await _cookieManager.LoadEditorValue(_schemaEditor, "schema");
 	}
 
-	private async Task SaveInstance()
+	private async Task HandleInstanceChanged()
 	{
-		var schemaText = await _instanceEditor.GetValue();
-
-		await _cookieManager.Set("schema-instance", schemaText);
+		await _cookieManager.SaveEditorValue(_instanceEditor, "schema-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var schemaText = _cookieManager.Get("schema-instance") ?? string.Empty;
-
-		await _instanceEditor.SetValue(schemaText);
+		await _cookieManager.LoadEditorValue(_instanceEditor, "schema-instance");
 	}
 
 	protected override async Task OnInitializedAsync()

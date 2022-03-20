@@ -99,7 +99,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Path is invalid");
+			await _outputEditor.SetValue($"Path is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement instance;
@@ -109,7 +109,7 @@
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("Data is invalid");
+			await _outputEditor.SetValue($"Data is invalid\n\n{e.Message}");
 			return;
 		}
 
@@ -138,15 +138,11 @@
 
 	private async Task SaveInstance()
 	{
-		var instanceText = await _instanceEditor.GetValue();
-
-		await _cookieManager.Set("path-instance", instanceText);
+		await _cookieManager.SaveEditorValue(_instanceEditor, "path-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		var instanceText = _cookieManager.Get("path-instance") ?? string.Empty;
-
-		await _instanceEditor.SetValue(instanceText);
+		await _cookieManager.LoadEditorValue(_instanceEditor, "path-instance");
 	}
 }
