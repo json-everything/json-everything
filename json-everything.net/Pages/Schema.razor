@@ -3,16 +3,36 @@
 @using BlazorMonaco
 @using Json.Schema
 @using System.Text.Json
+@using Json.Schema.Data
+@using Json.Schema.Generation
+@using Json.Schema.UniqueKeys
+@using JsonEverythingNet.Services
+
+@inject CookieManager _cookieManager;
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
-<h1 class="display-4">JSON Schema</h1>
-<p>
-    Constraints-based validation of JSON data
-    <br/>
-    Learn more about
-    <a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink"/></a>
-</p>
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON Schema</h1>
+		<div class="align-items-center mx-3">
+			<div>
+				Constraints-based validation of JSON data
+				<br/>
+				Learn more about
+				<a href="https://json-schema.org" target="_blank">JSON Schema <partial name="_ExternalLink"/></a>
+			</div>
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+			<div class="btn version-callout mx-2">
+				<span class="font-monospace fw-bold">@library.Name</span><br/>@@ v@(library.Version)
+			</div>
+		}
+	</div>
+</div>
 
 <div class="vstack gap-5">
 	<div>
@@ -20,48 +40,50 @@
 			<div class="col-5">
 				<div class="editor-input">
 					<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="EditorConstructionOptions"
-					              CssClass="h-100"/>
+					              CssClass="h-100" OnKeyUp="SaveSchema" OnDidInit="LoadSavedSchema"/>
 				</div>
 			</div>
 			<div class="col mx-3">
 				<div class="vstack gap-3">
-					<EditForm Model="_options">
-						<label>
-							Output format:<br/>
-							<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format">
+					<EditForm Model="_options" class="vstack">
+						<label class="my-2">
+							Output format<br/>
+							<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
 								@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
 								{
 									<option value="@format">@format</option>
 								}
 							</InputSelect>
 						</label>
-						<label>
-							Draft:<br/>
-							<InputSelect @bind-Value="_options.Draft" DisplayName="Draft">
+						<label class="my-2">
+							Draft (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
+							<InputSelect @bind-Value="_options.Draft" DisplayName="Draft" class="form-control">
 								@foreach (Draft draft in Enum.GetValues(typeof(Draft)))
 								{
-									<option value="@draft">@GetDescription(draft)</option>
+									if (draft == Draft.Unspecified) continue;
+									@*<option value="@draft">@GetDescription(draft)</option>*@
+									<option value="@draft">@draft</option>
 								}
 							</InputSelect>
 						</label>
-						<label>
-							Default base URI:<br/>
-							<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI"/>
+						<label class="my-2">
+							Default base URI<br/>
+							<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI" class="form-control"/>
 						</label>
-						<label>
+						<label class="my-2">
 							<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
-							Validate <code>format</code>
+							Validate <span class="font-monospace">format</span>
 						</label>
+						<button class="btn btn-primary" @onclick="Validate">Validate</button>
+						<hr/>
+						<button class="btn btn-primary" @onclick="Generate">Generate Data</button>
 					</EditForm>
-					<button class="btn btn-primary" @onclick="Validate">Validate</button>
-					<hr/>
-					<button class="btn btn-primary" @onclick="Generate">Generate Data</button>
 				</div>
 			</div>
 			<div class="col-5">
 				<div class="editor-input">
 					<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="EditorConstructionOptions"
-					              CssClass="h-100"/>
+					              CssClass="h-100" OnKeyUp="SaveInstance" OnDidInit="LoadSavedInstance"/>
 				</div>
 			</div>
 		</div>
@@ -75,11 +97,20 @@
 
 @code {
 #pragma warning disable CS8618
-    private MonacoEditor _schemaEditor;
-    private MonacoEditor _instanceEditor;
-    private MonacoEditor _outputEditor;
-	// ReSharper disable once FieldCanBeMadeReadOnly.Local
-	private SchemaOptionsModel _options = new();
+	private MonacoEditor _schemaEditor;
+	private MonacoEditor _instanceEditor;
+	private MonacoEditor _outputEditor;
+
+	private readonly SchemaOptionsModel _options = new();
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonSchema>(),
+		LibraryVersion.GetFor<DataKeyword>(),
+		LibraryVersion.GetFor<UniqueKeysKeyword>(),
+		LibraryVersion.GetFor<ISchemaRefiner>(),
+		LibraryVersion.GetFor<Bound>()
+	};
 #pragma warning restore CS8618
 
 	private class SchemaOptionsModel
@@ -108,58 +139,114 @@
 		Draft.Unspecified => "Draft 2020-12",
 		Draft.Draft202012 => "Draft 2020-12",
 		_ => "Draft 2020-12"
-	};
+		};
 
 	private async Task Validate()
-    {
-        var schema = JsonSchema.FromText(await _schemaEditor.GetValue());
-        var instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+	{
+		JsonSchema schema;
+		try
+		{
+			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Schema is invalid");
+			return;
+		}
+		JsonElement instance;
+		try
+		{
+			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Instance is invalid");
+			return;
+		}
 
-        var results = schema.Validate(instance, _options.ToValidationOptions());
+		var results = schema.Validate(instance, _options.ToValidationOptions());
 
-        var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
+		var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
 
-        await _outputEditor.SetValue(resultText);
-    }
+		await _outputEditor.SetValue(resultText);
+	}
 
-    private async Task Generate()
-    {
-        var schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+	private async Task Generate()
+	{
+		JsonSchema schema;
+		try
+		{
+			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Schema is invalid");
+			return;
+		}
 
-        var generationResults = schema.GenerateData();
+		var generationResults = schema.GenerateData();
 
-        if (generationResults.IsSuccess)
-        {
-            var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
-            await _instanceEditor.SetValue(instance);
-        }
-        else
-        {
-            await _outputEditor.SetValue(generationResults.ErrorMessage);
-        }
-    }
+		if (generationResults.IsSuccess)
+		{
+			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
+			await _instanceEditor.SetValue(instance);
+		}
+		else
+		{
+			await _outputEditor.SetValue(generationResults.ErrorMessage);
+		}
+	}
 
-    private static StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
-    {
-        return new StandaloneEditorConstructionOptions
-        {
-            AutomaticLayout = true,
-            Language = "json",
-            Theme = "vs-dark",
-            SelectOnLineNumbers = true,
-            Scrollbar = new EditorScrollbarOptions
-            {
-                AlwaysConsumeMouseWheel = false
-            }
-        };
-    }
+	private static StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+	{
+		return new StandaloneEditorConstructionOptions
+		{
+			AutomaticLayout = true,
+			Language = "json",
+			Theme = "vs-dark",
+			SelectOnLineNumbers = true,
+			Scrollbar = new EditorScrollbarOptions
+			{
+				AlwaysConsumeMouseWheel = false
+			}
+		};
+	}
 
-    private static StandaloneEditorConstructionOptions ReadonlyEditorConstructionOptions(MonacoEditor editor)
-    {
-	    var options = EditorConstructionOptions(editor);
-	    options.ReadOnly = true;
+	private static StandaloneEditorConstructionOptions ReadonlyEditorConstructionOptions(MonacoEditor editor)
+	{
+		var options = EditorConstructionOptions(editor);
+		options.ReadOnly = true;
 
-	    return options;
-    }
+		return options;
+	}
 
+	private async Task SaveSchema()
+	{
+		var schemaText = await _schemaEditor.GetValue();
+
+		await _cookieManager.Set(new Cookie {Key = "schema", Value = schemaText});
+	}
+
+	private async Task LoadSavedSchema()
+	{
+		var schemaText = await _cookieManager.Get("schema");
+		if (schemaText == null) return;
+
+		await _schemaEditor.SetValue(schemaText.Value);
+	}
+
+	private async Task SaveInstance()
+	{
+		var schemaText = await _instanceEditor.GetValue();
+
+		await _cookieManager.Set(new Cookie {Key = "instance", Value = schemaText});
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		var schemaText = await _cookieManager.Get("instance");
+		if (schemaText == null) return;
+
+		await _instanceEditor.SetValue(schemaText.Value);
+	}
 }

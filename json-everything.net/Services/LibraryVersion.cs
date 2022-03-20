@@ -7,8 +7,8 @@ namespace JsonEverythingNet.Services;
 
 public class LibraryVersion
 {
-	public string Name { get; set; }
-	public string Version { get; set; }
+	public string Name { get; private init; }
+	public string Version { get; private init; }
 
 	public static LibraryVersion GetFor<T>()
 	{

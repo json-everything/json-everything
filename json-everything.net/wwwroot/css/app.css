@@ -1,7 +1,7 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
 h1:focus {
@@ -110,10 +110,13 @@ a.navbar-brand {
       box-shadow: 0 0 0 0.2rem rgba(91, 0, 159, 0.5);
     }
 
-/*--- OPTIONS ---*/
+/*--- LIBRARY ---*/
 
-.options-border {
-	border-style: solid;
+.version-callout {
 	border-width: 1px;
 	border-radius: 3px;
+	border-color: #6800B7;
+	border-style: solid;
+	background: none !important;
+	padding: 2px 8px !important;
 }

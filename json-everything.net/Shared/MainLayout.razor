@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using JsonEverythingNet.Services
+
+@inherits LayoutComponentBase
+
+@inject CookieManager _cookieManager;
 
 <div class="page">
 	<main>
@@ -12,3 +16,11 @@
 		</article>
 	</main>
 </div>
+
+@code
+{
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+	}
+}
