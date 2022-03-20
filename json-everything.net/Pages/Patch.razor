@@ -1,0 +1,190 @@
+﻿@page "/json-patch"
+@using BlazorMonaco
+@using System.Text.Json
+@using Json.Patch
+@using JsonEverythingNet.Services
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
+
+@inject CookieManager _cookieManager;
+
+<PageTitle>JSON Patch - json-everything.net</PageTitle>
+
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON Patch</h1>
+		<div class="align-items-center mx-3">
+			<div>
+				Describe and process alterations to JSON documents
+				<br/>
+				Learn more about
+				<a href="http://jsonpatch.com/" target="_blank">JSON Schema <ExternalLinkIcon/></a>
+			</div>
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+			<div class="btn version-callout mx-2">
+				<span class="font-monospace fw-bold">@library.Name</span><br/>@@ v@(library.Version)
+			</div>
+		}
+	</div>
+</div>
+
+<div class="vstack gap-5 mt-4">
+	<div>
+		<div class="row">
+			<div class="col-5">
+				<label class="w-100">
+					Patch / Source data
+					<div class="editor-input">
+						<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SavePatch"/>
+					</div>
+				</label>
+			</div>
+			<div class="col mx-2 align-items-center row">
+				<div class="vstack gap-3 align-self-center">
+					<button class="btn btn-primary" @onclick="Apply">Apply</button>
+					<hr/>
+					<button class="btn btn-primary" @onclick="Generate">Generate</button>
+				</div>
+			</div>
+			<div class="col-5">
+				<label class="w-100">
+					Data / Target data
+					<div class="editor-input">
+						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveInstance"/>
+					</div>
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="editor-input">
+		<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+		              CssClass="h-100"/>
+	</div>
+</div>
+
+@code {
+#pragma warning disable CS8618
+	private MonacoEditor _patchEditor;
+	private MonacoEditor _instanceEditor;
+	private MonacoEditor _outputEditor;
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonPatch>(),
+	};
+#pragma warning restore CS8618
+
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private async Task Apply()
+	{
+		JsonPatch patch;
+		try
+		{
+			patch = JsonSerializer.Deserialize<JsonPatch>(await _patchEditor.GetValue())!;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Patch is invalid");
+			return;
+		}
+		JsonElement instance;
+		try
+		{
+			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Instance is invalid");
+			return;
+		}
+
+		var results = patch.Apply(instance);
+
+		var resultText = results.IsSuccess
+			? JsonSerializer.Serialize(results.Result, new JsonSerializerOptions {WriteIndented = true})
+			: results.Error;
+
+		await _outputEditor.SetValue(resultText);
+	}
+
+	private async Task Generate()
+	{
+		JsonElement source;
+		try
+		{
+			source = JsonDocument.Parse(await _patchEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Source data is invalid");
+			return;
+		}
+		JsonElement target;
+		try
+		{
+			target = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Target data is invalid");
+			return;
+		}
+
+		var patch = source.CreatePatch(target);
+
+		if (patch != null)
+		{
+			var instance = JsonSerializer.Serialize(patch, new JsonSerializerOptions {WriteIndented = true});
+			await _outputEditor.SetValue(instance);
+		}
+		else
+			await _outputEditor.SetValue("Unable to create patch");
+	}
+
+	private async Task SavePatch()
+	{
+		var schemaText = await _patchEditor.GetValue();
+
+		await _cookieManager.Set("patch", schemaText);
+	}
+
+	private async Task LoadSavedPatch()
+	{
+		var schemaText = _cookieManager.Get("patch");
+		if (schemaText == null) return;
+
+		await _patchEditor.SetValue(schemaText);
+	}
+
+	private async Task SaveInstance()
+	{
+		var schemaText = await _instanceEditor.GetValue();
+
+		await _cookieManager.Set("patch-instance", schemaText);
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		var schemaText = _cookieManager.Get("patch-instance");
+		if (schemaText == null) return;
+
+		await _instanceEditor.SetValue(schemaText);
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+
+		await LoadSavedPatch();
+		await LoadSavedInstance();
+	}
+
+}
