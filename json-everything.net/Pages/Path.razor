@@ -50,13 +50,13 @@
 			<div class="col mx-2 align-items-center row">
 				<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
 			</div>
-            <path class="col-5">
+            <label class="col-5">
                 Results
                 <div class="editor-input">
                     <MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
                                   CssClass="h-100"/>
                 </div>
-            </path>
+            </label>
 		</div>
 	</div>
 </div>
