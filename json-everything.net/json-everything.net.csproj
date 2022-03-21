@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
+    <PackageReference Include="Markdig" Version="0.28.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
   </ItemGroup>
@@ -29,6 +30,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\md\" />
   </ItemGroup>
 
 </Project>

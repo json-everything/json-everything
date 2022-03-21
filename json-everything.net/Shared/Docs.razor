@@ -1,0 +1,20 @@
+﻿@using Markdig
+
+@inject HttpClient Http
+
+<div>
+	@((MarkupString)_value)
+</div>
+
+@code{
+	[Parameter]
+	public string? Page { get; set; }
+
+	private string _value = "";
+
+	protected override async Task OnInitializedAsync()
+	{
+		var markdown = await Http.GetStringAsync($"/md/{Page}.md");
+		_value = Markdown.ToHtml(markdown);
+	}
+}
