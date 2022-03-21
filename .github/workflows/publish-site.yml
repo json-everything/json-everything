@@ -16,6 +16,7 @@ on:
       - JsonSchema.Generation/**
       - JsonSchema.DataGeneration/**
       - json-everything.net/**
+      - TryJsonEverything/**
   workflow_dispatch:
 
 jobs:

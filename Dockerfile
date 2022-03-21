@@ -12,16 +12,16 @@ COPY ["JsonPatch/JsonPatch.csproj", "JsonPatch/"]
 COPY ["JsonPath/JsonPath.csproj", "JsonPath/"]
 COPY ["JsonPointer/JsonPointer.csproj", "JsonPointer/"]
 COPY ["JsonSchema/JsonSchema.csproj", "JsonSchema/"]
-COPY ["json-everything.net/json-everything.net.csproj", "json-everything.net/"]
-RUN dotnet restore "json-everything.net/json-everything.net.csproj"
+COPY ["TryJsonEverything/TryJsonEverything.csproj", "TryJsonEverything/"]
+RUN dotnet restore "TryJsonEverything/TryJsonEverything.csproj"
 COPY . .
-WORKDIR "/src/json-everything.net"
-RUN dotnet build "json-everything.net.csproj" -c Release -o /app/build
+WORKDIR "/src/TryJsonEverything"
+RUN dotnet build "TryJsonEverything.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "json-everything.net.csproj" -c Release -o /app/publish
+RUN dotnet publish "TryJsonEverything.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-CMD ["dotnet", "json-everything.net.dll"]
+CMD ["dotnet", "TryJsonEverything.dll"]
