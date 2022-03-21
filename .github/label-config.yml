@@ -35,4 +35,5 @@
   - .github/workflows/**/*
 
 "try-me-site":
+  - json-everything.net/**/*
   - TryJsonEverything/**/*

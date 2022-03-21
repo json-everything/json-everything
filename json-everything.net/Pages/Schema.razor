@@ -1,0 +1,241 @@
+﻿@page "/json-schema"
+@using Json.Schema.DataGeneration
+@using BlazorMonaco
+@using Json.Schema
+@using System.Text.Json
+@using Json.Schema.Data
+@using Json.Schema.Generation
+@using Json.Schema.UniqueKeys
+@using JsonEverythingNet.Services
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
+
+@inject CookieManager _cookieManager;
+
+<PageTitle>JSON Schema - json-everything.net</PageTitle>
+
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON Schema</h1>
+		<div class="align-items-center mx-3">
+			<div>
+				Constraints-based validation of JSON data
+				<br/>
+				Learn more about
+				<a href="https://json-schema.org" target="_blank">JSON Schema <ExternalLinkIcon/></a>
+			</div>
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+		    <NugetLibrary Library="library"/>
+		}
+	</div>
+</div>
+
+<div class="vstack gap-3 mt-4">
+	<div>
+		<div class="row">
+			<div class="col-5">
+				<label class="w-100">
+					Schema
+					<div class="editor-input">
+						<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="HandleSchemaChanged"/>
+					</div>
+				</label>
+			</div>
+			<div class="col mx-3">
+				<div class="vstack gap-3">
+					<EditForm Model="_options" class="vstack">
+						<label class="my-2">
+							Output format<br/>
+							<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
+								@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
+								{
+									<option value="@format">@format</option>
+								}
+							</InputSelect>
+						</label>
+						<label class="my-2">
+							Draft (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
+							<InputSelect @bind-Value="_options.Draft" DisplayName="Draft" class="form-control">
+								@foreach (Draft draft in Enum.GetValues(typeof(Draft)))
+								{
+									if (draft == Draft.Unspecified) continue;
+									@*<option value="@draft">@GetDescription(draft)</option>*@
+									<option value="@draft">@draft</option>
+								}
+							</InputSelect>
+						</label>
+						<label class="my-2">
+							Default base URI<br/>
+							<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI" class="form-control"/>
+						</label>
+						<label class="my-2">
+							<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
+							Validate <span class="font-monospace">format</span>
+						</label>
+						<button class="btn btn-primary" @onclick="Validate">Validate</button>
+						<hr/>
+						<button class="btn btn-primary" @onclick="Generate">Generate Data</button>
+					</EditForm>
+				</div>
+			</div>
+			<div class="col-5">
+				<label class="w-100">
+					Instance
+					<div class="editor-input">
+						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="HandleInstanceChanged"/>
+					</div>
+				</label>
+			</div>
+		</div>
+	</div>
+    
+    <label>
+        Results
+        <div class="editor-input">
+            <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+                          CssClass="h-100"/>
+        </div>
+    </label>
+</div>
+
+@code {
+#pragma warning disable CS8618
+	private MonacoEditor _schemaEditor;
+	private MonacoEditor _instanceEditor;
+	private MonacoEditor _outputEditor;
+
+	private readonly SchemaOptionsModel _options = new();
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonSchema>(),
+		LibraryVersion.GetFor<DataKeyword>(),
+		LibraryVersion.GetFor<UniqueKeysKeyword>(),
+		LibraryVersion.GetFor<ISchemaRefiner>(),
+		LibraryVersion.GetFor<Bound>()
+	};
+#pragma warning restore CS8618
+
+	private class SchemaOptionsModel
+	{
+		public OutputFormat OutputFormat { get; set; } = OutputFormat.Detailed;
+		public Draft Draft { get; set; } = Draft.Draft202012;
+		public string? DefaultBaseUri { get; set; }
+		public bool ValidateFormat { get; set; }
+
+		public ValidationOptions ToValidationOptions() => new()
+		{
+			OutputFormat = OutputFormat,
+			ValidateAs = Draft,
+			DefaultBaseUri = Uri.TryCreate(DefaultBaseUri, UriKind.Absolute, out var uri)
+				? uri
+				: null!,
+			RequireFormatValidation = ValidateFormat
+		};
+	}
+
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private static string GetDescription(Draft draft) => draft switch
+	{
+		Draft.Draft6 => "Draft 6",
+		Draft.Draft7 => "Draft 7",
+		Draft.Draft201909 => "Draft 2019-09",
+		Draft.Unspecified => "Draft 2020-12",
+		Draft.Draft202012 => "Draft 2020-12",
+		_ => "Draft 2020-12"
+	};
+
+	private async Task Validate()
+	{
+		JsonSchema schema;
+		try
+		{
+			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
+			return;
+		}
+		JsonElement instance;
+		try
+		{
+			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Instance is invalid\n\n{e.Message}");
+			return;
+		}
+
+		var results = schema.Validate(instance, _options.ToValidationOptions());
+
+		var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
+
+		await _outputEditor.SetValue(resultText);
+	}
+
+	private async Task Generate()
+	{
+		JsonSchema schema;
+		try
+		{
+			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
+			return;
+		}
+
+		var generationResults = schema.GenerateData();
+
+		if (generationResults.IsSuccess)
+		{
+			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
+			await _instanceEditor.SetValue(instance);
+			await HandleInstanceChanged();
+		}
+		else
+		{
+			await _outputEditor.SetValue(generationResults.ErrorMessage);
+		}
+	}
+
+	private async Task HandleSchemaChanged()
+	{
+		await _cookieManager.SaveEditorValue(_schemaEditor, "schema");
+	}
+
+	private async Task LoadSavedSchema()
+	{
+		await _cookieManager.LoadEditorValue(_schemaEditor, "schema");
+	}
+
+	private async Task HandleInstanceChanged()
+	{
+		await _cookieManager.SaveEditorValue(_instanceEditor, "schema-instance");
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		await _cookieManager.LoadEditorValue(_instanceEditor, "schema-instance");
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+	    await _outputEditor.SetValue(string.Empty);
+
+		await LoadSavedSchema();
+		await LoadSavedInstance();
+	}
+
+}

@@ -1,0 +1,66 @@
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.top-row {
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 3.5rem;
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+}
+
+.oi {
+    font-size: 1.1rem;
+    top: -2px;
+    vertical-align: text-top;
+    width: 2rem;
+}
+
+.nav-item {
+    font-size: 1.1rem;
+    padding-bottom: 0.5rem;
+}
+
+.nav-item:first-of-type {
+    padding-top: 1rem;
+}
+
+.nav-item:last-of-type {
+    padding-bottom: 1rem;
+}
+
+.nav-item ::deep a {
+    align-items: center;
+    border-radius: 4px;
+    color: #d7d7d7;
+    display: flex;
+    height: 6.5rem;
+}
+
+.nav-item ::deep a.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+.nav-item ::deep a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+}
+
+.feature-description {
+    font-size: small;
+    font-style: italic;
+}
