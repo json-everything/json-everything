@@ -108,14 +108,12 @@ namespace Json.Schema
 			}
 			context.Options.LogIndentLevel--;
 
+			if (context.LocalResult.TryGetAnnotation(Name) is List<string> annotation)
+				annotation.AddRange(evaluatedProperties);
+			else
+				context.LocalResult.SetAnnotation(Name, evaluatedProperties);
 			if (overallResult)
-			{
-				if (context.LocalResult.TryGetAnnotation(Name) is List<string> annotation)
-					annotation.AddRange(evaluatedProperties);
-				else
-					context.LocalResult.SetAnnotation(Name, evaluatedProperties);
 				context.LocalResult.Pass();
-			}
 			else
 				context.LocalResult.Fail();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
@@ -123,7 +121,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			return Patterns.TryGetValue(new Regex(value), out var schema) ? schema : null;
+			throw new NotImplementedException();
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

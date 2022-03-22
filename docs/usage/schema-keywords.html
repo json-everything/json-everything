@@ -127,7 +127,7 @@
 <p>If you're implementing an applicator keyword, you'll need to invoke this consolidation before returning.  To this this call <code>.ConsolidateAnnotations()</code> on the context.</p>
 <h2 id="2-implement-irefresolvable">2. Implement <code>IRefResolvable</code></h2>
 <p>If your keyword contains one or more subschemas, you'll want to implement this.  It allows <code>JsonSchema</code> to search within the keyword when resolving <code>$ref</code>, <code>$recursiveRef</code>, and <code>$dynamicRef</code>.</p>
-<p>For <code>.ResolvePointerSegment()</code>, if the pointer segment matches a path where a schema might be found, return it.  Otherwise return null.</p>
+<p>As of v2.1.2, <code>.ResolvePointerSegment()</code> is obsolete.  You can leave this as throwing a <code>NotImplementedException</code>.  It won't be called.  This method will be removed in the next major version.</p>
 <p>For <code>.RegisterSubschemas()</code>, just use this:</p>
 <pre><code class="lang-c#">void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 {

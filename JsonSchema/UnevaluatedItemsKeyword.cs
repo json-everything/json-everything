@@ -132,11 +132,9 @@ namespace Json.Schema
 			}
 			context.Options.LogIndentLevel--;
 
+			context.LocalResult.SetAnnotation(Name, true);
 			if (overallResult)
-			{
-				context.LocalResult.SetAnnotation(Name, true);
 				context.LocalResult.Pass();
-			}
 			else
 				context.LocalResult.Fail();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
@@ -150,7 +148,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			return value == null ? Schema : null;
+			throw new NotImplementedException();
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

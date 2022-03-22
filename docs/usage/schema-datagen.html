@@ -109,7 +109,7 @@
 <h3 id="strings--format">Strings &amp; <code>format</code></h3>
 <p>All of the formats listed in the draft 2020-12 specification are supported, at least to the extent that they can be validated by JsonSchema.Net.</p>
 <p>If a format is specified, it will be used.</p>
-<p>If a format is not specified, Bogus's Lorem Ipsum generator is used to create some nice garbage (but oddly readable) garbage text.</p>
+<p>If a format is not specified, Bogus's Lorem Ipsum generator is used to create some nice garbage (but oddly readable) text.</p>
 <h3 id="numerics">Numerics</h3>
 <p>Integer and number generation each have custom algorithms that produce values that align with minimums, maximums, multiples, and even anti-multiples (numbers that should <em>not</em> be divisors).</p>
 <p>For this schema,</p>
@@ -123,7 +123,9 @@
       &quot;not&quot;: {
         &quot;minimum&quot;: 40,
         &quot;maximum&quot;: 60
-      },
+      }
+    },
+    {
       &quot;not&quot;: {
         &quot;multipleOf&quot;: 3
       }
