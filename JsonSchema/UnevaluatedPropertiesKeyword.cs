@@ -115,11 +115,9 @@ namespace Json.Schema
 			}
 			context.Options.LogIndentLevel--;
 
+			context.LocalResult.SetAnnotation(Name, evaluatedProperties);
 			if (overallResult)
-			{
-				context.LocalResult.SetAnnotation(Name, evaluatedProperties);
 				context.LocalResult.Pass();
-			}
 			else
 				context.LocalResult.Fail();
 			context.LocalResult.ConsolidateAnnotations();
