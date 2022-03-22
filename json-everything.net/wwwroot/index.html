@@ -8,13 +8,14 @@
 	<base href="/" />
 	<!--<base href="/json-everything/play/wwwroot/" />-->
 	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-	<link href="css/app.css" rel="stylesheet" />
+	<link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+	<link href="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
 	<link href="json-everything.net.styles.css" rel="stylesheet" />
-    <link href="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
+	<link href="css/app.css" rel="stylesheet" />
 	<link href="css/editor.css" rel="stylesheet" />
-    <link href="css/bootstrap-overrides.css" rel="stylesheet" />
-    <link href="css/docs.css" rel="stylesheet" />
-    <style>
+	<link href="css/bootstrap-overrides.css" rel="stylesheet" />
+	<link href="css/docs.css" rel="stylesheet" />
+	<style>
 		.loading-message-container {
 			position: relative;
 			height: 100vh;
@@ -22,14 +23,14 @@
 		}
 
 		.loading-message-child {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            line-height: 200%;
-        }
-    </style>
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			line-height: 200%;
+		}
+	</style>
 </head>
 
 <body>
@@ -51,6 +52,7 @@
 <script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
 <script src="_content/BlazorMonaco/jsInterop.js"></script>
 <script src="_framework/blazor.webassembly.js"></script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
 </body>
 
 </html>

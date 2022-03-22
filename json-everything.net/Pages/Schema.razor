@@ -7,6 +7,8 @@
 @using Json.Schema.Generation
 @using Json.Schema.UniqueKeys
 @using JsonEverythingNet.Services
+@using Radzen
+@using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 
 @inject CookieManager _cookieManager;
@@ -94,14 +96,48 @@
 		</div>
 	</div>
     
-    <label>
-        Results
-        <div class="editor-input">
-            <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
-                          CssClass="h-100"/>
-        </div>
-    </label>
+	<label>
+		Results
+		<div class="editor-input">
+			<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+			              CssClass="h-100"/>
+		</div>
+	</label>
 </div>
+
+<hr/>
+
+<RadzenTabs RenderMode="TabRenderMode.Client">
+	<Tabs>
+		<RadzenTabsItem Text="Building / Loading">
+			<Docs Page="schema-building"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Validation">
+			<Docs Page="schema-validation"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="References">
+			<Docs Page="schema-references"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Custom Keywords">
+			<Docs Page="schema-keywords"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Schema Generation">
+			<Docs Page="schema-generation"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Data Generation">
+			<Docs Page="schema-datagen"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Vocabularies">
+			<Docs Page="schema-vocabs"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Data Vocab">
+			<Docs Page="vocabs-data"/>
+		</RadzenTabsItem>
+		<RadzenTabsItem Text="Unique Keys Vocab">
+			<Docs Page="vocabs-unique-keys"/>
+		</RadzenTabsItem>
+	</Tabs>
+</RadzenTabs>
 
 @code {
 #pragma warning disable CS8618
