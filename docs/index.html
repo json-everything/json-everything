@@ -1,140 +1,58 @@
-﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
-<html>
-  
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Welcome! </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Welcome! ">
-    <meta name="generator" content="docfx 2.56.7.0">
-    
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-    
-    <meta property="docfx:rel" content="">
-    
-  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
-        
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
-              </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-        
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
-          </div>
-        </div>
-      </header>
-      <div class="container body-content">
-        
-        <div id="search-results">
-          <div class="search-list">Search Results for <span></span></div>
-          <div class="sr-items">
-            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
-          </div>
-          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
-        </div>
-      </div>
-      <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
-<h1 id="welcome">Welcome!</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p><code>json-everything</code> is your one-stop shop for all things JSON, powered by .Net's very own JSON models and serializer in the <code>System.Text.Json</code> namespace.</p>
-<p>The libraries contained here are built for speed and designed for usability.</p>
-<h2 id="the-libraries">The Libraries</h2>
-<p>Currently there are seven libraries output by this project:</p>
-<h3 id="jsonmorenet">Json.More<nsp>.Net</nsp></h3>
-<p>Json.More<nsp>.Net provides some core functionality that one would expect to be in <code>System.Text.Json</code> but isn't.  These include simple value conversion and equality comparisons involving their object model.<p>
-<h3 id="jsonpointernet">JsonPointer<nsp>.Net</nsp></h3>
-<p>JsonPointer.Net provides an implementation of JSON Pointer (<a href="https://tools.ietf.org/html/rfc6901">RFC 6901</a>) and a variant called <a href="">Relative JSON Pointer</a>, which is an important component in JSON HyperSchema.</p>
-<p><em><strong>NOTE</strong> Relative JSON Pointer requires the ability to navigate up toward the root of the JSON structure, which is <a href="https://github.com/dotnet/runtime/issues/40452">not supported yet</a>.  While this library can model and validate relative pointers, it cannot evaluate them until this functionality is available.</em></p>
-<h3 id="jsonschemanet">JsonSchema<nsp>.Net</nsp></h3>
-<p>JsonSchema<nsp>.Net provides <a href="https://json-schema.org">JSON Schema</a> support for drafts 6, 7, 2019-09, and 2020-12.  It is 100% compliant and passes all required and most optional tests of the <a href="https://github.com/json-schema-org/JSON-Schema-Test-Suite">JSON Schema Test Suite</a>.<p>
-<p><em><strong>NOTE</strong> The remaining optional tests involve ECMA Regular Expressions, big-num support, and some string formats.</em></p>
-<h3 id="jsonschemanetgeneration">JsonSchema.Net.Generation</h3>
-<p>Builds on top of JsonSchema<nsp>.Net to provide schema generation from .Net types.<p>
-<h3 id="jsonschemanetdatageneration">JsonSchema.Net.DataGeneration</h3>
-<p>Builds on top of JsonSchema<nsp>.Net to provide instance (random sample data) generation.<p>
-<h3 id="jsonschemanetdata">JsonSchema.Net.Data</h3>
-<p>Provides an implementation of a <a href="usage/vocabs-data.html">vocabulary</a> that defines a way to access instance and external data, a long-sought feature of JSON Schema.</p>
-<h3 id="jsonschemanetuniquekeys">JsonSchema.Net.UniqueKeys</h3>
-<p>Provides an implementation of a <a href="usage/vocabs-unique-keys.html">vocabulary</a> that defines a new keyword to validate item uniqueness by idenitifying specific data points within the item.</p>
-<h3 id="jsonpathnet">JsonPath<nsp>.Net</nsp></h3>
-<p>JsonPath<nsp>.Net provides JSON querying using the JSON Path querying language inspired by XPath and <a href="https://goessner.net/articles/JsonPath/">conceptualized by Matt Goessner</a>.  An <a href="https://github.com/jsonpath-standard/internet-draft">RFC</a> is currently being developed for JSON Path.  This library will update as the upcoming spec evolves.<p>
-<h3 id="jsonpatchnet">JsonPatch<nsp>.Net</nsp></h3>
-<p>JsonPatch<nsp>.Net provides <a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> support which can be used to modify JSON documents.<p>
-<h3 id="jsonlogic">JsonLogic</h3>
-<p>JsonLogic is a .Net implementation of the <a href="https://jsonlogic.com">JsonLogic concept</a> by <a href="https://github.com/jwadhams">Jeremy Wadhams</a>.</p>
-</nsp></nsp></nsp></nsp></nsp></nsp></article>
-          </div>
-          
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                  <li>
-                    <a href="https://github.com/gregsdennis/json-everything/blob/master/docs_source/index.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-            
-            <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
-    
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
-  </body>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>json-everything.net</title>
+	<base href="/" />
+	<!--<base href="/json-everything/play/wwwroot/" />-->
+	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+	<link href="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
+	<link href="json-everything.net.styles.css" rel="stylesheet" />
+	<link href="css/app.css" rel="stylesheet" />
+	<link href="css/editor.css" rel="stylesheet" />
+	<link href="css/bootstrap-overrides.css" rel="stylesheet" />
+	<link href="css/docs.css" rel="stylesheet" />
+	<style>
+		.loading-message-container {
+			position: relative;
+			height: 100vh;
+			font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+		}
+
+		.loading-message-child {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			line-height: 200%;
+		}
+	</style>
+</head>
+
+<body>
+<div id="app">
+	<div class="loading-message-container">
+	    <div class="loading-message-child">
+		    Blazor is loading...<br/>Yeah... .Net is gonna run in your browser!<br />The future is now!
+	    </div>
+	</div>
+</div>
+
+<div id="blazor-error-ui" style="display: none;">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+<script>require.config({ paths: { 'vs': '_content/BlazorMonaco/lib/monaco-editor/min/vs' } });</script>
+<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+<script src="_content/BlazorMonaco/jsInterop.js"></script>
+<script src="_framework/blazor.webassembly.js"></script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+</body>
+
 </html>
