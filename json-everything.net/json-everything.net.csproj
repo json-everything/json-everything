@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\docs.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
     <PackageReference Include="Markdig" Version="0.28.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
@@ -34,6 +38,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\md\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\docs.css" />
   </ItemGroup>
 
 </Project>
