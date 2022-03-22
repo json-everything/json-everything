@@ -49,7 +49,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			return value != null && Definitions.TryGetValue(value, out var schema) ? schema : null;
+			throw new NotImplementedException();
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

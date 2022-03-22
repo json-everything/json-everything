@@ -78,22 +78,20 @@ namespace Json.Schema
 				schema.ValidateSubschema(context);
 				var localResult = context.LocalResult.IsValid;
 				overallResult &= localResult;
+				evaluatedProperties.Add(name);
 				context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				if (localResult)
-					evaluatedProperties.Add(name);
 			}
 			context.Options.LogIndentLevel--;
 
+			if (context.LocalResult.TryGetAnnotation(Name) is List<string> annotation)
+				annotation.AddRange(evaluatedProperties);
+			else
+				context.LocalResult.SetAnnotation(Name, evaluatedProperties);
+
 			if (overallResult)
-			{
-				if (context.LocalResult.TryGetAnnotation(Name) is List<string> annotation)
-					annotation.AddRange(evaluatedProperties);
-				else
-					context.LocalResult.SetAnnotation(Name, evaluatedProperties);
 				context.LocalResult.Pass();
-			}
 			else
 				context.LocalResult.Fail();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
@@ -115,7 +113,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			return value != null && Properties.TryGetValue(value, out var schema) ? schema : null;
+			throw new NotImplementedException();
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

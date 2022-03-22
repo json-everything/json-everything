@@ -125,7 +125,7 @@ namespace Json.Schema
 				if (overwriteAnnotation)
 				{
 					// TODO: add message
-					if (overallResult) context.LocalResult.SetAnnotation(Name, true);
+					context.LocalResult.SetAnnotation(Name, true);
 				}
 			}
 			else // array
@@ -158,13 +158,10 @@ namespace Json.Schema
 				if (overwriteAnnotation)
 				{
 					// TODO: add message
-					if (overallResult)
-					{
-						if (maxEvaluations == context.LocalInstance.GetArrayLength())
-							context.LocalResult.SetAnnotation(Name, true);
-						else
-							context.LocalResult.SetAnnotation(Name, maxEvaluations);
-					}
+					if (maxEvaluations == context.LocalInstance.GetArrayLength())
+						context.LocalResult.SetAnnotation(Name, true);
+					else
+						context.LocalResult.SetAnnotation(Name, maxEvaluations);
 				}
 			}
 
@@ -191,12 +188,7 @@ namespace Json.Schema
 
 		IRefResolvable? IRefResolvable.ResolvePointerSegment(string? value)
 		{
-			if (value == null) return SingleSchema;
-
-			if (!int.TryParse(value, out var index)) return null;
-			if (index < 0 || ArraySchemas!.Count <= index) return null;
-
-			return ArraySchemas[index];
+			throw new NotImplementedException();
 		}
 
 		void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
