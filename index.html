@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>json-everything.net</title>
+	<base href="/" />
+	<!--<base href="/json-everything/play/wwwroot/" />-->
+	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+	<link href="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
+	<link href="json-everything.net.styles.css" rel="stylesheet" />
+	<link href="css/app.css" rel="stylesheet" />
+	<link href="css/editor.css" rel="stylesheet" />
+	<link href="css/bootstrap-overrides.css" rel="stylesheet" />
+	<link href="css/docs.css" rel="stylesheet" />
+	<style>
+		.loading-message-container {
+			position: relative;
+			height: 100vh;
+			font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+		}
+
+		.loading-message-child {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			line-height: 200%;
+		}
+	</style>
+</head>
+
+<body>
+<div id="app">
+	<div class="loading-message-container">
+	    <div class="loading-message-child">
+		    Blazor is loading...<br/>Yeah... .Net is gonna run in your browser!<br />The future is now!
+	    </div>
+	</div>
+</div>
+
+<div id="blazor-error-ui" style="display: none;">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+<script>require.config({ paths: { 'vs': '_content/BlazorMonaco/lib/monaco-editor/min/vs' } });</script>
+<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+<script src="_content/BlazorMonaco/jsInterop.js"></script>
+<script src="_framework/blazor.webassembly.js"></script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+</body>
+
+</html>

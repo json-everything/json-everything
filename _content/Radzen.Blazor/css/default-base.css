@@ -1,0 +1,6099 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons"), local("MaterialIcons-Regular"), url("../fonts/MaterialIcons-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 200;
+  font-style: normal;
+  font-stretch: normal;
+  src: local("SourceSansPro-ExtraLight"), local("Source Sans Pro"), url("../fonts/SourceSansPro-ExtraLight.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  src: local("SourceSansPro-Light"), local("Source Sans Pro"), url("../fonts/SourceSansPro-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  src: local("SourceSansPro-Regular"), local("Source Sans Pro"), url("../fonts/SourceSansPro-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  src: local("SourceSansPro-Semibold"), local("Source Sans Pro Semibold"), url("../fonts/SourceSansPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  src: local("SourceSansPro-Bold"), local("Source Sans Pro Bold"), url("../fonts/SourceSansPro-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 900;
+  font-style: normal;
+  font-stretch: normal;
+  src: local("SourceSansPro-Black"), local("Source Sans Pro Black"), url("../fonts/SourceSansPro-Black.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 200;
+  font-style: italic;
+  font-stretch: normal;
+  src: local("SourceSansPro-ExtraLightIt"), local("Source Sans Pro"), url("../fonts/SourceSansPro-ExtraLightIt.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 300;
+  font-style: italic;
+  font-stretch: normal;
+  src: local("SourceSansPro-LightIt"), local("Source Sans Pro"), url("../fonts/SourceSansPro-LightIt.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  font-style: italic;
+  font-stretch: normal;
+  src: local("SourceSansPro-It"), local("Source Sans Pro"), url("../fonts/SourceSansPro-It.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 600;
+  font-style: italic;
+  font-stretch: normal;
+  src: local("SourceSansPro-SemiboldIt"), local("Source Sans Pro"), url("../fonts/SourceSansPro-SemiboldIt.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 700;
+  font-style: italic;
+  font-stretch: normal;
+  src: local("SourceSansPro-BoldIt"), local("Source Sans Pro"), url("../fonts/SourceSansPro-BoldIt.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: normal;
+  src: local("SourceSansPro-BlackIt"), local("Source Sans Pro"), url("../fonts/SourceSansPro-BlackIt.woff") format("woff");
+}
+
+h1.rz-heading {
+  font-size: 2.25rem;
+  font-weight: bold;
+}
+
+h2.rz-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h3.rz-heading {
+  font-size: 1.25rem;
+  font-weight: normal;
+}
+
+h4.rz-heading {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+h5.rz-heading {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+h6.rz-heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.rz-label {
+  margin-bottom: 0;
+}
+
+/* Preferred icon size */
+.rzi, .rz-column-drag, .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-header .rzi-plus, .rz-sortable-column .rzi-grid-sort, .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rzi-chevron-circle-right, .rz-fileupload-row .rz-button .rzi-close, .rz-fileupload-row .rz-paginator-element .rzi-close,
+.rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-icon-trash, .rz-menuitem .rz-menuitem-icon {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.5em;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+.rzi-primary {
+  color: #ff6d41;
+}
+
+.rzi-light {
+  color: #e6ecef;
+}
+
+.rzi-secondary {
+  color: #479cc8;
+}
+
+.rzi-info {
+  color: #68d5c8;
+}
+
+.rzi-warning {
+  color: #e6c54f;
+}
+
+.rzi-error {
+  color: #f9777f;
+}
+
+.rzi-danger {
+  color: #f9777f;
+}
+
+.rzi-success {
+  color: #5dbf74;
+}
+
+.rz-helper-hidden-accessible {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.rz-scrollbar-measure {
+  width: 100px;
+  height: 100px;
+  overflow: scroll;
+  position: absolute;
+  top: -9999px;
+}
+
+.rz-helper-hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+  .header,
+.footer,
+.body {
+    width: 100vw;
+  }
+}
+
+rz-button[type],
+p-button[type] {
+  -webkit-appearance: none;
+}
+
+.rz-button, .rz-paginator-element {
+  -webkit-appearance: none;
+  border-radius: 4px;
+  background-color: #ff6d41;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  line-height: initial;
+  font-size: 1.0625rem;
+  box-shadow: none;
+  transition: none;
+  background-size: auto;
+  background-repeat: no-repeat;
+}
+
+.rz-button:focus, .rz-paginator-element:focus {
+  outline: none;
+}
+
+.rz-button:not(.rz-state-disabled), .rz-paginator-element:not(.rz-state-disabled) {
+  cursor: pointer;
+}
+
+.rz-button:not(.rz-state-disabled):hover:not(:active), .rz-paginator-element:not(.rz-state-disabled):hover:not(:active) {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+  background-size: auto;
+  box-shadow: inset 0 -3px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.rz-button:not(.rz-state-disabled):active, .rz-paginator-element:not(.rz-state-disabled):active {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  background-size: auto;
+  box-shadow: inset 0 3px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.rz-button.rz-state-disabled, .rz-state-disabled.rz-paginator-element {
+  opacity: 0.2;
+  cursor: initial;
+}
+
+.rz-button .rz-button-text, .rz-paginator-element .rz-button-text {
+  vertical-align: middle;
+  line-height: 1.5rem;
+}
+
+.rz-button .rzi, .rz-paginator-element .rzi, .rz-button .rz-column-drag, .rz-paginator-element .rz-column-drag, .rz-button .rz-datatable-loading-content .rzi-circle-o-notch, .rz-paginator-element .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-button .rzi-circle-o-notch, .rz-datatable-loading-content .rz-paginator-element .rzi-circle-o-notch, .rz-button .rz-datatable-header .rzi-plus, .rz-paginator-element .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-button .rzi-plus, .rz-datatable-header .rz-paginator-element .rzi-plus, .rz-button .rz-sortable-column .rzi-grid-sort, .rz-paginator-element .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-button .rzi-grid-sort, .rz-sortable-column .rz-paginator-element .rzi-grid-sort, .rz-button .rz-datatable .rzi-chevron-circle-down, .rz-paginator-element .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-button .rzi-chevron-circle-down, .rz-datatable .rz-paginator-element .rzi-chevron-circle-down, .rz-button .rz-datatable .rzi-chevron-circle-right, .rz-paginator-element .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-button .rzi-chevron-circle-right, .rz-datatable .rz-paginator-element .rzi-chevron-circle-right, .rz-fileupload-row .rz-button .rzi-close, .rz-fileupload-row .rz-paginator-element .rzi-close,
+.rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-icon-trash, .rz-button .rz-menuitem .rz-menuitem-icon, .rz-paginator-element .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-button .rz-menuitem-icon, .rz-menuitem .rz-paginator-element .rz-menuitem-icon {
+  vertical-align: middle;
+}
+
+.rz-button.btn-primary, .btn-primary.rz-paginator-element {
+  background-color: #ff6d41;
+  color: #ffffff;
+}
+
+.rz-button.btn-light, .btn-light.rz-paginator-element {
+  background-color: #e6ecef;
+  color: #3a474d;
+}
+
+.rz-button.btn-secondary, .btn-secondary.rz-paginator-element {
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-button.btn-info, .btn-info.rz-paginator-element {
+  background-color: #68d5c8;
+  color: #ffffff;
+}
+
+.rz-button.btn-warning, .btn-warning.rz-paginator-element {
+  background-color: #e6c54f;
+  color: #ffffff;
+}
+
+.rz-button.btn-error, .btn-error.rz-paginator-element {
+  background-color: #f9777f;
+  color: #ffffff;
+}
+
+.rz-button.btn-danger, .btn-danger.rz-paginator-element {
+  background-color: #f9777f;
+  color: #ffffff;
+}
+
+.rz-button.btn-success, .btn-success.rz-paginator-element {
+  background-color: #5dbf74;
+  color: #ffffff;
+}
+
+.rz-button-md, .rz-date-filter-buttons .rz-button, .rz-date-filter-buttons .rz-paginator-element, .rz-fileupload-choose, .rz-selectbutton .rz-button, .rz-selectbutton .rz-paginator-element, .rz-splitbutton-menubutton, .rz-splitbutton .rz-button-text-icon-left,
+.rz-splitbutton .rz-button-text-only {
+  font-size: 1.0625rem;
+  font-weight: normal;
+  padding: 0 2rem;
+  height: 2.1875rem;
+}
+
+.rz-button-md.rz-button-text-icon-left, .rz-date-filter-buttons .rz-button-text-icon-left.rz-button, .rz-date-filter-buttons .rz-button-text-icon-left.rz-paginator-element, .rz-button-text-icon-left.rz-fileupload-choose, .rz-selectbutton .rz-button-text-icon-left.rz-button, .rz-selectbutton .rz-button-text-icon-left.rz-paginator-element, .rz-button-text-icon-left.rz-splitbutton-menubutton, .rz-splitbutton .rz-button-text-icon-left {
+  padding: 0 1.375rem;
+}
+
+.rz-button-md.rz-button-icon-only, .rz-button-md.rz-paginator-element, .rz-date-filter-buttons .rz-button-icon-only.rz-button, .rz-date-filter-buttons .rz-paginator-element, .rz-button-icon-only.rz-fileupload-choose, .rz-fileupload-choose.rz-paginator-element, .rz-selectbutton .rz-button-icon-only.rz-button, .rz-selectbutton .rz-paginator-element, .rz-button-icon-only.rz-splitbutton-menubutton, .rz-splitbutton-menubutton.rz-paginator-element, .rz-splitbutton .rz-button-icon-only.rz-button-text-icon-left, .rz-splitbutton .rz-button-text-icon-left.rz-paginator-element,
+.rz-splitbutton .rz-button-icon-only.rz-button-text-only,
+.rz-splitbutton .rz-button-text-only.rz-paginator-element {
+  padding: 0 0.5rem;
+}
+
+.rz-button-md .rzi, .rz-button-md .rz-column-drag, .rz-button-md .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-button-md .rzi-circle-o-notch, .rz-date-filter-buttons .rz-button .rzi, .rz-date-filter-buttons .rz-paginator-element .rzi, .rz-date-filter-buttons .rz-button .rz-column-drag, .rz-date-filter-buttons .rz-paginator-element .rz-column-drag, .rz-date-filter-buttons .rz-button .rz-datatable-loading-content .rzi-circle-o-notch, .rz-date-filter-buttons .rz-paginator-element .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-date-filter-buttons .rz-button .rzi-circle-o-notch, .rz-datatable-loading-content .rz-date-filter-buttons .rz-paginator-element .rzi-circle-o-notch, .rz-button-md .rz-datatable-header .rzi-plus, .rz-date-filter-buttons .rz-button .rz-datatable-header .rzi-plus, .rz-date-filter-buttons .rz-paginator-element .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-button-md .rzi-plus, .rz-datatable-header .rz-date-filter-buttons .rz-button .rzi-plus, .rz-datatable-header .rz-date-filter-buttons .rz-paginator-element .rzi-plus, .rz-date-filter-buttons .rz-datatable-header .rz-button .rzi-plus, .rz-date-filter-buttons .rz-datatable-header .rz-paginator-element .rzi-plus, .rz-button-md .rz-sortable-column .rzi-grid-sort, .rz-date-filter-buttons .rz-button .rz-sortable-column .rzi-grid-sort, .rz-date-filter-buttons .rz-paginator-element .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-button-md .rzi-grid-sort, .rz-sortable-column .rz-date-filter-buttons .rz-button .rzi-grid-sort, .rz-sortable-column .rz-date-filter-buttons .rz-paginator-element .rzi-grid-sort, .rz-date-filter-buttons .rz-sortable-column .rz-button .rzi-grid-sort, .rz-date-filter-buttons .rz-sortable-column .rz-paginator-element .rzi-grid-sort, .rz-button-md .rz-datatable .rzi-chevron-circle-down, .rz-date-filter-buttons .rz-button .rz-datatable .rzi-chevron-circle-down, .rz-date-filter-buttons .rz-paginator-element .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-button-md .rzi-chevron-circle-down, .rz-datatable .rz-date-filter-buttons .rz-button .rzi-chevron-circle-down, .rz-datatable .rz-date-filter-buttons .rz-paginator-element .rzi-chevron-circle-down, .rz-date-filter-buttons .rz-datatable .rz-button .rzi-chevron-circle-down, .rz-date-filter-buttons .rz-datatable .rz-paginator-element .rzi-chevron-circle-down, .rz-button-md .rz-datatable .rzi-chevron-circle-right, .rz-date-filter-buttons .rz-button .rz-datatable .rzi-chevron-circle-right, .rz-date-filter-buttons .rz-paginator-element .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-button-md .rzi-chevron-circle-right, .rz-datatable .rz-date-filter-buttons .rz-button .rzi-chevron-circle-right, .rz-datatable .rz-date-filter-buttons .rz-paginator-element .rzi-chevron-circle-right, .rz-date-filter-buttons .rz-datatable .rz-button .rzi-chevron-circle-right, .rz-date-filter-buttons .rz-datatable .rz-paginator-element .rzi-chevron-circle-right, .rz-button-md .rz-fileupload-row .rz-button .rzi-close, .rz-button-md .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-date-filter-buttons .rz-button .rz-fileupload-row .rz-button .rzi-close, .rz-date-filter-buttons .rz-paginator-element .rz-fileupload-row .rz-button .rzi-close, .rz-date-filter-buttons .rz-button .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-date-filter-buttons .rz-paginator-element .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-button-md .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-button-md .rzi-close, .rz-fileupload-row .rz-button .rz-date-filter-buttons .rz-button .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-date-filter-buttons .rz-button .rzi-close, .rz-fileupload-row .rz-button .rz-date-filter-buttons .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-date-filter-buttons .rz-paginator-element .rzi-close, .rz-date-filter-buttons .rz-fileupload-row .rz-button .rz-button .rzi-close, .rz-date-filter-buttons .rz-fileupload-row .rz-paginator-element .rz-button .rzi-close, .rz-date-filter-buttons .rz-fileupload-row .rz-button .rz-paginator-element .rzi-close, .rz-date-filter-buttons .rz-fileupload-row .rz-paginator-element .rz-paginator-element .rzi-close,
+.rz-button-md .rz-fileupload-row .rz-button .rzi-times,
+.rz-button-md .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-date-filter-buttons .rz-button .rz-fileupload-row .rz-button .rzi-times,
+.rz-date-filter-buttons .rz-paginator-element .rz-fileupload-row .rz-button .rzi-times,
+.rz-date-filter-buttons .rz-button .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-date-filter-buttons .rz-paginator-element .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-button-md .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-button-md .rzi-times,
+.rz-fileupload-row .rz-button .rz-date-filter-buttons .rz-button .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-date-filter-buttons .rz-button .rzi-times,
+.rz-fileupload-row .rz-button .rz-date-filter-buttons .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-date-filter-buttons .rz-paginator-element .rzi-times,
+.rz-date-filter-buttons .rz-fileupload-row .rz-button .rz-button .rzi-times,
+.rz-date-filter-buttons .rz-fileupload-row .rz-paginator-element .rz-button .rzi-times,
+.rz-date-filter-buttons .rz-fileupload-row .rz-button .rz-paginator-element .rzi-times,
+.rz-date-filter-buttons .rz-fileupload-row .rz-paginator-element .rz-paginator-element .rzi-times,
+.rz-button-md .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-button-md .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-date-filter-buttons .rz-button .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-date-filter-buttons .rz-paginator-element .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-date-filter-buttons .rz-button .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-date-filter-buttons .rz-paginator-element .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-button-md .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-button-md .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-date-filter-buttons .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-date-filter-buttons .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-date-filter-buttons .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-date-filter-buttons .rz-paginator-element .rz-icon-trash,
+.rz-date-filter-buttons .rz-fileupload-row .rz-button .rz-button .rz-icon-trash,
+.rz-date-filter-buttons .rz-fileupload-row .rz-paginator-element .rz-button .rz-icon-trash,
+.rz-date-filter-buttons .rz-fileupload-row .rz-button .rz-paginator-element .rz-icon-trash,
+.rz-date-filter-buttons .rz-fileupload-row .rz-paginator-element .rz-paginator-element .rz-icon-trash, .rz-fileupload-choose .rzi, .rz-fileupload-choose .rz-column-drag, .rz-fileupload-choose .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-fileupload-choose .rzi-circle-o-notch, .rz-fileupload-choose .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-fileupload-choose .rzi-plus, .rz-fileupload-choose .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-fileupload-choose .rzi-grid-sort, .rz-fileupload-choose .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-fileupload-choose .rzi-chevron-circle-down, .rz-fileupload-choose .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-fileupload-choose .rzi-chevron-circle-right, .rz-fileupload-choose .rz-fileupload-row .rz-button .rzi-close, .rz-fileupload-choose .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-fileupload-choose .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-fileupload-choose .rzi-close,
+.rz-fileupload-choose .rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload-choose .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-fileupload-choose .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-fileupload-choose .rzi-times,
+.rz-fileupload-choose .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload-choose .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-fileupload-choose .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-fileupload-choose .rz-icon-trash, .rz-selectbutton .rz-button .rzi, .rz-selectbutton .rz-paginator-element .rzi, .rz-selectbutton .rz-button .rz-column-drag, .rz-selectbutton .rz-paginator-element .rz-column-drag, .rz-selectbutton .rz-button .rz-datatable-loading-content .rzi-circle-o-notch, .rz-selectbutton .rz-paginator-element .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-selectbutton .rz-button .rzi-circle-o-notch, .rz-datatable-loading-content .rz-selectbutton .rz-paginator-element .rzi-circle-o-notch, .rz-selectbutton .rz-button .rz-datatable-header .rzi-plus, .rz-selectbutton .rz-paginator-element .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-selectbutton .rz-button .rzi-plus, .rz-datatable-header .rz-selectbutton .rz-paginator-element .rzi-plus, .rz-selectbutton .rz-button .rz-sortable-column .rzi-grid-sort, .rz-selectbutton .rz-paginator-element .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-selectbutton .rz-button .rzi-grid-sort, .rz-sortable-column .rz-selectbutton .rz-paginator-element .rzi-grid-sort, .rz-selectbutton .rz-button .rz-datatable .rzi-chevron-circle-down, .rz-selectbutton .rz-paginator-element .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-selectbutton .rz-button .rzi-chevron-circle-down, .rz-datatable .rz-selectbutton .rz-paginator-element .rzi-chevron-circle-down, .rz-selectbutton .rz-button .rz-datatable .rzi-chevron-circle-right, .rz-selectbutton .rz-paginator-element .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-selectbutton .rz-button .rzi-chevron-circle-right, .rz-datatable .rz-selectbutton .rz-paginator-element .rzi-chevron-circle-right, .rz-selectbutton .rz-fileupload-row .rz-button .rzi-close, .rz-selectbutton .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-selectbutton .rz-button .rzi-close, .rz-fileupload-row .rz-selectbutton .rz-paginator-element .rzi-close,
+.rz-selectbutton .rz-fileupload-row .rz-button .rzi-times,
+.rz-selectbutton .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-selectbutton .rz-button .rzi-times,
+.rz-fileupload-row .rz-selectbutton .rz-paginator-element .rzi-times,
+.rz-selectbutton .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-selectbutton .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-selectbutton .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-selectbutton .rz-paginator-element .rz-icon-trash, .rz-splitbutton-menubutton .rzi, .rz-splitbutton-menubutton .rz-column-drag, .rz-splitbutton-menubutton .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-splitbutton-menubutton .rzi-circle-o-notch, .rz-splitbutton-menubutton .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-splitbutton-menubutton .rzi-plus, .rz-splitbutton-menubutton .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-splitbutton-menubutton .rzi-grid-sort, .rz-splitbutton-menubutton .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-splitbutton-menubutton .rzi-chevron-circle-down, .rz-splitbutton-menubutton .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-splitbutton-menubutton .rzi-chevron-circle-right, .rz-splitbutton-menubutton .rz-fileupload-row .rz-button .rzi-close, .rz-splitbutton-menubutton .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-splitbutton-menubutton .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-splitbutton-menubutton .rzi-close,
+.rz-splitbutton-menubutton .rz-fileupload-row .rz-button .rzi-times,
+.rz-splitbutton-menubutton .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-splitbutton-menubutton .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton-menubutton .rzi-times,
+.rz-splitbutton-menubutton .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-splitbutton-menubutton .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-splitbutton-menubutton .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton-menubutton .rz-icon-trash, .rz-button-md .rz-menuitem .rz-menuitem-icon, .rz-date-filter-buttons .rz-button .rz-menuitem .rz-menuitem-icon, .rz-date-filter-buttons .rz-paginator-element .rz-menuitem .rz-menuitem-icon, .rz-fileupload-choose .rz-menuitem .rz-menuitem-icon, .rz-selectbutton .rz-button .rz-menuitem .rz-menuitem-icon, .rz-selectbutton .rz-paginator-element .rz-menuitem .rz-menuitem-icon, .rz-splitbutton-menubutton .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-button-md .rz-menuitem-icon, .rz-menuitem .rz-date-filter-buttons .rz-button .rz-menuitem-icon, .rz-menuitem .rz-date-filter-buttons .rz-paginator-element .rz-menuitem-icon, .rz-date-filter-buttons .rz-menuitem .rz-button .rz-menuitem-icon, .rz-date-filter-buttons .rz-menuitem .rz-paginator-element .rz-menuitem-icon, .rz-menuitem .rz-fileupload-choose .rz-menuitem-icon, .rz-menuitem .rz-selectbutton .rz-button .rz-menuitem-icon, .rz-menuitem .rz-selectbutton .rz-paginator-element .rz-menuitem-icon, .rz-selectbutton .rz-menuitem .rz-button .rz-menuitem-icon, .rz-selectbutton .rz-menuitem .rz-paginator-element .rz-menuitem-icon, .rz-menuitem .rz-splitbutton-menubutton .rz-menuitem-icon, .rz-splitbutton .rz-button-text-icon-left .rzi, .rz-splitbutton .rz-button-text-icon-left .rz-column-drag, .rz-splitbutton .rz-button-text-icon-left .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-splitbutton .rz-button-text-icon-left .rzi-circle-o-notch, .rz-splitbutton .rz-button-text-icon-left .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-splitbutton .rz-button-text-icon-left .rzi-plus, .rz-splitbutton .rz-button-text-icon-left .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-splitbutton .rz-button-text-icon-left .rzi-grid-sort, .rz-splitbutton .rz-button-text-icon-left .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-splitbutton .rz-button-text-icon-left .rzi-chevron-circle-down, .rz-splitbutton .rz-button-text-icon-left .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-splitbutton .rz-button-text-icon-left .rzi-chevron-circle-right, .rz-splitbutton .rz-button-text-icon-left .rz-fileupload-row .rz-button .rzi-close, .rz-splitbutton .rz-button-text-icon-left .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-splitbutton .rz-button-text-icon-left .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-splitbutton .rz-button-text-icon-left .rzi-close,
+.rz-splitbutton .rz-button-text-icon-left .rz-fileupload-row .rz-button .rzi-times,
+.rz-splitbutton .rz-button-text-icon-left .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-splitbutton .rz-button-text-icon-left .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton .rz-button-text-icon-left .rzi-times,
+.rz-splitbutton .rz-button-text-icon-left .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-splitbutton .rz-button-text-icon-left .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-splitbutton .rz-button-text-icon-left .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton .rz-button-text-icon-left .rz-icon-trash, .rz-splitbutton .rz-button-text-icon-left .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-splitbutton .rz-button-text-icon-left .rz-menuitem-icon,
+.rz-splitbutton .rz-button-text-only .rzi,
+.rz-splitbutton .rz-button-text-only .rz-column-drag,
+.rz-splitbutton .rz-button-text-only .rz-datatable-loading-content .rzi-circle-o-notch,
+.rz-datatable-loading-content .rz-splitbutton .rz-button-text-only .rzi-circle-o-notch,
+.rz-splitbutton .rz-button-text-only .rz-datatable-header .rzi-plus,
+.rz-datatable-header .rz-splitbutton .rz-button-text-only .rzi-plus,
+.rz-splitbutton .rz-button-text-only .rz-sortable-column .rzi-grid-sort,
+.rz-sortable-column .rz-splitbutton .rz-button-text-only .rzi-grid-sort,
+.rz-splitbutton .rz-button-text-only .rz-datatable .rzi-chevron-circle-down,
+.rz-datatable .rz-splitbutton .rz-button-text-only .rzi-chevron-circle-down,
+.rz-splitbutton .rz-button-text-only .rz-datatable .rzi-chevron-circle-right,
+.rz-datatable .rz-splitbutton .rz-button-text-only .rzi-chevron-circle-right,
+.rz-splitbutton .rz-button-text-only .rz-fileupload-row .rz-button .rzi-close,
+.rz-splitbutton .rz-button-text-only .rz-fileupload-row .rz-paginator-element .rzi-close,
+.rz-fileupload-row .rz-button .rz-splitbutton .rz-button-text-only .rzi-close,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton .rz-button-text-only .rzi-close,
+.rz-splitbutton .rz-button-text-only .rz-fileupload-row .rz-button .rzi-times,
+.rz-splitbutton .rz-button-text-only .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-splitbutton .rz-button-text-only .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton .rz-button-text-only .rzi-times,
+.rz-splitbutton .rz-button-text-only .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-splitbutton .rz-button-text-only .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-splitbutton .rz-button-text-only .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-splitbutton .rz-button-text-only .rz-icon-trash,
+.rz-splitbutton .rz-button-text-only .rz-menuitem .rz-menuitem-icon,
+.rz-menuitem .rz-splitbutton .rz-button-text-only .rz-menuitem-icon {
+  font-size: 1.0625rem;
+  height: auto;
+  line-height: 2.1875rem;
+  width: 1.25rem;
+}
+
+.rz-button-md .rz-button-text, .rz-date-filter-buttons .rz-button .rz-button-text, .rz-date-filter-buttons .rz-paginator-element .rz-button-text, .rz-fileupload-choose .rz-button-text, .rz-selectbutton .rz-button .rz-button-text, .rz-selectbutton .rz-paginator-element .rz-button-text, .rz-splitbutton-menubutton .rz-button-text, .rz-splitbutton .rz-button-text-icon-left .rz-button-text,
+.rz-splitbutton .rz-button-text-only .rz-button-text {
+  line-height: 2.1875rem;
+}
+
+.rz-button-sm, .rz-paginator-element, .rz-fileupload .rz-button, .rz-fileupload .rz-paginator-element {
+  font-size: 0.875rem;
+  padding: 0 2.875rem;
+  height: 1.75rem;
+}
+
+.rz-button-sm.rz-button-text-icon-left, .rz-button-text-icon-left.rz-paginator-element, .rz-fileupload .rz-button-text-icon-left.rz-button {
+  padding: 0 1.375rem;
+}
+
+.rz-button-sm.rz-button-icon-only, .rz-paginator-element, .rz-fileupload .rz-button-icon-only.rz-button, .rz-fileupload .rz-button.rz-paginator-element {
+  padding: 0 0.3125rem;
+}
+
+.rz-button-sm .rzi, .rz-paginator-element .rzi, .rz-button-sm .rz-column-drag, .rz-paginator-element .rz-column-drag, .rz-button-sm .rz-datatable-loading-content .rzi-circle-o-notch, .rz-paginator-element .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-button-sm .rzi-circle-o-notch, .rz-datatable-loading-content .rz-paginator-element .rzi-circle-o-notch, .rz-button-sm .rz-datatable-header .rzi-plus, .rz-paginator-element .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-button-sm .rzi-plus, .rz-datatable-header .rz-paginator-element .rzi-plus, .rz-button-sm .rz-sortable-column .rzi-grid-sort, .rz-paginator-element .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-button-sm .rzi-grid-sort, .rz-sortable-column .rz-paginator-element .rzi-grid-sort, .rz-button-sm .rz-datatable .rzi-chevron-circle-down, .rz-paginator-element .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-button-sm .rzi-chevron-circle-down, .rz-datatable .rz-paginator-element .rzi-chevron-circle-down, .rz-button-sm .rz-datatable .rzi-chevron-circle-right, .rz-paginator-element .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-button-sm .rzi-chevron-circle-right, .rz-datatable .rz-paginator-element .rzi-chevron-circle-right, .rz-button-sm .rz-fileupload-row .rz-button .rzi-close, .rz-paginator-element .rz-fileupload-row .rz-button .rzi-close, .rz-button-sm .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-paginator-element .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-button-sm .rzi-close, .rz-fileupload-row .rz-button .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-button-sm .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-paginator-element .rzi-close,
+.rz-button-sm .rz-fileupload-row .rz-button .rzi-times,
+.rz-paginator-element .rz-fileupload-row .rz-button .rzi-times,
+.rz-button-sm .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-paginator-element .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-button-sm .rzi-times,
+.rz-fileupload-row .rz-button .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-button-sm .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-paginator-element .rzi-times,
+.rz-button-sm .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-paginator-element .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-button-sm .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-paginator-element .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-button-sm .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-button-sm .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-paginator-element .rz-icon-trash, .rz-fileupload .rz-button .rzi, .rz-fileupload .rz-button .rz-column-drag, .rz-fileupload .rz-button .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-fileupload .rz-button .rzi-circle-o-notch, .rz-fileupload .rz-button .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-fileupload .rz-button .rzi-plus, .rz-fileupload .rz-button .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-fileupload .rz-button .rzi-grid-sort, .rz-fileupload .rz-button .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-fileupload .rz-button .rzi-chevron-circle-down, .rz-fileupload .rz-button .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-fileupload .rz-button .rzi-chevron-circle-right, .rz-fileupload .rz-fileupload-row .rz-button .rzi-close, .rz-fileupload .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-fileupload .rz-button .rzi-close, .rz-fileupload-row .rz-fileupload .rz-paginator-element .rzi-close,
+.rz-fileupload .rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-fileupload .rz-button .rzi-times,
+.rz-fileupload-row .rz-fileupload .rz-paginator-element .rzi-times,
+.rz-fileupload .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-fileupload .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-fileupload .rz-paginator-element .rz-icon-trash, .rz-button-sm .rz-menuitem .rz-menuitem-icon, .rz-paginator-element .rz-menuitem .rz-menuitem-icon, .rz-fileupload .rz-button .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-button-sm .rz-menuitem-icon, .rz-menuitem .rz-paginator-element .rz-menuitem-icon, .rz-menuitem .rz-fileupload .rz-button .rz-menuitem-icon, .rz-fileupload .rz-menuitem .rz-button .rz-menuitem-icon {
+  font-size: 0.9375rem;
+  height: auto;
+  line-height: 1.75rem;
+  width: 1.125rem;
+}
+
+.rz-button-sm .rz-button-text, .rz-paginator-element .rz-button-text, .rz-fileupload .rz-button .rz-button-text {
+  line-height: 1.75rem;
+}
+
+@keyframes button-icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rz-badge {
+  color: #ffffff;
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-transform: none;
+  white-space: nowrap;
+  border-radius: 0;
+  letter-spacing: 0;
+}
+
+.rz-badge-primary {
+  background-color: #ff6d41;
+}
+
+.rz-badge-light {
+  background-color: #e6ecef;
+  color: #3a474d;
+}
+
+.rz-badge-secondary {
+  background-color: #479cc8;
+}
+
+.rz-badge-info {
+  background-color: #68d5c8;
+}
+
+.rz-badge-warning {
+  background-color: #e6c54f;
+}
+
+.rz-badge-error {
+  background-color: #f9777f;
+}
+
+.rz-badge-danger {
+  background-color: #f9777f;
+}
+
+.rz-badge-success {
+  background-color: #5dbf74;
+}
+
+.rz-badge-pill {
+  border-radius: 4px;
+  padding: 0.25em 0.4em;
+}
+
+.rz-autocomplete:hover:not(.rz-state-disabled), .rz-radiobutton-box:hover:not(.rz-state-disabled), .rz-chkbox-box:hover:not(.rz-state-disabled), .rz-colorpicker:not(:disabled):not(.rz-state-disabled):focus, .rz-lookup-search input:not(:disabled):not(.rz-state-disabled):focus, .rz-spinner:not(:disabled):not(.rz-state-disabled):focus, .rz-calendar .rz-inputtext:not(:disabled):not(.rz-state-disabled):focus, .rz-multiselect:not(:disabled):not(.rz-state-disabled):focus, .rz-dropdown:not(:disabled):not(.rz-state-disabled):focus, .mask:not(:disabled):not(.rz-state-disabled):focus, .rz-textarea:not(:disabled):not(.rz-state-disabled):focus, .rz-textbox:not(:disabled):not(.rz-state-disabled):focus, .rz-colorpicker:not(:disabled):not(.rz-state-disabled):hover, .rz-lookup-search input:not(:disabled):not(.rz-state-disabled):hover, .rz-spinner:not(:disabled):not(.rz-state-disabled):hover, .rz-calendar .rz-inputtext:not(:disabled):not(.rz-state-disabled):hover, .rz-multiselect:not(:disabled):not(.rz-state-disabled):hover, .rz-dropdown:not(:disabled):not(.rz-state-disabled):hover, .mask:not(:disabled):not(.rz-state-disabled):hover, .rz-textarea:not(:disabled):not(.rz-state-disabled):hover, .rz-textbox:not(:disabled):not(.rz-state-disabled):hover {
+  box-shadow: inset 0 4px 7px 0 rgba(0, 0, 0, 0.03);
+  border: 1px solid #cecece;
+}
+
+.rz-spinner.rz-state-disabled, .rz-calendar.rz-state-disabled .rz-inputtext, .rz-listbox.rz-state-disabled, .rz-autocomplete-input:disabled, .rz-state-disabled.rz-autocomplete, .rz-state-disabled.rz-multiselect, .rz-state-disabled.rz-dropdown, .rz-radiobutton-box.rz-state-disabled, .rz-chkbox-box.rz-state-disabled, .rz-colorpicker:disabled, .rz-lookup-search input:disabled, .rz-spinner:disabled, .rz-calendar .rz-inputtext:disabled, .rz-multiselect:disabled, .rz-dropdown:disabled, .mask:disabled, .rz-textarea:disabled, .rz-textbox:disabled {
+  color: rgba(58, 58, 58, 0.4);
+  box-shadow: inset 0 4px 7px 0 rgba(0, 0, 0, 0.03);
+  background-color: rgba(255, 255, 255, 0.7);
+  border: solid 1px #eaeaea;
+  opacity: 1;
+}
+
+.rz-spinner.rz-state-disabled::placeholder, .rz-calendar.rz-state-disabled .rz-inputtext::placeholder, .rz-listbox.rz-state-disabled::placeholder, .rz-autocomplete-input:disabled::placeholder, .rz-state-disabled.rz-autocomplete::placeholder, .rz-state-disabled.rz-multiselect::placeholder, .rz-state-disabled.rz-dropdown::placeholder, .rz-radiobutton-box.rz-state-disabled::placeholder, .rz-chkbox-box.rz-state-disabled::placeholder, .rz-colorpicker:disabled::placeholder, .rz-lookup-search input:disabled::placeholder, .rz-spinner:disabled::placeholder, .rz-calendar .rz-inputtext:disabled::placeholder, .rz-multiselect:disabled::placeholder, .rz-dropdown:disabled::placeholder, .mask:disabled::placeholder, .rz-textarea:disabled::placeholder, .rz-textbox:disabled::placeholder {
+  color: rgba(58, 58, 58, 0.4);
+}
+
+.rz-spinner.rz-state-disabled .rz-inputtext, .rz-calendar.rz-state-disabled .rz-inputtext .rz-inputtext, .rz-listbox.rz-state-disabled .rz-inputtext, .rz-autocomplete-input:disabled .rz-inputtext, .rz-state-disabled.rz-autocomplete .rz-inputtext, .rz-state-disabled.rz-multiselect .rz-inputtext, .rz-state-disabled.rz-dropdown .rz-inputtext, .rz-radiobutton-box.rz-state-disabled .rz-inputtext, .rz-chkbox-box.rz-state-disabled .rz-inputtext, .rz-colorpicker:disabled .rz-inputtext, .rz-lookup-search input:disabled .rz-inputtext, .rz-spinner:disabled .rz-inputtext, .rz-calendar .rz-inputtext:disabled .rz-inputtext, .rz-multiselect:disabled .rz-inputtext, .rz-dropdown:disabled .rz-inputtext, .mask:disabled .rz-inputtext, .rz-textarea:disabled .rz-inputtext, .rz-textbox:disabled .rz-inputtext {
+  background-color: rgba(255, 255, 255, 0.7);
+  color: rgba(58, 58, 58, 0.4);
+}
+
+input {
+  color: #212529;
+  font-size: 0.875rem;
+}
+
+input::placeholder {
+  color: #3a3a3a;
+}
+
+.rz-colorpicker, .rz-lookup-search input, .rz-spinner, .rz-calendar .rz-inputtext, .rz-multiselect, .rz-dropdown, .mask, .rz-textarea, .rz-textbox {
+  padding: 0.1875rem 0.625rem;
+}
+
+.rz-colorpicker, .rz-lookup-search input, .rz-spinner, .rz-calendar .rz-inputtext, .rz-multiselect, .rz-dropdown, .mask, .rz-textarea, .rz-textbox {
+  border: 1px solid #dadfe2;
+  border-radius: 4px;
+  box-shadow: inset 0 4px 3px 0 rgba(0, 0, 0, 0.03);
+  background-color: #ffffff;
+}
+
+.rz-colorpicker, .rz-lookup-search input, .rz-spinner, .rz-calendar .rz-inputtext, .rz-multiselect, .rz-dropdown, .mask, .rz-textarea, .rz-textbox {
+  height: 2.1875rem;
+  line-height: 1.75rem;
+  color: #212529;
+  font-size: 0.875rem;
+  transition: none;
+  outline: none;
+}
+
+.rz-colorpicker:not(:disabled):not(.rz-state-disabled):focus, .rz-lookup-search input:not(:disabled):not(.rz-state-disabled):focus, .rz-spinner:not(:disabled):not(.rz-state-disabled):focus, .rz-calendar .rz-inputtext:not(:disabled):not(.rz-state-disabled):focus, .rz-multiselect:not(:disabled):not(.rz-state-disabled):focus, .rz-dropdown:not(:disabled):not(.rz-state-disabled):focus, .mask:not(:disabled):not(.rz-state-disabled):focus, .rz-textarea:not(:disabled):not(.rz-state-disabled):focus, .rz-textbox:not(:disabled):not(.rz-state-disabled):focus {
+  box-shadow: inset 0 4px 3px 0 rgba(0, 0, 0, 0.03);
+}
+
+@media (max-width: 768px) {
+  .rz-colorpicker, .rz-lookup-search input, .rz-spinner, .rz-calendar .rz-inputtext, .rz-multiselect, .rz-dropdown, .mask, .rz-textarea, .rz-textbox,
+input {
+    font-size: 1rem;
+  }
+}
+
+.header {
+  background-color: #ffffff;
+  min-height: 3.125rem;
+  border-bottom: 1px solid #eaeef0;
+  color: #212529;
+  box-shadow: none;
+}
+
+.header.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.footer {
+  padding: 1rem;
+  border-top: 1px solid #eaeef0;
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.footer.fixed {
+  position: fixed;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.rz-sidebar {
+  background-color: #3a474d;
+  border-right: 1px solid #eaeef0;
+  position: fixed;
+  overflow: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 250px;
+  opacity: 1;
+  transition: all .1s linear;
+}
+
+@media (max-width: 768px) {
+  .rz-sidebar-responsive {
+    width: 0;
+    opacity: 0;
+  }
+}
+
+.rz-sidebar-expanded {
+  width: 250px;
+  opacity: 1;
+}
+
+.rz-sidebar-collapsed {
+  width: 0 !important;
+  opacity: 0;
+}
+
+.rz-card {
+  padding: 1.25rem 1.5625rem;
+  border-radius: 4px;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+}
+
+.rz-card h1,
+.rz-card h2,
+.rz-card h3,
+.rz-card h4,
+.rz-card h5,
+.rz-card h6 {
+  margin-bottom: 0.8125rem;
+}
+
+.rz-card p {
+  margin-bottom: 0;
+}
+
+.body {
+  padding: 1rem;
+}
+
+.rz-body {
+  padding: 1rem;
+}
+
+.rz-layout .rz-body {
+  transform: translateZ(0);
+}
+
+.rz-accordion {
+  box-shadow: none;
+}
+
+.rz-accordion-header {
+  background-color: #ffffff;
+}
+
+.rz-accordion-header a[role='tab'] {
+  padding: 0;
+  color: #212529;
+  line-height: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.rz-accordion-header:hover {
+  color: #479cc8;
+}
+
+.rz-accordion-header .rzi, .rz-accordion-header .rz-column-drag, .rz-accordion-header .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-accordion-header .rzi-circle-o-notch, .rz-accordion-header .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-accordion-header .rzi-plus, .rz-accordion-header .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-accordion-header .rzi-grid-sort, .rz-accordion-header .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-accordion-header .rzi-chevron-circle-down, .rz-accordion-header .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-accordion-header .rzi-chevron-circle-right, .rz-accordion-header .rz-fileupload-row .rz-button .rzi-close, .rz-accordion-header .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-accordion-header .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-accordion-header .rzi-close,
+.rz-accordion-header .rz-fileupload-row .rz-button .rzi-times,
+.rz-accordion-header .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-accordion-header .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-accordion-header .rzi-times,
+.rz-accordion-header .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-accordion-header .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-accordion-header .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-accordion-header .rz-icon-trash, .rz-accordion-header .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-accordion-header .rz-menuitem-icon {
+  font-size: 1.5rem;
+  margin: 0 0.375rem 0 0;
+}
+
+.rz-accordion-toggle-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  margin: 0 0.375rem 0 0;
+}
+
+.rz-accordion-toggle-icon.rzi-chevron-right:before {
+  content: 'arrow_right';
+}
+
+.rz-accordion-toggle-icon.rzi-chevron-down:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-state-active a[role='tab'] {
+  color: #479cc8;
+}
+
+.rz-accordion-content-wrapper-overflown {
+  overflow: hidden;
+}
+
+.rz-accordion-content {
+  font-size: inherit;
+  background-color: #ffffff;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+}
+
+.rz-panel {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 0.625rem 1.25rem;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.rz-panel-titlebar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rz-panel-content {
+  margin: 1.4375rem 0 0 0;
+}
+
+.rz-panel-content-wrapper[aria-hidden='true'] {
+  display: none;
+}
+
+.rz-panel-title {
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+.rz-panel-titlebar-toggler {
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 2px;
+  background-color: #e6ecef;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rz-panel-titlebar-toggler:hover {
+  text-decoration: none;
+  color: #479cc8;
+}
+
+.rz-panel-titlebar-toggler .rzi-minus:before {
+  content: 'remove';
+}
+
+.rz-panel-titlebar-toggler .rzi-plus:before {
+  content: 'add';
+}
+
+.sidebar-toggle {
+  -webkit-appearance: none;
+  border: none;
+  padding: 0.8125rem;
+  margin: 0 1rem 0 0;
+  border-right: 1px solid #eaeef0;
+  background-color: #ffffff;
+  color: #000;
+}
+
+.sidebar-toggle:focus {
+  outline: none;
+}
+
+.sidebar-toggle:hover {
+  color: #479cc8;
+  background: #ffffff;
+  border-radius: 0;
+}
+
+.sidebar-toggle .rzi, .sidebar-toggle .rz-column-drag, .sidebar-toggle .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .sidebar-toggle .rzi-circle-o-notch, .sidebar-toggle .rz-datatable-header .rzi-plus, .rz-datatable-header .sidebar-toggle .rzi-plus, .sidebar-toggle .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .sidebar-toggle .rzi-grid-sort, .sidebar-toggle .rz-datatable .rzi-chevron-circle-down, .rz-datatable .sidebar-toggle .rzi-chevron-circle-down, .sidebar-toggle .rz-datatable .rzi-chevron-circle-right, .rz-datatable .sidebar-toggle .rzi-chevron-circle-right, .sidebar-toggle .rz-fileupload-row .rz-button .rzi-close, .sidebar-toggle .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .sidebar-toggle .rzi-close, .rz-fileupload-row .rz-paginator-element .sidebar-toggle .rzi-close,
+.sidebar-toggle .rz-fileupload-row .rz-button .rzi-times,
+.sidebar-toggle .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .sidebar-toggle .rzi-times,
+.rz-fileupload-row .rz-paginator-element .sidebar-toggle .rzi-times,
+.sidebar-toggle .rz-fileupload-row .rz-button .rz-icon-trash,
+.sidebar-toggle .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .sidebar-toggle .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .sidebar-toggle .rz-icon-trash, .sidebar-toggle .rz-menuitem .rz-menuitem-icon, .rz-menuitem .sidebar-toggle .rz-menuitem-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.rz-navigation-item-link {
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+
+.rz-navigation-item-link:hover {
+  text-decoration: none;
+}
+
+.rz-navigation-item-text {
+  flex: auto;
+}
+
+.rz-context-menu .rz-menu {
+  flex-direction: column;
+}
+
+.rz-context-menu .rz-menu, .rz-context-menu .rz-navigation-menu {
+  box-shadow: 0 10px 8px 0 rgba(58, 71, 77, 0.06);
+  border: 1px solid #dadfe2;
+  border-radius: 2px;
+}
+
+.rz-menu:not(.rz-profile-menu) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background-color: #ffffff;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-link {
+  color: #3a474d;
+  white-space: nowrap;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper .rz-navigation-item-link {
+  padding: 0.8125rem 0.625rem;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover {
+  background-color: transparent;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link {
+  color: #479cc8;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper-active .rz-navigation-item-link {
+  color: #3a474d;
+}
+
+.rz-menu:not(.rz-profile-menu) > .rz-navigation-item > .rz-navigation-item-wrapper-active:before {
+  position: absolute;
+  content: '';
+  bottom: -2px;
+  height: 1px;
+  left: 0;
+  right: 0;
+  background-color: #3a474d;
+  margin-left: 0.75rem;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item {
+  position: relative;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu {
+  list-style: none;
+  overflow: hidden;
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  min-width: 100%;
+  box-shadow: 0 10px 8px 0 rgba(58, 71, 77, 0.06);
+  z-index: 3;
+  border-radius: 2px;
+  background-color: #ffffff;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-item-wrapper .rz-navigation-item-link {
+  padding: 0.375rem 1.25rem;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-item-wrapper:hover {
+  background-color: #479cc8;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-item-wrapper:hover .rz-navigation-item-link {
+  color: #ffffff;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-item-link {
+  color: #3a474d;
+  white-space: nowrap;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-menu {
+  position: static;
+  box-shadow: none;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-link {
+  color: #3a474d;
+  margin-left: 0.75rem;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-link {
+  margin-left: 1.5rem;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-link {
+  margin-left: 2.25rem;
+}
+
+.rz-menu:not(.rz-profile-menu) .rzi:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-column-drag:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-datatable-loading-content .rzi-circle-o-notch:not(.rz-navigation-item-icon-children), .rz-datatable-loading-content .rz-menu:not(.rz-profile-menu) .rzi-circle-o-notch:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-datatable-header .rzi-plus:not(.rz-navigation-item-icon-children), .rz-datatable-header .rz-menu:not(.rz-profile-menu) .rzi-plus:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-sortable-column .rzi-grid-sort:not(.rz-navigation-item-icon-children), .rz-sortable-column .rz-menu:not(.rz-profile-menu) .rzi-grid-sort:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-datatable .rzi-chevron-circle-down:not(.rz-navigation-item-icon-children), .rz-datatable .rz-menu:not(.rz-profile-menu) .rzi-chevron-circle-down:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-datatable .rzi-chevron-circle-right:not(.rz-navigation-item-icon-children), .rz-datatable .rz-menu:not(.rz-profile-menu) .rzi-chevron-circle-right:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-fileupload-row .rz-button .rzi-close:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-fileupload-row .rz-paginator-element .rzi-close:not(.rz-navigation-item-icon-children), .rz-fileupload-row .rz-button .rz-menu:not(.rz-profile-menu) .rzi-close:not(.rz-navigation-item-icon-children), .rz-fileupload-row .rz-paginator-element .rz-menu:not(.rz-profile-menu) .rzi-close:not(.rz-navigation-item-icon-children),
+.rz-menu:not(.rz-profile-menu) .rz-fileupload-row .rz-button .rzi-times:not(.rz-navigation-item-icon-children),
+.rz-menu:not(.rz-profile-menu) .rz-fileupload-row .rz-paginator-element .rzi-times:not(.rz-navigation-item-icon-children),
+.rz-fileupload-row .rz-button .rz-menu:not(.rz-profile-menu) .rzi-times:not(.rz-navigation-item-icon-children),
+.rz-fileupload-row .rz-paginator-element .rz-menu:not(.rz-profile-menu) .rzi-times:not(.rz-navigation-item-icon-children),
+.rz-menu:not(.rz-profile-menu) .rz-fileupload-row .rz-button .rz-icon-trash:not(.rz-navigation-item-icon-children),
+.rz-menu:not(.rz-profile-menu) .rz-fileupload-row .rz-paginator-element .rz-icon-trash:not(.rz-navigation-item-icon-children),
+.rz-fileupload-row .rz-button .rz-menu:not(.rz-profile-menu) .rz-icon-trash:not(.rz-navigation-item-icon-children),
+.rz-fileupload-row .rz-paginator-element .rz-menu:not(.rz-profile-menu) .rz-icon-trash:not(.rz-navigation-item-icon-children), .rz-menu:not(.rz-profile-menu) .rz-menuitem .rz-menuitem-icon:not(.rz-navigation-item-icon-children), .rz-menuitem .rz-menu:not(.rz-profile-menu) .rz-menuitem-icon:not(.rz-navigation-item-icon-children) {
+  margin: 0 0.625rem 0 0;
+}
+
+.rz-navigation-item-wrapper,
+.rz-navigation-item-link,
+.rz-navigation-item-text {
+  transition: none;
+}
+
+.rz-menu-toggle-item {
+  display: none;
+  padding: 0.8125rem 0.625rem;
+  text-align: right;
+  width: 100%;
+  height: 100%;
+}
+
+.rz-menu-toggle {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.rz-menu-toggle:active {
+  background-color: transparent;
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .rz-menu.rz-menu-closed:not(.rz-profile-menu) .rz-navigation-item {
+    display: none;
+  }
+  .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-column-drag, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-circle-o-notch, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-plus, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-grid-sort, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-chevron-circle-down, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-chevron-circle-right, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-fileupload-row .rz-button .rzi-close, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-close,
+.rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-fileupload-row .rz-button .rzi-times,
+.rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rzi-times,
+.rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-icon-trash, .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-menu:not(.rz-profile-menu) .rz-menu-toggle .rz-menuitem-icon {
+    margin: 0;
+  }
+  .rz-menu.rz-menu-open:not(.rz-profile-menu) {
+    display: block;
+  }
+  .rz-menu.rz-menu-open:not(.rz-profile-menu) .rz-navigation-item {
+    background-color: inherit;
+  }
+  .rz-menu.rz-menu-open:not(.rz-profile-menu) .rz-navigation-menu {
+    position: static;
+    box-shadow: none;
+  }
+  .rz-menu:not(.rz-profile-menu) .rz-menu-toggle-item {
+    display: block;
+  }
+  .rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper-active:before {
+    display: none !important;
+  }
+}
+
+.rz-panel-menu {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+  overflow: auto;
+  font-size: inherit;
+  color: #ffffff;
+  background-color: #3a474d;
+}
+
+.rz-panel-menu .rz-navigation-item {
+  border-bottom: solid 1px #363d40;
+}
+
+.rz-panel-menu .rz-navigation-item-wrapper {
+  position: relative;
+  line-height: 1.575;
+  transition: none;
+}
+
+.rz-panel-menu .rz-navigation-item-wrapper:hover {
+  background-color: #28363c;
+  color: #ffffff;
+}
+
+.rz-panel-menu .rz-navigation-item-active,
+.rz-panel-menu .rz-navigation-item-wrapper-active {
+  background-color: #28363c;
+  color: #ffffff;
+}
+
+.rz-panel-menu .rz-navigation-item-active:before,
+.rz-panel-menu .rz-navigation-item-wrapper-active:before {
+  position: absolute;
+  content: '';
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #479cc8;
+}
+
+.rz-panel-menu .rz-navigation-item-link {
+  padding: 0.625rem 1.25rem;
+  color: inherit;
+  cursor: pointer;
+}
+
+.rz-panel-menu a.rz-navigation-item-link {
+  cursor: pointer;
+}
+
+.rz-panel-menu .rz-navigation-item-text {
+  flex: auto;
+}
+
+.rz-panel-menu .rz-navigation-item-icon-children {
+  font-size: 1.5rem;
+  opacity: 1;
+}
+
+.rz-panel-menu .rz-navigation-item-icon {
+  height: 1.575;
+  width: 1.5rem;
+  color: inherit;
+  margin: 0 0.9375rem 0 0;
+  font-size: 1.5em;
+}
+
+.rz-panel-menu .rz-navigation-menu {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item-wrapper {
+  background-color: #28363c;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover {
+  background-color: #1f2b31;
+  color: inherit;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item-active,
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item-wrapper-active {
+  background-color: #1f2b31;
+  color: inherit;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item-icon {
+  margin: 0 0.75rem 0 -2.25rem;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-link {
+  padding-left: 0.75rem;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-wrapper {
+  background-color: #1f2b31;
+  color: inherit;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover {
+  background-color: #172024;
+  color: inherit;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-active,
+.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-wrapper-active {
+  background-color: #172024;
+  color: inherit;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item {
+  border-bottom: none;
+  font-size: 0.875rem;
+}
+
+.rz-panel-menu .rz-navigation-menu .rz-navigation-item .rz-navigation-item-link {
+  padding: 0.25rem 1.25rem;
+  padding-left: 3.625rem;
+}
+
+ul.rz-profile-menu {
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0.5625rem 1.25rem;
+  display: inline-block;
+  background-color: #ffffff;
+  border-left: 1px solid #eaeef0;
+  position: relative;
+  z-index: 3;
+}
+
+ul.rz-profile-menu .rz-navigation-item-icon-children {
+  color: #479cc8;
+}
+
+ul.rz-profile-menu .rz-navigation-menu {
+  border-radius: 2px;
+  background-color: #ffffff;
+  box-shadow: 0 10px 8px 0 rgba(58, 71, 77, 0.06);
+  overflow: hidden;
+  margin-bottom: 0;
+  padding: 0;
+  position: absolute;
+  text-align: left;
+  top: calc(100% - 2px);
+  min-width: 100%;
+  right: 0;
+  white-space: nowrap;
+}
+
+ul.rz-profile-menu .rz-navigation-menu .rz-navigation-item-wrapper .rz-navigation-item-link {
+  padding: 0.375rem 1.25rem;
+}
+
+ul.rz-profile-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover {
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+ul.rz-profile-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover .rz-navigation-item-link {
+  color: #ffffff;
+}
+
+ul.rz-profile-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover .rz-navigation-item-text {
+  color: #ffffff;
+}
+
+ul.rz-profile-menu .rz-navigation-menu .rz-navigation-item-link,
+ul.rz-profile-menu .rz-navigation-menu .rz-navigation-item-text {
+  color: #3a474d;
+}
+
+ul.rz-profile-menu .rz-navigation-menu .rzi, ul.rz-profile-menu .rz-navigation-menu .rz-column-drag, ul.rz-profile-menu .rz-navigation-menu .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content ul.rz-profile-menu .rz-navigation-menu .rzi-circle-o-notch, ul.rz-profile-menu .rz-navigation-menu .rz-datatable-header .rzi-plus, .rz-datatable-header ul.rz-profile-menu .rz-navigation-menu .rzi-plus, ul.rz-profile-menu .rz-navigation-menu .rz-sortable-column .rzi-grid-sort, .rz-sortable-column ul.rz-profile-menu .rz-navigation-menu .rzi-grid-sort, ul.rz-profile-menu .rz-navigation-menu .rz-datatable .rzi-chevron-circle-down, .rz-datatable ul.rz-profile-menu .rz-navigation-menu .rzi-chevron-circle-down, ul.rz-profile-menu .rz-navigation-menu .rz-datatable .rzi-chevron-circle-right, .rz-datatable ul.rz-profile-menu .rz-navigation-menu .rzi-chevron-circle-right, ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-button .rzi-close, ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button ul.rz-profile-menu .rz-navigation-menu .rzi-close, .rz-fileupload-row .rz-paginator-element ul.rz-profile-menu .rz-navigation-menu .rzi-close,
+ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-button .rzi-times,
+ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button ul.rz-profile-menu .rz-navigation-menu .rzi-times,
+.rz-fileupload-row .rz-paginator-element ul.rz-profile-menu .rz-navigation-menu .rzi-times,
+ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-button .rz-icon-trash,
+ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button ul.rz-profile-menu .rz-navigation-menu .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element ul.rz-profile-menu .rz-navigation-menu .rz-icon-trash, ul.rz-profile-menu .rz-navigation-menu .rz-menuitem .rz-menuitem-icon, .rz-menuitem ul.rz-profile-menu .rz-navigation-menu .rz-menuitem-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  font-size: 1.125rem;
+  margin: 0 0.625rem 0 0;
+}
+
+.rz-gravatar {
+  width: 2rem;
+  height: 2rem;
+  display: inline-block;
+  border-radius: 50%;
+  box-shadow: none;
+}
+
+.rz-steps ul {
+  list-style: none;
+  padding: 0;
+}
+
+.rz-steps .rz-menuitem-link {
+  display: inline-flex;
+  align-items: center;
+  color: #212529;
+  cursor: pointer;
+}
+
+.rz-steps .rz-menuitem-link:hover {
+  text-decoration: none;
+  color: #479cc8 !important;
+}
+
+.rz-steps .rz-state-disabled .rz-menuitem-link {
+  color: rgba(33, 37, 41, 0.5);
+  cursor: default;
+}
+
+.rz-steps .rz-state-disabled .rz-menuitem-link:hover {
+  color: rgba(33, 37, 41, 0.5) !important;
+}
+
+.rz-steps .rz-state-highlight .rz-steps-title {
+  color: #479cc8;
+}
+
+.rz-steps .rz-state-highlight .rz-steps-number {
+  background: #479cc8;
+  color: #ffffff;
+}
+
+.rz-steps-item {
+  display: inline-block;
+}
+
+.rz-steps-title {
+  margin: 0 0.8125rem;
+}
+
+.rz-steps-number {
+  text-align: center;
+  line-height: 1;
+  color: #212529;
+  padding: 0.4375rem 0;
+  width: 2rem;
+  height: 2rem;
+  background-color: #e6ecef;
+  border-radius: 50%;
+}
+
+.rz-steps-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rz-steps-next,
+.rz-steps-prev {
+  display: inline-flex;
+  align-items: center;
+  color: #6d787d !important;
+}
+
+.rz-steps-next:not(.rz-state-disabled):hover,
+.rz-steps-prev:not(.rz-state-disabled):hover {
+  cursor: pointer;
+  color: #479cc8 !important;
+}
+
+.rz-steps-next:hover,
+.rz-steps-prev:hover {
+  text-decoration: none;
+}
+
+.rz-steps-next.rz-state-disabled,
+.rz-steps-prev.rz-state-disabled {
+  color: rgba(109, 120, 125, 0.5) !important;
+}
+
+.rz-steps-next .rzi, .rz-steps-next .rz-column-drag, .rz-steps-next .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-steps-next .rzi-circle-o-notch, .rz-steps-next .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-steps-next .rzi-plus, .rz-steps-next .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-steps-next .rzi-grid-sort, .rz-steps-next .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-steps-next .rzi-chevron-circle-down, .rz-steps-next .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-steps-next .rzi-chevron-circle-right, .rz-steps-next .rz-fileupload-row .rz-button .rzi-close, .rz-steps-next .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-steps-next .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-steps-next .rzi-close,
+.rz-steps-next .rz-fileupload-row .rz-button .rzi-times,
+.rz-steps-next .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-steps-next .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-steps-next .rzi-times,
+.rz-steps-next .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-steps-next .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-steps-next .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-steps-next .rz-icon-trash, .rz-steps-next .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-steps-next .rz-menuitem-icon,
+.rz-steps-prev .rzi,
+.rz-steps-prev .rz-column-drag,
+.rz-steps-prev .rz-datatable-loading-content .rzi-circle-o-notch,
+.rz-datatable-loading-content .rz-steps-prev .rzi-circle-o-notch,
+.rz-steps-prev .rz-datatable-header .rzi-plus,
+.rz-datatable-header .rz-steps-prev .rzi-plus,
+.rz-steps-prev .rz-sortable-column .rzi-grid-sort,
+.rz-sortable-column .rz-steps-prev .rzi-grid-sort,
+.rz-steps-prev .rz-datatable .rzi-chevron-circle-down,
+.rz-datatable .rz-steps-prev .rzi-chevron-circle-down,
+.rz-steps-prev .rz-datatable .rzi-chevron-circle-right,
+.rz-datatable .rz-steps-prev .rzi-chevron-circle-right,
+.rz-steps-prev .rz-fileupload-row .rz-button .rzi-close,
+.rz-steps-prev .rz-fileupload-row .rz-paginator-element .rzi-close,
+.rz-fileupload-row .rz-button .rz-steps-prev .rzi-close,
+.rz-fileupload-row .rz-paginator-element .rz-steps-prev .rzi-close,
+.rz-steps-prev .rz-fileupload-row .rz-button .rzi-times,
+.rz-steps-prev .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-steps-prev .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-steps-prev .rzi-times,
+.rz-steps-prev .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-steps-prev .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-steps-prev .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-steps-prev .rz-icon-trash,
+.rz-steps-prev .rz-menuitem .rz-menuitem-icon,
+.rz-menuitem .rz-steps-prev .rz-menuitem-icon {
+  font-size: 1.25rem;
+}
+
+.rz-textarea {
+  padding: 0.1875rem 0.625rem;
+  height: auto;
+}
+
+.rz-checkbox-list-vertical .rz-checkbox {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.rz-checkbox-list-horizontal .rz-checkbox {
+  display: inline-flex;
+  align-items: center;
+}
+
+.rz-state-disabled .rz-checkbox {
+  cursor: initial;
+}
+
+.rz-chkbox-label {
+  margin: 0 1rem 0 0.5rem;
+}
+
+.rz-chkbox {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  width: 1.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+}
+
+.rz-chkbox .rz-helper-hidden-accessible {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.rz-chkbox-box {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dadfe2;
+  border-radius: 2px;
+  box-shadow: inset 0 4px 3px 0 rgba(0, 0, 0, 0.03);
+  background-color: #ffffff;
+}
+
+.rz-chkbox-box.rz-state-disabled {
+  cursor: initial;
+}
+
+.rz-chkbox-box .rzi, .rz-chkbox-box .rz-column-drag, .rz-chkbox-box .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-chkbox-box .rzi-circle-o-notch, .rz-chkbox-box .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-chkbox-box .rzi-plus, .rz-chkbox-box .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-chkbox-box .rzi-grid-sort, .rz-chkbox-box .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-chkbox-box .rzi-chevron-circle-down, .rz-chkbox-box .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-chkbox-box .rzi-chevron-circle-right, .rz-chkbox-box .rz-fileupload-row .rz-button .rzi-close, .rz-chkbox-box .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-chkbox-box .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-chkbox-box .rzi-close,
+.rz-chkbox-box .rz-fileupload-row .rz-button .rzi-times,
+.rz-chkbox-box .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-chkbox-box .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-chkbox-box .rzi-times,
+.rz-chkbox-box .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-chkbox-box .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-chkbox-box .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-chkbox-box .rz-icon-trash, .rz-chkbox-box .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-chkbox-box .rz-menuitem-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  font-size: 0.875rem;
+  color: #ffffff;
+  vertical-align: middle;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.rz-chkbox-box .rzi-check:before {
+  content: 'check';
+}
+
+.rz-chkbox-box .rzi-times {
+  width: 0.875rem;
+  height: 0.875rem;
+  font-size: 0.875rem;
+}
+
+.rz-chkbox-box .rzi-times:before {
+  content: 'remove';
+}
+
+.rz-chkbox-box.rz-state-active {
+  background-color: #3f8cb3;
+  border: 1px solid #dadfe2;
+}
+
+.rz-chkbox-box.rz-state-active:hover {
+  background-color: #59a6cd;
+}
+
+.rz-chkbox-box.rz-state-disabled.rz-state-active {
+  background-color: #3f8cb3;
+  border: 1px solid #dadfe2;
+  opacity: 0.5;
+}
+
+.rz-chkbox-box.rz-state-disabled.rz-state-active:hover {
+  background-color: #3f8cb3;
+}
+
+.rz-switch {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  min-width: 3rem;
+  height: 1.8rem;
+}
+
+.rz-switch-circle {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.rz-switch-circle.rz-disabled {
+  opacity: 0.5;
+  cursor: initial;
+}
+
+.rz-switch .rz-switch-circle {
+  background: #ced4da;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  border-radius: 1.8rem;
+}
+
+.rz-switch.rz-switch-checked .rz-switch-circle {
+  background: #479cc8;
+}
+
+.rz-switch .rz-switch-circle:before {
+  background: #ffffff;
+  width: 1.26rem;
+  height: 1.26rem;
+  left: 0.27rem;
+  margin-top: -0.63rem;
+  border-radius: 50%;
+  transition-duration: 0.2s;
+  box-shadow: none;
+}
+
+.rz-switch-circle:before {
+  position: absolute;
+  content: "";
+  top: 50%;
+}
+
+.rz-switch-circle.rz-disabled:before {
+  box-shadow: none;
+}
+
+.rz-switch.p-rz-switch-checked .rz-switch-circle:before {
+  background: #ffffff;
+}
+
+.rz-switch.rz-switch-checked .rz-switch-circle:before {
+  transform: translateX(1.2rem);
+}
+
+.rz-radio-button-list-vertical .rz-radio-btn {
+  display: flex;
+  margin: 1rem 0;
+}
+
+.rz-radio-button-list-horizontal .rz-radio-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.rz-radiobutton {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rz-state-disabled .rz-radiobutton {
+  cursor: initial;
+}
+
+.rz-radiobutton-label {
+  margin: 0 1rem 0 0.5rem;
+}
+
+.rz-radiobutton {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.rz-radiobutton .rz-helper-hidden-accessible {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.rz-radiobutton-box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: inherit;
+  border: 1px solid #dadfe2;
+  border-radius: 50%;
+  box-shadow: inset 0 4px 3px 0 rgba(0, 0, 0, 0.03);
+  background-color: #ffffff;
+}
+
+.rz-radiobutton-box:active:not(.rz-state-disabled) {
+  background-color: #3f8cb3;
+  box-shadow: inset 0 3px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.rz-radiobutton-box .rzi, .rz-radiobutton-box .rz-column-drag, .rz-radiobutton-box .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-radiobutton-box .rzi-circle-o-notch, .rz-radiobutton-box .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-radiobutton-box .rzi-plus, .rz-radiobutton-box .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-radiobutton-box .rzi-grid-sort, .rz-radiobutton-box .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-radiobutton-box .rzi-chevron-circle-down, .rz-radiobutton-box .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-radiobutton-box .rzi-chevron-circle-right, .rz-radiobutton-box .rz-fileupload-row .rz-button .rzi-close, .rz-radiobutton-box .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-radiobutton-box .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-radiobutton-box .rzi-close,
+.rz-radiobutton-box .rz-fileupload-row .rz-button .rzi-times,
+.rz-radiobutton-box .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-radiobutton-box .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-radiobutton-box .rzi-times,
+.rz-radiobutton-box .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-radiobutton-box .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-radiobutton-box .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-radiobutton-box .rz-icon-trash, .rz-radiobutton-box .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-radiobutton-box .rz-menuitem-icon {
+  width: 0.5rem;
+  height: 0.5rem;
+  color: #ffffff;
+}
+
+.rz-radiobutton-box .rzi-circle-on {
+  border-radius: 50%;
+  vertical-align: middle;
+  background-color: #ffffff;
+  box-shadow: inset 0 4px 7px 0 rgba(0, 0, 0, 0.03);
+}
+
+.rz-radiobutton-box .rzi-circle-on:hover {
+  background-color: #fafafa;
+}
+
+.rz-radiobutton-box.rz-state-active {
+  background-color: #3f8cb3;
+  border: 1px solid #dadfe2;
+}
+
+.rz-radiobutton-box.rz-state-active:hover {
+  background-color: #59a6cd;
+  box-shadow: inset 0 -3px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.rz-radiobutton-box.rz-state-disabled .rzi-circle-on:hover {
+  background-color: #ffffff;
+}
+
+.rz-radiobutton-box.rz-state-disabled.rz-state-active {
+  background-color: #3f8cb3;
+  border: 1px solid #dadfe2;
+  opacity: 0.5;
+}
+
+.rz-radiobutton-box.rz-state-disabled.rz-state-active:hover {
+  background-color: #3f8cb3;
+  border: 1px solid #dadfe2;
+}
+
+.rz-fieldset {
+  border: 1px solid #dadfe2;
+  border-radius: 0;
+}
+
+.rz-fieldset-content {
+  padding: 1.25rem;
+}
+
+.rz-fieldset-content-wrapper {
+  overflow: hidden;
+}
+
+.rz-fieldset-legend-text {
+  vertical-align: middle;
+}
+
+.rz-fieldset-toggler {
+  vertical-align: middle;
+  width: 1.125rem;
+  height: 1.125rem;
+  background-color: #e6ecef;
+  color: #88989b;
+  border: none;
+}
+
+.rz-fieldset-toggler.rzi, .rz-fieldset-toggler.rz-column-drag, .rz-datatable-loading-content .rz-fieldset-toggler.rzi-circle-o-notch, .rz-datatable-header .rz-fieldset-toggler.rzi-plus, .rz-sortable-column .rz-fieldset-toggler.rzi-grid-sort, .rz-datatable .rz-fieldset-toggler.rzi-chevron-circle-down, .rz-datatable .rz-fieldset-toggler.rzi-chevron-circle-right, .rz-fileupload-row .rz-button .rz-fieldset-toggler.rzi-close, .rz-fileupload-row .rz-paginator-element .rz-fieldset-toggler.rzi-close,
+.rz-fileupload-row .rz-button .rz-fieldset-toggler.rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-fieldset-toggler.rzi-times,
+.rz-fileupload-row .rz-button .rz-fieldset-toggler.rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-fieldset-toggler.rz-icon-trash, .rz-menuitem .rz-fieldset-toggler.rz-menuitem-icon {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.125rem;
+  margin: 0 0.5rem 0 0;
+}
+
+.rz-fieldset-toggler.rzi-minus:before {
+  content: 'remove';
+}
+
+.rz-fieldset-toggler.rzi-plus:before {
+  content: 'add';
+}
+
+.rz-fieldset-legend {
+  margin: 0 0 0 1rem;
+  width: auto;
+  color: #88989b;
+  font-size: 0.875rem;
+  padding: 0 1rem;
+}
+
+.rz-fieldset-legend a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.rz-multiselect, .rz-dropdown {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.rz-multiselect .rz-helper-hidden-accessible, .rz-dropdown .rz-helper-hidden-accessible {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.rz-multiselect .rz-placeholder, .rz-dropdown .rz-placeholder {
+  color: #3a3a3a;
+}
+
+.rz-dropdown.rz-dropdown-open {
+  background-color: #ffffff;
+  border: 1px solid #dadfe2;
+}
+
+.rz-multiselect.rz-state-focus {
+  background-color: #ffffff;
+  border: 1px solid #dadfe2;
+}
+
+.rz-multiselect-trigger, .rz-dropdown-trigger {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.rz-multiselect-trigger .rzi, .rz-multiselect-trigger .rz-column-drag, .rz-multiselect-trigger .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-multiselect-trigger .rzi-circle-o-notch, .rz-multiselect-trigger .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-multiselect-trigger .rzi-plus, .rz-multiselect-trigger .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-multiselect-trigger .rzi-grid-sort, .rz-multiselect-trigger .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-multiselect-trigger .rzi-chevron-circle-down, .rz-multiselect-trigger .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-multiselect-trigger .rzi-chevron-circle-right, .rz-multiselect-trigger .rz-fileupload-row .rz-button .rzi-close, .rz-multiselect-trigger .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-multiselect-trigger .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-multiselect-trigger .rzi-close,
+.rz-multiselect-trigger .rz-fileupload-row .rz-button .rzi-times,
+.rz-multiselect-trigger .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-multiselect-trigger .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-multiselect-trigger .rzi-times,
+.rz-multiselect-trigger .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-multiselect-trigger .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-multiselect-trigger .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-multiselect-trigger .rz-icon-trash, .rz-multiselect-trigger .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-multiselect-trigger .rz-menuitem-icon, .rz-dropdown-trigger .rzi, .rz-dropdown-trigger .rz-column-drag, .rz-dropdown-trigger .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-dropdown-trigger .rzi-circle-o-notch, .rz-dropdown-trigger .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-dropdown-trigger .rzi-plus, .rz-dropdown-trigger .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-dropdown-trigger .rzi-grid-sort, .rz-dropdown-trigger .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-dropdown-trigger .rzi-chevron-circle-down, .rz-dropdown-trigger .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-dropdown-trigger .rzi-chevron-circle-right, .rz-dropdown-trigger .rz-fileupload-row .rz-button .rzi-close, .rz-dropdown-trigger .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-dropdown-trigger .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-dropdown-trigger .rzi-close,
+.rz-dropdown-trigger .rz-fileupload-row .rz-button .rzi-times,
+.rz-dropdown-trigger .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-dropdown-trigger .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-dropdown-trigger .rzi-times,
+.rz-dropdown-trigger .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-dropdown-trigger .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-dropdown-trigger .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-dropdown-trigger .rz-icon-trash, .rz-dropdown-trigger .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-dropdown-trigger .rz-menuitem-icon {
+  width: 1.1875rem;
+  height: 1.1875rem;
+  font-size: 1.1875rem;
+  margin: 0 0.5rem 0 0;
+}
+
+.rz-multiselect-trigger .rzi-chevron-down:before, .rz-dropdown-trigger .rzi-chevron-down:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-dropdown-clear-icon {
+  position: absolute;
+  right: 1.6875rem;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 1.1875rem;
+  opacity: 0.4;
+}
+
+.rz-dropdown-clear-icon:before {
+  content: 'close';
+}
+
+.rz-dropdown-clear-icon:hover {
+  opacity: 1;
+}
+
+.rz-html-editor-dropdown-items, .rz-splitbutton-menu, .rz-autocomplete-panel, .rz-multiselect-panel, .rz-dropdown-panel {
+  position: absolute;
+  transform: translateY(-4px);
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #dadfe2;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.rz-dropdown-panel {
+  box-sizing: content-box;
+  padding: 0 0.625rem;
+}
+
+.rz-multiselect-panel {
+  box-sizing: content-box;
+  padding: 0 0.625rem;
+}
+
+.rz-multiselect-panel .rz-chkbox {
+  margin: 0 0.5rem 0 0;
+}
+
+.rz-dropdown-items, .rz-autocomplete-items, .rz-multiselect-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rz-dropdown-items li, .rz-autocomplete-items li, .rz-multiselect-items li {
+  /* The 'No results found' item has no CSS class */
+}
+
+.rz-dropdown-items-wrapper,
+.rz-multiselect-items-wrapper {
+  overflow: auto;
+  margin: 0 -0.625rem;
+}
+
+.rz-multiselect-items-wrapper {
+  overflow: auto;
+}
+
+.rz-dropdown-filter-container {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(151, 151, 151, 0.1);
+}
+
+.rz-dropdown-filter, .rz-multiselect-filter-container .rz-inputtext {
+  background-color: transparent;
+  color: #212529;
+}
+
+.rz-multiselect-header {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  margin: 0 -0.625rem;
+}
+
+.rz-dropdown-item, .rz-menuitem, .rz-autocomplete-list-item, .rz-multiselect-item, .rz-dropdown-items li, .rz-autocomplete-items li, .rz-multiselect-items li {
+  padding: 0.25rem 0.625rem;
+  transition: none;
+  cursor: default;
+  font-size: 0.875rem;
+}
+
+.rz-dropdown-item.rz-state-highlight, .rz-state-highlight.rz-menuitem, .rz-state-highlight.rz-autocomplete-list-item, .rz-state-highlight.rz-multiselect-item, .rz-dropdown-items li.rz-state-highlight, .rz-autocomplete-items li.rz-state-highlight, .rz-multiselect-items li.rz-state-highlight {
+  background-color: #479cc8;
+  color: #ffffff;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  border-radius: 0;
+}
+
+.rz-dropdown-item.rz-state-highlight:hover, .rz-state-highlight.rz-menuitem:hover, .rz-state-highlight.rz-autocomplete-list-item:hover, .rz-state-highlight.rz-multiselect-item:hover, .rz-dropdown-items li.rz-state-highlight:hover, .rz-autocomplete-items li.rz-state-highlight:hover, .rz-multiselect-items li.rz-state-highlight:hover {
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-dropdown-item:hover, .rz-menuitem:hover, .rz-autocomplete-list-item:hover, .rz-multiselect-item:hover, .rz-dropdown-items li:hover, .rz-autocomplete-items li:hover, .rz-multiselect-items li:hover {
+  background-color: #59a6cd;
+  color: #ffffff;
+  border-radius: 0;
+}
+
+.rz-multiselect-close {
+  display: none;
+}
+
+.rz-multiselect-filter-container {
+  flex: auto;
+  border-bottom: 1px solid rgba(151, 151, 151, 0.1);
+}
+
+.rz-multiselect-item {
+  display: flex;
+  align-items: center;
+}
+
+.rz-multiselect-label-container,
+.rz-dropdown-label {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 1.1875rem;
+}
+
+.rz-clear .rz-multiselect-label-container,
+.rz-clear .rz-dropdown-label {
+  padding-right: 2.375rem;
+}
+
+.rz-autocomplete {
+  display: inline-block;
+  border: 1px solid #dadfe2;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rz-autocomplete-input {
+  padding: 0.1875rem 0.625rem;
+  background-color: #ffffff;
+  box-shadow: inset 0 4px 3px 0 rgba(0, 0, 0, 0.03);
+  border: none;
+  height: 2.1875rem;
+  line-height: 1.75rem;
+  width: 100%;
+}
+
+.rz-autocomplete-input:focus {
+  outline: none;
+}
+
+.rz-autocomplete-input:disabled {
+  border: none;
+}
+
+.rz-autocomplete-panel {
+  overflow: auto;
+  box-sizing: content-box;
+  transform: translate(-1px, -4px);
+}
+
+.rz-listbox {
+  display: inline-flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #dadfe2;
+  border-radius: 4px;
+}
+
+.rz-listbox .rz-chkbox {
+  margin: 0 0.5rem 0 0;
+}
+
+.rz-listbox:not(.rz-state-disabled) .rz-listbox-item:hover:hover {
+  background-color: #59a6cd;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.rz-listbox-list {
+  margin: 0;
+  padding: 0;
+}
+
+.rz-listbox-item {
+  cursor: default;
+  padding: 0.25rem 0.625rem;
+  margin: 1px 0;
+  cursor: default;
+  font-size: 0.875rem;
+}
+
+.rz-listbox-item.rz-state-highlight {
+  background-color: #479cc8;
+  color: #ffffff;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  border-radius: 4px;
+}
+
+.rz-listbox-item.rz-state-highlight:hover {
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-listbox-header {
+  display: flex;
+  align-items: center;
+  padding: 0.5625rem 1.25rem 0.625rem 1.125rem;
+  border-bottom: 1px solid #dadfe2;
+}
+
+.rz-listbox-list-wrapper {
+  flex: auto;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+.rz-listbox-filter-container, .rz-dropdown-filter-container, .rz-multiselect-filter-container {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.rz-listbox-filter-container .rz-inputtext, .rz-dropdown-filter-container .rz-inputtext, .rz-multiselect-filter-container .rz-inputtext {
+  flex: auto;
+  width: 0;
+  border: none;
+  line-height: 1.75rem;
+}
+
+.rz-listbox-filter-container .rz-inputtext:focus, .rz-dropdown-filter-container .rz-inputtext:focus, .rz-multiselect-filter-container .rz-inputtext:focus {
+  outline: none;
+}
+
+.rz-listbox-filter-container .rzi-search, .rz-dropdown-filter-container .rzi-search, .rz-multiselect-filter-container .rzi-search {
+  width: 1.25rem;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  font-size: 1.25rem;
+}
+
+.rz-listbox-filter-container .rzi-search:before, .rz-dropdown-filter-container .rzi-search:before, .rz-multiselect-filter-container .rzi-search:before {
+  content: 'search';
+}
+
+.rz-listbox-filter-container {
+  flex: auto;
+}
+
+.rz-listbox-filter-container .rz-inputtext {
+  background-color: transparent;
+}
+
+.rz-splitbutton {
+  display: inline-flex;
+}
+
+.rz-splitbutton .rz-button-text-icon-left,
+.rz-splitbutton .rz-button-text-only {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 0 0.625rem;
+}
+
+.rz-splitbutton .rz-button-text-icon-left {
+  flex: 1;
+}
+
+.rz-splitbutton-menu {
+  display: none;
+  position: absolute;
+  min-width: 10rem;
+  border-top-right-radius: 4px;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.06);
+}
+
+.rz-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rz-menuitem:hover:first-child {
+  border-top-right-radius: 4px;
+}
+
+.rz-menuitem .rz-menuitem-link {
+  color: inherit;
+  display: block;
+}
+
+.rz-menuitem .rz-menuitem-link:hover {
+  text-decoration: none;
+}
+
+.rz-menuitem .rz-menuitem-icon {
+  vertical-align: top;
+}
+
+.rz-splitbutton-menubutton {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: solid 1px #e5613a;
+}
+
+.rz-splitbutton-menubutton .rz-button-text {
+  display: none;
+}
+
+.rz-splitbutton-menubutton .rzi-chevron-down:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-slider {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #dadfe2;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.rz-slider.rz-state-disabled {
+  background-color: rgba(211, 217, 219, 0.1);
+  border: solid 1px #dadfe2;
+}
+
+.rz-slider.rz-state-disabled .rz-slider-range {
+  background-color: rgba(211, 217, 219, 0.5);
+  border: solid 1px rgba(211, 217, 219, 0.3);
+}
+
+.rz-slider.rz-state-disabled .rz-slider-handle {
+  background-color: #d3d9db;
+  border: none;
+}
+
+.rz-slider-horizontal {
+  height: 0.8125rem;
+  width: 10rem;
+}
+
+.rz-slider-range {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: rgba(71, 156, 200, 0.3);
+  border: 1px solid #459cca;
+}
+
+.rz-slider-handle {
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  margin-left: -0.5rem;
+  background-color: #479cc8;
+  border: none;
+  border-radius: 2px;
+  width: 1rem;
+  height: 1.75rem;
+  transition: none;
+}
+
+.rz-slider-handle:before {
+  display: inline-block;
+  color: #ffffff;
+  transform: rotate(90deg);
+  vertical-align: middle;
+  font-family: 'Material Icons';
+  content: 'drag_handle';
+}
+
+.rz-slider:not(.rz-state-disabled) .rz-slider-handle:hover, .rz-slider:not(.rz-state-disabled) .rz-slider-handle:focus, .rz-slider:not(.rz-state-disabled) .rz-slider-handle:active {
+  background-color: #59a6cd;
+  box-shadow: inset 0 -3px 0 0 rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+}
+
+.rz-rating {
+  display: inline-flex;
+  font-size: 1.5rem;
+  height: 1em;
+}
+
+.rz-rating.rz-state-disabled .rzi, .rz-rating.rz-state-disabled .rz-column-drag, .rz-rating.rz-state-disabled .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-rating.rz-state-disabled .rzi-circle-o-notch, .rz-rating.rz-state-disabled .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-rating.rz-state-disabled .rzi-plus, .rz-rating.rz-state-disabled .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-rating.rz-state-disabled .rzi-grid-sort, .rz-rating.rz-state-disabled .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-rating.rz-state-disabled .rzi-chevron-circle-down, .rz-rating.rz-state-disabled .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-rating.rz-state-disabled .rzi-chevron-circle-right, .rz-rating.rz-state-disabled .rz-fileupload-row .rz-button .rzi-close, .rz-rating.rz-state-disabled .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-rating.rz-state-disabled .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-rating.rz-state-disabled .rzi-close,
+.rz-rating.rz-state-disabled .rz-fileupload-row .rz-button .rzi-times,
+.rz-rating.rz-state-disabled .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-rating.rz-state-disabled .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-rating.rz-state-disabled .rzi-times,
+.rz-rating.rz-state-disabled .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-rating.rz-state-disabled .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-rating.rz-state-disabled .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-rating.rz-state-disabled .rz-icon-trash, .rz-rating.rz-state-disabled .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-rating.rz-state-disabled .rz-menuitem-icon {
+  opacity: 0.3;
+  color: #88989b;
+}
+
+.rz-rating a {
+  width: 1em;
+  height: 1em;
+  text-decoration: none;
+  cursor: default;
+  outline: none;
+}
+
+.rz-rating .rzi, .rz-rating .rz-column-drag, .rz-rating .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-rating .rzi-circle-o-notch, .rz-rating .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-rating .rzi-plus, .rz-rating .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-rating .rzi-grid-sort, .rz-rating .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-rating .rzi-chevron-circle-down, .rz-rating .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-rating .rzi-chevron-circle-right, .rz-rating .rz-fileupload-row .rz-button .rzi-close, .rz-rating .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-rating .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-rating .rzi-close,
+.rz-rating .rz-fileupload-row .rz-button .rzi-times,
+.rz-rating .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-rating .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-rating .rzi-times,
+.rz-rating .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-rating .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-rating .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-rating .rz-icon-trash, .rz-rating .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-rating .rz-menuitem-icon {
+  color: #479cc8;
+  font-size: 1em;
+}
+
+.rz-rating .rzi-ban:before {
+  content: "not_interested";
+}
+
+.rz-rating .rzi-star-o {
+  opacity: 0.2;
+}
+
+.rz-rating .rzi-star-o:before {
+  content: "star_border";
+}
+
+.rz-rating .rzi-star {
+  color: #ff6d41;
+}
+
+.rz-rating .rzi-star:before {
+  content: "star";
+}
+
+.rz-rating:not(.rz-state-disabled):not(.rz-state-readonly) .rzi-star-o {
+  cursor: pointer;
+}
+
+.rz-rating:not(.rz-state-disabled):not(.rz-state-readonly) .rzi-star-o:hover {
+  color: #ff6d41;
+}
+
+.rz-rating:not(.rz-state-disabled):not(.rz-state-readonly) .rzi-star-o:hover:before {
+  content: "star";
+}
+
+.rz-rating:not(.rz-state-disabled):not(.rz-state-readonly) .rzi-ban {
+  cursor: pointer;
+}
+
+.rz-rating:not(.rz-state-disabled):not(.rz-state-readonly) .rzi-ban:hover {
+  color: #ff6d41;
+}
+
+.rz-selectbutton {
+  display: inline-block;
+}
+
+.rz-selectbutton .rz-button, .rz-selectbutton .rz-paginator-element {
+  margin-left: -1px;
+  display: inline-block;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #3a3a3a;
+  border: solid 1px #dadfe2;
+}
+
+.rz-selectbutton .rz-button:first-child, .rz-selectbutton .rz-paginator-element:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.rz-selectbutton .rz-button:last-child, .rz-selectbutton .rz-paginator-element:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.rz-selectbutton .rz-button.rz-state-active, .rz-selectbutton .rz-state-active.rz-paginator-element {
+  background-color: #479cc8;
+  color: #ffffff;
+  border: solid 1px #459cca;
+}
+
+.rz-calendar {
+  display: inline-block;
+  position: relative;
+}
+
+.rz-calendar .rz-readonly {
+  cursor: pointer;
+}
+
+.rz-calendar .rz-inputtext {
+  width: 100%;
+  line-height: 1.5rem;
+  padding-right: 1.125rem;
+}
+
+.rz-calendar:not(.rz-state-disabled):hover .rz-datepicker-trigger {
+  box-shadow: none;
+  color: #479cc8;
+}
+
+.rz-calendar-inline {
+  border: 1px solid #dadfe2;
+}
+
+.rz-datepicker-trigger {
+  box-shadow: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0.625rem;
+  background-color: transparent;
+  padding: 0;
+  vertical-align: text-top;
+  color: #88989b;
+  width: 1.125rem;
+  height: 1.25rem;
+  font-size: 1.25rem;
+}
+
+.rz-datepicker-trigger.rz-state-disabled {
+  border: none;
+  box-shadow: none;
+  cursor: initial;
+}
+
+.rz-datepicker-trigger:not(.rz-state-disabled):hover:not(:active), .rz-datepicker-trigger:not(.rz-state-disabled):hover:active {
+  background-color: transparent;
+}
+
+.rz-datepicker-trigger:not(.rz-state-disabled):active {
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+.rz-datepicker-trigger .rzi-calendar {
+  font-size: inherit;
+  vertical-align: top;
+}
+
+.rz-datepicker-trigger .rzi-calendar:before {
+  content: 'calendar_today';
+}
+
+.rz-datepicker-trigger .rz-button-text {
+  display: none;
+}
+
+.rz-datepicker {
+  background-color: #ffffff;
+}
+
+.rz-datepicker:not(.rz-datepicker-inline) {
+  box-sizing: content-box;
+  margin: 0;
+  position: absolute;
+  border: solid 1px #cecece;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+}
+
+.rz-calendar {
+  display: inline-block;
+}
+
+.rz-datepicker-inline {
+  position: static;
+}
+
+.rz-datepicker-inline .rz-datepicker-group {
+  display: inline-block;
+}
+
+.rz-datepicker-header {
+  position: relative;
+  line-height: 2.5rem;
+  background-color: #e6ecef;
+  border-bottom: none;
+  color: #88989b;
+  padding: 0 0.875rem;
+}
+
+.rz-datepicker-prev {
+  float: left;
+  height: 2.5rem;
+}
+
+.rz-datepicker-prev .rzi-chevron-left {
+  vertical-align: text-top;
+  color: #88989b;
+}
+
+.rz-datepicker-prev .rzi-chevron-left:before {
+  content: 'chevron_left';
+}
+
+.rz-datepicker-next {
+  float: right;
+  height: 2.5rem;
+}
+
+.rz-datepicker-next .rzi-chevron-right {
+  vertical-align: text-top;
+  color: #88989b;
+}
+
+.rz-datepicker-next .rzi-chevron-right:before {
+  content: 'chevron_right';
+}
+
+.rz-datepicker-title {
+  height: 40px;
+  text-align: center;
+}
+
+.rz-datepicker-calendar {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.rz-datepicker-calendar th {
+  font-weight: normal;
+  font-size: 0.6875rem;
+  text-transform: none;
+  color: #212529;
+  padding: 0.5rem 0.875rem;
+  text-align: center;
+}
+
+.rz-datepicker-calendar td {
+  text-align: center;
+  border-top: solid 1px rgba(151, 151, 151, 0.1);
+  padding: 0;
+}
+
+.rz-datepicker-calendar td .rz-state-default {
+  display: block;
+  padding: 0.5rem 0.875rem;
+  color: #212529;
+  font-size: 0.875rem;
+  border-radius: 0;
+  transition: none;
+}
+
+.rz-datepicker-calendar td .rz-state-default:hover {
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #479cc8;
+  cursor: pointer;
+}
+
+.rz-datepicker-calendar td .rz-state-active {
+  color: #ffffff;
+  background-color: #479cc8;
+  padding: 0.5rem 0.875rem;
+}
+
+.rz-datepicker-calendar td .rz-state-active:hover {
+  color: #ffffff;
+  background-color: #479cc8;
+}
+
+.rz-datepicker-calendar .rz-state-disabled {
+  opacity: 0.5;
+}
+
+.rz-datepicker-footer {
+  position: relative;
+  line-height: 2.5rem;
+  padding: 0 0.875rem;
+}
+
+.rz-timepicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: solid 1px rgba(151, 151, 151, 0.1);
+  padding: 0.5rem;
+  color: #212529;
+}
+
+.rz-timepicker .rzi-chevron-up:before {
+  content: 'expand_less';
+}
+
+.rz-timepicker .rzi-chevron-down:before {
+  content: 'expand_more';
+}
+
+.rz-timepicker .rz-separator {
+  color: #212529;
+  margin: 0 0.5rem;
+}
+
+.rz-timepicker .rz-separator a {
+  display: none;
+}
+
+.rz-timepicker .rz-button-md, .rz-timepicker .rz-date-filter-buttons .rz-button, .rz-timepicker .rz-date-filter-buttons .rz-paginator-element, .rz-date-filter-buttons .rz-timepicker .rz-button, .rz-date-filter-buttons .rz-timepicker .rz-paginator-element, .rz-timepicker .rz-fileupload-choose, .rz-timepicker .rz-splitbutton .rz-button-text-icon-left, .rz-splitbutton .rz-timepicker .rz-button-text-icon-left,
+.rz-timepicker .rz-splitbutton .rz-button-text-only,
+.rz-splitbutton .rz-timepicker .rz-button-text-only, .rz-timepicker .rz-splitbutton-menubutton, .rz-timepicker .rz-selectbutton .rz-button, .rz-timepicker .rz-selectbutton .rz-paginator-element, .rz-selectbutton .rz-timepicker .rz-button, .rz-selectbutton .rz-timepicker .rz-paginator-element {
+  padding: 0;
+}
+
+.rz-hour-picker,
+.rz-minute-picker,
+.rz-second-picker {
+  background-color: #e6ecef;
+  width: 4rem;
+}
+
+.rz-spinner {
+  display: inline-block;
+  position: relative;
+  padding: 0px;
+}
+
+.rz-spinner input[type='number'],
+.rz-spinner input[type='text'] {
+  -moz-appearance: textfield;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  line-height: 1.5rem;
+  text-align: inherit;
+  padding: 1px 12px 1px 0.5rem;
+  outline: none;
+}
+
+.rz-spinner input[type='number']::-webkit-inner-spin-button, .rz-spinner input[type='number']::-webkit-outer-spin-button,
+.rz-spinner input[type='text']::-webkit-inner-spin-button,
+.rz-spinner input[type='text']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.rz-spinner.rz-state-disabled .rz-spinner-button {
+  background-color: #dadfe2;
+  color: #88989b;
+}
+
+.rz-spinner.rz-state-disabled .rz-spinner-button:active, .rz-spinner.rz-state-disabled .rz-spinner-button:hover {
+  background-color: #dadfe2;
+  color: #88989b;
+  background-image: none;
+  box-shadow: none;
+  cursor: initial;
+}
+
+.rz-spinner-button {
+  position: absolute;
+  right: 2px;
+  padding: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 2px;
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-spinner-button:hover {
+  background-color: #479cc8;
+}
+
+.rz-spinner-button .rzi, .rz-spinner-button .rz-column-drag, .rz-spinner-button .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-spinner-button .rzi-circle-o-notch, .rz-spinner-button .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-spinner-button .rzi-plus, .rz-spinner-button .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-spinner-button .rzi-grid-sort, .rz-spinner-button .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-spinner-button .rzi-chevron-circle-down, .rz-spinner-button .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-spinner-button .rzi-chevron-circle-right, .rz-spinner-button .rz-fileupload-row .rz-button .rzi-close, .rz-spinner-button .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-button .rz-spinner-button .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-spinner-button .rzi-close,
+.rz-spinner-button .rz-fileupload-row .rz-button .rzi-times,
+.rz-spinner-button .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-spinner-button .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-spinner-button .rzi-times,
+.rz-spinner-button .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-spinner-button .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-spinner-button .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-spinner-button .rz-icon-trash, .rz-spinner-button .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-spinner-button .rz-menuitem-icon {
+  font-size: 0.875rem;
+  vertical-align: top;
+}
+
+.rz-spinner-button .rzi-caret-up:before {
+  content: 'expand_less';
+}
+
+.rz-spinner-button .rzi-caret-down:before {
+  content: 'expand_more';
+}
+
+.rz-spinner-up {
+  top: 2px;
+}
+
+.rz-spinner-down {
+  bottom: 2px;
+}
+
+.rz-fileupload {
+  display: inline-block;
+}
+
+.rz-fileupload .rz-button, .rz-fileupload .rz-paginator-element {
+  vertical-align: middle;
+  -webkit-appearance: none !important;
+}
+
+.rz-fileupload .rz-button[disabled], .rz-fileupload .rz-paginator-element[disabled] {
+  opacity: 0.5;
+}
+
+.rz-fileupload-choose {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-fileupload-choose input[type='file'] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  min-height: 100%;
+  cursor: pointer;
+}
+
+.rz-fileupload-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rz-fileupload-row > div {
+  margin: 0 0.75rem;
+}
+
+.rz-fileupload-row .rz-button-text {
+  display: none;
+}
+
+.rz-fileupload-row .rz-button .rzi-close, .rz-fileupload-row .rz-paginator-element .rzi-close,
+.rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-icon-trash {
+  display: block;
+}
+
+.rz-fileupload-row .rz-button .rzi-close:before, .rz-fileupload-row .rz-paginator-element .rzi-close:before,
+.rz-fileupload-row .rz-button .rzi-times:before,
+.rz-fileupload-row .rz-paginator-element .rzi-times:before,
+.rz-fileupload-row .rz-button .rz-icon-trash:before,
+.rz-fileupload-row .rz-paginator-element .rz-icon-trash:before {
+  content: 'close';
+}
+
+.rz-fileupload-buttonbar {
+  position: relative;
+  background-color: rgba(230, 236, 239, 0.5);
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+
+.rz-fileupload-buttonbar .rz-button:nth-child(3), .rz-fileupload-buttonbar .rz-paginator-element:nth-child(3) {
+  float: right;
+  background-color: #dadfe2;
+  color: #3a474d;
+}
+
+.rz-fileupload-files {
+  background-color: #ffffff;
+  padding: 1rem 0;
+}
+
+.rz-datatable {
+  position: relative;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  border: solid 1px #dfe7eb;
+  background-color: #ffffff;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.rz-datatable .rz-col-icon {
+  text-align: center;
+  vertical-align: middle;
+  width: 2rem;
+  padding: 0;
+}
+
+.rz-datatable .rzi-chevron-circle-right {
+  vertical-align: top;
+}
+
+.rz-datatable .rzi-chevron-circle-right:before {
+  content: 'arrow_right';
+}
+
+.rz-datatable .rzi-chevron-circle-down {
+  vertical-align: top;
+}
+
+.rz-datatable .rzi-chevron-circle-down:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-datatable.rz-has-template > .rz-datatable-scrollable-wrapper > .rz-datatable-scrollable-view > .rz-datatable-scrollable-body > .rz-datatable-scrollable-table-wrapper > table > .rz-datatable-scrollable-colgroup col:first-child {
+  width: 2rem;
+}
+
+.rz-unselectable-text {
+  user-select: none;
+}
+
+.rz-datatable-tablewrapper > table,
+.rz-datatable-scrollable-header-box > table,
+.rz-datatable-scrollable-table-wrapper > table,
+.rz-datatable-scrollable-footer-box > table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.rz-resizable-column {
+  position: relative;
+}
+
+.rz-column-resizer-helper {
+  position: absolute;
+  display: none;
+  width: 0.25rem;
+  background-color: #479cc8;
+}
+
+.rz-datatable-reorder-indicator-up {
+  position: absolute;
+}
+
+.rz-datatable-reorder-indicator-up:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-datatable-reorder-indicator-down {
+  position: absolute;
+}
+
+.rz-datatable-reorder-indicator-down:before {
+  content: 'arrow_drop_up';
+}
+
+.rz-column-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  cursor: col-resize;
+  width: 0.5rem;
+}
+
+.rz-rowgroup-header .fa,
+.rz-row-toggler {
+  color: #48606c;
+}
+
+.rz-datatable-scrollable-footer {
+  background-color: #e6ecef;
+  border-top: solid 1px #dfe7eb;
+}
+
+.rz-datatable-thead th, .rz-grid-table thead th {
+  background-color: #e6ecef;
+  padding: 0.5rem 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: none;
+}
+
+.rz-datatable-thead th:not(:last-child), .rz-datatable-thead th.rz-composite-cell, .rz-grid-table thead th:not(:last-child), .rz-grid-table thead th.rz-composite-cell {
+  border-right: solid 1px #dfe7eb;
+}
+
+.rz-datatable-thead th .rz-column-title, .rz-grid-table thead th .rz-column-title {
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: inherit;
+  text-transform: uppercase;
+  color: #3a474d;
+  padding: 0 0 0.625rem 0.625rem;
+  font-weight: normal;
+  vertical-align: unset;
+}
+
+.rz-datatable-tfoot td, .rz-grid-table tfoot td {
+  background-color: #e6ecef;
+  font-size: 0.875rem;
+  color: #48606c;
+  padding: 0.5rem 0.625rem 0.5rem 0.625rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rz-datatable-tfoot td:not(:last-child), .rz-datatable-tfoot td.rz-composite-cell, .rz-grid-table tfoot td:not(:last-child), .rz-grid-table tfoot td.rz-composite-cell {
+  border-right: solid 1px #dfe7eb;
+}
+
+.rz-datatable-scrollable-header {
+  background-color: #e6ecef;
+  border-bottom: solid 1px #dfe7eb;
+}
+
+.rz-datatable-scrollable-body {
+  overflow: auto;
+  border-top: none;
+  flex: auto;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.rz-has-paginator .rz-datatable-scrollable-body {
+  border-radius: 0;
+}
+
+.rz-sortable-column {
+  cursor: pointer;
+}
+
+.rz-sortable-column:focus {
+  outline: none;
+}
+
+.rz-sortable-column.rz-state-active {
+  background-color: #e2e9ee;
+}
+
+.rz-sortable-column .rzi-grid-sort {
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.rz-sortable-column .rzi-sort {
+  color: #3a474d;
+  transition: none;
+}
+
+.rz-sortable-column .rzi-sort:before {
+  content: 'sort';
+}
+
+.rz-sortable-column .rzi-sort:hover, .rz-sortable-column .rzi-sort:active {
+  color: #3a474d;
+}
+
+.rz-sortable-column .rzi-sort-asc {
+  color: #3a474d;
+}
+
+.rz-sortable-column .rzi-sort-asc:before {
+  content: 'arrow_drop_up';
+}
+
+.rz-sortable-column .rzi-sort-desc {
+  color: #3a474d;
+}
+
+.rz-sortable-column .rzi-sort-desc:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-datatable-odd > td {
+  background-color: #f7f9fa;
+}
+
+.rz-datatable-even > td {
+  background-color: #ffffff;
+}
+
+.rz-datatable-data .rz-cell-data .rz-button-sm, .rz-datatable-data .rz-cell-data .rz-paginator-element, .rz-datatable-data .rz-cell-data .rz-fileupload .rz-button, .rz-fileupload .rz-datatable-data .rz-cell-data .rz-button, .rz-grid-table .rz-cell-data .rz-button-sm, .rz-grid-table .rz-cell-data .rz-paginator-element, .rz-grid-table .rz-cell-data .rz-fileupload .rz-button, .rz-fileupload .rz-grid-table .rz-cell-data .rz-button {
+  line-height: 1.25rem;
+  padding: 0 0.6875rem;
+  height: 1.25rem;
+  font-size: 0.75rem;
+}
+
+.rz-datatable-data .rz-cell-data .rz-button-sm .rz-button-icon-left, .rz-datatable-data .rz-cell-data .rz-paginator-element .rz-button-icon-left, .rz-datatable-data .rz-cell-data .rz-fileupload .rz-button .rz-button-icon-left, .rz-fileupload .rz-datatable-data .rz-cell-data .rz-button .rz-button-icon-left, .rz-grid-table .rz-cell-data .rz-button-sm .rz-button-icon-left, .rz-grid-table .rz-cell-data .rz-paginator-element .rz-button-icon-left, .rz-grid-table .rz-cell-data .rz-fileupload .rz-button .rz-button-icon-left, .rz-fileupload .rz-grid-table .rz-cell-data .rz-button .rz-button-icon-left {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  width: 0.75rem;
+}
+
+.rz-datatable-data .rz-cell-data .rz-button-sm .rz-button-text, .rz-datatable-data .rz-cell-data .rz-paginator-element .rz-button-text, .rz-datatable-data .rz-cell-data .rz-fileupload .rz-button .rz-button-text, .rz-fileupload .rz-datatable-data .rz-cell-data .rz-button .rz-button-text, .rz-grid-table .rz-cell-data .rz-button-sm .rz-button-text, .rz-grid-table .rz-cell-data .rz-paginator-element .rz-button-text, .rz-grid-table .rz-cell-data .rz-fileupload .rz-button .rz-button-text, .rz-fileupload .rz-grid-table .rz-cell-data .rz-button .rz-button-text {
+  line-height: 1.25rem;
+}
+
+.rz-datatable-data .rz-cell-data .rz-button-sm.rz-button-icon-only, .rz-datatable-data .rz-cell-data .rz-paginator-element, .rz-datatable-data .rz-cell-data .rz-fileupload .rz-button-icon-only.rz-button, .rz-fileupload .rz-datatable-data .rz-cell-data .rz-button-icon-only.rz-button, .rz-grid-table .rz-cell-data .rz-button-sm.rz-button-icon-only, .rz-grid-table .rz-cell-data .rz-paginator-element, .rz-grid-table .rz-cell-data .rz-fileupload .rz-button-icon-only.rz-button, .rz-fileupload .rz-grid-table .rz-cell-data .rz-button-icon-only.rz-button {
+  padding: 0 0.25rem;
+}
+
+.rz-datatable-data td, .rz-grid-table td {
+  padding: 0.5rem 0.625rem 0.5rem 0.625rem;
+  border-bottom: solid 1px #dfe7eb;
+}
+
+.rz-datatable-data td:not(:last-child), .rz-datatable-data td.rz-composite-cell, .rz-grid-table td:not(:last-child), .rz-grid-table td.rz-composite-cell {
+  border-right: solid 1px #dfe7eb;
+}
+
+.rz-datatable-data td .rz-cell-data, .rz-grid-table td .rz-cell-data {
+  color: #48606c;
+  font-size: 0.875rem;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rz-datatable-data tr td:first-child, .rz-grid-table tr td:first-child {
+  border-left: none;
+}
+
+.rz-datatable-data tr td:last-child:not(.rz-composite-cell), .rz-grid-table tr td:last-child:not(.rz-composite-cell) {
+  border-right: none;
+}
+
+.rz-datatable-data tr:first-child td, .rz-grid-table tr:first-child td {
+  border-top: none;
+}
+
+.rz-datatable-data tr:last-child td, .rz-grid-table tr:last-child td {
+  border-bottom: none;
+}
+
+.rz-datatable-reflow tbody td > .rz-column-title {
+  display: none;
+}
+
+.rz-datatable-scrollable {
+  display: flex;
+  flex-direction: column;
+}
+
+.rz-datatable-scrollable.rz-has-height > .rz-datatable-scrollable-wrapper {
+  height: 0;
+}
+
+.rz-datatable-scrollable.rz-has-height > .rz-datatable-scrollable-wrapper > .rz-datatable-scrollable-view {
+  height: 0;
+}
+
+.rz-datatable-scrollable-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+}
+
+.rz-datatable-scrollable-view {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rz-datatable-header {
+  background-color: #ffffff;
+  padding: 0.625rem;
+  border-bottom: solid 1px #dfe7eb;
+}
+
+.rz-datatable-header .rzi-plus {
+  font-size: 0.875rem;
+}
+
+.rz-datatable-header .rzi-plus:before {
+  content: 'add';
+}
+
+.rz-cell-filter {
+  padding: 0.5rem 0.625rem;
+  margin: 0;
+  background-color: #f6f8f9;
+  border-top: solid 1px #dfe7eb;
+  font-size: 0.8125rem;
+  font-weight: normal;
+}
+
+.rz-cell-filter .rz-cell-filter-label {
+  display: flex;
+  flex: auto;
+  align-items: center;
+}
+
+.rz-cell-filter .rz-cell-filter-label > .rzi, .rz-cell-filter .rz-cell-filter-label > .rz-column-drag, .rz-cell-filter .rz-datatable-loading-content .rz-cell-filter-label > .rzi-circle-o-notch, .rz-datatable-loading-content .rz-cell-filter .rz-cell-filter-label > .rzi-circle-o-notch, .rz-cell-filter .rz-menuitem .rz-cell-filter-label > .rz-menuitem-icon, .rz-menuitem .rz-cell-filter .rz-cell-filter-label > .rz-menuitem-icon, .rz-cell-filter .rz-fileupload-row .rz-button .rz-cell-filter-label > .rzi-close, .rz-cell-filter .rz-fileupload-row .rz-paginator-element .rz-cell-filter-label > .rzi-close, .rz-fileupload-row .rz-button .rz-cell-filter .rz-cell-filter-label > .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-cell-filter .rz-cell-filter-label > .rzi-close,
+.rz-cell-filter .rz-fileupload-row .rz-button .rz-cell-filter-label > .rzi-times,
+.rz-cell-filter .rz-fileupload-row .rz-paginator-element .rz-cell-filter-label > .rzi-times,
+.rz-fileupload-row .rz-button .rz-cell-filter .rz-cell-filter-label > .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-cell-filter .rz-cell-filter-label > .rzi-times,
+.rz-cell-filter .rz-fileupload-row .rz-button .rz-cell-filter-label > .rz-icon-trash,
+.rz-cell-filter .rz-fileupload-row .rz-paginator-element .rz-cell-filter-label > .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-cell-filter .rz-cell-filter-label > .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-cell-filter .rz-cell-filter-label > .rz-icon-trash, .rz-cell-filter .rz-datatable .rz-cell-filter-label > .rzi-chevron-circle-right, .rz-datatable .rz-cell-filter .rz-cell-filter-label > .rzi-chevron-circle-right, .rz-cell-filter .rz-datatable .rz-cell-filter-label > .rzi-chevron-circle-down, .rz-datatable .rz-cell-filter .rz-cell-filter-label > .rzi-chevron-circle-down, .rz-cell-filter .rz-sortable-column .rz-cell-filter-label > .rzi-grid-sort, .rz-sortable-column .rz-cell-filter .rz-cell-filter-label > .rzi-grid-sort, .rz-cell-filter .rz-datatable-header .rz-cell-filter-label > .rzi-plus, .rz-datatable-header .rz-cell-filter .rz-cell-filter-label > .rzi-plus {
+  width: 0.875rem;
+  height: 0.875rem;
+  font-size: 0.8125rem;
+  margin: 0 0.3125rem 0 0;
+  color: #88989b;
+}
+
+.rz-cell-filter .rz-cell-filter-label > .rzi.rz-cell-filter-clear, .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rz-column-drag, .rz-cell-filter .rz-datatable-loading-content .rz-cell-filter-label > .rz-cell-filter-clear.rzi-circle-o-notch, .rz-datatable-loading-content .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-circle-o-notch, .rz-cell-filter .rz-menuitem .rz-cell-filter-label > .rz-cell-filter-clear.rz-menuitem-icon, .rz-menuitem .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rz-menuitem-icon, .rz-cell-filter .rz-fileupload-row .rz-button .rz-cell-filter-label > .rz-cell-filter-clear.rzi-close, .rz-cell-filter .rz-fileupload-row .rz-paginator-element .rz-cell-filter-label > .rz-cell-filter-clear.rzi-close, .rz-fileupload-row .rz-button .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-close, .rz-fileupload-row .rz-paginator-element .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-close,
+.rz-cell-filter .rz-fileupload-row .rz-button .rz-cell-filter-label > .rz-cell-filter-clear.rzi-times,
+.rz-cell-filter .rz-fileupload-row .rz-paginator-element .rz-cell-filter-label > .rz-cell-filter-clear.rzi-times,
+.rz-fileupload-row .rz-button .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-times,
+.rz-cell-filter .rz-fileupload-row .rz-button .rz-cell-filter-label > .rz-cell-filter-clear.rz-icon-trash,
+.rz-cell-filter .rz-fileupload-row .rz-paginator-element .rz-cell-filter-label > .rz-cell-filter-clear.rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rz-icon-trash, .rz-cell-filter .rz-datatable .rz-cell-filter-label > .rz-cell-filter-clear.rzi-chevron-circle-right, .rz-datatable .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-chevron-circle-right, .rz-cell-filter .rz-datatable .rz-cell-filter-label > .rz-cell-filter-clear.rzi-chevron-circle-down, .rz-datatable .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-chevron-circle-down, .rz-cell-filter .rz-sortable-column .rz-cell-filter-label > .rz-cell-filter-clear.rzi-grid-sort, .rz-sortable-column .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-grid-sort, .rz-cell-filter .rz-datatable-header .rz-cell-filter-label > .rz-cell-filter-clear.rzi-plus, .rz-datatable-header .rz-cell-filter .rz-cell-filter-label > .rz-cell-filter-clear.rzi-plus {
+  margin-left: auto;
+}
+
+.rz-cell-filter .rz-cell-filter-label .rz-current-filter {
+  margin-left: 0.5rem;
+}
+
+.rz-selectable .rz-datatable-even.rz-state-highlight > td,
+.rz-selectable .rz-datatable-odd.rz-state-highlight > td {
+  background-color: #479cc8;
+}
+
+.rz-selectable .rz-datatable-even.rz-state-highlight .rz-cell-data,
+.rz-selectable .rz-datatable-odd.rz-state-highlight .rz-cell-data {
+  color: #ffffff;
+}
+
+.rz-selectable .rz-datatable-even.rz-state-highlight > .rzi, .rz-selectable .rz-datatable-even.rz-state-highlight > .rz-column-drag, .rz-selectable .rz-datatable-loading-content .rz-datatable-even.rz-state-highlight > .rzi-circle-o-notch, .rz-datatable-loading-content .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-circle-o-notch, .rz-selectable .rz-menuitem .rz-datatable-even.rz-state-highlight > .rz-menuitem-icon, .rz-menuitem .rz-selectable .rz-datatable-even.rz-state-highlight > .rz-menuitem-icon, .rz-selectable .rz-fileupload-row .rz-button .rz-datatable-even.rz-state-highlight > .rzi-close, .rz-selectable .rz-fileupload-row .rz-paginator-element .rz-datatable-even.rz-state-highlight > .rzi-close, .rz-fileupload-row .rz-button .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-close,
+.rz-selectable .rz-fileupload-row .rz-button .rz-datatable-even.rz-state-highlight > .rzi-times,
+.rz-selectable .rz-fileupload-row .rz-paginator-element .rz-datatable-even.rz-state-highlight > .rzi-times,
+.rz-fileupload-row .rz-button .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-times,
+.rz-selectable .rz-fileupload-row .rz-button .rz-datatable-even.rz-state-highlight > .rz-icon-trash,
+.rz-selectable .rz-fileupload-row .rz-paginator-element .rz-datatable-even.rz-state-highlight > .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-selectable .rz-datatable-even.rz-state-highlight > .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-selectable .rz-datatable-even.rz-state-highlight > .rz-icon-trash, .rz-selectable .rz-datatable .rz-datatable-even.rz-state-highlight > .rzi-chevron-circle-right, .rz-datatable .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-chevron-circle-right, .rz-selectable .rz-datatable .rz-datatable-even.rz-state-highlight > .rzi-chevron-circle-down, .rz-datatable .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-chevron-circle-down, .rz-selectable .rz-sortable-column .rz-datatable-even.rz-state-highlight > .rzi-grid-sort, .rz-sortable-column .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-grid-sort, .rz-selectable .rz-datatable-header .rz-datatable-even.rz-state-highlight > .rzi-plus, .rz-datatable-header .rz-selectable .rz-datatable-even.rz-state-highlight > .rzi-plus,
+.rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi,
+.rz-selectable .rz-datatable-odd.rz-state-highlight > .rz-column-drag,
+.rz-selectable .rz-datatable-loading-content .rz-datatable-odd.rz-state-highlight > .rzi-circle-o-notch,
+.rz-datatable-loading-content .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-circle-o-notch,
+.rz-selectable .rz-menuitem .rz-datatable-odd.rz-state-highlight > .rz-menuitem-icon,
+.rz-menuitem .rz-selectable .rz-datatable-odd.rz-state-highlight > .rz-menuitem-icon,
+.rz-selectable .rz-fileupload-row .rz-button .rz-datatable-odd.rz-state-highlight > .rzi-close,
+.rz-selectable .rz-fileupload-row .rz-paginator-element .rz-datatable-odd.rz-state-highlight > .rzi-close,
+.rz-fileupload-row .rz-button .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-close,
+.rz-fileupload-row .rz-paginator-element .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-close,
+.rz-selectable .rz-fileupload-row .rz-button .rz-datatable-odd.rz-state-highlight > .rzi-times,
+.rz-selectable .rz-fileupload-row .rz-paginator-element .rz-datatable-odd.rz-state-highlight > .rzi-times,
+.rz-fileupload-row .rz-button .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-times,
+.rz-selectable .rz-fileupload-row .rz-button .rz-datatable-odd.rz-state-highlight > .rz-icon-trash,
+.rz-selectable .rz-fileupload-row .rz-paginator-element .rz-datatable-odd.rz-state-highlight > .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-selectable .rz-datatable-odd.rz-state-highlight > .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-selectable .rz-datatable-odd.rz-state-highlight > .rz-icon-trash,
+.rz-selectable .rz-datatable .rz-datatable-odd.rz-state-highlight > .rzi-chevron-circle-right,
+.rz-datatable .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-chevron-circle-right,
+.rz-selectable .rz-datatable .rz-datatable-odd.rz-state-highlight > .rzi-chevron-circle-down,
+.rz-datatable .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-chevron-circle-down,
+.rz-selectable .rz-sortable-column .rz-datatable-odd.rz-state-highlight > .rzi-grid-sort,
+.rz-sortable-column .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-grid-sort,
+.rz-selectable .rz-datatable-header .rz-datatable-odd.rz-state-highlight > .rzi-plus,
+.rz-datatable-header .rz-selectable .rz-datatable-odd.rz-state-highlight > .rzi-plus {
+  color: #ffffff;
+}
+
+.rz-selectable .rz-datatable-even:hover:not(.rz-state-highlight) > td:not(.rz-frozen-cell),
+.rz-selectable .rz-datatable-odd:hover:not(.rz-state-highlight) > td:not(.rz-frozen-cell) {
+  background-color: rgba(212, 236, 248, 0.5);
+}
+
+.rz-selectable .rz-datatable-even:hover:not(.rz-state-highlight) .rz-cell-data,
+.rz-selectable .rz-datatable-odd:hover:not(.rz-state-highlight) .rz-cell-data {
+  color: #479cc8;
+}
+
+.rz-cell-filter-content {
+  display: flex;
+  flex: auto;
+  align-items: center;
+}
+
+.rz-cell-filter-content {
+  color: #88989b;
+  min-height: 1.375rem;
+}
+
+.rz-date-filter {
+  display: flex;
+  align-items: center;
+  background-color: #f6f8f9;
+}
+
+.rz-date-filter .rz-listbox {
+  margin: 1.25rem;
+}
+
+.rz-date-filter .rz-datepicker {
+  border-left: 1px solid #e6ecef;
+}
+
+.rz-expanded-row > td {
+  border-bottom: none;
+  background-color: rgba(212, 236, 248, 0.5);
+}
+
+.rz-expanded-row > td .rz-cell-data,
+.rz-expanded-row > td .rz-row-toggler {
+  color: #479cc8;
+}
+
+.rz-expanded-row-template {
+  background-color: #ffffff;
+  padding: 0.625rem;
+  border: solid 1px rgba(71, 156, 200, 0.2);
+  border-radius: 2px;
+}
+
+.rz-expanded-row-content > td {
+  padding-top: 0;
+  background-color: #ffffff;
+}
+
+.rz-rowgroup-header a:hover {
+  text-decoration: none;
+}
+
+.rz-rowgroup-header td {
+  border-top: 1px solid #e6ecef;
+  border-bottom: 1px solid #e6ecef;
+}
+
+.rz-date-filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.325rem 1.25rem;
+  background-color: #ffffff;
+  border-top: 1px solid rgba(151, 151, 151, 0.2);
+}
+
+.rz-clear-filter {
+  background-color: #e6ecef;
+  color: #88989b;
+}
+
+.rz-apply-filter {
+  background-color: #479cc8;
+  color: inherit;
+}
+
+.rz-datatable-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(136, 152, 155, 0.5);
+  z-index: 2;
+}
+
+.rz-datatable-loading-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: currentColor;
+  z-index: 1;
+}
+
+.rz-datatable-loading-content .rzi-circle-o-notch {
+  animation: rotation .5s linear infinite;
+  font-size: 2rem;
+}
+
+.rz-datatable-loading-content .rzi-circle-o-notch:before {
+  content: 'refresh';
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .rz-datatable-reflow .rz-data-grid-data > table,
+.rz-datatable-reflow .rz-datatable-tablewrapper > table,
+.rz-datatable-reflow .rz-datatable-scrollable-header-box > table,
+.rz-datatable-reflow .rz-datatable-scrollable-table-wrapper > table {
+    table-layout: auto;
+    display: block;
+  }
+  .rz-datatable-reflow .rz-data-grid-data > tbody,
+.rz-datatable-reflow .rz-datatable-tablewrapper > tbody,
+.rz-datatable-reflow .rz-datatable-scrollable-header-box > tbody,
+.rz-datatable-reflow .rz-datatable-scrollable-table-wrapper > tbody {
+    display: block;
+  }
+  .rz-datatable-reflow thead th {
+    display: none;
+  }
+  .rz-datatable-reflow .rz-datatable-odd,
+.rz-datatable-reflow .rz-datatable-even {
+    display: block;
+  }
+  .rz-datatable-reflow .rz-datatable-odd > td,
+.rz-datatable-reflow .rz-datatable-even > td {
+    display: block;
+    width: 100% !important;
+    text-align: left !important;
+    border: none;
+  }
+  .rz-datatable-reflow .rz-datatable-odd > td .rz-column-title,
+.rz-datatable-reflow .rz-datatable-even > td .rz-column-title {
+    display: block;
+  }
+}
+
+.rz-grid-filter {
+  padding: 0 1rem;
+}
+
+.rz-grid-filter .rz-dropdown,
+.rz-grid-filter .rz-spinner,
+.rz-grid-filter .rz-textbox,
+.rz-grid-filter .rz-grid-filter-label {
+  display: block;
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+.rz-grid-filter .rz-grid-filter-label {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.rz-grid-filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.rz-grid-filter-icon {
+  color: #88989b;
+  margin: 5px 5px 0 0;
+  float: right;
+  font-size: 1rem;
+  transition: none;
+}
+
+.rz-grid-filter-icon:hover {
+  cursor: pointer;
+  color: inherit;
+}
+
+.rz-grid-filter-icon:after {
+  content: 'filter_alt';
+}
+
+.rz-grid-filter-active {
+  color: #479cc8 !important;
+}
+
+.rz-data-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.rz-data-grid-data {
+  overflow: auto;
+  flex: 1;
+  box-shadow: none;
+}
+
+.rz-grid-table td, .rz-grid-table th {
+  padding: 0.5rem 0.625rem 0.5rem 0.625rem;
+}
+
+.rz-grid-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.rz-grid-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.rz-grid-table thead tr:nth-of-type(2) th {
+  top: 35px;
+}
+
+.rz-grid-table-fixed {
+  table-layout: fixed;
+}
+
+.rz-grid-table-fixed .rz-frozen-cell {
+  position: -webkit-sticky;
+  position: sticky;
+  background: #e6ecef;
+  border-right: solid 1px #dfe7eb !important;
+  z-index: 1;
+}
+
+.rz-grid-table tfoot, .rz-grid-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
+.rz-grid-table {
+  overflow: auto;
+  width: 100%;
+  position: relative;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.rz-grid-table th {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rz-grid-table td {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rz-grid-table tbody > div {
+  display: table-row;
+}
+
+.rz-column-drag {
+  cursor: grab;
+  font-size: inherit;
+  vertical-align: middle;
+  color: #3a474d;
+  transition: none;
+}
+
+.rz-column-drag:after {
+  content: 'more_vert';
+}
+
+.rz-column-drag:hover {
+  color: #3a474d;
+}
+
+.rz-column-drag:active {
+  color: #3a474d;
+  cursor: grabbing;
+}
+
+.rz-column-draggable {
+  background-color: #e6ecef;
+}
+
+.rz-group-header {
+  background-color: #e6ecef;
+  padding: 15px;
+  border-bottom: solid 1px #dfe7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rz-group-header-items {
+  margin: 0;
+}
+
+.rz-group-header-item {
+  border: solid 1px #dfe7eb;
+  padding: 10px;
+  margin: 5px;
+  width: fit-content;
+  float: left;
+}
+
+.rz-group-header-item-title {
+  margin-right: 5px;
+}
+
+.rz-group-header-drop {
+  height: fit-content;
+}
+
+.rz-column-picker {
+  display: flex;
+}
+
+.rz-filter-menu-symbol {
+  width: 1.75rem;
+  display: inline-block;
+}
+
+.rz-filter-button {
+  margin-right: 10px;
+  width: 3.5rem;
+}
+
+.rz-paginator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 0.625rem;
+}
+
+.rz-paginator.rz-align-right {
+  justify-content: flex-end;
+}
+
+.rz-paginator.rz-align-left {
+  justify-content: flex-start;
+}
+
+.rz-paginator.rz-align-center {
+  justify-content: center;
+}
+
+.rz-paginator .rzi-step-backward:before {
+  content: 'first_page';
+}
+
+.rz-paginator .rzi-caret-left:before {
+  content: 'navigate_before';
+}
+
+.rz-paginator .rzi-caret-right:before {
+  content: 'navigate_next';
+}
+
+.rz-paginator .rzi-step-forward:before {
+  content: 'last_page';
+}
+
+.rz-paginator .rz-dropdown {
+  order: 2;
+  width: 80px;
+  margin-left: 1rem;
+  overflow: visible;
+}
+
+.rz-paginator .rz-pagesize-text {
+  order: 2;
+  margin: 0 0 0 0.625rem;
+  font-size: 0.875rem;
+  color: #6d787d;
+}
+
+.rz-paginator .rz-dropdown-items-wrapper {
+  width: 76px;
+}
+
+.rz-paginator-element:hover,
+.rz-paginator-page:hover {
+  color: inherit;
+}
+
+.rz-paginator-bottom {
+  border-top: 1px solid #e6ecef;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.rz-paginator-pages {
+  margin: 0 0.5rem;
+}
+
+.rz-paginator-first {
+  margin: 0 0.625rem 0 0;
+}
+
+.rz-align-center .rz-paginator-first {
+  margin-left: auto;
+}
+
+.rz-paginator-prev {
+  margin-right: auto;
+}
+
+.rz-align-left .rz-paginator-prev, .rz-align-right .rz-paginator-prev, .rz-align-center .rz-paginator-prev {
+  margin: 0 0.625rem 0 0;
+}
+
+.rz-paginator-next {
+  margin-left: auto;
+}
+
+.rz-align-left .rz-paginator-next, .rz-align-right .rz-paginator-next, .rz-align-center .rz-paginator-next {
+  margin: 0 0 0 0.625rem;
+}
+
+.rz-paginator-last {
+  margin: 0 0 0 0.625rem;
+}
+
+.rz-align-center .rz-paginator-last {
+  margin-right: auto;
+}
+
+.rz-paginator-first,
+.rz-paginator-prev {
+  background-color: #e6ecef;
+  color: #6d787d;
+}
+
+.rz-paginator-element:hover {
+  text-decoration: none;
+}
+
+.rz-paginator-last,
+.rz-paginator-next {
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-paginator-last:hover,
+.rz-paginator-next:hover {
+  color: #ffffff;
+}
+
+.rz-paginator-page {
+  display: inline-block;
+  min-width: 1.75rem;
+  text-align: center;
+  margin: 0 0.3125rem;
+  background-color: #e6ecef;
+  border-radius: 4px;
+  padding: 0.3125rem;
+  color: #6d787d;
+}
+
+.rz-paginator-page.rz-state-active {
+  background-color: #ffffff;
+  color: #ff6d41;
+  border: 1px solid #e6ecef;
+  padding: 0.25rem;
+}
+
+.rz-paginator-summary {
+  padding: 0 1.25rem 0 0.625rem;
+  font-size: 0.875rem;
+  color: #6d787d;
+}
+
+.rz-align-right .rz-paginator-summary {
+  margin-right: auto;
+}
+
+.rz-align-left .rz-paginator-summary {
+  order: 2;
+  margin-left: auto;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .rz-paginator-page:not(.rz-state-active) {
+    display: none;
+  }
+}
+
+.rz-overlaypanel {
+  position: absolute;
+  overflow: hidden;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.06);
+  border: solid 1px #cecece;
+  border-radius: 4px;
+  background-color: #f3f5f7;
+}
+
+.rz-tree {
+  display: inline-block;
+  overflow: auto;
+}
+
+.rz-tree .rz-treenode.rz-treenode-leaf > .rz-treenode-content > .rz-tree-toggler {
+  visibility: hidden;
+}
+
+.rz-treenode {
+  padding-left: 1rem;
+}
+
+.rz-tree-toggler {
+  cursor: pointer;
+  margin-left: -1rem;
+  width: 1rem;
+  height: 1.5rem;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  text-align: center;
+  color: inherit;
+  transition: none;
+}
+
+.rz-tree-toggler.rzi-caret-right:before {
+  content: "arrow_right";
+  margin-left: -0.125rem;
+}
+
+.rz-tree-toggler.rzi-caret-down:before {
+  content: "arrow_drop_down";
+  margin-left: -0.125rem;
+}
+
+.rz-tree-toggler:hover {
+  color: inherit;
+}
+
+.rz-treenode-content {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 1px 0;
+}
+
+.rz-treenode-content .rz-treenode-label {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0.25rem;
+}
+
+.rz-treenode-content .rz-treenode-label .rzi:first-child, .rz-treenode-content .rz-treenode-label .rz-menuitem .rz-menuitem-icon:first-child, .rz-menuitem .rz-treenode-content .rz-treenode-label .rz-menuitem-icon:first-child, .rz-treenode-content .rz-treenode-label .rz-fileupload-row .rz-button .rzi-close:first-child, .rz-fileupload-row .rz-button .rz-treenode-content .rz-treenode-label .rzi-close:first-child,
+.rz-treenode-content .rz-treenode-label .rz-fileupload-row .rz-button .rzi-times:first-child,
+.rz-fileupload-row .rz-button .rz-treenode-content .rz-treenode-label .rzi-times:first-child,
+.rz-treenode-content .rz-treenode-label .rz-fileupload-row .rz-button .rz-icon-trash:first-child,
+.rz-fileupload-row .rz-button .rz-treenode-content .rz-treenode-label .rz-icon-trash:first-child, .rz-treenode-content .rz-treenode-label .rz-datatable .rzi-chevron-circle-right:first-child, .rz-datatable .rz-treenode-content .rz-treenode-label .rzi-chevron-circle-right:first-child, .rz-treenode-content .rz-treenode-label .rz-datatable .rzi-chevron-circle-down:first-child, .rz-datatable .rz-treenode-content .rz-treenode-label .rzi-chevron-circle-down:first-child, .rz-treenode-content .rz-treenode-label .rz-sortable-column .rzi-grid-sort:first-child, .rz-sortable-column .rz-treenode-content .rz-treenode-label .rzi-grid-sort:first-child, .rz-treenode-content .rz-treenode-label .rz-datatable-header .rzi-plus:first-child, .rz-datatable-header .rz-treenode-content .rz-treenode-label .rzi-plus:first-child, .rz-treenode-content .rz-treenode-label .rz-datatable-loading-content .rzi-circle-o-notch:first-child, .rz-datatable-loading-content .rz-treenode-content .rz-treenode-label .rzi-circle-o-notch:first-child, .rz-treenode-content .rz-treenode-label .rz-column-drag:first-child, .rz-treenode-content .rz-treenode-label .rz-fileupload-row .rz-paginator-element .rzi-close:first-child, .rz-fileupload-row .rz-paginator-element .rz-treenode-content .rz-treenode-label .rzi-close:first-child,
+.rz-treenode-content .rz-treenode-label .rz-fileupload-row .rz-paginator-element .rzi-times:first-child,
+.rz-fileupload-row .rz-paginator-element .rz-treenode-content .rz-treenode-label .rzi-times:first-child,
+.rz-treenode-content .rz-treenode-label .rz-fileupload-row .rz-paginator-element .rz-icon-trash:first-child,
+.rz-fileupload-row .rz-paginator-element .rz-treenode-content .rz-treenode-label .rz-icon-trash:first-child {
+  margin-right: 0.25rem;
+}
+
+.rz-treenode-content:not(.rz-treenode-content-selected):hover .rz-treenode-label {
+  background-color: #59a6cd;
+  color: #ffffff;
+  border-radius: 2px;
+}
+
+.rz-tree-container,
+.rz-treenode-children {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rz-treenode-label {
+  transition: none;
+}
+
+.rz-treenode-content-selected .rz-treenode-label {
+  border-radius: 2px;
+  color: #ffffff;
+  background-color: #479cc8;
+}
+
+.rz-datalist,
+.rz-datagrid {
+  background-color: #ffffff;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  border: 1px solid #e6ecef;
+}
+
+.rz-g > div, .rz-datalist-data > li {
+  border-radius: 4px;
+  border: solid 1px #e6ecef;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  padding: 1rem;
+  background-color: #ffffff;
+}
+
+.rz-datalist-data {
+  list-style: none;
+  padding: 0.6875rem;
+  margin: 0;
+}
+
+.rz-datalist-data > li {
+  margin: 0.6875rem 0;
+}
+
+.rz-datalist-data > li:first-child {
+  margin-top: 0;
+}
+
+.rz-datalist-data > li:last-child {
+  margin-bottom: 0;
+}
+
+.rz-g {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.rz-g > div {
+  flex: auto;
+  margin: 0.6875rem;
+}
+
+.rz-scheduler {
+  display: flex;
+  height: 400px;
+  flex-direction: column;
+  border-radius: 4px;
+  border: 1px solid #dfe7eb;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  color: #6a6a6a;
+  background: #ffffff;
+}
+
+.rz-scheduler .rz-event-list-btn {
+  position: absolute;
+  color: #479cc8;
+}
+
+.rz-scheduler .rz-event-list-btn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.rz-slot {
+  display: flex;
+  height: 1.5em;
+  border-top: 1px solid #dfe7eb;
+  border-left: 1px solid #dfe7eb;
+}
+
+.rz-slot-hours .rz-slot-header {
+  height: 1.5em;
+  text-align: right;
+  padding: 0 4px;
+  width: 80px;
+  border-right: 1px solid #dfe7eb;
+  white-space: nowrap;
+}
+
+.rz-slot-minor {
+  border-top: 1px solid rgba(223, 231, 235, 0.2);
+}
+
+.rz-day-view .rz-slot,
+.rz-slots:first-child .rz-slot {
+  border-left: none;
+}
+
+.rz-event {
+  position: absolute;
+  padding: 2px 1px;
+}
+
+.rz-event-content {
+  background: #68d5c8;
+  border-radius: 4px;
+  color: #ffffff;
+  height: 100%;
+  padding: 4px;
+  font-size: 0.6875rem;
+  line-height: 12px;
+  overflow: hidden;
+}
+
+.rz-events {
+  position: relative;
+}
+
+.rz-month-view .rz-view-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rz-slot-title {
+  text-align: right;
+  padding: 0 11px;
+}
+
+.rz-scheduler-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0.625rem;
+  background: #e6ecef;
+}
+
+.rz-scheduler-nav .rz-scheduler-nav-title {
+  display: flex;
+  align-self: center;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.rz-view-header {
+  border-top: solid 1px #dfe7ec;
+  border-bottom: solid 1px #dfe7ec;
+  background-color: rgba(230, 236, 239, 0.4);
+  text-transform: uppercase;
+  color: inherit;
+  display: flex;
+}
+
+.rz-view-header .rz-slot-header {
+  flex: 1;
+  text-align: center;
+  font-size: 0.6875rem;
+  padding: 0.5rem 0;
+}
+
+.rz-view-header .rz-slot-hour-header {
+  flex: none;
+  width: 80px;
+}
+
+.rz-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rz-view-content {
+  flex: auto;
+  display: flex;
+  overflow: auto;
+  height: 0;
+}
+
+.rz-week-view-content {
+  flex: 1;
+  display: flex;
+}
+
+.rz-slots {
+  flex: 1;
+}
+
+.rz-week {
+  flex: 1;
+}
+
+.rz-week .rz-slots {
+  display: flex;
+  height: 100%;
+}
+
+.rz-week:first-child .rz-slot {
+  border-top: none;
+}
+
+.rz-month-view .rz-slot {
+  flex: 1;
+  height: 100%;
+}
+
+.rz-month-view .rz-slot:first-child {
+  border-left: none;
+}
+
+.rz-day-view .rz-slot:nth-of-type(2),
+.rz-week-view .rz-slot:nth-of-type(2) {
+  border-top: none;
+}
+
+.rz-week-view .rz-view-header,
+.rz-day-view .rz-view-header {
+  padding-right: 15px;
+}
+
+.rz-scheduler-nav-views {
+  display: flex;
+}
+
+.rz-scheduler-nav-views .rz-button, .rz-scheduler-nav-views .rz-paginator-element {
+  background: #ffffff;
+  color: #88989b;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6875rem;
+  line-height: 1.25rem;
+  border: solid 1px #dadfe2;
+  border-radius: 0;
+}
+
+.rz-scheduler-nav-views .rz-button span, .rz-scheduler-nav-views .rz-paginator-element span {
+  margin-left: 0.25rem;
+}
+
+.rz-scheduler-nav-views .rz-button:first-child, .rz-scheduler-nav-views .rz-paginator-element:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-right: none;
+}
+
+.rz-scheduler-nav-views .rz-button:last-child, .rz-scheduler-nav-views .rz-paginator-element:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-left: none;
+}
+
+.rz-scheduler-nav-views .rz-state-active {
+  background-color: #479cc8;
+  border-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-scheduler-nav-prev-next {
+  display: flex;
+}
+
+.rz-scheduler-nav-prev-next .rz-today {
+  margin-left: 0.5rem;
+}
+
+.rz-scheduler-nav-prev-next .rz-button, .rz-scheduler-nav-prev-next .rz-paginator-element {
+  background-color: #479cc8;
+  color: #ffffff;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6875rem;
+}
+
+.rz-scheduler-nav-prev-next .rz-prev {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6875rem;
+}
+
+.rz-scheduler-nav-prev-next .rz-next {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6875rem;
+}
+
+.rz-event-list .rz-event {
+  position: static;
+}
+
+@media (max-width: 576px) {
+  .rz-scheduler-nav .rz-scheduler-nav-prev-next {
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+    order: 1;
+  }
+  .rz-scheduler-nav .rz-scheduler-nav-title {
+    justify-content: center;
+    width: 100%;
+    order: 3;
+  }
+  .rz-scheduler-nav .rz-scheduler-nav-views {
+    margin-bottom: 0.5rem;
+    justify-content: center;
+    flex-grow: 1;
+    order: 2;
+  }
+  .rz-scheduler-nav .rz-scheduler-nav-views .rz-button, .rz-scheduler-nav .rz-scheduler-nav-views .rz-paginator-element {
+    flex-grow: 1;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .rz-scheduler-nav .rz-scheduler-nav-views .rz-button span, .rz-scheduler-nav .rz-scheduler-nav-views .rz-paginator-element span {
+    display: none;
+  }
+  .rz-slot-hours .rz-slot-header {
+    width: auto;
+  }
+}
+
+.rz-tabview {
+  display: flex;
+}
+
+.rz-tabview.rz-tabview-top {
+  flex-direction: column;
+}
+
+.rz-tabview.rz-tabview-bottom {
+  flex-direction: column-reverse;
+}
+
+.rz-tabview.rz-tabview-left {
+  flex-direction: row;
+}
+
+.rz-tabview.rz-tabview-right {
+  flex-direction: row-reverse;
+}
+
+.rz-tabview-nav {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.rz-tabview-nav li {
+  border: solid 1px #dfe7ec;
+  background-color: #e6ecef;
+  transition: none;
+}
+
+.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+  background-color: #ffffff;
+}
+
+.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) a {
+  color: #479cc8;
+}
+
+.rz-tabview-nav li a {
+  display: flex;
+  align-items: center;
+  color: #479cc8;
+  padding: 0.375rem 1.875rem;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.rz-tabview-nav li a:hover {
+  text-decoration: none;
+}
+
+.rz-tabview-nav li.rz-state-disabled {
+  opacity: 0.5;
+}
+
+.rz-tabview-nav .rz-tabview-selected {
+  background-color: #ffffff;
+  position: relative;
+}
+
+.rz-tabview-nav .rz-tabview-selected a {
+  color: #3a474d;
+}
+
+.rz-tabview-top > .rz-tabview-nav {
+  flex-direction: row;
+}
+
+.rz-tabview-top > .rz-tabview-nav li {
+  border-top-width: 2px;
+  border-bottom-color: #e6ecef;
+  border-radius: 4px 4px 0 0;
+}
+
+.rz-tabview-top > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+  border-top-color: #479cc8;
+}
+
+.rz-tabview-top > .rz-tabview-nav .rz-tabview-selected {
+  border-bottom-color: #ffffff;
+  margin-bottom: -1px;
+  border-top-color: #479cc8;
+}
+
+.rz-tabview-bottom > .rz-tabview-nav {
+  flex-direction: row;
+}
+
+.rz-tabview-bottom > .rz-tabview-nav li {
+  border-bottom-width: 2px;
+  border-top-color: #e6ecef;
+  border-radius: 0 0 4px 4px;
+}
+
+.rz-tabview-bottom > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+  border-bottom-color: #479cc8;
+}
+
+.rz-tabview-bottom > .rz-tabview-nav .rz-tabview-selected {
+  border-top-color: #ffffff;
+  margin-top: -1px;
+  padding-top: 1px;
+  border-bottom-color: #479cc8;
+}
+
+.rz-tabview-left > .rz-tabview-nav {
+  flex-direction: column;
+}
+
+.rz-tabview-left > .rz-tabview-nav li {
+  border-left-width: 2px;
+  border-right-color: #e6ecef;
+  border-radius: 4px 0 0 4px;
+}
+
+.rz-tabview-left > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+  border-left-color: #479cc8;
+}
+
+.rz-tabview-left > .rz-tabview-nav .rz-tabview-selected {
+  border-right-color: #ffffff;
+  margin-right: -1px;
+  border-left-color: #479cc8;
+}
+
+.rz-tabview-right > .rz-tabview-nav {
+  flex-direction: column;
+}
+
+.rz-tabview-right > .rz-tabview-nav li {
+  border-right-width: 2px;
+  border-left-color: #e6ecef;
+  border-radius: 0 4px 4px 0;
+}
+
+.rz-tabview-right > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+  border-right-color: #479cc8;
+}
+
+.rz-tabview-right > .rz-tabview-nav .rz-tabview-selected {
+  border-left-color: #ffffff;
+  margin-left: -1px;
+  padding-left: 1px;
+  border-right-color: #479cc8;
+}
+
+.rz-tabview-panels {
+  background-color: #ffffff;
+  border: solid 1px #dfe7ec;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  flex: 1;
+  overflow: auto;
+}
+
+.rz-tabview-top > .rz-tabview-panels {
+  border-radius: 0 0 4px 4px;
+}
+
+.rz-tabview-bottom > .rz-tabview-panels {
+  border-radius: 4px 4px 0 0;
+}
+
+.rz-tabview-left > .rz-tabview-panels {
+  border-radius: 0 4px 4px 0;
+}
+
+.rz-tabview-right > .rz-tabview-panels {
+  border-radius: 4px 0 0 4px;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .rz-tabview-panels {
+    flex: auto;
+  }
+}
+
+.rz-tabview-panel {
+  padding: 1.25rem;
+}
+
+.rz-tabview-left-icon {
+  font-size: 1.0625rem;
+  margin: 0;
+}
+
+.rz-tooltip {
+  position: absolute;
+  transition: top 0.2s, left 0.2s;
+  top: 0;
+  left: 0;
+}
+
+.rz-tooltip-content {
+  background: #84d2c8;
+  color: #fff;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
+  padding: 0.25rem 1rem;
+  border-radius: 4px;
+  font-size: initial;
+  white-space: nowrap;
+}
+
+.rz-tooltip .rz-top-tooltip-content {
+  margin-bottom: 15px;
+}
+
+.rz-tooltip .rz-top-tooltip-content:after {
+  content: ' ';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  bottom: 0;
+  background-color: inherit;
+  transform-origin: center;
+  transform: translate(-50%, -11px) rotate(45deg);
+  border-bottom: inherit;
+  border-right: inherit;
+}
+
+.rz-tooltip .rz-bottom-tooltip-content {
+  margin-top: -8px;
+}
+
+.rz-tooltip .rz-bottom-tooltip-content:after {
+  content: ' ';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: 0;
+  background-color: inherit;
+  transform-origin: center;
+  transform: translate(-50%, -11px) rotate(45deg);
+  border-bottom: inherit;
+  border-right: inherit;
+}
+
+.rz-tooltip .rz-left-tooltip-content {
+  margin-right: 8px;
+}
+
+.rz-tooltip .rz-left-tooltip-content:after {
+  content: ' ';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: 20px;
+  right: 0;
+  background-color: inherit;
+  transform-origin: center;
+  transform: translate(-50%, -11px) rotate(45deg);
+  border-bottom: inherit;
+  border-right: inherit;
+}
+
+.rz-tooltip .rz-right-tooltip-content {
+  margin-left: 0px;
+}
+
+.rz-tooltip .rz-right-tooltip-content:after {
+  content: ' ';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: 20px;
+  left: 0;
+  background-color: inherit;
+  transform-origin: center;
+  transform: translate(-50%, -11px) rotate(45deg);
+  border-bottom: inherit;
+  border-right: inherit;
+}
+
+.rz-dialog {
+  position: fixed;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 22px 64px 0 rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
+}
+
+.rz-dialog-titlebar {
+  background-color: rgba(243, 245, 247, 0.56);
+  padding: 0.6875rem 1.25rem;
+  font-size: 1.25rem;
+  line-height: 1.875rem;
+  border-bottom: none;
+}
+
+.rz-dialog-title {
+  font-weight: normal;
+  letter-spacing: normal;
+  color: inherit;
+}
+
+.rz-dialog-titlebar-close {
+  float: right;
+}
+
+.rz-dialog-titlebar-close .rzi-times {
+  font-size: 1.25rem;
+  color: #88989b;
+  vertical-align: middle;
+}
+
+.rz-dialog-titlebar-close .rzi-times:before {
+  content: 'close';
+}
+
+.rz-dialog-titlebar-close:hover .rzi-times {
+  color: #88989b;
+}
+
+.rz-dialog-content {
+  padding: 1.25rem;
+  overflow: auto;
+}
+
+.rz-confirmdialog {
+  top: 50%;
+  left: 50%;
+}
+
+.rz-dialog-mask {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #3a474d;
+  opacity: 0.5;
+}
+
+.rz-dialog-footer {
+  text-align: right;
+  border: 0 none;
+  padding: 1em;
+}
+
+.rz-dialog-footer .rz-button, .rz-dialog-footer .rz-paginator-element {
+  text-align: left !important;
+  padding: 6px;
+}
+
+.rz-dialog-footer .rz-button:first-child, .rz-dialog-footer .rz-paginator-element:first-child {
+  background-color: #ff6d41;
+  width: 80px;
+}
+
+.rz-dialog-footer .rz-button:last-child, .rz-dialog-footer .rz-paginator-element:last-child {
+  background-color: #479cc8;
+  width: 105px;
+}
+
+@media (max-width: 768px) {
+  .rz-dialog:not(.rz-confirmdialog) {
+    width: 100% !important;
+    top: 0px !important;
+  }
+  .rz-dialog-content {
+    -webkit-overflow-scrolling: touch;
+  }
+  .no-scroll {
+    padding-right: 0;
+  }
+}
+
+.no-scroll {
+  overflow: hidden;
+  padding-right: 15px;
+}
+
+.rz-dialog-wrapper {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  z-index: 1001;
+  align-items: center;
+  justify-content: center;
+}
+
+.rz-dialog-wrapper .rz-dialog {
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: static;
+}
+
+.rz-dialog-wrapper .rz-dialog-content {
+  flex: 0 1 auto;
+  overflow: auto;
+}
+
+.rz-growl {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  min-width: 20rem;
+}
+
+.rz-growl-item {
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+}
+
+.rz-growl-message-success .rz-growl-item {
+  background-color: #5dbf74;
+}
+
+.rz-growl-message-warn .rz-growl-item {
+  background-color: #e6c54f;
+}
+
+.rz-growl-message-error .rz-growl-item {
+  background-color: #f9777f;
+}
+
+.rz-growl-message-info .rz-growl-item {
+  background-color: #68d5c8;
+}
+
+.rz-growl-item {
+  margin: 1rem 0;
+  color: #ffffff;
+}
+
+.rz-growl-item p {
+  color: inherit;
+}
+
+.rz-growl-icon-close {
+  float: right;
+}
+
+.rz-growl-icon-close:before {
+  content: "close";
+}
+
+.rz-growl-image {
+  float: left;
+  margin: 0 0.625rem 0 0;
+}
+
+.rz-growl-image.rzi-check:before {
+  content: "check";
+}
+
+.rz-growl-image.rzi-exclamation-triangle:before {
+  content: "warning";
+}
+
+.rz-growl-image.rzi-info-circle:before {
+  content: "info";
+}
+
+.rz-growl-image.rzi-times:before {
+  content: "error";
+}
+
+.rz-growl-title {
+  font-weight: bold;
+}
+
+.rz-growl-message p {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+.rz-form .rz-textbox,
+.rz-form .rz-lookup,
+.rz-form .rz-dropdown,
+.rz-form .rz-multiselect,
+.rz-form .rz-calendar,
+.rz-form .rz-spinner,
+.rz-form .textarea {
+  width: 100%;
+}
+
+.rz-form .rz-messages-error {
+  position: absolute;
+}
+
+.rz-messages-error {
+  display: inline-block;
+  color: #f9777f;
+  font-size: 0.75rem;
+  padding: 0;
+}
+
+.rz-message-popup {
+  position: absolute;
+  background-color: #f9777f;
+  transform: translateY(16px);
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
+  padding: 4px 12px;
+  border-radius: 4px;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+.rz-message-popup:before {
+  content: '';
+  border: 6px solid transparent;
+  border-bottom-color: #f9777f;
+  border-left-color: #f9777f;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(6px, -100%);
+}
+
+.rz-template-form .row {
+  margin: 0;
+}
+
+body:not(.rz-default-scrollbars)::-webkit-scrollbar {
+  background-color: #ffffff;
+}
+
+body:not(.rz-default-scrollbars)::-webkit-scrollbar-thumb {
+  background: #479cc8;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+
+body:not(.rz-default-scrollbars)::-webkit-scrollbar-corner {
+  background-color: #ffffff;
+}
+
+body:not(.rz-default-scrollbars) ::-webkit-scrollbar {
+  background-color: #ffffff;
+}
+
+body:not(.rz-default-scrollbars) ::-webkit-scrollbar-thumb {
+  background: #479cc8;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+
+body:not(.rz-default-scrollbars) ::-webkit-scrollbar-corner {
+  background-color: #ffffff;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.login .register {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 1rem;
+}
+
+.login .register .rz-button, .login .register .rz-paginator-element {
+  margin: 0 1rem;
+}
+
+.login .login-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login .login-buttons a {
+  color: #479cc8;
+  cursor: pointer;
+}
+
+.login .login-buttons a:hover {
+  color: #479cc8;
+  text-decoration: underline;
+}
+
+.rz-lookup-panel {
+  background-color: #ffffff;
+  padding: 1rem;
+}
+
+.rz-lookup-search {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.rz-lookup-search input {
+  flex: auto;
+  margin-right: 1rem;
+}
+
+.rz-lookup-select {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rz-lookup {
+  display: inline-block;
+}
+
+.rz-lookup .rz-dropdown {
+  width: 100%;
+}
+
+.ssrsviewer {
+  display: flex;
+}
+
+.ssrsviewer iframe {
+  flex: auto;
+}
+
+.rz-map {
+  height: 10rem;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.01);
+  border-radius: 4px;
+}
+
+.rz-map-container {
+  height: 100%;
+}
+
+.rz-gauge,
+.rz-arc-gauge {
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  height: 300px;
+}
+
+.rz-gauge .rz-line,
+.rz-gauge .rz-tick {
+  stroke: #808080;
+}
+
+.rz-gauge .rz-tick-text {
+  font-size: 0.875rem;
+  fill: #808080;
+}
+
+.rz-arc-gauge .rz-line,
+.rz-arc-gauge .rz-tick {
+  stroke: #e6ecef;
+}
+
+.rz-arc-gauge .rz-tick-text {
+  font-size: 0.875rem;
+  fill: #808080;
+}
+
+.rz-gauge-value {
+  position: absolute;
+  transform: translateX(-50%);
+  padding: 0.5rem;
+}
+
+.rz-arc-gauge-value {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 0.5rem;
+}
+
+.rz-gauge-pointer {
+  fill: #414141;
+}
+
+.rz-arc-gauge-scale-value {
+  fill: #479cc8;
+}
+
+.rz-arc-gauge-scale {
+  fill: #e6ecef;
+}
+
+.rz-progressbar {
+  border-radius: 4px;
+  height: 1.25rem;
+  position: relative;
+  background-color: #e6ecef;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.rz-progressbar-value {
+  border-radius: 4px;
+  position: absolute;
+  background-color: #479cc8;
+  height: 100%;
+  width: 100%;
+}
+
+.rz-progressbar-label {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1rem;
+}
+
+.rz-progressbar-indeterminate {
+  overflow: hidden;
+}
+
+.rz-progressbar-indeterminate .rz-progressbar-value {
+  background-color: transparent;
+}
+
+.rz-progressbar-indeterminate .rz-progressbar-value:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #479cc8;
+  will-change: left, right;
+  animation: 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite rz-progressbar-indeterminate-anim;
+}
+
+.rz-progressbar-indeterminate .rz-progressbar-value:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #479cc8;
+  will-change: left, right;
+  animation: 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite rz-progressbar-indeterminate-anim-short;
+  animation-delay: 1.15s;
+}
+
+@keyframes rz-progressbar-indeterminate-anim {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  100%,
+60% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes rz-progressbar-indeterminate-anim-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  100%,
+60% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+.chart,
+.pie {
+  height: 200px;
+}
+
+.chart .ngx-charts,
+.pie .ngx-charts {
+  overflow: visible !important;
+}
+
+.chart .ngx-charts .gridline-path,
+.pie .ngx-charts .gridline-path {
+  stroke: rgba(65, 65, 65, 0.2);
+}
+
+.chart .chart-legend .legend-labels,
+.pie .chart-legend .legend-labels {
+  background-color: transparent;
+}
+
+.chart .legend-title,
+.pie .legend-title {
+  display: none;
+}
+
+.chart .tick text,
+.pie .tick text {
+  fill: rgba(65, 65, 65, 0.5);
+  font-size: 0.875rem !important;
+}
+
+.rz-chart {
+  position: relative;
+  height: 300px;
+}
+
+.rz-area-series {
+  fill-opacity: 0.8;
+}
+
+.rz-scheme-palette .rz-series-0 {
+  fill: #003f5c;
+  stroke: #003f5c;
+}
+
+.rz-scheme-palette .rz-series-0-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #003f5c;
+}
+
+.rz-scheme-palette .rz-series-item-0 {
+  fill: #003f5c;
+  stroke: #003f5c;
+}
+
+.rz-scheme-palette .rz-series-item-0 .rz-chart-tooltip-content {
+  border: 1px solid #003f5c;
+}
+
+.rz-scheme-palette .rz-series-1 {
+  fill: #2f4b7c;
+  stroke: #2f4b7c;
+}
+
+.rz-scheme-palette .rz-series-1-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #2f4b7c;
+}
+
+.rz-scheme-palette .rz-series-item-1 {
+  fill: #2f4b7c;
+  stroke: #2f4b7c;
+}
+
+.rz-scheme-palette .rz-series-item-1 .rz-chart-tooltip-content {
+  border: 1px solid #2f4b7c;
+}
+
+.rz-scheme-palette .rz-series-2 {
+  fill: #665191;
+  stroke: #665191;
+}
+
+.rz-scheme-palette .rz-series-2-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #665191;
+}
+
+.rz-scheme-palette .rz-series-item-2 {
+  fill: #665191;
+  stroke: #665191;
+}
+
+.rz-scheme-palette .rz-series-item-2 .rz-chart-tooltip-content {
+  border: 1px solid #665191;
+}
+
+.rz-scheme-palette .rz-series-3 {
+  fill: #a05195;
+  stroke: #a05195;
+}
+
+.rz-scheme-palette .rz-series-3-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #a05195;
+}
+
+.rz-scheme-palette .rz-series-item-3 {
+  fill: #a05195;
+  stroke: #a05195;
+}
+
+.rz-scheme-palette .rz-series-item-3 .rz-chart-tooltip-content {
+  border: 1px solid #a05195;
+}
+
+.rz-scheme-palette .rz-series-4 {
+  fill: #d45087;
+  stroke: #d45087;
+}
+
+.rz-scheme-palette .rz-series-4-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #d45087;
+}
+
+.rz-scheme-palette .rz-series-item-4 {
+  fill: #d45087;
+  stroke: #d45087;
+}
+
+.rz-scheme-palette .rz-series-item-4 .rz-chart-tooltip-content {
+  border: 1px solid #d45087;
+}
+
+.rz-scheme-palette .rz-series-5 {
+  fill: #f95d6a;
+  stroke: #f95d6a;
+}
+
+.rz-scheme-palette .rz-series-5-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #f95d6a;
+}
+
+.rz-scheme-palette .rz-series-item-5 {
+  fill: #f95d6a;
+  stroke: #f95d6a;
+}
+
+.rz-scheme-palette .rz-series-item-5 .rz-chart-tooltip-content {
+  border: 1px solid #f95d6a;
+}
+
+.rz-scheme-palette .rz-series-6 {
+  fill: #ff7c43;
+  stroke: #ff7c43;
+}
+
+.rz-scheme-palette .rz-series-6-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #ff7c43;
+}
+
+.rz-scheme-palette .rz-series-item-6 {
+  fill: #ff7c43;
+  stroke: #ff7c43;
+}
+
+.rz-scheme-palette .rz-series-item-6 .rz-chart-tooltip-content {
+  border: 1px solid #ff7c43;
+}
+
+.rz-scheme-palette .rz-series-7 {
+  fill: #ffa600;
+  stroke: #ffa600;
+}
+
+.rz-scheme-palette .rz-series-7-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #ffa600;
+}
+
+.rz-scheme-palette .rz-series-item-7 {
+  fill: #ffa600;
+  stroke: #ffa600;
+}
+
+.rz-scheme-palette .rz-series-item-7 .rz-chart-tooltip-content {
+  border: 1px solid #ffa600;
+}
+
+.rz-scheme-pastel .rz-series-0 {
+  fill: #0479cc;
+  stroke: #0479cc;
+}
+
+.rz-scheme-pastel .rz-series-0-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #0479cc;
+}
+
+.rz-scheme-pastel .rz-series-item-0 {
+  fill: #0479cc;
+  stroke: #0479cc;
+}
+
+.rz-scheme-pastel .rz-series-item-0 .rz-chart-tooltip-content {
+  border: 1px solid #0479cc;
+}
+
+.rz-scheme-pastel .rz-series-1 {
+  fill: #68d5c8;
+  stroke: #68d5c8;
+}
+
+.rz-scheme-pastel .rz-series-1-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #68d5c8;
+}
+
+.rz-scheme-pastel .rz-series-item-1 {
+  fill: #68d5c8;
+  stroke: #68d5c8;
+}
+
+.rz-scheme-pastel .rz-series-item-1 .rz-chart-tooltip-content {
+  border: 1px solid #68d5c8;
+}
+
+.rz-scheme-pastel .rz-series-2 {
+  fill: #ff6d41;
+  stroke: #ff6d41;
+}
+
+.rz-scheme-pastel .rz-series-2-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #ff6d41;
+}
+
+.rz-scheme-pastel .rz-series-item-2 {
+  fill: #ff6d41;
+  stroke: #ff6d41;
+}
+
+.rz-scheme-pastel .rz-series-item-2 .rz-chart-tooltip-content {
+  border: 1px solid #ff6d41;
+}
+
+.rz-scheme-pastel .rz-series-3 {
+  fill: #cb6992;
+  stroke: #cb6992;
+}
+
+.rz-scheme-pastel .rz-series-3-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #cb6992;
+}
+
+.rz-scheme-pastel .rz-series-item-3 {
+  fill: #cb6992;
+  stroke: #cb6992;
+}
+
+.rz-scheme-pastel .rz-series-item-3 .rz-chart-tooltip-content {
+  border: 1px solid #cb6992;
+}
+
+.rz-scheme-pastel .rz-series-4 {
+  fill: #e6c54f;
+  stroke: #e6c54f;
+}
+
+.rz-scheme-pastel .rz-series-4-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #e6c54f;
+}
+
+.rz-scheme-pastel .rz-series-item-4 {
+  fill: #e6c54f;
+  stroke: #e6c54f;
+}
+
+.rz-scheme-pastel .rz-series-item-4 .rz-chart-tooltip-content {
+  border: 1px solid #e6c54f;
+}
+
+.rz-scheme-pastel .rz-series-5 {
+  fill: #f9777f;
+  stroke: #f9777f;
+}
+
+.rz-scheme-pastel .rz-series-5-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #f9777f;
+}
+
+.rz-scheme-pastel .rz-series-item-5 {
+  fill: #f9777f;
+  stroke: #f9777f;
+}
+
+.rz-scheme-pastel .rz-series-item-5 .rz-chart-tooltip-content {
+  border: 1px solid #f9777f;
+}
+
+.rz-scheme-pastel .rz-series-6 {
+  fill: #5dbf74;
+  stroke: #5dbf74;
+}
+
+.rz-scheme-pastel .rz-series-6-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #5dbf74;
+}
+
+.rz-scheme-pastel .rz-series-item-6 {
+  fill: #5dbf74;
+  stroke: #5dbf74;
+}
+
+.rz-scheme-pastel .rz-series-item-6 .rz-chart-tooltip-content {
+  border: 1px solid #5dbf74;
+}
+
+.rz-scheme-pastel .rz-series-7 {
+  fill: #4db9f2;
+  stroke: #4db9f2;
+}
+
+.rz-scheme-pastel .rz-series-7-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #4db9f2;
+}
+
+.rz-scheme-pastel .rz-series-item-7 {
+  fill: #4db9f2;
+  stroke: #4db9f2;
+}
+
+.rz-scheme-pastel .rz-series-item-7 .rz-chart-tooltip-content {
+  border: 1px solid #4db9f2;
+}
+
+.rz-scheme-monochrome .rz-series-0 {
+  fill: #004c6d;
+  stroke: #004c6d;
+}
+
+.rz-scheme-monochrome .rz-series-0-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #004c6d;
+}
+
+.rz-scheme-monochrome .rz-series-item-0 {
+  fill: #004c6d;
+  stroke: #004c6d;
+}
+
+.rz-scheme-monochrome .rz-series-item-0 .rz-chart-tooltip-content {
+  border: 1px solid #004c6d;
+}
+
+.rz-scheme-monochrome .rz-series-1 {
+  fill: #296080;
+  stroke: #296080;
+}
+
+.rz-scheme-monochrome .rz-series-1-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #296080;
+}
+
+.rz-scheme-monochrome .rz-series-item-1 {
+  fill: #296080;
+  stroke: #296080;
+}
+
+.rz-scheme-monochrome .rz-series-item-1 .rz-chart-tooltip-content {
+  border: 1px solid #296080;
+}
+
+.rz-scheme-monochrome .rz-series-2 {
+  fill: #437594;
+  stroke: #437594;
+}
+
+.rz-scheme-monochrome .rz-series-2-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #437594;
+}
+
+.rz-scheme-monochrome .rz-series-item-2 {
+  fill: #437594;
+  stroke: #437594;
+}
+
+.rz-scheme-monochrome .rz-series-item-2 .rz-chart-tooltip-content {
+  border: 1px solid #437594;
+}
+
+.rz-scheme-monochrome .rz-series-3 {
+  fill: #5d8ba9;
+  stroke: #5d8ba9;
+}
+
+.rz-scheme-monochrome .rz-series-3-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #5d8ba9;
+}
+
+.rz-scheme-monochrome .rz-series-item-3 {
+  fill: #5d8ba9;
+  stroke: #5d8ba9;
+}
+
+.rz-scheme-monochrome .rz-series-item-3 .rz-chart-tooltip-content {
+  border: 1px solid #5d8ba9;
+}
+
+.rz-scheme-monochrome .rz-series-4 {
+  fill: #75a1be;
+  stroke: #75a1be;
+}
+
+.rz-scheme-monochrome .rz-series-4-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #75a1be;
+}
+
+.rz-scheme-monochrome .rz-series-item-4 {
+  fill: #75a1be;
+  stroke: #75a1be;
+}
+
+.rz-scheme-monochrome .rz-series-item-4 .rz-chart-tooltip-content {
+  border: 1px solid #75a1be;
+}
+
+.rz-scheme-monochrome .rz-series-5 {
+  fill: #8eb8d3;
+  stroke: #8eb8d3;
+}
+
+.rz-scheme-monochrome .rz-series-5-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #8eb8d3;
+}
+
+.rz-scheme-monochrome .rz-series-item-5 {
+  fill: #8eb8d3;
+  stroke: #8eb8d3;
+}
+
+.rz-scheme-monochrome .rz-series-item-5 .rz-chart-tooltip-content {
+  border: 1px solid #8eb8d3;
+}
+
+.rz-scheme-monochrome .rz-series-6 {
+  fill: #a7cfe9;
+  stroke: #a7cfe9;
+}
+
+.rz-scheme-monochrome .rz-series-6-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #a7cfe9;
+}
+
+.rz-scheme-monochrome .rz-series-item-6 {
+  fill: #a7cfe9;
+  stroke: #a7cfe9;
+}
+
+.rz-scheme-monochrome .rz-series-item-6 .rz-chart-tooltip-content {
+  border: 1px solid #a7cfe9;
+}
+
+.rz-scheme-monochrome .rz-series-7 {
+  fill: #c1e7ff;
+  stroke: #c1e7ff;
+}
+
+.rz-scheme-monochrome .rz-series-7-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #c1e7ff;
+}
+
+.rz-scheme-monochrome .rz-series-item-7 {
+  fill: #c1e7ff;
+  stroke: #c1e7ff;
+}
+
+.rz-scheme-monochrome .rz-series-item-7 .rz-chart-tooltip-content {
+  border: 1px solid #c1e7ff;
+}
+
+.rz-scheme-divergent .rz-series-0 {
+  fill: #00876c;
+  stroke: #00876c;
+}
+
+.rz-scheme-divergent .rz-series-0-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #00876c;
+}
+
+.rz-scheme-divergent .rz-series-item-0 {
+  fill: #00876c;
+  stroke: #00876c;
+}
+
+.rz-scheme-divergent .rz-series-item-0 .rz-chart-tooltip-content {
+  border: 1px solid #00876c;
+}
+
+.rz-scheme-divergent .rz-series-1 {
+  fill: #57a18b;
+  stroke: #57a18b;
+}
+
+.rz-scheme-divergent .rz-series-1-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #57a18b;
+}
+
+.rz-scheme-divergent .rz-series-item-1 {
+  fill: #57a18b;
+  stroke: #57a18b;
+}
+
+.rz-scheme-divergent .rz-series-item-1 .rz-chart-tooltip-content {
+  border: 1px solid #57a18b;
+}
+
+.rz-scheme-divergent .rz-series-2 {
+  fill: #8cbcac;
+  stroke: #8cbcac;
+}
+
+.rz-scheme-divergent .rz-series-2-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #8cbcac;
+}
+
+.rz-scheme-divergent .rz-series-item-2 {
+  fill: #8cbcac;
+  stroke: #8cbcac;
+}
+
+.rz-scheme-divergent .rz-series-item-2 .rz-chart-tooltip-content {
+  border: 1px solid #8cbcac;
+}
+
+.rz-scheme-divergent .rz-series-3 {
+  fill: #bed6ce;
+  stroke: #bed6ce;
+}
+
+.rz-scheme-divergent .rz-series-3-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #bed6ce;
+}
+
+.rz-scheme-divergent .rz-series-item-3 {
+  fill: #bed6ce;
+  stroke: #bed6ce;
+}
+
+.rz-scheme-divergent .rz-series-item-3 .rz-chart-tooltip-content {
+  border: 1px solid #bed6ce;
+}
+
+.rz-scheme-divergent .rz-series-4 {
+  fill: #f1f1f1;
+  stroke: #f1f1f1;
+}
+
+.rz-scheme-divergent .rz-series-4-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #f1f1f1;
+}
+
+.rz-scheme-divergent .rz-series-item-4 {
+  fill: #f1f1f1;
+  stroke: #f1f1f1;
+}
+
+.rz-scheme-divergent .rz-series-item-4 .rz-chart-tooltip-content {
+  border: 1px solid #f1f1f1;
+}
+
+.rz-scheme-divergent .rz-series-5 {
+  fill: #f1c6c6;
+  stroke: #f1c6c6;
+}
+
+.rz-scheme-divergent .rz-series-5-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #f1c6c6;
+}
+
+.rz-scheme-divergent .rz-series-item-5 {
+  fill: #f1c6c6;
+  stroke: #f1c6c6;
+}
+
+.rz-scheme-divergent .rz-series-item-5 .rz-chart-tooltip-content {
+  border: 1px solid #f1c6c6;
+}
+
+.rz-scheme-divergent .rz-series-6 {
+  fill: #ec9c9d;
+  stroke: #ec9c9d;
+}
+
+.rz-scheme-divergent .rz-series-6-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #ec9c9d;
+}
+
+.rz-scheme-divergent .rz-series-item-6 {
+  fill: #ec9c9d;
+  stroke: #ec9c9d;
+}
+
+.rz-scheme-divergent .rz-series-item-6 .rz-chart-tooltip-content {
+  border: 1px solid #ec9c9d;
+}
+
+.rz-scheme-divergent .rz-series-7 {
+  fill: #e27076;
+  stroke: #e27076;
+}
+
+.rz-scheme-divergent .rz-series-7-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #e27076;
+}
+
+.rz-scheme-divergent .rz-series-item-7 {
+  fill: #e27076;
+  stroke: #e27076;
+}
+
+.rz-scheme-divergent .rz-series-item-7 .rz-chart-tooltip-content {
+  border: 1px solid #e27076;
+}
+
+.rz-scheme-divergent .rz-series-8 {
+  fill: #d43d51;
+  stroke: #d43d51;
+}
+
+.rz-scheme-divergent .rz-series-8-tooltip .rz-chart-tooltip-content {
+  border: 1px solid #d43d51;
+}
+
+.rz-scheme-divergent .rz-series-item-8 {
+  fill: #d43d51;
+  stroke: #d43d51;
+}
+
+.rz-scheme-divergent .rz-series-item-8 .rz-chart-tooltip-content {
+  border: 1px solid #d43d51;
+}
+
+.rz-marker {
+  stroke: #fff;
+}
+
+.rz-area-series .rz-marker {
+  fill-opacity: 1;
+}
+
+.rz-axis {
+  stroke: rgba(65, 65, 65, 0.2);
+  font-size: 0.875em;
+}
+
+.rz-axis .rz-grid-line {
+  stroke: rgba(65, 65, 65, 0.2);
+}
+
+.rz-tick-text {
+  stroke: none;
+  fill: rgba(65, 65, 65, 0.5);
+}
+
+.rz-value-axis .rz-tick-text {
+  text-anchor: end;
+}
+
+.rz-category-axis .rz-tick-text {
+  text-anchor: middle;
+}
+
+.rz-axis .rz-axis-title {
+  stroke: none;
+  text-anchor: middle;
+}
+
+.rz-donut-title {
+  text-anchor: middle;
+}
+
+.rz-donut-content {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rz-legend {
+  position: absolute;
+  display: flex;
+}
+
+.rz-legend-right {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  align-items: center;
+}
+
+.rz-legend-left {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  align-items: center;
+}
+
+.rz-legend-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+}
+
+.rz-legend-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+}
+
+.rz-legend-items {
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
+}
+
+.rz-legend-item {
+  align-items: center;
+  display: flex;
+}
+
+.rz-legend-top .rz-legend-item,
+.rz-legend-bottom .rz-legend-item {
+  display: inline-flex;
+}
+
+.rz-legend-item-text {
+  padding: 4px;
+}
+
+.rz-chart-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  transition: top 0.2s, left 0.2s;
+  top: 0;
+  left: 0;
+}
+
+.rz-chart-tooltip-content {
+  background: rgba(255, 255, 255, 0.95);
+  color: #212529;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
+  padding: 0.25rem 1rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.rz-chart-tooltip:not(.rz-pie-tooltip) .rz-chart-tooltip-content {
+  margin-bottom: 15px;
+}
+
+.rz-chart-tooltip:not(.rz-pie-tooltip) .rz-chart-tooltip-content:after {
+  content: ' ';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 50%;
+  bottom: 0;
+  background-color: inherit;
+  transform-origin: center;
+  transform: translate(-50%, -11px) rotate(45deg);
+  border-bottom: inherit;
+  border-right: inherit;
+}
+
+.rz-link .rz-link-text {
+  vertical-align: middle;
+}
+
+.rz-link .rzi, .rz-link .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-link .rz-menuitem-icon, .rz-link .rz-fileupload-row .rz-button .rzi-close, .rz-fileupload-row .rz-button .rz-link .rzi-close,
+.rz-link .rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload-row .rz-button .rz-link .rzi-times,
+.rz-link .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-link .rz-icon-trash, .rz-link .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-link .rzi-chevron-circle-right, .rz-link .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-link .rzi-chevron-circle-down, .rz-link .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-link .rzi-grid-sort, .rz-link .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-link .rzi-plus, .rz-link .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-link .rzi-circle-o-notch, .rz-link .rz-column-drag, .rz-link .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-link .rzi-close,
+.rz-link .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-link .rzi-times,
+.rz-link .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-link .rz-icon-trash {
+  font-size: inherit;
+  vertical-align: middle;
+}
+
+.rz-state-highlight .link {
+  color: #ffffff;
+}
+
+.rz-html-editor {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  border: 1px solid #dadfe2;
+}
+
+.rz-html-editor-content {
+  flex: 1;
+  overflow: auto;
+  padding: 0.5rem;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.rz-html-editor-toolbar {
+  border-bottom: 1px solid #dadfe2;
+  display: flex;
+  line-height: 1rem;
+  flex-wrap: wrap;
+  background-color: #ffffff;
+}
+
+.rz-html-editor-toolbar .rzi, .rz-html-editor-toolbar .rz-menuitem .rz-menuitem-icon, .rz-menuitem .rz-html-editor-toolbar .rz-menuitem-icon, .rz-html-editor-toolbar .rz-fileupload-row .rz-button .rzi-close, .rz-fileupload-row .rz-button .rz-html-editor-toolbar .rzi-close,
+.rz-html-editor-toolbar .rz-fileupload-row .rz-button .rzi-times,
+.rz-fileupload-row .rz-button .rz-html-editor-toolbar .rzi-times,
+.rz-html-editor-toolbar .rz-fileupload-row .rz-button .rz-icon-trash,
+.rz-fileupload-row .rz-button .rz-html-editor-toolbar .rz-icon-trash, .rz-html-editor-toolbar .rz-datatable .rzi-chevron-circle-right, .rz-datatable .rz-html-editor-toolbar .rzi-chevron-circle-right, .rz-html-editor-toolbar .rz-datatable .rzi-chevron-circle-down, .rz-datatable .rz-html-editor-toolbar .rzi-chevron-circle-down, .rz-html-editor-toolbar .rz-sortable-column .rzi-grid-sort, .rz-sortable-column .rz-html-editor-toolbar .rzi-grid-sort, .rz-html-editor-toolbar .rz-datatable-header .rzi-plus, .rz-datatable-header .rz-html-editor-toolbar .rzi-plus, .rz-html-editor-toolbar .rz-datatable-loading-content .rzi-circle-o-notch, .rz-datatable-loading-content .rz-html-editor-toolbar .rzi-circle-o-notch, .rz-html-editor-toolbar .rz-column-drag, .rz-html-editor-toolbar .rz-fileupload-row .rz-paginator-element .rzi-close, .rz-fileupload-row .rz-paginator-element .rz-html-editor-toolbar .rzi-close,
+.rz-html-editor-toolbar .rz-fileupload-row .rz-paginator-element .rzi-times,
+.rz-fileupload-row .rz-paginator-element .rz-html-editor-toolbar .rzi-times,
+.rz-html-editor-toolbar .rz-fileupload-row .rz-paginator-element .rz-icon-trash,
+.rz-fileupload-row .rz-paginator-element .rz-html-editor-toolbar .rz-icon-trash {
+  font-size: 1rem;
+}
+
+.rz-html-editor-toolbar > * {
+  margin: 0.5rem;
+}
+
+.rz-html-editor-colorpicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0.625rem;
+}
+
+.rz-html-editor-colorpicker .rz-colorpicker-trigger {
+  color: inherit;
+  background-color: #ffffff;
+}
+
+.rz-html-editor-colorpicker .rz-colorpicker-value {
+  display: none;
+}
+
+.rz-html-editor-colorpicker .rz-colorpicker {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  height: auto;
+}
+
+.rz-html-editor-colorpicker .rz-colorpicker:hover {
+  border: none;
+  box-shadow: none;
+}
+
+.rz-html-editor-color {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  background: inherit;
+  color: inherit;
+  appearance: none;
+  padding: 0;
+  position: relative;
+}
+
+.rz-html-editor-color:disabled {
+  color: rgba(58, 58, 58, 0.4);
+}
+
+.rz-html-editor-color-value {
+  position: absolute;
+  bottom: -4px;
+  height: 4px;
+  width: 100%;
+}
+
+.rz-html-editor-button {
+  color: #212529;
+  appearance: none;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0.625rem;
+}
+
+.rz-html-editor-button.rz-selected {
+  background-color: #479cc8;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.rz-html-editor-button:disabled {
+  color: rgba(58, 58, 58, 0.4);
+}
+
+.rz-html-editor-dropdown {
+  display: inline-flex;
+  padding: 0.625rem;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rz-html-editor-dropdown.rz-disabled {
+  color: rgba(58, 58, 58, 0.4);
+  cursor: default;
+}
+
+.rz-html-editor-dropdown-item {
+  cursor: default;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.625rem;
+  white-space: nowrap;
+}
+
+.rz-html-editor-dropdown-item:hover {
+  background-color: #59a6cd;
+  color: #ffffff;
+  border-radius: 0;
+}
+
+.rz-html-editor-dropdown-item.rz-selected {
+  background-color: #479cc8;
+  color: #ffffff;
+}
+
+.rz-html-editor-dropdown-trigger {
+  border: none;
+  appearance: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  background-color: inherit;
+}
+
+.rz-html-editor-dropdown-trigger .rzi:before, .rz-html-editor-dropdown-trigger .rz-menuitem .rz-menuitem-icon:before, .rz-menuitem .rz-html-editor-dropdown-trigger .rz-menuitem-icon:before, .rz-html-editor-dropdown-trigger .rz-fileupload-row .rz-button .rzi-close:before, .rz-fileupload-row .rz-button .rz-html-editor-dropdown-trigger .rzi-close:before,
+.rz-html-editor-dropdown-trigger .rz-fileupload-row .rz-button .rzi-times:before,
+.rz-fileupload-row .rz-button .rz-html-editor-dropdown-trigger .rzi-times:before,
+.rz-html-editor-dropdown-trigger .rz-fileupload-row .rz-button .rz-icon-trash:before,
+.rz-fileupload-row .rz-button .rz-html-editor-dropdown-trigger .rz-icon-trash:before, .rz-html-editor-dropdown-trigger .rz-datatable .rzi-chevron-circle-right:before, .rz-datatable .rz-html-editor-dropdown-trigger .rzi-chevron-circle-right:before, .rz-html-editor-dropdown-trigger .rz-datatable .rzi-chevron-circle-down:before, .rz-datatable .rz-html-editor-dropdown-trigger .rzi-chevron-circle-down:before, .rz-html-editor-dropdown-trigger .rz-sortable-column .rzi-grid-sort:before, .rz-sortable-column .rz-html-editor-dropdown-trigger .rzi-grid-sort:before, .rz-html-editor-dropdown-trigger .rz-datatable-header .rzi-plus:before, .rz-datatable-header .rz-html-editor-dropdown-trigger .rzi-plus:before, .rz-html-editor-dropdown-trigger .rz-datatable-loading-content .rzi-circle-o-notch:before, .rz-datatable-loading-content .rz-html-editor-dropdown-trigger .rzi-circle-o-notch:before, .rz-html-editor-dropdown-trigger .rz-column-drag:before, .rz-html-editor-dropdown-trigger .rz-fileupload-row .rz-paginator-element .rzi-close:before, .rz-fileupload-row .rz-paginator-element .rz-html-editor-dropdown-trigger .rzi-close:before,
+.rz-html-editor-dropdown-trigger .rz-fileupload-row .rz-paginator-element .rzi-times:before,
+.rz-fileupload-row .rz-paginator-element .rz-html-editor-dropdown-trigger .rzi-times:before,
+.rz-html-editor-dropdown-trigger .rz-fileupload-row .rz-paginator-element .rz-icon-trash:before,
+.rz-fileupload-row .rz-paginator-element .rz-html-editor-dropdown-trigger .rz-icon-trash:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-html-editor-dropdown-items {
+  display: none;
+}
+
+.rz-html-editor-dialog-item {
+  margin-bottom: 1rem;
+}
+
+.rz-html-editor-dialog-item label:first-child {
+  display: block;
+}
+
+.rz-html-editor-dialog-buttons {
+  text-align: right;
+}
+
+.rz-html-editor-separator {
+  width: 1px;
+  background-color: #dadfe2;
+}
+
+.rz-colorpicker {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rz-colorpicker.rz-disabled {
+  color: rgba(58, 58, 58, 0.4);
+  cursor: default;
+}
+
+button.rz-colorpicker-trigger {
+  border: none;
+  appearance: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  color: #212529;
+  background-color: inherit;
+  outline: none;
+}
+
+button.rz-colorpicker-trigger .rzi:before, button.rz-colorpicker-trigger .rz-menuitem .rz-menuitem-icon:before, .rz-menuitem button.rz-colorpicker-trigger .rz-menuitem-icon:before, button.rz-colorpicker-trigger .rz-fileupload-row .rz-button .rzi-close:before, .rz-fileupload-row .rz-button button.rz-colorpicker-trigger .rzi-close:before,
+button.rz-colorpicker-trigger .rz-fileupload-row .rz-button .rzi-times:before,
+.rz-fileupload-row .rz-button button.rz-colorpicker-trigger .rzi-times:before,
+button.rz-colorpicker-trigger .rz-fileupload-row .rz-button .rz-icon-trash:before,
+.rz-fileupload-row .rz-button button.rz-colorpicker-trigger .rz-icon-trash:before, button.rz-colorpicker-trigger .rz-datatable .rzi-chevron-circle-right:before, .rz-datatable button.rz-colorpicker-trigger .rzi-chevron-circle-right:before, button.rz-colorpicker-trigger .rz-datatable .rzi-chevron-circle-down:before, .rz-datatable button.rz-colorpicker-trigger .rzi-chevron-circle-down:before, button.rz-colorpicker-trigger .rz-sortable-column .rzi-grid-sort:before, .rz-sortable-column button.rz-colorpicker-trigger .rzi-grid-sort:before, button.rz-colorpicker-trigger .rz-datatable-header .rzi-plus:before, .rz-datatable-header button.rz-colorpicker-trigger .rzi-plus:before, button.rz-colorpicker-trigger .rz-datatable-loading-content .rzi-circle-o-notch:before, .rz-datatable-loading-content button.rz-colorpicker-trigger .rzi-circle-o-notch:before, button.rz-colorpicker-trigger .rz-column-drag:before, button.rz-colorpicker-trigger .rz-fileupload-row .rz-paginator-element .rzi-close:before, .rz-fileupload-row .rz-paginator-element button.rz-colorpicker-trigger .rzi-close:before,
+button.rz-colorpicker-trigger .rz-fileupload-row .rz-paginator-element .rzi-times:before,
+.rz-fileupload-row .rz-paginator-element button.rz-colorpicker-trigger .rzi-times:before,
+button.rz-colorpicker-trigger .rz-fileupload-row .rz-paginator-element .rz-icon-trash:before,
+.rz-fileupload-row .rz-paginator-element button.rz-colorpicker-trigger .rz-icon-trash:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-colorpicker-popup {
+  display: none;
+  position: absolute;
+  border: 1px solid #dadfe2;
+  background-color: #ffffff;
+  box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.06);
+  min-width: 200px;
+  max-width: 280px;
+  padding: 0.625rem;
+  border-radius: 4px;
+}
+
+.rz-colorpicker-value {
+  flex: 1;
+  border-radius: 4px;
+  border: 1px solid #dadfe2;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.rz-saturation-picker {
+  height: 150px;
+  position: relative;
+  touch-action: none;
+  border-radius: 4px;
+}
+
+.rz-saturation-white {
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.rz-saturation-black,
+.rz-saturation-white {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 4px;
+  border-top-left-radius: 3px;
+}
+
+.rz-saturation-black {
+  background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+}
+
+.rz-saturation-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: white 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 0px 1px 1px inset, rgba(0, 0, 0, 0.4) 0px 0px 1px 2px;
+}
+
+.rz-hue-picker {
+  margin-bottom: 8px;
+  touch-action: none;
+  position: relative;
+  background-image: linear-gradient(to right, red 0%, yellow 17%, lime 33%, cyan 50%, blue 67%, magenta 83%, red 100%);
+  border-radius: 4px;
+  height: 12px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.rz-alpha-picker {
+  touch-action: none;
+  position: relative;
+  border-radius: 4px;
+  height: 12px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.rz-hue-handle,
+.rz-alpha-handle {
+  position: absolute;
+  height: 100%;
+  width: 8px;
+  border: 1px solid #fff;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: white 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 0px 1px 1px inset, rgba(0, 0, 0, 0.4) 0px 0px 1px 2px;
+}
+
+.rz-colorpicker-preview-area {
+  display: flex;
+}
+
+.rz-hue-and-alpha {
+  flex: 1;
+  padding-right: 8px;
+}
+
+.rz-alpha-picker:before,
+.rz-colorpicker-preview:before {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 4px;
+  background-image: linear-gradient(45deg, #cccccc 25%, transparent 25%), linear-gradient(-45deg, #cccccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cccccc 75%), linear-gradient(-45deg, transparent 75%, #cccccc 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+
+.rz-colorpicker-preview {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.25) 0px 0px 4px inset;
+  border-radius: 4px;
+}
+
+.rz-colorpicker-rgba {
+  display: flex;
+}
+
+.rz-color-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  color: rgba(58, 58, 58, 0.4);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.rz-color-box:not(:last-child) {
+  margin-right: 4px;
+}
+
+.rz-color-box .rz-textbox {
+  width: 80px;
+  margin-right: 4px;
+  padding: 0 3px;
+  height: 30px;
+}
+
+.rz-color-box .rz-spinner {
+  padding: 1px 3px;
+  height: 30px;
+}
+
+.rz-color-box .rz-spinner .rz-spinner-input {
+  padding: 0;
+  outline: none;
+}
+
+.rz-color-box .rz-spinner button {
+  display: none;
+}
+
+.rz-color-box .rz-spinner button:hover {
+  display: initial;
+}
+
+.rz-colorpicker-button {
+  justify-content: flex-end;
+  display: flex;
+}
+
+.rz-colorpicker-section:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.rz-colorpicker-colors {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -4px;
+  margin-right: -4px;
+}
+
+.rz-colorpicker-item {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin: 4px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.25) 0px 0px 4px inset;
+  cursor: pointer;
+}
+
+.rz-splitter {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 100%;
+}
+
+.rz-splitter > .rz-splitter-bar {
+  flex: 0 0 auto;
+  position: relative;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6A6A6A;
+  background-color: #E6ECEF;
+  opacity: 0.4;
+  user-select: none;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-collapse {
+  display: table;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-collapse:before {
+  font-family: 'Material Icons';
+  line-height: normal;
+  display: table-cell;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-collapse:hover {
+  cursor: pointer;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-resize {
+  border: 1px solid #6A6A6A;
+  border-radius: 1px;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-expand {
+  display: table;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-expand:before {
+  font-family: 'Material Icons';
+  line-height: normal;
+  display: table-cell;
+}
+
+.rz-splitter > .rz-splitter-bar > .rz-expand:hover {
+  cursor: pointer;
+}
+
+.rz-splitter > .rz-splitter-bar-resizable:hover {
+  background-color: #E6ECEF;
+  opacity: 1;
+}
+
+.rz-splitter > .rz-splitter-bar-resizable:active {
+  background-color: #479CC8;
+  opacity: 1;
+}
+
+.rz-splitter > .rz-splitter-bar-resizable:active > .rz-expand, .rz-splitter > .rz-splitter-bar-resizable:active > .rz-resize, .rz-splitter > .rz-splitter-bar-resizable:active > .rz-collapse {
+  color: #fff;
+}
+
+.rz-splitter > .rz-splitter-bar-resizable:active > .rz-resize {
+  border: 1px solid #fff;
+}
+
+.rz-splitter > .rz-splitter-bar-resizable:disabled {
+  opacity: 0.2;
+}
+
+.rz-splitter-horizontal {
+  flex-direction: row;
+}
+
+.rz-splitter-horizontal > .rz-splitter-bar {
+  flex-direction: column;
+  width: 8px;
+}
+
+.rz-splitter-horizontal > .rz-splitter-bar > .rz-collapse:before {
+  content: 'arrow_left';
+}
+
+.rz-splitter-horizontal > .rz-splitter-bar > .rz-resize {
+  height: 16px;
+  margin: 2px 0;
+}
+
+.rz-splitter-horizontal > .rz-splitter-bar > .rz-expand:before {
+  content: 'arrow_right';
+}
+
+.rz-splitter-horizontal > .rz-splitter-bar-resizable:hover {
+  cursor: col-resize;
+}
+
+.rz-splitter-vertical {
+  flex-direction: column;
+}
+
+.rz-splitter-vertical > .rz-splitter-bar {
+  flex-direction: row;
+  height: 8px;
+}
+
+.rz-splitter-vertical > .rz-splitter-bar > .rz-collapse:before {
+  content: 'arrow_drop_up';
+}
+
+.rz-splitter-vertical > .rz-splitter-bar > .rz-resize {
+  width: 16px;
+  margin: 0 2px;
+}
+
+.rz-splitter-vertical > .rz-splitter-bar > .rz-expand:before {
+  content: 'arrow_drop_down';
+}
+
+.rz-splitter-vertical > .rz-splitter-bar-resizable:hover {
+  cursor: row-resize;
+}
+
+.rz-splitter-pane {
+  overflow: hidden;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.rz-splitter-pane-collapsed {
+  flex: 0 1 0% !important;
+  overflow: hidden !important;
+  display: block !important;
+}
+
+.rz-splitter-pane-lastresizable {
+  flex: 1 1 auto;
+}
+
+.rz-layout {
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "rz-header rz-header" "rz-sidebar rz-body" "rz-footer rz-footer";
+}
+
+.rz-layout .rz-body {
+  grid-area: rz-body;
+  overflow: auto;
+}
+
+.rz-layout .rz-sidebar {
+  grid-area: rz-sidebar;
+  position: static;
+}
+
+.rz-layout .rz-header {
+  grid-area: rz-header;
+  z-index: 2;
+}
+
+.rz-layout .rz-footer {
+  grid-area: rz-footer;
+}
