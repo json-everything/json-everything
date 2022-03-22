@@ -16,7 +16,6 @@ on:
       - JsonSchema.Generation/**
       - JsonSchema.DataGeneration/**
       - json-everything.net/**
-      - TryJsonEverything/**
   workflow_dispatch:
 
 jobs:
@@ -25,13 +24,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: deploy to heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+      - name: restore submodules
+        run: git submodule update --init
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "json-everything" #Must be unique in Heroku
-          heroku_email: ${{secrets.HEROKU_USERNAME}}
-          usedocker: true
-        
-
-
+          dotnet-version: 6.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
+      - name: Publish
+        run: rm -rf docs && cp bin/wwwroot docs
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add --all
+          git commit -m "rebuilt documentation"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
