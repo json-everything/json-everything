@@ -37,7 +37,7 @@ jobs:
       - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
         run: sed -i 's/<base href="\/" \/>/<base href="\/json-everything\/" \/>/g' bin/wwwroot/index.html
       - name: Add .nojekyll file
-        run: touch release/wwwroot/.nojekyll
+        run: touch bin/wwwroot/.nojekyll
       - name: Publish
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
