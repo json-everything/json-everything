@@ -38,6 +38,8 @@ jobs:
         run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
       - name: Add .nojekyll file
         run: touch bin/wwwroot/.nojekyll
+      - name: Copy index.html files
+        run: cp bin/wwwroot/index.html bin/wwwroot/json-schema/index.html
       - name: Publish
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
