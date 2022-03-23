@@ -39,7 +39,12 @@ jobs:
       - name: Add .nojekyll file
         run: touch bin/wwwroot/.nojekyll
       - name: Copy index.html files
-        run: mkdir bin/wwwroot/json-schema/ && cp bin/wwwroot/index.html bin/wwwroot/json-schema/
+        run: |
+          mkdir bin/wwwroot/json-schema/ && cp bin/wwwroot/index.html bin/wwwroot/json-schema/
+          mkdir bin/wwwroot/json-path/ && cp bin/wwwroot/index.html bin/wwwroot/json-path/
+          mkdir bin/wwwroot/json-patch/ && cp bin/wwwroot/index.html bin/wwwroot/json-patch/
+          mkdir bin/wwwroot/json-pointer/ && cp bin/wwwroot/index.html bin/wwwroot/json-pointer/
+          mkdir bin/wwwroot/json-logic/ && cp bin/wwwroot/index.html bin/wwwroot/json-logic/
       - name: Publish
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
