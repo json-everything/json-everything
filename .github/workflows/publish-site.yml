@@ -34,22 +34,13 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
-      # - name: Publish
-      #   run: rm -rf docs && cp -a bin/wwwroot/. docs/
+      - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
+        run: sed -i 's/<base href="\/" \/>/<base href="\/json-everything\/" \/>/g' bin/wwwroot/index.html
+      - name: Add .nojekyll file
+        run: touch release/wwwroot/.nojekyll
       - name: Publish
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: bin/wwwroot
-      # - name: Commit changes
-      #   run: |
-      #     git config --local user.email "action@github.com"
-      #     git config --local user.name "GitHub Action"
-      #     git add --all
-      #     git commit -m "rebuilt documentation"
-      # - name: Push changes
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: ${{ github.ref }}
