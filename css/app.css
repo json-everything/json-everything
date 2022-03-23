@@ -79,10 +79,6 @@ a.navbar-brand {
     transition-timing-function: cubic-bezier(.65, .1, .43, .89);
 }
 
-  .highlight:hover {
-	  background-color: #8b69c3;
-  }
-
 /*--- BUTTON ---*/
 
 .btn-primary {
