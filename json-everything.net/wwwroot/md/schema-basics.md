@@ -1,3 +1,159 @@
+# Overview
+
+The occasion may arise when you wish to validate that a JSON object is in the correct form (has the appropriate keys and the right types of values).  Enter JSON Schema.  Much like XML Schema with XML, JSON Schema defines a pattern for JSON data.  A JSON Schema validator can verify that a given JSON object meets the requirements as defined by the JSON Schema.  This validation can come in handy as a precursor step before deserializing.
+
+More information about JSON Schema can be found at [json-schema.org](http://json-schema.org).
+
+To support JSON Schema, JsonSchema<nsp>.Net exposes the `JsonSchema` type.  This type is implemented as a list of keywords, each of which correspond to one of the keywords defined in the JSON Schema specifications.
+
+## Drafts
+
+There are currently six active drafts of the JSON Schema specification:
+
+- Draft 3
+- Draft 4
+- Draft 6
+- Draft 7
+- Draft 2019-09
+- Draft 2020-12
+
+JsonSchema<nsp>.Net supports draft 6 and later.
+
+### Meta-schemas
+
+Each draft defines a meta-schema.  This is a special JSON Schema that describes all of the keywords available for that draft.  They are intended to be used to validate other schemas.  Usually, a schema will declare the draft it should adhere to using the `$schema` keyword.
+
+JsonSchema<nsp>.Net declares the meta-schemas for the supported drafts as members of the `MetaSchemas` static class.
+
+Draft 2019-09 introduced vocabularies.  As part of this new feature, the meta-schemas for this draft and those which follow it have been split into vocabulary-specific meta-schemas.  Additionally, the specification recognizes that the meta-schemas aren't perfect and may need to be updated occasionally.  To this end, the meta-schemas are versioned with the year and month they are published.  The schemas within this library are named accordingly.
+
+## Keywords
+
+JSON Schema is expressed as a collection of keywords, each of which provides a specific constraint on a JSON instance.  For example, the `type` keyword specifies what type of data an instance may be, whereas the `minimum` keyword specifies a minimum numeric value *for numeric data*.  These keywords can be combined to express the expected shape of any JSON instance.  Once defined, the schema validates the instance, providing feedback on errors that occurred, including what and where the error occurred.
+
+# Building a schema
+
+There are two options when building a schema: defining it inline using the fluent builder and defining it externally and deserializing.  Which method you use depends on your specific requirements.
+
+## Deserialization
+
+JsonSchema<nsp>.Net schemas are fully serializable.
+
+```c#
+var mySchema = JsonSchema.FromText(content);
+```
+
+which just does
+
+```c#
+var mySchema = JsonSerializer.Deserialize<JsonSchema>(content);
+```
+
+Done.
+
+## Inline
+
+There are many reasons why you would want to hard-code your schemas.  This library actually hard-codes all of the meta-schemas.  Whatever your reason, the `JsonSchemaBuilder` class is going to be your friend.
+
+The builder class itself is pretty simple.  It just has an `.Add()` method which takes an instance of `IJsonSchemaKeyword`.  The real power comes from the multitudes of extension methods.  There's at least one for every keyword, and they all take the appropriate types for the data that the keyword expects.
+
+Once you've added all of your properties, just call the `.Build()` method to get your schema object.
+
+```c#
+var builder = new JsonSchemaBuilder()
+    // builder methods
+    ;
+var schema = builder.Build();
+```
+
+Let's take a look at some of the builder extension methods.
+
+### Easy Mode
+
+Some of the more straightforward builder methods are for like the `title` and `$comment` keywords, which just take a string:
+
+```c#
+builder.Comment("a comment")
+    .Title("A title for my schema");
+```
+
+Notice that these methods implement a fluent interface so that you can chain them together.
+
+### A Little Spice
+
+Other extension methods can take multiple values.  These have been overloaded to accept both `IEnumerable<T>` and `params` arrays just to keep things flexible.
+
+```c#
+var required = new List<string>{"prop1", "prop2"};
+builder.Required(required);
+```
+
+or just
+
+```c#
+builder.Required("prop1", "prop2");
+```
+
+### Now You're Cooking With Fire
+
+Lastly, we have the extension methods which take advantage of C# 7 tuples.  These include keywords like `$defs` and `properties` which take objects in their JSON form.
+
+```c#
+builder.Properties(
+        ("prop1", new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(8)
+        ),
+        ("prop2", new JsonSchemaBuilder()
+            .Type(SchemaValueType.Number)
+            .MultipleOf(42)
+        )
+    );
+```
+
+Did you notice how the `JsonSchemaBuilder` is just included directly without the `.Build()` method?  These methods actually require `JsonSchema` objects.  This leads us into the next part.
+
+### Conversions
+
+`JsonSchemaBuilder` defines an implicit cast to `JsonSchema` which calls the `.Build()` method.
+
+To help things further, `JsonSchema` also defines implicit conversions from `bool`.  This allows you to simply use `true` and `false` to create their respective schemas.
+
+```c#
+builder.Properties(
+        ("prop1", new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(8)
+        ),
+        ("prop2", new JsonSchemaBuilder()
+            .Type(SchemaValueType.Number)
+            .MultipleOf(42)
+        ),
+        ("prop3", true)
+    );
+```
+
+This cast can be used anywhere a `JsonSchema` is needed, such as in the `additionalProperties` or `items` keywords.
+
+```c#
+builder.Properties(
+        ("prop1", new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(8)
+        ),
+        ("prop2", new JsonSchemaBuilder()
+            .Type(SchemaValueType.Number)
+            .MultipleOf(42)
+        ),
+        ("prop3", true),
+        ("prop4", new JsonSchemaBuilder()
+            .Type(SchemaValueType.Array)
+            .Items(true)
+        )
+    )
+    .AdditionalProperties(false);
+```
+
 # Validation & annotations
 
 ## Validating instances
@@ -246,3 +402,55 @@ The `ValidationOptions` class gives you a few configuration points for customizi
 - `ValidateAs` - Indicates which schema draft to process as.  This will filter the keywords of a schema based on their support.  This means that if any keyword is not supported by this draft, it will be ignored.
 - `ValidateMetaSchema` - Indicates whether the schema should be validated against its `$schema` value (its meta-schema).  This is not typically necessary.
 - `OutputFormat` - You already read about output formats above.  This is the property that controls it all.  By default, a single "flag" node is returned.  This also yields the fastest validation times it enables certain optimizations.
+
+# Managing references (`$ref`)
+
+JsonSchema<nsp>.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
+
+## Schema registration
+
+In order to resolve references more quickly, JsonSchema<nsp>.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
+
+A `JsonSchema` instance will automatically register itself upon calling `Validate()`.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to validation.
+
+For example, given these two schemas
+
+```json
+{
+  "$id": "http://localhost/my-schema",
+  "$type": "object",
+  "properties": {
+    "refProp": { "$ref": "http://localhost/random-string" }
+  }
+}
+
+{
+  "$id": "http://localhost/random-string",
+  "type": "string"
+}
+```
+
+> Here's the schema build inline:
+> 
+> ```c#
+> var schema = new JsonSchemaBuilder()
+>     .Id("http://localhost/my-schema")
+>     .Type(SchemaValueType.Object)
+>     .Properties(("refProp", new JsonSchemaBuilder().Ref("http://localhost/random-string")))
+>     .Build();
+> ```
+
+You must register `random-string` before you attempt to validate with `my-schema`.
+
+```c#
+var randomString = JsonSchema.FromFile("random-string.json");
+SchemaRegistry.Global.Register("http://localhost/random-string", randomString);
+```
+
+Now JsonSchema<nsp>.Net will be able to resolve the reference.
+
+## Automatic resolution
+
+In order to support scenarios where schemas cannot be registered ahead of time, the `SchemaRegistry` class exposes the `Fetch` property which is defined as `Func<Uri, JsonSchema>`.  This property can be set to a method which downloads the content from the supplied URI and deserializes it into a `JsonSchema` object.
+
+The URI that is passed may need to be transformed, based on the schemas you're dealing with.  For instance if you're loading schemas from a local filesystem, and the schema `$ref`s use relative paths, you may need to prepend the working folder to the URI in order to locate it.
