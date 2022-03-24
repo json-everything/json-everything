@@ -13,7 +13,7 @@ An operation must be one of
 - `move`
 - `test`
 
-The arguments vary among them, though all must contain at least an `op` and a `path`.  ("Path" as used here is colloqiual.  It's actually a [JSON Pointer](json-pointer.md), not [JSON Path](json-path.md).)
+The arguments vary among them, though all must contain at least an `op` and a `path`.  ("Path" as used here is colloqiual.  It's actually a JSON Pointer, not JSON Path.)
 
 - `op` specifies the operation and must be one of the values above.
 - `path` specifies the location within the JSON document which will receive changes.
