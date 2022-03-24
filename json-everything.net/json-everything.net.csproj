@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\md\" />
+    <Folder Include="wwwroot\md\release-notes\" />
   </ItemGroup>
 
 </Project>
