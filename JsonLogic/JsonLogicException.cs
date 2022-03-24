@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace Json.Logic
+namespace Json.Logic;
+
+/// <summary>
+/// Thrown when a rule cannot be processed or deserialized.
+/// </summary>
+public class JsonLogicException : Exception
 {
 	/// <summary>
-	/// Thrown when a rule cannot be processed or deserialized.
+	/// Creates a new instance of the <see cref="JsonLogicException"/> class.
 	/// </summary>
-	public class JsonLogicException : Exception
+	/// <param name="message">The exception message.</param>
+	public JsonLogicException(string message)
+		: base(message)
 	{
-		/// <summary>
-		/// Creates a new instance of the <see cref="JsonLogicException"/> class.
-		/// </summary>
-		/// <param name="message">The exception message.</param>
-		public JsonLogicException(string message)
-			: base(message)
-		{
-		}
 	}
 }

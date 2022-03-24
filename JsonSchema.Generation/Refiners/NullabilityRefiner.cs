@@ -2,44 +2,43 @@
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation.Refiners
+namespace Json.Schema.Generation.Refiners;
+
+internal class NullabilityRefiner : ISchemaRefiner
 {
-	internal class NullabilityRefiner : ISchemaRefiner
+	public static NullabilityRefiner Instance { get; } = new();
+
+	private NullabilityRefiner(){}
+
+	public bool ShouldRun(SchemaGeneratorContext context)
 	{
-		public static NullabilityRefiner Instance { get; } = new NullabilityRefiner();
+		return context.Intents.OfType<TypeIntent>().Any();
+	}
 
-		private NullabilityRefiner(){}
+	public void Run(SchemaGeneratorContext context)
+	{
+		var typeIntent = context.Intents.OfType<TypeIntent>().FirstOrDefault();
+		if (typeIntent == null) return; // shouldn't happen because of ShouldRun(), but including just in case.
 
-		public bool ShouldRun(SchemaGeneratorContext context)
+		var nullableAttribute = context.Attributes.OfType<NullableAttribute>().FirstOrDefault();
+		var nullabilityOverride = nullableAttribute?.IsNullable;
+
+		if (nullabilityOverride.HasValue)
 		{
-			return context.Intents.OfType<TypeIntent>().Any();
+			if (nullabilityOverride.Value)
+				typeIntent.Type |= SchemaValueType.Null;
+			else
+				typeIntent.Type &= ~SchemaValueType.Null;
+			return;
 		}
 
-		public void Run(SchemaGeneratorContext context)
-		{
-			var typeIntent = context.Intents.OfType<TypeIntent>().FirstOrDefault();
-			if (typeIntent == null) return; // shouldn't happen because of ShouldRun(), but including just in case.
+		if (context.Configuration.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
+		    context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+			typeIntent.Type |= SchemaValueType.Null;
 
-			var nullableAttribute = context.Attributes.OfType<NullableAttribute>().FirstOrDefault();
-			var nullabilityOverride = nullableAttribute?.IsNullable;
-
-			if (nullabilityOverride.HasValue)
-			{
-				if (nullabilityOverride.Value)
-					typeIntent.Type |= SchemaValueType.Null;
-				else
-					typeIntent.Type &= ~SchemaValueType.Null;
-				return;
-			}
-
-			if (context.Configuration.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
-			    context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-				typeIntent.Type |= SchemaValueType.Null;
-
-			if (context.Configuration.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
-				// see https://stackoverflow.com/a/16578846/878701
-				!context.Type.IsValueType)
-				typeIntent.Type |= SchemaValueType.Null;
-		}
+		if (context.Configuration.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
+		    // see https://stackoverflow.com/a/16578846/878701
+		    !context.Type.IsValueType)
+			typeIntent.Type |= SchemaValueType.Null;
 	}
 }

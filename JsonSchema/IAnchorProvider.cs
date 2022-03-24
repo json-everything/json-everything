@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Json.Schema
+namespace Json.Schema;
+
+internal interface IAnchorProvider
 {
-	internal interface IAnchorProvider
-	{
-		void RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema);
-	}
+	void RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema);
 }

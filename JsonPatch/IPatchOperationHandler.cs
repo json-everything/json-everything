@@ -1,7 +1,6 @@
-﻿namespace Json.Patch
+﻿namespace Json.Patch;
+
+internal interface IPatchOperationHandler
 {
-	internal interface IPatchOperationHandler
-	{
-		void Process(PatchContext context, PatchOperation operation);
-	}
+	void Process(PatchContext context, PatchOperation operation);
 }

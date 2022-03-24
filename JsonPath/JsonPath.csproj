@@ -1,50 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>Json.Path</RootNamespace>
-    <AssemblyName>JsonPath.Net</AssemblyName>
-    <Authors>Greg Dennis</Authors>
-    <Company>Greg Dennis</Company>
-    <Description>JSON Path built on the System.Text.Json namespace.</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageTags>json-path jsonpath query json</PackageTags>
-    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
-    <Version>0.1.14</Version>
-    <FileVersion>0.1.14.0</FileVersion>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DocumentationFile>JsonPath.Net.xml</DocumentationFile>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	  <SignAssembly>true</SignAssembly>
-	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>Json.Path</RootNamespace>
+		<AssemblyName>JsonPath.Net</AssemblyName>
+		<Authors>Greg Dennis</Authors>
+		<Company>Greg Dennis</Company>
+		<Description>JSON Path built on the System.Text.Json namespace.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+		<PackageIcon>json-logo-256.png</PackageIcon>
+		<PackageTags>json-path jsonpath query json</PackageTags>
+		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
+		<Version>0.1.14</Version>
+		<FileVersion>0.1.14.0</FileVersion>
+		<AssemblyVersion>0.1.0.0</AssemblyVersion>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
-   </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\docs_source\release-notes\json-path.md" Link="json-path.md" />
-    <None Include="..\LICENSE" Link="LICENSE">
-      <PackagePath></PackagePath>
-      <Pack>True</Pack>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\docs_source\release-notes\json-path.md" Link="json-path.md" />
+		<None Include="..\LICENSE" Link="LICENSE">
+			<PackagePath></PackagePath>
+			<Pack>True</Pack>
+		</None>
+		<None Include="..\Resources\json-logo-256.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+	</ItemGroup>
 
 </Project>

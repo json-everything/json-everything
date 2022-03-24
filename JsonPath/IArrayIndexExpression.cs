@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Json.Path
+namespace Json.Path;
+
+internal interface IArrayIndexExpression : IIndexExpression
 {
-	internal interface IArrayIndexExpression : IIndexExpression
-	{
-		IEnumerable<int> GetIndices(JsonElement array);
-	}
+	IEnumerable<int> GetIndices(JsonElement array);
 }

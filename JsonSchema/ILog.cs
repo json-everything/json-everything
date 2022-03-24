@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Json.Schema
+namespace Json.Schema;
+
+/// <summary>
+/// Used to log processing details.
+/// </summary>
+public interface ILog
 {
 	/// <summary>
-	/// Used to log processing details.
+	/// Logs a message with a newline.
 	/// </summary>
-	public interface ILog
-	{
-		/// <summary>
-		/// Logs a message with a newline.
-		/// </summary>
-		/// <param name="message">The message.</param>
-		/// <param name="indent"></param>
-		void Write(Func<string> message, int indent = 0);
-	}
+	/// <param name="message">The message.</param>
+	/// <param name="indent"></param>
+	void Write(Func<string> message, int indent = 0);
 }

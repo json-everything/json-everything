@@ -2,36 +2,35 @@
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation
+namespace Json.Schema.Generation;
+
+/// <summary>
+/// Applies a `minimum` keyword.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class MinimumAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>
-	/// Applies a `minimum` keyword.
+	/// The minimum.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property)]
-	public class MinimumAttribute : Attribute, IAttributeHandler
+	public decimal Value { get; }
+
+	/// <summary>
+	/// Creates a new <see cref="MinimumAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public MinimumAttribute(double value)
 	{
-		/// <summary>
-		/// The minimum.
-		/// </summary>
-		public decimal Value { get; }
+		Value = Convert.ToDecimal(value);
+	}
 
-		/// <summary>
-		/// Creates a new <see cref="MinimumAttribute"/> instance.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		public MinimumAttribute(double value)
-		{
-			Value = Convert.ToDecimal(value);
-		}
+	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	{
+		var attribute = context.Attributes.OfType<MinimumAttribute>().FirstOrDefault();
+		if (attribute == null) return;
 
-		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
-		{
-			var attribute = context.Attributes.OfType<MinimumAttribute>().FirstOrDefault();
-			if (attribute == null) return;
+		if (!context.Type.IsNumber()) return;
 
-			if (!context.Type.IsNumber()) return;
-
-			context.Intents.Add(new MinimumIntent(attribute.Value));
-		}
+		context.Intents.Add(new MinimumIntent(attribute.Value));
 	}
 }

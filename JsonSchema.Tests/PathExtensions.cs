@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace Json.Schema.Tests
+namespace Json.Schema.Tests;
+
+public static class PathExtensions
 {
-	public static class PathExtensions
+	public static string AdjustForPlatform(this string path)
 	{
-		public static string AdjustForPlatform(this string path)
-		{
-			return Environment.OSVersion.Platform == PlatformID.MacOSX ||
-			       Environment.OSVersion.Platform == PlatformID.Unix
-				? path.Replace("\\", "/")
-				: path.Replace("/", "\\");
-		}
+		return Environment.OSVersion.Platform == PlatformID.MacOSX ||
+		       Environment.OSVersion.Platform == PlatformID.Unix
+			? path.Replace("\\", "/")
+			: path.Replace("/", "\\");
 	}
 }

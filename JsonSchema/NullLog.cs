@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Json.Schema
+namespace Json.Schema;
+
+internal class NullLog : ILog
 {
-	internal class NullLog : ILog
-	{
-		public static NullLog Instance { get; } = new NullLog();
+	public static NullLog Instance { get; } = new();
 
-		private NullLog(){ }
+	private NullLog(){ }
 
-		public void Write(Func<string> log, int indent) { }
-	}
+	public void Write(Func<string> log, int indent) { }
 }
