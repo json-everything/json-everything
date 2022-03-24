@@ -1,6 +1,6 @@
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/239)
 
-[#238](https://github.com/gregsdennis/json-everything/pull/238) - [WeihanLi](https://github.com/WeihanLi) added extenion methods to create schemas directly from `JsonDocument` and strings (i.e. `.FromText()`).
+[#238](https://github.com/gregsdennis/json-everything/pull/238) - [WeihanLi](https://github.com/WeihanLi) added extenion methods to create schemas directly from `JsonDocument` and strings that contain JSON data.
 
 # [2.1.2](https://github.com/gregsdennis/json-everything/pull/230)
 
