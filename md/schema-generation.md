@@ -1,6 +1,6 @@
 # Generating JSON Schema from .Net Types
 
-JsonSchema.Net.Generation is an extension package to [JsonSchema.Net](https://www.nuget.org/packages/JsonSchema.Net/) that provides JSON Schema generation from .Net types.
+JsonSchema.Net.Generation is an extension package to JsonSchema.Net that provides JSON Schema generation from .Net types.
 
 Using it is quite simple.  First you need a `JsonSchemaBuilder`.  Then...
 
@@ -171,7 +171,7 @@ These do not _all_ need to be implemented.
 
 ### Generators
 
-These are the first phase of generation.  When encountering a type, the system will find the first registered generator that can handle that type.  The generator then creates keyword intents (see [Intents](#intents) below).  The supported types list above is merely a list of the built-in generators.
+These are the first phase of generation.  When encountering a type, the system will find the first registered generator that can handle that type.  The generator then creates keyword intents (see "Intents" below).  The supported types list above is merely a list of the built-in generators.
 
 To create a new generator, you'll need to implement the `ISchemaGenerator` interface and register it using the `GeneratorRegistry.Register()` static method.  This will insert your generator at the top of the list so that it has priority.
 
