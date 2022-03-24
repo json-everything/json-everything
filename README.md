@@ -26,7 +26,7 @@ Currently supported:
 - [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - [JSON Schema (drafts 6 and higher)](https://json-schema.org)
   - Generation of schemas from .Net types supported in an additional library
-  - Random instance data generation
+  - Random instance data generation (powered by [Bogus](https://github.com/bchavez/Bogus))
   - A vocabulary for accessing instance and external data
   - A vocabulary for validating item uniqueness based on specific item values
 - [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)
