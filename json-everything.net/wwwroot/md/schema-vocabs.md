@@ -94,7 +94,7 @@ To tell JsonSchema<nsp>.Net about a vocabulary, you need to create a `Vocabulary
 
 The `Vocabulary` class is quite simple.  It defines the vocabulary's ID and lists the keywords which it supports.
 
-The keywords must be [registered separately](schema-keywords.md).
+The keywords must be registered separately (see "Defining Custom Keywords" below).
 
 It's not always necessary to have a meta-schema for your vocabulary.  However, if you want to enable `ValidationOptions.ValidateMetaschema`, you will need to register it.
 
@@ -110,7 +110,7 @@ It's not always necessary to have a meta-schema for your vocabulary.  However, i
 
 And your new keyword is ready to use.
 
-Lastly, remember that the best resource building keywords is [the code](https://github.com/gregsdennis/json-everything/tree/master/JsonSchema).
+Lastly, remember that the best resource building keywords is [the code](https://github.com/gregsdennis/json-everything/tree/master/JsonSchema) where all of the built-in keywords are defined.
 
 ## 1. Implement `IJsonSchemaKeyword`
 

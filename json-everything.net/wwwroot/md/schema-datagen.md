@@ -102,7 +102,7 @@ To combat this, there are some built-in limitations:
 
 # Generating Data
 
-All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the [Building a Schema](./schema-building.md) page.
+All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the "Overview" tab.
 
 Once you have your schema object, simply call the `.GenerateData()` extension method, and it will return a result to you.
 
