@@ -145,7 +145,7 @@ a.navbar-brand {
 	height: 1rem;
 }
 
-/*--- CODE HIGHLIGHT ---*/
+/*--- DOCS ---*/
 pre {
 	padding: 9.5px;
 	margin: 0 0 10px;
@@ -166,4 +166,61 @@ code {
 	padding: 2px 4px;
 	font-size: 90%;
 	unicode-bidi: normal;
+}
+
+/*--- RADZEN OVERRIDES ---*/
+
+.rz-tabview-top > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+	border-top-color: #6800B7;
+}
+
+.rz-tabview-top > .rz-tabview-nav .rz-tabview-selected {
+	border-bottom-color: #ffffff;
+	margin-bottom: -1px;
+	border-top-color: #6800B7;
+}
+
+.rz-tabview-bottom > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+	border-bottom-color: #6800B7;
+}
+
+.rz-tabview-bottom > .rz-tabview-nav .rz-tabview-selected {
+	border-top-color: #ffffff;
+	margin-top: -1px;
+	padding-top: 1px;
+	border-bottom-color: #6800B7;
+}
+
+.rz-tabview-left > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+	border-left-color: #6800B7;
+}
+
+.rz-tabview-left > .rz-tabview-nav .rz-tabview-selected {
+	border-right-color: #ffffff;
+	margin-right: -1px;
+	border-left-color: #6800B7;
+}
+
+.rz-tabview-right > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+	border-right-color: #6800B7;
+}
+
+.rz-tabview-right > .rz-tabview-nav .rz-tabview-selected {
+	border-left-color: #ffffff;
+	margin-left: -1px;
+	padding-left: 1px;
+	border-right-color: #6800B7;
+}
+
+.rz-tabview-nav li a {
+	display: flex;
+	align-items: center;
+	color: #6800B7;
+	padding: 0.375rem 1.875rem;
+	font-size: inherit;
+	font-weight: 600;
+}
+
+.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) a {
+	color: #6800B7;
 }
