@@ -41,8 +41,4 @@
     <Folder Include="wwwroot\md\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\css\docs.css" />
-  </ItemGroup>
-
 </Project>
