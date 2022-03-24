@@ -148,7 +148,6 @@ a.navbar-brand {
 /*--- DOCS ---*/
 pre {
 	padding: 9.5px;
-	margin: 0 0 10px;
 	font-size: 13px;
 	word-break: break-all;
 	word-wrap: break-word;
@@ -165,6 +164,19 @@ code {
 	border-radius: 4px;
 	padding: 2px 4px;
 	font-size: 90%;
+	unicode-bidi: normal;
+}
+
+blockquote {
+	padding: 9.5px;
+	margin: 0 20px 10px;
+	font-size: 13px;
+	word-break: break-all;
+	word-wrap: break-word;
+	background-color: #e0e0e0;
+	border-radius: 4px;
+	border: none;
+	box-shadow: 4px 4px 6px 0 rgba(61, 65, 68, 0.3);
 	unicode-bidi: normal;
 }
 
