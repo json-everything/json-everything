@@ -12,18 +12,10 @@
 	public string? Page { get; set; }
 
 	private string _value = "";
-	private static readonly string _baseAddress;
-
-	static Docs()
-	{
-		_baseAddress = Debugger.IsAttached
-			? string.Empty
-			: "/json-everything";
-	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		var markdown = await Http.GetStringAsync($"{_baseAddress}/md/{Page}.md");
+		var markdown = await Http.GetStringAsync($"/md/{Page}.md");
 		_value = Markdown.ToHtml(markdown);
 	}
 }
