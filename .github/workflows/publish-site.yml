@@ -32,8 +32,6 @@ jobs:
           dotnet-version: 6.0.x
       - name: Install dependencies
         run: dotnet restore
-      # - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
-      #   run: sed -i 's/<base href="\/" \/>/<base href="\/json-everything\/" \/>/g' json-everything.net/wwwroot/index.html
       - name: Build
         run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
       - name: Add .nojekyll file
