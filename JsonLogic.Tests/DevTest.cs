@@ -9,7 +9,7 @@ public class DevTest
 	[Test]
 	public void Check()
 	{
-		var rule = And(
+		And(
 			StrictEquals(
 				Literal(5),
 				Literal(10)),

@@ -85,7 +85,7 @@ public static class JsonElementExtensions
 	{
 		return element.ValueKind switch
 		{
-			JsonValueKind.String => decimal.TryParse(element.GetString(), out var d) ? d : (decimal?) null,
+			JsonValueKind.String => decimal.TryParse(element.GetString(), out var d) ? d : null,
 			JsonValueKind.Number => element.GetDecimal(),
 			JsonValueKind.True => 1,
 			JsonValueKind.False => 0,
