@@ -3,6 +3,8 @@
 @using System.Text.Json
 @using Json.Pointer
 @using JsonEverythingNet.Services
+@using Radzen
+@using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 
 @inject CookieManager _cookieManager;
@@ -61,10 +63,21 @@
 	</div>
 </div>
 
-<hr class="my-4"/>
-
-<div class="mb-4">
-	<Docs Page="json-pointer"/>
+<div class="row my-4">
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
+		<Tabs>
+			<RadzenTabsItem Text="Overview">
+				<Docs Page="json-pointer"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
+		<Tabs>
+			<RadzenTabsItem Text="Release Notes">
+				<Docs Page="release-notes/json-pointer"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
 </div>
 
 @code {

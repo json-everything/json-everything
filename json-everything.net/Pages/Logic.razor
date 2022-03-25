@@ -3,6 +3,8 @@
 @using System.Text.Json
 @using Json.Logic
 @using JsonEverythingNet.Services
+@using Radzen
+@using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 
 @inject CookieManager _cookieManager;
@@ -65,10 +67,21 @@
     </label>
 </div>
 
-<hr class="my-4"/>
-
-<div class="mb-4">
-	<Docs Page="json-logic"/>
+<div class="row my-4">
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
+		<Tabs>
+			<RadzenTabsItem Text="Overview">
+				<Docs Page="json-logic"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
+		<Tabs>
+			<RadzenTabsItem Text="Release Notes">
+				<Docs Page="release-notes/json-logic"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
 </div>
 
 @code {

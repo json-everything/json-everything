@@ -105,30 +105,50 @@
 	</label>
 </div>
 
-<hr/>
+<div class="row my-4">
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
+		<Tabs>
+			<RadzenTabsItem Text="Overview">
+				<Docs Page="schema-basics"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text="Vocabularies">
+				<Docs Page="schema-vocabs"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text="Schema Generation">
+				<Docs Page="schema-generation"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text="Data Generation">
+				<Docs Page="schema-datagen"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text="Vocab: Data">
+				<Docs Page="vocabs-data"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text="Vocab: Unique Keys">
+				<Docs Page="vocabs-unique-keys"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
 
-<RadzenTabs RenderMode="TabRenderMode.Client" class="mb-4">
-	<Tabs>
-		<RadzenTabsItem Text="Overview">
-			<Docs Page="schema-basics"/>
-		</RadzenTabsItem>
-		<RadzenTabsItem Text="Vocabularies & Custom Keywords">
-			<Docs Page="schema-vocabs"/>
-		</RadzenTabsItem>
-		<RadzenTabsItem Text="Schema Generation">
-			<Docs Page="schema-generation"/>
-		</RadzenTabsItem>
-		<RadzenTabsItem Text="Data Generation">
-			<Docs Page="schema-datagen"/>
-		</RadzenTabsItem>
-		<RadzenTabsItem Text="Vocab: Data">
-			<Docs Page="vocabs-data"/>
-		</RadzenTabsItem>
-		<RadzenTabsItem Text="Vocab: Unique Keys">
-			<Docs Page="vocabs-unique-keys"/>
-		</RadzenTabsItem>
-	</Tabs>
-</RadzenTabs>
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
+		<Tabs>
+			<RadzenTabsItem Text="JsonSchema.Net">
+				<Docs Page="release-notes/json-schema"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text=".Generation">
+				<Docs Page="release-notes/json-schema-generation"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text=".DataGeneration">
+				<Docs Page="release-notes/json-schema-datageneration"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text=".Data">
+				<Docs Page="release-notes/json-schema-data"/>
+			</RadzenTabsItem>
+			<RadzenTabsItem Text=".UniqueKeys">
+				<Docs Page="release-notes/json-schema-unique-keys"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+</div>
 
 @code {
 #pragma warning disable CS8618
