@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\docs_source\release-notes\json-more.md" Link="json-more.md" />
+    <None Include="..\json-everything.net\wwwroot\md\release-notes\json-more.md" Link="json-more.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

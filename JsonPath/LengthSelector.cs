@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Path;
 
@@ -17,10 +16,12 @@ internal class LengthSelector : SelectorBase
 		switch (match.Value.ValueKind)
 		{
 			case JsonValueKind.Object:
-				yield return new PathMatch(match.Value.EnumerateObject().Count().AsJsonElement(), match.Location.Combine(PointerSegment.Create("$length")));
+				yield return new PathMatch(match.Value.EnumerateObject().Count().AsJsonElement(),
+					match.Location.AddSelector(new PropertySelector("length")));
 				break;
 			case JsonValueKind.Array:
-				yield return new PathMatch(match.Value.GetArrayLength().AsJsonElement(), match.Location.Combine(PointerSegment.Create("$length")));
+				yield return new PathMatch(match.Value.GetArrayLength().AsJsonElement(),
+					match.Location.AddSelector(new PropertySelector("length")));
 				break;
 		}
 	}

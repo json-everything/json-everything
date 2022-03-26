@@ -14,9 +14,9 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<PackageTags>json-path jsonpath query json</PackageTags>
 		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-path.html</PackageReleaseNotes>
-		<Version>0.1.14</Version>
-		<FileVersion>0.1.14.0</FileVersion>
-		<AssemblyVersion>0.1.0.0</AssemblyVersion>
+		<Version>0.2.0</Version>
+		<FileVersion>0.2.0.0</FileVersion>
+		<AssemblyVersion>0.2.0.0</AssemblyVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -29,7 +29,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\docs_source\release-notes\json-path.md" Link="json-path.md" />
+		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-path.md" Link="json-path.md" />
 		<None Include="..\LICENSE" Link="LICENSE">
 			<PackagePath></PackagePath>
 			<Pack>True</Pack>
@@ -41,11 +41,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="4.7.2" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+	  <ProjectReference Include="..\Json.More\Json.More.csproj" />
+	  <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
 	</ItemGroup>
 
 </Project>

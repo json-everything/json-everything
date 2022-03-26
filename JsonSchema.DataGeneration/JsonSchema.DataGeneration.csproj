@@ -39,7 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\docs_source\release-notes\json-schema.md" Link="json-schema.md" />
+		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-schema.md" Link="json-schema.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

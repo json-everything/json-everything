@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Json.Pointer;
 
 namespace Json.Path;
 
@@ -15,9 +14,9 @@ public class PathMatch
 	/// <summary>
 	/// The location where the value was found.
 	/// </summary>
-	public JsonPointer Location { get; }
+	public JsonPath Location { get; }
 
-	internal PathMatch(in JsonElement value, in JsonPointer location)
+	internal PathMatch(in JsonElement value, in JsonPath location)
 	{
 		Value = value;
 		Location = location;

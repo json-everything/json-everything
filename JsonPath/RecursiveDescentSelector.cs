@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Json.Pointer;
 
 namespace Json.Path;
 
@@ -21,7 +20,7 @@ internal class RecursiveDescentSelector : SelectorBase
 				yield return match;
 				foreach (var prop in match.Value.EnumerateObject())
 				{
-					var newMatch = new PathMatch(prop.Value, match.Location.Combine(PointerSegment.Create(prop.Name)));
+					var newMatch = new PathMatch(prop.Value, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)prop.Name })));
 					foreach (var child in GetChildren(newMatch))
 					{
 						yield return child;
@@ -32,7 +31,7 @@ internal class RecursiveDescentSelector : SelectorBase
 				yield return match;
 				foreach (var (item, index) in match.Value.EnumerateArray().Select((item, i) => (item, i)))
 				{
-					var newMatch = new PathMatch(item, match.Location.Combine(PointerSegment.Create($"{index}")));
+					var newMatch = new PathMatch(item, match.Location.AddSelector(new IndexSelector(new[] { (SimpleIndex)index })));
 					foreach (var child in GetChildren(newMatch))
 					{
 						yield return child;

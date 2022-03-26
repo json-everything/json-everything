@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\docs_source\release-notes\json-logic.md" Link="json-logic.md" />
+		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-logic.md" Link="json-logic.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
