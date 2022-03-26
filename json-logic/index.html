@@ -32,25 +32,37 @@
 </head>
 
 <body>
-<div id="app">
-	<div class="loading-message-container">
-	    <div class="loading-message-child">
-		    Blazor is loading...<br/>Yeah... .Net is gonna run in your browser!<br />The future is now!
-	    </div>
+	<div id="app">
+		<div class="loading-message-container">
+			<div class="loading-message-child">
+				Blazor is loading...<br />Yeah... .Net is gonna run in your browser!<br />The future is now!
+			</div>
+		</div>
 	</div>
-</div>
 
-<div id="blazor-error-ui" style="display: none;">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
-<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
-<script>require.config({ paths: { 'vs': '_content/BlazorMonaco/lib/monaco-editor/min/vs' } });</script>
-<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
-<script src="_content/BlazorMonaco/jsInterop.js"></script>
-<script src="_framework/blazor.webassembly.js"></script>
-<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+	<div id="blazor-error-ui" style="display: none;">
+		An unhandled error has occurred.
+		<a href="" class="reload">Reload</a>
+		<a class="dismiss">🗙</a>
+	</div>
+	<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+	<script>require.config({ paths: { 'vs': '_content/BlazorMonaco/lib/monaco-editor/min/vs' } });</script>
+	<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+	<script src="_content/BlazorMonaco/jsInterop.js"></script>
+	<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+	<script>
+		function BlazorScrollToId(id) {
+			const element = document.getElementById(id);
+			if (element instanceof HTMLElement) {
+				element.scrollIntoView({
+					behavior: "smooth",
+					block: "start",
+					inline: "nearest"
+				});
+			}
+		}
+	</script>
+	<script src="_framework/blazor.webassembly.js"></script>
 </body>
 
 </html>
