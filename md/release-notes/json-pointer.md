@@ -6,6 +6,9 @@
 
 [#171](https://github.com/gregsdennis/json-everything/issues/171) - Updated `JsonPointer`, `PointerSegment`, and `RelativeJsonPointer` from struct to class since it holds by-reference data anyway.  Removes parameterless constructor for these types.  These changes make them better immutable models.
 
+<details>
+  <summary>1.x versions</summary>
+
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/162)
 
 - Added implicit casts from `int` and `string` to `PointerSegment`
@@ -50,3 +53,5 @@ Added optional parameters to `JsonPointer.Parse()` and `JsonPointer.TryParse()`.
 # 1.0.0
 
 Initial release.
+
+</details>

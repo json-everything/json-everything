@@ -89,6 +89,8 @@ The validation context now only contains data required for validation.  The vali
   - `Pass()`
   - `Fail()`
 
+<details>
+  <summary class="fw-bold fst-italic">1.x versions</summary>
 
 # [1.13.0](https://github.com/gregsdennis/json-everything/pull/204)
 
@@ -325,3 +327,5 @@ Fixed issue resolving references (`$ref` & `$recursiveRef`) to miscellaneous (no
 # 1.0.0
 
 Initial release.
+
+</details>
