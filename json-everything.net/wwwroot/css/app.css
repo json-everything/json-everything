@@ -180,6 +180,15 @@ blockquote {
 	unicode-bidi: normal;
 }
 
+markdown-anchor {
+	display: inline-block;
+	overflow: visible !important;
+	fill: #888888;
+	color: #888888;
+	vertical-align: middle;
+	visibility: hidden;
+}
+
 /*--- RADZEN OVERRIDES ---*/
 
 .rz-tabview-top > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
