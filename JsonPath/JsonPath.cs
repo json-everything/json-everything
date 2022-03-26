@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Json.Path;
 
 /// <summary>
 /// Represents a JSON Path.
 /// </summary>
+[JsonConverter(typeof(JsonPathConverter))]
 public class JsonPath
 {
 	private delegate bool TryParseMethod(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index);
@@ -30,7 +32,9 @@ public class JsonPath
 
 	private readonly IEnumerable<ISelector> _nodes;
 
-	private JsonPath(IEnumerable<ISelector> nodes)
+	internal static readonly JsonPath Root = new(new[] { new RootNodeSelector() });
+
+	internal JsonPath(IEnumerable<ISelector> nodes)
 	{
 		_nodes = nodes;
 	}
@@ -249,10 +253,42 @@ public class JsonPath
 		return context.BuildResult();
 	}
 
+	internal JsonPath AddSelector(ISelector selector)
+	{
+		var newNodes = new List<ISelector>(_nodes) { selector };
+		return new JsonPath(newNodes);
+	}
+
 	/// <summary>Returns a string that represents the current object.</summary>
 	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		return string.Concat(_nodes.Select(n => n.ToString()));
+	}
+}
+
+/// <summary>
+/// JSON converter for <see cref="JsonPath"/>.
+/// </summary>
+public class JsonPathConverter : JsonConverter<JsonPath>
+{
+	/// <summary>Reads and converts the JSON to type <see cref="JsonPath"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
+	public override JsonPath Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var text = reader.GetString();
+		return JsonPath.Parse(text);
+	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	public override void Write(Utf8JsonWriter writer, JsonPath value, JsonSerializerOptions options)
+	{
+		JsonSerializer.Serialize(writer, value.ToString(), options);
 	}
 }

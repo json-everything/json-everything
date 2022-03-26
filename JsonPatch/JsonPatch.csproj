@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\docs_source\release-notes\json-patch.md" Link="json-patch.md" />
+    <None Include="..\json-everything.net\wwwroot\md\release-notes\json-patch.md" Link="json-patch.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

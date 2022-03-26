@@ -76,4 +76,9 @@ internal class PropertyNameIndex : IObjectIndexExpression
 		// TODO: add escaping
 		return $"{_quoteChar}{_name}{_quoteChar}";
 	}
+
+	public static implicit operator PropertyNameIndex(string prop)
+	{
+		return new PropertyNameIndex(prop, '\'');
+	}
 }

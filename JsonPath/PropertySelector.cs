@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Json.Pointer;
 
 namespace Json.Path;
 
@@ -23,13 +22,13 @@ internal class PropertySelector : SelectorBase
 				case JsonValueKind.Object:
 					foreach (var propPair in match.Value.EnumerateObject())
 					{
-						yield return new PathMatch(propPair.Value, match.Location.Combine(PointerSegment.Create(propPair.Name)));
+						yield return new PathMatch(propPair.Value, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)propPair.Name })));
 					}
 					break;
 				case JsonValueKind.Array:
 					foreach (var (value, index) in match.Value.EnumerateArray().Select((v, i) => (v, i)))
 					{
-						yield return new PathMatch(value, match.Location.Combine(PointerSegment.Create(index.ToString())));
+						yield return new PathMatch(value, match.Location.AddSelector(new IndexSelector(new[] { (SimpleIndex)index })));
 					}
 					break;
 			}
@@ -41,7 +40,7 @@ internal class PropertySelector : SelectorBase
 
 		if (!match.Value.TryGetProperty(_name, out var prop)) yield break;
 
-		yield return new PathMatch(prop, match.Location.Combine(PointerSegment.Create(_name)));
+		yield return new PathMatch(prop, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)_name })));
 	}
 
 	public override string ToString()

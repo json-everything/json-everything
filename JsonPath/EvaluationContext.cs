@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
-using Json.Pointer;
 
 namespace Json.Path;
 
@@ -13,7 +12,7 @@ internal class EvaluationContext
 	internal EvaluationContext(in JsonElement root, PathEvaluationOptions options)
 	{
 		Root = root.Clone();
-		Current = new List<PathMatch>{new(root, JsonPointer.Empty)};
+		Current = new List<PathMatch>{new(root, JsonPath.Root)};
 		Options = options;
 	}
 

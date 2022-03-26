@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\docs_source\release-notes\json-pointer.md" Link="json-pointer.md" />
+    <None Include="..\json-everything.net\wwwroot\md\release-notes\json-pointer.md" Link="json-pointer.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

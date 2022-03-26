@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Json.Pointer;
 
 namespace Json.Path;
 
@@ -28,7 +27,7 @@ internal class IndexSelector : SelectorBase
 				          Enumerable.Range(0, array.Length);
 				foreach (var index in indices)
 				{
-					yield return new PathMatch(array[index], match.Location.Combine(PointerSegment.Create(index.ToString())));
+					yield return new PathMatch(array[index], match.Location.AddSelector(new IndexSelector(new[] { (SimpleIndex)index })));
 				}
 				break;
 			case JsonValueKind.Object:
@@ -40,14 +39,14 @@ internal class IndexSelector : SelectorBase
 					foreach (var prop in props)
 					{
 						if (!match.Value.TryGetProperty(prop, out var value)) continue;
-						yield return new PathMatch(value, match.Location.Combine(PointerSegment.Create(prop)));
+						yield return new PathMatch(value, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)prop })));
 					}
 				}
 				else
 				{
 					foreach (var prop in match.Value.EnumerateObject())
 					{
-						yield return new PathMatch(prop.Value, match.Location.Combine(PointerSegment.Create(prop.Name)));
+						yield return new PathMatch(prop.Value, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)prop.Name })));
 					}
 				}
 				break;
