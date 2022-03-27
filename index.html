@@ -15,6 +15,7 @@
 	<link href="css/bootstrap-overrides.css" rel="stylesheet" />
 	<style>
 		.loading-message-container {
+			background: radial-gradient(circle, #f0f0f0 0%, #d0d0d0 100%);
 			position: relative;
 			height: 100vh;
 			font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -28,6 +29,10 @@
 			text-align: center;
 			line-height: 200%;
 		}
+
+		.loading-image {
+			height: 300px;
+		}
 	</style>
 </head>
 
@@ -35,7 +40,7 @@
 	<div id="app">
 		<div class="loading-message-container">
 			<div class="loading-message-child">
-				Blazor is loading...<br />Yeah... .Net is gonna run in your browser!<br />The future is now!
+				<img src="img/json-animated.gif" class="loading-image"/><br/>
 			</div>
 		</div>
 	</div>
