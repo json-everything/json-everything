@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Pointer;
@@ -211,13 +212,11 @@ public class RelativeJsonPointer
 	}
 
 	/// <summary>
-	/// Evaluates the relative pointer over a <see cref="JsonElement"/>.
+	/// Evaluates the relative pointer over a <see cref="JsonNode"/>.
 	/// </summary>
-	/// <param name="element">The <see cref="JsonElement"/>.</param>
+	/// <param name="element">The <see cref="JsonNode"/>.</param>
 	/// <returns>The sub-element at the relative pointer's location, or null if the path does not exist.</returns>
-	/// <exception cref="NotSupportedException">This method is not yet supported.  Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452</exception>
-	[Obsolete("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452")]
-	public JsonElement Evaluate(JsonElement element)
+	public JsonNode Evaluate(JsonNode element)
 	{
 		throw new NotSupportedException("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452");
 	}

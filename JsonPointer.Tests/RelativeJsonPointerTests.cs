@@ -34,22 +34,22 @@ public class RelativeJsonPointerTests
 		}
 	}
 
-	[TestCaseSource(nameof(SpecificationExamples))]
-	[Ignore("Not supported by System.Text.Json (see https://github.com/dotnet/runtime/issues/40452)")]
-	public void EvaluateSuccess(string pointerString, string expectedString)
-	{
-		using var json = JsonDocument.Parse("{\"foo\":[\"bar\",\"baz\"],\"highly\":{\"nested\":{\"objects\":true}}}");
-		var startElement = json.RootElement.GetProperty("foo")[1];
+//	[TestCaseSource(nameof(SpecificationExamples))]
+//	[Ignore("Not supported by System.Text.Json (see https://github.com/dotnet/runtime/issues/40452)")]
+//	public void EvaluateSuccess(string pointerString, string expectedString)
+//	{
+//		using var json = JsonDocument.Parse("{\"foo\":[\"bar\",\"baz\"],\"highly\":{\"nested\":{\"objects\":true}}}");
+//		var startElement = json.RootElement.GetProperty("foo")[1];
 
-		var pointer = RelativeJsonPointer.Parse(pointerString);
-		using var expected = JsonDocument.Parse(expectedString);
- 
-#pragma warning disable 618
-		var actual = pointer.Evaluate(startElement);
-#pragma warning restore 618
+//		var pointer = RelativeJsonPointer.Parse(pointerString);
+//		using var expected = JsonDocument.Parse(expectedString);
 
-		Assert.True(actual.IsEquivalentTo(expected.RootElement));
-	}
+//#pragma warning disable 618
+//		var actual = pointer.Evaluate(startElement);
+//#pragma warning restore 618
+
+//		Assert.True(actual.IsEquivalentTo(expected.RootElement));
+//	}
 
 	[TestCaseSource(nameof(FailureCases))]
 	public void EvaluateFailure(string pointerString)
