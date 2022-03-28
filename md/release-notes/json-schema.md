@@ -1,3 +1,7 @@
+# [???](https://github.com/gregsdennis/json-everything/pull/???)
+
+[#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/239)
 
 [#238](https://github.com/gregsdennis/json-everything/pull/238) - [@WeihanLi](https://github.com/WeihanLi) added extenion methods to create schemas directly from `JsonDocument` and strings that contain JSON data.
