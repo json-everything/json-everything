@@ -4,7 +4,7 @@ Json.More<nsp>.Net aims to fill gaps left by `System.Text.Json`.  To this end, i
 
 ## Equality comparison
 
-Sadly, it seems equality was considered unnecessary.  To remedy that, the `.IsEquivalentTo()` extension method is supplied for `JsonDocument` and `JsonElement`.
+Sadly, it seems equality was considered unnecessary.  To remedy that, the `.IsEquivalentTo()` extension method is supplied for `JsonDocument`, `JsonElement`, and `JsonNode`.
 
 This extension method calculates the JSON-equality of the nodes.  This means that objects are key-matched (unordered) and arrays are sequence-matched (ordered).
 
@@ -17,6 +17,8 @@ and
 > An *array* is an ordered collection of values.
 
 Additionally, an `IEqualityComparer<JsonElement>` is supplied (`JsonElementEqualityComparer`) which has a convenient static `Instance` property.
+
+***NOTE** Comparers are also supplied for `JsonDocument` and `JsonNode`.*
 
 ## Enum serialization
 
