@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -44,7 +44,7 @@ public class RelativeJsonPointer
 	{
 		IsIndexQuery = true;
 		ParentSteps = parentSteps;
-		ArrayIndexManipulator = arrayIndexManipulator ;
+		ArrayIndexManipulator = arrayIndexManipulator;
 		Pointer = JsonPointer.Empty;
 	}
 	private RelativeJsonPointer(uint parentSteps, JsonPointer pointer)
@@ -214,11 +214,37 @@ public class RelativeJsonPointer
 	/// <summary>
 	/// Evaluates the relative pointer over a <see cref="JsonNode"/>.
 	/// </summary>
-	/// <param name="element">The <see cref="JsonNode"/>.</param>
-	/// <returns>The sub-element at the relative pointer's location, or null if the path does not exist.</returns>
-	public JsonNode Evaluate(JsonNode element)
+	/// <param name="node">The <see cref="JsonNode"/>.</param>
+	/// <param name="result">The result, if return value is true; null otherwise</param>
+	/// <returns>true if a value exists at the indicate path; false otherwise.</returns>
+	public bool TryEvaluate(JsonNode node, out JsonNode? result)
 	{
-		throw new NotSupportedException("Waiting for System.Text.Json to support upward navigation.  See https://github.com/dotnet/runtime/issues/40452");
+		result = null;
+
+		var current = node;
+		for (int i = 0; i < ParentSteps; i++)
+		{
+			current = current.Parent;
+			if (current == null) return false;
+		}
+
+		if (IsIndexQuery)
+		{
+			var parent = current.Parent;
+			switch (parent)
+			{
+				case JsonObject obj:
+					result = obj.Single(x => ReferenceEquals(x.Value, current)).Key;
+					return true;
+				case JsonArray array:
+					result = array.IndexOf(current);
+					return true;
+			}
+
+			return false;
+		}
+
+		return Pointer.TryEvaluate(current, out result);
 	}
 
 	/// <summary>Returns the fully qualified type name of this instance.</summary>
