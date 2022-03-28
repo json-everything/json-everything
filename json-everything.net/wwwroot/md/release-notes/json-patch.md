@@ -1,3 +1,7 @@
+# [???](https://github.com/gregsdennis/json-everything/pull/???)
+
+Updated System.Text.Json to version 6.
+
 # [1.1.2](https://github.com/gregsdennis/json-everything/pull/196)
 
 [#192](https://github.com/gregsdennis/json-everything/pull/192) - [@LordXaosa](https://github.com/LordXaosa) found some issues with patch generation.

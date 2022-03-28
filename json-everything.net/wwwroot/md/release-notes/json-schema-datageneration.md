@@ -1,3 +1,7 @@
+# [???](https://github.com/gregsdennis/json-everything/pull/???)
+
+Updated System.Text.Json to version 6.
+
 # 0.1.1 (No PR)
 
 Fixed a bug around property generation.

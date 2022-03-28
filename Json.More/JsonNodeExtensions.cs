@@ -38,17 +38,6 @@ public static class JsonNodeExtensions
 				return zipped.All(p => (p.ae == null && p.be == null) ||
 				                       (p.ae != null && p.be != null && p.ae.IsEquivalentTo(p.be)));
 			default:
-				//var aValue = a.AsValue();
-				//var bValue = b.AsValue();
-				//if (aValue.TryGetValue<bool>(out var boolA) &&
-				//    bValue.TryGetValue<bool>(out var boolB))
-				//	return boolA == boolB;
-				//if (aValue.TryGetValue<decimal>(out var decimalA) &&
-				//    bValue.TryGetValue<decimal>(out var decimalB))
-				//	return decimalA == decimalB;
-				//if (aValue.TryGetValue<string>(out var stringA) &&
-				//    bValue.TryGetValue<string>(out var stringB))
-				//	return stringA == stringB;
 				return a?.ToJsonString() == b?.ToJsonString();
 		}
 	}

@@ -1,3 +1,7 @@
+# [???](https://github.com/gregsdennis/json-everything/pull/???)
+
+Updated System.Text.Json to version 6.
+
 # [1.8.3](https://github.com/gregsdennis/json-everything/pull/200)
 
 Updated JsonSchema.Net reference to v2.0.0.  Please see [release notes](./json-schema.md) for that library as it contains breaking changes.
