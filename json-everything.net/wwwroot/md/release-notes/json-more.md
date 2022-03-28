@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/gregsdennis/json-everything/pull/243)
+
+Updated System.Text.Json to version 6 in order to add `JsonNode` support.
+
+Added:
+
+- `JsonNodeExtensions`
+- `JsonNodeEqualityComparer`
+
 # [1.4.4](https://github.com/gregsdennis/json-everything/pull/163)
 
 Added special case for `.ToJsonDocument()` that first checks to see if the value is already a `JsonDocument`.

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Pointer;
@@ -354,6 +355,55 @@ public class JsonPointer : IEquatable<JsonPointer>
 		}
 
 		return current;
+	}
+
+	/// <summary>
+	/// Evaluates the pointer over a <see cref="JsonNode"/>.
+	/// </summary>
+	/// <param name="root">The <see cref="JsonNode"/>.</param>
+	/// <param name="result">The result, if return value is true; null otherwise</param>
+	/// <returns>true if a value exists at the indicate path; false otherwise.</returns>
+	public bool TryEvaluate(JsonNode root, out JsonNode? result)
+	{
+		var current = root;
+		result = null;
+
+		foreach (var segment in Segments)
+		{
+			string segmentValue;
+			switch (current)
+			{
+				case JsonArray array:
+					segmentValue = segment.Value;
+					if (segmentValue == "0")
+					{
+						if (array.Count == 0) return false;
+						current = current[0];
+						break;
+					}
+					if (segmentValue[0] == '0') return false;
+					if (segmentValue == "-")
+					{
+						result = array.Last();
+						return true;
+					}
+					if (!int.TryParse(segmentValue, out var index)) return false;
+					if (index >= array.Count) return false;
+					if (index < 0) return false;
+					current = array[index];
+					break;
+				case JsonObject obj:
+					segmentValue = segment.Value;
+					if (!obj.TryGetPropertyValue(segmentValue, out var found)) return false;
+					current = found;
+					break;
+				default:
+					return false;
+			}
+		}
+
+		result = current;
+		return true;
 	}
 
 	private string BuildSource()

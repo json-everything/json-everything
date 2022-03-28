@@ -1,3 +1,7 @@
+# [???](https://github.com/gregsdennis/json-everything/pull/???)
+
+[#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/205)
 
 [#183](https://github.com/gregsdennis/json-everything/pull/183) - Added handling of object truthiness: empty objects are falsy; non-empty are truthy.  This behavior isn't specified, but emulates the original JS library.

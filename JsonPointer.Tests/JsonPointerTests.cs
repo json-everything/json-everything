@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Pointer.Tests;
@@ -34,6 +35,19 @@ public class JsonPointerTests
 		Assert.IsNull(actual);
 	}
 
+	[TestCaseSource(nameof(ErrorCases))]
+	public void Errors_ButWithNodes(string pointerString)
+	{
+		var target = JsonNode.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"false\":false}}")!;
+
+		var pointer = JsonPointer.Parse(pointerString);
+
+		var success = pointer.TryEvaluate(target, out var actual);
+
+		Assert.IsFalse(success);
+		Assert.IsNull(actual);
+	}
+
 	[Test]
 	public void IndexingAnObjectInterpretsIndexAsKey()
 	{
@@ -48,6 +62,19 @@ public class JsonPointerTests
 	}
 
 	[Test]
+	public void IndexingAnObjectInterpretsIndexAsKey_ButWithNodes()
+	{
+		var target = JsonNode.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}")!;
+
+		var pointer = JsonPointer.Parse("/c/0");
+
+		var success = pointer.TryEvaluate(target, out var actual);
+
+		Assert.IsTrue(success);
+		Assert.AreEqual(false, actual!.GetValue<bool>());
+	}
+
+	[Test]
 	public void GettingLastItemInArray()
 	{
 		using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
@@ -58,6 +85,19 @@ public class JsonPointerTests
 
 		// ReSharper disable once PossibleInvalidOperationException
 		Assert.AreEqual(JsonValueKind.Null, actual.Value.ValueKind);
+	}
+
+	[Test]
+	public void GettingLastItemInArray_ButWithNodes()
+	{
+		var target = JsonNode.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}")!;
+
+		var pointer = JsonPointer.Parse("/b/-");
+
+		var success = pointer.TryEvaluate(target, out var actual);
+
+		Assert.IsTrue(success);
+		Assert.IsNull(actual);
 	}
 
 	[Test]
