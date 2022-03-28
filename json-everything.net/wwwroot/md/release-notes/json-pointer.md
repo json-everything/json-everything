@@ -1,3 +1,17 @@
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/185)
+
+Updated System.Text.Json to version 6 in order to add `JsonNode` support.
+
+The API is shaped a bit differently for `JsonNode` than the existing API for `JsonElement`.  Specifically, it exposes
+
+```c#
+bool TryEvaluate(JsonNode node, out JsonNode? result)
+```
+
+instead of the `Evaluate()` call you've all come to know and love.
+
+This is because .Net decided to do a [silly thing](https://github.com/dotnet/runtime/issues/66948#issuecomment-1080148457) and represent JSON null using .Net null.  This decision means that a null returned here cannot be distinguished between not existing and existing with a value of JSON null.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/185)
 
 [#184](https://github.com/gregsdennis/json-everything/issues/184) - [@JanKnipp](https://github.com/JanKnipp) added array (e.g. `int[]`) support to Linq expression construction of pointers.

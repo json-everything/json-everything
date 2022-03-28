@@ -78,13 +78,13 @@ public static class JsonNodeExtensions
 		}
 
 		// ReSharper disable once InconsistentNaming
-		void ComputeHashCode(JsonNode? _node, ref int current, int depth)
+		void ComputeHashCode(JsonNode? target, ref int current, int depth)
 		{
-			if (_node == null) return;
+			if (target == null) return;
 
-			Add(ref current, _node.GetType());
+			Add(ref current, target.GetType());
 
-			switch (_node)
+			switch (target)
 			{
 				case JsonArray array:
 					if (depth != maxHashDepth)
@@ -103,7 +103,7 @@ public static class JsonNodeExtensions
 					}
 					break;
 				default:
-					var value = _node.AsValue();
+					var value = target.AsValue();
 					if (value.TryGetValue<bool>(out var boolA))
 						Add(ref current, boolA);
 					else if (value.TryGetValue<decimal>(out var decimalA))
