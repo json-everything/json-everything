@@ -1,6 +1,6 @@
 # [???](https://github.com/gregsdennis/json-everything/pull/???)
 
-Updated System.Text.Json to version 6.
+[#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
 
 # [1.1.2](https://github.com/gregsdennis/json-everything/pull/196)
 

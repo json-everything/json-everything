@@ -1,4 +1,4 @@
-# [1.5.0](https://github.com/gregsdennis/json-everything/pull/163)
+# [1.5.0](https://github.com/gregsdennis/json-everything/pull/243)
 
 Updated System.Text.Json to version 6 in order to add `JsonNode` support.
 
