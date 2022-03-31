@@ -46,6 +46,7 @@ public class PredicateFormat : Format
 	/// </summary>
 	/// <param name="element">The element to validate.</param>
 	/// <returns>The result of the predicate.</returns>
+	[Obsolete("This method isn't called anymore.  It will be removed in the next major version.")]
 	public override bool Validate(JsonElement element)
 	{
 		return Validate(element, out _);
