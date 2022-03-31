@@ -4,7 +4,7 @@
 
 [#245](https://github.com/gregsdennis/json-everything/issues/245) - [@ItsVeryWindy](https://github.com/ItsVeryWindy) identified where `allOf` was reporting locations incorrectly in validation output.
 
-[#246](https://github.com/gregsdennis/json-everything/issues/246) - [@YaroslavHuriev](https://github.com/YaroslavHuriev) noticed an issue with some formats where non-strings were not properly ignored.
+[#246](https://github.com/gregsdennis/json-everything/issues/246) - [@YaroslavHuriev](https://github.com/YaroslavHuriev) noticed an issue with some formats where non-strings were not properly ignored.  As part of this fix, `Format.Validate(JsonElement)` was marked obsolete as it has been replaced and is no longer called.  It will be removed with the next major version.
 
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/239)
 
