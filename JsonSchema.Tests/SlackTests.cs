@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 
-namespace Json.Schema.Tests
+namespace Json.Schema.Tests;
+
+public class SlackTests
 {
-	public class SlackTests
-	{
-
-
 	[Test]
-		public void MultiDraftSelfValidation()
-		{
-			var json =
-				@"{
+	public void MultiDraftSelfValidation()
+	{
+		var json =
+			@"{
 					""$defs"": {
 						""M"": {
 							""$id"": ""http://localhost/M"",
@@ -36,21 +32,20 @@ namespace Json.Schema.Tests
 					""$ref"": ""/C""
 				}";
 
-			var schema = JsonSchema.FromText(json);
-			var instance = JsonDocument.Parse(json).RootElement;
+		var schema = JsonSchema.FromText(json);
+		var instance = JsonDocument.Parse(json).RootElement;
 
-			var result = schema.Validate(instance, new ValidationOptions
-			{
-				Log = new TestLog(),
-				OutputFormat = OutputFormat.Detailed,
-				DefaultBaseUri = new Uri("http://localhost/")
-			});
+		var result = schema.Validate(instance, new ValidationOptions
+		{
+			Log = new TestLog(),
+			OutputFormat = OutputFormat.Detailed,
+			DefaultBaseUri = new Uri("http://localhost/")
+		});
 
-			Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
-			{
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-				WriteIndented = true
-			}));
-		}
+		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
+		{
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			WriteIndented = true
+		}));
 	}
 }

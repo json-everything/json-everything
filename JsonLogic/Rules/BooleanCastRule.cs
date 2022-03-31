@@ -1,26 +1,25 @@
 ﻿using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic.Rules
+namespace Json.Logic.Rules;
+
+[Operator("!!")]
+internal class BooleanCastRule : Rule
 {
-	[Operator("!!")]
-	internal class BooleanCastRule : Rule
+	private readonly Rule _value;
+
+	public BooleanCastRule(Rule value)
 	{
-		private readonly Rule _value;
-
-		public BooleanCastRule(Rule value)
-		{
-			_value = value;
-		}
+		_value = value;
+	}
 		
-		public override JsonElement Apply(JsonElement data)
-		{
-			var value = _value.Apply(data);
+	public override JsonElement Apply(JsonElement data)
+	{
+		var value = _value.Apply(data);
 
-			if (value.ValueKind == JsonValueKind.Object)
-				throw new JsonLogicException("Cannot cast objects to boolean");
+		if (value.ValueKind == JsonValueKind.Object)
+			throw new JsonLogicException("Cannot cast objects to boolean");
 			
-			return _value.Apply(data).IsTruthy().AsJsonElement();
-		}
+		return _value.Apply(data).IsTruthy().AsJsonElement();
 	}
 }

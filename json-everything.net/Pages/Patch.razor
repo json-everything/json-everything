@@ -1,0 +1,201 @@
+﻿@page "/json-patch"
+@using BlazorMonaco
+@using System.Text.Json
+@using Json.Patch
+@using JsonEverythingNet.Services
+@using Radzen
+@using Radzen.Blazor
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
+
+@inject CookieManager _cookieManager;
+
+<PageTitle>JSON Patch - json-everything.net</PageTitle>
+
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON Patch</h1>
+		<div class="align-items-center mx-3">
+			<div>
+				Describe and process alterations to JSON documents
+				<br/>
+				Learn more about
+				<a href="http://jsonpatch.com/" target="_blank">JSON Patch <ExternalLinkIcon/></a>
+			</div>
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+		    <NugetLibrary Library="library"/>
+		}
+	</div>
+</div>
+
+<div class="vstack gap-3 mt-4">
+	<div>
+		<div class="row">
+			<div class="col-5">
+				<label class="w-100">
+					Patch / Source data
+					<div class="editor-input">
+						<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SavePatch"/>
+					</div>
+				</label>
+			</div>
+			<div class="col mx-2 align-items-center row">
+				<div class="vstack gap-3 align-self-center">
+					<button class="btn btn-primary" @onclick="Apply">Apply</button>
+					<hr/>
+					<button class="btn btn-primary" @onclick="Generate">Generate</button>
+				</div>
+			</div>
+			<div class="col-5">
+				<label class="w-100">
+					Data / Target data
+					<div class="editor-input">
+						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveInstance"/>
+					</div>
+				</label>
+			</div>
+		</div>
+	</div>
+    
+    <label>
+        Result
+        <div class="editor-input">
+            <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+                          CssClass="h-100"/>
+        </div>
+    </label>
+</div>
+
+<div class="row my-4">
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
+		<Tabs>
+			<RadzenTabsItem Text="Overview">
+				<Docs Page="json-patch" AddAnchors="true"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
+		<Tabs>
+			<RadzenTabsItem Text="Release Notes">
+				<Docs Page="release-notes/json-patch"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+</div>
+
+@code {
+#pragma warning disable CS8618
+	private MonacoEditor _patchEditor;
+	private MonacoEditor _instanceEditor;
+	private MonacoEditor _outputEditor;
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonPatch>(),
+	};
+#pragma warning restore CS8618
+
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private async Task Apply()
+	{
+		JsonPatch patch;
+		try
+		{
+			patch = JsonSerializer.Deserialize<JsonPatch>(await _patchEditor.GetValue())!;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Patch is invalid\n\n{e.Message}");
+			return;
+		}
+		JsonElement instance;
+		try
+		{
+			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Instance is invalid\n\n{e.Message}");
+			return;
+		}
+
+		var results = patch.Apply(instance);
+
+		var resultText = results.IsSuccess
+			? JsonSerializer.Serialize(results.Result, new JsonSerializerOptions {WriteIndented = true})
+			: results.Error;
+
+		await _outputEditor.SetValue(resultText);
+	}
+
+	private async Task Generate()
+	{
+		JsonElement source;
+		try
+		{
+			source = JsonDocument.Parse(await _patchEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Source data is invalid\n\n{e.Message}");
+			return;
+		}
+		JsonElement target;
+		try
+		{
+			target = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Target data is invalid\n\n{e.Message}");
+			return;
+		}
+
+		var patch = source.CreatePatch(target);
+
+		if (patch != null)
+		{
+			var instance = JsonSerializer.Serialize(patch, new JsonSerializerOptions {WriteIndented = true});
+			await _outputEditor.SetValue(instance);
+		}
+		else
+			await _outputEditor.SetValue("Unable to create patch");
+	}
+
+	private async Task SavePatch()
+	{
+		await _cookieManager.SaveEditorValue(_patchEditor, "patch");
+	}
+
+	private async Task LoadSavedPatch()
+	{
+		await _cookieManager.LoadEditorValue(_patchEditor, "patch");
+	}
+
+	private async Task SaveInstance()
+	{
+		await _cookieManager.SaveEditorValue(_instanceEditor, "patch-instance");
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		await _cookieManager.LoadEditorValue(_instanceEditor, "patch-instance");
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+	    await _outputEditor.SetValue(string.Empty);
+
+		await LoadSavedPatch();
+		await LoadSavedInstance();
+	}
+
+}

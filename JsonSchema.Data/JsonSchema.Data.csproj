@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
 		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
 		<RootNamespace>Json.Schema.Data</RootNamespace>
 		<Authors>Greg Dennis</Authors>

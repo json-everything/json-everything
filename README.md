@@ -14,9 +14,9 @@
 |<a href="https://www.nuget.org/packages/JsonPointer.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPointer.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img></a>|<a href="https://www.nuget.org/packages/JsonPath.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPath.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPath.Net.svg?svg=true"></img></a>|<a href="https://www.nuget.org/packages/JsonPatch.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPatch.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img></a>|<a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonLogic.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a>|<a href="https://www.nuget.org/packages/Json.More.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/Json.More.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a>|
 
 
-|Try it online!|Read about it!|Discuss it!|(Oh, and built with)|
-|:-:|:-:|:-:|:-:|
-|<a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a>|<a href="https://gregsdennis.github.io/json-everything"><img src="Resources/github.png" alt="Read the docs" title="Read the docs" height="50"><br>Pages</a>|<a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"><br>Slack</a>|<a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"><br>Resharper</a>|
+|Try it online! & Read docs!|Discuss it!|(Oh, and built with)|
+|:-:|:-:|:-:|
+|<a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a>|<a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"><br>Slack</a>|<a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"><br>Resharper</a>|
 
 `json-everything` is your one-stop shop for extending the JSON functionality provided by .Net's `System.Text.Json` namespace, all (well, most anyway) provided in convenient .Net Standard 2.0 packages.
 
@@ -26,7 +26,7 @@ Currently supported:
 - [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - [JSON Schema (drafts 6 and higher)](https://json-schema.org)
   - Generation of schemas from .Net types supported in an additional library
-  - Random instance data generation
+  - Random instance data generation (powered by [Bogus](https://github.com/bchavez/Bogus))
   - A vocabulary for accessing instance and external data
   - A vocabulary for validating item uniqueness based on specific item values
 - [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)

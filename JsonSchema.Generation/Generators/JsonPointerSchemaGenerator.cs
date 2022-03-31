@@ -2,19 +2,18 @@
 using Json.Pointer;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation.Generators
-{
-	internal class JsonPointerSchemaGenerator : ISchemaGenerator
-	{
-		public bool Handles(Type type)
-		{
-			return type == typeof(JsonPointer);
-		}
+namespace Json.Schema.Generation.Generators;
 
-		public void AddConstraints(SchemaGeneratorContext context)
-		{
-			context.Intents.Add(new TypeIntent(SchemaValueType.String));
-			context.Intents.Add(new FormatIntent(Formats.JsonPointer));
-		}
+internal class JsonPointerSchemaGenerator : ISchemaGenerator
+{
+	public bool Handles(Type type)
+	{
+		return type == typeof(JsonPointer);
+	}
+
+	public void AddConstraints(SchemaGeneratorContext context)
+	{
+		context.Intents.Add(new TypeIntent(SchemaValueType.String));
+		context.Intents.Add(new FormatIntent(Formats.JsonPointer));
 	}
 }

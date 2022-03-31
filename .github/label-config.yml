@@ -7,6 +7,9 @@
 "pkg:schema-generation":
   - JsonSchema.Generation/**/*
 
+"pkg:schema-datagen":
+  - JsonSchema.DataGeneration/**/*
+
 "pkg:schema-data":
   - JsonSchema.Data/**/*
 
@@ -32,4 +35,5 @@
   - .github/workflows/**/*
 
 "try-me-site":
+  - json-everything.net/**/*
   - TryJsonEverything/**/*

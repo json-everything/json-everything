@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests
@@ -211,6 +212,102 @@ namespace Json.Schema.Tests
 
 			var result = _schema.Validate(instance.RootElement, options);
 			return result;
+		}
+
+		[Test]
+		public void AdditionalPropertiesDoesNotGiveExtraErrors()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Properties(
+					("foo", false)
+				)
+				.AdditionalProperties(false);
+
+			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+
+			var serialized = JsonSerializer.Serialize(result);
+			Console.WriteLine(serialized);
+
+			Assert.False(serialized.Contains("additionalProperties"));
+		}
+
+		[Test]
+		public void UnevaluatedPropertiesDoesNotGiveExtraErrors()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Properties(
+					("foo", false)
+				)
+				.UnevaluatedProperties(false);
+
+			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+
+			var serialized = JsonSerializer.Serialize(result);
+			Console.WriteLine(serialized);
+
+			Assert.False(serialized.Contains("unevaluatedProperties"));
+		}
+
+		[Test]
+		public void UnevaluatedPropertiesStillGivesExtraErrorsForReffedSchemas()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Defs(
+					("reffed", new JsonSchemaBuilder()
+						.Properties(
+							("foo", false)
+						)
+					)
+				)
+				.Ref("#/$defs/reffed")
+				.UnevaluatedProperties(false);
+
+			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+
+			var serialized = JsonSerializer.Serialize(result);
+			Console.WriteLine(serialized);
+
+			Assert.True(serialized.Contains("unevaluatedProperties"));
+		}
+
+		[Test]
+		public void AdditionalItemsDoesNotGiveExtraErrors()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Items(new JsonSchema[]{true, false})
+				.AdditionalItems(false);
+
+			var instance = JsonDocument.Parse("[1,2]").RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+
+			var serialized = JsonSerializer.Serialize(result);
+			Console.WriteLine(serialized);
+
+			Assert.False(serialized.Contains("additionalItems"));
+		}
+
+		[Test]
+		public void UnevaluatedItemsDoesNotGiveExtraErrors()
+		{
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Items(new JsonSchema[]{true, false})
+				.UnevaluatedItems(false);
+
+			var instance = JsonDocument.Parse("[1,2]").RootElement;
+
+			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+
+			var serialized = JsonSerializer.Serialize(result);
+			Console.WriteLine(serialized);
+
+			Assert.False(serialized.Contains("unevaluatedItems"));
 		}
 	}
 }

@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace Json.Path
+namespace Json.Path;
+
+internal class ErrorSelector : ISelector
 {
-	internal class ErrorSelector : ISelector
+	public string ErrorMessage { get; }
+
+	public ErrorSelector(string errorMessage)
 	{
-		public string ErrorMessage { get; }
+		ErrorMessage = errorMessage;
+	}
 
-		public ErrorSelector(string errorMessage)
-		{
-			ErrorMessage = errorMessage;
-		}
-
-		public void Evaluate(EvaluationContext context)
-		{
-			throw new NotImplementedException();
-		}
+	public void Evaluate(EvaluationContext context)
+	{
+		throw new NotImplementedException();
 	}
 }

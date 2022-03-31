@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Json.Path
+namespace Json.Path;
+
+internal static class RangeExtensions
 {
-	internal static class RangeExtensions
+	public static string ToPathString(this Index index)
 	{
-		public static string ToPathString(this Index index)
-		{
-			return index.IsFromEnd ? $"-{index.Value}" : index.Value.ToString();
-		}
+		return index.IsFromEnd ? $"-{index.Value}" : index.Value.ToString();
 	}
 }

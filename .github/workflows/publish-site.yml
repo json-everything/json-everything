@@ -1,5 +1,5 @@
-# https://github.com/marketplace/actions/publish-nuget
-name: Publish TryJsonEverything
+# https://github.com/marketplace/actions/deploy-to-heroku
+name: Publish json-everything.net
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ on:
       - JsonSchema.UniqueKeys/**
       - JsonSchema.Generation/**
       - JsonSchema.DataGeneration/**
-      - TryJsonEverything/**
+      - json-everything.net/**
   workflow_dispatch:
 
 jobs:
@@ -24,13 +24,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: deploy to heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+      - name: restore submodules
+        run: git submodule update --init
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "json-everything" #Must be unique in Heroku
-          heroku_email: ${{secrets.HEROKU_USERNAME}}
-          usedocker: true
-        
-
-
+          dotnet-version: 6.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
+      - name: Add .nojekyll file
+        run: touch bin/wwwroot/.nojekyll
+      - name: Copy index.html files
+        run: |
+          mkdir bin/wwwroot/json-schema/ && cp bin/wwwroot/index.html bin/wwwroot/json-schema/
+          mkdir bin/wwwroot/json-path/ && cp bin/wwwroot/index.html bin/wwwroot/json-path/
+          mkdir bin/wwwroot/json-patch/ && cp bin/wwwroot/index.html bin/wwwroot/json-patch/
+          mkdir bin/wwwroot/json-pointer/ && cp bin/wwwroot/index.html bin/wwwroot/json-pointer/
+          mkdir bin/wwwroot/json-logic/ && cp bin/wwwroot/index.html bin/wwwroot/json-logic/
+      - name: Publish
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: bin/wwwroot

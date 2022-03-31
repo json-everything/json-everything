@@ -1,0 +1,16 @@
+﻿@using JsonEverythingNet.Services
+
+<a href="@Library.NugetLink" target="_blank">
+    <div class="btn version-callout mx-2 highlight font-monospace">
+        <span class="fw-bold">@Library.Name</span><br/>v@(Library.Version)
+    </div>
+</a>
+
+@code{
+
+#pragma warning disable CS8618
+    [Parameter]
+    public LibraryVersion Library { get; set; }
+#pragma warning restore CS8618
+
+}

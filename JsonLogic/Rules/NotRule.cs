@@ -1,23 +1,22 @@
 ﻿using System.Text.Json;
 using Json.More;
 
-namespace Json.Logic.Rules
+namespace Json.Logic.Rules;
+
+[Operator("!")]
+internal class NotRule : Rule
 {
-	[Operator("!")]
-	internal class NotRule : Rule
+	private readonly Rule _value;
+
+	public NotRule(Rule value)
 	{
-		private readonly Rule _value;
+		_value = value;
+	}
 
-		public NotRule(Rule value)
-		{
-			_value = value;
-		}
+	public override JsonElement Apply(JsonElement data)
+	{
+		var value = _value.Apply(data);
 
-		public override JsonElement Apply(JsonElement data)
-		{
-			var value = _value.Apply(data);
-
-			return (!value.IsTruthy()).AsJsonElement();
-		}
+		return (!value.IsTruthy()).AsJsonElement();
 	}
 }

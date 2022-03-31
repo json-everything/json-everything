@@ -1,19 +1,20 @@
 ﻿using System.Linq;
+using JetBrains.Annotations;
 
-namespace Json.Schema.DataGeneration.Requirements
+namespace Json.Schema.DataGeneration.Requirements;
+
+[UsedImplicitly]
+internal class EnumRequirementsGatherer : IRequirementsGatherer
 {
-	internal class EnumRequirementsGatherer : IRequirementsGatherer
+	public void AddRequirements(RequirementsContext context, JsonSchema schema)
 	{
-		public void AddRequirements(RequirementsContext context, JsonSchema schema)
+		var enumKeyword = schema.Keywords?.OfType<EnumKeyword>().FirstOrDefault();
+		if (enumKeyword != null)
 		{
-			var enumKeyword = schema.Keywords?.OfType<EnumKeyword>().FirstOrDefault();
-			if (enumKeyword != null)
-			{
-				if (context.EnumOptions != null)
-					context.HasConflict = true;
-				else
-					context.EnumOptions = enumKeyword.Values.ToList();
-			}
+			if (context.EnumOptions != null)
+				context.HasConflict = true;
+			else
+				context.EnumOptions = enumKeyword.Values.ToList();
 		}
 	}
 }

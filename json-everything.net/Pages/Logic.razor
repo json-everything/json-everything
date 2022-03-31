@@ -1,0 +1,161 @@
+﻿@page "/json-logic"
+@using BlazorMonaco
+@using System.Text.Json
+@using Json.Logic
+@using JsonEverythingNet.Services
+@using Radzen
+@using Radzen.Blazor
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
+
+@inject CookieManager _cookieManager;
+
+<PageTitle>JSON Logic - json-everything.net</PageTitle>
+
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON Logic</h1>
+		<div class="align-items-center mx-3">
+			<div>
+				Complex rule definition and evaluation using JSON
+				<br/>
+				Learn more about
+				<a href="https://jsonlogic.com/" target="_blank">JSON Logic <ExternalLinkIcon/></a>
+			</div>
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+		    <NugetLibrary Library="library"/>
+		}
+	</div>
+</div>
+
+<div class="vstack gap-3 mt-4">
+	<div>
+		<div class="row">
+			<div class="col-5">
+				<label class="w-100">
+					Logic
+					<div class="editor-input">
+						<MonacoEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveLogic"/>
+					</div>
+				</label>
+			</div>
+			<div class="col mx-2 align-items-center row">
+				<button class="btn btn-primary w-100" @onclick="Apply">Apply</button>
+			</div>
+			<div class="col-5">
+				<label class="w-100">
+					Data
+					<div class="editor-input">
+						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+						              CssClass="h-100" OnKeyUp="SaveInstance"/>
+					</div>
+				</label>
+			</div>
+		</div>
+	</div>
+    
+    <label>
+        Result
+        <div class="editor-input">
+            <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+                          CssClass="h-100"/>
+        </div>
+    </label>
+</div>
+
+<div class="row my-4">
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
+		<Tabs>
+			<RadzenTabsItem Text="Overview">
+				<Docs Page="json-logic" AddAnchors="true"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
+		<Tabs>
+			<RadzenTabsItem Text="Release Notes">
+				<Docs Page="release-notes/json-logic"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+</div>
+
+@code {
+#pragma warning disable CS8618
+	private MonacoEditor _logicEditor;
+	private MonacoEditor _instanceEditor;
+	private MonacoEditor _outputEditor;
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<Rule>(),
+	};
+#pragma warning restore CS8618
+
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private async Task Apply()
+	{
+		Rule rule;
+		try
+		{
+			rule = JsonSerializer.Deserialize<Rule>(await _logicEditor.GetValue())!;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Rule is invalid\n\n{e.Message}");
+			return;
+		}
+		JsonElement instance;
+		try
+		{
+			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetValue($"Data is invalid\n\n{e.Message}");
+			return;
+		}
+
+		var results = rule.Apply(instance);
+
+		var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true});
+
+		await _outputEditor.SetValue(resultText);
+	}
+
+	private async Task SaveLogic()
+	{
+		await _cookieManager.SaveEditorValue(_logicEditor, "logic");
+	}
+
+	private async Task LoadSavedLogic()
+	{
+		await _cookieManager.LoadEditorValue(_logicEditor, "logic");
+	}
+
+	private async Task SaveInstance()
+	{
+		await _cookieManager.SaveEditorValue(_instanceEditor, "logic-instance");
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		await _cookieManager.LoadEditorValue(_instanceEditor, "logic-instance");
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await _cookieManager.Initialize();
+	    await _outputEditor.SetValue(string.Empty);
+
+		await LoadSavedLogic();
+		await LoadSavedInstance();
+	}
+
+}

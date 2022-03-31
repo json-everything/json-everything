@@ -2,20 +2,19 @@
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
-namespace Json.Schema.Generation.Generators
+namespace Json.Schema.Generation.Generators;
+
+internal class EnumGenerator : ISchemaGenerator
 {
-	internal class EnumGenerator : ISchemaGenerator
+	public bool Handles(Type type)
 	{
-		public bool Handles(Type type)
-		{
-			return type.IsEnum;
-		}
+		return type.IsEnum;
+	}
 
-		public void AddConstraints(SchemaGeneratorContext context)
-		{
-			var values = Enum.GetNames(context.Type).ToList();
+	public void AddConstraints(SchemaGeneratorContext context)
+	{
+		var values = Enum.GetNames(context.Type).ToList();
 
-			context.Intents.Add(new EnumIntent(values));
-		}
+		context.Intents.Add(new EnumIntent(values));
 	}
 }

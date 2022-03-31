@@ -2,50 +2,49 @@
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
-namespace Json.Schema.DataGeneration.Tests
+namespace Json.Schema.DataGeneration.Tests;
+
+public class ConditionalGenerationTests
 {
-	public class ConditionalGenerationTests
+	[Test]
+	public void IfThenElse()
 	{
-		[Test]
-		public void IfThenElse()
-		{
-			var schema = new JsonSchemaBuilder()
-				.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
-				.Then(new JsonSchemaBuilder().MultipleOf(3))
-				.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
+		var schema = new JsonSchemaBuilder()
+			.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+			.Then(new JsonSchemaBuilder().MultipleOf(3))
+			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-			Run(schema);
-		}
+		Run(schema);
+	}
 
-		[Test]
-		public void ThenElse()
-		{
-			var schema = new JsonSchemaBuilder()
-				.Type(SchemaValueType.Boolean)
-				.Then(new JsonSchemaBuilder().MultipleOf(3))
-				.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
+	[Test]
+	public void ThenElse()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Boolean)
+			.Then(new JsonSchemaBuilder().MultipleOf(3))
+			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-			Run(schema);
-		}
+		Run(schema);
+	}
 
-		[Test]
-		public void IfThen()
-		{
-			var schema = new JsonSchemaBuilder()
-				.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
-				.Then(new JsonSchemaBuilder().MultipleOf(3));
+	[Test]
+	public void IfThen()
+	{
+		var schema = new JsonSchemaBuilder()
+			.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+			.Then(new JsonSchemaBuilder().MultipleOf(3));
 
-			Run(schema);
-		}
+		Run(schema);
+	}
 
-		[Test]
-		public void IfElse()
-		{
-			var schema = new JsonSchemaBuilder()
-				.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
-				.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
+	[Test]
+	public void IfElse()
+	{
+		var schema = new JsonSchemaBuilder()
+			.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-			Run(schema);
-		}
+		Run(schema);
 	}
 }

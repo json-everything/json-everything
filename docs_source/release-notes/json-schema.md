@@ -1,3 +1,13 @@
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/239)
+
+[#238](https://github.com/gregsdennis/json-everything/pull/238) - [WeihanLi](https://github.com/WeihanLi) added extenion methods to create schemas directly from `JsonDocument` and strings that contain JSON data.
+
+# [2.1.2](https://github.com/gregsdennis/json-everything/pull/230)
+
+[#220](https://github.com/gregsdennis/json-everything/issues/220) - References to deeply nested subschemas could not be resolved through keywords that contained a single schema.
+
+Resolving the above resulted in not needing `IRefResolvable.ResolvePointerSegment(string)`.  This method has been marked obsolete on the interface and will be removed with the next major version.
+
 # [2.1.1](https://github.com/gregsdennis/json-everything/pull/227)
 
 [#226](https://github.com/gregsdennis/json-everything/issues/226) - Fixed an issue with including unneeded nodes in Basic output.
