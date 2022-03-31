@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -116,5 +117,34 @@ public class FormatTests
 		results.AssertInvalid();
 		var serialized = JsonSerializer.Serialize(results);
 		Assert.IsTrue(serialized.Contains("something-dumb"));
+	}
+
+	private class RegexBasedFormat : RegexFormat
+	{
+		public RegexBasedFormat()
+			: base("hexadecimal", "^[0-9a-fA-F]+$")
+		{
+		}
+	}
+
+	[TestCase("\"1dd7fe33f97f42cf89c5789018bae64d\"", true)]
+	[TestCase("\"nwvoiwe;oiabe23oi32\"", false)]
+	[TestCase("true", true)]
+	public void RegexBasedFormatWorksProperly(string jsonText, bool isValid)
+	{
+		Formats.Register(new RegexBasedFormat());
+
+		var json = JsonDocument.Parse(jsonText).RootElement;
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Format("hexadecimal");
+
+		var results = schema.Validate(json, new ValidationOptions
+		{
+			OutputFormat = OutputFormat.Detailed,
+			RequireFormatValidation = true
+		});
+
+		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+		Assert.AreEqual(isValid, results.IsValid);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
 namespace Json.Schema;
 
@@ -29,6 +30,7 @@ public class Format
 	/// </summary>
 	/// <param name="element">The element to validate.</param>
 	/// <returns><code>true</code>.  Override to return another value.</returns>
+	[Obsolete("This method isn't called anymore.  It will be removed in the next major version.")]
 	public virtual bool Validate(JsonElement element)
 	{
 		return true;
