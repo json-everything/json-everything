@@ -1,6 +1,10 @@
-# [???](https://github.com/gregsdennis/json-everything/pull/???)
+# [2.2.1](https://github.com/gregsdennis/json-everything/pull/???)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+[#245](https://github.com/gregsdennis/json-everything/issues/245) - [@ItsVeryWindy](https://github.com/ItsVeryWindy) identified where `allOf` was reporting locations incorrectly in validation output.
+
+[#246](https://github.com/gregsdennis/json-everything/issues/246) - [@YaroslavHuriev](https://github.com/YaroslavHuriev) noticed an issue with some formats where non-strings were not properly ignored.
 
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/239)
 
