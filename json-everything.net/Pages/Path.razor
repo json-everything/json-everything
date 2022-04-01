@@ -6,6 +6,7 @@
 @using Radzen
 @using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
+@using System.Text.Encodings.Web
 
 @inject CookieManager _cookieManager;
 
@@ -136,7 +137,11 @@
 		var results = path.Evaluate(instance);
 
 		var resultText = results.Error == null
-			? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions {WriteIndented = true})
+			? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			})
 			: string.Empty;
 
 		await _outputEditor.SetValue(resultText);

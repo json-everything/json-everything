@@ -6,6 +6,7 @@
 @using Radzen
 @using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
+@using System.Text.Encodings.Web
 
 @inject CookieManager _cookieManager;
 
@@ -136,7 +137,11 @@
 		var results = pointer.Evaluate(instance);
 
 		var resultText = results.HasValue
-			? JsonSerializer.Serialize(results, new JsonSerializerOptions {WriteIndented = true})
+			? JsonSerializer.Serialize(results, new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			})
 			: "No value found at that location";
 
 		await _outputEditor.SetValue(resultText);
