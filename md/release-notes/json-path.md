@@ -1,6 +1,8 @@
-# [???](https://github.com/gregsdennis/json-everything/pull/???)
+# [0.2.1](https://github.com/gregsdennis/json-everything/commit/1ba018b86c14dc94c55206062250735356491460)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+Fixed issue with parsing recursive descents into quoted-index property names, e.g. `$..['foo']`.  Previous versions added two recursive descent selectors, which resulted in duplicate entries in the results.
 
 # [0.2.0](https://github.com/gregsdennis/json-everything/pull/242)
 
