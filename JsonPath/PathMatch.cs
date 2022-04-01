@@ -1,10 +1,12 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 
 namespace Json.Path;
 
 /// <summary>
 /// Represents a single match.
 /// </summary>
+[DebuggerDisplay("{Value} - {Location}")]
 public class PathMatch
 {
 	/// <summary>

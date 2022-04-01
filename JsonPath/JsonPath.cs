@@ -140,7 +140,12 @@ public class JsonPath
 		var slice = span[i..];
 		if (slice.StartsWith("..") || slice.StartsWith(".["))
 		{
-			i++;
+			if (slice.StartsWith("..["))
+				// this handles cases like $..['foo-1'] that can't
+				// be represented by a dot-name selector
+				i += 2;
+			else
+				i++;
 			return new RecursiveDescentSelector();
 		}
 
