@@ -51,7 +51,7 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"{number} is less than or equal to {Value}");
+			context.LocalResult.Fail(Resources.Error_Minimum, ("received", number), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

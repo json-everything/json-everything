@@ -221,11 +221,25 @@ public class ValidationResults
 	/// <summary>
 	/// Marks the result as invalid.
 	/// </summary>
-	/// <param name="message"></param>
+	/// <param name="message">(optional) An error message.</param>
+	/// <remarks>
+	/// For better support for customization, consider using the overload that takes parameters.
+	/// </remarks>
 	public void Fail(string? message = null)
 	{
 		IsValid = false;
 		Message = message;
+	}
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string message, params (string token, object value)[] parameters)
+	{
+		IsValid = false;
+		Message = message.ReplaceTokens(parameters);
 	}
 
 	internal void ImportAnnotations(List<Annotation> annotations)
