@@ -180,6 +180,10 @@ blockquote {
 	unicode-bidi: normal;
 }
 
+blockquote > p {
+	margin-bottom: 0;
+}
+
 markdown-anchor {
 	display: inline-block;
 	overflow: visible !important;

@@ -1,0 +1,48 @@
+﻿@page "/json-more"
+@using JsonEverythingNet.Services
+@using Radzen
+@using Radzen.Blazor
+@using Json.More
+
+<PageTitle>Json.More.Net - json-everything.net</PageTitle>
+
+<div class="navbar">
+	<div class="align-items-center hstack mx-2">
+		<h1 class="display-4">JSON More</h1>
+		<div class="align-items-center mx-3">
+			Helpers and extended support for <code>System.Text.Json</code> models.
+		</div>
+	</div>
+	<div class="align-items-center mt-1">
+		@foreach (var library in _libraries)
+		{
+		    <NugetLibrary Library="library"/>
+		}
+	</div>
+</div>
+
+<div class="row my-4">
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
+		<Tabs>
+			<RadzenTabsItem Text="Overview">
+				<Docs Page="json-more" AddAnchors="true"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
+		<Tabs>
+			<RadzenTabsItem Text="Release Notes">
+				<Docs Page="release-notes/json-more"/>
+			</RadzenTabsItem>
+		</Tabs>
+	</RadzenTabs>
+</div>
+
+@code {
+#pragma warning disable CS8618
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonElementEqualityComparer>(),
+	};
+#pragma warning restore CS8618
+}

@@ -1,14 +1,12 @@
-# Json.More<nsp>.Net
-
 Json.More<nsp>.Net aims to fill gaps left by `System.Text.Json`.  To this end, it supplies four additional functions.
 
-## Equality comparison
+# Equality comparison
 
 Sadly, it seems equality was considered unnecessary.  To remedy that, the `.IsEquivalentTo()` extension method is supplied for `JsonDocument`, `JsonElement`, and `JsonNode`.
 
 This extension method calculates the JSON-equality of the nodes.  This means that objects are key-matched (unordered) and arrays are sequence-matched (ordered).
 
-From json.org:
+From [json.org](https://json.org):
 
 > An *object* is an unordered set of name/value pairs.
 
@@ -20,7 +18,7 @@ Additionally, an `IEqualityComparer<JsonElement>` is supplied (`JsonElementEqual
 
 ***NOTE** Comparers are also supplied for `JsonDocument` and `JsonNode`.*
 
-## Enum serialization
+# Enum serialization
 
 The `EnumStringConverter<T>` class enables string encoding of enum values.  `T` is the enum.
 
@@ -49,9 +47,9 @@ public enum MyFlagsEnum
 
 To use this converter, apply the `[JsonConverter(typeof(EnumStringConverter<T>))]` to either the enum or an enum-valued property.
 
-## Data conversions
+# Data conversions
 
-### `.AsJsonElement()` extension
+## `.AsJsonElement()` extension
 
 Sometimes you just want a `JsonElement` that represents a simple value, like a string, boolean, or number.  This library exposes several overloads of the `.AsJsonElement()` extension that can do this for you.
 
@@ -77,7 +75,7 @@ var obj = new Dictionary<string, JsonElement>{
 }
 ```
 
-### Making methods that require `JsonElement` easier to call
+## Making methods that require `JsonElement` easier to call
 
 The `JsonElementProxy` class allows the client to define methods that expect a `JsonElement` to be called with native types by defining implicit casts from those types into the `JsonElementProxy` and then also an implicit cast from the proxy into `JsonElement`.
 
@@ -119,7 +117,7 @@ myObject.SomeMethod("string");
 
 To achieve this without `JsonElementProxy`, you could also create overloads for `short`, `int`, `long`, `float`, `double`, `decimal`, `string`, and `bool`.
 
-## JSON model serialization
+# JSON model serialization
 
 The .Net team did a great job of supporting fast serialization, but for whatever reason they didn't implement serializing their data model.  The `Utf8JsonWriterExtensions` class fills that gap.
 
