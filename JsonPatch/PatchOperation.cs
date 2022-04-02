@@ -191,7 +191,7 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 
 	public override PatchOperation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var model = JsonSerializer.Deserialize<Model>(ref reader, options);
+		var model = JsonSerializer.Deserialize<Model>(ref reader, options)!;
 
 		if (model.Path == null)
 			throw new JsonException($"`{model.Op}` operation requires `path`");

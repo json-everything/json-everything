@@ -180,7 +180,7 @@ internal class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyw
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var dependencies = JsonSerializer.Deserialize<Dictionary<string, SchemaOrPropertyList>>(ref reader, options);
+		var dependencies = JsonSerializer.Deserialize<Dictionary<string, SchemaOrPropertyList>>(ref reader, options)!;
 		return new DependenciesKeyword(dependencies);
 	}
 	public override void Write(Utf8JsonWriter writer, DependenciesKeyword value, JsonSerializerOptions options)
@@ -263,9 +263,9 @@ internal class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropert
 	public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new SchemaOrPropertyList(JsonSerializer.Deserialize<List<string>>(ref reader, options));
+			return new SchemaOrPropertyList(JsonSerializer.Deserialize<List<string>>(ref reader, options)!);
 
-		return new SchemaOrPropertyList(JsonSerializer.Deserialize<JsonSchema>(ref reader, options));
+		return new SchemaOrPropertyList(JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!);
 	}
 
 	public override void Write(Utf8JsonWriter writer, SchemaOrPropertyList value, JsonSerializerOptions options)

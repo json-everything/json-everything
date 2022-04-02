@@ -34,7 +34,7 @@ public class JsonPath
 
 	internal static readonly JsonPath Root = new(new[] { new RootNodeSelector() });
 
-	internal JsonPath(IEnumerable<ISelector> nodes)
+	private JsonPath(IEnumerable<ISelector> nodes)
 	{
 		_nodes = nodes;
 	}
@@ -284,7 +284,7 @@ public class JsonPathConverter : JsonConverter<JsonPath>
 	/// <returns>The converted value.</returns>
 	public override JsonPath Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var text = reader.GetString();
+		var text = reader.GetString()!;
 		return JsonPath.Parse(text);
 	}
 

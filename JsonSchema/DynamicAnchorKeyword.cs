@@ -80,7 +80,7 @@ internal class DynamicAnchorKeywordJsonConverter : JsonConverter<DynamicAnchorKe
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var uriString = reader.GetString();
+		var uriString = reader.GetString()!;
 		if (!AnchorKeyword.AnchorPattern.IsMatch(uriString))
 			throw new JsonException("Expected anchor format");
 

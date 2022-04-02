@@ -80,7 +80,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	public static JsonSchema FromText(string jsonText)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText);
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText)!;
 	}
 
 	/// <summary>
@@ -90,7 +90,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	public static ValueTask<JsonSchema> FromStream(Stream source)
 	{
-		return JsonSerializer.DeserializeAsync<JsonSchema>(source);
+		return JsonSerializer.DeserializeAsync<JsonSchema>(source)!;
 	}
 
 	/// <summary>
@@ -423,7 +423,7 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 				case JsonTokenType.Comment:
 					break;
 				case JsonTokenType.PropertyName:
-					var keyword = reader.GetString();
+					var keyword = reader.GetString()!;
 					reader.Read();
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
@@ -439,7 +439,7 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 						                 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = (IJsonSchemaKeyword) JsonSerializer.Deserialize(ref reader, keywordType, options) ??
+						implementation = (IJsonSchemaKeyword) JsonSerializer.Deserialize(ref reader, keywordType, options)! ??
 						                 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
 					keywords.Add(implementation);
 					break;

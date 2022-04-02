@@ -77,7 +77,7 @@ internal class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var str = reader.GetString();
+		var str = reader.GetString()!;
 
 		return new CommentKeyword(str);
 	}

@@ -57,12 +57,13 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		var validCount = 0;
 		for (var i = 0; i < Schemas.Count; i++)
 		{
-			context.Log(() => $"Processing {Name}[{i}]...");
+			var i1 = i;
+			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
 			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 			schema.ValidateSubschema(context);
 			validCount += context.LocalResult.IsValid ? 1 : 0;
-			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();
 			if (validCount > 1 && context.ApplyOptimizations) break;
 		}
@@ -120,11 +121,11 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options);
+			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 			return new OneOfKeyword(schemas);
 		}
 			
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 		return new OneOfKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, OneOfKeyword value, JsonSerializerOptions options)

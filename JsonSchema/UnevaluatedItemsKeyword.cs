@@ -186,7 +186,7 @@ internal class UnevaluatedItemsKeywordJsonConverter : JsonConverter<UnevaluatedI
 {
 	public override UnevaluatedItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 
 		return new UnevaluatedItemsKeyword(schema);
 	}

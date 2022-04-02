@@ -20,7 +20,7 @@ public static class PatchExtensions
 	/// <typeparam name="T">The type of the object.</typeparam>
 	/// <returns>New instance of patched object</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
-	public static T Apply<T>(this JsonPatch patch, T obj)
+	public static T? Apply<T>(this JsonPatch patch, T obj)
 	{
 		return Apply<T, T>(patch, obj);
 	}
@@ -35,7 +35,7 @@ public static class PatchExtensions
 	/// <typeparam name="TTarget">The type of the target object.</typeparam>
 	/// <returns>New instance of patched object</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
-	public static TTarget Apply<TOriginal, TTarget>(this JsonPatch patch, TOriginal obj, JsonSerializerOptions? options = null)
+	public static TTarget? Apply<TOriginal, TTarget>(this JsonPatch patch, TOriginal obj, JsonSerializerOptions? options = null)
 	{
 		using var doc = JsonDocument.Parse(JsonSerializer.Serialize(obj, options));
 		var patchResult = patch.Apply(doc.RootElement);

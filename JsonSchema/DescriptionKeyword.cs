@@ -78,7 +78,7 @@ internal class DescriptionKeywordJsonConverter : JsonConverter<DescriptionKeywor
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var str = reader.GetString();
+		var str = reader.GetString()!;
 
 		return new DescriptionKeyword(str);
 	}

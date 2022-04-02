@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
 
@@ -59,7 +60,7 @@ public class ParsedGoessnerTests
 		_instance = model.ToJsonDocument(new JsonSerializerOptions
 		{
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			IgnoreNullValues = true
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 		}).RootElement;
 	}
 
@@ -72,7 +73,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches.Count);
+		Assert.AreEqual(1, result.Matches!.Count);
 		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetString());
 		Assert.AreEqual(input, path.ToString());
 
@@ -87,7 +88,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(4, result.Matches.Count);
+		Assert.AreEqual(4, result.Matches!.Count);
 		Assert.AreEqual("Nigel Rees", result.Matches[0].Value.GetString());
 		Assert.AreEqual("Evelyn Waugh", result.Matches[1].Value.GetString());
 		Assert.AreEqual("Herman Melville", result.Matches[2].Value.GetString());
@@ -104,7 +105,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(4, result.Matches.Count);
+		Assert.AreEqual(4, result.Matches!.Count);
 		Assert.AreEqual("Nigel Rees", result.Matches[0].Value.GetString());
 		Assert.AreEqual("Evelyn Waugh", result.Matches[1].Value.GetString());
 		Assert.AreEqual("Herman Melville", result.Matches[2].Value.GetString());
@@ -121,7 +122,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches.Count);
+		Assert.AreEqual(2, result.Matches!.Count);
 		Assert.AreEqual(4, result.Matches[0].Value.EnumerateArray().Count());
 		Assert.AreEqual(2, result.Matches[1].Value.EnumerateObject().Count());
 		Assert.AreEqual(input, path.ToString());
@@ -136,7 +137,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(5, result.Matches.Count);
+		Assert.AreEqual(5, result.Matches!.Count);
 		Assert.AreEqual(8.95m, result.Matches[0].Value.GetDecimal());
 		Assert.AreEqual(12.99m, result.Matches[1].Value.GetDecimal());
 		Assert.AreEqual(8.99m, result.Matches[2].Value.GetDecimal());
@@ -154,13 +155,13 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches.Count);
+		Assert.AreEqual(1, result.Matches!.Count);
 		Assert.AreEqual("Moby Dick", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
 	}
 
 	[Test]
-	public void Example6a()
+	public void Example6A()
 	{
 		var input = "$..book[(@.length-1)]";
 		var path = JsonPath.Parse(input);
@@ -168,13 +169,13 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches.Count);
+		Assert.AreEqual(1, result.Matches!.Count);
 		Assert.AreEqual("The Lord of the Rings", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
 	}
 
 	[Test]
-	public void Example6b()
+	public void Example6B()
 	{
 		var input = "$..book[-1:]";
 		var path = JsonPath.Parse(input);
@@ -182,13 +183,13 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches.Count);
+		Assert.AreEqual(1, result.Matches!.Count);
 		Assert.AreEqual("The Lord of the Rings", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
 	}
 
 	[Test]
-	public void Example7a()
+	public void Example7A()
 	{
 		var input = "$..book[0,1]";
 		var path = JsonPath.Parse(input);
@@ -196,14 +197,14 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches.Count);
+		Assert.AreEqual(2, result.Matches!.Count);
 		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual("Sword of Honour", result.Matches[1].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
 	}
 
 	[Test]
-	public void Example7b()
+	public void Example7B()
 	{
 		var input = "$..book[:2]";
 		var path = JsonPath.Parse(input);
@@ -211,7 +212,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches.Count);
+		Assert.AreEqual(2, result.Matches!.Count);
 		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual("Sword of Honour", result.Matches[1].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
@@ -226,7 +227,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches.Count);
+		Assert.AreEqual(2, result.Matches!.Count);
 		Assert.AreEqual("Moby Dick", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual("The Lord of the Rings", result.Matches[1].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
@@ -241,7 +242,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches.Count);
+		Assert.AreEqual(2, result.Matches!.Count);
 		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value.GetProperty("title").GetString());
 		Assert.AreEqual("Moby Dick", result.Matches[1].Value.GetProperty("title").GetString());
 		Assert.AreEqual(input, path.ToString());
@@ -256,7 +257,7 @@ public class ParsedGoessnerTests
 		var result = path.Evaluate(_instance);
 
 		Assert.IsNull(result.Error);
-		Assert.AreEqual(27, result.Matches.Count);
+		Assert.AreEqual(27, result.Matches!.Count);
 		Assert.AreEqual(input, path.ToString());
 	}
 }

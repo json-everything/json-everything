@@ -183,7 +183,7 @@ internal class AdditionalPropertiesKeywordJsonConverter : JsonConverter<Addition
 {
 	public override AdditionalPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 
 		return new AdditionalPropertiesKeyword(schema);
 	}

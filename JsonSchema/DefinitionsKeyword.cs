@@ -99,7 +99,7 @@ internal class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeywor
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options)!;
 		return new DefinitionsKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, DefinitionsKeyword value, JsonSerializerOptions options)

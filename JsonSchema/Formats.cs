@@ -187,14 +187,14 @@ public static class Formats
 	{
 		if (element.ValueKind != JsonValueKind.String) return true;
 
-		return Pointer.JsonPointer.TryParse(element.GetString(), out var p) && !p!.IsUriEncoded;
+		return Pointer.JsonPointer.TryParse(element.GetString()!, out var p) && !p!.IsUriEncoded;
 	}
 
 	private static bool CheckRelativeJsonPointer(JsonElement element)
 	{
 		if (element.ValueKind != JsonValueKind.String) return true;
 
-		return Pointer.RelativeJsonPointer.TryParse(element.GetString(), out _);
+		return Pointer.RelativeJsonPointer.TryParse(element.GetString()!, out _);
 	}
 
 	// source: https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
@@ -271,7 +271,7 @@ public static class Formats
 	{
 		if (element.ValueKind != JsonValueKind.String) return true;
 
-		return System.DateTime.TryParseExact(element.GetString().ToUpperInvariant(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+		return System.DateTime.TryParseExact(element.GetString()!.ToUpperInvariant(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
 	}
 
 	private static bool CheckHostName(JsonElement element)
@@ -306,7 +306,7 @@ public static class Formats
 	{
 		if (element.ValueKind != JsonValueKind.String) return true;
 
-		return Schema.Duration.TryParse(element.GetString(), out _);
+		return Schema.Duration.TryParse(element.GetString()!, out _);
 	}
 
 	private static bool CheckRegex(JsonElement element)
@@ -315,7 +315,7 @@ public static class Formats
 
 		try
 		{
-			var _ = new Regex(element.GetString());
+			var _ = new Regex(element.GetString()!);
 			return true;
 		}
 		catch

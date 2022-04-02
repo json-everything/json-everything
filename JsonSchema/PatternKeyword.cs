@@ -70,7 +70,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 			return;
 		}
 
-		var str = context.LocalInstance.GetString();
+		var str = context.LocalInstance.GetString()!;
 		if (Value.IsMatch(str))
 			context.LocalResult.Pass();
 		else
@@ -111,7 +111,7 @@ internal class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var str = reader.GetString();
+		var str = reader.GetString()!;
 		try
 		{
 			var regex = new Regex(str, RegexOptions.ECMAScript | RegexOptions.Compiled);

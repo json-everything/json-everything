@@ -11,7 +11,7 @@ internal class RelativeJsonPointerJsonConverter : JsonConverter<RelativeJsonPoin
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var str = reader.GetString();
+		var str = reader.GetString()!;
 		return RelativeJsonPointer.TryParse(str, out var pointer)
 			? pointer
 			: throw new JsonException("Value does not represent a Relative JSON Pointer");

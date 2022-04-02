@@ -178,7 +178,7 @@ internal class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<Unevalu
 {
 	public override UnevaluatedPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 
 		return new UnevaluatedPropertiesKeyword(schema);
 	}

@@ -32,7 +32,7 @@ internal class SubstrRule : Rule
 		if (input.ValueKind != JsonValueKind.String)
 			throw new JsonLogicException($"Cannot substring a {input.ValueKind}.");
 
-		var stringInput = input.GetString();
+		var stringInput = input.GetString()!;
 			
 		if (start.ValueKind != JsonValueKind.Number)
 			throw new JsonLogicException("Start value must be an integer");

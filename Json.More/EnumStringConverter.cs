@@ -44,7 +44,7 @@ public class EnumStringConverter<T> : JsonConverter<T>
 	private static Dictionary<T, string>? _writeValues;
 	private static Func<T, T, T>? _aggregator;
 	// ReSharper disable once StaticMemberInGenericType
-	private static readonly object _lock = new object();
+	private static readonly object _lock = new();
 
 	private static Dictionary<string, T> ReadValues
 	{
@@ -85,7 +85,7 @@ public class EnumStringConverter<T> : JsonConverter<T>
 				var values = new List<T>();
 				while (reader.TokenType != JsonTokenType.EndArray)
 				{
-					str = reader.GetString();
+					str = reader.GetString()!;
 
 					if (!ReadValues.TryGetValue(str, out var immediate))
 						throw new JsonException($"Could not find appropriate value for {str} in type {typeToConvert.Name}");
@@ -100,7 +100,7 @@ public class EnumStringConverter<T> : JsonConverter<T>
 			throw new JsonException("Expected string");
 		}
 
-		str = reader.GetString();
+		str = reader.GetString()!;
 
 		return ReadValues.TryGetValue(str, out var value)
 			? value

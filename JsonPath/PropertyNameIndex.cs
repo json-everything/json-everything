@@ -60,7 +60,7 @@ internal class PropertyNameIndex : IObjectIndexExpression
 			if (start == '\'') 
 				key = key.Replace("\\'", "'").Replace("\"", "\\\"");
 			using var doc = JsonDocument.Parse($"\"{key}\"");
-			key = doc.RootElement.GetString();
+			key = doc.RootElement.GetString()!;
 		}
 		catch
 		{

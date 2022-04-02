@@ -115,7 +115,7 @@ internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 			throw new JsonException("Expected array");
 
 		return new RequiredKeyword(document.RootElement.EnumerateArray()
-			.Select(e => e.GetString()));
+			.Select(e => e.GetString()!));
 	}
 	public override void Write(Utf8JsonWriter writer, RequiredKeyword value, JsonSerializerOptions options)
 	{

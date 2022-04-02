@@ -76,7 +76,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	{
 		if (reader.TokenType == JsonTokenType.StartObject)
 		{
-			var data = JsonSerializer.Deserialize<Dictionary<string, ArgumentCollection>>(ref reader, options);
+			var data = JsonSerializer.Deserialize<Dictionary<string, ArgumentCollection>>(ref reader, options)!;
 
 			if (data.Count != 1)
 				throw new JsonException("Rules must contain exactly one operator key with an array of arguments.");
@@ -97,7 +97,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var data = JsonSerializer.Deserialize<List<Rule>>(ref reader, options);
+			var data = JsonSerializer.Deserialize<List<Rule>>(ref reader, options)!;
 			return new RuleCollection(data);
 		}
 
@@ -134,7 +134,7 @@ internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 	public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new ArgumentCollection(JsonSerializer.Deserialize<List<Rule>>(ref reader, options));
+			return new ArgumentCollection(JsonSerializer.Deserialize<List<Rule>>(ref reader, options)!);
 			
 		return new ArgumentCollection(JsonSerializer.Deserialize<Rule>(ref reader, options));
 	}

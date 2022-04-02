@@ -23,7 +23,7 @@ internal class MissingRule : Rule
 		if (data.ValueKind != JsonValueKind.Object)
 			return expected.AsJsonElement();
 
-		var paths = expected.Select(e => e.GetString())
+		var paths = expected.Select(e => e.GetString()!)
 			.Select(p => new {Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}")})
 			.Select(p => new {Path = p.Path, Value = p.Pointer.Evaluate(data)});
 

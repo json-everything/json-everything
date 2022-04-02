@@ -41,7 +41,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	/// </remarks>
 	public PrefixItemsKeyword(params JsonSchema[] values)
 	{
-		ArraySchemas = values?.ToList() ?? throw new ArgumentNullException(nameof(values));
+		ArraySchemas = values.ToList();
 	}
 
 	/// <summary>
@@ -161,7 +161,7 @@ internal class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsKeywor
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 			
-		var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options);
+		var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 		return new PrefixItemsKeyword(schemas);
 	}
 	public override void Write(Utf8JsonWriter writer, PrefixItemsKeyword value, JsonSerializerOptions options)

@@ -120,7 +120,7 @@ internal class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var str = reader.GetString();
+		var str = reader.GetString()!;
 		var format = Formats.Get(str);
 
 		return new FormatKeyword(format);

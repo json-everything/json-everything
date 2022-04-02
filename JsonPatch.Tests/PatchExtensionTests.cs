@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NUnit.Framework;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Json.Patch.Tests;
 
@@ -96,7 +98,7 @@ public class PatchExtensionTests
 		};
 		var patchExpectedStr = "[{\"op\":\"add\",\"path\":\"/Attributes\",\"value\":[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]}]";
 		var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
-		var patch = initial.CreatePatch(target, new JsonSerializerOptions {IgnoreNullValues = true});
+		var patch = initial.CreatePatch(target, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 			
 		OutputPatch(expected);
 		OutputPatch(patch);
@@ -118,7 +120,7 @@ public class PatchExtensionTests
 		var patchExpectedStr = "[{\"op\":\"remove\",\"path\":\"/Attributes\"}]";
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
 			
-		var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
+		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 			
 		Assert.AreEqual(patchExpected, patch);
 	}
@@ -243,9 +245,9 @@ public class PatchExtensionTests
 			"{\"op\":\"add\",\"path\":\"/Attributes/0/test\",\"value\":\"test123\"},"+
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":2},{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
 		var patchBackExpected = JsonSerializer.Deserialize<JsonPatch>(patchBackExpectedStr);
-			
-		var patch = initial.CreatePatch(expected, new JsonSerializerOptions {IgnoreNullValues = true});
-		var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions {IgnoreNullValues = true});
+
+		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+		var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 			
 		Assert.AreEqual(patchExpected, patch);
 		Assert.AreEqual(patchBackExpected, patchBack);

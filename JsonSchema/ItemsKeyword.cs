@@ -111,12 +111,13 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 			{
-				context.Log(() => $"Validating item at index {i}.");
+				var i1 = i;
+				context.Log(() => $"Validating item at index {i1}.");
 				var item = context.LocalInstance[i];
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
 				SingleSchema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
@@ -141,7 +142,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			var maxEvaluations = Math.Min(ArraySchemas!.Count, context.LocalInstance.GetArrayLength());
 			for (int i = 0; i < maxEvaluations; i++)
 			{
-				context.Log(() => $"Validating item at index {i}.");
+				var i1 = i;
+				context.Log(() => $"Validating item at index {i1}.");
 				var schema = ArraySchemas[i];
 				var item = context.LocalInstance[i];
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
@@ -149,7 +151,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 				schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
@@ -253,11 +255,11 @@ internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options);
+			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 			return new ItemsKeyword(schemas);
 		}
 			
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 		return new ItemsKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)

@@ -38,7 +38,7 @@ internal class ContainerQueryIndex : IArrayIndexExpression, IObjectIndexExpressi
 		var result = _expression.Evaluate(obj);
 		if (result.ValueKind != JsonValueKind.String) return new string[] { };
 
-		var index = result.GetString();
+		var index = result.GetString()!;
 		return new[] {index};
 	}
 

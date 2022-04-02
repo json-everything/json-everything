@@ -122,11 +122,11 @@ internal class AnyOfKeywordJsonConverter : JsonConverter<AnyOfKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options);
+			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 			return new AnyOfKeyword(schemas);
 		}
 			
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 		return new AnyOfKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, AnyOfKeyword value, JsonSerializerOptions options)

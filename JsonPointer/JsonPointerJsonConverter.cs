@@ -11,7 +11,7 @@ internal class JsonPointerJsonConverter : JsonConverter<JsonPointer?>
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
-		var str = reader.GetString();
+		var str = reader.GetString()!;
 		return JsonPointer.TryParse(str, out var pointer)
 			? pointer
 			: throw new JsonException("Value does not represent a JSON Pointer");
