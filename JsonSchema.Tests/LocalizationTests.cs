@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -69,7 +68,7 @@ public class LocalizationTests
 		}
 		finally
 		{
-			ErrorMessages.Culture = null;
+			ErrorMessages.Minimum = null!;
 		}
 	}
 }

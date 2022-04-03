@@ -1,34 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <RootNamespace>Json.Schema</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>JsonSchema.Net</PackageId>
-    <Authors>Greg Dennis</Authors>
-    <Company />
-    <Product>JsonSchema.Net</Product>
-    <Description>JSON Schema built on the System.Text.Json namespace.</Description>
-    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-    <PackageTags>json-schema validation schema json</PackageTags>
-    <Version>2.2.1</Version>
-    <FileVersion>2.2.1.0</FileVersion>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyName>JsonSchema.Net</AssemblyName>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
-    <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>Json.Schema</RootNamespace>
+		<PackageId>JsonSchema.Net</PackageId>
+		<Authors>Greg Dennis</Authors>
+		<Company />
+		<Product>JsonSchema.Net</Product>
+		<Description>JSON Schema built on the System.Text.Json namespace.</Description>
+		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+		<PackageTags>json-schema validation schema json</PackageTags>
+		<Version>2.2.1</Version>
+		<FileVersion>2.2.1.0</FileVersion>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<AssemblyName>JsonSchema.Net</AssemblyName>
+		<PackageIcon>json-logo-256.png</PackageIcon>
+		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema.html</PackageReleaseNotes>
+		<DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
+		<Configurations>Debug;Release;Localization</Configurations>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<EmbeddedResource Remove="Localization\Resources.es.resx" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
@@ -53,10 +61,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Localization\Resources.resx">
-	    <SubType>Designer</SubType>
-	    <Generator></Generator>
-	  </EmbeddedResource>
+		<EmbeddedResource Update="Localization\Resources.resx">
+			<SubType>Designer</SubType>
+			<Generator></Generator>
+		</EmbeddedResource>
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Localization'">
+		<ItemGroup>
+			<ResourceFiles Include="$(TargetDir)**\*" Exclude="$(TargetDir)*" />
+		</ItemGroup>
+
+		<Move SourceFiles="@(ResourceFiles)" DestinationFolder="nuspec\%(RecursiveDir)" />
+	</Target>
 
 </Project>
