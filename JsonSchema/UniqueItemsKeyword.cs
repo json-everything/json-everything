@@ -118,3 +118,21 @@ internal class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsKeywor
 		writer.WriteBoolean(UniqueItemsKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _uniqueItems;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="UniqueItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[duplicates]] - the indices of duplicate pairs
+	/// </remarks>
+	public static string UniqueItems
+	{
+		get => _uniqueItems ?? Get();
+		set => _uniqueItems = value;
+	}
+}

@@ -128,3 +128,41 @@ internal class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 		writer.WriteString(PatternKeyword.Name, value.Value.ToString());
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _invalidPattern;
+
+	/// <summary>
+	/// Gets or sets the error message for when the <see cref="PatternKeyword"/> contains
+	/// an invalid or unsupported regular expression.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[pattern]] - the regular expression
+	/// </remarks>
+	public static string InvalidPattern
+	{
+		get => _invalidPattern ?? Get();
+		set => _invalidPattern = value;
+	}
+
+	private static string? _pattern;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[pattern]] - the number of subschemas that passed validation
+	///
+	/// The default messages are static and do not use these tokens as string values
+	/// could be quite large.  They are provided to support custom messages.
+	/// </remarks>
+	public static string Pattern
+	{
+		get => _pattern ?? Get();
+		set => _pattern = value;
+	}
+}

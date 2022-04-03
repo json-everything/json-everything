@@ -485,3 +485,18 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 		writer.WriteEndObject();
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _false;
+
+	/// <summary>
+	/// Gets or sets the error message for the "false" schema.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string False
+	{
+		get => _false ?? Get();
+		set => _false = value;
+	}
+}

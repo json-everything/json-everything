@@ -98,3 +98,22 @@ internal class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
 		writer.WriteNumber(MaxLengthKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _maxLength;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxLengthKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[value]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxLength
+	{
+		get => _maxLength ?? Get();
+		set => _maxLength = value;
+	}
+}

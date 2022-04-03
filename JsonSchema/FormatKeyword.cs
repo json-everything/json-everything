@@ -130,3 +130,52 @@ internal class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
 		writer.WriteString(FormatKeyword.Name, value.Value.Key);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _unknownFormat;
+
+	/// <summary>
+	/// Gets or sets the error message for an unknown format.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string UnknownFormat
+	{
+		get => _unknownFormat ?? Get();
+		set => _unknownFormat = value;
+	}
+
+	private static string? _format;
+
+	/// <summary>
+	/// Gets or sets the error message for the <see cref="FormatKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string Format
+	{
+		get => _format ?? Get();
+		set => _format = value;
+	}
+
+	private static string? _formatWithDetail;
+
+	/// <summary>
+	/// Gets or sets the error message for the <see cref="FormatKeyword"/> with
+	/// additional information from the format validation.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string FormatWithDetail
+	{
+		get => _formatWithDetail ?? Get();
+		set => _formatWithDetail = value;
+	}
+}

@@ -97,3 +97,22 @@ internal class MinimumKeywordJsonConverter : JsonConverter<MinimumKeyword>
 		writer.WriteNumber(MinimumKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _minimum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string Minimum
+	{
+		get => _minimum ?? Get();
+		set => _minimum = value;
+	}
+}

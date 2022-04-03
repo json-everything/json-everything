@@ -153,3 +153,21 @@ internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSch
 		writer.WriteEndObject();
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _dependentSchemas;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="DependentSchemasKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string DependentSchemas
+	{
+		get => _dependentSchemas ?? Get();
+		set => _dependentSchemas = value;
+	}
+}

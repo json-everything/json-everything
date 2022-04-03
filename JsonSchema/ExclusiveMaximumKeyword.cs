@@ -97,3 +97,22 @@ internal class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMax
 		writer.WriteNumber(ExclusiveMaximumKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _exclusiveMaximum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ExclusiveMaximumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string ExclusiveMaximum
+	{
+		get => _exclusiveMaximum ?? Get();
+		set => _exclusiveMaximum = value;
+	}
+}

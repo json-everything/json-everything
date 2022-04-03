@@ -98,3 +98,22 @@ internal class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
 		writer.WriteNumber(MinLengthKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _minLength;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinLengthKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[value]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinLength
+	{
+		get => _minLength ?? Get();
+		set => _minLength = value;
+	}
+}

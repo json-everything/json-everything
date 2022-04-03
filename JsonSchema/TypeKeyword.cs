@@ -146,3 +146,22 @@ internal class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 		JsonSerializer.Serialize(writer, value.Type, options);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _type;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="TypeKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the type of value provided in the JSON instance
+	///   - [[value]] - the type(s) required by the schema
+	/// </remarks>
+	public static string Type
+	{
+		get => _type ?? Get();
+		set => _type = value;
+	}
+}

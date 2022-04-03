@@ -98,3 +98,22 @@ internal class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKe
 		writer.WriteNumber(MaxPropertiesKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _maxProperties;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[value]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxProperties
+	{
+		get => _maxProperties ?? Get();
+		set => _maxProperties = value;
+	}
+}

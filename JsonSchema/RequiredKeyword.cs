@@ -128,3 +128,21 @@ internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 		writer.WriteEndArray();
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _required;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="RequiredKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[properties]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string Required
+	{
+		get => _required ?? Get();
+		set => _required = value;
+	}
+}

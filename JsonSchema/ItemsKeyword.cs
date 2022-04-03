@@ -278,3 +278,19 @@ internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 		}
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _invalidItemsForm;
+
+	/// <summary>
+	/// Gets or sets the error message for when <see cref="ItemsKeyword"/> is specified
+	/// with an array of schemas in a draft 2020-12 or later schema.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string InvalidItemsForm
+	{
+		get => _invalidItemsForm ?? Get();
+		set => _invalidItemsForm = value;
+	}
+}

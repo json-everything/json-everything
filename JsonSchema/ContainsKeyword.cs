@@ -81,7 +81,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 			context.LocalResult.Pass();
 		}
 		else
-			context.LocalResult.Fail("Expected array to contain at least one item that matched the schema, but it did not");
+			context.LocalResult.Fail(ErrorMessages.Contains);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -147,5 +147,20 @@ internal class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
 	{
 		writer.WritePropertyName(ContainsKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _contains;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ContainsKeyword"/>.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string Contains
+	{
+		get => _contains ?? Get();
+		set => _contains = value;
 	}
 }

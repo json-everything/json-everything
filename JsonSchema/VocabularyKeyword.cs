@@ -124,3 +124,21 @@ internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 		writer.WriteEndObject();
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _unknownVocabularies;
+
+	/// <summary>
+	/// Gets or sets the error message for when a vocabulary is unknown but required.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[vocabs]] - the URI IDs of the missing vocabularies
+	/// </remarks>
+	public static string UnknownVocabularies
+	{
+		get => _unknownVocabularies ?? Get();
+		set => _unknownVocabularies = value;
+	}
+}

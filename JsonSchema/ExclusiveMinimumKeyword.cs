@@ -97,3 +97,22 @@ internal class ExclusiveMinimumKeywordJsonConverter : JsonConverter<ExclusiveMin
 		writer.WriteNumber(ExclusiveMinimumKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _exclusiveMinimum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ExclusiveMinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string ExclusiveMinimum
+	{
+		get => _exclusiveMinimum ?? Get();
+		set => _exclusiveMinimum = value;
+	}
+}

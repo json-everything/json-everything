@@ -97,3 +97,22 @@ internal class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>
 		writer.WriteNumber(MaxItemsKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _maxItems;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[value]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxItems
+	{
+		get => _maxItems ?? Get();
+		set => _maxItems = value;
+	}
+}

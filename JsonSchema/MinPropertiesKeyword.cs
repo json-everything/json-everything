@@ -98,3 +98,22 @@ internal class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKe
 		writer.WriteNumber(MinPropertiesKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _minProperties;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[value]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinProperties
+	{
+		get => _minProperties ?? Get();
+		set => _minProperties = value;
+	}
+}

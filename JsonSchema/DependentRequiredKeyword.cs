@@ -175,3 +175,21 @@ internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRe
 		writer.WriteEndObject();
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _dependentRequired;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="DependentRequiredKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string DependentRequired
+	{
+		get => _dependentRequired ?? Get();
+		set => _dependentRequired = value;
+	}
+}

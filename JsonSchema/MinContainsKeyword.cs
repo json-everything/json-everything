@@ -117,3 +117,22 @@ internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeywor
 		writer.WriteNumber(MinContainsKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _minContains;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinContainsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of matching items provided in the JSON instance
+	///   - [[value]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinContains
+	{
+		get => _minContains ?? Get();
+		set => _minContains = value;
+	}
+}

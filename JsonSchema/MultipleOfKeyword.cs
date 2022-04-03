@@ -51,7 +51,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		if (number % Value == 0)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"{number} a multiple of {Value}");
+			context.LocalResult.Fail($"{number} is not a multiple of {Value}");
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -95,5 +95,24 @@ internal class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
 	public override void Write(Utf8JsonWriter writer, MultipleOfKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MultipleOfKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _multipleOf;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MultipleOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[value]] - the required divisor
+	/// </remarks>
+	public static string MultipleOf
+	{
+		get => _multipleOf ?? Get();
+		set => _multipleOf = value;
 	}
 }

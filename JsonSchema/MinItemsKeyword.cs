@@ -97,3 +97,22 @@ internal class MinItemsKeywordJsonConverter : JsonConverter<MinItemsKeyword>
 		writer.WriteNumber(MinItemsKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _minItems;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[value]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinItems
+	{
+		get => _minItems ?? Get();
+		set => _minItems = value;
+	}
+}

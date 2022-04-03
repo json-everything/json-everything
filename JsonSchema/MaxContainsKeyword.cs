@@ -108,3 +108,22 @@ internal class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsKeywor
 		writer.WriteNumber(MaxContainsKeyword.Name, value.Value);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _maxContains;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxContainsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of matching items provided in the JSON instance
+	///   - [[value]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxContains
+	{
+		get => _maxContains ?? Get();
+		set => _maxContains = value;
+	}
+}

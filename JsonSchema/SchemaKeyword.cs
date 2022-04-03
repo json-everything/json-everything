@@ -121,3 +121,37 @@ internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 		writer.WriteString(SchemaKeyword.Name, value.Schema.OriginalString);
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _metaSchemaResolution;
+
+	/// <summary>
+	/// Gets or sets the error message for when the meta-schema cannot be resolved.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[properties]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string MetaSchemaResolution
+	{
+		get => _metaSchemaResolution ?? Get();
+		set => _metaSchemaResolution = value;
+	}
+
+	private static string? _metaSchemaValidation;
+
+	/// <summary>
+	/// Gets or sets the error message for when the schema cannot be validated
+	/// against the meta-schema.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[properties]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string MetaSchemaValidation
+	{
+		get => _metaSchemaValidation ?? Get();
+		set => _metaSchemaValidation = value;
+	}
+}

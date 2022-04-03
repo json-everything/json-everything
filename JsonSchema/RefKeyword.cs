@@ -174,4 +174,62 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	}
 }
 
-// Source: https://github.com/WebDAVSharp/WebDAVSharp.Server/blob/1d2086a502937936ebc6bfe19cfa15d855be1c31/WebDAVExtensions.cs
+public static partial class ErrorMessages
+{
+	private static string? _recursiveRef;
+
+	/// <summary>
+	/// Gets or sets the error message for when a recursive reference is encountered.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string RecursiveRef
+	{
+		get => _recursiveRef ?? Get();
+		set => _recursiveRef = value;
+	}
+
+	private static string? _uriResolution;
+
+	/// <summary>
+	/// Gets or sets the error message for when a base URI cannot be resolved.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the base URI to resolve
+	/// </remarks>
+	public static string UriResolution
+	{
+		get => _uriResolution ?? Get();
+		set => _uriResolution = value;
+	}
+
+	private static string? _pointerParse;
+
+	/// <summary>
+	/// Gets or sets the error message for when a URI fragment cannot be parsed into a JSON Pointer.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[fragment]] - the pointer fragment
+	/// </remarks>
+	public static string PointerParse
+	{
+		get => _pointerParse ?? Get();
+		set => _pointerParse = value;
+	}
+
+	private static string? _otherFailedRefResolution;
+
+	/// <summary>
+	/// Gets or sets the error message for when a reference fails to resolve.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the reference to resolve
+	/// </remarks>
+	public static string OtherFailedRefResolution
+	{
+		get => _otherFailedRefResolution ?? Get();
+		set => _otherFailedRefResolution = value;
+	}
+}

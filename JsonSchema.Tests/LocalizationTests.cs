@@ -71,4 +71,29 @@ public class LocalizationTests
 			ErrorMessages.Minimum = null!;
 		}
 	}
+
+	[Test]
+	public void MinimumReturnsCustomErrorMessageWithFormatting()
+	{
+		try
+		{
+			ErrorMessages.Minimum = "This is a custom error message with [[received:N3]] and [[value]]";
+
+			JsonSchema schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Number)
+				.Minimum(10);
+
+			var instance = JsonDocument.Parse("5");
+
+			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+
+			var message = results.Message;
+
+			Assert.AreEqual("This is a custom error message with 5.000 and 10", message);
+		}
+		finally
+		{
+			ErrorMessages.Minimum = null!;
+		}
+	}
 }

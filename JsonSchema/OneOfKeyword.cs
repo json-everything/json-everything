@@ -139,3 +139,21 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 		writer.WriteEndArray();
 	}
 }
+
+public static partial class ErrorMessages
+{
+	private static string? _oneOf;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[count]] - the number of subschemas that passed validation
+	/// </remarks>
+	public static string OneOf
+	{
+		get => _oneOf ?? Get();
+		set => _oneOf = value;
+	}
+}
