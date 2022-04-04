@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - id: get-localized-nuspecs
         run: |
-          NUSPEC_FILES=$(echo -n '[' ; ls nuspec/ --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g')
+          NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema/nuspec/ --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g')
           echo "::set-output name=NUSPEC_FILES::${NUSPEC_FILES}"
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -28,12 +28,12 @@ jobs:
         run: dotnet restore
       - name: Build
         # Localization build automatically moves localization DLLs into nuspec/ folder
-        run: dotnet build --configuration Localization --no-restore
+        run: dotnet build JsonSchema/JsonSchema.csproj --configuration Localization --no-restore
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
           name: localization-artifacts
-          path: nuspec/**/*
+          path: JsonSchema/nuspec/**/*
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.matrix }}
   publish-localizations:
