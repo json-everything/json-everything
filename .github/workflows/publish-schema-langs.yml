@@ -38,6 +38,7 @@ jobs:
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.matrix }}
   verify-matrix:
+    needs: build-localizations
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -47,7 +48,8 @@ jobs:
     name: build, pack & publish localizations
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.build-localizations.outputs.matrix) }}
+      matrix:
+        nuspec: ${{ fromJson(needs.build-localizations.outputs.matrix) }}
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
