@@ -56,7 +56,7 @@ jobs:
       - name: publish localization
         run: |
           pwd
-          ls
+          ls artifacts/*
           nuget pack artifacts/${{ matrix.nuspec }} -OutputDirectory nupkg/
       - name: archive packages
         uses: actions/upload-artifact@v2
