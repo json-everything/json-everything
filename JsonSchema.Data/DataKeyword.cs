@@ -71,7 +71,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		JsonSchema subschema;
 		try
 		{
-			subschema = JsonSerializer.Deserialize<JsonSchema>(json);
+			subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 		}
 		catch (JsonException e)
 		{
@@ -108,7 +108,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 		if (Equals(data, default(JsonElement)))
 		{
-			context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
+			context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", baseUri));
 			return null;
 		}
 
@@ -117,14 +117,14 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 			fragment = $"#{fragment}";
 			if (!JsonPointer.TryParse(fragment, out var pointer))
 			{
-				context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
 				return null;
 			}
 
 			var resolved = pointer!.Evaluate(data);
 			if (resolved == null)
 			{
-				context.LocalResult.Fail($"Could not resolve pointer `{fragment}`");
+				context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", fragment));
 				return null;
 			}
 			data = resolved.Value;
@@ -132,7 +132,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 		if (Equals(data, default(JsonElement)))
 		{
-			context.LocalResult.Fail($"Could not resolve URI `{baseUri}`");
+			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", baseUri));
 			return null;
 		}
 
@@ -201,7 +201,7 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)
+		var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)!
 			.ToDictionary(kvp => kvp.Key, kvp => new Uri(kvp.Value, UriKind.RelativeOrAbsolute));
 		return new DataKeyword(references);
 	}
