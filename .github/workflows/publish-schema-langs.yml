@@ -56,7 +56,6 @@ jobs:
       - name: publish localization
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
-          cat artifacts/${NUSPEC_NAME}
           nuget pack artifacts/localization/${NUSPEC_NAME} -OutputDirectory nupkg/
 
           PKG_NAME=${NUSPEC_NAME%.nuspec}.nupkg
