@@ -59,8 +59,11 @@ jobs:
           ls artifacts/*
 
           NUSPEC_NAME=${{ matrix.nuspec }}
+          echo ${NUSPEC_NAME}
           if test -f artifacts/${NUSPEC_NAME}; then
               echo "file exists"
+          else
+            missing file
           fi
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
 
