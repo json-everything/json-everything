@@ -56,12 +56,14 @@ jobs:
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: '6.x'
-      - name: publish localization
+      - name: pack
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
           nuget pack artifacts/localization/${NUSPEC_NAME} -OutputDirectory nupkg/
-
+      - name: push
+        run: |
           PKG_NAME=${NUSPEC_NAME%.nuspec}.nupkg
+          echo ${PKG_NAME}
           nuget push nupkg/${PKG_NAME}
       - name: archive packages
         uses: actions/upload-artifact@v2
