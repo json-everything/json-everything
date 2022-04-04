@@ -55,6 +55,8 @@ jobs:
           nuget-version: '6.x'
       - name: publish localization
         run: |
+          pwd
+          ls
           nuget pack JsonSchema/nuspec/${{ matrix.nuspec }} -OutputDirectory nupkg/
       - name: archive packages
         uses: actions/upload-artifact@v2
