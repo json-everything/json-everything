@@ -51,7 +51,7 @@ public class MaxItemsKeyword : IJsonSchemaKeyword, IEquatable<MaxItemsKeyword>
 		if (Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has more than {Value} items");
+			context.LocalResult.Fail(ErrorMessages.MaxItems, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -95,5 +95,24 @@ internal class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>
 	public override void Write(Utf8JsonWriter writer, MaxItemsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MaxItemsKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _maxItems;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxItems
+	{
+		get => _maxItems ?? Get();
+		set => _maxItems = value;
 	}
 }

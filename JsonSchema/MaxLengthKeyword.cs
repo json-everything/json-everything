@@ -52,7 +52,7 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 		if (Value >= length)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value is not shorter than or equal to {Value} characters");
+			context.LocalResult.Fail(ErrorMessages.MaxLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -96,5 +96,24 @@ internal class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
 	public override void Write(Utf8JsonWriter writer, MaxLengthKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MaxLengthKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _maxLength;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxLengthKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxLength
+	{
+		get => _maxLength ?? Get();
+		set => _maxLength = value;
 	}
 }

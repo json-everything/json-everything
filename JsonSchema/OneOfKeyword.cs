@@ -72,7 +72,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		if (validCount == 1)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Expected 1 matching subschema but found {validCount}");
+			context.LocalResult.Fail(ErrorMessages.OneOf, ("count", validCount));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -137,5 +137,23 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 			JsonSerializer.Serialize(writer, schema, options);
 		}
 		writer.WriteEndArray();
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _oneOf;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[count]] - the number of subschemas that passed validation
+	/// </remarks>
+	public static string OneOf
+	{
+		get => _oneOf ?? Get();
+		set => _oneOf = value;
 	}
 }

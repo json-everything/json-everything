@@ -80,7 +80,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}");
+			context.LocalResult.Fail(ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -151,5 +151,23 @@ internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSch
 			JsonSerializer.Serialize(writer, kvp.Value, options);
 		}
 		writer.WriteEndObject();
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _dependentSchemas;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="DependentSchemasKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string DependentSchemas
+	{
+		get => _dependentSchemas ?? Get();
+		set => _dependentSchemas = value;
 	}
 }

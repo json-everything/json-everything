@@ -45,7 +45,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 		if (metaSchema == null)
 		{
-			context.LocalResult.Fail($"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation");
+			context.LocalResult.Fail(ErrorMessages.MetaSchemaResolution, ("uri", Schema.OriginalString));
 			context.Log(() => context.LocalResult.Message!);
 			context.ExitKeyword(Name, false);
 			return;
@@ -72,7 +72,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		if (results.IsValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Cannot validate current schema against meta-schema `{Schema.OriginalString}`");
+			context.LocalResult.Fail(ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -119,5 +119,39 @@ internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 	public override void Write(Utf8JsonWriter writer, SchemaKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(SchemaKeyword.Name, value.Schema.OriginalString);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _metaSchemaResolution;
+
+	/// <summary>
+	/// Gets or sets the error message for when the meta-schema cannot be resolved.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the URI of the meta-schema
+	/// </remarks>
+	public static string MetaSchemaResolution
+	{
+		get => _metaSchemaResolution ?? Get();
+		set => _metaSchemaResolution = value;
+	}
+
+	private static string? _metaSchemaValidation;
+
+	/// <summary>
+	/// Gets or sets the error message for when the schema cannot be validated
+	/// against the meta-schema.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the URI of the meta-schema
+	/// </remarks>
+	public static string MetaSchemaValidation
+	{
+		get => _metaSchemaValidation ?? Get();
+		set => _metaSchemaValidation = value;
 	}
 }

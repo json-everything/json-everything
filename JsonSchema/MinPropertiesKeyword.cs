@@ -52,7 +52,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has fewer than {Value} properties");
+			context.LocalResult.Fail(ErrorMessages.MinProperties, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -96,5 +96,24 @@ internal class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKe
 	public override void Write(Utf8JsonWriter writer, MinPropertiesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinPropertiesKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _minProperties;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinProperties
+	{
+		get => _minProperties ?? Get();
+		set => _minProperties = value;
 	}
 }

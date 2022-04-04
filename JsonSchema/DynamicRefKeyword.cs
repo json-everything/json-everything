@@ -80,7 +80,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		var navigation = (absoluteReference, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 		{
-			context.LocalResult.Fail("Encountered recursive reference");
+			context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -92,7 +92,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		{
 			if (baseSchema == null)
 			{
-				context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
+				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment!));
 				context.ExitKeyword(Name, false);
 				return;
 			}
@@ -102,7 +102,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
 					context.ExitKeyword(Name, false);
 					return;
 				}
@@ -115,7 +115,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 
 		if (schema == null)
 		{
-			context.LocalResult.Fail($"Could not resolve DynamicReference `{Reference}`");
+			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -164,7 +164,7 @@ internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
 {
 	public override DynamicRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var uri = reader.GetString(); 
+		var uri = reader.GetString()!; 
 		return new DynamicRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
 
 

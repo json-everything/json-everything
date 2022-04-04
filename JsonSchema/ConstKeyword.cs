@@ -44,7 +44,7 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 		if (Value.IsEquivalentTo(context.LocalInstance))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail("Expected value to match given value");
+			context.LocalResult.Fail(ErrorMessages.Const, ("value", Value.ToJsonString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -87,5 +87,23 @@ internal class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 	{
 		writer.WritePropertyName(ConstKeyword.Name);
 		value.Value.WriteTo(writer);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _const;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ConstKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string Const
+	{
+		get => _const ?? Get();
+		set => _const = value;
 	}
 }

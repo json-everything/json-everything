@@ -70,7 +70,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		var navigation = (absoluteReference, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 		{
-			context.LocalResult.Fail("Encountered recursive reference");
+			context.LocalResult.Fail(ErrorMessages.RecursiveRef);
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -83,7 +83,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		{
 			if (baseSchema == null)
 			{
-				context.LocalResult.Fail($"Could not resolve base URI `{newUri}`");
+				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
 				context.ExitKeyword(Name, false);
 				return;
 			}
@@ -93,7 +93,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
 					context.ExitKeyword(Name, false);
 					return;
 				}
@@ -107,7 +107,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 
 		if (schema == null)
 		{
-			context.LocalResult.Fail($"Could not resolve reference `{Reference}`");
+			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference.OriginalString));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -174,4 +174,62 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	}
 }
 
-// Source: https://github.com/WebDAVSharp/WebDAVSharp.Server/blob/1d2086a502937936ebc6bfe19cfa15d855be1c31/WebDAVExtensions.cs
+public static partial class ErrorMessages
+{
+	private static string? _recursiveRef;
+
+	/// <summary>
+	/// Gets or sets the error message for when a recursive reference is encountered.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string RecursiveRef
+	{
+		get => _recursiveRef ?? Get();
+		set => _recursiveRef = value;
+	}
+
+	private static string? _baseUriResolution;
+
+	/// <summary>
+	/// Gets or sets the error message for when a base URI cannot be resolved.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the base URI to resolve
+	/// </remarks>
+	public static string BaseUriResolution
+	{
+		get => _baseUriResolution ?? Get();
+		set => _baseUriResolution = value;
+	}
+
+	private static string? _pointerParse;
+
+	/// <summary>
+	/// Gets or sets the error message for when a URI fragment cannot be parsed into a JSON Pointer.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[fragment]] - the pointer fragment
+	/// </remarks>
+	public static string PointerParse
+	{
+		get => _pointerParse ?? Get();
+		set => _pointerParse = value;
+	}
+
+	private static string? _refResolution;
+
+	/// <summary>
+	/// Gets or sets the error message for when a reference fails to resolve.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the reference to resolve
+	/// </remarks>
+	public static string RefResolution
+	{
+		get => _refResolution ?? Get();
+		set => _refResolution = value;
+	}
+}

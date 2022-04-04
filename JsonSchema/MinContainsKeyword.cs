@@ -71,7 +71,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 		if (Value <= containsCount)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has less than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword");
+			context.LocalResult.Fail(ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -115,5 +115,24 @@ internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeywor
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinContainsKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _minContains;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinContainsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of matching items provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinContains
+	{
+		get => _minContains ?? Get();
+		set => _minContains = value;
 	}
 }

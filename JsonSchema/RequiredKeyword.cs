@@ -75,7 +75,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		if (notFound.Count == 0)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Required properties [{string.Join(", ", notFound)}] were not present");
+			context.LocalResult.Fail(ErrorMessages.Required, ("missing", notFound));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -126,5 +126,23 @@ internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 			writer.WriteStringValue(property);
 		}
 		writer.WriteEndArray();
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _required;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="RequiredKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string Required
+	{
+		get => _required ?? Get();
+		set => _required = value;
 	}
 }

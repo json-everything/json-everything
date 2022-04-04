@@ -52,7 +52,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		if (Value <= length)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value is not longer than or equal to {Value} characters");
+			context.LocalResult.Fail(ErrorMessages.MinLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -96,5 +96,24 @@ internal class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
 	public override void Write(Utf8JsonWriter writer, MinLengthKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinLengthKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _minLength;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinLengthKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string MinLength
+	{
+		get => _minLength ?? Get();
+		set => _minLength = value;
 	}
 }

@@ -58,7 +58,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		context.EnterKeyword(Name);
 		if (InvalidPattern != null)
 		{
-			context.LocalResult.Fail($"The regular expression `{InvalidPattern}` is either invalid or not supported");
+			context.LocalResult.Fail(ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -74,7 +74,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		if (Value.IsMatch(str))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail("The string value was not a match for the indicated regular expression");
+			context.LocalResult.Fail(ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -126,5 +126,43 @@ internal class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 	public override void Write(Utf8JsonWriter writer, PatternKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(PatternKeyword.Name, value.Value.ToString());
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _invalidPattern;
+
+	/// <summary>
+	/// Gets or sets the error message for when the <see cref="PatternKeyword"/> contains
+	/// an invalid or unsupported regular expression.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[pattern]] - the regular expression
+	/// </remarks>
+	public static string InvalidPattern
+	{
+		get => _invalidPattern ?? Get();
+		set => _invalidPattern = value;
+	}
+
+	private static string? _pattern;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[pattern]] - the number of subschemas that passed validation
+	///
+	/// The default messages are static and do not use these tokens as string values
+	/// could be quite large.  They are provided to support custom messages.
+	/// </remarks>
+	public static string Pattern
+	{
+		get => _pattern ?? Get();
+		set => _pattern = value;
 	}
 }

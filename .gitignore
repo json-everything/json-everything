@@ -10,6 +10,8 @@
 *.userosscache
 *.sln.docstates
 Json*.xml
+/JsonSchema/nuspec/*/*.dll
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

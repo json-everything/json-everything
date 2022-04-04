@@ -98,7 +98,10 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		if (!matchedIndexPairs.Any())
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Found duplicate items at index pairs {string.Join(", ", matchedIndexPairs.Select(x => $"({x.Item1}, {x.Item2})"))}");
+		{
+			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
+			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("pairs", pairs));
+		}
 		context.ExitKeyword(Name);
 	}
 
@@ -136,7 +139,7 @@ internal class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = JsonSerializer.Deserialize<List<JsonPointer>>(ref reader, options);
+		var references = JsonSerializer.Deserialize<List<JsonPointer>>(ref reader, options)!;
 		return new UniqueKeysKeyword(references);
 	}
 

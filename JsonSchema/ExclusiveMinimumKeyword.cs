@@ -51,7 +51,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		if ( Value < number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"{number} is not less than {Value}");
+			context.LocalResult.Fail(ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -95,5 +95,24 @@ internal class ExclusiveMinimumKeywordJsonConverter : JsonConverter<ExclusiveMin
 	public override void Write(Utf8JsonWriter writer, ExclusiveMinimumKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(ExclusiveMinimumKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _exclusiveMinimum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ExclusiveMinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string ExclusiveMinimum
+	{
+		get => _exclusiveMinimum ?? Get();
+		set => _exclusiveMinimum = value;
 	}
 }

@@ -68,7 +68,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		if (Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail("Expected value to match one of the values specified by the enum");
+			context.LocalResult.Fail(ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -124,5 +124,28 @@ internal class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 			writer.WriteValue(element);
 		}
 		writer.WriteEndArray();
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _enum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="EnumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[values]] - the available values in the schema
+	///
+	/// The default messages are static and do not use these tokens as enum values
+	/// may be any JSON type and could be quite large.  They are provided to support
+	/// custom messages.
+	/// </remarks>
+	public static string Enum
+	{
+		get => _enum ?? Get();
+		set => _enum = value;
 	}
 }

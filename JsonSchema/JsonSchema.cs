@@ -200,7 +200,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			if (BoolValue.Value)
 				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail("All values fail against the false schema");
+				context.LocalResult.Fail(ErrorMessages.FalseSchema);
 			return;
 		}
 
@@ -483,5 +483,20 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 		}
 
 		writer.WriteEndObject();
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _falseSchema;
+
+	/// <summary>
+	/// Gets or sets the error message for the "false" schema.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string FalseSchema
+	{
+		get => _falseSchema ?? Get();
+		set => _falseSchema = value;
 	}
 }

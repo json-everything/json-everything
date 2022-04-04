@@ -133,7 +133,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		{
 			if (context.Options.ValidatingAs == Draft.Draft202012)
 			{
-				context.LocalResult.Fail($"Array form of {Name} is invalid for draft 2020-12 and later");
+				context.LocalResult.Fail(ErrorMessages.InvalidItemsForm);
 				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
 				context.ExitKeyword(Name, false);
 				return;
@@ -276,5 +276,21 @@ internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 			}
 			writer.WriteEndArray();
 		}
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _invalidItemsForm;
+
+	/// <summary>
+	/// Gets or sets the error message for when <see cref="ItemsKeyword"/> is specified
+	/// with an array of schemas in a draft 2020-12 or later schema.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string InvalidItemsForm
+	{
+		get => _invalidItemsForm ?? Get();
+		set => _invalidItemsForm = value;
 	}
 }

@@ -102,7 +102,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		if (isValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value is {found} but should be {expected}");
+			context.LocalResult.Fail(ErrorMessages.Type, ("received", found), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -144,5 +144,24 @@ internal class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	{
 		writer.WritePropertyName(TypeKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Type, options);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _type;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="TypeKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the type of value provided in the JSON instance
+	///   - [[expected]] - the type(s) required by the schema
+	/// </remarks>
+	public static string Type
+	{
+		get => _type ?? Get();
+		set => _type = value;
 	}
 }

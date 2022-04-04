@@ -51,7 +51,7 @@ public class MaximumKeyword : IJsonSchemaKeyword, IEquatable<MaximumKeyword>
 		if ( Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"{number} is greater than or equal to {Value}");
+			context.LocalResult.Fail(ErrorMessages.Maximum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -95,5 +95,24 @@ internal class MaximumKeywordJsonConverter : JsonConverter<MaximumKeyword>
 	public override void Write(Utf8JsonWriter writer, MaximumKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MaximumKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _maximum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string Maximum
+	{
+		get => _maximum ?? Get();
+		set => _maximum = value;
 	}
 }

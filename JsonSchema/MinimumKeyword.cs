@@ -51,7 +51,7 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"{number} is less than or equal to {Value}");
+			context.LocalResult.Fail(ErrorMessages.Minimum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -95,5 +95,24 @@ internal class MinimumKeywordJsonConverter : JsonConverter<MinimumKeyword>
 	public override void Write(Utf8JsonWriter writer, MinimumKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinimumKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _minimum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string Minimum
+	{
+		get => _minimum ?? Get();
+		set => _minimum = value;
 	}
 }

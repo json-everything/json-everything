@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -65,7 +66,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Validator does not know about these required vocabularies: [{string.Join(", ", violations)}]");
+			context.LocalResult.Fail(ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -122,5 +123,23 @@ internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 			writer.WriteBoolean(kvp.Key.OriginalString, kvp.Value);
 		}
 		writer.WriteEndObject();
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _unknownVocabularies;
+
+	/// <summary>
+	/// Gets or sets the error message for when a vocabulary is unknown but required.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[vocabs]] - the URI IDs of the missing vocabularies as a comma-delimited list
+	/// </remarks>
+	public static string UnknownVocabularies
+	{
+		get => _unknownVocabularies ?? Get();
+		set => _unknownVocabularies = value;
 	}
 }

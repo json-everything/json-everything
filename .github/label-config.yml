@@ -29,11 +29,10 @@
   - JsonPatch/**/*
 
 "documentation":
-  - docs_source/**/*
+  - json-everything.net/wwwroot/md/**/*
 
 "build pipeline":
   - .github/workflows/**/*
 
 "try-me-site":
-  - json-everything.net/**/*
-  - TryJsonEverything/**/*
+  - any: ['json-everything.net/**/*', '!json-everything.net/wwwroot/md/*']

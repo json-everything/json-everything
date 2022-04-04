@@ -31,7 +31,9 @@ public class VocabularyTests
 			if (date >= Date)
 				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail($"{date:O} must be on or after {Date:O}");
+				context.LocalResult.Fail("[[provided:O]] must be on or after [[value:O]]",
+					("provided", date),
+					("value", Date));
 		}
 
 		public bool Equals(MinDateKeyword other)
@@ -93,7 +95,9 @@ public class VocabularyTests
 			if (date <= Date)
 				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail($"{date:O} must be on or before {Date:O}");
+				context.LocalResult.Fail("[[provided:O]] must be on or before [[value:O]]",
+					("provided", date),
+					("value", Date));
 		}
 
 		public bool Equals(MaxDateKeyword other)

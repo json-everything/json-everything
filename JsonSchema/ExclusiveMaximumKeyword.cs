@@ -51,7 +51,7 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		if (Value > number)
 			context.LocalResult.Pass();
 		else 
-			context.LocalResult.Fail($"{number} is not greater than {Value}");
+			context.LocalResult.Fail(ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -95,5 +95,24 @@ internal class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMax
 	public override void Write(Utf8JsonWriter writer, ExclusiveMaximumKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(ExclusiveMaximumKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _exclusiveMaximum;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ExclusiveMaximumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string ExclusiveMaximum
+	{
+		get => _exclusiveMaximum ?? Get();
+		set => _exclusiveMaximum = value;
 	}
 }

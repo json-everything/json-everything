@@ -71,7 +71,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		else
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail($"Found duplicates at the following index pairs: {pairs}");
+			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
@@ -116,5 +116,23 @@ internal class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsKeywor
 	public override void Write(Utf8JsonWriter writer, UniqueItemsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteBoolean(UniqueItemsKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _uniqueItems;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="UniqueItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[duplicates]] - the indices of duplicate pairs as a comma-delimited list of "(x, y)" items
+	/// </remarks>
+	public static string UniqueItems
+	{
+		get => _uniqueItems ?? Get();
+		set => _uniqueItems = value;
 	}
 }

@@ -1,6 +1,8 @@
-# [???](https://github.com/gregsdennis/json-everything/pull/???)
+# [1.1.0](https://github.com/gregsdennis/json-everything/pull/249)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+[#190](https://github.com/gregsdennis/json-everything/issues/190) - Added support for custom and localized error messages.
 
 # [1.0.2](https://github.com/gregsdennis/json-everything/pull/200)
 

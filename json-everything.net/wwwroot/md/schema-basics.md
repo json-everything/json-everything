@@ -454,3 +454,31 @@ Now JsonSchema<nsp>.Net will be able to resolve the reference.
 In order to support scenarios where schemas cannot be registered ahead of time, the `SchemaRegistry` class exposes the `Fetch` property which is defined as `Func<Uri, JsonSchema>`.  This property can be set to a method which downloads the content from the supplied URI and deserializes it into a `JsonSchema` object.
 
 The URI that is passed may need to be transformed, based on the schemas you're dealing with.  For instance if you're loading schemas from a local filesystem, and the schema `$ref`s use relative paths, you may need to prepend the working folder to the URI in order to locate it.
+
+# Error reporting
+
+Beginning with v2.3.0, the library exposes the `ErrorMessages` static type which includes read/write properties for all of the error messages.  Customization of error messages can be achieved by setting these properties.
+
+## Templates
+
+Most of the error messages support token replacement.  Tokens will use the format `[[foo]]` and will be replaced by the JSON serialization of the associated value.
+
+For example, the default message for `minimum` is:
+
+```
+[[received]] is less than or equal to [[limit]]
+```
+
+In this case, `[[received]]` will be replaced by the value in the JSON instance, and `[[limit]]` will be replaced by the value of the `minimum` keyword.  This results in a message similar to:
+
+```
+5 is less than or equal to 10
+```
+
+***NOTE** Since this example uses numbers, they appear without any particular formatting as this is how numbers serialize into JSON.  Similarly, strings will render surrounded by double quotes, `true`, `false`, and `null` will appear using those literals, and more complex values like object and arrays will be rendered in their JSON representation.*
+
+## Localization
+
+In addition to customization, using resource files enables support for localization.  The default locale is determined by `CultureInfo.CurrentCulture` and can be overridden by setting the `ErrorMessages.Culture` static property.
+
+At initial release, the only additional language provided was Spanish (provided by Google Translate 😁).  PRs are welcome to help create additional translations.

@@ -52,7 +52,7 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxProperties
 		if (Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has more than {Value} properties");
+			context.LocalResult.Fail(ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -96,5 +96,24 @@ internal class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKe
 	public override void Write(Utf8JsonWriter writer, MaxPropertiesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MaxPropertiesKeyword.Name, value.Value);
+	}
+}
+
+public static partial class ErrorMessages
+{
+	private static string? _maxProperties;
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string MaxProperties
+	{
+		get => _maxProperties ?? Get();
+		set => _maxProperties = value;
 	}
 }

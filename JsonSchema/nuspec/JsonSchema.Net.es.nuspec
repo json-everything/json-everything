@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata minClientVersion="2.12">
+    <id>JsonSchema.Net.es</id>
+    <version>1.0.0</version>
+    <title>JsonSchema.Net Locale (es)</title>
+    <authors>Greg Dennis</authors>
+    <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
+    <icon>json-logo-256.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>JsonSchema.Net Locale Spanish (es)</description>
+    <license type="expression">MIT</license>
+    <repository type="git" url="https://github.com/gregsdennis/json-everything" />
+    <language>es</language>
+  </metadata>
+  <files>
+    <file src="es\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\es" />
+    <file src="..\..\Resources\json-logo-256.png" target="json-logo-256.png" />
+  </files>
+</package>
