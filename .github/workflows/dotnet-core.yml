@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -105,7 +105,7 @@ jobs:
         with:
           paths: Json.More/**
       - if: steps.changed-more.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-more.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -165,7 +165,7 @@ jobs:
         with:
           paths: JsonPatch/**
       - if: steps.changed-patch.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-patch.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -225,7 +225,7 @@ jobs:
         with:
           paths: JsonPath/**
       - if: steps.changed-path.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-path.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -285,7 +285,7 @@ jobs:
         with:
           paths: JsonPointer/**
       - if: steps.changed-pointer.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-pointer.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -345,7 +345,7 @@ jobs:
         with:
           paths: JsonSchema/**
       - if: steps.changed-schema.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-schema.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -405,7 +405,7 @@ jobs:
         with:
           paths: JsonSchema.Generation/**
       - if: steps.changed-schema-gen.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-schema-gen.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -470,7 +470,7 @@ jobs:
         with:
           paths: JsonSchema.Data/**
       - if: steps.changed-schema-data.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-schema-data.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -530,7 +530,7 @@ jobs:
         with:
           paths: JsonSchema.UniqueKeys/**
       - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -590,7 +590,7 @@ jobs:
         with:
           paths: JsonSchema.DataGeneration/**
       - if: steps.changed-schema-datageneration.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-schema-datageneration.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -650,7 +650,7 @@ jobs:
         with:
           paths: JsonLogic/**
       - if: steps.changed-logic.outputs.changed == 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - if: steps.changed-logic.outputs.changed == 'true'
         name: Setup .NET Core
         uses: actions/setup-dotnet@v1
