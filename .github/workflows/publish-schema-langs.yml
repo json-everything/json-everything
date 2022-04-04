@@ -57,7 +57,15 @@ jobs:
         run: |
           pwd
           ls artifacts/*
-          nuget pack artifacts/${{ matrix.nuspec }} -OutputDirectory nupkg/
+
+          NUSPEC_NAME=${{ matrix.nuspec }}
+          if test -f artifacts/${NUSPEC_NAME}; then
+              echo "file exists"
+          fi
+          nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
+
+          PKG_NAME=${NUSPEC_NAME%.nuspec}.nupkg
+          nuget push nupkg/${PKG_NAME}
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
