@@ -36,13 +36,14 @@ jobs:
           name: localization-artifacts
           path: JsonSchema/nuspec/**/*
     outputs:
-      matrix: ${{ steps.get-localized-nuspecs.outputs.matrix }}
+      matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
   verify-matrix:
     needs: build-localizations
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo ${{ needs.build-localizations.outputs.matrix }}
+          matrix='${{ needs.build-localizations.outputs.matrix }}'
+          echo $matrix
   publish-localizations:
     needs: build-localizations
     name: build, pack & publish localizations
