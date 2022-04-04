@@ -34,7 +34,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: localization
-          path: JsonSchema/nuspec/**/*
+          path: |
+            JsonSchema/nuspec/**/*
+            Resources/json-logo-256.png
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
   publish-localizations:
