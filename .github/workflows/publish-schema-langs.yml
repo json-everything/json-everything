@@ -33,7 +33,7 @@ jobs:
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
-          name: localization-artifacts
+          name: localization
           path: JsonSchema/nuspec/**/*
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
@@ -55,12 +55,9 @@ jobs:
           nuget-version: '6.x'
       - name: publish localization
         run: |
-          pwd
-          find . -ls
-
           NUSPEC_NAME=${{ matrix.nuspec }}
           cat artifacts/${NUSPEC_NAME}
-          nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
+          nuget pack artifacts/localization/${NUSPEC_NAME} -OutputDirectory nupkg/
 
           PKG_NAME=${NUSPEC_NAME%.nuspec}.nupkg
           nuget push nupkg/${PKG_NAME}
