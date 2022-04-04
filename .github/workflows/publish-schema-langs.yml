@@ -65,7 +65,7 @@ jobs:
           NUSPEC_NAME=${{ matrix.nuspec }}
           PKG_NAME=${NUSPEC_NAME%.nuspec}.*.nupkg
           echo ${PKG_NAME}
-          nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org
+          nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
