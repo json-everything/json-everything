@@ -102,7 +102,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		if (isValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Type, ("received", found), ("value", expected));
+			context.LocalResult.Fail(ErrorMessages.Type, ("received", found), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -157,7 +157,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the type of value provided in the JSON instance
-	///   - [[value]] - the type(s) required by the schema
+	///   - [[expected]] - the type(s) required by the schema
 	/// </remarks>
 	public static string Type
 	{

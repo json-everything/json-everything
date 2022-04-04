@@ -60,7 +60,7 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 		if (Value >= containsCount)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MaxContains, ("received", containsCount), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MaxContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -117,7 +117,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the number of matching items provided in the JSON instance
-	///   - [[value]] - the upper limit specified in the schema
+	///   - [[limit]] - the upper limit specified in the schema
 	/// </remarks>
 	public static string MaxContains
 	{

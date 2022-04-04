@@ -52,7 +52,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MinProperties, ("received", number), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MinProperties, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -109,7 +109,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the number of properties provided in the JSON instance
-	///   - [[value]] - the lower limit specified in the schema
+	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
 	public static string MinProperties
 	{

@@ -51,7 +51,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		if ( Value < number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.ExclusiveMinimum, ("received", number), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -108,7 +108,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the value provided in the JSON instance
-	///   - [[value]] - the value in the schema
+	///   - [[limit]] - the lower limit in the schema
 	/// </remarks>
 	public static string ExclusiveMinimum
 	{

@@ -51,7 +51,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		if (number % Value == 0)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MultipleOf, ("received", number), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MultipleOf, ("received", number), ("divisor", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -108,7 +108,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the value provided in the JSON instance
-	///   - [[value]] - the required divisor
+	///   - [[divisor]] - the required divisor
 	/// </remarks>
 	public static string MultipleOf
 	{

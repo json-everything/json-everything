@@ -144,7 +144,7 @@ namespace Json.Schema.Tests
       ""keywordLocation"": ""#/properties/multi/allOf/0/$ref/type"",
       ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
       ""instanceLocation"": ""#/multi"",
-      ""error"": ""Value is number but should be integer""
+      ""error"": ""Value is \""number\"" but should be \""integer\""""
     },
     {
       ""valid"": false,
@@ -196,7 +196,7 @@ namespace Json.Schema.Tests
   ""keywordLocation"": ""#/properties/refs/$ref/type"",
   ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
   ""instanceLocation"": ""#/refs"",
-  ""error"": ""Value is number but should be integer""
+  ""error"": ""Value is \""number\"" but should be \""integer\""""
 }";
 
 			result.AssertInvalid(expected);

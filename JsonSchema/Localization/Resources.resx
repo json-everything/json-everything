@@ -127,7 +127,7 @@
     <value>Expected array to contain at least one item that matched the schema, but it did not</value>
   </data>
   <data name="Error_Dependencies" xml:space="preserve">
-    <value>The following properties failed their dependent schemas: [[properties]]</value>
+    <value>The following properties failed their requirements: [[properties]]</value>
   </data>
   <data name="Error_DependentRequired" xml:space="preserve">
     <value>Some required property dependencies are missing: [[missing]]</value>
@@ -139,10 +139,10 @@
     <value>Expected value to match one of the values specified by the enum</value>
   </data>
   <data name="Error_ExclusiveMaximum" xml:space="preserve">
-    <value>[[received]] is not greater than [[value]]</value>
+    <value>[[received]] is not greater than [[limit]]</value>
   </data>
   <data name="Error_ExclusiveMinimum" xml:space="preserve">
-    <value>[[received]] is not less than [[value]]</value>
+    <value>[[received]] is not less than [[limit]]</value>
   </data>
   <data name="Error_FalseSchema" xml:space="preserve">
     <value>All values fail against the false schema</value>
@@ -160,19 +160,19 @@
     <value>The regular expression [[pattern]] is either invalid or not supported</value>
   </data>
   <data name="Error_MaxContains" xml:space="preserve">
-    <value>Value has more than [[value]] items that matched the schema provided by "contains"</value>
+    <value>Value has more than [[limit]] items that matched the schema provided by "contains"</value>
   </data>
-  <data name="Error_Maximum1" xml:space="preserve">
-    <value>[[received]] is greater than or equal to [[value]]</value>
+  <data name="Error_Maximum" xml:space="preserve">
+    <value>[[received]] is greater than or equal to [[limit]]</value>
   </data>
   <data name="Error_MaxItems" xml:space="preserve">
-    <value>Value has more than [[value]] items</value>
+    <value>Value has more than [[limit]] items</value>
   </data>
   <data name="Error_MaxLength" xml:space="preserve">
-    <value>Value is not shorter than or equal to [[value]] characters</value>
+    <value>Value is not shorter than or equal to [[limit]] characters</value>
   </data>
   <data name="Error_MaxProperties" xml:space="preserve">
-    <value>Value has more than [[value]] properties</value>
+    <value>Value has more than [[limit]] properties</value>
   </data>
   <data name="Error_MetaSchemaResolution" xml:space="preserve">
     <value>Could not resolve schema [[uri]] for meta-schema validation</value>
@@ -181,22 +181,22 @@
     <value>Cannot validate current schema against meta-schema [[uri]]</value>
   </data>
   <data name="Error_MinContains" xml:space="preserve">
-    <value>Value has fewer than [[value]] items that matched the schema provided by "contains"</value>
+    <value>Value has fewer than [[limit]] items that matched the schema provided by "contains"</value>
   </data>
   <data name="Error_Minimum" xml:space="preserve">
-    <value>[[received]] is less than or equal to [[value]]</value>
+    <value>[[received]] is less than or equal to [[limit]]</value>
   </data>
   <data name="Error_MinItems" xml:space="preserve">
-    <value>Value has fewer than [[value]] items</value>
+    <value>Value has fewer than [[limit]] items</value>
   </data>
   <data name="Error_MinLength" xml:space="preserve">
-    <value>Value is not longer than or equal to [[value]] characters</value>
+    <value>Value is not longer than or equal to [[limit]] characters</value>
   </data>
   <data name="Error_MinProperties" xml:space="preserve">
-    <value>Value has fewer than [[value]] properties</value>
+    <value>Value has fewer than [[limit]] properties</value>
   </data>
   <data name="Error_MultipleOf" xml:space="preserve">
-    <value>[[received]] is not a multiple of [[value]]</value>
+    <value>[[received]] is not a multiple of [[divisor]]</value>
   </data>
   <data name="Error_OneOf" xml:space="preserve">
     <value>Expected 1 matching subschema but found [[count]]</value>
@@ -217,7 +217,7 @@
     <value>Required properties [[missing]] were not present</value>
   </data>
   <data name="Error_Type" xml:space="preserve">
-    <value>Value is [[received]] but should be [[value]]</value>
+    <value>Value is [[received]] but should be [[expected]]</value>
   </data>
   <data name="Error_UniqueItems" xml:space="preserve">
     <value>Found duplicates at the following index pairs: [[duplicates]]</value>

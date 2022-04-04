@@ -286,7 +286,7 @@ public static partial class ErrorMessages
 	/// </summary>
 	/// <remarks>
 	///	Available tokens are:
-	///   - [[value]] - the value in the schema
+	///   - [[properties]] - the properties which failed to match the requirements
 	/// </remarks>
 	public static string Dependencies
 	{

@@ -5,7 +5,6 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Json.Schema;
 
@@ -20,7 +19,6 @@ namespace Json.Schema;
 /// </remarks>
 public static partial class ErrorMessages
 {
-	private const string _tokenPatternFormat = @"\[\[{0}(:[^\[]+)?]]";
 	private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
 	
 	/// <summary>
@@ -37,17 +35,13 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
-	/// Replaces tokens in the form of <code>[[token]]</code> or <code>[[token:format]]</code> with a specified value, serialized as JSON.
+	/// Replaces tokens in the form of <code>[[token]]</code> with a specified value, serialized as JSON.
 	/// </summary>
 	/// <param name="message">The message template.</param>
 	/// <param name="parameters">
 	/// Tuple of the token name (without brackets) and the value which will replace it.
 	/// </param>
 	/// <returns>The detokenized string.</returns>
-	/// <remarks>
-	/// Formatting is provided by <see cref="string.Format(string, object[])"/>, so all standard and custom
-	/// formats apply.
-	/// </remarks>
 	public static string ReplaceTokens(this string message, params (string token, object value)[] parameters)
 	{
 		var current = message;
@@ -56,8 +50,7 @@ public static partial class ErrorMessages
 		{
 			var parameter = parameters[i];
 			values[i] = JsonSerializer.Serialize(parameter.value, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping});
-			var pattern = string.Format(_tokenPatternFormat, parameter.token);
-			current = Regex.Replace(current, pattern, $"{{{i}$1}}");
+			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}
 
 		return string.Format(current, values);

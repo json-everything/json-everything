@@ -51,7 +51,7 @@ public class MinItemsKeyword : IJsonSchemaKeyword, IEquatable<MinItemsKeyword>
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MinItems, ("received", number), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MinItems, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -108,7 +108,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the number of items provided in the JSON instance
-	///   - [[value]] - the lower limit specified in the schema
+	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
 	public static string MinItems
 	{

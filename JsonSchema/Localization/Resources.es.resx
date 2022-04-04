@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Error_Minimum" xml:space="preserve">
-    <value>[[received]] es menor o igual que [[value]]</value>
+    <value>[[received]] es menor o igual que [[limit]]</value>
   </data>
 </root>

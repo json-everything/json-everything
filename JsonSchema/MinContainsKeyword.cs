@@ -71,7 +71,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 		if (Value <= containsCount)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MinContains, ("received", containsCount), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -128,7 +128,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the number of matching items provided in the JSON instance
-	///   - [[value]] - the lower limit specified in the schema
+	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
 	public static string MinContains
 	{

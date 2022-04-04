@@ -83,7 +83,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		else if (errorMessage == null)
 			context.LocalResult.Fail(ErrorMessages.Format, ("format", Value.Key));
 		else
-			context.LocalResult.Fail(ErrorMessages.Format, ("format", Value.Key), ("message", errorMessage));
+			context.LocalResult.Fail(ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

@@ -52,7 +52,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		if (Value <= length)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MinLength, ("received", length), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MinLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -109,7 +109,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the length of the JSON string
-	///   - [[value]] - the lower limit specified in the schema
+	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
 	public static string MinLength
 	{

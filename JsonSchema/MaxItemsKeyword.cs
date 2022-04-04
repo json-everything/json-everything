@@ -51,7 +51,7 @@ public class MaxItemsKeyword : IJsonSchemaKeyword, IEquatable<MaxItemsKeyword>
 		if (Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MaxItems, ("received", number), ("value", Value));
+			context.LocalResult.Fail(ErrorMessages.MaxItems, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -108,7 +108,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[received]] - the number of items provided in the JSON instance
-	///   - [[value]] - the upper limit specified in the schema
+	///   - [[limit]] - the upper limit specified in the schema
 	/// </remarks>
 	public static string MaxItems
 	{

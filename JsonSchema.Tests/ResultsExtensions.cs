@@ -37,7 +37,7 @@ public static class ResultsExtensions
 		if (expected == null) return;
 
 		var expectedJson = JsonDocument.Parse(expected).RootElement;
-		var actualJson = JsonDocument.Parse(JsonSerializer.Serialize(results)).RootElement;
+		var actualJson = JsonDocument.Parse(JsonSerializer.Serialize(results, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping})).RootElement;
 
 		Assert.IsTrue(expectedJson.IsEquivalentTo(actualJson));
 	}
