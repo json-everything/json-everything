@@ -18,6 +18,7 @@ jobs:
       - id: get-localized-nuspecs
         run: |
           NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema/nuspec/ --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g')
+          echo ${NUSPEC_FILES}
           echo "::set-output name=NUSPEC_FILES::${NUSPEC_FILES}"
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
