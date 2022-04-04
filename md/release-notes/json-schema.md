@@ -1,4 +1,13 @@
-# [2.2.1](https://github.com/gregsdennis/json-everything/pull/???)
+# [2.3.0](https://github.com/gregsdennis/json-everything/pull/249)
+
+[#190](https://github.com/gregsdennis/json-everything/issues/190) - Added support for custom and localized error messages.
+
+Added
+
+- `ErrorMessages` static class which exposes all error message properties and allows for customization.
+- Embedded string resources which defines all error messages.
+
+# [2.2.1](https://github.com/gregsdennis/json-everything/pull/247)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
 
