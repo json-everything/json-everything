@@ -56,7 +56,7 @@ jobs:
       - name: publish localization
         run: |
           pwd
-          ls artifacts/
+          find . -ls
 
           NUSPEC_NAME=${{ matrix.nuspec }}
           cat artifacts/${NUSPEC_NAME}
