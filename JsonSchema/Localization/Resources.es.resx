@@ -117,7 +117,115 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Error_BaseUriResolution" xml:space="preserve">
+    <value>No se pudo resolver el URI base [[uri]]</value>
+  </data>
+  <data name="Error_Const" xml:space="preserve">
+    <value>Esperado [[value]]</value>
+  </data>
+  <data name="Error_Contains" xml:space="preserve">
+    <value>Se esperaba que la matriz contuviera al menos un elemento que coincidiera con el esquema, pero no fue así</value>
+  </data>
+  <data name="Error_Dependencies" xml:space="preserve">
+    <value>Las siguientes propiedades no cumplieron con sus requisitos: [[properties]]</value>
+  </data>
+  <data name="Error_DependentRequired" xml:space="preserve">
+    <value>Faltan algunas dependencias de propiedad requeridas: [[missing]]</value>
+  </data>
+  <data name="Error_DependentSchemas" xml:space="preserve">
+    <value>Las siguientes propiedades fallaron en sus esquemas dependientes: [[failed]]</value>
+  </data>
+  <data name="Error_Enum" xml:space="preserve">
+    <value>Valor esperado para coincidir con uno de los valores especificados por "enum"</value>
+  </data>
+  <data name="Error_ExclusiveMaximum" xml:space="preserve">
+    <value>[[received]] no es mayor que [[limit]]</value>
+  </data>
+  <data name="Error_ExclusiveMinimum" xml:space="preserve">
+    <value>[[received]] no es menor que [[limit]]</value>
+  </data>
+  <data name="Error_FalseSchema" xml:space="preserve">
+    <value>Todos los valores fallan contra el esquema falso</value>
+  </data>
+  <data name="Error_Format" xml:space="preserve">
+    <value>El valor no coincide con el formato [[format]]</value>
+  </data>
+  <data name="Error_FormatWithDetail" xml:space="preserve">
+    <value>El valor no coincide con el formato [[format]]: [[detail]]</value>
+  </data>
+  <data name="Error_InvalidItemsForm" xml:space="preserve">
+    <value>La forma de matriz de "items" no es válida para draft 2020-12 y posteriores</value>
+  </data>
+  <data name="Error_InvalidPattern" xml:space="preserve">
+    <value>La expresión regular [[pattern]] no es válida o no se admite</value>
+  </data>
+  <data name="Error_MaxContains" xml:space="preserve">
+    <value>El valor tiene más de [[limit]] elementos que coinciden con el esquema proporcionado por "contains"</value>
+  </data>
+  <data name="Error_Maximum" xml:space="preserve">
+    <value>[[received]] es mayor o igual que [[limit]]</value>
+  </data>
+  <data name="Error_MaxItems" xml:space="preserve">
+    <value>El valor tiene más de [[limit]] elementos</value>
+  </data>
+  <data name="Error_MaxLength" xml:space="preserve">
+    <value>El valor no es menor o igual a [[limit]] caracteres</value>
+  </data>
+  <data name="Error_MaxProperties" xml:space="preserve">
+    <value>El valor tiene más de [[limit]] propiedades</value>
+  </data>
+  <data name="Error_MetaSchemaResolution" xml:space="preserve">
+    <value>No se pudo resolver el esquema [[uri]] para la validación del metaesquema</value>
+  </data>
+  <data name="Error_MetaSchemaValidation" xml:space="preserve">
+    <value>No se puede validar el esquema actual con el metaesquema [[uri]]</value>
+  </data>
+  <data name="Error_MinContains" xml:space="preserve">
+    <value>El valor tiene menos de [[limit]]  elementos que coinciden con el esquema proporcionado por "contains"</value>
+  </data>
   <data name="Error_Minimum" xml:space="preserve">
     <value>[[received]] es menor o igual que [[limit]]</value>
+  </data>
+  <data name="Error_MinItems" xml:space="preserve">
+    <value>El valor tiene menos de [[limit]] elementos</value>
+  </data>
+  <data name="Error_MinLength" xml:space="preserve">
+    <value>El valor no es mayor o igual a [[limit]] caracteres</value>
+  </data>
+  <data name="Error_MinProperties" xml:space="preserve">
+    <value>El valor tiene menos de [[limit]] propiedades</value>
+  </data>
+  <data name="Error_MultipleOf" xml:space="preserve">
+    <value>[[received]] no es múltiplo de [[divisor]]</value>
+  </data>
+  <data name="Error_OneOf" xml:space="preserve">
+    <value>Se esperaba 1 subesquema coincidente pero se encontraron [[count]]</value>
+  </data>
+  <data name="Error_Pattern" xml:space="preserve">
+    <value>El valor de la cadena no coincidía con la expresión regular indicada</value>
+  </data>
+  <data name="Error_PointerParse" xml:space="preserve">
+    <value>No se pudo analizar JSON Pointer [[fragment]]</value>
+  </data>
+  <data name="Error_RecursiveRef" xml:space="preserve">
+    <value>Referencia recursiva encontrada</value>
+  </data>
+  <data name="Error_RefResolution" xml:space="preserve">
+    <value>No se pudo resolver la referencia [[uri]]</value>
+  </data>
+  <data name="Error_Required" xml:space="preserve">
+    <value>Las propiedades requeridas [[missing]] no estaban presentes</value>
+  </data>
+  <data name="Error_Type" xml:space="preserve">
+    <value>El valor es [[received]] pero debería ser [[expected]]</value>
+  </data>
+  <data name="Error_UniqueItems" xml:space="preserve">
+    <value>Se encontraron duplicados en los siguientes pares de índices: [[duplicates]]</value>
+  </data>
+  <data name="Error_UnknownFormat" xml:space="preserve">
+    <value>No se puede validar formato desconocido [[format]]</value>
+  </data>
+  <data name="Error_UnknownVocabularies" xml:space="preserve">
+    <value>El validador no conoce estos vocabularios obligatorios: [[vocabs]]</value>
   </data>
 </root>

@@ -481,4 +481,4 @@ In this case, `[[received]]` will be replaced by the value in the JSON instance,
 
 In addition to customization, using resource files enables support for localization.  The default locale is determined by `CultureInfo.CurrentCulture` and can be overridden by setting the `ErrorMessages.Culture` static property.
 
-At initial release, the only additional language provided was Spanish.  PRs are welcome to help create additional translations.
+At initial release, the only additional language provided was Spanish (provided by Google Translate 😁).  PRs are welcome to help create additional translations.
