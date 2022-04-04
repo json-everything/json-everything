@@ -56,18 +56,9 @@ jobs:
       - name: publish localization
         run: |
           pwd
-          ls artifacts/*
+          ls artifacts/
 
           NUSPEC_NAME=${{ matrix.nuspec }}
-
-          if [[ -d artifacts/$NUSPEC_NAME ]]; then
-              echo "it is a directory"
-          elif [[ -f artifacts/$NUSPEC_NAME ]]; then
-              echo "it is a file"
-          else
-              echo "it cannot be found"
-          fi
-
           cat artifacts/${NUSPEC_NAME}
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
 
