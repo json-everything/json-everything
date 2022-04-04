@@ -42,7 +42,7 @@ jobs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
   publish-localizations:
     needs: build-localizations
-    name: build, pack & publish localizations
+    name: pack & publish localizations
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,6 +62,7 @@ jobs:
           nuget pack artifacts/localization/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
+          NUSPEC_NAME=${{ matrix.nuspec }}
           PKG_NAME=${NUSPEC_NAME%.nuspec}.nupkg
           echo ${PKG_NAME}
           nuget push nupkg/${PKG_NAME}
