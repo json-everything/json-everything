@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-        echo ${{ needs.build-localizations.outputs.matrix }}
+          echo ${{ needs.build-localizations.outputs.matrix }}
   publish-localizations:
     needs: build-localizations
     name: build, pack & publish localizations
