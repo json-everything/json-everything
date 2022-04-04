@@ -102,7 +102,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		if (isValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value is {found} but should be {expected}");
+			context.LocalResult.Fail(ErrorMessages.Type, ("received", found), ("value", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

@@ -80,7 +80,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"The following properties failed their dependent schemas: {JsonSerializer.Serialize(evaluatedProperties)}");
+			context.LocalResult.Fail(ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

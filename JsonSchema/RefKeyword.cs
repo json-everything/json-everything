@@ -70,7 +70,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		var navigation = (absoluteReference, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 		{
-			context.LocalResult.Fail("Encountered recursive reference");
+			context.LocalResult.Fail(ErrorMessages.RecursiveRef);
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -83,7 +83,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		{
 			if (baseSchema == null)
 			{
-				context.LocalResult.Fail($"Could not resolve base URI `{newUri}`");
+				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
 				context.ExitKeyword(Name, false);
 				return;
 			}
@@ -93,7 +93,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
 					context.ExitKeyword(Name, false);
 					return;
 				}
@@ -107,7 +107,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 
 		if (schema == null)
 		{
-			context.LocalResult.Fail($"Could not resolve reference `{Reference}`");
+			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference.OriginalString));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -188,7 +188,7 @@ public static partial class ErrorMessages
 		set => _recursiveRef = value;
 	}
 
-	private static string? _uriResolution;
+	private static string? _baseUriResolution;
 
 	/// <summary>
 	/// Gets or sets the error message for when a base URI cannot be resolved.
@@ -197,10 +197,10 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[uri]] - the base URI to resolve
 	/// </remarks>
-	public static string UriResolution
+	public static string BaseUriResolution
 	{
-		get => _uriResolution ?? Get();
-		set => _uriResolution = value;
+		get => _baseUriResolution ?? Get();
+		set => _baseUriResolution = value;
 	}
 
 	private static string? _pointerParse;
@@ -218,7 +218,7 @@ public static partial class ErrorMessages
 		set => _pointerParse = value;
 	}
 
-	private static string? _otherFailedRefResolution;
+	private static string? _refResolution;
 
 	/// <summary>
 	/// Gets or sets the error message for when a reference fails to resolve.
@@ -227,9 +227,9 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[uri]] - the reference to resolve
 	/// </remarks>
-	public static string OtherFailedRefResolution
+	public static string RefResolution
 	{
-		get => _otherFailedRefResolution ?? Get();
-		set => _otherFailedRefResolution = value;
+		get => _refResolution ?? Get();
+		set => _refResolution = value;
 	}
 }

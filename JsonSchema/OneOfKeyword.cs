@@ -72,7 +72,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		if (validCount == 1)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Expected 1 matching subschema but found {validCount}");
+			context.LocalResult.Fail(ErrorMessages.OneOf, ("count", validCount));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

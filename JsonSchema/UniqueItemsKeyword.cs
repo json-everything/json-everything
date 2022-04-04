@@ -71,7 +71,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		else
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail($"Found duplicates at the following index pairs: {pairs}");
+			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
@@ -128,7 +128,7 @@ public static partial class ErrorMessages
 	/// </summary>
 	/// <remarks>
 	///	Available tokens are:
-	///   - [[duplicates]] - the indices of duplicate pairs
+	///   - [[duplicates]] - the indices of duplicate pairs as a comma-delimited list of "(x, y)" items
 	/// </remarks>
 	public static string UniqueItems
 	{

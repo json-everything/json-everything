@@ -51,7 +51,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
 		{
-			context.LocalResult.Fail($"Cannot validate unknown format `{Value.Key}`");
+			context.LocalResult.Fail(ErrorMessages.UnknownFormat, ("format", Value.Key));
 			return;
 		}
 
@@ -78,12 +78,12 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 
 		if (!requireValidation || Value.Validate(context.LocalInstance, out var errorMessage))
 			context.LocalResult.Pass();
+		else if (Value is UnknownFormat)
+			context.LocalResult.Fail(errorMessage);
+		else if (errorMessage == null)
+			context.LocalResult.Fail(ErrorMessages.Format, ("format", Value.Key));
 		else
-			context.LocalResult.Fail(Value is UnknownFormat
-				? errorMessage
-				: errorMessage == null
-					? $"Value does not match format '{Value.Key}'"
-					: $"Value does not match format '{Value.Key}': {errorMessage}");
+			context.LocalResult.Fail(ErrorMessages.Format, ("format", Value.Key), ("message", errorMessage));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -172,6 +172,7 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[format]] - the format key
+	///   - [[detail]] - the format key
 	/// </remarks>
 	public static string FormatWithDetail
 	{

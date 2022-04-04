@@ -52,7 +52,7 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 		if (Value >= length)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value is not shorter than or equal to {Value} characters");
+			context.LocalResult.Fail(ErrorMessages.MaxLength, ("received", length), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

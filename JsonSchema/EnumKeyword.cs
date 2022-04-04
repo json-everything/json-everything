@@ -68,7 +68,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		if (Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail("Expected value to match one of the values specified by the enum");
+			context.LocalResult.Fail(ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

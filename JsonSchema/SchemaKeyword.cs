@@ -45,7 +45,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 		if (metaSchema == null)
 		{
-			context.LocalResult.Fail($"Could not resolve schema `{Schema.OriginalString}` for meta-schema validation");
+			context.LocalResult.Fail(ErrorMessages.MetaSchemaResolution, ("uri", Schema.OriginalString));
 			context.Log(() => context.LocalResult.Message!);
 			context.ExitKeyword(Name, false);
 			return;
@@ -72,7 +72,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		if (results.IsValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Cannot validate current schema against meta-schema `{Schema.OriginalString}`");
+			context.LocalResult.Fail(ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -131,7 +131,7 @@ public static partial class ErrorMessages
 	/// </summary>
 	/// <remarks>
 	///	Available tokens are:
-	///   - [[properties]] - the properties missing from the JSON instance
+	///   - [[uri]] - the URI of the meta-schema
 	/// </remarks>
 	public static string MetaSchemaResolution
 	{
@@ -147,7 +147,7 @@ public static partial class ErrorMessages
 	/// </summary>
 	/// <remarks>
 	///	Available tokens are:
-	///   - [[properties]] - the properties missing from the JSON instance
+	///   - [[uri]] - the URI of the meta-schema
 	/// </remarks>
 	public static string MetaSchemaValidation
 	{

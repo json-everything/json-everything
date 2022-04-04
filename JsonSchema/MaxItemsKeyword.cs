@@ -51,7 +51,7 @@ public class MaxItemsKeyword : IJsonSchemaKeyword, IEquatable<MaxItemsKeyword>
 		if (Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has more than {Value} items");
+			context.LocalResult.Fail(ErrorMessages.MaxItems, ("received", number), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

@@ -99,7 +99,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 			foreach (var pattern in InvalidPatterns)
 			{
 				context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-				context.LocalResult.Fail($"The regular expression `{pattern}` is either invalid or not supported");
+				context.LocalResult.Fail(ErrorMessages.InvalidPattern, ("pattern", pattern));
 				overallResult = false;
 				context.Log(() => $"Discovered invalid pattern '{pattern}'.");
 				context.Pop();

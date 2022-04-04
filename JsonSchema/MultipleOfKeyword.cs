@@ -51,7 +51,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		if (number % Value == 0)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"{number} is not a multiple of {Value}");
+			context.LocalResult.Fail(ErrorMessages.MultipleOf, ("received", number), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

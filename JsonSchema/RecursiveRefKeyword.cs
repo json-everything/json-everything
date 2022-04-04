@@ -71,7 +71,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 		var navigation = (absoluteReference, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 		{
-			context.LocalResult.Fail("Encountered recursive reference");
+			context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -83,7 +83,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 		{
 			if (baseSchema == null)
 			{
-				context.LocalResult.Fail($"Could not resolve base URI `{baseUri}`");
+				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment!));
 				context.ExitKeyword(Name, false);
 				return;
 			}
@@ -93,7 +93,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail($"Could not parse pointer `{fragment}`");
+					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
 					context.ExitKeyword(Name, false);
 					return;
 				}
@@ -106,7 +106,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 
 		if (schema == null)
 		{
-			context.LocalResult.Fail($"Could not resolve RecursiveReference `{Reference}`");
+			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -155,7 +155,7 @@ internal class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyw
 {
 	public override RecursiveRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var uri = reader.GetString(); 
+		var uri = reader.GetString()!; 
 		return new RecursiveRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
 
 

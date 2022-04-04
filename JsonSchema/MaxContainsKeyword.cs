@@ -60,9 +60,7 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 		if (Value >= containsCount)
 			context.LocalResult.Pass();
 		else
-		{
-			context.LocalResult.Fail($"Value has more than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword");
-		}
+			context.LocalResult.Fail(ErrorMessages.MaxContains, ("received", containsCount), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

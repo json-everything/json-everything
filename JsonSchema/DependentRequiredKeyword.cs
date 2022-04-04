@@ -91,7 +91,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		else
 		{
 			var missing = JsonSerializer.Serialize(missingDependencies);
-			context.LocalResult.Fail($"Some required property dependencies are missing: {missing}");
+			context.LocalResult.Fail(ErrorMessages.DependentRequired, ("missing", missing));
 		}
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
@@ -185,7 +185,7 @@ public static partial class ErrorMessages
 	/// </summary>
 	/// <remarks>
 	///	Available tokens are:
-	///   - [[value]] - the value in the schema
+	///   - [[missing]] - the value in the schema
 	/// </remarks>
 	public static string DependentRequired
 	{

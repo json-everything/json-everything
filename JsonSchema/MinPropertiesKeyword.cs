@@ -52,7 +52,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has fewer than {Value} properties");
+			context.LocalResult.Fail(ErrorMessages.MinProperties, ("received", number), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

@@ -133,7 +133,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		{
 			if (context.Options.ValidatingAs == Draft.Draft202012)
 			{
-				context.LocalResult.Fail($"Array form of {Name} is invalid for draft 2020-12 and later");
+				context.LocalResult.Fail(ErrorMessages.InvalidItemsForm);
 				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
 				context.ExitKeyword(Name, false);
 				return;

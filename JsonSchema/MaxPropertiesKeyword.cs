@@ -52,7 +52,7 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxProperties
 		if (Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has more than {Value} properties");
+			context.LocalResult.Fail(ErrorMessages.MaxProperties, ("received", number), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

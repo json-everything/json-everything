@@ -71,7 +71,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 		if (Value <= containsCount)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail($"Value has less than {Value} items that matched the schema provided by the {ContainsKeyword.Name} keyword");
+			context.LocalResult.Fail(ErrorMessages.MinContains, ("received", containsCount), ("value", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

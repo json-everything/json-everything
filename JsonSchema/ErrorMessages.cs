@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Json.Schema;
@@ -36,12 +37,11 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
-	/// Replaces tokens in the form of <code>[[token]]</code> or <code>[[token:format]]</code> with a specified value.
+	/// Replaces tokens in the form of <code>[[token]]</code> or <code>[[token:format]]</code> with a specified value, serialized as JSON.
 	/// </summary>
 	/// <param name="message">The message template.</param>
 	/// <param name="parameters">
 	/// Tuple of the token name (without brackets) and the value which will replace it.
-	/// The value will be converted to a string using <code>.ToString()</code>.
 	/// </param>
 	/// <returns>The detokenized string.</returns>
 	/// <remarks>
@@ -55,7 +55,7 @@ public static partial class ErrorMessages
 		for (var i = 0; i < parameters.Length; i++)
 		{
 			var parameter = parameters[i];
-			values[i] = parameter.value;
+			values[i] = JsonSerializer.Serialize(parameter.value, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping});
 			var pattern = string.Format(_tokenPatternFormat, parameter.token);
 			current = Regex.Replace(current, pattern, $"{{{i}$1}}");
 		}
