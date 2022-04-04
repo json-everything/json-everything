@@ -57,7 +57,7 @@ jobs:
         run: |
           pwd
           ls
-          nuget pack JsonSchema/nuspec/${{ matrix.nuspec }} -OutputDirectory nupkg/
+          nuget pack artifacts/${{ matrix.nuspec }} -OutputDirectory nupkg/
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
