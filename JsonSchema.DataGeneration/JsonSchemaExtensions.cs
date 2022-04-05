@@ -77,8 +77,8 @@ public static class JsonSchemaExtensions
 		typeof(IRequirementsGatherer).Assembly
 			.DefinedTypes
 			.Where(x => typeof(IRequirementsGatherer).IsAssignableFrom(x) &&
-			            !x.IsAbstract &&
-			            !x.IsInterface)
+						!x.IsAbstract &&
+						!x.IsInterface)
 			.Select(Activator.CreateInstance)
 			.Cast<IRequirementsGatherer>()
 			.ToList();

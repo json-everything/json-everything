@@ -24,7 +24,7 @@ internal class MissingSomeRule : Rule
 		var components = _components.Apply(data);
 		if (components.ValueKind != JsonValueKind.Array)
 			throw new JsonLogicException("Expected array of required paths.");
-			
+
 		var expected = components.EnumerateArray().SelectMany(e => e.Flatten()).ToList();
 		if (expected.Any(e => e.ValueKind != JsonValueKind.String))
 			throw new JsonLogicException("Expected array of required paths.");
@@ -33,8 +33,8 @@ internal class MissingSomeRule : Rule
 			return expected.AsJsonElement();
 
 		var paths = expected.Select(e => e.GetString()!)
-			.Select(p => new {Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}")})
-			.Select(p => new {Path = p.Path, Value = p.Pointer.Evaluate(data)})
+			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
+			.Select(p => new { Path = p.Path, Value = p.Pointer.Evaluate(data) })
 			.ToList();
 
 		var missing = paths.Where(p => p.Value == null)

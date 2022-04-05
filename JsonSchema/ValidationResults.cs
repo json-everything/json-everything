@@ -57,7 +57,7 @@ public class ValidationResults
 	/// The collection of nested results.
 	/// </summary>
 	public IReadOnlyList<ValidationResults> NestedResults => _nestedResults ??= new List<ValidationResults>();
-	
+
 	/// <summary>
 	/// Gets whether there are nested results.
 	/// </summary>
@@ -175,7 +175,7 @@ public class ValidationResults
 	/// <param name="value">The annotation value.</param>
 	public void SetAnnotation(string owner, object value)
 	{
-		AddAnnotation(new Annotation(owner, value, SchemaLocation) {WasConsolidated = _isConsolidating});
+		AddAnnotation(new Annotation(owner, value, SchemaLocation) { WasConsolidated = _isConsolidating });
 	}
 
 	/// <summary>
@@ -208,7 +208,7 @@ public class ValidationResults
 	{
 		if (!HasAnnotations) return Enumerable.Empty<T>();
 		return Annotations.Where(x => x.Owner == key && x.Value is T)
-			.Select(x => (T) x.Value);
+			.Select(x => (T)x.Value);
 	}
 
 	/// <summary>
@@ -298,7 +298,7 @@ public class ValidationResults
 		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 		if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
 		if (pointer.Segments.All(s => s.Value != RefKeyword.Name &&
-		                              s.Value != RecursiveRefKeyword.Name))
+									  s.Value != RecursiveRefKeyword.Name))
 			return null;
 
 		var lastIndexOfRef = pointer.Segments
@@ -306,7 +306,7 @@ public class ValidationResults
 			.Last(s => s.s.Value == RefKeyword.Name || s.s.Value == RecursiveRefKeyword.Name).i;
 		var absoluteSegments = pointer.Segments.Skip(lastIndexOfRef + 1);
 
-		if (_reference != null) 
+		if (_reference != null)
 			absoluteSegments = _reference.Segments.Concat(absoluteSegments);
 
 		return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());

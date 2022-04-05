@@ -14,7 +14,7 @@ public class LessThanTests
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
-		
+
 	[Test]
 	public void EqualTwoNumbersReturnsFalse()
 	{
@@ -22,7 +22,7 @@ public class LessThanTests
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
-		
+
 	[Test]
 	public void LessThanTwoNumbersReturnsFalse()
 	{
@@ -30,7 +30,7 @@ public class LessThanTests
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
-		
+
 	[Test]
 	public void LessThanStringThrowsError()
 	{
@@ -38,7 +38,7 @@ public class LessThanTests
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void LessThanBooleanThrowsError()
 	{
@@ -50,11 +50,11 @@ public class LessThanTests
 	[Test]
 	public void LessThanArrayThrowsError()
 	{
-		var rule = new LessThanRule(new JsonElement[]{}.AsJsonElement(), 2);
+		var rule = new LessThanRule(new JsonElement[] { }.AsJsonElement(), 2);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void LessThanObjectThrowsError()
 	{
@@ -62,7 +62,7 @@ public class LessThanTests
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void LessThanNullThrowsError()
 	{
@@ -70,7 +70,7 @@ public class LessThanTests
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void BetweenValueInRangeReturnsTrue()
 	{

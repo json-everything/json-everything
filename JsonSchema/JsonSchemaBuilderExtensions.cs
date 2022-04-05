@@ -261,7 +261,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DependentRequired(this JsonSchemaBuilder builder, params (string name, IEnumerable<string> properties)[] deps)
 	{
-		builder.Add(new DependentRequiredKeyword(deps.ToDictionary(x => x.name, x => (IReadOnlyList<string>) x.properties.ToList())));
+		builder.Add(new DependentRequiredKeyword(deps.ToDictionary(x => x.name, x => (IReadOnlyList<string>)x.properties.ToList())));
 		return builder;
 	}
 
@@ -381,7 +381,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonElementProxy> elements)
 	{
-		builder.Add(new EnumKeyword(elements.Select(p => (JsonElement) p)));
+		builder.Add(new EnumKeyword(elements.Select(p => (JsonElement)p)));
 		return builder;
 	}
 
@@ -405,7 +405,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonElementProxy[] elements)
 	{
-		builder.Add(new EnumKeyword(elements.Select(p => (JsonElement) p)));
+		builder.Add(new EnumKeyword(elements.Select(p => (JsonElement)p)));
 		return builder;
 	}
 
@@ -441,7 +441,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonElementProxy> elements)
 	{
-		builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement) p)));
+		builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement)p)));
 		return builder;
 	}
 
@@ -453,7 +453,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonElementProxy[] elements)
 	{
-		builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement) p)));
+		builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement)p)));
 		return builder;
 	}
 

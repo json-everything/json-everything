@@ -160,7 +160,7 @@ internal class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsKeywor
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
-			
+
 		var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 		return new PrefixItemsKeyword(schemas);
 	}

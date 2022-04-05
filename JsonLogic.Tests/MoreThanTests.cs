@@ -14,7 +14,7 @@ public class MoreThanTests
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
-		
+
 	[Test]
 	public void EqualTwoNumbersReturnsFalse()
 	{
@@ -22,7 +22,7 @@ public class MoreThanTests
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
-		
+
 	[Test]
 	public void MoreThanTwoNumbersReturnsFalse()
 	{
@@ -30,7 +30,7 @@ public class MoreThanTests
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
-		
+
 	[Test]
 	public void MoreThanStringThrowsError()
 	{
@@ -38,7 +38,7 @@ public class MoreThanTests
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void MoreThanBooleanThrowsError()
 	{
@@ -50,11 +50,11 @@ public class MoreThanTests
 	[Test]
 	public void MoreThanArrayThrowsError()
 	{
-		var rule = new MoreThanRule(new JsonElement[]{}.AsJsonElement(), 2);
+		var rule = new MoreThanRule(new JsonElement[] { }.AsJsonElement(), 2);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void MoreThanObjectThrowsError()
 	{
@@ -62,7 +62,7 @@ public class MoreThanTests
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
-		
+
 	[Test]
 	public void MoreThanNullThrowsError()
 	{

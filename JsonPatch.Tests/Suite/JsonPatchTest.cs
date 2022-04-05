@@ -118,7 +118,7 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 			};
 		}
 
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions{WriteIndented = true}));
+		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
 		return null;
 	}
 
@@ -136,7 +136,7 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 			writer.WritePropertyName("expected");
 			value.ExpectedValue.WriteTo(writer);
 		}
-		if (value.Error != null) 
+		if (value.Error != null)
 			writer.WriteString("error", value.Error);
 		if (value.Comment != null)
 			writer.WriteString("comment", value.Comment);

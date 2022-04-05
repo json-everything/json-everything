@@ -30,17 +30,17 @@ internal class ArrayGenerator : IDataGenerator
 
 			var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ItemCounts.Ranges.ToArray());
 			if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
-				minItems = (uint) (numberRange.Minimum.Inclusive
+				minItems = (uint)(numberRange.Minimum.Inclusive
 					? numberRange.Minimum.Value
 					: numberRange.Minimum.Value + 1);
 			if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
-				maxItems = (uint) (numberRange.Maximum.Inclusive
+				maxItems = (uint)(numberRange.Maximum.Inclusive
 					? numberRange.Maximum.Value
 					: numberRange.Maximum.Value - 1);
 		}
 
-		var itemCount = (int) JsonSchemaExtensions.Randomizer.UInt(minItems, maxItems);
-		var sequenceCount = (uint?) context.SequentialItems?.Count ?? 0;
+		var itemCount = (int)JsonSchemaExtensions.Randomizer.UInt(minItems, maxItems);
+		var sequenceCount = (uint?)context.SequentialItems?.Count ?? 0;
 		var containsCount = 0;
 		if (context.Contains != null)
 		{
@@ -50,9 +50,9 @@ internal class ArrayGenerator : IDataGenerator
 			{
 				var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ContainsCounts.Ranges.ToArray());
 				if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
-					minContains = (uint) numberRange.Minimum.Value;
+					minContains = (uint)numberRange.Minimum.Value;
 				if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
-					maxContains = (uint) numberRange.Maximum.Value;
+					maxContains = (uint)numberRange.Maximum.Value;
 			}
 
 			// some simple checks to ensure an instance can be generated
@@ -61,8 +61,8 @@ internal class ArrayGenerator : IDataGenerator
 			if (minContains > maxItems - sequenceCount)
 				return GenerationResult.Fail("minContains is greater than maxItems less sequential items count");
 
-			containsCount = (int) JsonSchemaExtensions.Randomizer.UInt(minContains, maxContains);
-			if (itemCount < containsCount) 
+			containsCount = (int)JsonSchemaExtensions.Randomizer.UInt(minContains, maxContains);
+			if (itemCount < containsCount)
 				itemCount = containsCount;
 		}
 

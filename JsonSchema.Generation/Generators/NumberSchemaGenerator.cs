@@ -8,8 +8,8 @@ internal class NumberSchemaGenerator : ISchemaGenerator
 	public bool Handles(Type type)
 	{
 		return type == typeof(float) ||
-		       type == typeof(double) ||
-		       type == typeof(decimal);
+			   type == typeof(double) ||
+			   type == typeof(decimal);
 	}
 
 	public void AddConstraints(SchemaGeneratorContext context)

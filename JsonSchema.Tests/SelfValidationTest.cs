@@ -25,7 +25,7 @@ public class SelfValidationTest
 	public void Hardcoded(string testName, JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema);
-		var validation = schema.Validate(JsonDocument.Parse(json).RootElement, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+		var validation = schema.Validate(JsonDocument.Parse(json).RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		validation.AssertValid();
 	}
@@ -88,7 +88,7 @@ public class SelfValidationTest
 	[Ignore("Schema equality not a feature yet")]
 	public void RoundTrip(string testName, JsonSchema schema)
 	{
-		var json = JsonSerializer.Serialize(schema, new JsonSerializerOptions{WriteIndented = true});
+		var json = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
 		Console.WriteLine(json);
 		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json);
 

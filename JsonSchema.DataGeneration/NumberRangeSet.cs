@@ -40,15 +40,15 @@ public class NumberRangeSet
 	static NumberRangeSet()
 	{
 		None = new NumberRangeSet(Array.Empty<NumberRange>());
-		Full = new NumberRangeSet(new[] {new NumberRange(MinRangeValue, MaxRangeValue)});
-		NonNegative = new NumberRangeSet(new[] {new NumberRange(0, MaxRangeValue)});
+		Full = new NumberRangeSet(new[] { new NumberRange(MinRangeValue, MaxRangeValue) });
+		NonNegative = new NumberRangeSet(new[] { new NumberRange(0, MaxRangeValue) });
 	}
 
 	/// <summary>
 	/// Creates a new set from a single range.
 	/// </summary>
 	public NumberRangeSet(NumberRange range)
-		: this(new[] {range}) { }
+		: this(new[] { range }) { }
 
 	/// <summary>
 	/// Copies a range set.
@@ -156,7 +156,7 @@ public class NumberRangeSet
 
 		if (first == last)
 			return new NumberRange(newMinimum, newMaximum);
-			
+
 		var newFirst = new NumberRange(newMinimum, first.Maximum);
 		var index = newRanges.IndexOf(first);
 		newRanges[index] = newFirst;
@@ -211,8 +211,8 @@ public class NumberRangeSet
 	private List<NumberRange> GetIntersectingRanges(NumberRange range)
 	{
 		return _ranges.Where(x => (x.Minimum <= range.Minimum && range.Minimum <= x.Maximum) ||
-		                          (x.Minimum <= range.Maximum && range.Maximum <= x.Maximum) ||
-		                          (range.Minimum <= x.Minimum && x.Maximum <= range.Maximum))
+								  (x.Minimum <= range.Maximum && range.Maximum <= x.Maximum) ||
+								  (range.Minimum <= x.Minimum && x.Maximum <= range.Maximum))
 			.ToList();
 	}
 

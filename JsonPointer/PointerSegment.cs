@@ -21,7 +21,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	public string Value { get; private set; }
 
 #pragma warning disable CS8618
-	private PointerSegment(){}
+	private PointerSegment() { }
 #pragma warning restore CS8618
 
 	/// <summary>
@@ -163,7 +163,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 			{
 				if (i <= span.Length - 3 && span[i + 1].IsHexadecimal() && span[i + 2].IsHexadecimal())
 				{
-					var ch = (char) ((span[i + 1].GetHexadecimalValue() << 4) + span[i + 2].GetHexadecimalValue());
+					var ch = (char)((span[i + 1].GetHexadecimalValue() << 4) + span[i + 2].GetHexadecimalValue());
 					builder.Append(ch);
 					i += 2;
 					continue;

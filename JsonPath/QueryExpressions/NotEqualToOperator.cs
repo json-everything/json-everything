@@ -10,7 +10,7 @@ internal class NotEqualToOperator : IQueryExpressionOperator
 	public QueryExpressionType GetOutputType(QueryExpressionNode left, QueryExpressionNode right)
 	{
 		if (left.OutputType == QueryExpressionType.Invalid ||
-		    right.OutputType == QueryExpressionType.Invalid)
+			right.OutputType == QueryExpressionType.Invalid)
 			return QueryExpressionType.Invalid;
 		return QueryExpressionType.Boolean;
 	}

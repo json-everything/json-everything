@@ -146,14 +146,22 @@ internal static class SpanExtensions
 				case 'n':
 					end += 4;
 					break;
-				case '.': case '-': case '0':
-				case '1': case '2': case '3':
-				case '4': case '5': case '6':
-				case '7': case '8': case '9':
+				case '.':
+				case '-':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
 					end = i;
 					var allowDash = false;
 					while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
-					                             span[end].In('e', '.', '-')))
+												 span[end].In('e', '.', '-')))
 					{
 						if (!allowDash && span[end] == '-') break;
 						allowDash = span[end] == 'e';
@@ -205,7 +213,7 @@ internal static class SpanExtensions
 					element = default;
 					return false;
 			}
-				
+
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();

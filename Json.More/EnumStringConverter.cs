@@ -160,7 +160,7 @@ public class EnumStringConverter<T> : JsonConverter<T>
 				.Where(f => !f.IsSpecialName)
 				.Select(f => new
 				{
-					Value = (T) Enum.Parse(typeof(T), f.Name),
+					Value = (T)Enum.Parse(typeof(T), f.Name),
 					Description = f.GetCustomAttribute<DescriptionAttribute>()?.Description ?? f.Name
 				})
 				.ToList();

@@ -82,8 +82,8 @@ public class ClientTests
 	{
 		JsonSchema actual = new JsonSchemaBuilder().FromType<T>();
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions {WriteIndented = true}));
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions {WriteIndented = true}));
+		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(expected, actual);
 	}
 
@@ -112,8 +112,8 @@ public class ClientTests
 		var simpleValueSettingsSchema1 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 		var simpleValueSettingsSchema2 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, new JsonSerializerOptions {WriteIndented = true}));
-		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, new JsonSerializerOptions {WriteIndented = true}));
+		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(simpleValueSettingsSchema1, simpleValueSettingsSchema2);
 	}
 }

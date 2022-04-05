@@ -10,7 +10,7 @@ namespace Json.Patch;
 internal class EditableJsonElement
 {
 	private readonly JsonElement _raw;
-		
+
 	public Dictionary<string, EditableJsonElement>? Object { get; }
 	public List<EditableJsonElement>? Array { get; }
 

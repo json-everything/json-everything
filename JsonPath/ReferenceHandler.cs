@@ -35,8 +35,8 @@ internal static class ReferenceHandler
 
 		var props = element.EnumerateObject().ToList();
 		if (props.Count != 1 ||
-		    props[0].Name != "$ref" || 
-		    props[0].Value.ValueKind != JsonValueKind.String)
+			props[0].Name != "$ref" ||
+			props[0].Value.ValueKind != JsonValueKind.String)
 			return false;
 
 		var value = props[0].Value.GetString();

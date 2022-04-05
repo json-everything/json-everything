@@ -33,7 +33,7 @@ public class PropertyNamesIntent : ISchemaKeywordIntent, IContextContainer
 	/// </remarks>
 	public IEnumerable<SchemaGeneratorContext> GetContexts()
 	{
-		return new[] {Context};
+		return new[] { Context };
 	}
 
 	/// <summary>

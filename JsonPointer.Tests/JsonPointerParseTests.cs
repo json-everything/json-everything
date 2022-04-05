@@ -14,17 +14,17 @@ public class JsonPointerParseTests
 		{
 			// Normal
 			yield return new TestCaseData("", new string[] { });
-			yield return new TestCaseData("/foo", new[] {"foo"});
-			yield return new TestCaseData("/foo/0", new[] {"foo", "0"});
-			yield return new TestCaseData("/", new[] {""});
-			yield return new TestCaseData("/a~1b", new[] {"a/b"});
-			yield return new TestCaseData("/c%d", new[] {"c%d"});
-			yield return new TestCaseData("/e^f", new[] {"e^f"});
-			yield return new TestCaseData("/g|h", new[] {"g|h"});
-			yield return new TestCaseData("/i\\j", new[] {"i\\j"});
-			yield return new TestCaseData("/k\"l", new[] {"k\"l"});
-			yield return new TestCaseData("/ ", new[] {" "});
-			yield return new TestCaseData("/m~0n", new[] {"m~n"});
+			yield return new TestCaseData("/foo", new[] { "foo" });
+			yield return new TestCaseData("/foo/0", new[] { "foo", "0" });
+			yield return new TestCaseData("/", new[] { "" });
+			yield return new TestCaseData("/a~1b", new[] { "a/b" });
+			yield return new TestCaseData("/c%d", new[] { "c%d" });
+			yield return new TestCaseData("/e^f", new[] { "e^f" });
+			yield return new TestCaseData("/g|h", new[] { "g|h" });
+			yield return new TestCaseData("/i\\j", new[] { "i\\j" });
+			yield return new TestCaseData("/k\"l", new[] { "k\"l" });
+			yield return new TestCaseData("/ ", new[] { " " });
+			yield return new TestCaseData("/m~0n", new[] { "m~n" });
 			yield return new TestCaseData("/c%25d", new[] { "c%25d" });
 			yield return new TestCaseData("/e%5Ef", new[] { "e%5Ef" });
 			yield return new TestCaseData("/g%7Ch", new[] { "g%7Ch" });
@@ -33,17 +33,17 @@ public class JsonPointerParseTests
 			yield return new TestCaseData("/%20", new[] { "%20" });
 			// Url
 			yield return new TestCaseData("#", new string[] { });
-			yield return new TestCaseData("#/foo", new[] {"foo"});
-			yield return new TestCaseData("#/foo/0", new[] {"foo", "0"});
-			yield return new TestCaseData("#/", new[] {""});
-			yield return new TestCaseData("#/a~1b", new[] {"a/b"});
-			yield return new TestCaseData("#/c%25d", new[] {"c%d"});
-			yield return new TestCaseData("#/e%5Ef", new[] {"e^f"});
-			yield return new TestCaseData("#/g%7Ch", new[] {"g|h"});
-			yield return new TestCaseData("#/i%5Cj", new[] {"i\\j"});
-			yield return new TestCaseData("#/k%22l", new[] {"k\"l"});
-			yield return new TestCaseData("#/%20", new[] {" "});
-			yield return new TestCaseData("#/m~0n", new[] {"m~n"});
+			yield return new TestCaseData("#/foo", new[] { "foo" });
+			yield return new TestCaseData("#/foo/0", new[] { "foo", "0" });
+			yield return new TestCaseData("#/", new[] { "" });
+			yield return new TestCaseData("#/a~1b", new[] { "a/b" });
+			yield return new TestCaseData("#/c%25d", new[] { "c%d" });
+			yield return new TestCaseData("#/e%5Ef", new[] { "e^f" });
+			yield return new TestCaseData("#/g%7Ch", new[] { "g|h" });
+			yield return new TestCaseData("#/i%5Cj", new[] { "i\\j" });
+			yield return new TestCaseData("#/k%22l", new[] { "k\"l" });
+			yield return new TestCaseData("#/%20", new[] { " " });
+			yield return new TestCaseData("#/m~0n", new[] { "m~n" });
 		}
 	}
 	public static IEnumerable FailureCases

@@ -60,11 +60,11 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		var count = context.LocalInstance.GetArrayLength();
 		var duplicates = new List<(int, int)>();
 		for (int i = 0; i < count - 1; i++)
-		for (int j = i + 1; j < count; j++)
-		{
-			if (context.LocalInstance[i].IsEquivalentTo(context.LocalInstance[j]))
-				duplicates.Add((i, j));
-		}
+			for (int j = i + 1; j < count; j++)
+			{
+				if (context.LocalInstance[i].IsEquivalentTo(context.LocalInstance[j]))
+					duplicates.Add((i, j));
+			}
 
 		if (!duplicates.Any())
 			context.LocalResult.Pass();

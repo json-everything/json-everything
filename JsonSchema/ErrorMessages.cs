@@ -20,7 +20,7 @@ namespace Json.Schema;
 public static partial class ErrorMessages
 {
 	private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
-	
+
 	/// <summary>
 	/// Gets or sets a culture to use for error messages.  Default is <see cref="CultureInfo.CurrentCulture"/>.
 	/// </summary>
@@ -31,7 +31,7 @@ public static partial class ErrorMessages
 		if (key == null) throw new ArgumentNullException(nameof(key), "Cannot get a null-keyed resource");
 
 		return _resourceManager.GetString($"Error_{key}", Culture ?? CultureInfo.CurrentCulture) ??
-		       throw new KeyNotFoundException($"Could not find error message with key '{key}'");
+			   throw new KeyNotFoundException($"Could not find error message with key '{key}'");
 	}
 
 	/// <summary>
@@ -49,7 +49,7 @@ public static partial class ErrorMessages
 		for (var i = 0; i < parameters.Length; i++)
 		{
 			var parameter = parameters[i];
-			values[i] = JsonSerializer.Serialize(parameter.value, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping});
+			values[i] = JsonSerializer.Serialize(parameter.value, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
 			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}
 

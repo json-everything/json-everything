@@ -126,7 +126,7 @@ public class RelativeJsonPointer
 		}
 		if (span[i] == '#')
 		{
-			if (i+1 < span.Length) throw new PointerParseException($"{nameof(source)} cannot contain data after a `#`");
+			if (i + 1 < span.Length) throw new PointerParseException($"{nameof(source)} cannot contain data after a `#`");
 			return new RelativeJsonPointer(parentSteps, indexManipulation);
 		}
 

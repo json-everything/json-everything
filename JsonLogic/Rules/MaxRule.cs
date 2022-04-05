@@ -13,10 +13,10 @@ internal class MaxRule : Rule
 
 	public MaxRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> {a};
+		_items = new List<Rule> { a };
 		_items.AddRange(more);
 	}
-	
+
 	public override JsonElement Apply(JsonElement data)
 	{
 		var items = _items.Select(i => i.Apply(data)).Select(e => new { e.ValueKind, Value = e.Numberify() }).ToList();

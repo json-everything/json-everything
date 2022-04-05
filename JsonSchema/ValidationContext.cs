@@ -204,6 +204,6 @@ public class ValidationContext
 	{
 		return MetaSchemaVocabs?.Keys
 			.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
-			                 Enumerable.Empty<Type>());
+							 Enumerable.Empty<Type>());
 	}
 }

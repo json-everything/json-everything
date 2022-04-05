@@ -24,8 +24,8 @@ internal class IntegerGenerator : IDataGenerator
 
 		var range = JsonSchemaExtensions.Randomizer.ArrayElement(rangeSet.Ranges.ToArray());
 
-		var minValue = (long) Math.Ceiling(range.Minimum.Value);
-		var maxValue = (long) Math.Floor(range.Maximum.Value);
+		var minValue = (long)Math.Ceiling(range.Minimum.Value);
+		var maxValue = (long)Math.Floor(range.Maximum.Value);
 
 		if (!range.Minimum.Inclusive) minValue++;
 		if (!range.Maximum.Inclusive) maxValue--;
@@ -40,7 +40,7 @@ internal class IntegerGenerator : IDataGenerator
 
 	private static long? GetValue(long lowerBound, long upperBound, decimal[] requireMultiple, decimal[] requireNotMultiple)
 	{
-		var period = (int) Lcm(requireNotMultiple.Concat(requireMultiple).Concat(new[] {1m}).ToArray());
+		var period = (int)Lcm(requireNotMultiple.Concat(requireMultiple).Concat(new[] { 1m }).ToArray());
 		if (period == 1) return JsonSchemaExtensions.Randomizer.Long(lowerBound, upperBound);
 
 		var range = upperBound - lowerBound;
@@ -52,8 +52,8 @@ internal class IntegerGenerator : IDataGenerator
 		{
 			var nonMultiples = Enumerable.Range(0, period)
 				.Where(x => requireNotMultiple.All(n => x % n != 0) &&
-				            x % multipleOf == 0 &&
-				            lowBound <= x && x <= highBound)
+							x % multipleOf == 0 &&
+							lowBound <= x && x <= highBound)
 				.ToArray();
 			if (nonMultiples.Length == 0) return null;
 			offset = nonMultiples[JsonSchemaExtensions.Randomizer.Int(0, nonMultiples.Length - 1)];

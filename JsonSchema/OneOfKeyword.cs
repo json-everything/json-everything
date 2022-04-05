@@ -124,7 +124,7 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 			return new OneOfKeyword(schemas);
 		}
-			
+
 		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 		return new OneOfKeyword(schema);
 	}

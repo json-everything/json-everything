@@ -11,7 +11,7 @@ public class VocabularyAttribute : Attribute
 	/// <summary>
 	/// The vocabulary ID.
 	/// </summary>
-	public Uri Id { get;}
+	public Uri Id { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="VocabularyAttribute"/>.

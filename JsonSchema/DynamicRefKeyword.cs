@@ -37,7 +37,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		var parts = Reference.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
+		var parts = Reference.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 		var baseUri = parts[0];
 		var fragment = parts.Length > 1 ? parts[1] : null;
 
@@ -164,7 +164,7 @@ internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
 {
 	public override DynamicRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var uri = reader.GetString()!; 
+		var uri = reader.GetString()!;
 		return new DynamicRefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
 
 

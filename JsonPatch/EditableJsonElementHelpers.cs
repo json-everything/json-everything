@@ -21,7 +21,7 @@ internal static class EditableJsonElementHelpers
 					continue;
 				}
 				if (int.TryParse(segment.Value, out var index) &&
-				    0 <= index && index < current.Array.Count)
+					0 <= index && index < current.Array.Count)
 				{
 					current = current.Array[index];
 					continue;
@@ -49,10 +49,10 @@ internal static class EditableJsonElementHelpers
 					continue;
 				}
 				if (int.TryParse(segment.Value, out var index) &&
-				    0 <= index && index < current.Array.Count)
+					0 <= index && index < current.Array.Count)
 				{
 					if ((index != 0 && segment.Value[0] == '0') ||
-					    (index == 0 && segment.Value.Length > 1))
+						(index == 0 && segment.Value.Length > 1))
 						return $"Path `{path}` is not present in the instance.";
 
 					current = current.Array[index];

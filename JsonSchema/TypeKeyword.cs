@@ -128,7 +128,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		return (int) Type;
+		return (int)Type;
 	}
 }
 

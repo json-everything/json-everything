@@ -12,9 +12,9 @@ public class MetaTests
 			.Assembly
 			.DefinedTypes
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface)
-			.Select(t => new TestCaseData(t) {TestName = t.Name});
+						!t.IsAbstract &&
+						!t.IsInterface)
+			.Select(t => new TestCaseData(t) { TestName = t.Name });
 
 	[TestCaseSource(nameof(Keywords))]
 	public void AllKeywordsImplementIEquatable(Type keywordType)

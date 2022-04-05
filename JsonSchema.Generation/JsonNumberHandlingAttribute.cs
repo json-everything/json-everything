@@ -22,7 +22,7 @@ public sealed class JsonNumberHandlingAttribute : JsonAttribute
 	/// </summary>
 	public JsonNumberHandlingAttribute(JsonNumberHandling handling)
 	{
-		var handlingValue = (int) handling;
+		var handlingValue = (int)handling;
 		if (handlingValue < 0 || 7 < handlingValue)
 			throw new ArgumentOutOfRangeException(nameof(handling));
 

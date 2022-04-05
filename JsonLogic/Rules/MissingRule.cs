@@ -24,8 +24,8 @@ internal class MissingRule : Rule
 			return expected.AsJsonElement();
 
 		var paths = expected.Select(e => e.GetString()!)
-			.Select(p => new {Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}")})
-			.Select(p => new {Path = p.Path, Value = p.Pointer.Evaluate(data)});
+			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
+			.Select(p => new { Path = p.Path, Value = p.Pointer.Evaluate(data) });
 
 		return paths.Where(p => p.Value == null)
 			.Select(k => k.Path.AsJsonElement())

@@ -11,7 +11,7 @@ public class CatTests
 	public void CatTwoStringsConcatsValues()
 	{
 		var rule = new CatRule("foo", "bar");
-			
+
 		JsonAssert.AreEquivalent("foobar", rule.Apply());
 	}
 
@@ -19,7 +19,7 @@ public class CatTests
 	public void CatStringAndNullConcatsValues()
 	{
 		var rule = new CatRule("foo", LiteralRule.Null);
-			
+
 		JsonAssert.AreEquivalent("foo", rule.Apply());
 	}
 
@@ -27,7 +27,7 @@ public class CatTests
 	public void CatStringAndNumberConcatsValues()
 	{
 		var rule = new CatRule("foo", 1);
-			
+
 		JsonAssert.AreEquivalent("foo1", rule.Apply());
 	}
 
@@ -35,24 +35,24 @@ public class CatTests
 	public void CatStringAndBooleanConcatsValues()
 	{
 		var rule = new CatRule("foo", true);
-			
+
 		JsonAssert.AreEquivalent("footrue", rule.Apply());
 	}
 
 	[Test]
 	public void CatStringAndArrayConcatsValues()
 	{
-		var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
+		var array = new[] { 1.AsJsonElement(), 2.AsJsonElement(), 3.AsJsonElement() }.AsJsonElement();
 		var rule = new CatRule("foo", array);
-			
+
 		JsonAssert.AreEquivalent("foo1,2,3", rule.Apply());
 	}
 
 	[Test]
 	public void CatStringAndNestedArrayConcatsValues()
 	{
-		var array = new[]{1.AsJsonElement(),2.AsJsonElement(),3.AsJsonElement()}.AsJsonElement();
-		var nestedArray = new[]{1.AsJsonElement(),array,3.AsJsonElement()}.AsJsonElement();
+		var array = new[] { 1.AsJsonElement(), 2.AsJsonElement(), 3.AsJsonElement() }.AsJsonElement();
+		var nestedArray = new[] { 1.AsJsonElement(), array, 3.AsJsonElement() }.AsJsonElement();
 		var rule = new CatRule("foo", nestedArray);
 
 		JsonAssert.AreEquivalent("foo1,1,2,3,3", rule.Apply());

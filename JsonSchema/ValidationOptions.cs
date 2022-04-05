@@ -84,7 +84,7 @@ public class ValidationOptions
 	/// assertion behavior.
 	/// </remarks>
 	public bool OnlyKnownFormats { get; set; }
-		
+
 	internal Draft ValidatingAs { get; private set; }
 
 	static ValidationOptions()
@@ -169,7 +169,7 @@ public class ValidationOptions
 	{
 		var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
 
-		return refKeyword != null ? new[] {refKeyword} : FilterByDraft(keywords, draft);
+		return refKeyword != null ? new[] { refKeyword } : FilterByDraft(keywords, draft);
 	}
 
 	private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)

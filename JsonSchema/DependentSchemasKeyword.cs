@@ -63,7 +63,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
 			}
-				
+
 			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
 			schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;

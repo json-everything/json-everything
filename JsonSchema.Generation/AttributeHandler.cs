@@ -14,8 +14,8 @@ public static class AttributeHandler
 			.Assembly
 			.DefinedTypes
 			.Where(t => typeof(IAttributeHandler).IsAssignableFrom(t) &&
-			            !typeof(Attribute).IsAssignableFrom(t) &&
-			            !t.IsAbstract && !t.IsInterface)
+						!typeof(Attribute).IsAssignableFrom(t) &&
+						!t.IsAbstract && !t.IsInterface)
 			.Select(Activator.CreateInstance)
 			.Cast<IAttributeHandler>()
 			.ToList();

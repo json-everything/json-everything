@@ -52,7 +52,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	public EnumKeyword(IEnumerable<JsonElement> values)
 	{
 		_values = new HashSet<JsonElement>(values.Select(e => e.Clone()).ToList() ??
-		                                   throw new ArgumentNullException(nameof(values)), JsonElementEqualityComparer.Instance);
+										   throw new ArgumentNullException(nameof(values)), JsonElementEqualityComparer.Instance);
 
 		if (_values.Count != values.Count())
 			throw new ArgumentException("`enum` requires unique values");
@@ -82,7 +82,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		// Don't need ContentsEqual here because that method considers counts.
 		// We know that with a hash set, all counts are 1.
 		return Values.Count == other.Values.Count &&
-		       Values.All(x => other.Values.Contains(x, JsonElementEqualityComparer.Instance));
+			   Values.All(x => other.Values.Contains(x, JsonElementEqualityComparer.Instance));
 	}
 
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>

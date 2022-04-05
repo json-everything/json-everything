@@ -17,7 +17,7 @@ internal class NumberGenerator : IDataGenerator
 	public GenerationResult Generate(RequirementsContext context)
 	{
 		context.NumberRanges ??= NumberRangeSet.Full;
-			
+
 		// we have no requirements, so use the full range
 		if (!context.NumberRanges.Ranges.Any())
 			context.NumberRanges = NumberRangeSet.Full;

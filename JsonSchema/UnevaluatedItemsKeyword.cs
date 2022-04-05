@@ -85,7 +85,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 				context.ExitKeyword(Name, true);
 				return;
 			}
-			startIndex = (int) annotation;
+			startIndex = (int)annotation;
 		}
 		else
 			context.Log(() => $"No annotations from {ItemsKeyword.Name}.");

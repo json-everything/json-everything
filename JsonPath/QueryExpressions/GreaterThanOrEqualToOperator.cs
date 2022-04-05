@@ -27,11 +27,11 @@ internal class GreaterThanOrEqualToOperator : IQueryExpressionOperator
 		{
 			case JsonValueKind.Number:
 				if (lElement.ValueKind != JsonValueKind.Number ||
-				    rElement.ValueKind != JsonValueKind.Number) return default;
+					rElement.ValueKind != JsonValueKind.Number) return default;
 				return lElement.GetDecimal() >= rElement.GetDecimal();
 			case JsonValueKind.String:
 				if (lElement.ValueKind != JsonValueKind.String ||
-				    rElement.ValueKind != JsonValueKind.String) return default;
+					rElement.ValueKind != JsonValueKind.String) return default;
 				return string.Compare(lElement.GetString(), rElement.GetString(), StringComparison.Ordinal) >= 0;
 			default:
 				return default;

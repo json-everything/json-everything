@@ -18,7 +18,7 @@ namespace Json.Schema;
 public class ExclusiveMaximumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveMaximumKeyword>
 {
 	internal const string Name = "exclusiveMaximum";
-	
+
 	/// <summary>
 	/// The maximum value.
 	/// </summary>
@@ -50,7 +50,7 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		var number = context.LocalInstance.GetDecimal();
 		if (Value > number)
 			context.LocalResult.Pass();
-		else 
+		else
 			context.LocalResult.Fail(ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

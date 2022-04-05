@@ -81,7 +81,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		var byUri = Vocabulary.Join(other.Vocabulary,
 				tv => tv.Key.OriginalString,
 				ov => ov.Key.OriginalString,
-				(tv, ov) => new {ThisVocab = tv.Value, OtherVocab = ov.Value})
+				(tv, ov) => new { ThisVocab = tv.Value, OtherVocab = ov.Value })
 			.ToList();
 		if (Vocabulary.Count != byUri.Count) return false;
 		return byUri.All(x => x.ThisVocab == x.OtherVocab);

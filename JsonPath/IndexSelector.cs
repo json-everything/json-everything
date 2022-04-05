@@ -21,10 +21,10 @@ internal class IndexSelector : SelectorBase
 				var array = match.Value.EnumerateArray().ToArray();
 				IEnumerable<int> indices;
 				indices = _ranges?.OfType<IArrayIndexExpression>()
-					          .SelectMany(r => r.GetIndices(match.Value))
-					          .Where(i => 0 <= i && i < array.Length)
-					          .Distinct() ??
-				          Enumerable.Range(0, array.Length);
+							  .SelectMany(r => r.GetIndices(match.Value))
+							  .Where(i => 0 <= i && i < array.Length)
+							  .Distinct() ??
+						  Enumerable.Range(0, array.Length);
 				foreach (var index in indices)
 				{
 					yield return new PathMatch(array[index], match.Location.AddSelector(new IndexSelector(new[] { (SimpleIndex)index })));

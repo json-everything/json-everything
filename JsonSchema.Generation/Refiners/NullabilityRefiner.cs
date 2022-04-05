@@ -8,7 +8,7 @@ internal class NullabilityRefiner : ISchemaRefiner
 {
 	public static NullabilityRefiner Instance { get; } = new();
 
-	private NullabilityRefiner(){}
+	private NullabilityRefiner() { }
 
 	public bool ShouldRun(SchemaGeneratorContext context)
 	{
@@ -33,12 +33,12 @@ internal class NullabilityRefiner : ISchemaRefiner
 		}
 
 		if (context.Configuration.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
-		    context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+			context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
 			typeIntent.Type |= SchemaValueType.Null;
 
 		if (context.Configuration.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
-		    // see https://stackoverflow.com/a/16578846/878701
-		    !context.Type.IsValueType)
+			// see https://stackoverflow.com/a/16578846/878701
+			!context.Type.IsValueType)
 			typeIntent.Type |= SchemaValueType.Null;
 	}
 }

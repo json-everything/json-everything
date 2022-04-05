@@ -190,7 +190,7 @@ public class SchemaGeneratorContext
 		if (ReferenceEquals(this, obj)) return true;
 		if (obj.GetType() != GetType()) return false;
 
-		var other = (SchemaGeneratorContext) obj;
+		var other = (SchemaGeneratorContext)obj;
 		return Type == other.Type &&
 			   Intents.ContentsEqual(other.Intents);
 	}

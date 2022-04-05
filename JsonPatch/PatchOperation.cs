@@ -149,11 +149,11 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 	public bool Equals(PatchOperation other)
 	{
 		return Op == other.Op &&
-		       From.Equals(other.From) &&
-		       Path.Equals(other.Path) &&
-		       ((Value.ValueKind == JsonValueKind.Undefined &&
-		         other.Value.ValueKind == JsonValueKind.Undefined) ||
-		        Value.IsEquivalentTo(other.Value));
+			   From.Equals(other.From) &&
+			   Path.Equals(other.Path) &&
+			   ((Value.ValueKind == JsonValueKind.Undefined &&
+				 other.Value.ValueKind == JsonValueKind.Undefined) ||
+				Value.IsEquivalentTo(other.Value));
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
@@ -170,7 +170,7 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 	{
 		unchecked
 		{
-			var hashCode = (int) Op;
+			var hashCode = (int)Op;
 			hashCode = (hashCode * 397) ^ From.GetHashCode();
 			hashCode = (hashCode * 397) ^ Path.GetHashCode();
 			hashCode = (hashCode * 397) ^ Value.GetHashCode();

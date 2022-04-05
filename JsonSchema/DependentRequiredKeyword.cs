@@ -161,7 +161,7 @@ internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRe
 			throw new JsonException("Expected object");
 
 		var requirements = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref reader, options);
-		return new DependentRequiredKeyword(requirements.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.Value));
+		return new DependentRequiredKeyword(requirements.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 	{

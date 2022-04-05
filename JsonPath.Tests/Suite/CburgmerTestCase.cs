@@ -10,8 +10,8 @@ public class CburgmerTestCase
 	public override string ToString()
 	{
 		return $"TestName:   {TestName}\n" +
-		       $"PathString: {PathString}\n" +
-		       $"JsonString: {JsonString}\n" +
-		       $"Consensus:   {Consensus}";
+			   $"PathString: {PathString}\n" +
+			   $"JsonString: {JsonString}\n" +
+			   $"Consensus:   {Consensus}";
 	}
 }

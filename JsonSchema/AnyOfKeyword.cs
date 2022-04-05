@@ -125,7 +125,7 @@ internal class AnyOfKeywordJsonConverter : JsonConverter<AnyOfKeyword>
 			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 			return new AnyOfKeyword(schemas);
 		}
-			
+
 		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 		return new AnyOfKeyword(schema);
 	}

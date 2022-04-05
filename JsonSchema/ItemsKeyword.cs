@@ -106,7 +106,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 					return;
 				}
 
-				startIndex = (int) annotation;
+				startIndex = (int)annotation;
 			}
 
 			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
@@ -258,7 +258,7 @@ internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
 			return new ItemsKeyword(schemas);
 		}
-			
+
 		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
 		return new ItemsKeyword(schema);
 	}

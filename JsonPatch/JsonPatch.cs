@@ -85,7 +85,7 @@ internal class PatchJsonConverter : JsonConverter<JsonPatch>
 {
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var operations = JsonSerializer.Deserialize<List<PatchOperation>>(ref reader, new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase})!;
+		var operations = JsonSerializer.Deserialize<List<PatchOperation>>(ref reader, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })!;
 
 		return new JsonPatch(operations);
 	}

@@ -8,56 +8,56 @@ public static class JsonAssert
 {
 	public static void AreEquivalent(JsonElement expected, JsonElement actual)
 	{
-		if (!expected.IsEquivalentTo(actual)) 
+		if (!expected.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expected.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(int expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(long expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(float expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(double expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(decimal expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(string expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
 	public static void AreEquivalent(bool expected, JsonElement actual)
 	{
 		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual)) 
+		if (!expectedJson.IsEquivalentTo(actual))
 			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
 	}
 
@@ -75,7 +75,7 @@ public static class JsonAssert
 
 	public static void IsFalse(JsonElement actual)
 	{
-		if (actual.ValueKind != JsonValueKind.False) 
+		if (actual.ValueKind != JsonValueKind.False)
 			Assert.Fail($"Expected: false\nActual: {actual.ToJsonString()}");
 	}
 }

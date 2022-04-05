@@ -53,7 +53,7 @@ public class AddTests
 	[Test]
 	public void AddSingleArrayThrowsError()
 	{
-		var rule = new AddRule(new[] {false.AsJsonElement(), 5.AsJsonElement()}.AsJsonElement());
+		var rule = new AddRule(new[] { false.AsJsonElement(), 5.AsJsonElement() }.AsJsonElement());
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
@@ -61,7 +61,7 @@ public class AddTests
 	[Test]
 	public void AddSingleObjectThrowsError()
 	{
-		var rule = new AddRule(JsonDocument.Parse(JsonSerializer.Serialize(new {foo = 5})).RootElement);
+		var rule = new AddRule(JsonDocument.Parse(JsonSerializer.Serialize(new { foo = 5 })).RootElement);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

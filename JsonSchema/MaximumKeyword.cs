@@ -48,7 +48,7 @@ public class MaximumKeyword : IJsonSchemaKeyword, IEquatable<MaximumKeyword>
 		}
 
 		var number = context.LocalInstance.GetDecimal();
-		if ( Value >= number)
+		if (Value >= number)
 			context.LocalResult.Pass();
 		else
 			context.LocalResult.Fail(ErrorMessages.Maximum, ("received", number), ("limit", Value));

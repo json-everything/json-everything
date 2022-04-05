@@ -57,7 +57,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	public JsonPointerKind Kind { get; private set; }
 
-	private JsonPointer(){}
+	private JsonPointer() { }
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.
@@ -156,7 +156,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 			case JsonPointerKind.Plain:
 				if (isUriEncoded)
 				{
-					pointer =  null;
+					pointer = null;
 					return false;
 				}
 				break;
@@ -248,14 +248,15 @@ public class JsonPointer : IEquatable<JsonPointer>
 				body = me.Expression;
 			}
 			else if (body is MethodCallExpression mce &&
-			         mce.Method.Name.StartsWith("get_") &&
-			         mce.Arguments.Count == 1 &&
-			         mce.Arguments[0].Type == typeof(int))
+					 mce.Method.Name.StartsWith("get_") &&
+					 mce.Arguments.Count == 1 &&
+					 mce.Arguments[0].Type == typeof(int))
 			{
 				segments.Insert(0, PointerSegment.Create(mce.Arguments[0].ToString()));
 				body = mce.Object;
-			} else if (body is BinaryExpression {Right: ConstantExpression arrayIndexExpression} binaryExpression
-			           and {NodeType: ExpressionType.ArrayIndex})
+			}
+			else if (body is BinaryExpression { Right: ConstantExpression arrayIndexExpression } binaryExpression
+					 and { NodeType: ExpressionType.ArrayIndex })
 			{
 				// Array index
 				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value.ToString()));
@@ -267,7 +268,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 
 		return Create(segments, false);
 	}
-		
+
 	/// <summary>
 	/// Concatenates a pointer onto the current pointer.
 	/// </summary>

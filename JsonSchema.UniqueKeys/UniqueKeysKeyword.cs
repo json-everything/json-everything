@@ -77,7 +77,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		var matchedIndexPairs = new List<(int, int)>();
 		for (int i = 0; i < collections.Count; i++)
 		{
-			for (int j = i+1; j < collections.Count; j++)
+			for (int j = i + 1; j < collections.Count; j++)
 			{
 				var a = collections[i];
 				var b = collections[j];

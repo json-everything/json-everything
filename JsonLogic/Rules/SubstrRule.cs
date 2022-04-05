@@ -33,7 +33,7 @@ internal class SubstrRule : Rule
 			throw new JsonLogicException($"Cannot substring a {input.ValueKind}.");
 
 		var stringInput = input.GetString()!;
-			
+
 		if (start.ValueKind != JsonValueKind.Number)
 			throw new JsonLogicException("Start value must be an integer");
 
@@ -41,7 +41,7 @@ internal class SubstrRule : Rule
 		if (numberStart != Math.Floor(numberStart))
 			throw new JsonLogicException("Start value must be an integer");
 
-		var intStart = (int) Math.Floor(numberStart);
+		var intStart = (int)Math.Floor(numberStart);
 		if (intStart < -stringInput.Length) return input;
 		if (intStart < 0)
 			intStart = Math.Max(stringInput.Length + intStart, 0);
@@ -55,7 +55,7 @@ internal class SubstrRule : Rule
 			throw new JsonLogicException("Count value must be an integer");
 
 		var availableLength = stringInput.Length - intStart;
-		var intCount = (int) Math.Floor(numberCount);
+		var intCount = (int)Math.Floor(numberCount);
 		if (intCount < 0)
 			intCount = Math.Max(availableLength + intCount, 0);
 		intCount = Math.Min(availableLength, intCount);

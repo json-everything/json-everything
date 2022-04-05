@@ -42,7 +42,7 @@ internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 					context.Options.Add(ifelse);
 				}
 				else
-					context.Options = new List<RequirementsContext> {ifthen, ifelse};
+					context.Options = new List<RequirementsContext> { ifthen, ifelse };
 			}
 		}
 	}

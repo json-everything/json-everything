@@ -69,7 +69,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 			return;
 		}
-		var startIndex = (int) annotation;
+		var startIndex = (int)annotation;
 
 		for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
 		{

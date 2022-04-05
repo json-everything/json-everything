@@ -9,10 +9,10 @@ public class SubstrTests
 	public void SubstrStartNoCount()
 	{
 		var rule = new SubstrRule("foobar", 3);
-			
+
 		JsonAssert.AreEquivalent("bar", rule.Apply());
 	}
-		
+
 	[Test]
 	public void SubstrStartBeyondLengthNoCount()
 	{
@@ -25,10 +25,10 @@ public class SubstrTests
 	public void SubstrNegativeStartNoCount()
 	{
 		var rule = new SubstrRule("foobar", -2);
-			
+
 		JsonAssert.AreEquivalent("ar", rule.Apply());
 	}
-		
+
 	[Test]
 	public void SubstrNegativeStartBeyondLengthNoCount()
 	{
@@ -41,10 +41,10 @@ public class SubstrTests
 	public void SubstrStartCount()
 	{
 		var rule = new SubstrRule("foobar", 3, 2);
-			
+
 		JsonAssert.AreEquivalent("ba", rule.Apply());
 	}
-		
+
 	[Test]
 	public void SubstrStartCountBeyondLength()
 	{
@@ -57,10 +57,10 @@ public class SubstrTests
 	public void SubstrStartNegativeCount()
 	{
 		var rule = new SubstrRule("foobar", 2, -1);
-			
+
 		JsonAssert.AreEquivalent("oba", rule.Apply());
 	}
-		
+
 	[Test]
 	public void SubstrStartNegativeCountBeyondLength()
 	{

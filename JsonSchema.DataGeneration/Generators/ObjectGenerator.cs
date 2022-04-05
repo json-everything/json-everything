@@ -32,16 +32,16 @@ internal class ObjectGenerator : IDataGenerator
 
 			var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.PropertyCounts.Ranges.ToArray());
 			if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
-				minProperties = (uint) (numberRange.Minimum.Inclusive
+				minProperties = (uint)(numberRange.Minimum.Inclusive
 					? numberRange.Minimum.Value
 					: numberRange.Minimum.Value + 1);
 			if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
-				maxProperties = (uint) (numberRange.Maximum.Inclusive
+				maxProperties = (uint)(numberRange.Maximum.Inclusive
 					? numberRange.Maximum.Value
 					: numberRange.Maximum.Value - 1);
 		}
 
-		var propertyCount = (int) JsonSchemaExtensions.Randomizer.UInt(minProperties, maxProperties);
+		var propertyCount = (int)JsonSchemaExtensions.Randomizer.UInt(minProperties, maxProperties);
 		var containsCount = 0;
 		if (context.Contains != null)
 		{
@@ -51,9 +51,9 @@ internal class ObjectGenerator : IDataGenerator
 			{
 				var numberRange = JsonSchemaExtensions.Randomizer.ArrayElement(context.ContainsCounts.Ranges.ToArray());
 				if (numberRange.Minimum.Value != NumberRangeSet.MinRangeValue)
-					minContains = (uint) numberRange.Minimum.Value;
+					minContains = (uint)numberRange.Minimum.Value;
 				if (numberRange.Maximum.Value != NumberRangeSet.MaxRangeValue)
-					maxContains = (uint) numberRange.Maximum.Value;
+					maxContains = (uint)numberRange.Maximum.Value;
 			}
 
 			// some simple checks to ensure an instance can be generated
@@ -62,7 +62,7 @@ internal class ObjectGenerator : IDataGenerator
 			if (minContains > maxProperties)
 				return GenerationResult.Fail("minContains is greater than maxItems less property count");
 
-			containsCount = (int) JsonSchemaExtensions.Randomizer.UInt(minContains, maxContains);
+			containsCount = (int)JsonSchemaExtensions.Randomizer.UInt(minContains, maxContains);
 			if (propertyCount < containsCount)
 				propertyCount = containsCount;
 		}

@@ -20,12 +20,12 @@ public class TestConverter : JsonConverter<Test>
 	{
 		var element = JsonDocument.ParseValue(ref reader).RootElement;
 		if (element.ValueKind != JsonValueKind.Array) return null;
-			
+
 		var items = element.EnumerateArray().ToList();
-		var logic = JsonSerializer.Serialize(items[0], new JsonSerializerOptions {Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping});
+		var logic = JsonSerializer.Serialize(items[0], new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
 		var data = items[1];
 		var expected = items[2];
-			
+
 		return new Test
 		{
 			Logic = logic,

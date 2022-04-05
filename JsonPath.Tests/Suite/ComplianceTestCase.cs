@@ -19,9 +19,9 @@ public class ComplianceTestCase
 	{
 		var result = Result == null ? null : $"[{string.Join(", ", Result.Select(e => e.ToJsonString()))}]";
 		return $"Name:     {Name}\n" +
-		       $"Selector: {Selector}\n" +
-		       $"Document: {Document}\n" +
-		       $"Result:   {result}\n" +
-		       $"IsValid:  {!InvalidSelector}";
+			   $"Selector: {Selector}\n" +
+			   $"Document: {Document}\n" +
+			   $"Result:   {result}\n" +
+			   $"IsValid:  {!InvalidSelector}";
 	}
 }

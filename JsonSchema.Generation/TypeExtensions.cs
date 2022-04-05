@@ -20,12 +20,12 @@ public static class TypeExtensions
 	public static bool IsInteger(this Type type)
 	{
 		return type == typeof(byte) ||
-		       type == typeof(short) ||
-		       type == typeof(ushort) ||
-		       type == typeof(int) ||
-		       type == typeof(uint) ||
-		       type == typeof(long) ||
-		       type == typeof(ulong);
+			   type == typeof(short) ||
+			   type == typeof(ushort) ||
+			   type == typeof(int) ||
+			   type == typeof(uint) ||
+			   type == typeof(long) ||
+			   type == typeof(ulong);
 	}
 
 	/// <summary>
@@ -36,8 +36,8 @@ public static class TypeExtensions
 	public static bool IsFloatingPoint(this Type type)
 	{
 		return type == typeof(float) ||
-		       type == typeof(double) ||
-		       type == typeof(decimal);
+			   type == typeof(double) ||
+			   type == typeof(decimal);
 	}
 
 	/// <summary>
@@ -58,8 +58,8 @@ public static class TypeExtensions
 	public static bool IsArray(this Type type)
 	{
 		return type.IsArray ||
-		       type == typeof(Array) ||
-		       typeof(IEnumerable).IsAssignableFrom(type);
+			   type == typeof(Array) ||
+			   typeof(IEnumerable).IsAssignableFrom(type);
 	}
 
 	internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)

@@ -1,9 +1,9 @@
-﻿using Json.Schema.Generation.Intents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Generators;
 
@@ -44,8 +44,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			var memberAttributes = member.GetCustomAttributes().ToList();
 #pragma warning disable 8600 // Assigning null to non-null
 			// ReSharper disable once AssignNullToNotNullAttribute
-			var ignoreAttribute = (Attribute) memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault() ??
-			                      memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
+			var ignoreAttribute = (Attribute)memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault() ??
+								  memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
 #pragma warning restore 8600
 			if (ignoreAttribute != null) continue;
 

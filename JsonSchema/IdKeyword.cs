@@ -43,7 +43,7 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 	{
 		context.EnterKeyword(Name);
 		if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
-		    (context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7))
+			(context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7))
 		{
 			context.LocalResult.Pass();
 			context.NotApplicable(() => "$ref present; ignoring");
@@ -52,7 +52,7 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 
 		var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
 		context.UriChanged |= context.CurrentUri != newUri;
-		if (context.UriChanged) 
+		if (context.UriChanged)
 			context.CurrentAnchor = null;
 		context.Options.SchemaRegistry.EnteringUriScope(newUri);
 		context.UpdateCurrentUri(newUri);

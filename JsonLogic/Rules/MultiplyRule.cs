@@ -11,7 +11,7 @@ internal class MultiplyRule : Rule
 
 	public MultiplyRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> {a};
+		_items = new List<Rule> { a };
 		_items.AddRange(more);
 	}
 
@@ -24,7 +24,7 @@ internal class MultiplyRule : Rule
 			var value = item.Apply(data);
 
 			var number = value.Numberify();
-				
+
 			if (number == null)
 				throw new JsonLogicException($"Cannot multiply {value.ValueKind}.");
 

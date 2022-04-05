@@ -143,7 +143,7 @@ public class VocabularyTests
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
-	public static readonly Vocabulary DatesVocabulary = 
+	public static readonly Vocabulary DatesVocabulary =
 		new("http://mydates.com/vocabulary", typeof(MinDateKeyword), typeof(MaxDateKeyword));
 
 	public static readonly JsonSchema DatesMetaSchema =

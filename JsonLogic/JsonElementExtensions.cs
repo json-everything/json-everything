@@ -100,7 +100,7 @@ public static class JsonElementExtensions
 	/// <returns>Returns a single array with all of the intermediate arrays removed.</returns>
 	public static IEnumerable<JsonElement> Flatten(this JsonElement root)
 	{
-		if (root.ValueKind != JsonValueKind.Array) return new[] {root};
+		if (root.ValueKind != JsonValueKind.Array) return new[] { root };
 
 		return root.EnumerateArray().SelectMany(Flatten);
 	}

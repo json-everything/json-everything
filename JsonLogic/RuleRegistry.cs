@@ -14,7 +14,7 @@ public static class RuleRegistry
 		typeof(Rule).Assembly
 			.GetTypes()
 			.Where(t => typeof(Rule).IsAssignableFrom(t) && !t.IsAbstract)
-			.SelectMany(t => t.GetCustomAttributes<OperatorAttribute>().Select(a => new {Name = a.Name, Type = t}))
+			.SelectMany(t => t.GetCustomAttributes<OperatorAttribute>().Select(a => new { Name = a.Name, Type = t }))
 			.ToDictionary(t => t.Name, t => t.Type);
 
 	/// <summary>

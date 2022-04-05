@@ -66,8 +66,8 @@ public class CburgmerFeatureValidationTests
 				if (TryMatch(line, _idPattern, out var value))
 				{
 					if (currentTestCase != null)
-						yield return new TestCaseData(currentTestCase) {TestName = currentTestCase.TestName};
-					currentTestCase = new CburgmerTestCase{TestName = value};
+						yield return new TestCaseData(currentTestCase) { TestName = currentTestCase.TestName };
+					currentTestCase = new CburgmerTestCase { TestName = value };
 				}
 				else if (TryMatch(line, _selectorPattern, out value))
 				{
