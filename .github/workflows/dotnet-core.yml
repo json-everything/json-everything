@@ -27,9 +27,9 @@ jobs:
           dotnet format --verify-no-changes --report . || true
           FORMAT_REPORT=$(cat format-report.json)
           if [ "${FORMAT_REPORT}" != "[]" ]; then
-            cat "\<details\>\<summary\>Expand to see formatting issues\</summary\>" > pr-message.md
+            echo "\<details\>\<summary\>Expand to see formatting issues\</summary\>" > pr-message.md
             cat format-report.json > pr-message.md
-            cat "\</details\>" > pr-message.md
+            echo "\</details\>" > pr-message.md
             echo "::set-output name=POST_REPORT::true"
           fi
       - if: ${{ steps.dotnet-format.outputs.POST_REPORT == 'true' }}
