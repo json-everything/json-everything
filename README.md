@@ -3,7 +3,7 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Average time to resolve an issue")
 [![License](https://img.shields.io/github/license/gregsdennis/json-everything)](https://github.com/gregsdennis/json-everything/blob/master/LICENSE)
-<!-- ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/json-everything) -->
+![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/json-everything)
 
 |JsonSchema.Net|JsonSchema.Net<br>.Generation|JsonSchema.Net<br>.DataGeneration|JsonSchema.Net<br>.Data|JsonSchema.Net<br>.UniqueKeys|
 |:-:|:-:|:-:|:-:|:-:|
