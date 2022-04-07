@@ -5,18 +5,31 @@
 [![License](https://img.shields.io/github/license/gregsdennis/json-everything)](https://github.com/gregsdennis/json-everything/blob/master/LICENSE)
 [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/json-everything)](https://stackoverflow.com/questions/tagged/json-everything)
 
-||||
+||||  
 |-|:-:|:-:|
 |JsonSchema.Net|<a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a>|
-|JsonSchema.Net<br>.Generation|<a href="https://www.nuget.org/packages/JsonSchema.Net.Generation/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.Generation.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img></a>|
-|JsonSchema.Net<br>.DataGeneration|<a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.DataGeneration.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a>|
-|JsonSchema.Net<br>.Data|<a href="https://www.nuget.org/packages/JsonSchema.Net.Data/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.Data.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Data.svg?svg=true"></img></a>|
-|JsonSchema.Net<br>.UniqueKeys|<a href="https://www.nuget.org/packages/JsonSchema.Net.UniqueKeys/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.UniqueKeys.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.UniqueKeys.svg?svg=true"></img></a>|
+|JsonSchema.Net|<a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a>|
+|JsonSchema.Net.Generation|<a href="https://www.nuget.org/packages/JsonSchema.Net.Generation/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.Generation.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img></a>|
+|JsonSchema.Net.DataGeneration|<a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.DataGeneration.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a>|
+|JsonSchema.Net.Data|<a href="https://www.nuget.org/packages/JsonSchema.Net.Data/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.Data.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Data.svg?svg=true"></img></a>|
+|JsonSchema.Net.UniqueKeys|<a href="https://www.nuget.org/packages/JsonSchema.Net.UniqueKeys/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.UniqueKeys.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.UniqueKeys.svg?svg=true"></img></a>|
 |JsonPointer.Net|<a href="https://www.nuget.org/packages/JsonPointer.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPointer.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img></a>|
 |JsonPath.Net|<a href="https://www.nuget.org/packages/JsonPath.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPath.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPath.Net.svg?svg=true"></img></a>|
 |JsonPatch.Net|<a href="https://www.nuget.org/packages/JsonPatch.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPatch.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img></a>|
 |JsonLogic|<a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonLogic.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a>|
 |Json.More.Net|<a href="https://www.nuget.org/packages/Json.More.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/Json.More.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a>|
+
+<details>
+<summary>
+Supported languages for JsonSchema.Net
+</summary>
+
+|||||  
+|-|-|:-:|:-:|
+|Spanish|JsonSchema.Net.es|<a href="https://www.nuget.org/packages/JsonSchema.Net.es/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.es.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.es.svg?svg=true"></img></a>|
+
+</details>
+
 
 
 |Try it online! & Read docs!|Discuss it!|(Oh, and built with)|
