@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: format-report.json
+          path: pr-message.md
   build:
     runs-on: ubuntu-latest
     steps:
