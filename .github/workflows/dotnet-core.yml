@@ -28,7 +28,9 @@ jobs:
           FORMAT_REPORT=$(cat format-report.json)
           if [ "${FORMAT_REPORT}" != "[]" ]; then
             echo "\<details\>\<summary\>Expand to see formatting issues\</summary\>" > pr-message.md
+            echo "```json"
             cat format-report.json > pr-message.md
+            echo "```"
             echo "\</details\>" > pr-message.md
             echo "::set-output name=POST_REPORT::true"
           fi
