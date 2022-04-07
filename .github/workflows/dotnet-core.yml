@@ -27,15 +27,17 @@ jobs:
           dotnet format --verify-no-changes --report . || true
           FORMAT_REPORT=$(cat format-report.json)
           if [ "${FORMAT_REPORT}" != "[]" ]; then
-            echo ${FORMAT_REPORT}
-            FORMAT_REPORT="\<details\>\<summary\>Expand to see formatting issues\</summary\>${FORMAT_REPORT}\</details\>"
-            echo "::set-output name=FORMAT_REPORT::${FORMAT_REPORT}"
+            cat "\<details\>\<summary\>Expand to see formatting issues\</summary\>" > pr-message.md
+            cat format-report.json > pr-message.md
+            cat "\</details\>" > pr-message.md
+            echo "::set-output name=POST_REPORT::true"
           fi
-      - if: ${{ steps.dotnet-format.outputs.FORMAT_REPORT != '' }}
-        uses: mshick/add-pr-comment@v1
+      - if: ${{ steps.dotnet-format.outputs.POST_REPORT == 'true' }}
+        uses: machine-learning-apps/pr-comment@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          message: ${{ steps.dotnet-format.outputs.FORMAT_REPORT }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          path: format-report.json
   build:
     runs-on: ubuntu-latest
     steps:
