@@ -31,7 +31,7 @@ jobs:
             FORMAT_REPORT=\<details\>\<summary\>Expand to see formatting issues\</summary\>${FORMAT_REPORT}\</details\>
             echo "::set-output name=FORMAT_REPORT::${FORMAT_REPORT}"
           fi
-      - if: ${{ steps.dotnet-format.outputs.FORMAT_REPORT == '' }}
+      - if: ${{ steps.dotnet-format.outputs.FORMAT_REPORT != '' }}
         uses: mshick/add-pr-comment@v1
         with:
           message: ${{ steps.dotnet-format.outputs.FORMAT_REPORT }}
