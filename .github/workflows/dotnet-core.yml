@@ -20,7 +20,8 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          # See https://stackoverflow.com/a/71619953/878701
+          dotnet-version: 6.0.100
       - id: dotnet-format
         run: |
           dotnet format --verify-no-changes --report .
