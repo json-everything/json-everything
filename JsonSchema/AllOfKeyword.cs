@@ -47,8 +47,6 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		Schemas = values.ToList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
-
-
 	/// <summary>
 	/// Provides validation for the keyword.
 	/// </summary>
