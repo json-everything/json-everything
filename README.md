@@ -5,8 +5,7 @@
 [![License](https://img.shields.io/github/license/gregsdennis/json-everything)](https://github.com/gregsdennis/json-everything/blob/master/LICENSE)
 
 ||||  
-|-|:-:|:-:|
-|JsonSchema.Net|<a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a>|
+|-|:-|:-|
 |JsonSchema.Net|<a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a>|
 |JsonSchema.Net.Generation|<a href="https://www.nuget.org/packages/JsonSchema.Net.Generation/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.Generation.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img></a>|
 |JsonSchema.Net.DataGeneration|<a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.DataGeneration.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a>|
@@ -24,7 +23,7 @@ Supported languages for JsonSchema.Net
 </summary>
 
 |||||  
-|-|-|:-:|:-:|
+|-|-|:-|:-|
 |Spanish|JsonSchema.Net.es|<a href="https://www.nuget.org/packages/JsonSchema.Net.es/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonSchema.Net.es.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.es.svg?svg=true"></img></a>|
 
 </details>
