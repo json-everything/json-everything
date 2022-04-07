@@ -13,6 +13,24 @@ on:
   workflow_dispatch:
 
 jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: dotnet-format
+        run: |
+          dotnet format --verify-no-changes --report .
+          FORMAT_REPORT=$(cat format-report.json)
+          if [ "${FORMAT_REPORT}" != "[]" ]; then
+            echo ${FORMAT_REPORT}
+            FORMAT_REPORT=<details><summary>Expand to see formatting issues</summary>${FORMAT_REPORT}</details>
+            echo "::set-output name=FORMAT_REPORT::${FORMAT_REPORT}"
+          fi
+      - if: ${{ steps.dotnet-format.outputs.FORMAT_REPORT == '' }}
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: ${{ steps.dotnet-format.outputs.FORMAT_REPORT }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
   build:
     runs-on: ubuntu-latest
     steps:
