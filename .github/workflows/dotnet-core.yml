@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
       - id: dotnet-format
         run: |
           dotnet format --verify-no-changes --report .
@@ -38,7 +42,7 @@ jobs:
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: |
             3.1.x
@@ -126,7 +130,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-more.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -186,7 +190,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-patch.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -246,7 +250,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-path.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -306,7 +310,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-pointer.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -366,7 +370,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-schema.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -426,12 +430,12 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-schema-gen.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
       - if: steps.changed-schema-gen.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 5.0.100
 
@@ -491,7 +495,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-schema-data.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -551,7 +555,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-schema-uniquekeys.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -611,7 +615,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-schema-datageneration.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 
@@ -671,7 +675,7 @@ jobs:
         uses: actions/checkout@v3
       - if: steps.changed-logic.outputs.changed == 'true'
         name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 3.1.301
 

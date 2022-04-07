@@ -21,7 +21,7 @@ jobs:
           echo ${NUSPEC_FILES}
           echo "::set-output name=NUSPEC_FILES::${NUSPEC_FILES}"
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
       # Publish
