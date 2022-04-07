@@ -24,7 +24,7 @@ jobs:
           dotnet-version: 6.0.100
       - id: dotnet-format
         run: |
-          dotnet format --verify-no-changes --report .
+          dotnet format --verify-no-changes --report . || true
           FORMAT_REPORT=$(cat format-report.json)
           if [ "${FORMAT_REPORT}" != "[]" ]; then
             echo ${FORMAT_REPORT}

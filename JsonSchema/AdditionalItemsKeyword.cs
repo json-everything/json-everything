@@ -43,8 +43,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	/// Provides validation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
-	{
+	public void Validate(ValidationContext context)	{
 		context.EnterKeyword(Name);
 		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
 		{
