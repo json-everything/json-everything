@@ -48,6 +48,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	}
 
 
+
 	/// <summary>
 	/// Provides validation for the keyword.
 	/// </summary>
@@ -56,7 +57,8 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	{
 		context.EnterKeyword(Name);
 		var overallResult = true;
-		for (var i = 0; i < Schemas.Count; i++){
+		for (var i = 0; i < Schemas.Count; i++)
+		{
 			var i1 = i;
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
