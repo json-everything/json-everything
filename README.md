@@ -3,7 +3,6 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Average time to resolve an issue")
 [![License](https://img.shields.io/github/license/gregsdennis/json-everything)](https://github.com/gregsdennis/json-everything/blob/master/LICENSE)
-[![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/json-everything)](https://stackoverflow.com/questions/tagged/json-everything)
 
 ||||  
 |-|:-:|:-:|
@@ -32,9 +31,9 @@ Supported languages for JsonSchema.Net
 
 
 
-|Try it online! & Read docs!|Discuss it!|(Oh, and built with)|
-|:-:|:-:|:-:|
-|<a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a>|<a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"><br>Slack</a>|<a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"><br>Resharper</a>|
+|Play & Learn|Discuss|Ask|Built with|
+|:-:|:-:|:-:|:-:|
+|<a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a>|<a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"><br>Slack</a>|<a href="https://stackoverflow.com/questions/tagged/json-everything"><img src="Resources/stackoverflow.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"><br>StackOverflow</a>|<a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"><br>Resharper</a>|
 
 `json-everything` is your one-stop shop for extending the JSON functionality provided by .Net's `System.Text.Json` namespace, all (well, most anyway) provided in convenient .Net Standard 2.0 packages.
 
