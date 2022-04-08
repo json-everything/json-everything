@@ -11,7 +11,7 @@ internal class ReduceRule : Rule
 		public JsonElement Accumulator { get; set; }
 	}
 
-	private static readonly JsonSerializerOptions _options = new() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
+	private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
 	private readonly Rule _input;
 	private readonly Rule _rule;
@@ -23,7 +23,7 @@ internal class ReduceRule : Rule
 		_rule = rule;
 		_initial = initial;
 	}
-		
+
 	public override JsonElement Apply(JsonElement data)
 	{
 		var input = _input.Apply(data);
@@ -42,7 +42,7 @@ internal class ReduceRule : Rule
 			};
 			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(intermediary, _options));
 			var item = doc.RootElement.Clone();
-				
+
 			accumulator = _rule.Apply(item);
 		}
 

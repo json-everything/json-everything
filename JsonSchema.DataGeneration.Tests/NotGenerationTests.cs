@@ -21,11 +21,11 @@ public class NotGenerationTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Not(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object |
-				      SchemaValueType.Array |
-				      SchemaValueType.Integer |
-				      SchemaValueType.Number |
-				      SchemaValueType.Null |
-				      SchemaValueType.Boolean)
+					  SchemaValueType.Array |
+					  SchemaValueType.Integer |
+					  SchemaValueType.Number |
+					  SchemaValueType.Null |
+					  SchemaValueType.Boolean)
 			);
 
 		Run(schema);

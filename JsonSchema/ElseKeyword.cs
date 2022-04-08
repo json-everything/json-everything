@@ -49,7 +49,7 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 			return;
 		}
 
-		if ((bool) annotation)
+		if ((bool)annotation)
 		{
 			context.LocalResult.Pass();
 			context.NotApplicable(() => $"Annotation for {IfKeyword.Name} is {annotation}.");

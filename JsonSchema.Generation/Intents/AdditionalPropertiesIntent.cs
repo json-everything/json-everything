@@ -29,7 +29,7 @@ public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContaine
 	/// </returns>
 	public IEnumerable<SchemaGeneratorContext> GetContexts()
 	{
-		return new[] {Context};
+		return new[] { Context };
 	}
 
 	/// <summary>

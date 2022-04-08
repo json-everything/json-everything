@@ -52,7 +52,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		}
 
 		var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
-		if (vocabularyKeyword != null) 
+		if (vocabularyKeyword != null)
 			context.UpdateMetaSchemaVocabs(vocabularyKeyword.Vocabulary);
 
 		if (!context.Options.ValidateMetaSchema)

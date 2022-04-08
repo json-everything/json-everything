@@ -29,7 +29,7 @@ public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
 	/// </returns>
 	public IEnumerable<SchemaGeneratorContext> GetContexts()
 	{
-		return new[] {Context};
+		return new[] { Context };
 	}
 
 	/// <summary>

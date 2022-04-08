@@ -26,13 +26,13 @@ internal class VariableRule : Rule
 	public override JsonElement Apply(JsonElement data)
 	{
 		if (_path == null) return data;
-			
+
 		var path = _path.Apply(data);
 		var pathString = path.Stringify()!;
 		var pointer = JsonPointer.Parse(pathString == string.Empty ? "" : $"/{pathString.Replace('.', '/')}");
 		var pathEval = pointer.Evaluate(data);
 		if (pathEval != null) return pathEval.Value;
 
-		return _defaultValue?.Apply(data) ?? ((string?) null).AsJsonElement();
+		return _defaultValue?.Apply(data) ?? ((string?)null).AsJsonElement();
 	}
 }

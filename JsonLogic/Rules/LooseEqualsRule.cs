@@ -14,7 +14,7 @@ internal class LooseEqualsRule : Rule
 		_a = a;
 		_b = b;
 	}
-	
+
 	public override JsonElement Apply(JsonElement data)
 	{
 		var a = _a.Apply(data);

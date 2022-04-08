@@ -150,7 +150,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		var byKey = Requirements.Join(other.Requirements,
 				td => td.Key,
 				od => od.Key,
-				(td, od) => new {ThisDef = td.Value, OtherDef = od.Value})
+				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
 			.ToList();
 		if (byKey.Count != Requirements.Count) return false;
 

@@ -15,7 +15,7 @@ internal class InRule : Rule
 		_test = test;
 		_source = source;
 	}
-	
+
 	public override JsonElement Apply(JsonElement data)
 	{
 		var test = _test.Apply(data);

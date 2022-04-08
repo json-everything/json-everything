@@ -41,7 +41,7 @@ public class CookieManager
 
 			var index = val.IndexOf('=');
 			var key = val[..(index)].Trim();
-			var value = val[(index+1)..];
+			var value = val[(index + 1)..];
 			if (string.IsNullOrEmpty(value)) continue;
 
 			_cache[key] = value;

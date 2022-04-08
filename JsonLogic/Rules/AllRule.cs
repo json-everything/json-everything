@@ -26,7 +26,7 @@ internal class AllRule : Rule
 		var inputData = input.EnumerateArray();
 		var results = inputData.Select(value => _rule.Apply(value)).ToList();
 		return (results.Any() &&
-		        results.All(result => result.IsTruthy()))
+				results.All(result => result.IsTruthy()))
 			.AsJsonElement();
 	}
 }

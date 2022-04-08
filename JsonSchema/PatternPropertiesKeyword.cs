@@ -64,7 +64,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-			
+
 		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
 		{
 			context.LocalResult.Pass();
@@ -157,7 +157,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		var byKey = Patterns.Join(other.Patterns,
 				td => td.Key.ToString(),
 				od => od.Key.ToString(),
-				(td, od) => new {ThisDef = td.Value, OtherDef = od.Value})
+				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
 			.ToList();
 		if (byKey.Count != Patterns.Count) return false;
 
@@ -176,7 +176,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		return ((IKeyedSchemaCollector) this).Schemas.GetStringDictionaryHashCode();
+		return ((IKeyedSchemaCollector)this).Schemas.GetStringDictionaryHashCode();
 	}
 }
 
@@ -194,7 +194,7 @@ internal class PatternPropertiesKeywordJsonConverter : JsonConverter<PatternProp
 		{
 			try
 			{
-				var regex = new Regex(prop.Key, RegexOptions.ECMAScript | RegexOptions.Compiled);	
+				var regex = new Regex(prop.Key, RegexOptions.ECMAScript | RegexOptions.Compiled);
 				schemas.Add(regex, prop.Value);
 			}
 			catch

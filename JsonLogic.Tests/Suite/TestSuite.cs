@@ -11,7 +11,7 @@ public class TestSuite
 {
 	public List<Test> Tests { get; set; }
 }
-	
+
 public class TestSuiteConverter : JsonConverter<TestSuite>
 {
 	public override TestSuite Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -22,8 +22,8 @@ public class TestSuiteConverter : JsonConverter<TestSuite>
 		var tests = JsonSerializer.Deserialize<List<Test>>(ref reader, options)
 			.Where(t => t != null)
 			.ToList();
-			
-		return new TestSuite {Tests = tests};
+
+		return new TestSuite { Tests = tests };
 	}
 
 	public override void Write(Utf8JsonWriter writer, TestSuite value, JsonSerializerOptions options)

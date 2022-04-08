@@ -80,7 +80,7 @@ public readonly struct Bound : IComparable<Bound>, IEquatable<Bound>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
 	public override bool Equals(object obj)
 	{
-		return Equals((Bound) obj);
+		return Equals((Bound)obj);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

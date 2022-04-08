@@ -35,7 +35,7 @@ public class ComplianceTestSuiteTests
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 				PropertyNameCaseInsensitive = true
 			});
-			return suite.Tests.Select(t => new TestCaseData(t) {TestName = t.Name});
+			return suite.Tests.Select(t => new TestCaseData(t) { TestName = t.Name });
 		}
 	}
 
@@ -76,7 +76,7 @@ public class ComplianceTestSuiteTests
 		var actualValues = actual.Matches.Select(m => m.Value).AsJsonElement();
 		Console.WriteLine($"Actual (values): {actualValues}");
 		Console.WriteLine();
-		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping})}");
+		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 

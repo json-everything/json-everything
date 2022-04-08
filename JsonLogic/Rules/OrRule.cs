@@ -12,7 +12,7 @@ internal class OrRule : Rule
 
 	public OrRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> {a};
+		_items = new List<Rule> { a };
 		_items.AddRange(more);
 	}
 
@@ -25,7 +25,7 @@ internal class OrRule : Rule
 			first = x;
 			if (x.IsTruthy()) break;
 		}
-			
+
 		return first;
 	}
 }

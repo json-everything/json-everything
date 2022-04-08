@@ -28,7 +28,7 @@ public class Tests
 
 	[OneTimeSetUp]
 	public void Setup()
-	{ 
+	{
 		Vocabularies.Register();
 
 		ValidationOptions.Default.OutputFormat = OutputFormat.Detailed;

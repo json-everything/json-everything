@@ -14,8 +14,8 @@ public static class KeywordExtensions
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface)
+						!t.IsAbstract &&
+						!t.IsInterface)
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
 
 	/// <summary>
@@ -46,8 +46,8 @@ public static class KeywordExtensions
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface)
+						!t.IsAbstract &&
+						!t.IsInterface)
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaPriorityAttribute>()?.ActualPriority ?? 0);
 
 	/// <summary>
@@ -74,8 +74,8 @@ public static class KeywordExtensions
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface)
+						!t.IsAbstract &&
+						!t.IsInterface)
 			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaDraftAttribute>()
 				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft));
 
@@ -125,7 +125,7 @@ public static class KeywordExtensions
 		return keyword switch
 		{
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			ISchemaContainer container => container.Schema == null ? Enumerable.Empty<JsonSchema>() : new[] {container.Schema},
+			ISchemaContainer container => container.Schema == null ? Enumerable.Empty<JsonSchema>() : new[] { container.Schema },
 			// ReSharper disable ConstantNullCoalescingCondition
 			ISchemaCollector collector => collector.Schemas ?? Enumerable.Empty<JsonSchema>(),
 			IKeyedSchemaCollector collector => collector.Schemas.Values ?? Enumerable.Empty<JsonSchema>(),

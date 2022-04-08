@@ -36,7 +36,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 
 			current.Object[last.Value] = new EditableJsonElement(operation.Value);
 			return;
-		} 
+		}
 		if (current.Array != null)
 		{
 			if (last.Value == "-")

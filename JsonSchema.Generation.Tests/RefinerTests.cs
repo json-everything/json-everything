@@ -38,7 +38,7 @@ public class RefinerTests
 	{
 		var configuration = new SchemaGeneratorConfiguration
 		{
-			Refiners = {new Refiner()}
+			Refiners = { new Refiner() }
 		};
 
 		JsonSchema expected = new JsonSchemaBuilder()
@@ -52,8 +52,8 @@ public class RefinerTests
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ThreeProps>(configuration);
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions {WriteIndented = true}));
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions {WriteIndented = true}));
+		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(expected, actual);
 	}
 
@@ -62,7 +62,7 @@ public class RefinerTests
 	{
 		var configuration = new SchemaGeneratorConfiguration
 		{
-			Refiners = {new Refiner()}
+			Refiners = { new Refiner() }
 		};
 
 		JsonSchema expected = new JsonSchemaBuilder()
@@ -74,8 +74,8 @@ public class RefinerTests
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<TwoProps>(configuration);
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions {WriteIndented = true}));
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions {WriteIndented = true}));
+		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(expected, actual);
 	}
 }

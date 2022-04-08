@@ -14,8 +14,8 @@ public static partial class Vocabularies
 			.Assembly
 			.DefinedTypes
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface)
+						!t.IsAbstract &&
+						!t.IsInterface)
 			.Select(t => new
 			{
 				Type = t,

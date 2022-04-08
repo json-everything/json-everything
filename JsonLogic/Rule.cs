@@ -87,9 +87,9 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			if (ruleType == null)
 				throw new JsonException($"Cannot identify rule for {op}");
 
-			var value = args ?? new ArgumentCollection((Rule?) null);
+			var value = args ?? new ArgumentCollection((Rule?)null);
 
-			return (Rule) Activator.CreateInstance(ruleType,
+			return (Rule)Activator.CreateInstance(ruleType,
 				value.Cast<object>()
 					.Select(o => o ?? new LiteralRule(null))
 					.ToArray());
@@ -128,14 +128,14 @@ internal class ArgumentCollection : List<Rule>
 	{
 	}
 }
-	
+
 internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 {
 	public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 			return new ArgumentCollection(JsonSerializer.Deserialize<List<Rule>>(ref reader, options)!);
-			
+
 		return new ArgumentCollection(JsonSerializer.Deserialize<Rule>(ref reader, options));
 	}
 

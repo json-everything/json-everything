@@ -148,7 +148,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Date);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -158,7 +158,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.DateTime);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -168,7 +168,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Duration);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -178,7 +178,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Email);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -188,7 +188,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Hostname);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -198,7 +198,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.IdnEmail);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -208,7 +208,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.IdnHostname);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -218,7 +218,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Ipv4);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -228,7 +228,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Ipv6);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -238,7 +238,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Iri);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -248,7 +248,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.IriReference);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -258,7 +258,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.JsonPointer);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -268,7 +268,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.RelativeJsonPointer);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -278,7 +278,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Time);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -288,7 +288,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Uri);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -298,7 +298,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.UriReference);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
@@ -308,7 +308,7 @@ public class StringGenerationTests
 			.Type(SchemaValueType.String)
 			.Format(Formats.Uuid);
 
-		Run(schema, new ValidationOptions {RequireFormatValidation = true});
+		Run(schema, new ValidationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]

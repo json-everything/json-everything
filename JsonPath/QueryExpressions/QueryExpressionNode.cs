@@ -49,7 +49,7 @@ internal class QueryExpressionNode
 		}
 
 		if (OutputType == QueryExpressionType.Invalid) return default;
-			
+
 		var value = Operator!.Evaluate(_left!, _right!, element);
 		if (OutputType != QueryExpressionType.InstanceDependent)
 			_value = value;
@@ -105,12 +105,12 @@ internal class QueryExpressionNode
 		if (_path != null) return QueryExpressionType.InstanceDependent;
 
 		if (_left?.OutputType == QueryExpressionType.Invalid ||
-		    _right?.OutputType == QueryExpressionType.Invalid)
+			_right?.OutputType == QueryExpressionType.Invalid)
 			return QueryExpressionType.Invalid;
 
 		// TODO: this might be optimizable depending on the operation
 		if (_left?.OutputType == QueryExpressionType.InstanceDependent ||
-		    _right?.OutputType == QueryExpressionType.InstanceDependent)
+			_right?.OutputType == QueryExpressionType.InstanceDependent)
 			return QueryExpressionType.InstanceDependent;
 
 		return Operator?.GetOutputType(_left!, _right!) ?? GetValueType();

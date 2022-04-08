@@ -54,7 +54,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 				return;
 			}
 			if ((index != 0 && last.Value[0] == '0') ||
-			    (index == 0 && last.Value.Length > 1))
+				(index == 0 && last.Value.Length > 1))
 			{
 				context.Message = $"Path `{operation.Path}` is not present in the instance.";
 				return;

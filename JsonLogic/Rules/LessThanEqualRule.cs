@@ -21,7 +21,7 @@ internal class LessThanEqualRule : Rule
 		_b = b;
 		_c = c;
 	}
-	
+
 	public override JsonElement Apply(JsonElement data)
 	{
 		if (_c == null)
@@ -37,7 +37,7 @@ internal class LessThanEqualRule : Rule
 
 			return (numberA <= numberB).AsJsonElement();
 		}
-			
+
 		var low = _a.Apply(data);
 		var value = _b.Apply(data);
 		var high = _c.Apply(data);

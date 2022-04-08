@@ -30,7 +30,7 @@ internal class SubtractRule : Rule
 
 		if (_items.Count == 1)
 			return (-result).AsJsonElement();
-			
+
 		foreach (var item in _items.Skip(1))
 		{
 			value = item.Apply(data);

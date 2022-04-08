@@ -144,7 +144,7 @@ public class GithubTests
 	""additionalProperties"": false
 }");
 
-		var result = schema.Validate(instance.RootElement, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+		var result = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		result.AssertValid();
 	}
@@ -155,7 +155,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonDocument.Parse("\"some string\"");
 
-		var result = schema.Validate(instance.RootElement, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+		var result = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		result.AssertInvalid();
 	}
@@ -269,7 +269,7 @@ public class GithubTests
 }";
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr);
 		var json = JsonDocument.Parse(jsonStr).RootElement;
-		var validation = schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		validation.AssertValid();
 	}
@@ -469,8 +469,8 @@ public class GithubTests
 		var passing = JsonDocument.Parse(passingText).RootElement;
 		var failing = JsonDocument.Parse(failingText).RootElement;
 
-		schema.Validate(passing, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertValid();
-		schema.Validate(failing, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
+		schema.Validate(passing, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertValid();
+		schema.Validate(failing, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
 	}
 
 	[Test]
@@ -482,7 +482,7 @@ public class GithubTests
 
 		var json = JsonDocument.Parse("\"value\"").RootElement;
 
-		schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
+		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
 	}
 
 	[Test]
@@ -497,7 +497,7 @@ public class GithubTests
 
 		var json = JsonDocument.Parse("\"value\"").RootElement;
 
-		schema.Validate(json, new ValidationOptions{OutputFormat = OutputFormat.Detailed}).AssertInvalid();
+		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
 	}
 
 	[SchemaKeyword(Name)]
@@ -668,10 +668,10 @@ public class GithubTests
 
 		var instance = JsonDocument.Parse("{\"foo\":1,\"bar\":false}").RootElement;
 
-		var result = schema.Validate(instance, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		result.AssertInvalid();
-		var nodes = new List<ValidationResults>{result};
+		var nodes = new List<ValidationResults> { result };
 		while (nodes.Any())
 		{
 			var node = nodes.First();
@@ -690,7 +690,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonDocument.Parse(instanceText).RootElement;
 
-		var result = schema.Validate(instance, new ValidationOptions{OutputFormat = OutputFormat.Basic});
+		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 		Assert.AreEqual(0, result.NestedResults.Count);
 	}

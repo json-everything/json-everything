@@ -71,7 +71,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
 			}
-				
+
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
 				item,
 				context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));

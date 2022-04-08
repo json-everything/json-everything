@@ -18,7 +18,7 @@ internal class SimpleIndex : IArrayIndexExpression
 	{
 		var length = array.GetArrayLength();
 		var end = _index.IsFromEnd ? length - _index.Value : _index.Value;
-		return new[] {end};
+		return new[] { end };
 	}
 
 	internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)

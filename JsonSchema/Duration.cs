@@ -80,8 +80,8 @@ public readonly struct Duration
 		if (!gotDaily)
 		{
 			gotDaily = TryGetComponent(source, ref index, out year, 'Y') |
-			           TryGetComponent(source, ref index, out month, 'M') |
-			           TryGetComponent(source, ref index, out day, 'D');
+					   TryGetComponent(source, ref index, out month, 'M') |
+					   TryGetComponent(source, ref index, out day, 'D');
 		}
 
 		if (!Require(source, ref index, 'T'))
@@ -92,8 +92,8 @@ public readonly struct Duration
 		else
 		{
 			var gotTime = TryGetComponent(source, ref index, out hour, 'H') |
-			              TryGetComponent(source, ref index, out minute, 'M') |
-			              TryGetComponent(source, ref index, out second, 'S');
+						  TryGetComponent(source, ref index, out minute, 'M') |
+						  TryGetComponent(source, ref index, out second, 'S');
 
 			if (!gotTime) return false;
 		}

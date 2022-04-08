@@ -51,7 +51,7 @@ internal class RequirementsContext
 
 	public bool HasConflict { get; set; }
 
-	public RequirementsContext(){}
+	public RequirementsContext() { }
 
 	public RequirementsContext(RequirementsContext other)
 	{

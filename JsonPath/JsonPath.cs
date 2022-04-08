@@ -172,10 +172,10 @@ public class JsonPath
 	private static bool IsValidForPropertyName(char ch)
 	{
 		return ch.In('a'..('z' + 1)) ||
-		       ch.In('A'..('Z' + 1)) ||
-		       ch.In('0'..('9' + 1)) ||
-		       ch.In('_') ||
-		       ch.In(0x80..0x10FFFF);
+			   ch.In('A'..('Z' + 1)) ||
+			   ch.In('0'..('9' + 1)) ||
+			   ch.In('_') ||
+			   ch.In(0x80..0x10FFFF);
 	}
 
 	private static ISelector AddIndex(ReadOnlySpan<char> span, ref int i)
@@ -209,7 +209,7 @@ public class JsonPath
 
 		if (ch != ']')
 			return new ErrorSelector("Expected ']' or ','");
-			
+
 		return new IndexSelector(indices);
 	}
 

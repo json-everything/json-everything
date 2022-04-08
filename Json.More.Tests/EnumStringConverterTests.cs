@@ -19,7 +19,7 @@ public class EnumStringConverterTests
 	public void DayOfWeekAsPropertyIsConverted()
 	{
 		var expected = "{\"Day\":\"Wednesday\"}";
-		var actual = JsonSerializer.Serialize(new ConversionTest {Day = DayOfWeek.Wednesday});
+		var actual = JsonSerializer.Serialize(new ConversionTest { Day = DayOfWeek.Wednesday });
 
 		Assert.AreEqual(expected, actual);
 	}

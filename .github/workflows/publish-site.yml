@@ -27,7 +27,7 @@ jobs:
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
       - name: Install dependencies

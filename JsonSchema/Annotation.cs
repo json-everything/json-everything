@@ -19,7 +19,7 @@ public class Annotation
 	/// The pointer to the keyword that created the annotation.
 	/// </summary>
 	public JsonPointer Source { get; }
-		
+
 	internal bool WasConsolidated { get; set; }
 
 	/// <summary>
@@ -37,6 +37,6 @@ public class Annotation
 
 	internal static Annotation CreateConsolidated(Annotation source)
 	{
-		return new Annotation(source.Owner, source.Value, source.Source) {WasConsolidated = true};
+		return new Annotation(source.Owner, source.Value, source.Source) { WasConsolidated = true };
 	}
 }

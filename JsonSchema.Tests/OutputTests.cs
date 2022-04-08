@@ -225,7 +225,7 @@ namespace Json.Schema.Tests
 
 			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
 
-			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var serialized = JsonSerializer.Serialize(result);
 			Console.WriteLine(serialized);
@@ -244,7 +244,7 @@ namespace Json.Schema.Tests
 
 			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
 
-			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var serialized = JsonSerializer.Serialize(result);
 			Console.WriteLine(serialized);
@@ -268,7 +268,7 @@ namespace Json.Schema.Tests
 
 			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
 
-			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var serialized = JsonSerializer.Serialize(result);
 			Console.WriteLine(serialized);
@@ -280,12 +280,12 @@ namespace Json.Schema.Tests
 		public void AdditionalItemsDoesNotGiveExtraErrors()
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
-				.Items(new JsonSchema[]{true, false})
+				.Items(new JsonSchema[] { true, false })
 				.AdditionalItems(false);
 
 			var instance = JsonDocument.Parse("[1,2]").RootElement;
 
-			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var serialized = JsonSerializer.Serialize(result);
 			Console.WriteLine(serialized);
@@ -297,12 +297,12 @@ namespace Json.Schema.Tests
 		public void UnevaluatedItemsDoesNotGiveExtraErrors()
 		{
 			JsonSchema schema = new JsonSchemaBuilder()
-				.Items(new JsonSchema[]{true, false})
+				.Items(new JsonSchema[] { true, false })
 				.UnevaluatedItems(false);
 
 			var instance = JsonDocument.Parse("[1,2]").RootElement;
 
-			var result = schema.Validate(instance, new ValidationOptions {OutputFormat = OutputFormat.Basic});
+			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var serialized = JsonSerializer.Serialize(result);
 			Console.WriteLine(serialized);

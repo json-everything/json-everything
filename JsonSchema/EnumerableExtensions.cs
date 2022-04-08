@@ -27,10 +27,10 @@ public static class EnumerableExtensions
 		var grouped = collection.GroupBy(x => x);
 		var otherCopy = other.ToList();
 		if (grouped.Any(g =>
-		    {
-			    var value = g.First();
-			    return g.Count() != otherCopy.RemoveAll(x => Equals(x, value));
-		    }))
+			{
+				var value = g.First();
+				return g.Count() != otherCopy.RemoveAll(x => Equals(x, value));
+			}))
 			return false;
 
 		return !otherCopy.Any();
@@ -54,10 +54,10 @@ public static class EnumerableExtensions
 		var grouped = collection.GroupBy(x => x);
 		var otherCopy = other.ToList();
 		if (grouped.Any(g =>
-		    {
-			    var value = g.First();
-			    return g.Count() != otherCopy.RemoveAll(x => comparer.Equals(x, value));
-		    }))
+			{
+				var value = g.First();
+				return g.Count() != otherCopy.RemoveAll(x => comparer.Equals(x, value));
+			}))
 			return false;
 
 		return !otherCopy.Any();

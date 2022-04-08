@@ -46,7 +46,7 @@ public class GenerationResult
 		return new GenerationResult(result, null, null);
 	}
 
-	internal static GenerationResult Fail(string errorMessage)	
+	internal static GenerationResult Fail(string errorMessage)
 	{
 		return new GenerationResult(null, errorMessage, null);
 	}

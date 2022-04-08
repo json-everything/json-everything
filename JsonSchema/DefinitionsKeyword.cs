@@ -69,7 +69,7 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSche
 		var byKey = Definitions.Join(other.Definitions,
 				td => td.Key,
 				od => od.Key,
-				(td, od) => new {ThisDef = td.Value, OtherDef = od.Value})
+				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
 			.ToList();
 		if (byKey.Count != Definitions.Count) return false;
 

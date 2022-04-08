@@ -13,7 +13,7 @@ namespace Json.Path;
 public class ExperimentalFeatures
 {
 	private Func<Uri, Task<JsonDocument?>>? _download;
-		
+
 	/// <summary>
 	/// Enables dereferencing of reference objects such as
 	/// <code>{ "$ref": "http://example.com/data#/pointer/to/value" }</code>.

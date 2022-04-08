@@ -125,7 +125,7 @@ public static class Formats
 		_registry = new ConcurrentDictionary<string, Format>(
 			typeof(Formats)
 				.GetFields(BindingFlags.Static | BindingFlags.Public)
-				.Select(f => (Format) f.GetValue(null))
+				.Select(f => (Format)f.GetValue(null))
 				.ToDictionary(f => f.Key));
 	}
 

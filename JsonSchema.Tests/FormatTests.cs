@@ -15,7 +15,7 @@ public class FormatTests
 
 		var value = JsonDocument.Parse("\"100.2.54.3\"");
 
-		var result = schema.Validate(value.RootElement, new ValidationOptions{RequireFormatValidation = true});
+		var result = schema.Validate(value.RootElement, new ValidationOptions { RequireFormatValidation = true });
 
 		Assert.True(result.IsValid);
 	}
@@ -27,7 +27,7 @@ public class FormatTests
 
 		var value = JsonDocument.Parse("\"100.2.5444.3\"");
 
-		var result = schema.Validate(value.RootElement, new ValidationOptions {RequireFormatValidation = true});
+		var result = schema.Validate(value.RootElement, new ValidationOptions { RequireFormatValidation = true });
 
 		Assert.False(result.IsValid);
 	}
@@ -64,7 +64,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonDocument.Parse("\"a value\"").RootElement;
 
-		var results = schema.Validate(instance, new ValidationOptions{OutputFormat = OutputFormat.Detailed});
+		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		results.AssertValid();
 		var serialized = JsonSerializer.Serialize(results);

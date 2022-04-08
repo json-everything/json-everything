@@ -21,7 +21,7 @@ internal class MultiplicationOperator : IQueryExpressionOperator
 
 		var rElement = right.Evaluate(element);
 		if (rElement.ValueKind != JsonValueKind.Number) return default;
-		
+
 		return lElement.GetDecimal() * rElement.GetDecimal();
 	}
 

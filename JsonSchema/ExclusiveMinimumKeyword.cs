@@ -48,7 +48,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		}
 
 		var number = context.LocalInstance.GetDecimal();
-		if ( Value < number)
+		if (Value < number)
 			context.LocalResult.Pass();
 		else
 			context.LocalResult.Fail(ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));

@@ -32,7 +32,7 @@ public class JsonPatchTestSuite
 			foreach (var test in suite.Where(t => t != null))
 			{
 				var testName = test.Comment?.Replace(' ', '_') ?? "Unnamed test";
-				yield return new TestCaseData(fileName, test) {TestName = testName};
+				yield return new TestCaseData(fileName, test) { TestName = testName };
 			}
 		}
 	}

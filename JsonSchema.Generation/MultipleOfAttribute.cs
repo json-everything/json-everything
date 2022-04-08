@@ -21,7 +21,7 @@ public class MultipleOfAttribute : Attribute, IAttributeHandler
 	/// <param name="value">The value.</param>
 	public MultipleOfAttribute(double value)
 	{
-		Value = (decimal) value;
+		Value = (decimal)value;
 	}
 
 	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)

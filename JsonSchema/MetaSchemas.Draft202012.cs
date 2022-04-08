@@ -13,7 +13,7 @@ public static partial class MetaSchemas
 	/// The Draft 2020-12 meta-schema ID.
 	/// </summary>
 	public static readonly Uri Draft202012Id = new Uri(Draft202012IdValue);
-		
+
 	/// <summary>
 	/// The Draft 2020-12 Core meta-schema ID.
 	/// </summary>

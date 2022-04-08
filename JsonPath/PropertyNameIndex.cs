@@ -19,7 +19,7 @@ internal class PropertyNameIndex : IObjectIndexExpression
 
 	IEnumerable<string> IObjectIndexExpression.GetProperties(JsonElement obj)
 	{
-		return new[] {_name};
+		return new[] { _name };
 	}
 
 	internal static bool TryParse(ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out IIndexExpression? index)
@@ -39,7 +39,7 @@ internal class PropertyNameIndex : IObjectIndexExpression
 		{
 			if (span[i + length] == '\\')
 			{
-				length+=2;
+				length += 2;
 				continue;
 			}
 			if (span[i + length] == start) break;
@@ -57,7 +57,7 @@ internal class PropertyNameIndex : IObjectIndexExpression
 		}
 		try
 		{
-			if (start == '\'') 
+			if (start == '\'')
 				key = key.Replace("\\'", "'").Replace("\"", "\\\"");
 			using var doc = JsonDocument.Parse($"\"{key}\"");
 			key = doc.RootElement.GetString()!;

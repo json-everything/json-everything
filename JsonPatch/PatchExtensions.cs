@@ -131,7 +131,7 @@ public static class PatchExtensions
 	{
 		for (int i = 0; i < Math.Max(orig.GetArrayLength(), mod.GetArrayLength()); i++)
 		{
-			var ui = (uint) i;
+			var ui = (uint)i;
 			if (i >= orig.GetArrayLength())
 			{
 				patch.Add(PatchOperation.Add(path.Combine(ui), mod[i]));

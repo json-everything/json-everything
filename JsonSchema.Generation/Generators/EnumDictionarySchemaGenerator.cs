@@ -13,8 +13,8 @@ internal class EnumDictionarySchemaGenerator : ISchemaGenerator
 
 		var generic = type.GetGenericTypeDefinition();
 		if (generic != typeof(IDictionary<,>) &&
-		    generic != typeof(Dictionary<,>) &&
-		    generic != typeof(ConcurrentDictionary<,>))
+			generic != typeof(Dictionary<,>) &&
+			generic != typeof(ConcurrentDictionary<,>))
 			return false;
 
 		var keyType = type.GenericTypeArguments[0];

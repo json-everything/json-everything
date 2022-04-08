@@ -24,10 +24,10 @@ internal class SliceIndex : IArrayIndexExpression
 
 		var length = array.GetArrayLength();
 		var startUnspecified = _range.Start.IsFromEnd && _range.Start.Value == 0;
-		var start = startUnspecified ? (int?) null : _range.Start.Value * (_range.Start.IsFromEnd ? -1 : 1);
+		var start = startUnspecified ? (int?)null : _range.Start.Value * (_range.Start.IsFromEnd ? -1 : 1);
 
 		var endUnspecified = _range.End.IsFromEnd && _range.End.Value == 0;
-		var end = endUnspecified ? (int?) null : _range.End.Value * (_range.End.IsFromEnd ? -1 : 1);
+		var end = endUnspecified ? (int?)null : _range.End.Value * (_range.End.IsFromEnd ? -1 : 1);
 
 		var indices = new List<int>();
 		var (lower, upper) = Bounds(start, end, _step, length);
@@ -61,7 +61,7 @@ internal class SliceIndex : IArrayIndexExpression
 		return index >= 0 ? index : length + index;
 	}
 
-	private static (int? ,int?) Bounds(int? start, int? end, int? step, int length)
+	private static (int?, int?) Bounds(int? start, int? end, int? step, int length)
 	{
 		var startIndex = Normalize(start, length);
 		var endIndex = Normalize(end, length);
@@ -75,8 +75,8 @@ internal class SliceIndex : IArrayIndexExpression
 		}
 		else
 		{
-			upper = startIndex.HasValue ? Math.Min(Math.Max(startIndex.Value, -1), length-1) : null;
-			lower = endIndex.HasValue ? Math.Min(Math.Max(endIndex.Value, -1), length-1) : null;
+			upper = startIndex.HasValue ? Math.Min(Math.Max(startIndex.Value, -1), length - 1) : null;
+			lower = endIndex.HasValue ? Math.Min(Math.Max(endIndex.Value, -1), length - 1) : null;
 		}
 
 		return (lower, upper);

@@ -159,11 +159,11 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
 		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
 		var refMatters = refKeyword != null &&
-		                 (registry.ValidatingAs == Draft.Draft6 || registry.ValidatingAs == Draft.Draft7);
+						 (registry.ValidatingAs == Draft.Draft6 || registry.ValidatingAs == Draft.Draft7);
 		if (idKeyword != null && !refMatters)
 		{
 			currentUri = idKeyword.UpdateUri(currentUri);
-			var parts = idKeyword.Id.OriginalString.Split(new[] {'#'}, StringSplitOptions.None);
+			var parts = idKeyword.Id.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 			var fragment = parts.Length > 1 ? parts[1] : null;
 #pragma warning disable 8602
 			if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
@@ -217,7 +217,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			if (keyword is not SchemaKeyword)
 				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
-		
+
 			context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);
 			context.PullDirectRefNavigation();
 			context.LocalResult.ConsiderAnnotations(previousAnnotationSet);
@@ -262,7 +262,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 						i--;
 					}
 					else if (int.TryParse(segment.Value, out index) &&
-					         index >= 0 && index < collector.Schemas.Count)
+							 index >= 0 && index < collector.Schemas.Count)
 						newResolvable = collector.Schemas[index];
 
 					break;
@@ -273,14 +273,14 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 					break;
 				case ISchemaCollector collector:
 					if (int.TryParse(segment.Value, out index) &&
-					    index >= 0 && index < collector.Schemas.Count)
+						index >= 0 && index < collector.Schemas.Count)
 						newResolvable = collector.Schemas[index];
 					break;
 				case IKeyedSchemaCollector keyedCollector:
 					if (keyedCollector.Schemas.TryGetValue(segment.Value, out var subschema))
 						newResolvable = subschema;
 					break;
-				case JsonSchema {Keywords: { }} schema:
+				case JsonSchema { Keywords: { } } schema:
 					if (!ReferenceEquals(schema, this))
 					{
 						// the assumption here is that if the schema is this schema, the $ref
@@ -296,8 +296,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			if (newResolvable == null)
 			{
 				// TODO: document that this process does not consider `$id` in extraneous data
-				if (resolvable is JsonSchema {OtherData: { }} subSchema &&
-				    subSchema.OtherData.TryGetValue(segment.Value, out var element))
+				if (resolvable is JsonSchema { OtherData: { } } subSchema &&
+					subSchema.OtherData.TryGetValue(segment.Value, out var element))
 				{
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
 					var value = newPointer.Evaluate(element);
@@ -358,7 +358,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			var byKeyword = Keywords.Join(other.Keywords,
 					tk => tk.Keyword(),
 					ok => ok.Keyword(),
-					(tk, ok) => new {ThisKeyword = tk, OtherKeyword = ok})
+					(tk, ok) => new { ThisKeyword = tk, OtherKeyword = ok })
 				.ToList();
 			if (byKeyword.Count != Keywords.Count) return false;
 			if (!byKeyword.All(k => k.ThisKeyword.Equals(k.OtherKeyword))) return false;
@@ -369,7 +369,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			var byKey = OtherData.Join(other.OtherData!,
 					td => td.Key,
 					od => od.Key,
-					(td, od) => new {ThisData = td.Value, OtherData = od.Value})
+					(td, od) => new { ThisData = td.Value, OtherData = od.Value })
 				.ToList();
 			if (byKey.Count != OtherData.Count) return false;
 			if (!byKey.All(k => k.ThisData.IsEquivalentTo(k.OtherData))) return false;
@@ -437,10 +437,10 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 					IJsonSchemaKeyword implementation;
 					if (reader.TokenType == JsonTokenType.Null)
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
-						                 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
+										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = (IJsonSchemaKeyword) JsonSerializer.Deserialize(ref reader, keywordType, options)! ??
-						                 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+						implementation = (IJsonSchemaKeyword)JsonSerializer.Deserialize(ref reader, keywordType, options)! ??
+										 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:

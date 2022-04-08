@@ -88,7 +88,7 @@ namespace JsonPointer.Benchmark
 			}
 
 			Console.WriteLine($"  Time: {stopwatch.ElapsedMilliseconds}ms");
-			Console.WriteLine($"  Score: {score*100/testCount}%");
+			Console.WriteLine($"  Score: {score * 100 / testCount}%");
 		}
 
 		private static object ParseLocal(string source)

@@ -21,10 +21,10 @@ internal class ModulusOperator : IQueryExpressionOperator
 
 		var rValue = rElement.GetDecimal();
 		if (rValue == 0) return default;
-		
+
 		var lElement = left.Evaluate(element);
 		if (lElement.ValueKind != JsonValueKind.Number) return default;
-		
+
 		return lElement.GetDecimal() % rValue;
 	}
 

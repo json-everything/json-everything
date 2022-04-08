@@ -15,7 +15,7 @@ public class NullTests
 	{
 		var json = JsonDocument.Parse("{\"foo\": null}").RootElement;
 
-		var result = _schema.Validate(json, new ValidationOptions {OutputFormat = OutputFormat.Detailed});
+		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		result.AssertValid();
 	}

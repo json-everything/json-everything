@@ -116,7 +116,7 @@ public class SchemaRegistry
 		if (registration == null)
 			_registered[uri] = registration = new Registration();
 		if (!registration.Anchors.ContainsKey(anchor))
-			registration.Anchors[anchor] = new Anchor {Schema = schema};
+			registration.Anchors[anchor] = new Anchor { Schema = schema };
 	}
 
 	internal void RegisterDynamicAnchor(Uri uri, string anchor, JsonSchema schema)
@@ -128,7 +128,7 @@ public class SchemaRegistry
 		if (registration.Anchors.TryGetValue(anchor, out var existing))
 			existing.HasDynamic = true;
 		else
-			registration.Anchors[anchor] = new Anchor {Schema = schema, HasDynamic = true};
+			registration.Anchors[anchor] = new Anchor { Schema = schema, HasDynamic = true };
 	}
 
 	internal bool DynamicScopeDefinesAnchor(Uri uri, string anchor)
@@ -184,8 +184,8 @@ public class SchemaRegistry
 			registration = CheckRegistry(Global._registered!, uri);
 
 		if (_scopes != null && registration != null && !string.IsNullOrEmpty(anchor) &&
-		    registration.Anchors.TryGetValue(anchor!, out var anchorRegistration) &&
-		    anchorRegistration.HasDynamic)
+			registration.Anchors.TryGetValue(anchor!, out var anchorRegistration) &&
+			anchorRegistration.HasDynamic)
 		{
 			// Stacks iterate their values in Pop order.  Since we want the one at the root, we reverse.
 			foreach (var scope in _scopes.Reverse())
@@ -245,8 +245,8 @@ public class SchemaRegistry
 				if (anchor.Value.HasDynamic)
 					anchor.Value.DynamicSequence = _registered!.SelectMany(x =>
 						x.Value.Anchors.Where(y => y.Key == anchor.Key &&
-						                           y.Value.HasDynamic &&
-						                           y.Value.DynamicSequence != int.MaxValue)).Count();
+												   y.Value.HasDynamic &&
+												   y.Value.DynamicSequence != int.MaxValue)).Count();
 			}
 		}
 	}
@@ -300,7 +300,7 @@ public class SchemaRegistry
 	internal void CopyFrom(SchemaRegistry other)
 	{
 		_fetch = other._fetch;
-		
+
 		if (other._registered == null) return;
 
 		if (_registered == null)

@@ -12,7 +12,7 @@ internal class EvaluationContext
 	internal EvaluationContext(in JsonElement root, PathEvaluationOptions options)
 	{
 		Root = root.Clone();
-		Current = new List<PathMatch>{new(root, JsonPath.Root)};
+		Current = new List<PathMatch> { new(root, JsonPath.Root) };
 		Options = options;
 	}
 

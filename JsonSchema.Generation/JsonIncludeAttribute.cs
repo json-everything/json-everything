@@ -21,7 +21,7 @@ public sealed class JsonIncludeAttribute : JsonAttribute
 	/// Initializes a new instance of <see cref="JsonIncludeAttribute"/>.
 	/// </summary>
 	// ReSharper disable once EmptyConstructor (it's not redundant if it defines new comments ;)
-    public JsonIncludeAttribute() { }
+	public JsonIncludeAttribute() { }
 }
 
 #endif

@@ -12,10 +12,10 @@ public class DevTest
 		var schema = JsonSchema.FromText(@"{}");
 		var instance = JsonDocument.Parse(@"{}").RootElement;
 
-		var validationOptions = new ValidationOptions{OutputFormat = OutputFormat.Basic};
+		var validationOptions = new ValidationOptions { OutputFormat = OutputFormat.Basic };
 		var results = schema.Validate(instance, validationOptions);
 
-		var serializerOptions = new JsonSerializerOptions{WriteIndented = true};
+		var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
 		Console.WriteLine(JsonSerializer.Serialize(schema, serializerOptions));
 		Console.WriteLine();
 		Console.WriteLine(JsonSerializer.Serialize(instance, serializerOptions));

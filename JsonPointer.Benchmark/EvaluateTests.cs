@@ -23,7 +23,7 @@ namespace JsonPointer.Benchmark
 
 		private static void InitializeTypes()
 		{
-			 
+
 		}
 
 		private static void RunEvaluate(string testName, Func<string, string, string> runEval)
@@ -90,7 +90,7 @@ namespace JsonPointer.Benchmark
 
 			var result = pointer.Evaluate(document.RootElement);
 
-			var evalLocal = JsonSerializer.Serialize(result, new JsonSerializerOptions {Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping});
+			var evalLocal = JsonSerializer.Serialize(result, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
 			return evalLocal;
 		}
 
@@ -103,7 +103,7 @@ namespace JsonPointer.Benchmark
 
 			return result.Result?.ToString();
 		}
-		
+
 		private static bool Check(string actual, string expected)
 		{
 			if (actual != null)

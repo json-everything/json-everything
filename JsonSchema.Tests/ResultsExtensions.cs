@@ -10,9 +10,9 @@ public static class ResultsExtensions
 {
 	public static void AssertInvalid(this ValidationResults results, string expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results,  new JsonSerializerOptions
+		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
-			WriteIndented = true, 
+			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		}));
 
@@ -22,9 +22,9 @@ public static class ResultsExtensions
 
 	public static void AssertValid(this ValidationResults results, string expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results,  new JsonSerializerOptions
+		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
-			WriteIndented = true, 
+			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		}));
 
@@ -37,7 +37,7 @@ public static class ResultsExtensions
 		if (expected == null) return;
 
 		var expectedJson = JsonDocument.Parse(expected).RootElement;
-		var actualJson = JsonDocument.Parse(JsonSerializer.Serialize(results, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping})).RootElement;
+		var actualJson = JsonDocument.Parse(JsonSerializer.Serialize(results, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })).RootElement;
 
 		Assert.IsTrue(expectedJson.IsEquivalentTo(actualJson));
 	}

@@ -32,7 +32,7 @@ internal class LessThanRule : Rule
 
 			var numberA = a.Numberify();
 			var numberB = b.Numberify();
-				
+
 			if (numberA == null || numberB == null)
 				throw new JsonLogicException($"Cannot compare {a.ValueKind} and {b.ValueKind}.");
 

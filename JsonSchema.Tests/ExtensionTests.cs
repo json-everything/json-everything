@@ -9,12 +9,12 @@ public class ExtensionTests
 	{
 		get
 		{
-			yield return new TestCaseData(new[] {1, 2, 3}, new[] {1, 2, 3}, true);
-			yield return new TestCaseData(new[] {1, 2, 3}, new[] {3, 1, 2}, true);
-			yield return new TestCaseData(new[] {1, 1, 3}, new[] {3, 1, 1}, true);
-			yield return new TestCaseData(new[] {1, 1, 3}, new[] {3, 1, 2}, false);
-			yield return new TestCaseData(new[] {1, 1, 3, 2}, new[] {3, 1, 2, 1}, true);
-			yield return new TestCaseData(new[] {1, 1, 3, 2}, new[] {3, 1, 2, 2}, false);
+			yield return new TestCaseData(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }, true);
+			yield return new TestCaseData(new[] { 1, 2, 3 }, new[] { 3, 1, 2 }, true);
+			yield return new TestCaseData(new[] { 1, 1, 3 }, new[] { 3, 1, 1 }, true);
+			yield return new TestCaseData(new[] { 1, 1, 3 }, new[] { 3, 1, 2 }, false);
+			yield return new TestCaseData(new[] { 1, 1, 3, 2 }, new[] { 3, 1, 2, 1 }, true);
+			yield return new TestCaseData(new[] { 1, 1, 3, 2 }, new[] { 3, 1, 2, 2 }, false);
 		}
 	}
 
@@ -44,7 +44,8 @@ public class ExtensionTests
 					["3"] = 3,
 				},
 				true
-			) {TestName = "Dictionary 1"};
+			)
+			{ TestName = "Dictionary 1" };
 			yield return new TestCaseData(
 				new Dictionary<string, int>
 				{
@@ -59,7 +60,8 @@ public class ExtensionTests
 					["2"] = 2,
 				},
 				true
-			) {TestName = "Dictionary 2" };
+			)
+			{ TestName = "Dictionary 2" };
 			yield return new TestCaseData(
 				new Dictionary<string, int>
 				{
@@ -74,7 +76,8 @@ public class ExtensionTests
 					["1"] = 1,
 				},
 				true
-			) {TestName = "Dictionary 3" };
+			)
+			{ TestName = "Dictionary 3" };
 			yield return new TestCaseData(
 				new Dictionary<string, int>
 				{
@@ -89,7 +92,8 @@ public class ExtensionTests
 					["3"] = 3,
 				},
 				false
-			) {TestName = "Dictionary 4" };
+			)
+			{ TestName = "Dictionary 4" };
 			yield return new TestCaseData(
 				new Dictionary<string, int>
 				{
@@ -104,7 +108,8 @@ public class ExtensionTests
 					["3"] = 1,
 				},
 				false
-			) {TestName = "Dictionary 5" };
+			)
+			{ TestName = "Dictionary 5" };
 		}
 	}
 

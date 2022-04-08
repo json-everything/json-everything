@@ -52,14 +52,14 @@ internal class StringGenerator : IDataGenerator
 		var ranges = context.StringLengths ?? _defaultRange;
 		var range = JsonSchemaExtensions.Randomizer.ArrayElement(ranges.Ranges.ToArray());
 		var minimum = range.Minimum.Value != NumberRangeSet.MinRangeValue
-			? (uint) Math.Max(0, (long) range.Minimum.Value)
+			? (uint)Math.Max(0, (long)range.Minimum.Value)
 			: Math.Max(0, DefaultMinLength);
 		var maximum = range.Maximum.Value != NumberRangeSet.MaxRangeValue
-			? (uint) Math.Min(_maxStringLength, range.Maximum.Value)
+			? (uint)Math.Min(_maxStringLength, range.Maximum.Value)
 			: Math.Min(_maxStringLength, DefaultMaxLength);
 
 		//var rangeRegex = $".{{{range.Minimum.Value},{range.Maximum.Value}}}";
-			
+
 		//string overallRegex = string.Empty;
 
 		//if (context.Patterns != null)
@@ -86,7 +86,7 @@ internal class StringGenerator : IDataGenerator
 			return GenerationResult.Success(generate(range));
 		}
 
-		var data = _faker.Lorem.Text().ClampLength((int) minimum, (int) maximum);
+		var data = _faker.Lorem.Text().ClampLength((int)minimum, (int)maximum);
 		return GenerationResult.Success(data);
 	}
 
