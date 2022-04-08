@@ -28,9 +28,9 @@ jobs:
           FORMAT_REPORT=$(cat bin/format-report.json)
           if [ "${FORMAT_REPORT}" != "[]" ]; then
             echo '<details><summary>Expand to see formatting issues</summary>' >> pr-message.md
-            echo '```json' >> pr-message.md
+            echo '\`\`\`json' >> pr-message.md
             cat bin/format-report.json >> pr-message.md
-            echo '```' >> pr-message.md
+            echo '\`\`\`' >> pr-message.md
             echo '</details>' >> pr-message.md
           fi
       - if: '(test -f pr-message.md && echo pr-message.md exists) || echo report does not exist, skipping step'
