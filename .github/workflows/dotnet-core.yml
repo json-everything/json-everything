@@ -34,8 +34,9 @@ jobs:
             echo '```' >> pr-message.md
             echo >> pr-message.md
             echo '</details>' >> pr-message.md
+            echo "::set-output name=POST_REPORT::true"
           fi
-      - if: ${{ (test -f pr-message.md && echo 'pr-message.md exists') || echo 'report does not exist, skipping step' }}
+      - if: ${{ steps.dotnet-format.outputs.POST_REPORT == 'true' }}
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
