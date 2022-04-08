@@ -33,7 +33,7 @@ jobs:
             echo '\`\`\`' >> pr-message.md
             echo '</details>' >> pr-message.md
           fi
-      - if: '(test -f pr-message.md && echo pr-message.md exists) || echo report does not exist, skipping step'
+      - if: ${{ (test -f pr-message.md && echo 'pr-message.md exists') || echo 'report does not exist, skipping step' }}
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
