@@ -43,6 +43,6 @@ I've added a build step that posts to a PR if the code isn't formatted correctly
 
 Anything in the [issues](https://github.com/gregsdennis/json-everything/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) with a `help wanted` label is something that could benefit from a volunteer or two.
 
-Of primary focus is translating the [resource file]() into additional languages for JsonSchema.Net.
+Of primary focus is translating the [resource file](https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/Localization/Resources.resx) into additional languages for JsonSchema.Net.
 
 Outside of this, PRs are welcome.  For larger changes or changes to the API surface, it's preferred that there be some discussion in an issue before a PR is submitted, just to discuss the specifics of the change.  Mainly, you shouldn't feel like you've wasted your time if changes are requested or the PR is ultimately closed unmerged.
