@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Schema.DataGeneration;
 
@@ -79,6 +80,7 @@ internal class RequirementsContext
 		if (other.Options != null)
 			Options = other.Options.Select(x => new RequirementsContext(x)).ToList();
 
+		Const = other.Const;
 		HasConflict = other.HasConflict;
 
 		if (other.Properties != null)
@@ -204,6 +206,13 @@ internal class RequirementsContext
 			return true;
 		}
 
+		bool BreakConst(RequirementsContext context)
+		{
+			if (Const == null) return false;
+			context.Const = null;
+			return true;
+		}
+
 		var allBreakers = new Func<RequirementsContext, bool>[]
 		{
 			BreakType,
@@ -216,7 +225,8 @@ internal class RequirementsContext
 			BreakProperties,
 			BreakPropertyCounts,
 			BreakContains,
-			BreakContainsCount
+			BreakContainsCount,
+			BreakConst
 		};
 		var breakers = JsonSchemaExtensions.Randomizer.Shuffle(allBreakers);
 
@@ -259,7 +269,12 @@ internal class RequirementsContext
 		if (Format == null)
 			Format = other.Format;
 		else if (other.Format != null)
-			HasConflict = true;
+			HasConflict = Format != other.Format;
+
+		if (Const == null)
+			Const = other.Const;
+		else if (other.Const != null)
+			HasConflict = Const.Value.IsEquivalentTo(other.Const.Value);
 
 		//if (Patterns == null)
 		//	Patterns = other.Patterns;
