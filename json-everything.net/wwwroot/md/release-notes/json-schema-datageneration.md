@@ -1,6 +1,8 @@
-# (coming soon)
+# [0.1.2](https://github.com/gregsdennis/json-everything/pull/259)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+Better support for const, specifically when it appears in a conditional (`if`/`then`/`else`) or under a `not`.
 
 # 0.1.1 (No PR)
 

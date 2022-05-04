@@ -14,4 +14,14 @@ public class ConstGenerationTests
 
 		Run(schema);
 	}
+
+	[Test]
+	public void NotConstSchemaGeneratesAnythingButItsValue()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Not(new JsonSchemaBuilder()
+				.Const("anything but this value"));
+
+		Run(schema);
+	}
 }
