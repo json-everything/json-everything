@@ -1,4 +1,4 @@
-# 0.1.2 (No PR)
+# [0.1.2](https://github.com/gregsdennis/json-everything/pull/259)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
 
