@@ -7,7 +7,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies a `pattern` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class PatternAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>

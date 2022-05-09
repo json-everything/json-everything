@@ -6,7 +6,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies a `maxLength` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class MaxLengthAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>

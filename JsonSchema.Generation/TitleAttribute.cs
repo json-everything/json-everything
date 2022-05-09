@@ -8,7 +8,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies a `title` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class TitleAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>

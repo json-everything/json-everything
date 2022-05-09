@@ -11,7 +11,7 @@ public class DescriptionIntent : ISchemaKeywordIntent
 	public string Value { get; set; }
 
 	/// <summary>
-	/// Creates a new <see cref="MinimumIntent"/> instance.
+	/// Creates a new <see cref="DescriptionIntent"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
 	public DescriptionIntent(string value)

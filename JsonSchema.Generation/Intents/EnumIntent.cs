@@ -16,7 +16,7 @@ public class EnumIntent : ISchemaKeywordIntent
 	public List<string> Names { get; set; }
 
 	/// <summary>
-	/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.
+	/// Creates a new <see cref="EnumIntent"/> instance.
 	/// </summary>
 	/// <param name="names">The names defined by the enumeration.</param>
 	public EnumIntent(IEnumerable<string> names)
@@ -25,7 +25,7 @@ public class EnumIntent : ISchemaKeywordIntent
 	}
 
 	/// <summary>
-	/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.
+	/// Creates a new <see cref="EnumIntent"/> instance.
 	/// </summary>
 	/// <param name="names">The names defined by the enumeration.</param>
 	public EnumIntent(params string[] names)

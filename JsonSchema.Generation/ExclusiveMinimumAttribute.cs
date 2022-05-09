@@ -6,7 +6,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies an `exclusiveMinimum` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class ExclusiveMinimumAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>

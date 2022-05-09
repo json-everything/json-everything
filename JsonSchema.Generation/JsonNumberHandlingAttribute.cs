@@ -9,7 +9,8 @@ namespace Json.Schema.Generation;
 /// When placed on a type, property, or field, indicates what <see cref="JsonNumberHandling"/>
 /// settings should be used when serializing or deserializing numbers.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public sealed class JsonNumberHandlingAttribute : JsonAttribute
 {
 	/// <summary>
