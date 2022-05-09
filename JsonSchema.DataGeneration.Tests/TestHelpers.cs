@@ -21,7 +21,14 @@ public static class TestHelpers
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			}));
-		Assert.IsTrue(schema.Validate(result.Result, options).IsValid, "failed validation");
+		var validation = schema.Validate(result.Result, options);
+		Console.WriteLine(JsonSerializer.Serialize(validation,
+			new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			}));
+		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
 	public static void RunFailure(JsonSchema schema, ValidationOptions? options = null)

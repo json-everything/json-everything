@@ -75,6 +75,15 @@ internal class ObjectGenerator : IDataGenerator
 			definedPropertyNames.AddRange(context.RequiredProperties);
 			remainingPropertyCount -= context.RequiredProperties.Count;
 		}
+
+		if (context.AvoidProperties != null)
+		{
+			foreach (var avoidProperty in context.AvoidProperties)
+			{
+				if (definedPropertyNames.Remove(avoidProperty))
+					remainingPropertyCount++;
+			}
+		}
 		if (context.Properties != null)
 		{
 			var propertyNames = context.Properties.Keys.Except(definedPropertyNames).ToArray();
@@ -113,7 +122,7 @@ internal class ObjectGenerator : IDataGenerator
 				currentContainsIndex++;
 			}
 
-			propertyGenerationResults.Add(propertyName, propertyRequirement!.GenerateData());
+			propertyGenerationResults[propertyName] = propertyRequirement!.GenerateData();
 		}
 
 		return propertyGenerationResults.All(x => x.Value.IsSuccess)

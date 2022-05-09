@@ -1,3 +1,7 @@
+# [0.1.3](https://github.com/gregsdennis/json-everything/pull/262)
+
+Improved handling of conditionals and inferred types.
+
 # [0.1.2](https://github.com/gregsdennis/json-everything/pull/259)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.

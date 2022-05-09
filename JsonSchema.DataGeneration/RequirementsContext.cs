@@ -20,6 +20,7 @@ internal class RequirementsContext
 	public bool IsFalse { get; set; }
 
 	public SchemaValueType? Type { get; set; }
+	public SchemaValueType InferredType { get; set; }
 
 	public NumberRangeSet? NumberRanges { get; set; }
 	public List<decimal>? Multiples { get; set; }
@@ -43,6 +44,7 @@ internal class RequirementsContext
 	public RequirementsContext? RemainingProperties { get; set; }
 	public NumberRangeSet? PropertyCounts { get; set; }
 	public List<string>? RequiredProperties { get; set; }
+	public List<string>? AvoidProperties { get; set; }
 	// TODO: unevaluatedItems
 
 	public JsonElement? Const { get; set; }
@@ -57,6 +59,7 @@ internal class RequirementsContext
 	public RequirementsContext(RequirementsContext other)
 	{
 		Type = other.Type;
+		InferredType = other.InferredType;
 
 		if (other.NumberRanges != null)
 			NumberRanges = new NumberRangeSet(other.NumberRanges);
@@ -91,6 +94,8 @@ internal class RequirementsContext
 			PropertyCounts = other.PropertyCounts;
 		if (other.RequiredProperties != null)
 			RequiredProperties = other.RequiredProperties.ToList();
+		if (other.AvoidProperties != null)
+			AvoidProperties = other.AvoidProperties.ToList();
 	}
 
 	public IEnumerable<RequirementsContext> GetAllVariations()
@@ -180,8 +185,29 @@ internal class RequirementsContext
 
 		bool BreakProperties(RequirementsContext context)
 		{
-			if (RemainingProperties == null) return false;
-			context.RemainingProperties = RemainingProperties.Break();
+			var broken = false;
+			if (RemainingProperties != null)
+			{
+				context.RemainingProperties = RemainingProperties.Break();
+				broken = true;
+			}
+
+			if (Properties != null)
+			{
+				context.Properties = Properties.ToDictionary(x => x.Key, x => x.Value.Break());
+				context.RequiredProperties ??= new List<string>();
+				context.RequiredProperties.AddRange(context.Properties.Keys);
+				broken = true;
+			}
+
+			return broken;
+		}
+
+		bool BreakRequired(RequirementsContext context)
+		{
+			if (RequiredProperties == null && AvoidProperties == null) return false;
+			context.RequiredProperties = AvoidProperties;
+			context.AvoidProperties = RequiredProperties;
 			return true;
 		}
 
@@ -223,6 +249,7 @@ internal class RequirementsContext
 			BreakItems,
 			BreakItemCount,
 			BreakProperties,
+			BreakRequired,
 			BreakPropertyCounts,
 			BreakContains,
 			BreakContainsCount,
@@ -245,6 +272,8 @@ internal class RequirementsContext
 			Type = other.Type;
 		else if (other.Type != null)
 			Type &= other.Type;
+
+		InferredType |= other.InferredType;
 
 		if (NumberRanges == null || !NumberRanges.Ranges.Any())
 			NumberRanges = other.NumberRanges;
@@ -314,6 +343,11 @@ internal class RequirementsContext
 			RequiredProperties = other.RequiredProperties;
 		else if (other.RequiredProperties != null)
 			RequiredProperties.AddRange(other.RequiredProperties);
+
+		if (AvoidProperties == null)
+			AvoidProperties = other.AvoidProperties;
+		else if (other.AvoidProperties != null)
+			AvoidProperties.AddRange(other.AvoidProperties);
 
 		if (Contains == null)
 			Contains = other.Contains;

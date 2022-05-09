@@ -61,7 +61,12 @@ public static class JsonSchemaExtensions
 				return priorityGenerator.Generate(variation);
 
 			var applicableGenerators = _generators
-				.Where(x => !variation.Type.HasValue || variation.Type.Value.HasFlag(x.Type))
+				.Where(x =>
+				{
+					if (variation.Type.HasValue) return variation.Type.Value.HasFlag(x.Type);
+					if (variation.InferredType == default) return true;
+					return variation.InferredType.HasFlag(x.Type);
+				})
 				.ToArray();
 			if (applicableGenerators.Length == 0) continue;
 
