@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -24,13 +23,10 @@ public class MinimumAttribute : Attribute, IAttributeHandler
 		Value = Convert.ToDecimal(value);
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<MinimumAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
 		if (!context.Type.IsNumber()) return;
 
-		context.Intents.Add(new MinimumIntent(attribute.Value));
+		context.Intents.Add(new MinimumIntent(Value));
 	}
 }

@@ -22,12 +22,12 @@ public class RefinerTests
 
 	private class Refiner : ISchemaRefiner
 	{
-		public bool ShouldRun(SchemaGeneratorContext context)
+		public bool ShouldRun(SchemaGenerationContextBase context)
 		{
 			return context.Type.GetProperties().Length % 2 == 1;
 		}
 
-		public void Run(SchemaGeneratorContext context)
+		public void Run(SchemaGenerationContextBase context)
 		{
 			context.Intents.Add(new ReadOnlyIntent(true));
 		}

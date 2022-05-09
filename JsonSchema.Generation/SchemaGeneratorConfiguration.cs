@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using Json.Schema.Generation.Generators;
 
 namespace Json.Schema.Generation;
@@ -13,11 +15,13 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
-	public List<ISchemaRefiner> Refiners { get; set; } = new();
+	[UsedImplicitly]
+	public List<ISchemaRefiner> Refiners { get; } = new();
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>
-	public List<ISchemaGenerator> Generators { get; set; } = new();
+	[UsedImplicitly]
+	public List<ISchemaGenerator> Generators { get; } = new();
 	/// <summary>
 	/// Gets or sets the order in which properties will be listed in the schema.
 	/// </summary>
@@ -42,4 +46,9 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public Nullability Nullability { get; set; }
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+
+#pragma warning disable CS8618
+	[field: ThreadStatic]
+	internal static SchemaGeneratorConfiguration Current { get; set; }
+#pragma warning restore CS8618
 }

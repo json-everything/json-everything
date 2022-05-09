@@ -11,7 +11,7 @@ internal class JsonPointerSchemaGenerator : ISchemaGenerator
 		return type == typeof(JsonPointer);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.String));
 		context.Intents.Add(new FormatIntent(Formats.JsonPointer));

@@ -11,7 +11,7 @@ internal class EnumGenerator : ISchemaGenerator
 		return type.IsEnum;
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		var values = Enum.GetNames(context.Type).ToList();
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -32,11 +31,8 @@ public class WriteOnlyAttribute : Attribute, IAttributeHandler
 		Value = value;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<WriteOnlyAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
-		context.Intents.Add(new WriteOnlyIntent(attribute.Value));
+		context.Intents.Add(new WriteOnlyIntent(Value));
 	}
 }

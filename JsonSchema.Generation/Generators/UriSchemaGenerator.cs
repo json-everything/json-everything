@@ -10,7 +10,7 @@ internal class UriSchemaGenerator : ISchemaGenerator
 		return type == typeof(Uri);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.String));
 		context.Intents.Add(new FormatIntent(Formats.Uri));

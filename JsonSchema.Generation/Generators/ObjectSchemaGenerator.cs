@@ -14,11 +14,11 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		return true;
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
-		var props = new Dictionary<string, SchemaGeneratorContext>();
+		var props = new Dictionary<string, SchemaGenerationContextBase>();
 		var required = new List<string>();
 		var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 			.Where(p => p.CanRead && p.CanWrite);
@@ -32,7 +32,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			.Concat(hiddenPropertiesToGenerate)
 			.Concat(hiddenFieldsToGenerate);
 
-		membersToGenerate = context.Configuration.PropertyOrder switch
+		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
 			PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer),
 			PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name),
@@ -49,9 +49,9 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 #pragma warning restore 8600
 			if (ignoreAttribute != null) continue;
 
-			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes, context.Configuration);
+			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes);
 
-			var name = context.Configuration.PropertyNamingMethod(member.Name);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(member.Name);
 			var nameAttribute = memberAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 			if (nameAttribute != null)
 				name = nameAttribute.Name;

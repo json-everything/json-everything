@@ -15,11 +15,11 @@ public interface ISchemaRefiner
 	/// </summary>
 	/// <param name="context"></param>
 	/// <returns></returns>
-	bool ShouldRun(SchemaGeneratorContext context);
+	bool ShouldRun(SchemaGenerationContextBase context);
 
 	/// <summary>
 	/// Runs the refiner.
 	/// </summary>
 	/// <param name="context"></param>
-	void Run(SchemaGeneratorContext context);
+	void Run(SchemaGenerationContextBase context);
 }

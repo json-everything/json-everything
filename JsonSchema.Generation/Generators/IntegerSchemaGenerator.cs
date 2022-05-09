@@ -16,7 +16,7 @@ internal class IntegerSchemaGenerator : ISchemaGenerator
 			   type == typeof(ulong);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Integer));
 	}

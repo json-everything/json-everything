@@ -12,7 +12,7 @@ internal class NumberSchemaGenerator : ISchemaGenerator
 			   type == typeof(decimal);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Number));
 	}

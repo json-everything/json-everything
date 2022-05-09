@@ -9,12 +9,12 @@ internal class NullableValueTypeSchemaGenerator : ISchemaGenerator
 		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		var underlyingType = Nullable.GetUnderlyingType(context.Type);
 
 		if (underlyingType == null) return;
-		var underlyingContext = SchemaGenerationContextCache.Get(underlyingType, context.Attributes, context.Configuration);
+		var underlyingContext = SchemaGenerationContextCache.Get(underlyingType);
 
 		context.Intents.AddRange(underlyingContext.Intents);
 	}

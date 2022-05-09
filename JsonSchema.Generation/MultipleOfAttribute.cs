@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
@@ -24,13 +25,10 @@ public class MultipleOfAttribute : Attribute, IAttributeHandler
 		Value = (decimal)value;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<MultipleOfAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
 		if (!context.Type.IsNumber()) return;
 
-		context.Intents.Add(new MultipleOfIntent(attribute.Value));
+		context.Intents.Add(new MultipleOfIntent(Value));
 	}
 }

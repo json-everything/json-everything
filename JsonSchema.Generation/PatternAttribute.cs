@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using JetBrains.Annotations;
 using Json.Schema.Generation.Intents;
 
@@ -25,13 +24,10 @@ public class PatternAttribute : Attribute, IAttributeHandler
 		Value = value;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<PatternAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
 		if (context.Type != typeof(string)) return;
 
-		context.Intents.Add(new PatternIntent(attribute.Value));
+		context.Intents.Add(new PatternIntent(Value));
 	}
 }

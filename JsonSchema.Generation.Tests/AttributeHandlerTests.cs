@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using NUnit.Framework;
+using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests;
 
@@ -11,29 +11,28 @@ public class AttributeHandlerTests
 	{
 		public const uint MaxLength = 100;
 
-		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 		{
-			if (context.Attributes.Any(x => x.GetType() == typeof(AttributeWithDirectHandler)))
-				context.Intents.Add(new Intents.MaxLengthIntent(MaxLength));
+			context.Intents.Add(new Intents.MaxLengthIntent(MaxLength));
 		}
 	}
 
 	[AttributeUsage(AttributeTargets.Property)]
 	private class AttributeWithIndirectHandler : Attribute
 	{
-		public const uint MaxLength = 200;
+		public readonly uint MaxLength = 200;
 	}
 
-	private class CustomAttributeHandler : IAttributeHandler
+	private class CustomAttributeHandler : IAttributeHandler<AttributeWithIndirectHandler>
 	{
-		void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+		void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 		{
-			if (context.Attributes.Any(x => x.GetType() == typeof(AttributeWithIndirectHandler)))
-				context.Intents.Add(new Intents.MaxLengthIntent(AttributeWithIndirectHandler.MaxLength));
+			var maxLength = attribute as AttributeWithIndirectHandler;
+			context.Intents.Add(new Intents.MaxLengthIntent(maxLength.MaxLength));
 		}
 	}
 
-	private class TypeWithCustomAttribute1
+	private class TypeWithCustomattribute
 	{
 		[AttributeWithDirectHandler]
 		public string MyProperty { get; set; }
@@ -54,9 +53,9 @@ public class AttributeHandlerTests
 				("MyProperty", new JsonSchemaBuilder().Type(SchemaValueType.String).MaxLength(AttributeWithDirectHandler.MaxLength))
 			);
 
-		JsonSchema actual = new JsonSchemaBuilder().FromType<TypeWithCustomAttribute1>();
+		JsonSchema actual = new JsonSchemaBuilder().FromType<TypeWithCustomattribute>();
 
-		Assert.AreEqual(expected, actual);
+		AssertEqual(expected, actual);
 	}
 
 	[Test]
@@ -68,11 +67,11 @@ public class AttributeHandlerTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("MyProperty", new JsonSchemaBuilder().Type(SchemaValueType.String).MaxLength(AttributeWithIndirectHandler.MaxLength))
+				("MyProperty", new JsonSchemaBuilder().Type(SchemaValueType.String).MaxLength(200))
 			);
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<TypeWithCustomAttribute2>();
 
-		Assert.AreEqual(expected, actual);
+		AssertEqual(expected, actual);
 	}
 }

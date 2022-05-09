@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Json.Schema.Generation;
 
@@ -29,12 +28,12 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The schema builder (for fluent syntax support).</returns>
 	public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type, SchemaGeneratorConfiguration? configuration = null)
 	{
-		configuration ??= new SchemaGeneratorConfiguration();
+		SchemaGeneratorConfiguration.Current = configuration ?? new SchemaGeneratorConfiguration();
 
 		SchemaGenerationContextCache.Clear();
-		var context = SchemaGenerationContextCache.Get(type, new List<Attribute>(), configuration);
+		var context = SchemaGenerationContextCache.Get(type);
 
-		context.Optimize();
+		SchemaGenerationContextOptimizer.Optimize();
 
 		context.Apply(builder);
 
