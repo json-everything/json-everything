@@ -63,5 +63,7 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 			else
 				context.RemainingProperties = additionalProperties.GetRequirements();
 		}
+
+		context.InferredType |= SchemaValueType.Object;
 	}
 }

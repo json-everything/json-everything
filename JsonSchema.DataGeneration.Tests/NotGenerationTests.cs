@@ -135,4 +135,13 @@ public class NotGenerationTests
 
 		Run(schema);
 	}
+
+	[Test]
+	public void AnObjectThatDoesNotContainAFooPropertyWithoutSpecifyingType()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Not(new JsonSchemaBuilder().Required("foo"));
+
+		Run(schema, new ValidationOptions{OutputFormat = OutputFormat.Verbose});
+	}
 }
