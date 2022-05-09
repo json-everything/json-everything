@@ -8,13 +8,21 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 {
 	public void AddRequirements(RequirementsContext context, JsonSchema schema)
 	{
+		var supportsArrays = false;
+
 		var range = NumberRangeSet.Full;
 		var minimum = schema.Keywords?.OfType<MinItemsKeyword>().FirstOrDefault()?.Value;
 		if (minimum != null)
+		{
 			range = range.Floor(minimum.Value);
+			supportsArrays = true;
+		}
 		var maximum = schema.Keywords?.OfType<MaxItemsKeyword>().FirstOrDefault()?.Value;
 		if (maximum != null)
+		{
 			range = range.Ceiling(maximum.Value);
+			supportsArrays = true;
+		}
 		if (range != NumberRangeSet.Full)
 		{
 			if (context.ItemCounts != null)
@@ -42,6 +50,7 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 				else
 					context.SequentialItems = items.ArraySchemas!.Select(x => x.GetRequirements()).ToList();
 			}
+			supportsArrays = true;
 		}
 
 		var prefixItems = schema.Keywords?.OfType<PrefixItemsKeyword>().FirstOrDefault()?.ArraySchemas;
@@ -53,6 +62,7 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 			}
 			else
 				context.SequentialItems = prefixItems.Select(x => x.GetRequirements()).ToList();
+			supportsArrays = true;
 		}
 
 		var additionalItems = schema.Keywords?.OfType<AdditionalItemsKeyword>().FirstOrDefault()?.Schema;
@@ -62,6 +72,7 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 				context.RemainingItems.And(additionalItems.GetRequirements());
 			else
 				context.RemainingItems = additionalItems.GetRequirements();
+			supportsArrays = true;
 		}
 
 		additionalItems = schema.Keywords?.OfType<UnevaluatedItemsKeyword>().FirstOrDefault()?.Schema;
@@ -71,6 +82,10 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 				context.RemainingItems.And(additionalItems.GetRequirements());
 			else
 				context.RemainingItems = additionalItems.GetRequirements();
+			supportsArrays = true;
 		}
+
+		if (supportsArrays)
+			context.InferredType |= SchemaValueType.Array;
 	}
 }
