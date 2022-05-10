@@ -1,6 +1,8 @@
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/200)
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/261)
 
-[#256](https://github.com/gregsdennis/json-everything/pull/243) - Added support for type-level attributes.
+[#202](https://github.com/gregsdennis/json-everything/issues/202) - Added support for read-only & write-only keywords for properties that only have getters or setters.  The attributes override this detection behavior.
+
+[#256](https://github.com/gregsdennis/json-everything/pull/256) - Added support for type-level attributes.
 
 ## Breaking changes
 
