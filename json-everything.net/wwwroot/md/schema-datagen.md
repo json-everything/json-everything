@@ -45,7 +45,7 @@ All of the formats listed in the draft 2020-12 specification are supported, at l
 
 If a format is specified, it will be used.
 
-If a format is not specified, Bogus's Lorem Ipsum generator is used to create some nice garbage (but oddly readable) garbage text.
+If a format is not specified, Bogus's Lorem Ipsum generator is used to create some nice (but oddly readable) garbage text.
 
 ### Numerics
 
