@@ -1,6 +1,29 @@
-# (coming soon)
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/261)
+
+[#202](https://github.com/gregsdennis/json-everything/issues/202) - Added support for read-only & write-only keywords for properties that only have getters or setters.  The attributes override this detection behavior.
+
+[#256](https://github.com/gregsdennis/json-everything/pull/256) - Added support for type-level attributes.
+
+## Breaking changes
+
+- Intents no longer require equality methods (`Equals()` & `GetHashCode()`). 🎉
+- `SchemaGeneratorContext` replaced by `SchemaGenerationContextBase`, `TypeGenerationContext`, and `MemberGenerationContext`.
+    - The "Type" version represents generation of a "pure" type; that is, it's not a member of another type.  This will only handle attributes that are placed on the type itself.
+    - The "Member" version represents object members.  This will handle attributes placed on the member.  The `Attributes` property is only present on this version since the type carries the attributes for the other.
+- `SchemaGenerationContextCache.Get()` has two overloads, only with member attributes, and one without.  If attributes are supplied, a `MemberGenerationContext` will be returned; otherwise a `TypeGenerationContext` will be returned.
+- `SchemaGeneratorConfiguration` converted into a thread-static singleton (the static property is `Current`) for easier access.
+- `IAttributeHandler` is now just a placeholder.  Attribute handlers will now need to implement `IAttributeHandler<T>` where `T` is the attribute type.
+- `IAttributeHandler.AddConstraints()` now has an `attribute` parameter.
+
+## Other fixes & enhancements
+
+[#206](https://github.com/gregsdennis/json-everything/issues/206) - Some XML comments were inaccurate or had copy/paste errors.
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+Most attributes can now be placed on:
+- properties & fields
+- all types (class, struct, enum, interface)
 
 # [1.8.3](https://github.com/gregsdennis/json-everything/pull/200)
 
