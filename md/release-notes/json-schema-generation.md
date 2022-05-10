@@ -1,3 +1,9 @@
+# 2.0.1 (No PR)
+
+Exposed `SchemaGenerationContextBase.Hash` property.  Required to implement `IContextContainer.Replace()`.
+
+Marked `IContextContainer.GetContexts()` obsolete as it's not used.
+
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/261)
 
 [#202](https://github.com/gregsdennis/json-everything/issues/202) - Added support for read-only & write-only keywords for properties that only have getters or setters.  The attributes override this detection behavior.

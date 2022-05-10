@@ -10,7 +10,13 @@ var schema = schemaBuilder.FromType<MyType>().Build();
 
 Done.
 
-***NOTE** Ideally, this functionality should be used to create a starting point in authoring a schema.  The schemas output by this library should be reviewed by actual people prior to being put into a production system.*
+## IMPORTANT
+
+Ideally, this functionality should be used to create a starting point in authoring a schema.  The schemas output by this library should be reviewed by actual people prior to being put into a production system.
+
+**The JSON Schema team generally recommends against real-time schema generation.**
+
+The suggested approach is to have a dedicated schema generation data model, separate from your domain model and DTOs, from which schemas are generated.  Generation can be done as an independent developer activity or as part of a CI/CD build chain.  This helps separate serialization and validation concerns and prevent overburdening your domain/DTO models with a bunch of attributes.
 
 ## Making better schemas
 
@@ -49,9 +55,11 @@ All of these and more are supplied via a set of attributes that can be applied t
 
 \*\* The `[JsonExclude]` attribute functions equivalently to `[JsonIgnore]` (see below).  It is included to allow generation to skip a property while allowing serialization to consider it.
 
+***NOTE** The `System.ComponentModel.DataAnnotations` annotations are not (and likely will not be) supported by this library.  Defining the above attributes separately allows alignment with JSON Schema and separation of concerns between serialization and validation.*
+
 Simply add the attributes directly to the properties and the corresponding keywords will be added to the schema.
 
-For properties typed with generic collections, like `List<T>`, the schema will automatically generate an `items` keyword and an generate a schema for the indicated `T`.  If your `T` is a numeric value or a string, then you can also apply the relevant attributes and they'll be applied in the `items` subschema.
+For properties typed with generic collections, like `List<T>`, the schema will automatically generate an `items` keyword and generate a schema for the indicated `T`.  If your `T` is a numeric value or a string, then you can also apply the relevant attributes and they'll be applied in the `items` subschema.
 
 For example, this object:
 
@@ -92,7 +100,7 @@ The generator also supports these .Net-defined attributes:
 - `JsonNumberHandling`\* - supports allowing numeric values in strings or only as numbers as well as allowing the `NaN`, `Infinity`, and `-Infinity` values.
 - `JsonIgnore`\* - ignores a property
 
-\* These attributes were introduced with .Net 5.  The .Net Standard version of the library also provides a definition for them.
+\* These attributes were introduced with .Net 5.  The .Net Standard 2.0 version of the library also provides a definition for them.
 
 The generator will handle most common types:
 
@@ -105,11 +113,11 @@ The generator will handle most common types:
 - `Guid`
 - `DateTime`
 - collections (`IEnumerable<T>`)
-- string-keyed dictionaries
+- string-keyed dictionaries (`Dictionary<string, TValue>`)
 - enumeration-keyed dictionaries (keys are mapped to strings)
 - POCOs
 
-For POCOs, currently only read/write properties are converted.  Future versions of this library may also support read-only or write-only by adding the `readOnly` and `writeOnly` keywords, respectively.
+For POCOs, read-only properties and fields will be marked with a `readOnly` keyword, and write-only properties (those with only a setter) will be marked with a `writeOnly` keyword.  These behaviors can be overridden by applying the appropriate keyword with a `false` value.
 
 Lastly, property names will either be listed as declared in code (default) or sorted by name.  This is controlled via the `SchemaGenerationConfiguration.PropertyOrder` property.
 
@@ -121,7 +129,7 @@ Those familiar with .Net validation will recognize that having `[Required]` on y
 
 To this end, the `[Required]` attribute will only be represented in generated schemas in the `required` keyword.
 
-However, for nullable types, it may or may not be appropriate to include `null` in the `type` keyword.  JsonSchema.Net.Generation controls this behavior via the `SchemaGenerationConfiguration.Nullability` option with individual properties being overrideable via the `[Nullable(bool)]` attribute.
+However, for nullable types, it may or may not be appropriate to include `null` in the `type` keyword.  JsonSchema.Net.Generation controls this behavior via the `SchemaGeneratorConfiguration.Nullability` option with individual properties being overrideable via the `[Nullable(bool)]` attribute.
 
 There are four options:
 
@@ -187,7 +195,7 @@ internal class BooleanSchemaGenerator : ISchemaGenerator
         return type == typeof(bool);
     }
 
-    public void AddConstraints(SchemaGeneratorContext context)
+    public void AddConstraints(SchemaGeneratorContextBase context)
     {
         context.Intents.Add(new TypeIntent(SchemaValueType.Boolean));
     }
@@ -197,6 +205,24 @@ internal class BooleanSchemaGenerator : ISchemaGenerator
 Very simple.  It says that it handles booleans and then it does.
 
 To explain _how_ it does, we need to discuss intents.
+
+### The Context Object
+
+The context holds all of the data you need to determine which intents need to be applied.  It is defined by a base class, `SchemaGeneratorContextBase`, and two derivations, `TypeGenerationContext` and `MemberGenerationContext`.
+
+`TypeGenerationContext` represents generation of just a type, whereas `MemberGenerationContext` represents generation of an object member, which will have a type (which may have its own attributes) _and_ possibly additional attributes as a member.
+
+The data exposed by contexts are:
+
+- `Type` - the type for which a schema is being generated
+- `ReferenceCount` - the number of times this context has been used
+- `Intents` - the collection of intents that represent this type
+- `Hash` - a hash value that can be used to identify this object
+
+`MemberGenerationContext` also defines:
+
+- `BasedOn` - a context on which this context builds
+- `Attributes` - additional attributes defined on the member
 
 ### Intents
 
@@ -221,69 +247,42 @@ public class TypeIntent : ISchemaKeywordIntent
     }
 
     public void Apply(JsonSchemaBuilder builder) => builder.Type(Type);
-
-    public override bool Equals(object obj) => !ReferenceEquals(null, obj);
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = GetType().GetHashCode();
-            hashCode = (hashCode * 397) ^ Type.GetHashCode();
-            return hashCode;
-        }
-    }
 }
 ```
 
 See?  The `Apply()` method just takes the builder, and adds a keyword with the data that it already collected.  Pretty easy.
 
-Note that the equality methods are overridden.  This is ***extremely*** important as it's a pivotal part of how the optimization works.  You **must** override these methods, and it is strongly advised that you do it just like this.
+***NOTE** In v1.x of the library, implementing the equality methods (`Equals()` and `GetHashCode()`) was required.  As of v2.0, this is unnecessary.*
 
 This will work for most intents, but some keywords contain subschemas.  For these, we don't want to hold a subschema because, as mentioned before, they can't be edited.  Instead, we'll hold a context object that represents the subschema: its type, attribute set, and the intents required to build it.  For these intents, we *also* want to implement `IContextContainer`.  Here's the `ItemsIntent`:
 
 ```c#
 public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
 {
-    public SchemaGeneratorContext Context { get; private set; }
+    public SchemaGeneratorContextBase Context { get; private set; }
 
-    public ItemsIntent(SchemaGeneratorContext context)
+    public ItemsIntent(SchemaGeneratorContextBase context)
     {
         Context = context;
     }
 
-    public IEnumerable<SchemaGeneratorContext> GetContexts() => new[] {Context};
+    public IEnumerable<SchemaGeneratorContextBase> GetContexts() => new[] {Context};
 
-    public void Replace(int hashCode, SchemaGeneratorContext newContext)
+    public void Replace(int hashCode, SchemaGeneratorContextBase newContext)
     {
-        var hc = Context.GetHashCode();
-        if (hc == hashCode)
+        if (Context.Hash == hashCode)
             Context = newContext;
     }
 
     public void Apply(JsonSchemaBuilder builder) => builder.Items(Context.Apply());
-
-    public override bool Equals(object obj) => !ReferenceEquals(null, obj);
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = GetType().GetHashCode();
-            hashCode = (hashCode * 397) ^ Context.GetHashCode();
-            return hashCode;
-        }
-    }
 }
 ```
 
 There are two methods required by `IContextContainer`: `GetContexts()` and `Replace()`.
 
-`GetContexts()` gets the context objects *directly* held by this intent.
+`GetContexts()` was used in v1.x but is no longer used as of v2.0 and has been marked obsolete with v2.0.1.  This method should have been removed.  Implementations can just throw a `NotImplementedException`.  This will be marked obsolete in a patch of 2.0.0.
 
-***IMPORTANT** Don't dive into the context's `Intents` collection and get the contexts that those hold also.  The system will handle that.*
-
-`Replace()` replaces a context with a given hash code with a new context.  This is the system creating `$ref` intents that point to the new `$defs` intent it's building and distributing them throughout the context tree.  Once all the `$ref`s are distributed, the system will add the `$defs` intent to the root context to be applied at the last step.
+`Replace()` replaces a context with a given hash code with a new context.  This is called when the system is creating `$ref` intents that point to the new `$defs` intent it's building and distributing them throughout the context tree.  Once all the `$ref`s are distributed, the system will add the `$defs` intent to the root context to be applied at the last step.
 
 Generally intents for applicator keywords, which are keywords that have subschemas (`anyOf`, `allOf`, etc.), will need to implement this second interface.  In most cases, you can just copy this code.
 
@@ -291,15 +290,15 @@ Generally intents for applicator keywords, which are keywords that have subschem
 
 The other source for intents are attributes.  These are handled once the generator has completed adding the intents it needs to.
 
-When processing an object, the properties are analyzed for the presence of any of the above attributes.  Each of the attributes can then add its intents to the context.
+When processing, types and object properties are analyzed for the presence of any of the above attributes.  Each of the attributes can then add its intents to the context.
 
-To create your own attribute and have it processed by the system, it'll need to implement `IAttributeHandler` as well.
+To create your own attribute and have it processed by the system, it'll need to implement `IAttributeHandler<T>` as well.
 
-The attribute itself is pretty simple.  It's just a class that inherits from `Attribute`, implements `IAttributeHandler`, and carries some data.  Here's `MaximumAttribute`:
+The attribute itself is pretty simple.  It's just a class that inherits from `Attribute`, implements `IAttributeHandler<T>`, and carries some data.  Here's `MaximumAttribute`:
 
 ```c#
 [AttributeUsage(AttributeTargets.Property)]
-public class MaximumAttribute : Attribute, IAttributeHandler
+public class MaximumAttribute : Attribute, IAttributeHandler<MaximumAttribute>
 {
     public uint Value { get; }
 
@@ -310,12 +309,9 @@ public class MaximumAttribute : Attribute, IAttributeHandler
 
     void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
     {
-        var attribute = context.Attributes.OfType<MaximumAttribute>().FirstOrDefault();
-        if (attribute == null) return;
-
         if (!context.Type.IsNumber()) return;
 
-        context.Intents.Add(new MaximumIntent(attribute.Value));
+        context.Intents.Add(new MaximumIntent(Value));
     }
 }
 ```
@@ -324,7 +320,7 @@ The `AddConstraints()` method works exactly the same as in the generator class. 
 
 ***NOTE** `.IsNumber()` is an extension method on `Type` that determines if it's a numeric type.  There are a few more of these helper extensions as well.*
 
-The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method.
+The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler<T>`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method, passing the handler type for `T`.
 
 ### Refiners
 
@@ -334,8 +330,8 @@ Refiners are called after all intents have been generated for each type, recursi
 
 To implement a refiner, two methods will be needed:
 
-- `bool ShouldRun(SchemaGenerationContext)` which determines whether the refiner needs to run for the current generation iteration.
-- `void Run(SchemaGenerationContext)` which makes whatever modifications are needed.
+- `bool ShouldRun(SchemaGeneratorContextBase)` which determines whether the refiner needs to run for the current generation iteration.
+- `void Run(SchemaGeneratorContextBase)` which makes whatever modifications are needed.
 
 Remember that a this point, you're stil working with intents.  You can add new ones as well as modify or remove existing ones.  You really have complete freedom within a refiner.
 
