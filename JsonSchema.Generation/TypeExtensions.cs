@@ -64,14 +64,19 @@ public static class TypeExtensions
 
 	internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
 	{
-		var eligible = items.Where(a => a is not JsonPropertyNameAttribute and not RequiredAttribute);
+		var eligible = items.Where(a => a is not JsonPropertyNameAttribute and not RequiredAttribute)
+			.OrderBy(x => x.GetType().AssemblyQualifiedName);
 		unchecked
 		{
-			int hashCode = 0;
-			foreach (var item in eligible)
+			var hashCode = 0;
+			foreach (var attribute in eligible)
 			{
-				hashCode = (hashCode * 397) ^ item.GetHashCode();
-				hashCode = (hashCode * 397) ^ item.GetType().GetHashCode();
+				var properties = attribute.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+					.OrderBy(x => x.Name);
+				var propertyHash = properties.Aggregate(0, (c, p) => (c * 397) ^ (p.GetValue(attribute)?.GetHashCode() ?? 0));
+
+				hashCode = (hashCode * 397) ^ attribute.GetType().GetHashCode();
+				hashCode = (hashCode * 397) ^ propertyHash;
 			}
 			return hashCode;
 		}
@@ -83,5 +88,21 @@ public static class TypeExtensions
 			FieldInfo fieldInfo => fieldInfo.FieldType,
 			PropertyInfo propertyInfo => propertyInfo.PropertyType,
 			_ => throw new NotSupportedException($"Cannot get type of {info.GetType()}")
+		};
+
+	internal static bool IsReadOnly(this MemberInfo info) =>
+		info switch
+		{
+			FieldInfo fieldInfo => fieldInfo.IsInitOnly,
+			PropertyInfo propertyInfo => !propertyInfo.CanWrite,
+			_ => throw new NotSupportedException($"Cannot get readability of {info.GetType()}")
+		};
+
+	internal static bool IsWriteOnly(this MemberInfo info) =>
+		info switch
+		{
+			FieldInfo => false,
+			PropertyInfo propertyInfo => !propertyInfo.CanRead,
+			_ => throw new NotSupportedException($"Cannot get writability of {info.GetType()}")
 		};
 }

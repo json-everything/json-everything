@@ -8,8 +8,10 @@ internal static class AssertionExtensions
 {
 	public static void AssertEqual(JsonSchema expected, JsonSchema actual)
 	{
+		Console.WriteLine("Expected");
 		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
 		Console.WriteLine();
+		Console.WriteLine("Actual");
 		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(expected, actual);
 	}

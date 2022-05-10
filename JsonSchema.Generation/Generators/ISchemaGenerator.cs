@@ -25,5 +25,5 @@ public interface ISchemaGenerator
 	/// intents to the context.
 	/// </summary>
 	/// <param name="context">The generation context.</param>
-	void AddConstraints(SchemaGeneratorContext context);
+	void AddConstraints(SchemaGenerationContextBase context);
 }

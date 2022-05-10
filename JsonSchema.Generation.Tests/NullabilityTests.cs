@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
+using static Json.Schema.Generation.Tests.AssertionExtensions;
+
 namespace Json.Schema.Generation.Tests;
 
 public class NullabilityTests
 {
+	// ReSharper disable UnusedMember.Global
+	// ReSharper disable MemberCanBePrivate.Global
 	public class ReferenceMember
 	{
 		public string Property { get; set; }
@@ -57,12 +61,13 @@ public class NullabilityTests
 		[Nullable(false)]
 		public int Property { get; set; }
 	}
+	// ReSharper restore UnusedMember.Global
+	// ReSharper restore MemberCanBePrivate.Global
 
 	private static readonly Nullability Disabled = Nullability.Disabled;
 	private static readonly Nullability AllowForReferenceTypes = Nullability.AllowForReferenceTypes;
 	private static readonly Nullability AllowForNullableValueTypes = Nullability.AllowForNullableValueTypes;
 	private static readonly Nullability AllowForAllTypes = Nullability.AllowForAllTypes;
-
 	private static readonly SchemaValueType String = SchemaValueType.String;
 	private static readonly SchemaValueType Integer = SchemaValueType.Integer;
 	private static readonly SchemaValueType Null = SchemaValueType.Null;
@@ -110,7 +115,6 @@ public class NullabilityTests
 			yield return new TestCaseData(AllowForReferenceTypes, typeof(ValueTypeMember), Integer);
 			yield return new TestCaseData(AllowForReferenceTypes, typeof(ValueTypeMemberWithNull), Integer | Null);
 			yield return new TestCaseData(AllowForReferenceTypes, typeof(ValueTypeMemberWithNotNull), Integer);
-
 		}
 	}
 
@@ -127,20 +131,19 @@ public class NullabilityTests
 			.Properties(
 				(nameof(ReferenceMember.Property), new JsonSchemaBuilder().Type(valueType)))
 			.Build()
-			.Keywords
+			.Keywords!
 			.OfType<PropertiesKeyword>()
 			.First();
 
 		var actual = new JsonSchemaBuilder()
 			.FromType(type, config)
 			.Build()
-			.Keywords
+			.Keywords!
 			.OfType<PropertiesKeyword>()
 			.First();
 
 		Assert.AreEqual(expected, actual);
 	}
-
 
 	public static IEnumerable<TestCaseData> TypeCases
 	{
@@ -180,7 +183,7 @@ public class NullabilityTests
 			.FromType(type, config)
 			.Build();
 
-		Assert.AreEqual(expected, actual);
+		AssertEqual(expected, actual);
 	}
 
 }

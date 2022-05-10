@@ -11,7 +11,7 @@ internal class ArraySchemaGenerator : ISchemaGenerator
 		return type.IsArray();
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Array));
 
@@ -23,7 +23,9 @@ internal class ArraySchemaGenerator : ISchemaGenerator
 			itemType = context.Type.GetElementType();
 
 		if (itemType == null) return;
-		var itemContext = SchemaGenerationContextCache.Get(itemType, context.Attributes, context.Configuration);
+		var itemContext = context is MemberGenerationContext memberContext
+			? SchemaGenerationContextCache.Get(itemType, memberContext.Attributes)
+			: SchemaGenerationContextCache.Get(itemType);
 
 		context.Intents.Add(new ItemsIntent(itemContext));
 	}

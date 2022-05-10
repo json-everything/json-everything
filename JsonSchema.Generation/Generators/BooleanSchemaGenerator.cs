@@ -10,7 +10,7 @@ internal class BooleanSchemaGenerator : ISchemaGenerator
 		return type == typeof(bool);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Boolean));
 	}

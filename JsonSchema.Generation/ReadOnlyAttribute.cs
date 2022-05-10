@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -7,7 +6,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies a `readOnly` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class ReadOnlyAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>
@@ -33,11 +33,8 @@ public class ReadOnlyAttribute : Attribute, IAttributeHandler
 		Value = value;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<ReadOnlyAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
-		context.Intents.Add(new ReadOnlyIntent(attribute.Value));
+		context.Intents.Add(new ReadOnlyIntent(Value));
 	}
 }

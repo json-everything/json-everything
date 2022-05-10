@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
@@ -7,7 +8,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies a `title` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class TitleAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>
@@ -24,11 +26,8 @@ public class TitleAttribute : Attribute, IAttributeHandler
 		Title = title;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<TitleAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
-		context.Intents.Add(new TitleIntent(attribute.Title));
+		context.Intents.Add(new TitleIntent(Title));
 	}
 }

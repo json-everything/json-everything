@@ -120,6 +120,7 @@ public class SchemaGenerationTests
 	}
 
 	// ReSharper disable once ClassNeverInstantiated.Local
+	// ReSharper disable UnusedMember.Local
 	private class GenerationTarget
 	{
 		[JsonInclude]
@@ -193,6 +194,7 @@ public class SchemaGenerationTests
 		[Description("description")]
 		public string Metadata { get; set; }
 	}
+	// ReSharper restore UnusedMember.Local
 
 	[Test]
 	public void GeneratorForObject()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Json.Schema.Generation;
 
@@ -9,7 +10,7 @@ namespace Json.Schema.Generation;
 /// </summary>
 public static class AttributeHandler
 {
-	private static readonly List<IAttributeHandler> _handlers =
+	private static readonly List<IAttributeHandler> _externalHandlers =
 		typeof(IAttributeHandler)
 			.Assembly
 			.DefinedTypes
@@ -27,9 +28,10 @@ public static class AttributeHandler
 	public static void AddHandler<T>()
 		where T : IAttributeHandler, new()
 	{
-		if (_handlers.Any(h => h.GetType() == typeof(T))) return;
+		if (typeof(Attribute).IsAssignableFrom(typeof(T))) return;
+		if (_externalHandlers.Any(h => h.GetType() == typeof(T))) return;
 
-		_handlers.Add(new T());
+		_externalHandlers.Add(new T());
 	}
 
 	/// <summary>
@@ -39,9 +41,10 @@ public static class AttributeHandler
 	public static void AddHandler(IAttributeHandler handler)
 	{
 		var handlerType = handler.GetType();
-		if (_handlers.Any(h => h.GetType() == handlerType)) return;
+		if (typeof(Attribute).IsAssignableFrom(handlerType)) return;
+		if (_externalHandlers.Any(h => h.GetType() == handlerType)) return;
 
-		_handlers.Add(handler);
+		_externalHandlers.Add(handler);
 	}
 
 	/// <summary>
@@ -51,19 +54,37 @@ public static class AttributeHandler
 	public static void RemoveHandler<T>()
 		where T : IAttributeHandler
 	{
-		var handler = _handlers.OfType<T>().FirstOrDefault();
+		var handler = _externalHandlers.OfType<T>().FirstOrDefault();
 		if (handler == null) return;
 
-		_handlers.Remove(handler);
+		_externalHandlers.Remove(handler);
 	}
 
-	internal static void HandleAttributes(SchemaGeneratorContext context)
+	internal static void HandleAttributes(SchemaGenerationContextBase context)
 	{
-		var handlers = _handlers.Concat(context.Attributes.OfType<IAttributeHandler>());
+		IEnumerable<IAttributeHandler> handlers = _externalHandlers;
+
+		var attributes = context.GetAttributes().ToList();
+
+		handlers = handlers.Concat(attributes.OfType<IAttributeHandler>());
 
 		foreach (var handler in handlers)
 		{
-			handler.AddConstraints(context);
+			var attribute = handler as Attribute;
+			if (attribute == null)
+			{
+				var interfaces = handler.GetType().GetInterfaces();
+				var handlerInterface = interfaces.FirstOrDefault(x => x.IsGenericType &&
+																	  x.GetGenericTypeDefinition() == typeof(IAttributeHandler<>));
+				if (handlerInterface == null) continue;
+
+				var attributeType = handlerInterface.GetGenericArguments()[0];
+				attribute = attributes.FirstOrDefault(x => x.GetType() == attributeType)!;
+
+				if (attribute == null) continue;
+			}
+
+			handler.AddConstraints(context, attribute);
 		}
 	}
 }

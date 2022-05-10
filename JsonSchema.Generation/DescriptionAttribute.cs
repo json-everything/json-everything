@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -7,13 +6,14 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies a `description` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class DescriptionAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>
 	/// The description.
 	/// </summary>
-	public string Desription { get; }
+	public string Description { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="DescriptionAttribute"/> instance.
@@ -21,14 +21,11 @@ public class DescriptionAttribute : Attribute, IAttributeHandler
 	/// <param name="description">The value.</param>
 	public DescriptionAttribute(string description)
 	{
-		Desription = description;
+		Description = description;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<DescriptionAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
-		context.Intents.Add(new DescriptionIntent(attribute.Desription));
+		context.Intents.Add(new DescriptionIntent(Description));
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -7,7 +6,8 @@ namespace Json.Schema.Generation;
 /// <summary>
 /// Applies an `maxItems` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class MaxItemsAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>
@@ -24,13 +24,10 @@ public class MaxItemsAttribute : Attribute, IAttributeHandler
 		Value = value;
 	}
 
-	void IAttributeHandler.AddConstraints(SchemaGeneratorContext context)
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		var attribute = context.Attributes.OfType<MaxItemsAttribute>().FirstOrDefault();
-		if (attribute == null) return;
-
 		if (!context.Type.IsArray()) return;
 
-		context.Intents.Add(new MaxItemsIntent(attribute.Value));
+		context.Intents.Add(new MaxItemsIntent(Value));
 	}
 }

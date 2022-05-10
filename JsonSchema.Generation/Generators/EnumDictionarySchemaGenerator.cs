@@ -21,17 +21,16 @@ internal class EnumDictionarySchemaGenerator : ISchemaGenerator
 		return keyType.IsEnum;
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 		var keyType = context.Type.GenericTypeArguments[0];
-		var keyContext = SchemaGenerationContextCache.Get(keyType, context.Attributes, context.Configuration);
+		var keyContext = SchemaGenerationContextCache.Get(keyType);
 		context.Intents.Add(new PropertyNamesIntent(keyContext));
 
 		var valueType = context.Type.GenericTypeArguments[1];
-		var valueContext = SchemaGenerationContextCache.Get(valueType, context.Attributes, context.Configuration);
-
+		var valueContext = SchemaGenerationContextCache.Get(valueType);
 		context.Intents.Add(new AdditionalPropertiesIntent(valueContext));
 	}
 }

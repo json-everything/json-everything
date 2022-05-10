@@ -52,24 +52,4 @@ public class AnyOfIntent : ISchemaKeywordIntent
 
 		return builder;
 	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object? obj)
-	{
-		return !ReferenceEquals(null, obj);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = typeof(AnyOfIntent).GetHashCode();
-			hashCode = (hashCode * 397) ^ Subschemas.GetCollectionHashCode();
-			return hashCode;
-		}
-	}
 }

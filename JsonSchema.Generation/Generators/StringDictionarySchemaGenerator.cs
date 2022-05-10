@@ -21,12 +21,12 @@ internal class StringDictionarySchemaGenerator : ISchemaGenerator
 		return keyType == typeof(string);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 		var valueType = context.Type.GenericTypeArguments[1];
-		var valueContext = SchemaGenerationContextCache.Get(valueType, context.Attributes, context.Configuration);
+		var valueContext = SchemaGenerationContextCache.Get(valueType);
 
 		context.Intents.Add(new AdditionalPropertiesIntent(valueContext));
 	}

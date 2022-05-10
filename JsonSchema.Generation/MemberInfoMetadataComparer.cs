@@ -5,13 +5,16 @@ using System.Reflection;
 
 namespace Json.Schema.Generation;
 
-internal class MemberInfoMetadataTokenComparer : Comparer<MemberInfo>
+internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 {
 	private readonly int[] _typeOrder;
 
-	internal MemberInfoMetadataTokenComparer(Type type)
+	public static MemberInfoMetadataTokenComparer<T> Instance { get; } = new();
+
+	private MemberInfoMetadataTokenComparer()
 	{
 		var typeStack = new Stack<Type>();
+		var type = typeof(T);
 
 		do
 		{

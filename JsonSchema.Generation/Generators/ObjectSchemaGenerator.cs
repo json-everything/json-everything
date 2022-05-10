@@ -14,14 +14,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		return true;
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
-		var props = new Dictionary<string, SchemaGeneratorContext>();
+		var props = new Dictionary<string, SchemaGenerationContextBase>();
 		var required = new List<string>();
-		var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-			.Where(p => p.CanRead && p.CanWrite);
+		var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 		var fieldsToGenerate = context.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
 		var hiddenPropertiesToGenerate = context.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
@@ -32,7 +31,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			.Concat(hiddenPropertiesToGenerate)
 			.Concat(hiddenFieldsToGenerate);
 
-		membersToGenerate = context.Configuration.PropertyOrder switch
+		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
 			PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer),
 			PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name),
@@ -49,15 +48,25 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 #pragma warning restore 8600
 			if (ignoreAttribute != null) continue;
 
-			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes, context.Configuration);
+			if (member.IsReadOnly() && !memberAttributes.OfType<ReadOnlyAttribute>().Any())
+				memberAttributes.Add(new ReadOnlyAttribute(true));
 
-			var name = context.Configuration.PropertyNamingMethod(member.Name);
+			if (member.IsWriteOnly() && !memberAttributes.OfType<WriteOnlyAttribute>().Any())
+				memberAttributes.Add(new WriteOnlyAttribute(true));
+
+			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes);
+
+			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(member.Name);
 			var nameAttribute = memberAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 			if (nameAttribute != null)
 				name = nameAttribute.Name;
 
 			if (memberAttributes.OfType<ObsoleteAttribute>().Any())
+			{
+				if (memberContext is TypeGenerationContext)
+					memberContext = new MemberGenerationContext(memberContext, new List<Attribute>());
 				memberContext.Intents.Add(new DeprecatedIntent(true));
+			}
 
 			props.Add(name, memberContext);
 

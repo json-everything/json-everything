@@ -10,7 +10,7 @@ internal class DateTimeSchemaGenerator : ISchemaGenerator
 		return type == typeof(DateTime);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.String));
 		context.Intents.Add(new FormatIntent(Formats.DateTime));

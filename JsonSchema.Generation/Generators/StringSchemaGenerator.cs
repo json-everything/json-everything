@@ -10,7 +10,7 @@ internal class StringSchemaGenerator : ISchemaGenerator
 		return type == typeof(string);
 	}
 
-	public void AddConstraints(SchemaGeneratorContext context)
+	public void AddConstraints(SchemaGenerationContextBase context)
 	{
 		context.Intents.Add(new TypeIntent(SchemaValueType.String));
 	}
