@@ -69,6 +69,8 @@ public abstract class SchemaGenerationContextBase
 
 		var refiners = configuration.Refiners.ToList();
 		refiners.Add(NullabilityRefiner.Instance);
+		//refiners.Add(ReadabilityRefiner.Instance);
+		//refiners.Add(WritabilityRefiner.Instance);
 		foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
 		{
 			refiner.Run(this);

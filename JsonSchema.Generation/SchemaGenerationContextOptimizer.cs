@@ -19,7 +19,6 @@ public static class SchemaGenerationContextOptimizer
 			throw new InvalidOperationException("root should always be a type context");
 
 		var contextsToMove = allContexts.Where(x => x.ReferenceCount > 1 && x.Intents.Count > 1);
-		var memberContexts = allContexts.OfType<MemberGenerationContext>().ToList();
 
 		var currentNames = new List<string>();
 		var defs = new Dictionary<string, SchemaGenerationContextBase>();

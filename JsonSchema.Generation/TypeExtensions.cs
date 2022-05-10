@@ -89,4 +89,20 @@ public static class TypeExtensions
 			PropertyInfo propertyInfo => propertyInfo.PropertyType,
 			_ => throw new NotSupportedException($"Cannot get type of {info.GetType()}")
 		};
+
+	internal static bool IsReadOnly(this MemberInfo info) =>
+		info switch
+		{
+			FieldInfo fieldInfo => fieldInfo.IsInitOnly,
+			PropertyInfo propertyInfo => !propertyInfo.CanWrite,
+			_ => throw new NotSupportedException($"Cannot get readability of {info.GetType()}")
+		};
+
+	internal static bool IsWriteOnly(this MemberInfo info) =>
+		info switch
+		{
+			FieldInfo => false,
+			PropertyInfo propertyInfo => !propertyInfo.CanRead,
+			_ => throw new NotSupportedException($"Cannot get writability of {info.GetType()}")
+		};
 }
