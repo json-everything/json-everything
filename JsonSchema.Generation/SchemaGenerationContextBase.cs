@@ -28,9 +28,12 @@ public abstract class SchemaGenerationContextBase
 	/// </summary>
 	public List<ISchemaKeywordIntent> Intents { get; } = new();
 
-	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
+	/// <summary>
+	/// A calculated hash value that represents and identifies this context.
+	/// </summary>
+	public int Hash { get; set; }
 
-	internal int Hash { get; set; }
+	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
 
 	/// <summary>
 	/// Creates a new context.

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Json.Schema.Generation;
 
@@ -22,6 +23,7 @@ public interface IContextContainer
 	/// Only return the contexts contained directly by this object.  Do not fetch
 	/// the child contexts of those contexts.
 	/// </remarks>
+	[Obsolete("This method is no longer used and may be implemented to simply throw an exception.")]
 	IEnumerable<SchemaGenerationContextBase> GetContexts();
 
 	/// <summary>
