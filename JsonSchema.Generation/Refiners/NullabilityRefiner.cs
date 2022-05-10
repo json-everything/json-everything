@@ -39,8 +39,8 @@ internal class NullabilityRefiner : ISchemaRefiner
 			typeIntent.Type |= SchemaValueType.Null;
 
 		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
-		    // see https://stackoverflow.com/a/16578846/878701
-		    !context.Type.IsValueType)
+			// see https://stackoverflow.com/a/16578846/878701
+			!context.Type.IsValueType)
 			typeIntent.Type |= SchemaValueType.Null;
 	}
 }

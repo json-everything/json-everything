@@ -10,7 +10,7 @@ namespace Json.Schema.Generation;
 /// settings should be used when serializing or deserializing numbers.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public sealed class JsonNumberHandlingAttribute : JsonAttribute
 {
 	/// <summary>

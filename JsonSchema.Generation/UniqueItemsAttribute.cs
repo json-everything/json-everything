@@ -7,7 +7,7 @@ namespace Json.Schema.Generation;
 /// Applies a `uniqueItems` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-                AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class UniqueItemsAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>

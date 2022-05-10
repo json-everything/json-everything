@@ -51,7 +51,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (member.IsReadOnly() && !memberAttributes.OfType<ReadOnlyAttribute>().Any())
 				memberAttributes.Add(new ReadOnlyAttribute(true));
 
-			if (member.IsWriteOnly() && !memberAttributes.OfType<WriteOnlyAttribute>().Any()) 
+			if (member.IsWriteOnly() && !memberAttributes.OfType<WriteOnlyAttribute>().Any())
 				memberAttributes.Add(new WriteOnlyAttribute(true));
 
 			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes);

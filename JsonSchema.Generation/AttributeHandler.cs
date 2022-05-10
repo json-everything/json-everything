@@ -75,7 +75,7 @@ public static class AttributeHandler
 			{
 				var interfaces = handler.GetType().GetInterfaces();
 				var handlerInterface = interfaces.FirstOrDefault(x => x.IsGenericType &&
-				                                                      x.GetGenericTypeDefinition() == typeof(IAttributeHandler<>));
+																	  x.GetGenericTypeDefinition() == typeof(IAttributeHandler<>));
 				if (handlerInterface == null) continue;
 
 				var attributeType = handlerInterface.GetGenericArguments()[0];

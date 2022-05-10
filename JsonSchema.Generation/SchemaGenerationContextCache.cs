@@ -48,7 +48,7 @@ public static class SchemaGenerationContextCache
 
 			context.Hash = hash;
 			Cache[hash] = context;
-		
+
 			context.GenerateIntents();
 		}
 
