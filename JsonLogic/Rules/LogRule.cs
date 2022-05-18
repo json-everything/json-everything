@@ -13,9 +13,9 @@ internal class LogRule : Rule
 		_log = log;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var log = _log.Apply(data);
+		var log = _log.Apply(data, contextData);
 
 		Console.WriteLine(log);
 

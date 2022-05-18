@@ -41,4 +41,13 @@ public class VariableTests
 
 		JsonAssert.AreEquivalent(11, rule.Apply(data));
 	}
+
+	[Test]
+	public void VariableWithEmptyPathReturnsEntireData()
+	{
+		var rule = new VariableRule("");
+		var data = new { foo = 5, bar = 10 }.ToJsonDocument().RootElement;
+
+		JsonAssert.AreEquivalent(data, rule.Apply(data));
+	}
 }

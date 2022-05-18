@@ -50,7 +50,7 @@ internal class LiteralRule : Rule
 		_value = value.AsJsonElement();
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		return _value;
 	}

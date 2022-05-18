@@ -23,12 +23,12 @@ internal class LessThanRule : Rule
 		_c = c;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		if (_c == null)
 		{
-			var a = _a.Apply(data);
-			var b = _b.Apply(data);
+			var a = _a.Apply(data, contextData);
+			var b = _b.Apply(data, contextData);
 
 			var numberA = a.Numberify();
 			var numberB = b.Numberify();
@@ -39,9 +39,9 @@ internal class LessThanRule : Rule
 			return (numberA < numberB).AsJsonElement();
 		}
 
-		var low = _a.Apply(data);
-		var value = _b.Apply(data);
-		var high = _c.Apply(data);
+		var low = _a.Apply(data, contextData);
+		var value = _b.Apply(data, contextData);
+		var high = _c.Apply(data, contextData);
 
 		if (low.ValueKind != JsonValueKind.Number)
 			throw new JsonLogicException("Lower bound must be a number.");

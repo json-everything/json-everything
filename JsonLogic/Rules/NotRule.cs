@@ -13,9 +13,9 @@ internal class NotRule : Rule
 		_value = value;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var value = _value.Apply(data);
+		var value = _value.Apply(data, contextData);
 
 		return (!value.IsTruthy()).AsJsonElement();
 	}

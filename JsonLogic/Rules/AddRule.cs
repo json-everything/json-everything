@@ -15,13 +15,13 @@ internal class AddRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		decimal result = 0;
 
 		foreach (var item in _items)
 		{
-			var value = item.Apply(data);
+			var value = item.Apply(data, contextData);
 
 			var number = value.Numberify();
 

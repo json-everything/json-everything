@@ -15,8 +15,8 @@ internal class StrictNotEqualsRule : Rule
 		_b = b;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		return (!_a.Apply(data).IsEquivalentTo(_b.Apply(data))).AsJsonElement();
+		return (!_a.Apply(data, contextData).IsEquivalentTo(_b.Apply(data, contextData))).AsJsonElement();
 	}
 }

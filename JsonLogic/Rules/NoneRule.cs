@@ -16,15 +16,15 @@ internal class NoneRule : Rule
 		_rule = rule;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var input = _input.Apply(data);
+		var input = _input.Apply(data, contextData);
 
 		if (input.ValueKind != JsonValueKind.Array)
 			throw new JsonLogicException("Input must evaluate to an array.");
 
 		var inputData = input.EnumerateArray();
-		return (!inputData.Select(value => _rule.Apply(value))
+		return (!inputData.Select(value => _rule.Apply(data, value))
 				.Any(result => result.IsTruthy()))
 			.AsJsonElement();
 	}

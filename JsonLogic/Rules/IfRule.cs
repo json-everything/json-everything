@@ -16,7 +16,7 @@ internal class IfRule : Rule
 		_components = new List<Rule>(components);
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		bool condition;
 		switch (_components.Count)
@@ -24,13 +24,13 @@ internal class IfRule : Rule
 			case 0:
 				return ((string?)null).AsJsonElement();
 			case 1:
-				return _components[0].Apply(data);
+				return _components[0].Apply(data, contextData);
 			case 2:
-				condition = _components[0].Apply(data).IsTruthy();
+				condition = _components[0].Apply(data, contextData).IsTruthy();
 				var thenResult = _components[1];
 
 				return condition
-					? thenResult.Apply(data)
+					? thenResult.Apply(data, contextData)
 					: ((string?)null).AsJsonElement();
 			default:
 				var currentCondition = _components[0];
@@ -39,17 +39,17 @@ internal class IfRule : Rule
 
 				while (currentCondition != null)
 				{
-					condition = currentCondition.Apply(data).IsTruthy();
+					condition = currentCondition.Apply(data, contextData).IsTruthy();
 
 					if (condition)
-						return currentTrueResult.Apply(data);
+						return currentTrueResult.Apply(data, contextData);
 
 					if (elseIndex == _components.Count) return ((string?)null).AsJsonElement();
 
 					currentCondition = _components[elseIndex++];
 
 					if (elseIndex >= _components.Count)
-						return currentCondition.Apply(data);
+						return currentCondition.Apply(data, contextData);
 
 					currentTrueResult = _components[elseIndex++];
 				}

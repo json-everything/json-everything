@@ -16,9 +16,9 @@ internal class AllRule : Rule
 		_rule = rule;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var input = _input.Apply(data);
+		var input = _input.Apply(data, contextData);
 
 		if (input.ValueKind != JsonValueKind.Array)
 			throw new JsonLogicException("Input must evaluate to an array.");

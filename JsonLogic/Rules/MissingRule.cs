@@ -15,9 +15,9 @@ internal class MissingRule : Rule
 		_components = components;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var expected = _components.SelectMany(c => c.Apply(data).Flatten())
+		var expected = _components.SelectMany(c => c.Apply(data, contextData).Flatten())
 			.Where(e => e.ValueKind == JsonValueKind.String);
 
 		if (data.ValueKind != JsonValueKind.Object)

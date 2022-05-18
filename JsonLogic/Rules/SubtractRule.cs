@@ -16,11 +16,11 @@ internal class SubtractRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		if (_items.Count == 0) return 0.AsJsonElement();
 
-		var value = _items[0].Apply(data);
+		var value = _items[0].Apply(data, contextData);
 		var number = value.Numberify();
 
 		if (number == null)
@@ -33,7 +33,7 @@ internal class SubtractRule : Rule
 
 		foreach (var item in _items.Skip(1))
 		{
-			value = item.Apply(data);
+			value = item.Apply(data, contextData);
 
 			number = value.Numberify();
 
