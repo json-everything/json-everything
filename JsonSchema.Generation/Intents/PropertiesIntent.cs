@@ -53,6 +53,6 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Properties(Properties.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));
+		builder.Properties(Properties.ToDictionary(p => p.Key, p => p.Value.Apply()));
 	}
 }

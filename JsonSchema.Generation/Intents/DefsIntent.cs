@@ -28,6 +28,6 @@ public class DefsIntent : ISchemaKeywordIntent
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Defs(Definitions.ToDictionary(p => p.Key, p => p.Value.Apply().Build()));
+		builder.Defs(Definitions.ToDictionary(p => p.Key, p => p.Value.Apply()));
 	}
 }
