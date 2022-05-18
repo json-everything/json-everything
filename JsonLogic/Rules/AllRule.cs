@@ -24,7 +24,7 @@ internal class AllRule : Rule
 			throw new JsonLogicException("Input must evaluate to an array.");
 
 		var inputData = input.EnumerateArray();
-		var results = inputData.Select(value => _rule.Apply(value)).ToList();
+		var results = inputData.Select(value => _rule.Apply(data, value)).ToList();
 		return (results.Any() &&
 				results.All(result => result.IsTruthy()))
 			.AsJsonElement();
