@@ -16,10 +16,10 @@ internal class InRule : Rule
 		_source = source;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var test = _test.Apply(data);
-		var source = _source.Apply(data);
+		var test = _test.Apply(data, contextData);
+		var source = _source.Apply(data, contextData);
 
 		if (source.ValueKind == JsonValueKind.String)
 		{

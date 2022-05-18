@@ -16,9 +16,9 @@ internal class AndRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var items = _items.Select(i => i.Apply(data));
+		var items = _items.Select(i => i.Apply(data, contextData));
 		var first = false.AsJsonElement();
 		foreach (var x in items)
 		{

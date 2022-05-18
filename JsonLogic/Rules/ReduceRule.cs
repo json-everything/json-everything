@@ -24,10 +24,10 @@ internal class ReduceRule : Rule
 		_initial = initial;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var input = _input.Apply(data);
-		var accumulator = _initial.Apply(data);
+		var input = _input.Apply(data, contextData);
+		var accumulator = _initial.Apply(data, contextData);
 
 		if (input.ValueKind == JsonValueKind.Null) return accumulator;
 		if (input.ValueKind != JsonValueKind.Array)
@@ -43,7 +43,7 @@ internal class ReduceRule : Rule
 			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(intermediary, _options));
 			var item = doc.RootElement.Clone();
 
-			accumulator = _rule.Apply(item);
+			accumulator = _rule.Apply(data, item);
 		}
 
 		return accumulator;

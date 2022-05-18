@@ -17,13 +17,13 @@ internal class MapRule : Rule
 		_rule = rule;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var input = _input.Apply(data);
+		var input = _input.Apply(data, contextData);
 
 		if (input.ValueKind != JsonValueKind.Array)
 			return Array.Empty<JsonElement>().AsJsonElement();
 
-		return input.EnumerateArray().Select(i => _rule.Apply(i)).AsJsonElement();
+		return input.EnumerateArray().Select(i => _rule.Apply(data, i)).AsJsonElement();
 	}
 }

@@ -1,6 +1,13 @@
-# (coming soon)
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/265)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+[#263](https://github.com/gregsdennis/json-everything/issues/263) - `{"var": ""}` is used by some operations to pass context data into inner rules, but the external data is also available.
+
+## Breaking Changes
+
+- Added optional parameter to `Rule.Apply()` in order to supply context data.
+- `"var"` will now prioritize context data over external data.  If the path yields no result for context data, it will search the external data.  This means that if both the context data and the external data have the given path, the context data will be used.
 
 # [1.4.0](https://github.com/gregsdennis/json-everything/pull/205)
 

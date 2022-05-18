@@ -15,9 +15,9 @@ internal class MergeRule : Rule
 		_items = items.ToList();
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var items = _items.Select(i => i.Apply(data)).SelectMany(e => e.Flatten());
+		var items = _items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
 
 		return items.AsJsonElement();
 	}

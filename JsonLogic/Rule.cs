@@ -17,8 +17,12 @@ public abstract class Rule
 	/// Applies the rule to the input data.
 	/// </summary>
 	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
 	/// <returns>The result of the rule.</returns>
-	public abstract JsonElement Apply(JsonElement data);
+	public abstract JsonElement Apply(JsonElement data, JsonElement? contextData = null);
 
 	/// <summary>
 	/// Casts a JSON value to a <see cref="LiteralRule"/>.

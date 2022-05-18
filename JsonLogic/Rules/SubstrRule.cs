@@ -23,11 +23,11 @@ internal class SubstrRule : Rule
 		_count = count;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var input = _input.Apply(data);
-		var start = _start.Apply(data);
-		var count = _count?.Apply(data);
+		var input = _input.Apply(data, contextData);
+		var start = _start.Apply(data, contextData);
+		var count = _count?.Apply(data, contextData);
 
 		if (input.ValueKind != JsonValueKind.String)
 			throw new JsonLogicException($"Cannot substring a {input.ValueKind}.");

@@ -23,16 +23,18 @@ internal class VariableRule : Rule
 		_defaultValue = defaultValue;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		if (_path == null) return data;
 
-		var path = _path.Apply(data);
+		var path = _path.Apply(data, contextData);
 		var pathString = path.Stringify()!;
+		if (pathString == string.Empty) return contextData ?? data;
+
 		var pointer = JsonPointer.Parse(pathString == string.Empty ? "" : $"/{pathString.Replace('.', '/')}");
-		var pathEval = pointer.Evaluate(data);
+		var pathEval = pointer.Evaluate(contextData ?? data) ?? pointer.Evaluate(data);
 		if (pathEval != null) return pathEval.Value;
 
-		return _defaultValue?.Apply(data) ?? ((string?)null).AsJsonElement();
+		return _defaultValue?.Apply(data, contextData) ?? ((string?)null).AsJsonElement();
 	}
 }

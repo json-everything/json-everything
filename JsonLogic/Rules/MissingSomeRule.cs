@@ -18,10 +18,10 @@ internal class MissingSomeRule : Rule
 		_components = components;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var requiredCount = _requiredCount.Apply(data).Numberify();
-		var components = _components.Apply(data);
+		var requiredCount = _requiredCount.Apply(data, contextData).Numberify();
+		var components = _components.Apply(data, contextData);
 		if (components.ValueKind != JsonValueKind.Array)
 			throw new JsonLogicException("Expected array of required paths.");
 

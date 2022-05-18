@@ -17,13 +17,13 @@ internal class FilterRule : Rule
 		_rule = rule;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var input = _input.Apply(data);
+		var input = _input.Apply(data, contextData);
 
 		if (input.ValueKind != JsonValueKind.Array)
 			return Array.Empty<JsonElement>().AsJsonElement();
 
-		return input.EnumerateArray().Where(i => _rule.Apply(i).IsTruthy()).AsJsonElement();
+		return input.EnumerateArray().Where(i => _rule.Apply(data, i).IsTruthy()).AsJsonElement();
 	}
 }

@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
+using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
 
@@ -85,5 +87,21 @@ public class GithubTests
 		var result = rule.Apply(data.RootElement);
 
 		JsonAssert.AreEquivalent(true, result);
+	}
+
+	[Test]
+	public void Issue263_SomeInTest()
+	{
+		var rule = JsonLogic.Some(
+			JsonLogic.Variable("x"),
+			JsonLogic.In(
+				JsonLogic.Variable(""),
+				JsonLogic.Variable("y")
+			)
+		);
+
+		var data = JsonDocument.Parse("{\"x\":[-1, 0, 1],\"y\":[2, 3, 1]}").RootElement;
+
+		JsonAssert.IsTrue(rule.Apply(data));
 	}
 }

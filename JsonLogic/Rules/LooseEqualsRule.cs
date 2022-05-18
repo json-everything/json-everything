@@ -15,10 +15,10 @@ internal class LooseEqualsRule : Rule
 		_b = b;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		var a = _a.Apply(data);
-		var b = _b.Apply(data);
+		var a = _a.Apply(data, contextData);
+		var b = _b.Apply(data, contextData);
 
 		return a.LooseEquals(b).AsJsonElement();
 	}

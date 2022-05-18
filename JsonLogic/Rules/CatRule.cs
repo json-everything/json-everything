@@ -15,13 +15,13 @@ internal class CatRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
 		var result = string.Empty;
 
 		foreach (var item in _items)
 		{
-			var value = item.Apply(data);
+			var value = item.Apply(data, contextData);
 
 			var str = value.Stringify();
 

@@ -18,8 +18,8 @@ internal class RuleCollection : Rule
 		_rules = rules;
 	}
 
-	public override JsonElement Apply(JsonElement data)
+	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
 	{
-		return _rules.Select(x => x.Apply(data)).AsJsonElement();
+		return _rules.Select(x => x.Apply(data, contextData)).AsJsonElement();
 	}
 }
