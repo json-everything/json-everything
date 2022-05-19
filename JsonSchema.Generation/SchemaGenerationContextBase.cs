@@ -11,7 +11,20 @@ namespace Json.Schema.Generation;
 /// </summary>
 public abstract class SchemaGenerationContextBase
 {
+	internal class TrueType { }
+
+	internal class FalseType { }
+
 	private IComparer<MemberInfo>? _memberInfoComparer;
+
+	/// <summary>
+	/// Represents a true schema.
+	/// </summary>
+	public static readonly SchemaGenerationContextBase True = new TypeGenerationContext(typeof(TrueType));
+	/// <summary>
+	/// Represents a false schema.
+	/// </summary>
+	public static readonly SchemaGenerationContextBase False = new TypeGenerationContext(typeof(FalseType));
 
 	/// <summary>
 	/// The type.
@@ -49,8 +62,11 @@ public abstract class SchemaGenerationContextBase
 	/// </summary>
 	/// <param name="builder">The schema builder.</param>
 	/// <returns>The schema builder (for fluent syntax support).</returns>
-	public JsonSchemaBuilder Apply(JsonSchemaBuilder? builder = null)
+	public JsonSchema Apply(JsonSchemaBuilder? builder = null)
 	{
+		if (ReferenceEquals(this, True)) return true;
+		if (ReferenceEquals(this, False)) return false;
+
 		builder ??= new JsonSchemaBuilder();
 
 		foreach (var intent in Intents)
@@ -63,6 +79,8 @@ public abstract class SchemaGenerationContextBase
 
 	internal void GenerateIntents()
 	{
+		if (ReferenceEquals(this, True) || ReferenceEquals(this, False)) return;
+
 		var configuration = SchemaGeneratorConfiguration.Current;
 
 		var generator = configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
@@ -72,8 +90,6 @@ public abstract class SchemaGenerationContextBase
 
 		var refiners = configuration.Refiners.ToList();
 		refiners.Add(NullabilityRefiner.Instance);
-		//refiners.Add(ReadabilityRefiner.Instance);
-		//refiners.Add(WritabilityRefiner.Instance);
 		foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
 		{
 			refiner.Run(this);

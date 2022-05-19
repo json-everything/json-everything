@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Json.Schema.Generation.Intents;
 
 /// <summary>
-/// Provides intent to create an `additionalProperties` keyword.
+/// Provides intent to create an `additionalItems` keyword.
 /// </summary>
-public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
+public class AdditionalItemsIntent : ISchemaKeywordIntent, IContextContainer
 {
 	/// <summary>
-	/// The contexts that represent the properties.
+	/// The context that represents the inner requirements.
 	/// </summary>
-	public Dictionary<string, SchemaGenerationContextBase> Properties { get; }
+	public SchemaGenerationContextBase Context { get; private set; }
 
 	/// <summary>
-	/// Creates a new <see cref="PropertiesIntent"/> instance.
+	/// Creates a new <see cref="AdditionalItemsIntent"/> instance.
 	/// </summary>
-	/// <param name="properties">The contexts.</param>
-	public PropertiesIntent(Dictionary<string, SchemaGenerationContextBase> properties)
+	/// <param name="context">The context.</param>
+	public AdditionalItemsIntent(SchemaGenerationContextBase context)
 	{
-		Properties = properties;
+		Context = context;
 	}
 
 	/// <summary>
@@ -30,7 +29,7 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	/// </returns>
 	public IEnumerable<SchemaGenerationContextBase> GetContexts()
 	{
-		return Properties.Values;
+		return new[] { Context };
 	}
 
 	/// <summary>
@@ -40,11 +39,8 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	/// <param name="newContext">The new context.</param>
 	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
 	{
-		foreach (var property in Properties.ToList())
-		{
-			if (property.Value.Hash == hashCode)
-				Properties[property.Key] = newContext;
-		}
+		if (Context.Hash == hashCode)
+			Context = newContext;
 	}
 
 	/// <summary>
@@ -53,6 +49,6 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Properties(Properties.ToDictionary(p => p.Key, p => p.Value.Apply()));
+		builder.AdditionalItems(Context.Apply());
 	}
 }

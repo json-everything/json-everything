@@ -1,3 +1,11 @@
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/267)
+
+[#264](https://github.com/gregsdennis/json-everything/issues/264) - Added support for `additionalProperties` and `additionalItems`.
+
+Improved support for array types that inherit `IEnumerable<T>` but aren't generic themselves, e.g. `MyList : List<int>`.
+
+Also updated return value of `SchemaGenerationContextBase.Apply()` from `JsonSchemaBuilder` to `JsonSchema`.  This is pretty hidden, so it _shouldn't_ break anyone, thus not strictly adhering to semver for this change.  Calling it out just in case.
+
 # 2.0.1 (No PR)
 
 Exposed `SchemaGenerationContextBase.Hash` property.  Required to implement `IContextContainer.Replace()`.
