@@ -99,6 +99,13 @@ In C#, your operators will need to derive from the `Rule` abstract class.  There
 - You're working with `JsonElement`s, so you'll need to detect compatible value types.  There are a few extension methods that you can use, like `.Numberify()`, that try to "fuzzy-cast" to a numberish value.
 - If you encounter invalid input, throw a `JsonLogicException` with an appropriate message.
 
+`Apply()` takes two parameters, both of which are data for variables to act upon.
+
+- `data` represents the external data.
+- `contextData` represents data that's passed to it by other rules.
+
+Several rules (`all`, `none`, and `some`) can pass data to their children.  `var` will prioritize `contextData` when attempting to resolve the path.  If `contextData` is null or doesn't have data at the indicated path, the path will be resolved against `data`.
+
 It's definitely recommended to go through the [code for the built-in ruleset](https://github.com/gregsdennis/json-everything/tree/master/JsonLogic/Rules) for examples.
 
 Once your rule is defined, it needs to be registered using the `RuleRegistry.Register<T>()` method.  This will allow the rule to be automatically deserialized.
