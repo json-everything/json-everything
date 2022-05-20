@@ -387,7 +387,7 @@ JsonSchema<nsp>.Net makes a valiant attempt at validating a few of them.  These 
 - `relative-json-pointer`
 - `uri`
 - `uri-reference`
-- `uri-template`
+- `uri-template` (not supported by default, see [this user solution](https://github.com/gregsdennis/json-everything/issues/244#issuecomment-1081842470) for a workaround)
 
 I'm not going to claim that the validation on any of these is perfect, but it will likely suffice for most applications.  In the (rare) event that it doesn't support your needs, they are completely overridable.  Additionally, if you find a method that works better than what's in the library, feel free to [contribute a PR](https://github.com/gregsdennis/json-everything/pulls) and make the library better for everyone.
 

@@ -1,3 +1,7 @@
 .width-auto {
     width: auto;
 }
+
+select.form-control {
+	appearance: auto;
+}
