@@ -11,8 +11,12 @@
 @using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
+@using Microsoft.CodeAnalysis
+@using Microsoft.CodeAnalysis.CSharp
+@using System.Reflection
 
-@inject CookieManager _cookieManager;
+@inject CookieManager CookieManager;
+@inject NavigationManager NavigationManager;
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
@@ -41,7 +45,7 @@
 		<div class="row">
 			<div class="col-5">
 				<label class="w-100">
-					Schema
+					@SchemaEditorLabel
 					<div class="editor-input">
 						<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
 						              CssClass="h-100" OnKeyUp="HandleSchemaChanged"/>
@@ -66,8 +70,8 @@
 								@foreach (Draft draft in Enum.GetValues(typeof(Draft)))
 								{
 									if (draft == Draft.Unspecified) continue;
-									@*<option value="@draft">@GetDescription(draft)</option>*@
-									<option value="@draft">@draft</option>
+									<option value="@draft">@GetDescription(draft)</option>
+									@*<option value="@draft">@draft</option>*@
 								}
 							</InputSelect>
 						</label>
@@ -81,7 +85,14 @@
 						</label>
 						<button class="btn btn-primary" @onclick="Validate">Validate</button>
 						<hr/>
-						<button class="btn btn-primary" @onclick="Generate">Generate Data</button>
+						<label class="my-2">
+							Input Language<br/>
+							<InputSelect @bind-Value="InputLanguage" DisplayName="Output format" class="form-control">
+								<option value="json">JSON</option>
+								<option value="csharp">C#</option>
+							</InputSelect>
+						</label>
+						<button class="btn btn-primary" @onclick="Generate">@GenerateButtonText</button>
 					</EditForm>
 				</div>
 			</div>
@@ -152,6 +163,9 @@
 </div>
 
 @code {
+    private const string _generateDataText = "Generate Data";
+    private const string _generateSchemaText = "Generate Schema";
+
 #pragma warning disable CS8618
 	private MonacoEditor _schemaEditor;
 	private MonacoEditor _instanceEditor;
@@ -167,6 +181,9 @@
 		LibraryVersion.GetFor<ISchemaRefiner>(),
 		LibraryVersion.GetFor<Bound>()
 	};
+
+	private string _inputLanguage = "json";
+
 #pragma warning restore CS8618
 
 	private class SchemaOptionsModel
@@ -187,8 +204,34 @@
 		};
 	}
 
+	private string GenerateButtonText { get; set; } = _generateDataText;
+
+	private string InputLanguage
+	{
+		get => _inputLanguage;
+		set
+		{
+			_inputLanguage = value;
+			GenerateButtonText = value switch {
+				"json" => _generateDataText,
+				"csharp" => _generateSchemaText,
+				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
+			_schemaEditor.GetModel()
+				.ContinueWith(x => MonacoEditorBase.SetModelLanguage(x.Result, _inputLanguage));
+			SchemaEditorLabel = value switch {
+				"json" => "Schema",
+				"csharp" => "Class Definition",
+				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
+			Task.Run(() => CookieManager.Set("schema-input-language", value));
+		}
+	}
+
+	private string SchemaEditorLabel { get; set; } = "Schema";
+
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private IEnumerable<MetadataReference> _references;
 
 	private static string GetDescription(Draft draft) => draft switch
 	{
@@ -236,6 +279,19 @@
 
 	private async Task Generate()
 	{
+		switch (_inputLanguage)
+		{
+			case "json":
+				await GenerateData();
+				break;
+			case "csharp":
+				await GenerateSchema();
+				break;
+		}
+	}
+
+	public async Task GenerateData()
+	{
 		JsonSchema schema;
 		try
 		{
@@ -261,33 +317,129 @@
 		}
 	}
 
+	public async Task GenerateSchema()
+	{
+		try
+		{
+			var source = await _schemaEditor.GetValue();
+
+			var fullSource = $@"
+using System;
+using System.Collections.Generic;
+using Json.Schema.Generation;
+
+namespace JsonEverythingTemp
+{{
+	{source}
+}}";
+
+			var syntaxTree = CSharpSyntaxTree.ParseText(fullSource);
+			var assemblyPath = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "dll");
+
+			var compilation = CSharpCompilation.Create(System.IO.Path.GetFileName(assemblyPath))
+				.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
+				.AddReferences(_references)
+				.AddSyntaxTrees(syntaxTree);
+
+			using var dllStream = new MemoryStream();
+			using var pdbStream = new MemoryStream();
+			var emitResult = compilation.Emit(dllStream, pdbStream);
+			if (!emitResult.Success)
+			{
+				Console.WriteLine("You may expect a list of what compilation errors there are, but unfortunately " +
+				                  "Roslyn doesn't seem to be giving that information out (or I don't know how to " +
+				                  "interpret it.  So instead, here are the errors in raw form.  Good luck.  If you " +
+				                  "know what these mean, please drop a line in a GitHub issue.");
+				var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
+					.Select(x => GetErrorDetails(source, x)));
+				await _instanceEditor.SetValue("Compilation error");
+				//await _instanceEditor.SetValue(errors);
+				return;
+			}
+
+			var assembly = Assembly.Load(dllStream.ToArray());
+			var type = assembly.DefinedTypes.First();
+
+			JsonSchema schema = new JsonSchemaBuilder().FromType(type);
+
+			await _instanceEditor.SetValue(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+		}
+		catch (Exception e)
+		{
+			await _instanceEditor.SetValue(e.Message);
+			throw;
+		}
+	}
+
+	private static string GetErrorDetails(string source, Diagnostic diagnostic)
+	{
+		Console.WriteLine(JsonSerializer.Serialize(diagnostic, new JsonSerializerOptions { WriteIndented = true }));
+		//var start = diagnostic.Location.SourceSpan.Start - 115;
+		//var lineNumber = source[..start].Count(x => x == '\n') + 1;
+		//var lastNewLine = source[..start].LastIndexOf('\n') - 1;
+		//var columnNumber = start - lastNewLine;
+
+		//return $"Compilation error at line {lineNumber}, col {columnNumber}";
+		return "Compilation error";
+	}
+
 	private async Task HandleSchemaChanged()
 	{
-		await _cookieManager.SaveEditorValue(_schemaEditor, "schema");
+		await CookieManager.SaveEditorValue(_schemaEditor, "schema");
 	}
 
 	private async Task LoadSavedSchema()
 	{
-		await _cookieManager.LoadEditorValue(_schemaEditor, "schema");
+		await CookieManager.LoadEditorValue(_schemaEditor, "schema");
 	}
 
 	private async Task HandleInstanceChanged()
 	{
-		await _cookieManager.SaveEditorValue(_instanceEditor, "schema-instance");
+		await CookieManager.SaveEditorValue(_instanceEditor, "schema-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await _cookieManager.LoadEditorValue(_instanceEditor, "schema-instance");
+		await CookieManager.LoadEditorValue(_instanceEditor, "schema-instance");
+	}
+
+	private void LoadSavedSettings()
+	{
+		InputLanguage = CookieManager.Get("schema-input-language") ?? "json";
 	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		await _cookieManager.Initialize();
+		await CookieManager.Initialize();
 	    await _outputEditor.SetValue(string.Empty);
 
 		await LoadSavedSchema();
 		await LoadSavedInstance();
+		LoadSavedSettings();
+		await LoadAssemblyReferences();
 	}
 
+	private async Task LoadAssemblyReferences()
+	{
+		var refs = AppDomain.CurrentDomain.GetAssemblies();
+		var client = new HttpClient 
+		{
+			BaseAddress = new Uri(NavigationManager.BaseUri)
+		};
+ 
+		var references = new List<MetadataReference>();
+
+		foreach (var reference in refs.Where(x => !x.IsDynamic))
+		{
+			Console.WriteLine($"{reference.FullName}\n  Location - {reference.Location}\n");
+		}
+
+		foreach(var reference in refs.Where(x => !x.IsDynamic))
+		{
+			var stream = await client.GetStreamAsync($"_framework/{reference.FullName.Split(',')[0]}.dll");
+			references.Add(MetadataReference.CreateFromStream(stream));
+		}
+ 
+		_references = references;
+	}
 }
