@@ -95,7 +95,7 @@ JSON Logic also supports [adding custom operations](https://jsonlogic.com/add_op
 
 In C#, your operators will need to derive from the `Rule` abstract class.  There is only a single method to implement, `Apply()`, and you'll need to add an `Operator` attribute.  The logic in the rule doesn't need to be complex, but there are a couple things to be aware of:
 
-- Your rule must have a parameterless constructor.
+- The arguments for your rule must correspond to the parameters of the constructor.
 - You're working with `JsonElement`s, so you'll need to detect compatible value types.  There are a few extension methods that you can use, like `.Numberify()`, that try to "fuzzy-cast" to a numberish value.
 - If you encounter invalid input, throw a `JsonLogicException` with an appropriate message.
 
