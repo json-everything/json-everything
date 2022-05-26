@@ -1,6 +1,6 @@
 # [2.4.0](https://github.com/gregsdennis/json-everything/pull/270)
 
-Added `UnrecognizedKeyword` to represent keywords that were not recognized by any known vocabulary.  The values of these keywords are then captured in the validation results as annotations.  As a result of this change `JsonSchema.OtherData` has been marked obsolete.
+Added `UnrecognizedKeyword` to represent keywords that were not recognized by any known vocabulary.  The values of these keywords are then captured in the validation results as annotations.  As a result of this change `JsonSchema.OtherData` has been marked obsolete.  
 
 # [2.3.0](https://github.com/gregsdennis/json-everything/pull/249)
 

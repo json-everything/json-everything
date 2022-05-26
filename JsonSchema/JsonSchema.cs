@@ -300,20 +300,28 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 					break;
 			}
 
-			if (newResolvable == null)
+			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
-				// TODO: document that this process does not consider `$id` in extraneous data
-				if (resolvable is JsonSchema { OtherData: { } } subSchema &&
-					subSchema.OtherData.TryGetValue(segment.Value, out var element))
-				{
-					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
-					var value = newPointer.Evaluate(element);
-					var asSchema = FromText(value.ToString());
-					return (asSchema, currentUri);
-				}
-
-				return (null, currentUri);
+				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
+				var value = newPointer.Evaluate(unrecognized.Value);
+				var asSchema = FromText(value.ToString());
+				return (asSchema, currentUri);
 			}
+
+			//if (newResolvable == null)
+			//{
+			//	// TODO: document that this process does not consider `$id` in extraneous data
+			//	if (resolvable is JsonSchema { OtherData: { } } subSchema &&
+			//		subSchema.OtherData.TryGetValue(segment.Value, out var element))
+			//	{
+			//		var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
+			//		var value = newPointer.Evaluate(element);
+			//		var asSchema = FromText(value.ToString());
+			//		return (asSchema, currentUri);
+			//	}
+
+			//	return (null, currentUri);
+			//}
 
 			resolvable = newResolvable;
 		}
