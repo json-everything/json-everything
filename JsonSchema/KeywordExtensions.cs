@@ -15,7 +15,8 @@ public static class KeywordExtensions
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
 						!t.IsAbstract &&
-						!t.IsInterface)
+						!t.IsInterface &&
+						t != typeof(UnrecognizedKeyword))
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
 
 	/// <summary>
@@ -28,6 +29,8 @@ public static class KeywordExtensions
 	public static string Keyword(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
+
+		if (keyword is UnrecognizedKeyword unrecognized) return unrecognized.Name;
 
 		var keywordType = keyword.GetType();
 		if (!_attributes.TryGetValue(keywordType, out var name))
