@@ -1061,6 +1061,32 @@ public static class JsonSchemaBuilderExtensions
 	}
 
 	/// <summary>
+	/// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="name">The keyword name.</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonElement value)
+	{
+		builder.Add(new UnrecognizedKeyword(name, value));
+		return builder;
+	}
+
+	/// <summary>
+	/// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="name">The keyword name.</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonElementProxy value)
+	{
+		builder.Add(new UnrecognizedKeyword(name, value));
+		return builder;
+	}
+
+	/// <summary>
 	/// Add an `$vocabulary` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
