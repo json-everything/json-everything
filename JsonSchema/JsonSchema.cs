@@ -308,22 +308,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 				return (asSchema, currentUri);
 			}
 
-			//if (newResolvable == null)
-			//{
-			//	// TODO: document that this process does not consider `$id` in extraneous data
-			//	if (resolvable is JsonSchema { OtherData: { } } subSchema &&
-			//		subSchema.OtherData.TryGetValue(segment.Value, out var element))
-			//	{
-			//		var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
-			//		var value = newPointer.Evaluate(element);
-			//		var asSchema = FromText(value.ToString());
-			//		return (asSchema, currentUri);
-			//	}
-
-			//	return (null, currentUri);
-			//}
-
-			resolvable = newResolvable;
+			resolvable = newResolvable!;
 		}
 
 		return (resolvable as JsonSchema, currentUri);
