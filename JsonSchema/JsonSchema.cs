@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
 
+#pragma warning disable CS0618
+
 namespace Json.Schema;
 
 /// <summary>
@@ -21,23 +23,28 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <summary>
 	/// The empty schema <code>{}</code>.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
-	public static readonly JsonSchema Empty = new JsonSchema(Enumerable.Empty<IJsonSchemaKeyword>(), null);
+	public static readonly JsonSchema Empty = new(Enumerable.Empty<IJsonSchemaKeyword>(), null);
 	/// <summary>
 	/// The <code>true</code> schema.  Passes all instances.
 	/// </summary>
-	public static readonly JsonSchema True = new JsonSchema(true);
+	public static readonly JsonSchema True = new(true);
 	/// <summary>
 	/// The <code>false</code> schema.  Fails all instances.
 	/// </summary>
-	public static readonly JsonSchema False = new JsonSchema(false);
+	public static readonly JsonSchema False = new(false);
 
 	/// <summary>
 	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
 	/// </summary>
 	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
 	/// <summary>
-	/// Gets other non-keyword (or unknown keyword) properties in the schema.
+	/// (obsolete) Gets other non-keyword (or unknown keyword) properties in the schema.
 	/// </summary>
+	/// <remarks>
+	/// This property is now obsolete and no longer used.  It will be removed at the next major version.
+	/// Until then, it will remain populated.
+	/// </remarks>
+	[Obsolete("Unrecognized keyword data now appears as UnrecognizedKeyword instances in the Keywords collection.")]
 	public IReadOnlyDictionary<string, JsonElement>? OtherData { get; }
 
 	/// <summary>
@@ -293,22 +300,15 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 					break;
 			}
 
-			if (newResolvable == null)
+			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
-				// TODO: document that this process does not consider `$id` in extraneous data
-				if (resolvable is JsonSchema { OtherData: { } } subSchema &&
-					subSchema.OtherData.TryGetValue(segment.Value, out var element))
-				{
-					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
-					var value = newPointer.Evaluate(element);
-					var asSchema = FromText(value.ToString());
-					return (asSchema, currentUri);
-				}
-
-				return (null, currentUri);
+				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
+				var value = newPointer.Evaluate(unrecognized.Value);
+				var asSchema = FromText(value.ToString());
+				return (asSchema, currentUri);
 			}
 
-			resolvable = newResolvable;
+			resolvable = newResolvable!;
 		}
 
 		return (resolvable as JsonSchema, currentUri);
@@ -431,6 +431,9 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 						using var document = JsonDocument.ParseValue(ref reader);
 						var element = document.RootElement;
 						otherData[keyword] = element.Clone();
+
+						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, element);
+						keywords.Add(unrecognizedKeyword);
 						break;
 					}
 
@@ -471,15 +474,6 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 		foreach (var keyword in value.Keywords!)
 		{
 			JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
-		}
-
-		if (value.OtherData != null)
-		{
-			foreach (var data in value.OtherData)
-			{
-				writer.WritePropertyName(data.Key);
-				JsonSerializer.Serialize(writer, data.Value, options);
-			}
 		}
 
 		writer.WriteEndObject();
