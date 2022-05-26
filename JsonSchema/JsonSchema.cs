@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
 
+#pragma warning disable CS0618
+
 namespace Json.Schema;
 
 /// <summary>
