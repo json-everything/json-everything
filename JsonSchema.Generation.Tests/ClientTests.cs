@@ -2,17 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
 
 namespace Json.Schema.Generation.Tests;
 
 public class ClientTests
 {
+	[UsedImplicitly]
 	public class TestMenu
 	{
 		public string Name { get; set; }
@@ -38,6 +41,7 @@ public class ClientTests
 		VerifyGeneration<TestMenu>(expected);
 	}
 
+	[UsedImplicitly]
 	public class TreeNode
 	{
 		public string Value { get; set; }
@@ -46,6 +50,7 @@ public class ClientTests
 		[JsonPropertyName("right")] public TreeNodeMetaData Right { get; set; }
 	}
 
+	[UsedImplicitly]
 	public class TreeNodeMetaData
 	{
 		public TreeNode Node { get; set; }
@@ -90,6 +95,7 @@ public class ClientTests
 		Assert.AreEqual(expected, actual);
 	}
 
+	[UsedImplicitly]
 	private class SimpleValueWidgetSettings
 	{
 		[Required] public string name { get; set; }
@@ -125,6 +131,7 @@ public class ClientTests
 	{
 	}
 
+	[UsedImplicitly]
 	private class ObjectA
 	{
 		public Guid Property1 { get; set; }
@@ -151,6 +158,5 @@ public class ClientTests
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ObjectA>();
 
 		AssertEqual(expected, actual);
-
 	}
 }
