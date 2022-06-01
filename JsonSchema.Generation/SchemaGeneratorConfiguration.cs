@@ -47,8 +47,18 @@ public class SchemaGeneratorConfiguration
 	public Nullability Nullability { get; set; }
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
+	/// <summary>
+	/// Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
+	/// </summary>
+	public bool Optimize { get; set; } = true;
+
 #pragma warning disable CS8618
+	/// <summary>
+	/// Thread-static storage of the current configuration. Only to be used for reading
+	/// the configuration. Setting values on this object will be overwritten when starting
+	/// generation.
+	/// </summary>
 	[field: ThreadStatic]
-	internal static SchemaGeneratorConfiguration Current { get; set; }
+	public static SchemaGeneratorConfiguration Current { get; internal set; }
 #pragma warning restore CS8618
 }
