@@ -15,8 +15,8 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>2.1.0</Version>
-		<FileVersion>2.1.0.0</FileVersion>
+		<Version>2.2.0</Version>
+		<FileVersion>2.2.0.0</FileVersion>
 		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
