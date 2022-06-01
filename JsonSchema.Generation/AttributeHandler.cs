@@ -79,12 +79,20 @@ public static class AttributeHandler
 				if (handlerInterface == null) continue;
 
 				var attributeType = handlerInterface.GetGenericArguments()[0];
-				attribute = attributes.FirstOrDefault(x => x.GetType() == attributeType)!;
+				attribute = attributes.FirstOrDefault(x => x.GetType() == attributeType);
 
 				if (attribute == null) continue;
 			}
 
 			handler.AddConstraints(context, attribute);
 		}
+	}
+
+	internal static IEnumerable<Attribute> WhereHandled(this IEnumerable<Attribute> attributes)
+	{
+		return attributes.Where(x => x is IAttributeHandler ||
+		                             _externalHandlers.Any(h => typeof(IAttributeHandler<>)
+			                             .MakeGenericType(x.GetType())
+			                             .IsInstanceOfType(h)));
 	}
 }

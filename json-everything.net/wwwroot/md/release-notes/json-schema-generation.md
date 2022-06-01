@@ -1,3 +1,11 @@
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/273)
+
+[#272](https://github.com/gregsdennis/json-everything/issues/272) - Miscellaneous attributes can cause incorrect optimizations.
+
+Added `SchemaGeneratorConfiguration.Optimize` to control whether common subschemas are collected into `$defs`.
+
+Exposed `SchemaGeneratorConfiguration.Current` static property for read use by custom generators, etc.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/267)
 
 [#264](https://github.com/gregsdennis/json-everything/issues/264) - Added support for `additionalProperties` and `additionalItems`.

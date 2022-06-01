@@ -37,8 +37,22 @@ public static class SchemaGenerationContextOptimizer
 
 				if (ReferenceEquals(def, context)) continue;
 
-				if (context is MemberGenerationContext memberContext && ReferenceEquals(def, memberContext.BasedOn))
-					context.Intents.Add(refIntent);
+				if (context is MemberGenerationContext memberContext)
+				{
+					if (def.Hash == memberContext.Hash)
+					{
+						context.Intents.Clear();
+						context.Intents.Add(refIntent);
+					}
+					//else if (def.Hash == memberContext.BasedOn.Hash)
+					//{
+					//	// this is always the case because type intents are added first
+					//	// if there are any member attributes (e.g. List<int> with minimum 5)
+					//	// then we won't enter into this block
+					//	context.Intents.RemoveRange(0, memberContext.BasedOn.Intents.Count);
+					//	context.Intents.Add(refIntent);
+					//}
+				}
 			}
 			if (ReferenceEquals(def, root)) continue;
 			defs[name] = def;

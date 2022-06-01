@@ -2,14 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using NUnit.Framework;
+
+using static Json.Schema.Generation.Tests.AssertionExtensions;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
 
 namespace Json.Schema.Generation.Tests;
 
 public class ClientTests
 {
+	[UsedImplicitly]
 	public class TestMenu
 	{
 		public string Name { get; set; }
@@ -35,6 +41,7 @@ public class ClientTests
 		VerifyGeneration<TestMenu>(expected);
 	}
 
+	[UsedImplicitly]
 	public class TreeNode
 	{
 		public string Value { get; set; }
@@ -43,6 +50,7 @@ public class ClientTests
 		[JsonPropertyName("right")] public TreeNodeMetaData Right { get; set; }
 	}
 
+	[UsedImplicitly]
 	public class TreeNodeMetaData
 	{
 		public TreeNode Node { get; set; }
@@ -87,6 +95,7 @@ public class ClientTests
 		Assert.AreEqual(expected, actual);
 	}
 
+	[UsedImplicitly]
 	private class SimpleValueWidgetSettings
 	{
 		[Required] public string name { get; set; }
@@ -115,5 +124,39 @@ public class ClientTests
 		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, new JsonSerializerOptions { WriteIndented = true }));
 		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(simpleValueSettingsSchema1, simpleValueSettingsSchema2);
+	}
+
+	[AttributeUsage(AttributeTargets.Property)]
+	private class UnfortunateAttribute : Attribute
+	{
+	}
+
+	[UsedImplicitly]
+	private class ObjectA
+	{
+		public Guid Property1 { get; set; }
+		[Unfortunate]
+		public Guid Property2 { get; set; }
+	}
+
+	[Test]
+	public void Issue272_UnhandledAttributeShouldBeIgnoredWhenOptimizing()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Property1", new JsonSchemaBuilder().Ref("#/$defs/Guid")),
+				("Property2", new JsonSchemaBuilder().Ref("#/$defs/Guid"))
+			)
+			.Defs(
+				("Guid", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String)
+					.Format(Formats.Uuid)
+				)
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<ObjectA>();
+
+		AssertEqual(expected, actual);
 	}
 }

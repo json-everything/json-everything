@@ -23,5 +23,8 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 	{
 		BasedOn = basedOn;
 		Attributes = attributes;
+
+		if (Hash != BasedOn.Hash)
+			BasedOn.ReferenceCount--;
 	}
 }

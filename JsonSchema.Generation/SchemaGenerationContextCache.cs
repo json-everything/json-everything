@@ -35,7 +35,7 @@ public static class SchemaGenerationContextCache
 	/// </remarks>
 	public static SchemaGenerationContextBase Get(Type type, List<Attribute>? memberAttributes = null)
 	{
-		var hash = CalculateHash(type, memberAttributes);
+		var hash = CalculateHash(type, memberAttributes?.WhereHandled());
 		if (!Cache.TryGetValue(hash, out var context))
 		{
 			if (memberAttributes != null && memberAttributes.Any())
@@ -62,7 +62,7 @@ public static class SchemaGenerationContextCache
 		Cache.Clear();
 	}
 
-	private static int CalculateHash(Type type, IReadOnlyCollection<Attribute>? attributes)
+	private static int CalculateHash(Type type, IEnumerable<Attribute>? attributes)
 	{
 		unchecked
 		{

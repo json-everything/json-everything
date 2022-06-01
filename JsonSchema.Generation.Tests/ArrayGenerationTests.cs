@@ -77,6 +77,42 @@ public class ArrayGenerationTests
 		AssertEqual(expected, actual);
 	}
 
+	[UsedImplicitly]
+	private class MinValueListWithBasicList
+	{
+		[Minimum(5)]
+		[UsedImplicitly]
+		public List<int> List { get; set; }
+		[UsedImplicitly]
+		public List<int> BasicList { get; set; }
+	}
+
+	[Test]
+	public void ListOfIntWithMinValueWithBasicList()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("List", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder()
+						.Type(SchemaValueType.Integer)
+						.Minimum(5)
+					)
+				),
+				("BasicList", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder()
+						.Type(SchemaValueType.Integer)
+					)
+				)
+			);
+
+		var actual = new JsonSchemaBuilder().FromType<MinValueListWithBasicList>();
+
+		AssertEqual(expected, actual);
+	}
+
 	[Title("A test enum")]
 	private enum EnumTest
 	{
