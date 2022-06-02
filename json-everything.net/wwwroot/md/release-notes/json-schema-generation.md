@@ -1,4 +1,8 @@
-# [2.1.0](https://github.com/gregsdennis/json-everything/pull/273)
+# [2.1.1](https://github.com/gregsdennis/json-everything/pull/276)
+
+[#275](https://github.com/gregsdennis/json-everything/issues/275) - Added support for `JsonObject`, `JsonArray`, and `JsonValue`.
+
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/273)
 
 [#272](https://github.com/gregsdennis/json-everything/issues/272) - Miscellaneous attributes can cause incorrect optimizations.
 
