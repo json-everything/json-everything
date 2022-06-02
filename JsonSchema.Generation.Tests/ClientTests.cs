@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -156,6 +158,29 @@ public class ClientTests
 			);
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ObjectA>();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class JsonObjectProp
+	{
+		public JsonObject ObjectProp { get; set; }
+		public JsonArray ArrayProp { get; set; }
+		public JsonValue ValueProp { get; set; }
+	}
+
+	[Test]
+	public void GenerateForPlanImpl()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ObjectProp", new JsonSchemaBuilder().Type(SchemaValueType.Object)),
+				("ArrayProp", new JsonSchemaBuilder().Type(SchemaValueType.Array)),
+				("ValueProp", true)
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<JsonObjectProp>();
 
 		AssertEqual(expected, actual);
 	}

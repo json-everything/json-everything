@@ -67,6 +67,8 @@ public abstract class SchemaGenerationContextBase
 		if (ReferenceEquals(this, True)) return true;
 		if (ReferenceEquals(this, False)) return false;
 
+		if (!Intents.Any()) return true;
+
 		builder ??= new JsonSchemaBuilder();
 
 		foreach (var intent in Intents)

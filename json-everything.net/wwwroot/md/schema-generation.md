@@ -110,6 +110,7 @@ The generator will handle most common types:
 - enumerations (mapped to strings)
 - `Uri`
 - `JsonPointer` (from [JsonPointer.Net](https://www.nuget.org/packages/JsonPointer.Net/))
+- `JsonObject`, `JsonArray`, & `JsonValue` (from namespace `System.Text.Json.Nodes`)
 - `Guid`
 - `DateTime`
 - collections (`IEnumerable<T>`)
