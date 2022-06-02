@@ -22,6 +22,9 @@ public static class GeneratorRegistry
 			new DateTimeSchemaGenerator(),
 			new GuidSchemaGenerator(),
 			new JsonPointerSchemaGenerator(),
+			new JsonArraySchemaGenerator(),
+			new JsonObjectSchemaGenerator(),
+			new JsonValueSchemaGenerator(),
 			new UriSchemaGenerator(),
 			// the dictionary ones are enumerable, so they need to come before the array one
 			new StringDictionarySchemaGenerator(),

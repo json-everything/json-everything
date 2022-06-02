@@ -44,14 +44,6 @@ public static class SchemaGenerationContextOptimizer
 						context.Intents.Clear();
 						context.Intents.Add(refIntent);
 					}
-					//else if (def.Hash == memberContext.BasedOn.Hash)
-					//{
-					//	// this is always the case because type intents are added first
-					//	// if there are any member attributes (e.g. List<int> with minimum 5)
-					//	// then we won't enter into this block
-					//	context.Intents.RemoveRange(0, memberContext.BasedOn.Intents.Count);
-					//	context.Intents.Add(refIntent);
-					//}
 				}
 			}
 			if (ReferenceEquals(def, root)) continue;

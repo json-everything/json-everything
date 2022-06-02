@@ -164,14 +164,21 @@ public class ClientTests
 
 	private class JsonObjectProp
 	{
-		public JsonObject Prop { get; set; }
+		public JsonObject ObjectProp { get; set; }
+		public JsonArray ArrayProp { get; set; }
+		public JsonValue ValueProp { get; set; }
 	}
 
 	[Test]
 	public void GenerateForPlanImpl()
 	{
 		JsonSchema expected = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object);
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ObjectProp", new JsonSchemaBuilder().Type(SchemaValueType.Object)),
+				("ArrayProp", new JsonSchemaBuilder().Type(SchemaValueType.Array)),
+				("ValueProp", true)
+			);
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<JsonObjectProp>();
 
