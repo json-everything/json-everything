@@ -323,6 +323,12 @@ The `AddConstraints()` method works exactly the same as in the generator class. 
 
 The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler<T>`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method, passing the handler type for `T`.
 
+> #### BEWARE
+> 
+> Some intents (e.g. `AnyOfIntent`) take `IEnumerable<ISchemaKeywordIntent[]>`.  Note that this is a collection of intent arrays.  In these cases, each array represents a separate subschema.
+> 
+> The confusing bit is that these also have a `params` overload that appears to just take `ISchemaKeywordIntent[]`.  However, it works the same as the non-`params` overload in that each array represents a subschema.
+
 ### Refiners
 
 Sometimes you may need to make minor adjustments to the generated schemas dynamically.  For this you'll need to create an implementation of `ISchemaRefiner`.
