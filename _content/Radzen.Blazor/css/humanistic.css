@@ -1,3 +1,4 @@
+@charset "UTF-8";
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -7816,6 +7817,10 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   opacity: 0.5;
 }
 
+.rz-datepicker-calendar .rz-datepicker-other-month {
+  opacity: 0.5;
+}
+
 .rz-datepicker-footer {
   position: relative;
   line-height: 2.5rem;
@@ -7876,7 +7881,7 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   background-color: transparent;
   line-height: 1.5rem;
   text-align: inherit;
-  padding: 1px 12px 1px 0.5rem;
+  padding: 1px 18px 1px 0.5rem;
   outline: none;
 }
 
@@ -11464,4 +11469,23 @@ button.rz-colorpicker-trigger .rz-fileupload-row .rz-paginator-element .rz-icon-
 
 .rz-layout .rz-footer {
   grid-area: rz-footer;
+}
+
+.rz-breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.rz-breadcrumb-item + .rz-breadcrumb-item::before {
+  content: '»';
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+
+.rz-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
 }
