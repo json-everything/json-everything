@@ -162,6 +162,7 @@
 	};
 
 	private string _inputLanguage = "json";
+	private IEnumerable<MetadataReference> _references;
 
 #pragma warning restore CS8618
 
@@ -209,8 +210,6 @@
 
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
-
-	private IEnumerable<MetadataReference> _references;
 
 	private static string GetDescription(Draft draft) => draft switch
 	{
@@ -269,7 +268,7 @@
 		}
 	}
 
-	public async Task GenerateData()
+	private async Task GenerateData()
 	{
 		JsonSchema schema;
 		try
@@ -296,7 +295,7 @@
 		}
 	}
 
-	public async Task GenerateSchema()
+	private async Task GenerateSchema()
 	{
 		try
 		{
@@ -333,9 +332,9 @@ namespace JsonEverythingTemp
 				                  "Roslyn doesn't seem to be giving that information out (or I don't know how to " +
 				                  "interpret it.  So instead, here are the errors in raw form.  Good luck.  If you " +
 				                  "know what these mean, please drop a line in a GitHub issue.");
-				var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
-					.Select(x => GetErrorDetails(source, x)));
 				await _instanceEditor.SetValue("Compilation error");
+				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
+				//	.Select(x => GetErrorDetails(source, x)));
 				//await _instanceEditor.SetValue(errors);
 				return;
 			}
@@ -354,17 +353,17 @@ namespace JsonEverythingTemp
 		}
 	}
 
-	private static string GetErrorDetails(string source, Diagnostic diagnostic)
-	{
-		Console.WriteLine(JsonSerializer.Serialize(diagnostic, new JsonSerializerOptions { WriteIndented = true }));
-		//var start = diagnostic.Location.SourceSpan.Start - 115;
-		//var lineNumber = source[..start].Count(x => x == '\n') + 1;
-		//var lastNewLine = source[..start].LastIndexOf('\n') - 1;
-		//var columnNumber = start - lastNewLine;
+	//private static string GetErrorDetails(string source, Diagnostic diagnostic)
+	//{
+	//	Console.WriteLine(JsonSerializer.Serialize(diagnostic, new JsonSerializerOptions { WriteIndented = true }));
+	//	var start = diagnostic.Location.SourceSpan.Start - 115;
+	//	var lineNumber = source[..start].Count(x => x == '\n') + 1;
+	//	var lastNewLine = source[..start].LastIndexOf('\n') - 1;
+	//	var columnNumber = start - lastNewLine;
 
-		//return $"Compilation error at line {lineNumber}, col {columnNumber}";
-		return "Compilation error";
-	}
+	//	return $"Compilation error at line {lineNumber}, col {columnNumber}";
+	//	return "Compilation error";
+	//}
 
 	private async Task HandleSchemaChanged()
 	{
@@ -426,7 +425,7 @@ namespace JsonEverythingTemp
 
 		foreach(var reference in refs.Where(x => !x.IsDynamic))
 		{
-			var stream = await client.GetStreamAsync($"_framework/{reference.FullName.Split(',')[0]}.dll");
+			var stream = await client.GetStreamAsync($"_framework/{reference.FullName!.Split(',')[0]}.dll");
 			references.Add(MetadataReference.CreateFromStream(stream));
 		}
  

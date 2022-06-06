@@ -1,7 +1,15 @@
-﻿@inject IJSRuntime JSRuntime
+﻿ @* ReSharper disable once InconsistentNaming *@
+ @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@using JsonEverythingNet.Services
 @implements IDisposable
+
 @code {
+#pragma warning disable CS8618
+	[Parameter]
+	public Docs Owner { get; set; }
+#pragma warning restore CS8618
+
 	protected override void OnInitialized()
 	{
 		NavigationManager.LocationChanged += OnLocationChanged;
@@ -9,6 +17,8 @@
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
+		if (!firstRender) return;
+
 		await ScrollToFragment();
 	}
 
@@ -19,7 +29,7 @@
 
 	private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
 	{
-		await ScrollToFragment();
+		//await ScrollToFragment();
 	}
 
 	private async Task ScrollToFragment()
@@ -30,17 +40,18 @@
 		{
 			// Handle text fragment (https://example.org/#test:~:text=foo)
 			// https://github.com/WICG/scroll-to-text-fragment/
-			var elementId = fragment.Substring(1);
+			var elementId = fragment[1..];
 			var index = elementId.IndexOf(":~:", StringComparison.Ordinal);
 			if (index > 0)
-			{
-				elementId = elementId.Substring(0, index);
-			}
+				elementId = elementId[..index];
+
+			var ownerDoc = AnchorRegistry.GetPageForFragment(elementId);
+			if (ownerDoc == null) return;
+
+			await Owner.SetPage(ownerDoc);
 
 			if (!string.IsNullOrEmpty(elementId))
-			{
 				await JSRuntime.InvokeVoidAsync("BlazorScrollToId", elementId);
-			}
 		}
 	}
 }

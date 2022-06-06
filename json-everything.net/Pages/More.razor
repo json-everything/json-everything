@@ -21,21 +21,14 @@
 	</div>
 </div>
 
-<div class="row my-4">
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
-		<Tabs>
-			<RadzenTabsItem Text="Overview">
-				<Docs Page="json-more" AddAnchors="true"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
-		<Tabs>
-			<RadzenTabsItem Text="Release Notes">
-				<Docs Page="release-notes/json-more"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
+<div class="row my-4 mx-5">
+	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-more")"/>
+		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-more")"/>
+	</RadzenPanelMenu>
+	<div class="col-10">
+		<Docs @ref="_docs" Page="json-more"/>
+	</div>
 </div>
 
 @code {
@@ -44,5 +37,13 @@
 	{
 		LibraryVersion.GetFor<JsonElementEqualityComparer>(),
 	};
+	private Docs _docs;
 #pragma warning restore CS8618
+
+	private async Task SetPagePath(MouseEventArgs args)
+	{
+		if (args is not MenuItemEventArgs menuArgs) return;
+
+		await _docs.SetPage((string)menuArgs.Value);
+	}
 }
