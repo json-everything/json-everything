@@ -68,21 +68,15 @@
     </label>
 </div>
 
-<div class="row my-4">
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
-		<Tabs>
-			<RadzenTabsItem Text="Overview">
-				<Docs Page="json-logic" AddAnchors="true"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
-		<Tabs>
-			<RadzenTabsItem Text="Release Notes">
-				<Docs Page="release-notes/json-logic"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
+<div class="row my-4 mx-5">
+	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/logic")"/>
+		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-logic")"/>
+		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-logic")"/>
+	</RadzenPanelMenu>
+	<div class="col-10">
+		<Docs @ref="_docs" Page="playground/logic"/>
+	</div>
 </div>
 
 @code {
@@ -90,6 +84,7 @@
 	private MonacoEditor _logicEditor;
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
+	private Docs _docs;
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
@@ -163,4 +158,10 @@
 		await LoadSavedInstance();
 	}
 
+	private async Task SetPagePath(MouseEventArgs args)
+	{
+		if (args is not MenuItemEventArgs menuArgs) return;
+
+		await _docs.SetPage((string)menuArgs.Value);
+	}
 }

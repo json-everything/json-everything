@@ -72,21 +72,15 @@
     </label>
 </div>
 
-<div class="row my-4">
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
-		<Tabs>
-			<RadzenTabsItem Text="Overview">
-				<Docs Page="json-patch" AddAnchors="true"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
-		<Tabs>
-			<RadzenTabsItem Text="Release Notes">
-				<Docs Page="release-notes/json-patch"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
+<div class="row my-4 mx-5">
+	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/patch")"/>
+		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-patch")"/>
+		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-patch")"/>
+	</RadzenPanelMenu>
+	<div class="col-10">
+		<Docs @ref="_docs" Page="playground/patch"/>
+	</div>
 </div>
 
 @code {
@@ -94,6 +88,7 @@
 	private MonacoEditor _patchEditor;
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
+	private Docs _docs;
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
@@ -207,4 +202,10 @@
 		await LoadSavedInstance();
 	}
 
+	private async Task SetPagePath(MouseEventArgs args)
+	{
+		if (args is not MenuItemEventArgs menuArgs) return;
+
+		await _docs.SetPage((string)menuArgs.Value);
+	}
 }

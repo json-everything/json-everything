@@ -71,7 +71,6 @@
 								{
 									if (draft == Draft.Unspecified) continue;
 									<option value="@draft">@GetDescription(draft)</option>
-									@*<option value="@draft">@draft</option>*@
 								}
 							</InputSelect>
 						</label>
@@ -117,52 +116,31 @@
 	</label>
 </div>
 
-<div class="row my-4">
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-7">
-		<Tabs>
-			<RadzenTabsItem Text="Overview">
-				<Docs Page="schema-basics" AddAnchors="true"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text="Vocabularies">
-				<Docs Page="schema-vocabs" AddAnchors="true"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text="Schema Generation">
-				<Docs Page="schema-generation" AddAnchors="true"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text="Data Generation">
-				<Docs Page="schema-datagen" AddAnchors="true"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text="Vocab: Data">
-				<Docs Page="vocabs-data" AddAnchors="true"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text="Vocab: Unique Keys">
-				<Docs Page="vocabs-unique-keys" AddAnchors="true"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
-
-	<RadzenTabs RenderMode="TabRenderMode.Client" class="col-5">
-		<Tabs>
-			<RadzenTabsItem Text="JsonSchema.Net">
-				<Docs Page="release-notes/json-schema"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text=".Generation">
-				<Docs Page="release-notes/json-schema-generation"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text=".DataGeneration">
-				<Docs Page="release-notes/json-schema-datageneration"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text=".Data">
-				<Docs Page="release-notes/json-schema-data"/>
-			</RadzenTabsItem>
-			<RadzenTabsItem Text=".UniqueKeys">
-				<Docs Page="release-notes/json-schema-unique-keys"/>
-			</RadzenTabsItem>
-		</Tabs>
-	</RadzenTabs>
+<div class="row my-4 mx-5">
+	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/schema")"/>
+		<RadzenPanelMenuItem Text="Documentation" Icon="article" Expanded="true">
+			<RadzenPanelMenuItem Text="Overview" Value="@("schema-basics")"/>
+			<RadzenPanelMenuItem Text="Vocabularies" Value="@("schema-vocabs")"/>
+			<RadzenPanelMenuItem Text="Schema Generation" Value="@("schema-generation")"/>
+			<RadzenPanelMenuItem Text="Data Generation" Value="@("schema-datagen")"/>
+			<RadzenPanelMenuItem Text="Vocabulary: data" Value="@("vocabs-data")"/>
+			<RadzenPanelMenuItem Text="Vocabulary: uniqueKeys" Value="@("vocabs-unique-keys")"/>
+		</RadzenPanelMenuItem>
+		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Expanded="true">
+			<RadzenPanelMenuItem Text="JsonSchema.Net" Value="@("release-notes/json-schema")"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.Generation" Value="@("release-notes/json-schema-generation")"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.DataGeneration" Value="@("release-notes/json-schema-datageneration")"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.DataGeneration" Value="@("release-notes/json-schema-data")"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.DataGeneration" Value="@("release-notes/json-schema-unique-keys")"/>
+		</RadzenPanelMenuItem>
+	</RadzenPanelMenu>
+	<div class="col-10">
+		<Docs @ref="_docs" Page="playground/schema"/>
+	</div>
 </div>
 
-@code {
+@code {	
     private const string _generateDataText = "Generate Data";
     private const string _generateSchemaText = "Generate Schema";
 
@@ -170,6 +148,7 @@
 	private MonacoEditor _schemaEditor;
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
+	private Docs _docs;
 
 	private readonly SchemaOptionsModel _options = new();
 
@@ -326,6 +305,10 @@
 			var fullSource = $@"
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using Json.Schema;
 using Json.Schema.Generation;
 
 namespace JsonEverythingTemp
@@ -406,6 +389,13 @@ namespace JsonEverythingTemp
 	private void LoadSavedSettings()
 	{
 		InputLanguage = CookieManager.Get("schema-input-language") ?? "json";
+	}
+
+	private async Task SetPagePath(MouseEventArgs args)
+	{
+		if (args is not MenuItemEventArgs menuArgs) return;
+
+		await _docs.SetPage((string)menuArgs.Value);
 	}
 
 	protected override async Task OnInitializedAsync()
