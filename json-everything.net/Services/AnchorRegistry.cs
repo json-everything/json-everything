@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using JsonEverythingNet.Shared;
 using Markdig;
+using Markdig.SyntaxHighlighting;
 
 namespace JsonEverythingNet.Services
 {
@@ -12,23 +13,18 @@ namespace JsonEverythingNet.Services
 		public static async Task RegisterDocs(HttpClient client)
 		{
 			await RegisterAnchors(client, "json-more");
-			await RegisterAnchors(client, "release-notes/json-more");
 
 			await RegisterAnchors(client, "playground/patch");
 			await RegisterAnchors(client, "json-patch");
-			await RegisterAnchors(client, "release-notes/json-patch");
 
 			await RegisterAnchors(client, "playground/path");
 			await RegisterAnchors(client, "json-path");
-			await RegisterAnchors(client, "release-notes/json-path");
 
 			await RegisterAnchors(client, "playground/pointer");
 			await RegisterAnchors(client, "json-pointer");
-			await RegisterAnchors(client, "release-notes/json-pointer");
 
 			await RegisterAnchors(client, "playground/logic");
 			await RegisterAnchors(client, "json-logic");
-			await RegisterAnchors(client, "release-notes/json-logic");
 
 			await RegisterAnchors(client, "playground/schema");
 			await RegisterAnchors(client, "schema-basics");
@@ -37,25 +33,23 @@ namespace JsonEverythingNet.Services
 			await RegisterAnchors(client, "schema-vocabs");
 			await RegisterAnchors(client, "vocabs-data");
 			await RegisterAnchors(client, "vocabs-unique-keys");
-			await RegisterAnchors(client, "release-notes/json-schema");
-			await RegisterAnchors(client, "release-notes/json-schema-data");
-			await RegisterAnchors(client, "release-notes/json-schema-datageneration");
-			await RegisterAnchors(client, "release-notes/json-schema-generation");
-			await RegisterAnchors(client, "release-notes/json-schema-unique-keys");
 		}
 
 		private static async Task RegisterAnchors(HttpClient client, string page)
 		{
 			var markdown = await client.GetStringAsync($"/md/{page}.md");
-			var html = Markdown.ToHtml(markdown);
+			var pipeline = new MarkdownPipelineBuilder()
+				.UseAdvancedExtensions()
+				.UseSyntaxHighlighting()
+				.Build();
+			var html = Markdown.ToHtml(markdown, pipeline);
 
 			var matches = Docs.HeaderPattern.Matches(html);
 			var first = true;
 
 			foreach (Match match in matches)
 			{
-				var headerText = match.Groups[2].Value;
-				var href = GetHrefFromText(headerText);
+				var href = match.Groups[2].Value;
 
 				_registry[href] = page;
 				if (!first) continue;
