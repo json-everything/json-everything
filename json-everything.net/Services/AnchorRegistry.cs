@@ -12,27 +12,29 @@ namespace JsonEverythingNet.Services
 
 		public static async Task RegisterDocs(HttpClient client)
 		{
-			await RegisterAnchors(client, "json-more");
+			await Task.WhenAll(
+				RegisterAnchors(client, "json-more"),
 
-			await RegisterAnchors(client, "playground/patch");
-			await RegisterAnchors(client, "json-patch");
+				RegisterAnchors(client, "playground/patch"),
+				RegisterAnchors(client, "json-patch"),
 
-			await RegisterAnchors(client, "playground/path");
-			await RegisterAnchors(client, "json-path");
+				RegisterAnchors(client, "playground/path"),
+				RegisterAnchors(client, "json-path"),
 
-			await RegisterAnchors(client, "playground/pointer");
-			await RegisterAnchors(client, "json-pointer");
+				RegisterAnchors(client, "playground/pointer"),
+				RegisterAnchors(client, "json-pointer"),
 
-			await RegisterAnchors(client, "playground/logic");
-			await RegisterAnchors(client, "json-logic");
+				RegisterAnchors(client, "playground/logic"),
+				RegisterAnchors(client, "json-logic"),
 
-			await RegisterAnchors(client, "playground/schema");
-			await RegisterAnchors(client, "schema-basics");
-			await RegisterAnchors(client, "schema-datagen");
-			await RegisterAnchors(client, "schema-generation");
-			await RegisterAnchors(client, "schema-vocabs");
-			await RegisterAnchors(client, "vocabs-data");
-			await RegisterAnchors(client, "vocabs-unique-keys");
+				RegisterAnchors(client, "playground/schema"),
+				RegisterAnchors(client, "schema-basics"),
+				RegisterAnchors(client, "schema-datagen"),
+				RegisterAnchors(client, "schema-generation"),
+				RegisterAnchors(client, "schema-vocabs"),
+				RegisterAnchors(client, "vocabs-data"),
+				RegisterAnchors(client, "vocabs-unique-keys")
+			);
 		}
 
 		private static async Task RegisterAnchors(HttpClient client, string page)

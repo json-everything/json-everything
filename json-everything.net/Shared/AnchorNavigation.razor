@@ -1,5 +1,5 @@
-﻿ @* ReSharper disable once InconsistentNaming *@
- @inject IJSRuntime JSRuntime
+﻿@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 @using JsonEverythingNet.Services
 @implements IDisposable
@@ -27,7 +27,7 @@
 		NavigationManager.LocationChanged -= OnLocationChanged;
 	}
 
-	private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+	private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
 	{
 		//await ScrollToFragment();
 	}
