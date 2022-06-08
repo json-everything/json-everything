@@ -188,7 +188,7 @@ JsonSchema<nsp>.Net contains several attributes that you should use to specify s
 
 To make JsonSchema<nsp>.Net aware of your keyword, you must register it with `SchemaKeywordRegistry.Register<T>()`.  This will enable deserialization.
 
-## Now make it nice to use
+### Now make it nice to use
 
 To enable the fluent construction interface for your keyword, simply create an extension method on `JsonSchemaBuilder` that adds the keyword and returns the builder.  For example, adding a `description` keyword is implemented by this method:
 
