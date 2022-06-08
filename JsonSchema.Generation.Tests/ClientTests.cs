@@ -222,6 +222,7 @@ public class ClientTests
 	}
 
 	[Test]
+	[Ignore("Works as expected.  See issue.")]
 	public void Issue277_AttributeMixup()
 	{
 		JsonSchemaBuilder jsonSchemaBuilder = new();
