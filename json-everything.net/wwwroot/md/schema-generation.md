@@ -211,7 +211,9 @@ To explain _how_ it does, we need to discuss intents.
 
 The context holds all of the data you need to determine which intents need to be applied.  It is defined by a base class, `SchemaGeneratorContextBase`, and two derivations, `TypeGenerationContext` and `MemberGenerationContext`.
 
-`TypeGenerationContext` represents generation of just a type, whereas `MemberGenerationContext` represents generation of an object member, which will have a type (which may have its own attributes) _and_ possibly additional attributes as a member.
+`TypeGenerationContext` represents generation of just a type (including attributes present on the type itself), whereas `MemberGenerationContext` represents generation of an object member, which will have a type (and its attributes) _and_ possibly additional attributes as a member.
+
+***IMPORTANT** `MemberGenerationContext` will only be created if there are _handled_ attributes; attributes which are unhandled will be ignored, so two properties with the same type, but different sets of unhandled custom attributes will receive the same context object.  See the Attributes section below for more on handling custom attributes.*
 
 The data exposed by contexts are:
 

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
+using Json.Schema.Generation.Intents;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
@@ -183,5 +185,55 @@ public class ClientTests
 		JsonSchema actual = new JsonSchemaBuilder().FromType<JsonObjectProp>();
 
 		AssertEqual(expected, actual);
+	}
+
+	public class Person
+	{
+		[MyAttribute1]
+		public string FirstName { get; set; }
+		[MyAttribute2]
+		public string LastName { get; set; }
+	}
+
+	[AttributeUsage(AttributeTargets.Property)]
+	public class MyAttribute1 : Attribute { }
+
+	[AttributeUsage(AttributeTargets.Property)]
+	public class MyAttribute2 : Attribute { }
+
+	public class PersonRefiner : ISchemaRefiner
+	{
+		public Dictionary<string, List<Type>> FoundAttributes { get; } = new();
+
+		public void Run(SchemaGenerationContextBase context)
+		{
+			var properties = context.Intents.OfType<PropertiesIntent>().Single();
+			var firstNameContext = (MemberGenerationContext)properties.Properties["FirstName"];
+			var lastNameContext = (MemberGenerationContext)properties.Properties["LastName"];
+
+			FoundAttributes[nameof(Person.FirstName)] = firstNameContext.Attributes.Select(x => x.GetType()).ToList();
+			FoundAttributes[nameof(Person.LastName)] = lastNameContext.Attributes.Select(x => x.GetType()).ToList();
+		}
+
+		public bool ShouldRun(SchemaGenerationContextBase context)
+		{
+			return context.Type == typeof(Person);
+		}
+	}
+
+	[Test]
+	[Ignore("Works as expected.  See issue.")]
+	public void Issue277_AttributeMixup()
+	{
+		JsonSchemaBuilder jsonSchemaBuilder = new();
+		SchemaGeneratorConfiguration generatorConfiguration = new();
+		var personRefiner = new PersonRefiner();
+		generatorConfiguration.Refiners.Add(personRefiner);
+		jsonSchemaBuilder.FromType(typeof(Person), generatorConfiguration).Build();
+
+		Assert.AreEqual(1, personRefiner.FoundAttributes[nameof(Person.FirstName)].Count);
+		Assert.IsTrue(personRefiner.FoundAttributes[nameof(Person.FirstName)][0] == typeof(MyAttribute1));
+		Assert.AreEqual(1, personRefiner.FoundAttributes[nameof(Person.LastName)].Count);
+		Assert.IsTrue(personRefiner.FoundAttributes[nameof(Person.LastName)][0] == typeof(MyAttribute2));
 	}
 }
