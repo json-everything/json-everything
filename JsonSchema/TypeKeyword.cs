@@ -77,6 +77,9 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 			case SchemaValueType.String:
 				isValid = Type.HasFlag(SchemaValueType.String);
 				break;
+			case SchemaValueType.Integer:
+				isValid = Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number);
+				break;
 			case SchemaValueType.Number:
 				if (Type.HasFlag(SchemaValueType.Number))
 					isValid = true;

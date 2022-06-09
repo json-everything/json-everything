@@ -83,7 +83,7 @@ internal class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 	}
 	public override void Write(Utf8JsonWriter writer, DefaultKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ConstKeyword.Name);
+		writer.WritePropertyName(DefaultKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }
