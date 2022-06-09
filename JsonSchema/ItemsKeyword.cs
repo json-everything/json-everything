@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -80,13 +81,15 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
+		var array = (JsonArray)context.LocalInstance!;
 		bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 		var overallResult = true;
 		if (SingleSchema != null)
@@ -109,11 +112,11 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 				startIndex = (int)annotation;
 			}
 
-			for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
+			for (int i = startIndex; i < array.Count; i++)
 			{
 				var i1 = i;
 				context.Log(() => $"Validating item at index {i1}.");
-				var item = context.LocalInstance[i];
+				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
 				SingleSchema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
@@ -139,13 +142,13 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 				return;
 			}
 			context.Options.LogIndentLevel++;
-			var maxEvaluations = Math.Min(ArraySchemas!.Count, context.LocalInstance.GetArrayLength());
+			var maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
 			for (int i = 0; i < maxEvaluations; i++)
 			{
 				var i1 = i;
 				context.Log(() => $"Validating item at index {i1}.");
 				var schema = ArraySchemas[i];
-				var item = context.LocalInstance[i];
+				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
@@ -160,7 +163,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			if (overwriteAnnotation)
 			{
 				// TODO: add message
-				if (maxEvaluations == context.LocalInstance.GetArrayLength())
+				if (maxEvaluations == array.Count)
 					context.LocalResult.SetAnnotation(Name, true);
 				else
 					context.LocalResult.SetAnnotation(Name, maxEvaluations);
@@ -186,11 +189,6 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
 		if (!Equals(value, -1))
 			localResults.SetAnnotation(Name, value);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

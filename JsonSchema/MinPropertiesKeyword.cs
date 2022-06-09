@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Schema;
@@ -41,14 +42,15 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var number = context.LocalInstance.EnumerateObject().Count();
+		var number = ((JsonObject)context.LocalInstance!).Count;
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else

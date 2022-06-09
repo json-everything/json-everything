@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -48,13 +49,15 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
+		var obj = (JsonObject)context.LocalInstance!;
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
 		foreach (var property in Requirements)
@@ -62,7 +65,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 			context.Log(() => $"Validating property '{property.Key}'.");
 			var requirements = property.Value;
 			var name = property.Key;
-			if (!context.LocalInstance.TryGetProperty(name, out _))
+			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
@@ -86,7 +89,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 				var missingDependencies = new List<string>();
 				foreach (var dependency in requirements.Requirements!)
 				{
-					if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
+					if (obj.TryGetPropertyValue(dependency, out _)) continue;
 
 					overallResult = false;
 					missingDependencies.Add(dependency);
@@ -124,11 +127,6 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 			annotation.AddRange(allDependencies);
 		else if (allDependencies.Any())
 			localResults.SetAnnotation(Name, allDependencies);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

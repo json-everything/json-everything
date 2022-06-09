@@ -13,7 +13,7 @@ namespace Json.More;
 /// - Objects are unordered.
 /// - Arrays are ordered.
 /// </remarks>
-public class JsonNodeEqualityComparer : IEqualityComparer<JsonNode>
+public class JsonNodeEqualityComparer : IEqualityComparer<JsonNode?>
 {
 	/// <summary>
 	/// A singleton instance for convenience.
@@ -24,7 +24,7 @@ public class JsonNodeEqualityComparer : IEqualityComparer<JsonNode>
 	/// <param name="x">The first object of type T to compare.</param>
 	/// <param name="y">The second object of type T to compare.</param>
 	/// <returns>true if the specified objects are equal; otherwise, false.</returns>
-	public bool Equals(JsonNode x, JsonNode y)
+	public bool Equals(JsonNode? x, JsonNode? y)
 	{
 		return x.IsEquivalentTo(y);
 	}
@@ -33,8 +33,8 @@ public class JsonNodeEqualityComparer : IEqualityComparer<JsonNode>
 	/// <param name="obj">The <see cref="T:System.Object"></see> for which a hash code is to be returned.</param>
 	/// <returns>A hash code for the specified object.</returns>
 	/// <exception cref="T:System.ArgumentNullException">The type of <paramref name="obj">obj</paramref> is a reference type and <paramref name="obj">obj</paramref> is null.</exception>
-	public int GetHashCode(JsonNode obj)
+	public int GetHashCode(JsonNode? obj)
 	{
-		return obj.GetEquivalenceHashCode();
+		return obj?.GetEquivalenceHashCode() ?? 0;
 	}
 }

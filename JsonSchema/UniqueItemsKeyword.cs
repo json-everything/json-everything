@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -43,10 +44,11 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var scheamValueType = context.LocalInstance.GetSchemaValueType();
+		if (scheamValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(scheamValueType);
 			return;
 		}
 
@@ -57,12 +59,12 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 			return;
 		}
 
-		var count = context.LocalInstance.GetArrayLength();
+		var array = (JsonArray)context.LocalInstance!;
 		var duplicates = new List<(int, int)>();
-		for (int i = 0; i < count - 1; i++)
-			for (int j = i + 1; j < count; j++)
+		for (int i = 0; i < array.Count - 1; i++)
+			for (int j = i + 1; j < array.Count; j++)
 			{
-				if (context.LocalInstance[i].IsEquivalentTo(context.LocalInstance[j]))
+				if (array[i].IsEquivalentTo(array[j]))
 					duplicates.Add((i, j));
 			}
 

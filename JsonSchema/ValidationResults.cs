@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -173,7 +172,7 @@ public class ValidationResults
 	/// </summary>
 	/// <param name="owner">The annotation key.  Typically the name of the keyword.</param>
 	/// <param name="value">The annotation value.</param>
-	public void SetAnnotation(string owner, object value)
+	public void SetAnnotation(string owner, object? value)
 	{
 		AddAnnotation(new Annotation(owner, value, SchemaLocation) { WasConsolidated = _isConsolidating });
 	}
@@ -208,7 +207,7 @@ public class ValidationResults
 	{
 		if (!HasAnnotations) return Enumerable.Empty<T>();
 		return Annotations.Where(x => x.Owner == key && x.Value is T)
-			.Select(x => (T)x.Value);
+			.Select(x => (T)x.Value!);
 	}
 
 	/// <summary>
@@ -237,7 +236,7 @@ public class ValidationResults
 	/// </summary>
 	/// <param name="message">The error message.</param>
 	/// <param name="parameters">Parameters to replace in the message.</param>
-	public void Fail(string message, params (string token, object value)[] parameters)
+	public void Fail(string message, params (string token, object? value)[] parameters)
 	{
 		IsValid = false;
 		Message = message.ReplaceTokens(parameters);

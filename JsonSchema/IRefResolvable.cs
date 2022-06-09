@@ -11,14 +11,6 @@ namespace Json.Schema;
 public interface IRefResolvable
 {
 	/// <summary>
-	/// Resolves a JSON Pointer segment to another <see cref="IRefResolvable"/> node.
-	/// Usually, these are schemas stored within the keyword.
-	/// </summary>
-	/// <param name="value">A JSON Pointer segment.</param>
-	/// <returns>Another <see cref="IRefResolvable"/> or null.</returns>
-	[Obsolete("This method is no longer used.  It will be removed in the next major version.")]
-	IRefResolvable? ResolvePointerSegment(string? value);
-	/// <summary>
 	/// Passes registration of any subschemas back to <see cref="JsonSchema.RegisterSubschemas(SchemaRegistry,Uri)"/>.
 	/// </summary>
 	/// <param name="registry">The registry into which the subschema should be registered.</param>

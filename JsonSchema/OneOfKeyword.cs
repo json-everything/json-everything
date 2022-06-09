@@ -76,11 +76,6 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
-	}
-
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
 		foreach (var schema in Schemas)

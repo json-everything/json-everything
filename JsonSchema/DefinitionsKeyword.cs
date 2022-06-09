@@ -45,11 +45,6 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSche
 		context.ExitKeyword(Name, true);
 	}
 
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
-	}
-
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
 		foreach (var schema in Definitions.Values)

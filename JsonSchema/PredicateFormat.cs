@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -14,9 +14,9 @@ public class PredicateFormat : Format
 	/// <param name="element">The element to validate.</param>
 	/// <param name="errorMessage">An error message.</param>
 	/// <returns><code>true</code>.  Override to return another value.</returns>
-	public delegate bool PredicateWithErrorMessage(JsonElement element, out string? errorMessage);
+	public delegate bool PredicateWithErrorMessage(JsonNode? element, out string? errorMessage);
 
-	private readonly Func<JsonElement, bool>? _predicate;
+	private readonly Func<JsonNode?, bool>? _predicate;
 	private readonly PredicateWithErrorMessage? _predicateWithErrorMessage;
 
 	/// <summary>
@@ -24,7 +24,7 @@ public class PredicateFormat : Format
 	/// </summary>
 	/// <param name="key">The format key.</param>
 	/// <param name="predicate">The predicate.</param>
-	public PredicateFormat(string key, Func<JsonElement, bool> predicate)
+	public PredicateFormat(string key, Func<JsonNode?, bool> predicate)
 		: base(key)
 	{
 		_predicate = predicate;
@@ -42,23 +42,12 @@ public class PredicateFormat : Format
 	}
 
 	/// <summary>
-	/// Validates an instance against a format.
-	/// </summary>
-	/// <param name="element">The element to validate.</param>
-	/// <returns>The result of the predicate.</returns>
-	[Obsolete("This method isn't called anymore.  It will be removed in the next major version.")]
-	public override bool Validate(JsonElement element)
-	{
-		return Validate(element, out _);
-	}
-
-	/// <summary>
 	/// Validates an instance against a format and provides an error message.
 	/// </summary>
 	/// <param name="element">The element to validate.</param>
 	/// <param name="errorMessage"></param>
 	/// <returns><code>true</code>.  Override to return another value.</returns>
-	public override bool Validate(JsonElement element, out string? errorMessage)
+	public override bool Validate(JsonNode? element, out string? errorMessage)
 	{
 		if (_predicateWithErrorMessage != null)
 			return _predicateWithErrorMessage(element, out errorMessage);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -22,7 +23,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 {
 	internal const string Name = "enum";
 
-	private readonly HashSet<JsonElement> _values;
+	private readonly HashSet<JsonNode?> _values;
 
 	/// <summary>
 	/// The collection of enum values.
@@ -30,16 +31,16 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// <remarks>
 	/// Enum values aren't necessarily strings; they can be of any JSON value.
 	/// </remarks>
-	public IReadOnlyCollection<JsonElement> Values => _values;
+	public IReadOnlyCollection<JsonNode?> Values => _values;
 
 	/// <summary>
 	/// Creates a new <see cref="EnumKeyword"/>.
 	/// </summary>
 	/// <param name="values">The collection of enum values.</param>
-	public EnumKeyword(params JsonElement[] values)
+	public EnumKeyword(params JsonNode?[] values)
 	{
-		_values = new HashSet<JsonElement>(values.Select(e => e.Clone()) ?? throw new ArgumentNullException(nameof(values)),
-			JsonElementEqualityComparer.Instance);
+		_values = new HashSet<JsonNode?>(values ?? throw new ArgumentNullException(nameof(values)),
+			JsonNodeEqualityComparer.Instance);
 
 		if (_values.Count != values.Length)
 			throw new ArgumentException("`enum` requires unique values");
@@ -49,10 +50,10 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// Creates a new <see cref="EnumKeyword"/>.
 	/// </summary>
 	/// <param name="values">The collection of enum values.</param>
-	public EnumKeyword(IEnumerable<JsonElement> values)
+	public EnumKeyword(IEnumerable<JsonNode?> values)
 	{
-		_values = new HashSet<JsonElement>(values.Select(e => e.Clone()).ToList() ??
-										   throw new ArgumentNullException(nameof(values)), JsonElementEqualityComparer.Instance);
+		_values = new HashSet<JsonNode?>(values ?? throw new ArgumentNullException(nameof(values)),
+			JsonNodeEqualityComparer.Instance);
 
 		if (_values.Count != values.Count())
 			throw new ArgumentException("`enum` requires unique values");
@@ -65,7 +66,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (Values.Contains(context.LocalInstance, JsonElementEqualityComparer.Instance))
+		if (Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
 			context.LocalResult.Pass();
 		else
 			context.LocalResult.Fail(ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
@@ -82,7 +83,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		// Don't need ContentsEqual here because that method considers counts.
 		// We know that with a hash set, all counts are 1.
 		return Values.Count == other.Values.Count &&
-			   Values.All(x => other.Values.Contains(x, JsonElementEqualityComparer.Instance));
+			   Values.All(x => other.Values.Contains(x, JsonNodeEqualityComparer.Instance));
 	}
 
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -97,7 +98,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		return Values.GetUnorderedCollectionHashCode(element => element.GetEquivalenceHashCode());
+		return Values.GetUnorderedCollectionHashCode(element => element?.GetEquivalenceHashCode() ?? 0);
 	}
 }
 
@@ -105,23 +106,19 @@ internal class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 {
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		using var document = JsonDocument.ParseValue(ref reader);
+		var array = JsonSerializer.Deserialize<JsonArray>(ref reader);
+		if (array is null)
+			throw new JsonException("Expected an array, but received null");
 
-		if (document.RootElement.ValueKind != JsonValueKind.Array)
-			throw new JsonException("Expected array");
-
-		if (document.RootElement.GetArrayLength() == 0)
-			throw new JsonException("Enums must contain a value");
-
-		return new EnumKeyword(document.RootElement.EnumerateArray());
+		return new EnumKeyword((IEnumerable<JsonNode>)array!);
 	}
 	public override void Write(Utf8JsonWriter writer, EnumKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(EnumKeyword.Name);
 		writer.WriteStartArray();
-		foreach (var element in value.Values)
+		foreach (var node in value.Values)
 		{
-			writer.WriteValue(element);
+			JsonSerializer.Serialize(writer, node, options);
 		}
 		writer.WriteEndArray();
 	}

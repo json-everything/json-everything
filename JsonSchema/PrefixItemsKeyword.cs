@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -60,20 +61,22 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
+		var array = (JsonArray)context.LocalInstance!;
 		bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 		var overallResult = true;
-		var maxEvaluations = Math.Min(ArraySchemas.Count, context.LocalInstance.GetArrayLength());
+		var maxEvaluations = Math.Min(ArraySchemas.Count, array.Count);
 		for (int i = 0; i < maxEvaluations; i++)
 		{
 			var schema = ArraySchemas[i];
-			var item = context.LocalInstance[i];
+			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 				item,
 				context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
@@ -85,7 +88,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 
 		if (overwriteAnnotation)
 		{
-			if (maxEvaluations == context.LocalInstance.GetArrayLength())
+			if (maxEvaluations == array.Count)
 				context.LocalResult.SetAnnotation(Name, true);
 			else
 				context.LocalResult.SetAnnotation(Name, maxEvaluations);
@@ -112,11 +115,6 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 			localResults.SetAnnotation(Name, value);
 	}
 
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
-	}
-
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
 		foreach (var schema in ArraySchemas)
@@ -132,8 +130,6 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	{
 		if (ReferenceEquals(null, other)) return false;
 		if (ReferenceEquals(this, other)) return true;
-		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-		if (other.ArraySchemas == null) return false;
 
 		return ArraySchemas.ContentsEqual(other.ArraySchemas);
 	}

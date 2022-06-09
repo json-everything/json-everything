@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
 namespace Json.Schema;
@@ -161,48 +161,48 @@ public static class Formats
 		return new UnknownFormat(name);
 	}
 
-	private static bool CheckAbsoluteUri(JsonElement element)
+	private static bool CheckAbsoluteUri(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return System.Uri.TryCreate(element.GetString(), UriKind.Absolute, out _);
+		return System.Uri.TryCreate(node!.GetValue<string>(), UriKind.Absolute, out _);
 	}
 
-	private static bool CheckUri(JsonElement element)
+	private static bool CheckUri(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return System.Uri.TryCreate(element.GetString(), UriKind.RelativeOrAbsolute, out _);
+		return System.Uri.TryCreate(node!.GetValue<string>(), UriKind.RelativeOrAbsolute, out _);
 	}
 
-	private static bool CheckUriTemplate(JsonElement element)
+	private static bool CheckUriTemplate(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		throw new NotSupportedException("The UriTemplate class has not been ported to .Net Standard/Core yet.");
-		//return System.UriTemplate.Match(element.GetString());
+		//return System.UriTemplate.Match(node.GetValue<string>());
 	}
 
-	private static bool CheckJsonPointer(JsonElement element)
+	private static bool CheckJsonPointer(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Pointer.JsonPointer.TryParse(element.GetString()!, out var p) && !p!.IsUriEncoded;
+		return Pointer.JsonPointer.TryParse(node!.GetValue<string>(), out var p) && !p!.IsUriEncoded;
 	}
 
-	private static bool CheckRelativeJsonPointer(JsonElement element)
+	private static bool CheckRelativeJsonPointer(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Pointer.RelativeJsonPointer.TryParse(element.GetString()!, out _);
+		return Pointer.RelativeJsonPointer.TryParse(node!.GetValue<string>(), out _);
 	}
 
 	// source: https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
-	private static bool CheckEmail(JsonElement element)
+	private static bool CheckEmail(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var email = element.GetString();
+		var email = node!.GetValue<string>();
 
 		if (string.IsNullOrWhiteSpace(email)) return false;
 
@@ -245,77 +245,77 @@ public static class Formats
 		return match.Groups[1].Value + domainName;
 	}
 
-	private static bool CheckUuid(JsonElement element)
+	private static bool CheckUuid(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Guid.TryParseExact(element.GetString(), "D", out _);
+		return Guid.TryParseExact(node!.GetValue<string>(), "D", out _);
 	}
 
-	private static bool CheckDate(JsonElement element)
+	private static bool CheckDate(JsonNode? node)
 	{
-		return CheckDateFormat(element, "yyyy-MM-dd");
+		return CheckDateFormat(node, "yyyy-MM-dd");
 	}
 
-	private static bool CheckTime(JsonElement element)
+	private static bool CheckTime(JsonNode? node)
 	{
-		return CheckDateFormat(element, _timeFormats);
+		return CheckDateFormat(node, _timeFormats);
 	}
 
-	private static bool CheckDateTime(JsonElement element)
+	private static bool CheckDateTime(JsonNode? node)
 	{
-		return CheckDateFormat(element, _dateTimeFormats);
+		return CheckDateFormat(node, _dateTimeFormats);
 	}
 
-	private static bool CheckDateFormat(JsonElement element, params string[] formats)
+	private static bool CheckDateFormat(JsonNode? node, params string[] formats)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return System.DateTime.TryParseExact(element.GetString()!.ToUpperInvariant(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+		return System.DateTime.TryParseExact(node!.GetValue<string>().ToUpperInvariant(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
 	}
 
-	private static bool CheckHostName(JsonElement element)
+	private static bool CheckHostName(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var type = System.Uri.CheckHostName(element.GetString());
+		var type = System.Uri.CheckHostName(node!.GetValue<string>());
 
 		return type != UriHostNameType.Unknown;
 	}
 
-	private static bool CheckIpv4(JsonElement element)
+	private static bool CheckIpv4(JsonNode? node)
 	{
-		return CheckHostName(element, UriHostNameType.IPv4);
+		return CheckHostName(node, UriHostNameType.IPv4);
 	}
 
-	private static bool CheckIpv6(JsonElement element)
+	private static bool CheckIpv6(JsonNode? node)
 	{
-		return CheckHostName(element, UriHostNameType.IPv6);
+		return CheckHostName(node, UriHostNameType.IPv6);
 	}
 
-	private static bool CheckHostName(JsonElement element, UriHostNameType type)
+	private static bool CheckHostName(JsonNode? node, UriHostNameType type)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var actualType = System.Uri.CheckHostName(element.GetString());
+		var actualType = System.Uri.CheckHostName(node!.GetValue<string>());
 
 		return actualType == type;
 	}
 
-	private static bool CheckDuration(JsonElement element)
+	private static bool CheckDuration(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Schema.Duration.TryParse(element.GetString()!, out _);
+		return Schema.Duration.TryParse(node!.GetValue<string>(), out _);
 	}
 
-	private static bool CheckRegex(JsonElement element)
+	private static bool CheckRegex(JsonNode? node)
 	{
-		if (element.ValueKind != JsonValueKind.String) return true;
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		try
 		{
-			var _ = new Regex(element.GetString()!);
+			var _ = new Regex(node!.GetValue<string>());
 			return true;
 		}
 		catch

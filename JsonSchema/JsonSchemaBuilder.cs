@@ -63,7 +63,7 @@ public class JsonSchemaBuilder
 		if (duplicates.Any())
 			throw new ArgumentException($"Found duplicate keywords: [{string.Join(", ", duplicates)}]");
 
-		return new JsonSchema(_keywords.Values, null);
+		return new JsonSchema(_keywords.Values);
 	}
 
 	/// <summary>

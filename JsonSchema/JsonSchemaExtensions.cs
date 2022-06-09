@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -8,7 +10,7 @@ namespace Json.Schema;
 public static class JsonSchemaExtensions
 {
 	/// <summary>
-	/// Extends <see cref="JsonSchema.Validate(JsonElement,ValidationOptions)"/> to take <see cref="JsonDocument"/>.
+	/// Extends <see cref="JsonSchema.Validate(JsonNode?,ValidationOptions)"/> to take <see cref="JsonDocument"/>.
 	/// </summary>
 	/// <param name="jsonSchema">The schema.</param>
 	/// <param name="jsonDocument">Document to be validated.</param>
@@ -20,7 +22,19 @@ public static class JsonSchemaExtensions
 	}
 
 	/// <summary>
-	/// Extends <see cref="JsonSchema.Validate(JsonElement,ValidationOptions)"/> to take <see cref="JsonDocument"/>.
+	/// Extends <see cref="JsonSchema.Validate(JsonNode?,ValidationOptions)"/> to take <see cref="JsonElement"/>.
+	/// </summary>
+	/// <param name="jsonSchema">The schema.</param>
+	/// <param name="jsonElement">Element to be validated.</param>
+	/// <param name="options">The options to use for this validation.</param>
+	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
+	public static ValidationResults Validate(this JsonSchema jsonSchema, JsonElement jsonElement, ValidationOptions? options = null)
+	{
+		return jsonSchema.Validate(jsonElement.AsNode(), options);
+	}
+
+	/// <summary>
+	/// Extends <see cref="JsonSchema.Validate(JsonNode?,ValidationOptions)"/> to take <see cref="string"/>.
 	/// </summary>
 	/// <param name="jsonSchema">The schema.</param>
 	/// <param name="jsonString">A string containing a JSON instance to be validated.</param>

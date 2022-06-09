@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -46,10 +47,11 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
@@ -71,11 +73,12 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		}
 		var startIndex = (int)annotation;
 
-		for (int i = startIndex; i < context.LocalInstance.GetArrayLength(); i++)
+		var array = (JsonArray)context.LocalInstance!;
+		for (int i = startIndex; i < array.Count; i++)
 		{
 			var i1 = i;
 			context.Log(() => $"Validating item at index {i1}.");
-			var item = context.LocalInstance[i];
+			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
 			Schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;
@@ -97,11 +100,6 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	{
 		if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
 			localResults.SetAnnotation(Name, true);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

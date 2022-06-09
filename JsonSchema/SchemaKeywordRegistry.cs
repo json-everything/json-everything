@@ -31,11 +31,10 @@ public static class SchemaKeywordRegistry
 				.ToDictionary(k => k.Keyword, k => k.Type));
 
 		using var document = JsonDocument.Parse("null");
-		var nullElement = document.RootElement;
 		_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>
 		{
-			[typeof(ConstKeyword)] = new ConstKeyword(nullElement),
-			[typeof(DefaultKeyword)] = new DefaultKeyword(nullElement)
+			[typeof(ConstKeyword)] = new ConstKeyword(null),
+			[typeof(DefaultKeyword)] = new DefaultKeyword(null)
 		};
 	}
 

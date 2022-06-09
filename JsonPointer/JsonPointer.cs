@@ -364,7 +364,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <param name="root">The <see cref="JsonNode"/>.</param>
 	/// <param name="result">The result, if return value is true; null otherwise</param>
 	/// <returns>true if a value exists at the indicate path; false otherwise.</returns>
-	public bool TryEvaluate(JsonNode root, out JsonNode? result)
+	public bool TryEvaluate(JsonNode? root, out JsonNode? result)
 	{
 		var current = root;
 		result = null;

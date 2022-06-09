@@ -65,44 +65,43 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 	{
 		context.EnterKeyword(Name);
 		bool isValid;
-		switch (context.LocalInstance.ValueKind)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		switch (schemaValueType)
 		{
-			case JsonValueKind.Object:
+			case SchemaValueType.Object:
 				isValid = Type.HasFlag(SchemaValueType.Object);
 				break;
-			case JsonValueKind.Array:
+			case SchemaValueType.Array:
 				isValid = Type.HasFlag(SchemaValueType.Array);
 				break;
-			case JsonValueKind.String:
+			case SchemaValueType.String:
 				isValid = Type.HasFlag(SchemaValueType.String);
 				break;
-			case JsonValueKind.Number:
+			case SchemaValueType.Number:
 				if (Type.HasFlag(SchemaValueType.Number))
 					isValid = true;
 				else if (Type.HasFlag(SchemaValueType.Integer))
 				{
-					var number = context.LocalInstance.GetDecimal();
+					var number = context.LocalInstance!.GetValue<decimal>();
 					isValid = number == Math.Truncate(number);
 				}
 				else
 					isValid = false;
 				break;
-			case JsonValueKind.True:
-			case JsonValueKind.False:
+			case SchemaValueType.Boolean:
 				isValid = Type.HasFlag(SchemaValueType.Boolean);
 				break;
-			case JsonValueKind.Null:
+			case SchemaValueType.Null:
 				isValid = Type.HasFlag(SchemaValueType.Null);
 				break;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
-		var found = context.LocalInstance.ValueKind.ToString().ToLower();
 		var expected = Type.ToString().ToLower();
 		if (isValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Type, ("received", found), ("expected", expected));
+			context.LocalResult.Fail(ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

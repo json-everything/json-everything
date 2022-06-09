@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -14,7 +14,7 @@ public class ValidationContext
 	private JsonSchema? _currentAnchorBackup;
 
 	private readonly Stack<Uri> _currentUris = new();
-	private readonly Stack<JsonElement> _localInstances = new();
+	private readonly Stack<JsonNode?> _localInstances = new();
 	private readonly Stack<JsonPointer> _instanceLocations = new();
 	private readonly Stack<JsonSchema> _localSchemas = new();
 	private readonly Stack<JsonPointer> _schemaLocations = new();
@@ -46,7 +46,7 @@ public class ValidationContext
 	/// <summary>
 	/// The instance root.
 	/// </summary>
-	public JsonElement InstanceRoot { get; }
+	public JsonNode? InstanceRoot { get; }
 
 	/// <summary>
 	/// The current instance location relative to the instance root.
@@ -56,7 +56,7 @@ public class ValidationContext
 	/// <summary>
 	/// The current instance.
 	/// </summary>
-	public JsonElement LocalInstance => _localInstances.Peek();
+	public JsonNode? LocalInstance => _localInstances.Peek();
 
 	/// <summary>
 	/// The current URI, based on `$id` and `$anchor` keywords present in the schema.
@@ -108,15 +108,14 @@ public class ValidationContext
 #pragma warning disable 8618
 	internal ValidationContext(ValidationOptions options,
 		Uri currentUri,
-		JsonElement instanceRoot,
+		JsonNode? instanceRoot,
 		JsonSchema schemaRoot)
 	{
 		Options = options;
 		_currentUris.Push(currentUri);
-		var instanceClone = instanceRoot.Clone();
-		InstanceRoot = instanceClone;
+		InstanceRoot = instanceRoot;
 		SchemaRoot = schemaRoot;
-		_localInstances.Push(instanceClone);
+		_localInstances.Push(instanceRoot);
 		_instanceLocations.Push(JsonPointer.UrlEmpty);
 		_localSchemas.Push(schemaRoot);
 		_schemaLocations.Push(JsonPointer.UrlEmpty);
@@ -136,7 +135,7 @@ public class ValidationContext
 	/// <param name="subschema">The subschema.</param>
 	/// <param name="newUri">The URI of the subschema.</param>
 	public void Push(in JsonPointer? instanceLocation = null,
-		in JsonElement? instance = null,
+		in JsonNode? instance = null,
 		in JsonPointer? subschemaLocation = null,
 		in JsonSchema? subschema = null,
 		Uri? newUri = null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 
@@ -24,31 +25,20 @@ public class RegexFormat : Format
 	}
 
 	/// <summary>
-	/// Validates an instance against a format.
-	/// </summary>
-	/// <param name="element">The element to validate.</param>
-	/// <returns><code>true</code> if the value is a match for the regular expression; <code>false</code> otherwise.</returns>
-	[Obsolete("This method isn't called anymore.  It will be removed in the next major version.")]
-	public override bool Validate(JsonElement element)
-	{
-		return Validate(element, out _);
-	}
-
-	/// <summary>
 	/// Validates an instance against a format and provides an error message.
 	/// </summary>
-	/// <param name="element">The element to validate.</param>
+	/// <param name="node">The node to validate.</param>
 	/// <param name="errorMessage">An error message.</param>
 	/// <returns><code>true</code> if the value is a match for the regular expression; <code>false</code> otherwise.</returns>
-	public override bool Validate(JsonElement element, out string? errorMessage)
+	public override bool Validate(JsonNode? node, out string? errorMessage)
 	{
-		if (element.ValueKind != JsonValueKind.String)
+		if (node.GetSchemaValueType() != SchemaValueType.String)
 		{
 			errorMessage = null;
 			return true;
 		}
 
-		var str = element.GetString();
+		var str = node!.GetValue<string>();
 		var matches = _regex.Match(str);
 
 		if (matches.Value != str)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Json.More;
@@ -15,7 +16,7 @@ public static class JsonNodeExtensions
 	/// <param name="a">The first element.</param>
 	/// <param name="b">The second element.</param>
 	/// <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
-	public static bool IsEquivalentTo(this JsonNode a, JsonNode b)
+	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
 		switch (a, b)
 		{
@@ -107,5 +108,27 @@ public static class JsonNodeExtensions
 		ComputeHashCode(node, ref hash, 0);
 		return hash;
 
+	}
+
+	public static JsonValueKind ValueKind(this JsonNode? node)
+	{
+		if (node is null) return JsonValueKind.Null;
+		if (node is JsonArray) return JsonValueKind.Array;
+		if (node is JsonObject) return JsonValueKind.Object;
+		if (node is JsonValue value)
+		{
+			var obj = value.GetValue<object>();
+			var objType = obj.GetType();
+			if (objType.IsNumber()) return JsonValueKind.Number;
+			if (obj is string) return JsonValueKind.String;
+			if (obj is bool b) return b ? JsonValueKind.True : JsonValueKind.False;
+		}
+
+		return JsonValueKind.Undefined;
+	}
+
+	public static string AsJsonString(this JsonNode? node)
+	{
+		return node?.ToJsonString() ?? "null";
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -25,24 +26,24 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	/// <summary>
 	/// The collection of example values.
 	/// </summary>
-	public IReadOnlyList<JsonElement> Values { get; }
+	public IReadOnlyList<JsonNode?> Values { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="ExamplesKeyword"/>.
 	/// </summary>
 	/// <param name="values">The collection of example values.</param>
-	public ExamplesKeyword(params JsonElement[] values)
+	public ExamplesKeyword(params JsonNode?[] values)
 	{
-		Values = values.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values));
+		Values = values.ToList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
 	/// Creates a new <see cref="ExamplesKeyword"/>.
 	/// </summary>
 	/// <param name="values">The collection of example values.</param>
-	public ExamplesKeyword(IEnumerable<JsonElement> values)
+	public ExamplesKeyword(IEnumerable<JsonNode?> values)
 	{
-		Values = values.Select(e => e.Clone()).ToList() ?? throw new ArgumentNullException(nameof(values));
+		Values = values.ToList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -64,7 +65,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	{
 		if (ReferenceEquals(null, other)) return false;
 		if (ReferenceEquals(this, other)) return true;
-		return Values.ContentsEqual(other.Values, JsonElementEqualityComparer.Instance);
+		return Values.ContentsEqual(other.Values, JsonNodeEqualityComparer.Instance);
 	}
 
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -79,7 +80,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		return Values.GetUnorderedCollectionHashCode(element => element.GetEquivalenceHashCode());
+		return Values.GetUnorderedCollectionHashCode(element => element?.GetEquivalenceHashCode() ?? 0);
 	}
 }
 
@@ -87,20 +88,19 @@ internal class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>
 {
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		using var document = JsonDocument.ParseValue(ref reader);
+		var array = JsonSerializer.Deserialize<JsonArray>(ref reader);
+		if (array is null)
+			throw new JsonException("Expected an array, but received null");
 
-		if (document.RootElement.ValueKind != JsonValueKind.Array)
-			throw new JsonException("Expected array");
-
-		return new ExamplesKeyword(document.RootElement.EnumerateArray());
+		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);
 	}
 	public override void Write(Utf8JsonWriter writer, ExamplesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(ExamplesKeyword.Name);
 		writer.WriteStartArray();
-		foreach (var element in value.Values)
+		foreach (var node in value.Values)
 		{
-			writer.WriteValue(element);
+			JsonSerializer.Serialize(writer, node, options);
 		}
 		writer.WriteEndArray();
 	}

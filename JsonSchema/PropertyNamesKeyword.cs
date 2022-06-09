@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -51,20 +51,21 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
+		var obj = (JsonObject)context.LocalInstance!;
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		foreach (var name in context.LocalInstance.EnumerateObject().Select(p => p.Name))
+		foreach (var name in obj.Select(p => p.Key))
 		{
 			context.Log(() => $"Validating property name '{name}'.");
-			var instance = name.AsJsonElement();
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{name}")), instance);
+			context.Push(context.InstanceLocation.Combine(PointerSegment.Create(name)), name);
 			Schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
@@ -93,11 +94,6 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 			annotation.AddRange(allPropertyNames);
 		else if (allPropertyNames.Any())
 			localResults.SetAnnotation(Name, allPropertyNames);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

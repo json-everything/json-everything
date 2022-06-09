@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -49,10 +50,11 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
@@ -60,6 +62,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		var overallResult = true;
 		var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 		List<string> evaluatedProperties;
+		var obj = (JsonObject)context.LocalInstance!;
 		if (context.Options.ValidatingAs is Draft.Draft6 or Draft.Draft7)
 		{
 			evaluatedProperties = new List<string>();
@@ -68,8 +71,8 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 				evaluatedProperties.AddRange(propertiesKeyword.Properties.Keys);
 			var patternPropertiesKeyword = context.LocalSchema.Keywords!.OfType<PatternPropertiesKeyword>().FirstOrDefault();
 			if (patternPropertiesKeyword != null)
-				evaluatedProperties.AddRange(context.LocalInstance.EnumerateObject()
-					.Select(x => x.Name)
+				evaluatedProperties.AddRange(obj
+					.Select(x => x.Key)
 					.Where(x => patternPropertiesKeyword.Patterns.All(p => !p.Key.IsMatch(x))));
 		}
 		else
@@ -94,26 +97,26 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 				evaluatedProperties.AddRange(annotation);
 			}
 		}
-		var additionalProperties = context.LocalInstance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
+		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToList();
 		evaluatedProperties.Clear();
 		foreach (var property in additionalProperties)
 		{
-			if (!context.LocalInstance.TryGetProperty(property.Name, out var item))
+			if (!obj.TryGetPropertyValue(property.Key, out var item))
 			{
-				context.Log(() => $"Property '{property.Name}' does not exist. Skipping.");
+				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
 			}
 
-			context.Log(() => $"Validating property '{property.Name}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")), item);
+			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item);
 			Schema.ValidateSubschema(context);
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
-			context.Log(() => $"Property '{property.Name}' {localResult.GetValidityString()}.");
+			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 			context.Pop();
 			if (!overallResult && context.ApplyOptimizations) break;
 			if (localResult)
-				evaluatedProperties.Add(property.Name);
+				evaluatedProperties.Add(property.Key);
 		}
 		context.Options.LogIndentLevel--;
 
@@ -141,11 +144,6 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 			annotation.AddRange(allProperties);
 		else if (allProperties.Any())
 			localResults.SetAnnotation(Name, allProperties);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
