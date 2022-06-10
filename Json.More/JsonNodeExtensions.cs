@@ -99,10 +99,15 @@ public static class JsonNodeExtensions
 					var value = target.AsValue();
 					if (value.TryGetValue<bool>(out var boolA))
 						Add(ref current, boolA);
-					else if (value.TryGetValue<decimal>(out var decimalA))
-						Add(ref current, decimalA);
-					else if (value.TryGetValue<string>(out var stringA))
-						Add(ref current, stringA);
+					else
+					{
+						var number = value.GetNumber();
+						if (number != null)
+							Add(ref current, number);
+						else if (value.TryGetValue<string>(out var stringA))
+							Add(ref current, stringA);
+					}
+
 					break;
 			}
 		}
@@ -110,28 +115,36 @@ public static class JsonNodeExtensions
 		var hash = 0;
 		ComputeHashCode(node, ref hash, 0);
 		return hash;
-
-	}
-
-	public static JsonValueKind ValueKind(this JsonNode? node)
-	{
-		if (node is null) return JsonValueKind.Null;
-		if (node is JsonArray) return JsonValueKind.Array;
-		if (node is JsonObject) return JsonValueKind.Object;
-		if (node is JsonValue value)
-		{
-			var obj = value.GetValue<object>();
-			var objType = obj.GetType();
-			if (objType.IsNumber()) return JsonValueKind.Number;
-			if (obj is string) return JsonValueKind.String;
-			if (obj is bool b) return b ? JsonValueKind.True : JsonValueKind.False;
-		}
-
-		return JsonValueKind.Undefined;
 	}
 
 	public static string AsJsonString(this JsonNode? node)
 	{
 		return node?.ToJsonString() ?? "null";
+	}
+
+	public static decimal? GetNumber(this JsonValue value)
+	{
+		var number = GetInteger(value);
+		if (number != null) return number;
+
+		if (value.TryGetValue<float>(out var f)) return (decimal)f;
+		if (value.TryGetValue<double>(out var d)) return (decimal)d;
+		if (value.TryGetValue<decimal>(out var dc)) return dc;
+
+		return null;
+	}
+
+	public static long? GetInteger(this JsonValue value)
+	{
+		if (value.TryGetValue<byte>(out var b)) return b;
+		if (value.TryGetValue<short>(out var s)) return s;
+		if (value.TryGetValue<ushort>(out var us)) return us;
+		if (value.TryGetValue<int>(out var i)) return i;
+		if (value.TryGetValue<ushort>(out var ui)) return ui;
+		if (value.TryGetValue<long>(out var l)) return l;
+		// this doesn't feel right... throw?
+		if (value.TryGetValue<ulong>(out var ul)) return (long)ul;
+
+		return null;
 	}
 }

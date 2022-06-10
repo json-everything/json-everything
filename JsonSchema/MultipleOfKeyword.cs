@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -48,7 +49,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 			return;
 		}
 
-		var number = context.LocalInstance!.GetValue<decimal>();
+		var number = context.LocalInstance!.AsValue().GetNumber();
 		if (number % Value == 0)
 			context.LocalResult.Pass();
 		else

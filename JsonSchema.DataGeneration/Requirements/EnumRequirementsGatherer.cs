@@ -14,7 +14,7 @@ internal class EnumRequirementsGatherer : IRequirementsGatherer
 			if (context.EnumOptions != null)
 				context.HasConflict = true;
 			else
-				context.EnumOptions = enumKeyword.Values.ToList();
+				context.EnumOptions = enumKeyword.Values.Select(x => (true, x)).ToList();
 		}
 	}
 }

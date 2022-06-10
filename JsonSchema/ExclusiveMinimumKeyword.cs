@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -48,7 +49,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 			return;
 		}
 
-		var number = context.LocalInstance!.GetValue<decimal>();
+		var number = context.LocalInstance!.AsValue().GetNumber();
 		if (Value < number)
 			context.LocalResult.Pass();
 		else

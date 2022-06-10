@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -85,8 +86,8 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 					isValid = true;
 				else if (Type.HasFlag(SchemaValueType.Integer))
 				{
-					var number = context.LocalInstance!.GetValue<decimal>();
-					isValid = number == Math.Truncate(number);
+					var number = context.LocalInstance!.AsValue().GetNumber();
+					isValid = number == Math.Truncate(number!.Value);
 				}
 				else
 					isValid = false;
