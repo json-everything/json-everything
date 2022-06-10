@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Schema;
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 #pragma warning disable CS8618
@@ -15,12 +14,12 @@ public class JsonPatchTest
 		.Schema(MetaSchemas.Draft202012Id)
 		.Defs(
 			("operationType", new JsonSchemaBuilder().Enum(
-					"add".AsJsonElement(),
-					"remove".AsJsonElement(),
-					"replace".AsJsonElement(),
-					"move".AsJsonElement(),
-					"copy".AsJsonElement(),
-					"test".AsJsonElement()
+					"add",
+					"remove",
+					"replace",
+					"move",
+					"copy",
+					"test"
 				)
 			)
 		)
@@ -47,22 +46,22 @@ public class JsonPatchTest
 					.Required("op")
 					.OneOf(
 						new JsonSchemaBuilder()
-							.Properties(("op", new JsonSchemaBuilder().Const("add".AsJsonElement())))
+							.Properties(("op", new JsonSchemaBuilder().Const("add")))
 							.Required("path", "value"),
 						new JsonSchemaBuilder()
-							.Properties(("op", new JsonSchemaBuilder().Const("remove".AsJsonElement())))
+							.Properties(("op", new JsonSchemaBuilder().Const("remove")))
 							.Required("path"),
 						new JsonSchemaBuilder()
-							.Properties(("op", new JsonSchemaBuilder().Const("replace".AsJsonElement())))
+							.Properties(("op", new JsonSchemaBuilder().Const("replace")))
 							.Required("path", "value"),
 						new JsonSchemaBuilder()
-							.Properties(("op", new JsonSchemaBuilder().Const("move".AsJsonElement())))
+							.Properties(("op", new JsonSchemaBuilder().Const("move")))
 							.Required("path", "from"),
 						new JsonSchemaBuilder()
-							.Properties(("op", new JsonSchemaBuilder().Const("copy".AsJsonElement())))
+							.Properties(("op", new JsonSchemaBuilder().Const("copy")))
 							.Required("path", "from"),
 						new JsonSchemaBuilder()
-							.Properties(("op", new JsonSchemaBuilder().Const("test".AsJsonElement())))
+							.Properties(("op", new JsonSchemaBuilder().Const("test")))
 							.Required("path", "value")
 					)
 				)
@@ -76,7 +75,7 @@ public class JsonPatchTest
 	public JsonElement ExpectedValue { get; set; }
 	public string? Error { get; set; }
 	public string? Comment { get; set; }
-	public JsonPatch Patch { get; set; }
+	public JsonPatch? Patch { get; set; }
 	public bool Disabled { get; set; }
 
 	public bool ExpectsError => Error != null;
