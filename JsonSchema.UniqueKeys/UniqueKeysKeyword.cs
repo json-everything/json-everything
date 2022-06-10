@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
@@ -19,21 +20,21 @@ namespace Json.Schema.UniqueKeys;
 [JsonConverter(typeof(UniqueKeysKeywordJsonConverter))]
 public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeyword>
 {
-	private class NullableJsonElementComparer : IEqualityComparer<JsonElement?>
+	private class MaybeJsonNodeComparer : IEqualityComparer<(bool resolved, JsonNode? node)>
 	{
-		public static IEqualityComparer<JsonElement?> Instance { get; } = new NullableJsonElementComparer();
+		public static IEqualityComparer<(bool resolved, JsonNode? node)> Instance { get; } = new MaybeJsonNodeComparer();
 
-		public bool Equals(JsonElement? x, JsonElement? y)
+		public bool Equals((bool resolved, JsonNode? node) x, (bool resolved, JsonNode? node) y)
 		{
-			if (x == null) return y == null;
-			if (y == null) return false;
+			if (!x.resolved) return !y.resolved;
+			if (!y.resolved) return false;
 
-			return JsonElementEqualityComparer.Instance.Equals(x.Value, y.Value);
+			return JsonNodeEqualityComparer.Instance.Equals(x.node, y.node);
 		}
 
-		public int GetHashCode(JsonElement? obj)
+		public int GetHashCode((bool resolved, JsonNode? node) obj)
 		{
-			return obj == null ? 0 : JsonElementEqualityComparer.Instance.GetHashCode(obj.Value);
+			return !obj.resolved ? 0 : JsonNodeEqualityComparer.Instance.GetHashCode(obj.node);
 		}
 	}
 
@@ -60,17 +61,19 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var collections = new List<List<JsonElement?>>();
-		foreach (var item in context.LocalInstance.EnumerateArray())
+		var array = (JsonArray)context.LocalInstance!;
+		var collections = new List<List<(bool, JsonNode?)>>();
+		foreach (var item in array)
 		{
-			var values = Keys.Select(x => x.Evaluate(item));
+			var values = Keys.Select(x => (x.TryEvaluate(item, out var resolved), resolved));
 			collections.Add(values.ToList());
 		}
 
@@ -82,7 +85,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 				var a = collections[i];
 				var b = collections[j];
 
-				if (a.SequenceEqual(b, NullableJsonElementComparer.Instance))
+				if (a.SequenceEqual(b, MaybeJsonNodeComparer.Instance))
 				{
 					if (context.Options.OutputFormat == OutputFormat.Flag)
 					{

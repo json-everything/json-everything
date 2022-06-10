@@ -5,7 +5,7 @@ using Json.More;
 
 namespace Json.Schema;
 
-internal static class JsonNodeExtensions
+public static class JsonNodeExtensions
 {
 	public static SchemaValueType GetSchemaValueType(this JsonNode? node)
 	{
