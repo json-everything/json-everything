@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Bogus;
 using Bogus.Extensions;
 using Json.More;
@@ -13,7 +14,7 @@ internal class StringGenerator : IDataGenerator
 	private const int _maxStringLength = 1000;
 	private static readonly NumberRangeSet _defaultRange = NumberRangeSet.NonNegative.Floor(0).Ceiling(_maxStringLength);
 	private static readonly Faker _faker = new();
-	private static readonly Dictionary<string, Func<NumberRange, JsonElementProxy>> _formatGenerators =
+	private static readonly Dictionary<string, Func<NumberRange, JsonNode?>> _formatGenerators =
 		new()
 		{
 			[Formats.Date.Key] = GenerateDate,

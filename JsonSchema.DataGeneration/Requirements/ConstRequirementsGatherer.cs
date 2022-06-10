@@ -11,10 +11,13 @@ internal class ConstRequirementsGatherer : IRequirementsGatherer
 		var constKeyword = schema.Keywords?.OfType<ConstKeyword>().FirstOrDefault();
 		if (constKeyword != null)
 		{
-			if (context.Const.HasValue)
+			if (context.ConstIsSet)
 				context.HasConflict = true;
 			else
+			{
 				context.Const = constKeyword.Value;
+				context.ConstIsSet = true;
+			}
 		}
 	}
 }

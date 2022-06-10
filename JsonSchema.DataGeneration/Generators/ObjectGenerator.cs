@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Bogus;
 using Json.More;
 
@@ -126,7 +127,7 @@ internal class ObjectGenerator : IDataGenerator
 		}
 
 		return propertyGenerationResults.All(x => x.Value.IsSuccess)
-			? GenerationResult.Success(propertyGenerationResults.ToDictionary(x => x.Key, x => x.Value.Result).AsJsonElement())
+			? GenerationResult.Success(new JsonObject(propertyGenerationResults.ToDictionary(x => x.Key, x => x.Value.Result)))
 			: GenerationResult.Fail(propertyGenerationResults.Values);
 	}
 }

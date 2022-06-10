@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Schema.DataGeneration;
@@ -47,8 +47,9 @@ internal class RequirementsContext
 	public List<string>? AvoidProperties { get; set; }
 	// TODO: unevaluatedItems
 
-	public JsonElement? Const { get; set; }
-	public List<JsonElement>? EnumOptions { get; set; }
+	public JsonNode? Const { get; set; }
+	public bool ConstIsSet { get; set; }
+	public List<(bool, JsonNode?)>? EnumOptions { get; set; }
 
 	public List<RequirementsContext>? Options { get; set; }
 
@@ -84,6 +85,7 @@ internal class RequirementsContext
 			Options = other.Options.Select(x => new RequirementsContext(x)).ToList();
 
 		Const = other.Const;
+		ConstIsSet = other.ConstIsSet;
 		HasConflict = other.HasConflict;
 
 		if (other.Properties != null)
@@ -234,8 +236,9 @@ internal class RequirementsContext
 
 		bool BreakConst(RequirementsContext context)
 		{
-			if (Const == null) return false;
-			context.Const = null;
+			if (!ConstIsSet) return false;
+			context.Const = Const == null ? 1 : null;
+			context.ConstIsSet = true;
 			return true;
 		}
 
@@ -259,7 +262,7 @@ internal class RequirementsContext
 
 		var broken = new RequirementsContext(this);
 		using var enumerator = breakers.GetEnumerator();
-		while (enumerator.MoveNext() && !enumerator.Current(broken)) ;
+		while (enumerator.MoveNext() && !enumerator.Current!(broken)) {}
 
 		return broken;
 	}
@@ -300,10 +303,13 @@ internal class RequirementsContext
 		else if (other.Format != null)
 			HasConflict = Format != other.Format;
 
-		if (Const == null)
+		if (!ConstIsSet)
+		{
 			Const = other.Const;
-		else if (other.Const != null)
-			HasConflict = Const.Value.IsEquivalentTo(other.Const.Value);
+			ConstIsSet = other.ConstIsSet;
+		}
+		else if (other.ConstIsSet)
+			HasConflict = Const.IsEquivalentTo(other.Const);
 
 		//if (Patterns == null)
 		//	Patterns = other.Patterns;

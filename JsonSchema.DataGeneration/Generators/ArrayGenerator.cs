@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Schema.DataGeneration.Generators;
@@ -106,7 +107,7 @@ internal class ArrayGenerator : IDataGenerator
 			return GenerationResult.Fail("Could not generate sufficient items to meet requirements");
 
 		return itemGenerationResults.All(x => x.IsSuccess)
-			? GenerationResult.Success(itemGenerationResults.Select(x => x.Result).AsJsonElement())
+			? GenerationResult.Success(new JsonArray(itemGenerationResults.Select(x => x.Result).ToArray()))
 			: GenerationResult.Fail(itemGenerationResults);
 	}
 }

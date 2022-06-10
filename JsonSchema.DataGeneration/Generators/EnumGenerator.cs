@@ -14,6 +14,6 @@ internal class EnumGenerator : IPrioritizedDataGenerator
 	public GenerationResult Generate(RequirementsContext context)
 	{
 		var value = JsonSchemaExtensions.Randomizer.ListItem(context.EnumOptions);
-		return GenerationResult.Success(value);
+		return GenerationResult.Success(value.Item2);
 	}
 }
