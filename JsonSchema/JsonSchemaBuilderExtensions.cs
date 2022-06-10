@@ -361,6 +361,21 @@ public static class JsonSchemaBuilderExtensions
 	}
 
 	/// <summary>
+	/// Add an `enum` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="elements">The values for the enum.</param>
+	/// <returns>The builder.</returns>
+	/// <remarks>
+	/// This overload is provided as a convenience as string-only enums are most common.
+	/// </remarks>
+	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<string> elements)
+	{
+		builder.Add(new EnumKeyword(elements.Select(x => (JsonNode?)x)));
+		return builder;
+	}
+
+	/// <summary>
 	/// Add an `examples` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>

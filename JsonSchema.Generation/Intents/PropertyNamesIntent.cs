@@ -22,21 +22,6 @@ public class PropertyNamesIntent : ISchemaKeywordIntent, IContextContainer
 	}
 
 	/// <summary>
-	/// Gets the contexts.
-	/// </summary>
-	/// <returns>
-	///	The <see cref="SchemaGenerationContextBase"/>s contained by this object.
-	/// </returns>
-	/// <remarks>
-	/// Only return the contexts contained directly by this object.  Do not fetch
-	/// the child contexts of those contexts.
-	/// </remarks>
-	public IEnumerable<SchemaGenerationContextBase> GetContexts()
-	{
-		return new[] { Context };
-	}
-
-	/// <summary>
 	/// Replaces one context with another.
 	/// </summary>
 	/// <param name="hashCode">The hashcode of the context to replace.</param>

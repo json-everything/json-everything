@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
@@ -54,7 +55,7 @@ public class GeneratorTests
 	{
 		var expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
-			.PropertyNames(new JsonSchemaBuilder().Enum(Enum.GetNames(typeof(DayOfWeek)).Select(x => x.AsJsonElement())))
+			.PropertyNames(new JsonSchemaBuilder().Enum(Enum.GetNames(typeof(DayOfWeek))))
 			.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Build();
 
@@ -67,7 +68,7 @@ public class GeneratorTests
 	public void EnumSchema()
 	{
 		var expected = new JsonSchemaBuilder()
-			.Enum(Enum.GetNames(typeof(DayOfWeek)).Select(x => x.AsJsonElement()))
+			.Enum(Enum.GetNames(typeof(DayOfWeek)))
 			.Build();
 
 		var actual = new JsonSchemaBuilder().FromType<DayOfWeek>().Build();
@@ -179,7 +180,7 @@ public class GeneratorTests
 	public void NullableEnumSchema()
 	{
 		var expected = new JsonSchemaBuilder()
-			.Enum(Enum.GetNames(typeof(DayOfWeek)).Select(x => x.AsJsonElement()))
+			.Enum(Enum.GetNames(typeof(DayOfWeek)))
 			.Build();
 
 		var actual = new JsonSchemaBuilder().FromType<DayOfWeek?>().Build();

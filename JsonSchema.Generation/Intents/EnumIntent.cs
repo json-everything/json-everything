@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Json.More;
-using Json.Pointer;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema.Generation.Intents;
 
@@ -39,6 +38,6 @@ public class EnumIntent : ISchemaKeywordIntent
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Enum(Names.Select(n => n.AsJsonElement()));
+		builder.Enum(Names.Select(n => (JsonNode?)n));
 	}
 }
