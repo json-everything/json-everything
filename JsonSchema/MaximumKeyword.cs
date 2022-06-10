@@ -41,7 +41,7 @@ public class MaximumKeyword : IJsonSchemaKeyword, IEquatable<MaximumKeyword>
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Number)
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
 			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);

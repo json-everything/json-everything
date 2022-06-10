@@ -41,7 +41,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not SchemaValueType.Number or SchemaValueType.Integer)
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
 			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);

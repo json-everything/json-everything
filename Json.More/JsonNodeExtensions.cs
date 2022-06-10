@@ -28,16 +28,19 @@ public static class JsonNodeExtensions
 					.GroupBy(p => p.Key)
 					.Select(g => g.ToList())
 					.ToList();
-#pragma warning disable CS8604 // Possible null reference argument.
 				return grouped.All(g => g.Count == 2 &&
 										g[0].Value != null && g[1].Value != null &&
 										g[0].Value.IsEquivalentTo(g[1].Value));
-#pragma warning restore CS8604 // Possible null reference argument.
 			case (JsonArray arrayA, JsonArray arrayB):
 				if (arrayA.Count != arrayB.Count) return false;
 				var zipped = arrayA.Zip(arrayB, (ae, be) => (ae, be));
 				return zipped.All(p => (p.ae == null && p.be == null) ||
 									   (p.ae != null && p.be != null && p.ae.IsEquivalentTo(p.be)));
+			case (JsonValue aValue, JsonValue bValue):
+				if (aValue.GetValue<object>() is JsonElement aElement &&
+				    bValue.GetValue<object>() is JsonElement bElement)
+					return aElement.IsEquivalentTo(bElement);
+				return a.ToJsonString() == b.ToJsonString();
 			default:
 				return a?.ToJsonString() == b?.ToJsonString();
 		}

@@ -24,6 +24,12 @@ public class ValidationContext
 	private readonly Stack<bool> _directRefNavigation = new();
 	private JsonSchema? _currentAnchor;
 
+	public static readonly JsonNode NullNode = new JsonObject
+	{
+		["id"] = "959896ae23a94cb49c7c3b61f1431b7e",
+		["description"] = "This static property exists solely to represent a JSON null value"
+	};
+
 	/// <summary>
 	/// The option set for the validation.
 	/// </summary>
@@ -142,7 +148,10 @@ public class ValidationContext
 	{
 		_currentUris.Push(newUri ?? CurrentUri);
 		_instanceLocations.Push(instanceLocation ?? InstanceLocation);
-		_localInstances.Push(instance ?? LocalInstance);
+		if (ReferenceEquals(instance, NullNode))
+			_localInstances.Push(null);
+		else
+			_localInstances.Push(instance ?? LocalInstance);
 		_schemaLocations.Push(subschemaLocation ?? SchemaLocation);
 		_localSchemas.Push(subschema ?? LocalSchema);
 		var newResult = new ValidationResults(this);
