@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
@@ -10,7 +11,7 @@ namespace Json.Patch;
 /// Represents a single JSON Patch operation.
 /// </summary>
 [JsonConverter(typeof(PatchOperationJsonConverter))]
-public readonly struct PatchOperation : IEquatable<PatchOperation>
+public class PatchOperation : IEquatable<PatchOperation>
 {
 	private readonly IPatchOperationHandler _handler;
 
@@ -29,15 +30,15 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 	/// <summary>
 	/// Gets the discrete value.
 	/// </summary>
-	public JsonElement Value { get; }
+	public JsonNode? Value { get; }
 
-	private PatchOperation(OperationType op, JsonPointer from, JsonPointer path, JsonElement value, IPatchOperationHandler handler)
+	private PatchOperation(OperationType op, JsonPointer from, JsonPointer path, JsonNode? value, IPatchOperationHandler handler)
 	{
 		_handler = handler;
 		Op = op;
 		From = from;
 		Path = path;
-		Value = value.ValueKind == JsonValueKind.Undefined ? default : value.Clone();
+		Value = value.Copy();
 	}
 
 	/// <summary>
@@ -46,18 +47,7 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The source path.</param>
 	/// <param name="value">The value to add.</param>
 	/// <returns>An `add` operation.</returns>
-	public static PatchOperation Add(JsonPointer path, JsonElement value)
-	{
-		return new PatchOperation(OperationType.Add, JsonPointer.Empty, path, value, AddOperationHandler.Instance);
-	}
-
-	/// <summary>
-	/// Creates an `add` operation.
-	/// </summary>
-	/// <param name="path">The source path.</param>
-	/// <param name="value">The value to add.</param>
-	/// <returns>An `add` operation.</returns>
-	public static PatchOperation Add(JsonPointer path, JsonElementProxy value)
+	public static PatchOperation Add(JsonPointer path, JsonNode? value)
 	{
 		return new PatchOperation(OperationType.Add, JsonPointer.Empty, path, value, AddOperationHandler.Instance);
 	}
@@ -78,18 +68,7 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The source path.</param>
 	/// <param name="value">The value to add.</param>
 	/// <returns>An `replace` operation.</returns>
-	public static PatchOperation Replace(JsonPointer path, JsonElement value)
-	{
-		return new PatchOperation(OperationType.Replace, JsonPointer.Empty, path, value, ReplaceOperationHandler.Instance);
-	}
-
-	/// <summary>
-	/// Creates an `replace` operation.
-	/// </summary>
-	/// <param name="path">The source path.</param>
-	/// <param name="value">The value to add.</param>
-	/// <returns>An `replace` operation.</returns>
-	public static PatchOperation Replace(JsonPointer path, JsonElementProxy value)
+	public static PatchOperation Replace(JsonPointer path, JsonNode? value)
 	{
 		return new PatchOperation(OperationType.Replace, JsonPointer.Empty, path, value, ReplaceOperationHandler.Instance);
 	}
@@ -122,18 +101,7 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The source path.</param>
 	/// <param name="value">The value to match.</param>
 	/// <returns>An `test` operation.</returns>
-	public static PatchOperation Test(JsonPointer path, JsonElement value)
-	{
-		return new PatchOperation(OperationType.Test, JsonPointer.Empty, path, value, TestOperationHandler.Instance);
-	}
-
-	/// <summary>
-	/// Creates an `test` operation.
-	/// </summary>
-	/// <param name="path">The source path.</param>
-	/// <param name="value">The value to match.</param>
-	/// <returns>An `test` operation.</returns>
-	public static PatchOperation Test(JsonPointer path, JsonElementProxy value)
+	public static PatchOperation Test(JsonPointer path, JsonNode? value)
 	{
 		return new PatchOperation(OperationType.Test, JsonPointer.Empty, path, value, TestOperationHandler.Instance);
 	}
@@ -151,9 +119,7 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 		return Op == other.Op &&
 			   From.Equals(other.From) &&
 			   Path.Equals(other.Path) &&
-			   ((Value.ValueKind == JsonValueKind.Undefined &&
-				 other.Value.ValueKind == JsonValueKind.Undefined) ||
-				Value.IsEquivalentTo(other.Value));
+			   Value.IsEquivalentTo(other.Value);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
@@ -173,7 +139,7 @@ public readonly struct PatchOperation : IEquatable<PatchOperation>
 			var hashCode = (int)Op;
 			hashCode = (hashCode * 397) ^ From.GetHashCode();
 			hashCode = (hashCode * 397) ^ Path.GetHashCode();
-			hashCode = (hashCode * 397) ^ Value.GetHashCode();
+			hashCode = (hashCode * 397) ^ (Value?.GetHashCode() ?? 0);
 			return hashCode;
 		}
 	}
@@ -201,13 +167,13 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 			case OperationType.Add:
 				if (model.Value.ValueKind == JsonValueKind.Undefined)
 					throw new JsonException("`add` operation requires `value`");
-				return PatchOperation.Add(model.Path, model.Value);
+				return PatchOperation.Add(model.Path, model.Value.AsNode());
 			case OperationType.Remove:
 				return PatchOperation.Remove(model.Path);
 			case OperationType.Replace:
 				if (model.Value.ValueKind == JsonValueKind.Undefined)
 					throw new JsonException("`replace` operation requires `value`");
-				return PatchOperation.Replace(model.Path, model.Value);
+				return PatchOperation.Replace(model.Path, model.Value.AsNode());
 			case OperationType.Move:
 				if (model.From == null)
 					throw new JsonException("`move` operation requires `from`");
@@ -219,7 +185,7 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 			case OperationType.Test:
 				if (model.Value.ValueKind == JsonValueKind.Undefined)
 					throw new JsonException("`test` operation requires `value`");
-				return PatchOperation.Test(model.Path, model.Value);
+				return PatchOperation.Test(model.Path, model.Value.AsNode());
 			case OperationType.Unknown:
 			default:
 				throw new JsonException();

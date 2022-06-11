@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Json.Patch;
 
@@ -16,51 +17,20 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var current = context.Source;
-		var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
-
-		if (message != null)
+		if (!operation.Path.EvaluateAndGetParent(context.Source, out var source) ||
+		    !operation.Path.TryEvaluate(context.Source, out _))
 		{
-			context.Message = message;
+			context.Message = $"Target path `{operation.Path}` could not be reached.";
 			return;
 		}
 
-		var last = operation.Path.Segments.Last();
-		if (current.Object != null)
+		var lastPathSegment = operation.Path.Segments.Last().Value;
+		if (source is JsonObject objSource)
+			objSource.Remove(lastPathSegment);
+		else if (source is JsonArray arrSource)
 		{
-			if (!current.Object.TryGetValue(last.Value, out _))
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-
-			current.Object.Remove(last.Value);
-			return;
+			var index = lastPathSegment == "-" ? arrSource.Count - 1 : int.Parse(lastPathSegment);
+			arrSource.RemoveAt(index);
 		}
-		if (current.Array != null)
-		{
-			if (last.Value == "-")
-			{
-				current.Array.RemoveAt(current.Array.Count - 1);
-				return;
-			}
-
-			if (!int.TryParse(last.Value, out var index) || 0 > index || index >= current.Array.Count)
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-			if ((index != 0 && last.Value[0] == '0') ||
-				(index == 0 && last.Value.Length > 1))
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-
-			current.Array.RemoveAt(index);
-			return;
-		}
-
-		context.Message = $"Path `{operation.Path}` is not present in the instance.";
 	}
 }

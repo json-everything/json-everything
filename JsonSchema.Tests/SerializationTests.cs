@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -101,5 +102,23 @@ public class SerializationTests
 		var returnToText = JsonSerializer.Serialize(schema);
 
 		Assert.AreEqual(text, returnToText);
+	}
+
+	[Test]
+	public void DuplicateKeysAreHandled()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("foo", true),
+				("bar", true)
+			)
+			.Required("foo", "bar");
+
+		var json = JsonNode.Parse("{\"foo\":1, \"bar\":2, \"foo\":false}");
+
+		var results = schema.Validate(json);
+
+		Assert.IsFalse(results.IsValid);
 	}
 }

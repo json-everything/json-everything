@@ -56,6 +56,8 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+
 		var overallResult = true;
 		var missingDependencies = new Dictionary<string, List<string>>();
 		foreach (var property in Requirements)

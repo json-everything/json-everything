@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Json.Patch;
 
@@ -14,50 +15,39 @@ internal class AddOperationHandler : IPatchOperationHandler
 	{
 		if (operation.Path.Segments.Length == 0)
 		{
-			context.Source = new EditableJsonElement(operation.Value);
+			context.Source = operation.Value;
 			return;
 		}
 
-		var current = context.Source;
-		var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
-
-		if (message != null)
+		if (!operation.Path.EvaluateAndGetParent(context.Source, out var target))
 		{
-			context.Message = message;
+			context.Message = $"Target path `{operation.Path}` could not be reached.";
 			return;
 		}
 
-		var last = operation.Path.Segments.Last();
-		if (current.Object != null)
+		var lastPathSegment = operation.Path.Segments.Last().Value;
+		if (target is JsonObject objTarget)
 		{
-			current.Object[last.Value] = new EditableJsonElement(operation.Value);
+			objTarget[lastPathSegment] = operation.Value;
 			return;
 		}
 
-		if (current.Array != null)
+		if (target is JsonArray arrTarget)
 		{
-			if (last.Value == "-")
+			int index;
+			if (lastPathSegment == "-")
+				index = arrTarget.Count;
+			else if (!int.TryParse(lastPathSegment, out index))
 			{
-				current.Array.Add(new EditableJsonElement(operation.Value));
+				context.Message = $"Target path `{operation.Path}` could not be reached.";
 				return;
 			}
-
-			if (!int.TryParse(last.Value, out var index) || 0 > index || index > current.Array.Count)
-			{
-				context.Message = $"Path `{operation.Path}` could not be reached.";
-				return;
-			}
-			if ((index != 0 && last.Value[0] == '0') ||
-				(index == 0 && last.Value.Length > 1))
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-
-			current.Array.Insert(index, new EditableJsonElement(operation.Value));
-			return;
+			if (0 <= index && index < arrTarget.Count)
+				arrTarget.Insert(index, operation.Value);
+			else if (index == arrTarget.Count)
+				arrTarget.Add(operation.Value);
+			else
+				context.Message = "Path indicates an index greater than the bounds of the array";
 		}
-
-		context.Message = $"Path `{operation.Path}` could not be reached.";
 	}
 }

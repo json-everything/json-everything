@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -61,6 +62,8 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();

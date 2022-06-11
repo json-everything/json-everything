@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Schema;
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 #pragma warning disable CS8618
@@ -71,22 +73,22 @@ public class JsonPatchTest
 			("disabled", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
 		);
 
-	public JsonElement Doc { get; set; }
-	public JsonElement ExpectedValue { get; set; }
+	public JsonNode? Doc { get; set; }
+	public JsonNode? ExpectedValue { get; set; }
 	public string? Error { get; set; }
 	public string? Comment { get; set; }
 	public JsonPatch? Patch { get; set; }
 	public bool Disabled { get; set; }
 
 	public bool ExpectsError => Error != null;
-	public bool HasExpectedValue => ExpectedValue.ValueKind != JsonValueKind.Undefined;
+	public bool HasExpectedValue { get; set; }
 }
 
 public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 {
 	private class Model
 	{
-		public JsonElement Doc { get; set; }
+		public JsonNode? Doc { get; set; }
 		public JsonElement Expected { get; set; }
 		public string? Error { get; set; }
 		public string? Comment { get; set; }
@@ -96,20 +98,21 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 
 	public override JsonPatchTest? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
 
-		var results = JsonPatchTest.TestSchema.Validate(element, new ValidationOptions
+		var results = JsonPatchTest.TestSchema.Validate(node, new ValidationOptions
 		{
 			OutputFormat = OutputFormat.Detailed,
 			RequireFormatValidation = true
 		});
 		if (results.IsValid)
 		{
-			var model = JsonSerializer.Deserialize<Model>(element.GetRawText(), options)!;
+			var model = node.Deserialize<Model>(options)!;
 			return new JsonPatchTest
 			{
-				Doc = model.Doc.ValueKind == JsonValueKind.Undefined ? default : model.Doc.Clone(),
-				ExpectedValue = model.Expected.ValueKind == JsonValueKind.Undefined ? default : model.Expected.Clone(),
+				Doc = model.Doc,
+				ExpectedValue = model.Expected.AsNode(),
+				HasExpectedValue = model.Expected.ValueKind != JsonValueKind.Undefined,
 				Error = model.Error,
 				Comment = model.Comment,
 				Patch = model.Patch,
@@ -125,15 +128,15 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 	{
 		writer.WriteStartObject();
 
-		if (value!.Doc.ValueKind != JsonValueKind.Undefined)
+		if (value!.Doc != null)
 		{
 			writer.WritePropertyName("doc");
 			value.Doc.WriteTo(writer);
 		}
-		if (value.ExpectedValue.ValueKind != JsonValueKind.Undefined)
+		if (value.HasExpectedValue)
 		{
 			writer.WritePropertyName("expected");
-			value.ExpectedValue.WriteTo(writer);
+			JsonSerializer.Serialize(writer, value.ExpectedValue, options);
 		}
 		if (value.Error != null)
 			writer.WriteString("error", value.Error);

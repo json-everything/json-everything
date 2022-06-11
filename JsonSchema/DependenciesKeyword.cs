@@ -58,6 +58,8 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
 		foreach (var property in Requirements)

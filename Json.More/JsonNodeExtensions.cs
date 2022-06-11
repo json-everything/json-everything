@@ -28,14 +28,11 @@ public static class JsonNodeExtensions
 					.GroupBy(p => p.Key)
 					.Select(g => g.ToList())
 					.ToList();
-				return grouped.All(g => g.Count == 2 &&
-										g[0].Value != null && g[1].Value != null &&
-										g[0].Value.IsEquivalentTo(g[1].Value));
+				return grouped.All(g => g.Count == 2 && g[0].Value.IsEquivalentTo(g[1].Value));
 			case (JsonArray arrayA, JsonArray arrayB):
 				if (arrayA.Count != arrayB.Count) return false;
 				var zipped = arrayA.Zip(arrayB, (ae, be) => (ae, be));
-				return zipped.All(p => (p.ae == null && p.be == null) ||
-									   (p.ae != null && p.be != null && p.ae.IsEquivalentTo(p.be)));
+				return zipped.All(p => p.ae.IsEquivalentTo(p.be));
 			case (JsonValue aValue, JsonValue bValue):
 				if (aValue.GetValue<object>() is JsonElement aElement &&
 				    bValue.GetValue<object>() is JsonElement bElement)
@@ -146,5 +143,25 @@ public static class JsonNodeExtensions
 		if (value.TryGetValue<ulong>(out var ul)) return (long)ul;
 
 		return null;
+	}
+
+	public static JsonNode? Copy(this JsonNode? source)
+	{
+		return source.Deserialize<JsonNode?>();
+	}
+
+	public static bool TryGetValue(this JsonObject obj, string propertyName, out JsonNode? node, out Exception? e)
+	{
+		e = null;
+		try
+		{
+			return obj.TryGetPropertyValue(propertyName, out node);
+		}
+		catch (ArgumentException ae)
+		{
+			e = ae;
+			node = null;
+			return false;
+		}
 	}
 }

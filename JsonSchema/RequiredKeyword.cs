@@ -61,6 +61,8 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+	
 		context.Options.LogIndentLevel++;
 		var notFound = new List<string>();
 		foreach (var property in Properties)

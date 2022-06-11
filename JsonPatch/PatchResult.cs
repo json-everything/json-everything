@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 
 namespace Json.Patch;
 
@@ -10,7 +10,7 @@ public class PatchResult
 	/// <summary>
 	/// Gets the resulting JSON document.
 	/// </summary>
-	public JsonElement Result { get; }
+	public JsonNode? Result { get; }
 	/// <summary>
 	/// Gets any error that occurred.
 	/// </summary>
@@ -27,7 +27,7 @@ public class PatchResult
 
 	internal PatchResult(PatchContext context)
 	{
-		Result = context.Source.ToElement();
+		Result = context.Source;
 		Error = context.Message;
 		Operation = context.Index;
 	}

@@ -63,6 +63,8 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 		List<string> evaluatedProperties;
 		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+
 		if (context.Options.ValidatingAs is Draft.Draft6 or Draft.Draft7)
 		{
 			evaluatedProperties = new List<string>();

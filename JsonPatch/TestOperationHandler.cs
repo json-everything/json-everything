@@ -10,17 +10,14 @@ internal class TestOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		var current = context.Source;
-		var message = EditableJsonElementHelpers.FindTarget(ref current, operation.Path);
-
-		if (message != null)
+		if (!operation.Path.TryEvaluate(context.Source, out var data))
 		{
-			context.Message = message;
+			context.Message = $"Path `{operation.Path}` could not be reached.";
 			return;
 		}
 
-		if (current.ToElement().IsEquivalentTo(operation.Value)) return;
-
+		if (data.IsEquivalentTo(operation.Value)) return;
+		
 		context.Message = $"Path `{operation.Path}` is not equal to the indicated value.";
 	}
 }
