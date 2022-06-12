@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -12,13 +12,13 @@ public class PathMatch
 	/// <summary>
 	/// The value at the matching location.
 	/// </summary>
-	public JsonElement Value { get; }
+	public JsonNode? Value { get; }
 	/// <summary>
 	/// The location where the value was found.
 	/// </summary>
 	public JsonPath Location { get; }
 
-	internal PathMatch(in JsonElement value, in JsonPath location)
+	internal PathMatch(in JsonNode? value, in JsonPath location)
 	{
 		Value = value;
 		Location = location;
