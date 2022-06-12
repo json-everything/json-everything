@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Path;
@@ -24,6 +23,11 @@ public class JsonPath
 			PropertyNameIndex.TryParse,
 			SliceIndex.TryParse,
 			SimpleIndex.TryParse
+		};
+	private static readonly Dictionary<string, ISelector> _reservedWords =
+		new()
+		{
+			["length"] = LengthSelector.Instance
 		};
 
 	private readonly IEnumerable<ISelector> _nodes;
@@ -160,7 +164,9 @@ public class JsonPath
 
 		var propertyName = slice[..propertyNameLength];
 		i += 1 + propertyNameLength;
-		return new PropertySelector(propertyName.ToString());
+		return _reservedWords.TryGetValue(propertyName.ToString(), out var node)
+			? node
+			: new PropertySelector(propertyName.ToString());
 	}
 
 	private static bool IsValidForPropertyName(char ch)
@@ -236,7 +242,7 @@ public class JsonPath
 	/// <param name="root">The root of the JSON instance.</param>
 	/// <param name="options">Evaluation options.</param>
 	/// <returns>The results of the evaluation.</returns>
-	public PathResult Evaluate(JsonNode? root, PathEvaluationOptions? options = null)
+	public PathResult Evaluate(JsonElement root, PathEvaluationOptions? options = null)
 	{
 		options ??= new PathEvaluationOptions();
 
