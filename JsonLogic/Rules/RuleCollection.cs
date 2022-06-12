@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -18,8 +17,8 @@ internal class RuleCollection : Rule
 		_rules = rules;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		return _rules.Select(x => x.Apply(data, contextData)).AsJsonElement();
+		return new JsonArray(_rules.Select(x => x.Apply(data, contextData)).ToArray());
 	}
 }

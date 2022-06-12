@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -15,8 +15,8 @@ internal class StrictNotEqualsRule : Rule
 		_b = b;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		return (!_a.Apply(data, contextData).IsEquivalentTo(_b.Apply(data, contextData))).AsJsonElement();
+		return !_a.Apply(data, contextData).IsEquivalentTo(_b.Apply(data, contextData));
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using NUnit.Framework;
 
@@ -9,7 +9,7 @@ public class NotTests
 	[Test]
 	public void EmptyArrayIsTrue()
 	{
-		var rule = new NotRule(JsonDocument.Parse("[]").RootElement);
+		var rule = new NotRule(JsonNode.Parse("[]"));
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
@@ -17,7 +17,7 @@ public class NotTests
 	[Test]
 	public void NonEmptyArrayIsFalse()
 	{
-		var rule = new NotRule(JsonDocument.Parse("[1]").RootElement);
+		var rule = new NotRule(JsonNode.Parse("[1]"));
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
@@ -73,7 +73,7 @@ public class NotTests
 	[Test]
 	public void NullIsTrue()
 	{
-		var rule = new NotRule(JsonDocument.Parse("null").RootElement);
+		var rule = new NotRule(JsonNode.Parse("null"));
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
@@ -81,7 +81,7 @@ public class NotTests
 	[Test]
 	public void EmptyObjectIsTrue()
 	{
-		var rule = new NotRule(JsonDocument.Parse("{}").RootElement);
+		var rule = new NotRule(JsonNode.Parse("{}"));
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
@@ -89,7 +89,7 @@ public class NotTests
 	[Test]
 	public void NonEmptyObjectIsFalse()
 	{
-		var rule = new NotRule(JsonDocument.Parse("{\"foo\":5}").RootElement);
+		var rule = new NotRule(JsonNode.Parse("{\"foo\":5}"));
 
 		JsonAssert.IsFalse(rule.Apply());
 	}

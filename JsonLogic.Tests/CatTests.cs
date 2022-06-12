@@ -1,6 +1,5 @@
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests;
@@ -42,7 +41,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndArrayConcatsValues()
 	{
-		var array = new[] { 1.AsJsonElement(), 2.AsJsonElement(), 3.AsJsonElement() }.AsJsonElement();
+		var array = new JsonArray { 1, 2, 3 };
 		var rule = new CatRule("foo", array);
 
 		JsonAssert.AreEquivalent("foo1,2,3", rule.Apply());
@@ -51,8 +50,8 @@ public class CatTests
 	[Test]
 	public void CatStringAndNestedArrayConcatsValues()
 	{
-		var array = new[] { 1.AsJsonElement(), 2.AsJsonElement(), 3.AsJsonElement() }.AsJsonElement();
-		var nestedArray = new[] { 1.AsJsonElement(), array, 3.AsJsonElement() }.AsJsonElement();
+		var array = new JsonArray { 1, 2, 3 };
+		var nestedArray = new JsonArray { 1, array, 3 };
 		var rule = new CatRule("foo", nestedArray);
 
 		JsonAssert.AreEquivalent("foo1,1,2,3,3", rule.Apply());
@@ -61,7 +60,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndObjectConcatsValues()
 	{
-		var rule = new CatRule("foo", JsonDocument.Parse("{}").RootElement);
+		var rule = new CatRule("foo", JsonNode.Parse("{}"));
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

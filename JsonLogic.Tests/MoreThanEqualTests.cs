@@ -1,6 +1,5 @@
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests;
@@ -50,7 +49,7 @@ public class MoreThanEqualTests
 	[Test]
 	public void MoreThanEqualArrayThrowsError()
 	{
-		var rule = new MoreThanEqualRule(new JsonElement[] { }.AsJsonElement(), 2);
+		var rule = new MoreThanEqualRule(new JsonArray(), 2);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
@@ -58,7 +57,7 @@ public class MoreThanEqualTests
 	[Test]
 	public void MoreThanEqualObjectThrowsError()
 	{
-		var rule = new MoreThanEqualRule(JsonDocument.Parse("{}").RootElement, 2);
+		var rule = new MoreThanEqualRule(new JsonObject(), 2);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

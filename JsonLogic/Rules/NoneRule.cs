@@ -1,6 +1,5 @@
 ﻿using System.Linq;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -16,16 +15,14 @@ internal class NoneRule : Rule
 		_rule = rule;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var input = _input.Apply(data, contextData);
 
-		if (input.ValueKind != JsonValueKind.Array)
+		if (input is not JsonArray arr)
 			throw new JsonLogicException("Input must evaluate to an array.");
 
-		var inputData = input.EnumerateArray();
-		return (!inputData.Select(value => _rule.Apply(data, value))
-				.Any(result => result.IsTruthy()))
-			.AsJsonElement();
+		return !arr.Select(value => _rule.Apply(data, value))
+			.Any(result => result.IsTruthy());
 	}
 }

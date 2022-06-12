@@ -1,6 +1,5 @@
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests;
@@ -50,7 +49,7 @@ public class MoreThanTests
 	[Test]
 	public void MoreThanArrayThrowsError()
 	{
-		var rule = new MoreThanRule(new JsonElement[] { }.AsJsonElement(), 2);
+		var rule = new MoreThanRule(new JsonArray(), 2);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
@@ -58,7 +57,7 @@ public class MoreThanTests
 	[Test]
 	public void MoreThanObjectThrowsError()
 	{
-		var rule = new MoreThanRule(JsonDocument.Parse("{}").RootElement, 2);
+		var rule = new MoreThanRule(new JsonObject(), 2);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

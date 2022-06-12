@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -16,13 +15,13 @@ internal class IfRule : Rule
 		_components = new List<Rule>(components);
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		bool condition;
 		switch (_components.Count)
 		{
 			case 0:
-				return ((string?)null).AsJsonElement();
+				return null;
 			case 1:
 				return _components[0].Apply(data, contextData);
 			case 2:
@@ -31,7 +30,7 @@ internal class IfRule : Rule
 
 				return condition
 					? thenResult.Apply(data, contextData)
-					: ((string?)null).AsJsonElement();
+					: null;
 			default:
 				var currentCondition = _components[0];
 				var currentTrueResult = _components[1];
@@ -44,7 +43,7 @@ internal class IfRule : Rule
 					if (condition)
 						return currentTrueResult.Apply(data, contextData);
 
-					if (elseIndex == _components.Count) return ((string?)null).AsJsonElement();
+					if (elseIndex == _components.Count) return null;
 
 					currentCondition = _components[elseIndex++];
 

@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Json.More;
+﻿using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -15,11 +14,11 @@ internal class LooseNotEqualsRule : Rule
 		_b = b;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var a = _a.Apply(data, contextData);
 		var b = _b.Apply(data, contextData);
 
-		return (!a.LooseEquals(b)).AsJsonElement();
+		return !a.LooseEquals(b);
 	}
 }

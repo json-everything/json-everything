@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -16,28 +16,24 @@ internal class InRule : Rule
 		_source = source;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var test = _test.Apply(data, contextData);
 		var source = _source.Apply(data, contextData);
 
-		if (source.ValueKind == JsonValueKind.String)
+		if (source is JsonValue value && value.TryGetValue(out string? stringSource))
 		{
 			var stringTest = test.Stringify();
-			var stringSource = source.GetString();
 
 			if (stringTest == null || stringSource == null)
-				throw new JsonLogicException($"Cannot check string for {test.ValueKind}.");
+				throw new JsonLogicException($"Cannot check string for {test.JsonType()}.");
 
-			return (!string.IsNullOrEmpty(stringTest) && stringSource.Contains(stringTest)).AsJsonElement();
+			return !string.IsNullOrEmpty(stringTest) && stringSource.Contains(stringTest);
 		}
 
-		if (source.ValueKind == JsonValueKind.Array)
-		{
-			var items = source.EnumerateArray();
-			return items.Any(i => i.IsEquivalentTo(test)).AsJsonElement();
-		}
+		if (source is JsonArray arr)
+			return arr.Any(i => i.IsEquivalentTo(test));
 
-		throw new JsonLogicException($"Cannot apply `in` to {test.ValueKind} and {source.ValueKind}.");
+		throw new JsonLogicException($"Cannot apply `in` to {test.JsonType()} and {source.JsonType()}.");
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -13,7 +14,7 @@ internal class LogRule : Rule
 		_log = log;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var log = _log.Apply(data, contextData);
 

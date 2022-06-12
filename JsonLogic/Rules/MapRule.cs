@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Text.Json;
-using Json.More;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -17,13 +15,13 @@ internal class MapRule : Rule
 		_rule = rule;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var input = _input.Apply(data, contextData);
 
-		if (input.ValueKind != JsonValueKind.Array)
-			return Array.Empty<JsonElement>().AsJsonElement();
+		if (input is not JsonArray arr)
+			return new JsonArray();
 
-		return input.EnumerateArray().Select(i => _rule.Apply(data, i)).AsJsonElement();
+		return new JsonArray(arr.Select(i => _rule.Apply(data, i)).ToArray());
 	}
 }

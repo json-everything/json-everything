@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -16,10 +15,10 @@ internal class AndRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var items = _items.Select(i => i.Apply(data, contextData));
-		var first = false.AsJsonElement();
+		JsonNode? first = false;
 		foreach (var x in items)
 		{
 			first = x;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -15,7 +14,7 @@ internal class CatRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var result = string.Empty;
 
@@ -25,9 +24,9 @@ internal class CatRule : Rule
 
 			var str = value.Stringify();
 
-			result += str ?? throw new JsonLogicException($"Cannot concatenate {value.ValueKind}.");
+			result += str ?? throw new JsonLogicException($"Cannot concatenate {value.JsonType()}.");
 		}
 
-		return result.AsJsonElement();
+		return result;
 	}
 }

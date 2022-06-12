@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -15,7 +14,7 @@ internal class MultiplyRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		decimal result = 1;
 
@@ -26,11 +25,11 @@ internal class MultiplyRule : Rule
 			var number = value.Numberify();
 
 			if (number == null)
-				throw new JsonLogicException($"Cannot multiply {value.ValueKind}.");
+				throw new JsonLogicException($"Cannot multiply {value.JsonType()}.");
 
 			result *= number.Value;
 		}
 
-		return result.AsJsonElement();
+		return result;
 	}
 }

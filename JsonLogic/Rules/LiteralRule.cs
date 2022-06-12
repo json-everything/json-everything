@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -6,51 +6,16 @@ namespace Json.Logic.Rules;
 [Operator("")]
 internal class LiteralRule : Rule
 {
-	private readonly JsonElement _value;
+	private readonly JsonNode? _value;
 
-	public static readonly LiteralRule Null = new LiteralRule(null);
+	public static readonly LiteralRule Null = new(null);
 
-	public LiteralRule(JsonElement value)
+	public LiteralRule(JsonNode? value)
 	{
-		_value = value.Clone();
+		_value = value.Copy();
 	}
 
-	public LiteralRule(int value)
-	{
-		_value = value.AsJsonElement();
-	}
-
-	public LiteralRule(string? value)
-	{
-		_value = value?.AsJsonElement() ?? JsonDocument.Parse("null").RootElement;
-	}
-
-	public LiteralRule(bool value)
-	{
-		_value = value.AsJsonElement();
-	}
-
-	public LiteralRule(long value)
-	{
-		_value = value.AsJsonElement();
-	}
-
-	public LiteralRule(decimal value)
-	{
-		_value = value.AsJsonElement();
-	}
-
-	public LiteralRule(float value)
-	{
-		_value = value.AsJsonElement();
-	}
-
-	public LiteralRule(double value)
-	{
-		_value = value.AsJsonElement();
-	}
-
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return _value;
 	}
