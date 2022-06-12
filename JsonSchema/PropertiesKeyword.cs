@@ -79,7 +79,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 			}
 
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
-				item ?? ValidationContext.NullNode,
+				item ?? JsonNull.SignalNode,
 				context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
 			schema.ValidateSubschema(context);
 			var localResult = context.LocalResult.IsValid;

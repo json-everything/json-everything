@@ -1,21 +1,16 @@
-﻿using System;
-using System.Text.Json.Nodes;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Json.More.Tests;
 
 public class DevTest
 {
+
 	[Test]
 	public void Test()
 	{
-		JsonNode node = 1L;
-		var copy = node.Copy();
+		var node = JsonNull.SignalNode;
 
-		Console.WriteLine(node);
-		Console.WriteLine(copy);
-
-		Assert.AreNotSame(node, copy);
-		node.IsEquivalentTo(copy);
+		Assert.IsNotNull(node);
+		Assert.AreEqual("null", node.AsJsonString());
 	}
 }
