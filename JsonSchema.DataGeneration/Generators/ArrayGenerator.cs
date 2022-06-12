@@ -107,7 +107,7 @@ internal class ArrayGenerator : IDataGenerator
 			return GenerationResult.Fail("Could not generate sufficient items to meet requirements");
 
 		return itemGenerationResults.All(x => x.IsSuccess)
-			? GenerationResult.Success(new JsonArray(itemGenerationResults.Select(x => x.Result).ToArray()))
+			? GenerationResult.Success(itemGenerationResults.Select(x => x.Result).ToJsonArray())
 			: GenerationResult.Fail(itemGenerationResults);
 	}
 }

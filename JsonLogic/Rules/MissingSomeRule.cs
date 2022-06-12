@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Logic.Rules;
@@ -24,11 +25,11 @@ internal class MissingSomeRule : Rule
 			throw new JsonLogicException("Expected array of required paths.");
 
 		var expected = arr.SelectMany(e => e.Flatten()).ToList();
-		if (expected.Any(e => e is JsonValue v && v.TryGetValue(out string? _)))
+		if (expected.Any(e => e is JsonValue v && !v.TryGetValue(out string? _)))
 			throw new JsonLogicException("Expected array of required paths.");
 
 		if (data is not JsonObject)
-			return new JsonArray(expected.ToArray());
+			return expected.ToJsonArray();
 
 		var paths = expected.Cast<JsonValue>().Select(e => e.GetValue<string?>()!)
 			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
@@ -44,7 +45,7 @@ internal class MissingSomeRule : Rule
 		var found = paths.Count(p => p.Value != null);
 
 		if (found < requiredCount)
-			return new JsonArray(missing.ToArray());
+			return missing.ToJsonArray();
 
 		return new JsonArray();
 	}

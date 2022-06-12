@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -124,23 +125,35 @@ public static class JsonNodeExtensions
 		var number = GetInteger(value);
 		if (number != null) return number;
 
-		if (value.TryGetValue<float>(out var f)) return (decimal)f;
-		if (value.TryGetValue<double>(out var d)) return (decimal)d;
-		if (value.TryGetValue<decimal>(out var dc)) return dc;
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind != JsonValueKind.Number) return null;
+			return e.GetDecimal();
+		}
+		if (value.TryGetValue(out float f)) return (decimal)f;
+		if (value.TryGetValue(out double d)) return (decimal)d;
+		if (value.TryGetValue(out decimal dc)) return dc;
 
 		return null;
 	}
 
 	public static long? GetInteger(this JsonValue value)
 	{
-		if (value.TryGetValue<byte>(out var b)) return b;
-		if (value.TryGetValue<short>(out var s)) return s;
-		if (value.TryGetValue<ushort>(out var us)) return us;
-		if (value.TryGetValue<int>(out var i)) return i;
-		if (value.TryGetValue<ushort>(out var ui)) return ui;
-		if (value.TryGetValue<long>(out var l)) return l;
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind != JsonValueKind.Number) return null;
+			var d = e.GetDecimal();
+			if (d == Math.Floor(d)) return (long)d;
+			return null;
+		}
+		if (value.TryGetValue(out byte b)) return b;
+		if (value.TryGetValue(out short s)) return s;
+		if (value.TryGetValue(out ushort us)) return us;
+		if (value.TryGetValue(out int i)) return i;
+		if (value.TryGetValue(out ushort ui)) return ui;
+		if (value.TryGetValue(out long l)) return l;
 		// this doesn't feel right... throw?
-		if (value.TryGetValue<ulong>(out var ul)) return (long)ul;
+		if (value.TryGetValue(out ulong ul)) return (long)ul;
 
 		return null;
 	}
@@ -163,5 +176,10 @@ public static class JsonNodeExtensions
 			node = null;
 			return false;
 		}
+	}
+
+	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
+	{
+		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
 	}
 }

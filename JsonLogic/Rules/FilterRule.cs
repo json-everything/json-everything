@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -22,6 +23,6 @@ internal class FilterRule : Rule
 		if (input is not JsonArray arr)
 			return new JsonArray();
 
-		return new JsonArray(arr.Where(i => _rule.Apply(data, i).IsTruthy()).ToArray());
+		return arr.Where(i => _rule.Apply(data, i).IsTruthy()).ToJsonArray();
 	}
 }

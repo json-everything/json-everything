@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -64,9 +65,10 @@ public static class JsonNodeExtensions
 		{
 			case null:
 				return string.Empty;
-			case JsonObject:
-			case JsonArray:
-			case JsonValue:
+			case JsonArray arr:
+				return string.Join(",", arr.Select(Stringify));
+			case JsonValue value:
+				if (value.TryGetValue(out string? s)) return s;
 				return node.ToJsonString();
 			default:
 				return null;

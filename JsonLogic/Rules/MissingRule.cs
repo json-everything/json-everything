@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Logic.Rules;
@@ -21,7 +22,7 @@ internal class MissingRule : Rule
 			.Where(v => v.TryGetValue(out string? _));
 
 		if (data is not JsonObject)
-			return new JsonArray(expected.Cast<JsonNode>().ToArray());
+			return expected.ToJsonArray();
 
 		var paths = expected.Select(e => e.GetValue<string?>()!)
 			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
@@ -31,9 +32,9 @@ internal class MissingRule : Rule
 				return new { Path = p.Path, Value = value };
 			});
 
-		return new JsonArray(paths.Where(p => p.Value == null)
+		return paths.Where(p => p.Value == null)
 			.Select(k => (JsonNode?)k.Path)
-			.ToArray());
+			.ToJsonArray();
 
 	}
 }

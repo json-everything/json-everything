@@ -79,10 +79,18 @@ public class BooleanCastTests
 	}
 
 	[Test]
-	public void ObjectThrowsError()
+	public void EmptyObjectIsFalse()
 	{
 		var rule = new BooleanCastRule(JsonNode.Parse("{}"));
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
+	}
+
+	[Test]
+	public void NonEmptyObjectIsTrue()
+	{
+		var rule = new BooleanCastRule(JsonNode.Parse("{\"foo\":1}"));
+
+		JsonAssert.IsTrue(rule.Apply());
 	}
 }

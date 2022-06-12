@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -18,6 +19,6 @@ internal class MergeRule : Rule
 	{
 		var items = _items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
 
-		return new JsonArray(items.ToArray());
+		return items.ToJsonArray();
 	}
 }
