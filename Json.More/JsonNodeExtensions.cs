@@ -115,11 +115,21 @@ public static class JsonNodeExtensions
 		return hash;
 	}
 
+	/// <summary>
+	/// Gets JSON string representation for <see cref="JsonNode"/>, including null support.
+	/// </summary>
+	/// <param name="node">A node.</param>
+	/// <returns>JSON string representation.</returns>
 	public static string AsJsonString(this JsonNode? node)
 	{
 		return node?.ToJsonString() ?? "null";
 	}
 
+	/// <summary>
+	/// Gets a node's underlying numeric value.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying numeric value, or null if the node represented a non-numeric value.</returns>
 	public static decimal? GetNumber(this JsonValue value)
 	{
 		if (value.TryGetValue(out JsonElement e))
@@ -138,6 +148,11 @@ public static class JsonNodeExtensions
 		return null;
 	}
 
+	/// <summary>
+	/// Gets a node's underlying numeric value if it's an integer.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying numeric value if it's an integer, or null if the node represented a non-integer value.</returns>
 	public static long? GetInteger(this JsonValue value)
 	{
 		if (value.TryGetValue(out JsonElement e))
@@ -159,11 +174,34 @@ public static class JsonNodeExtensions
 		return null;
 	}
 
+	/// <summary>
+	/// Creates a copy of a node by passing it through the serializer.
+	/// </summary>
+	/// <param name="source">A node.</param>
+	/// <returns>A duplicate of the node.</returns>
+	/// <remarks>
+	///	`JsonNode` may only be part of a single JSON tree, i.e. have a single parent.
+	/// Copying a node allows its value to be saved to another JSON tree.
+	/// </remarks>
 	public static JsonNode? Copy(this JsonNode? source)
 	{
 		return source.Deserialize<JsonNode?>();
 	}
 
+	/// <summary>
+	/// Convenience method that wraps <see cref="JsonObject.TryGetPropertyValue(string, out JsonNode?)"/>
+	/// and catches argument exceptions.
+	/// </summary>
+	/// <param name="obj">The JSON object.</param>
+	/// <param name="propertyName">The property name</param>
+	/// <param name="node">The node under the property name if it exists and is singular; null otherwise.</param>
+	/// <param name="e">An exception if one was thrown during the access attempt.</param>
+	/// <returns>true if the property exists and is singular within the JSON data.</returns>
+	/// <remarks>
+	/// <see cref="JsonObject.TryGetPropertyValue(string, out JsonNode?)"/> throws an
+	/// <see cref="ArgumentException"/> if the node was parsed from data that has duplicate
+	/// keys.  Please see https://github.com/dotnet/runtime/issues/70604 for more information.
+	/// </remarks>
 	public static bool TryGetValue(this JsonObject obj, string propertyName, out JsonNode? node, out Exception? e)
 	{
 		e = null;
@@ -179,6 +217,11 @@ public static class JsonNodeExtensions
 		}
 	}
 
+	/// <summary>
+	/// Creates a new <see cref="JsonArray"/> from an enumerable of nodes.
+	/// </summary>
+	/// <param name="nodes">The nodes.</param>
+	/// <returns>A JSON array.</returns>
 	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
 	{
 		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());

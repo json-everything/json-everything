@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -49,7 +48,7 @@ public static class JsonNodeExtensions
 	/// <summary>
 	/// Provides a loose-cast to a string.
 	/// </summary>
-	/// <param name="element">The element.</param>
+	/// <param name="node">The node.</param>
 	/// <returns>
 	///	A string representation of the value as follows:
 	///
@@ -78,7 +77,7 @@ public static class JsonNodeExtensions
 	/// <summary>
 	/// Provides a loose-cast to a number.
 	/// </summary>
-	/// <param name="element">The element.</param>
+	/// <param name="node">The node.</param>
 	/// <returns>
 	///	A string representation of the value as follows:
 	///

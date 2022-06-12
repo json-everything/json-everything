@@ -56,7 +56,7 @@ public class PatchExtensionTests
 
 		var patch = initial.CreatePatch(expected);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -70,7 +70,7 @@ public class PatchExtensionTests
 
 		var patch = initial.CreatePatch(expected);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -84,7 +84,7 @@ public class PatchExtensionTests
 
 		var patch = initial.CreatePatch(expected);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -141,7 +141,7 @@ public class PatchExtensionTests
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 		var patch = initial.CreatePatch(expected);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -153,7 +153,7 @@ public class PatchExtensionTests
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 		var patch = initial.CreatePatch(expected);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -165,7 +165,7 @@ public class PatchExtensionTests
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 		var patch = initial.CreatePatch(expected);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -177,7 +177,7 @@ public class PatchExtensionTests
 		var patchExpectedStr = "[{\"op\":\"replace\",\"path\":\"/2\",\"value\":1}]";
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 
-		VerifyPatches(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -249,8 +249,8 @@ public class PatchExtensionTests
 		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 		var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 
-		VerifyPatches(patchExpected, patch);
-		VerifyPatches(patchBackExpected, patchBack);
+		VerifyPatches(patchExpected!, patch);
+		VerifyPatches(patchBackExpected!, patchBack);
 	}
 
 	private static void OutputPatch(JsonPatch patch)

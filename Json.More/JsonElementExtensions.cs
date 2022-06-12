@@ -259,6 +259,15 @@ public static class JsonElementExtensions
 		return doc.RootElement.Clone();
 	}
 
+	/// <summary>
+	/// Converts a <see cref="JsonElement"/> to a <see cref="JsonNode"/>.
+	/// </summary>
+	/// <param name="element">The element.</param>
+	/// <returns>An equivalent node.</returns>
+	/// <remarks>
+	/// This provides a single point of conversion as one is not provided by .Net.
+	/// See https://github.com/dotnet/runtime/issues/70427 for more information.
+	/// </remarks>
 	public static JsonNode? AsNode(this JsonElement element) => element.ValueKind switch
 	{
 		JsonValueKind.Array => JsonArray.Create(element),

@@ -24,6 +24,15 @@ public class ValidationContext
 	private readonly Stack<bool> _directRefNavigation = new();
 	private JsonSchema? _currentAnchor;
 
+	/// <summary>
+	/// Provides a <see cref="JsonNode"/> instance to use as null.
+	/// </summary>
+	/// <remarks>
+	/// .Net has decided to unify JSON null with .Net null.  This decision has a number
+	/// of consequences.  This value is provided to get around some of these issues.
+	/// It has a value of <code>{ "id": "959896ae23a94cb49c7c3b61f1431b7e", "description": "This static property exists solely to represent a JSON null value" }</code>.
+	/// This is intended to be sufficiently unique.
+	/// </remarks>
 	public static readonly JsonNode NullNode = new JsonObject
 	{
 		["id"] = "959896ae23a94cb49c7c3b61f1431b7e",

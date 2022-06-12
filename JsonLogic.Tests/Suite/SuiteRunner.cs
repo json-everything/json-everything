@@ -18,7 +18,7 @@ public class SuiteRunner
 		{
 			var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
 
-			string content = null;
+			string content = null!;
 			try
 			{
 				using var client = new HttpClient();

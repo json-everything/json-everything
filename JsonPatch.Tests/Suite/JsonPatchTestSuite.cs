@@ -56,7 +56,7 @@ public class JsonPatchTestSuite
 		{
 			try
 			{
-				result = test.Patch.Apply(test.Doc);
+				result = test.Patch!.Apply(test.Doc);
 
 				Assert.AreNotEqual(test.ExpectsError, result.IsSuccess);
 

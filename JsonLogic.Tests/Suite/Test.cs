@@ -9,14 +9,16 @@ namespace Json.Logic.Tests.Suite;
 [JsonConverter(typeof(TestConverter))]
 public class Test
 {
+#pragma warning disable CS8618
 	public string Logic { get; set; }
 	public JsonNode? Data { get; set; }
 	public JsonNode? Expected { get; set; }
+#pragma warning restore CS8618
 }
 
-public class TestConverter : JsonConverter<Test>
+public class TestConverter : JsonConverter<Test?>
 {
-	public override Test Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override Test? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
 		if (node is not JsonArray arr) return null;
@@ -33,7 +35,7 @@ public class TestConverter : JsonConverter<Test>
 		};
 	}
 
-	public override void Write(Utf8JsonWriter writer, Test value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, Test? value, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
 	}

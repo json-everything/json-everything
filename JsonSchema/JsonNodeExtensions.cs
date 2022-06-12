@@ -5,8 +5,17 @@ using Json.More;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Provides some schema-related functionality for <see cref="JsonNode"/>.
+/// </summary>
 public static class JsonNodeExtensions
 {
+	/// <summary>
+	/// Provides the JSON Schema type of a node.
+	/// </summary>
+	/// <param name="node">The node.</param>
+	/// <returns>The <see cref="SchemaValueType"/> of the node.</returns>
+	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	public static SchemaValueType GetSchemaValueType(this JsonNode? node)
 	{
 		if (node is null) return SchemaValueType.Null;
@@ -41,6 +50,13 @@ public static class JsonNodeExtensions
 			_ => throw new ArgumentOutOfRangeException(nameof(element.ValueKind), element.ValueKind, null)
 		};
 
+	/// <summary>
+	/// Verifies that a <see cref="JsonObject"/> doesn't have any duplicate keys and can
+	/// therefore be processed.
+	/// </summary>
+	/// <param name="obj">The object.</param>
+	/// <param name="context">The validation context to log errors.</param>
+	/// <returns>true if the the object can be processed; false otherwise.</returns>
 	public static bool VerifyJsonObject(this JsonObject obj, ValidationContext context)
 	{
 		if (!obj.TryGetValue("_", out _, out var e) && e != null)

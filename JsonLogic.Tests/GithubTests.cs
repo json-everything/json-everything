@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
 
@@ -70,7 +68,7 @@ public class GithubTests
 
 		var data = JsonNode.Parse("{\"data\":{\"r\":[{\"tg\":\"140539006\"}],\"t\":[{\"tg\":\"140539006\"}],\"v\":[{\"tg\":\"Test\"}]}}");
 
-		var result = rule.Apply(data);
+		var result = rule!.Apply(data);
 
 		JsonAssert.AreEquivalent(false, result);
 	}
@@ -85,7 +83,7 @@ public class GithubTests
 
 		var data = JsonNode.Parse("{\"data\":{\"r\":[{\"tg\":\"140539006\"},{\"tg\":\"140539006\"}]}}");
 
-		var result = rule.Apply(data);
+		var result = rule!.Apply(data);
 
 		JsonAssert.AreEquivalent(true, result);
 	}
