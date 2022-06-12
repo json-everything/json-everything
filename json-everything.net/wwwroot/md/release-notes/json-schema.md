@@ -1,3 +1,22 @@
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Updated all functionality to use `JsonNode` instead of `JsonElement`.
+
+## Breaking Changes
+
+_`JsonElement` -> `JsonNode` type exchange changes not listed._
+
+- Removed obsolete members
+  - `IRefResolvable.ResolvePointerSegment()` (and implementations)
+  - `Format.Validate()` (and implementations)
+  - `JsonSchema.OtherData` (and associated constructor parameter) which is now supported by `UnrecognizedKeyword`
+
+## Additional Changes
+
+- Added `JsonNodeExtensions` to provide schema-specific functionality on top of what's provided in Json.More.Net
+  - `.GetSchemaValueType()` to get the JSON Schema type represented by a node
+  - `.VerifyJsonObject()` to verify that the underlying data of a `JsonObject` can be processed.  See [this issue](https://github.com/dotnet/runtime/issues/70604) for more information.
+
 # [2.4.0](https://github.com/gregsdennis/json-everything/pull/270)
 
 Added `UnrecognizedKeyword` to represent keywords that were not recognized by any known vocabulary.  The values of these keywords are then captured in the validation results as annotations.  As a result of this change `JsonSchema.OtherData` has been marked obsolete.  

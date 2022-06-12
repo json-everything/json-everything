@@ -57,6 +57,7 @@ public static class JsonNodeExtensions
 	/// <param name="obj">The object.</param>
 	/// <param name="context">The validation context to log errors.</param>
 	/// <returns>true if the the object can be processed; false otherwise.</returns>
+	/// <remarks>See https://github.com/dotnet/runtime/issues/70604 for more information.</remarks>
 	public static bool VerifyJsonObject(this JsonObject obj, ValidationContext context)
 	{
 		if (!obj.TryGetValue("_", out _, out var e) && e != null)

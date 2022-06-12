@@ -1,6 +1,23 @@
-# (coming soon)
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/280)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+
+Updated all functionality to use `JsonNode` instead of `JsonElement`.
+
+## Breaking Changes
+
+_`JsonElement` -> `JsonNode` type exchange changes not listed._
+
+- `JsonPatch.Apply()` now takes `JsonNode`
+- `.CreatePatch(JsonDocument, JsonDocument)` removed
+- `.CreatePatch(JsonElement, JsonElement)` replaced with `.CreatePatch(JsonNode?, JsonNode?)`
+- `PatchOperation` converted to a class
+- `PatchOperation` static methods which take `JsonElementProxy` removed as `JsonNode` defines implicit casts for the supported types
+- `PatchResult.Result` update to `JsonNode?`
+
+## Additional Changes
+
+- `.Apply<T>()` extension method now takes optional serializer options
 
 # [1.1.2](https://github.com/gregsdennis/json-everything/pull/196)
 

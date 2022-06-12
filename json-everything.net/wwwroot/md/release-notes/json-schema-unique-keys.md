@@ -1,3 +1,7 @@
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Updated all functionality to use `JsonNode` instead of `JsonElement` in line with JsonSchema.Net v3.
+
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/249)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
