@@ -36,7 +36,7 @@ public static class JsonNodeExtensions
 				return zipped.All(p => p.ae.IsEquivalentTo(p.be));
 			case (JsonValue aValue, JsonValue bValue):
 				if (aValue.GetValue<object>() is JsonElement aElement &&
-				    bValue.GetValue<object>() is JsonElement bElement)
+					bValue.GetValue<object>() is JsonElement bElement)
 					return aElement.IsEquivalentTo(bElement);
 				return a.ToJsonString() == b.ToJsonString();
 			default:
@@ -122,14 +122,15 @@ public static class JsonNodeExtensions
 
 	public static decimal? GetNumber(this JsonValue value)
 	{
-		var number = GetInteger(value);
-		if (number != null) return number;
-
 		if (value.TryGetValue(out JsonElement e))
 		{
 			if (e.ValueKind != JsonValueKind.Number) return null;
 			return e.GetDecimal();
 		}
+
+		var number = GetInteger(value);
+		if (number != null) return number;
+
 		if (value.TryGetValue(out float f)) return (decimal)f;
 		if (value.TryGetValue(out double d)) return (decimal)d;
 		if (value.TryGetValue(out decimal dc)) return dc;
