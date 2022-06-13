@@ -1074,4 +1074,16 @@ public static class JsonSchemaBuilderExtensions
 		builder.Add(new WriteOnlyKeyword(value));
 		return builder;
 	}
+
+	/// <summary>
+	/// Convenience method that builds and validates with a single call.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="root">The root instance.</param>
+	/// <param name="options">The options to use for this validation.</param>
+	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
+	public static ValidationResults Validate(this JsonSchemaBuilder builder, JsonNode? root, ValidationOptions? options = null)
+	{
+		return builder.Build().Validate(root, options);
+	}
 }

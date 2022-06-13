@@ -19,6 +19,15 @@ _`JsonElement` -> `JsonNode` type exchange changes not listed._
   - `.GetSchemaValueType()` to get the JSON Schema type represented by a node
   - `.VerifyJsonObject()` to verify that the underlying data of a `JsonObject` can be processed.  See [this issue](https://github.com/dotnet/runtime/issues/70604) for more information.
 - Added `JsonSchemaExtensions.Validate(this JsonSchema, JsonElement, ValidationOptions)` to continue supporting elements
+- Added `JsonSchemaBuilderExtensions.Validate(this JsonSchemaBuilder, JsonNode, ValidationOptions)` as a convenience method
+    ```c#
+    // instead of
+    var schema = builder.Build();
+    var results = schema.Validate(json);
+
+    // you can do
+    var results = builder.Validate(json);
+    ```
 
 # [2.4.0](https://github.com/gregsdennis/json-everything/pull/270)
 
