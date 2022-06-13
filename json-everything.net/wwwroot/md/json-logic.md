@@ -27,10 +27,10 @@ The library defines an object model for rules, starting with the `Rule` base cla
 var rule = JsonSerializer.Deserialize<Rule>("{\"<\" : [1, 2]}");
 ```
 
-Once you have a rule instance, you can apply it using the `.Apply()` method, which takes a `JsonElement` for the data.  Sometimes, you may not have a data instance; rather you just want the rule to run.  In these cases you can call `.Apply()` passing a `null` or by using the `.Apply()` extension method which takes no parameters.
+Once you have a rule instance, you can apply it using the `.Apply()` method, which takes a `JsonNode?` for the data.  (JSON null and .Net null are unified for this model.)  Sometimes, you may not have a data instance; rather you just want the rule to run.  In these cases you can call `.Apply()` passing a `null` or by using the `.Apply()` extension method which takes no parameters.
 
 ```c#
-var data = JsonDocument.Parse("{\"foo\": \"bar\"}").RootElement;
+var data = JsonNode.Parse("{\"foo\": \"bar\"}");
 var result = rule.Apply(data);
 ```
 
@@ -42,7 +42,15 @@ Creating the "less than" rule with a variable lookup from above:
 var rule = JsonLogic.LessThan(JsonLogic.Variable("foo.bar"), 2);
 ```
 
-The `2` here is actually implicitly cast to a `LiteralRule` which is a stand-in for discrete JSON elements.  It can hold any JSON value, and there are implicit casts for numeric, string (null uses the `string` cast since it's the only nullable type), and boolean types, as well as `JsonElement`.  For arrays and objects, it's best to express the value in a string and use either the `JsonDocument.Parse` mechanism shown above or one of the `.AsJsonElement()` overloads from [Json.More](json-more.md).
+The `2` here is actually implicitly cast to a `LiteralRule` which is a stand-in for discrete JSON elements.  It can hold any JSON value, and there are implicit casts for numeric, string\*, and boolean types, as well as `JsonElement`.  For arrays and objects, you can either build nodes inline
+
+```c#
+new JsonArray { 1, false, "string" };
+```
+
+or via `JsonNode.Parse()`.
+
+\* _JSON null literals need to either be cast to `string`, use `JsonNull.Node` from Json.More.Net, or use the provided `LiteralRule.Null`.  All of these result in the same semantic value._
 
 ## Gotchas for .Net developers
 
@@ -62,8 +70,8 @@ The first check is whether they are they same type.  If so, it just applies stri
 |anything|`null`|`false`|
 |object|anything|`false`|
 |anything|object|`false`|
-|number|array|convert the array to comma-delimited string and apply loose equality\*|
-|array|number|convert the array to comma-delimited string and apply loose equality\*|
+|number|array|convert the array to comma-delimited string and apply loose equality\*\*|
+|array|number|convert the array to comma-delimited string and apply loose equality\*\*|
 |number|anything|attempt to convert to number and apply strict equality|
 |anything|number|attempt to convert to number and apply strict equality|
 |array|string|convert the array to comma-delimited string and apply strict equality|
@@ -71,7 +79,7 @@ The first check is whether they are they same type.  If so, it just applies stri
 
 That _should_ cover everything, but in case something's missed, it'll just return `false`.
 
-\* _These cases effectively mean that the array must have a single element that is loosely equal to the number, though perhaps something like `[1,234]` might pass.  Again, the equality is **very** loose._
+\*\* _These cases effectively mean that the array must have a single element that is loosely equal to the number, though perhaps something like `[1,234]` might pass.  Again, the equality is **very** loose._
 
 ### Type conversion
 
@@ -80,6 +88,8 @@ Some operations operate on specific types: sometimes strings, sometimes numbers.
 Arithmetic operations, like `+` and `-`, and some other operations, like `min` and `max`, will attempt to convert the values to a number.
 
 String operations will attempt to convert to... yeah, strings.
+
+Because `+` supports both numbers (addition) and strings (concatenation); it will try both.
 
 Objects are never converted.
 
@@ -96,7 +106,7 @@ JSON Logic also supports [adding custom operations](https://jsonlogic.com/add_op
 In C#, your operators will need to derive from the `Rule` abstract class.  There is only a single method to implement, `Apply()`, and you'll need to add an `Operator` attribute.  The logic in the rule doesn't need to be complex, but there are a couple things to be aware of:
 
 - The arguments for your rule must correspond to the parameters of the constructor.
-- You're working with `JsonElement`s, so you'll need to detect compatible value types.  There are a few extension methods that you can use, like `.Numberify()`, that try to "fuzzy-cast" to a numberish value.
+- You're working with `JsonNode`s, so you'll need to detect compatible value types.  There are a few extension methods that you can use, like `.Numberify()`, that try to "fuzzy-cast" to an appropriate value.
 - If you encounter invalid input, throw a `JsonLogicException` with an appropriate message.
 
 `Apply()` takes two parameters, both of which are data for variables to act upon.
@@ -104,7 +114,7 @@ In C#, your operators will need to derive from the `Rule` abstract class.  There
 - `data` represents the external data.
 - `contextData` represents data that's passed to it by other rules.
 
-Several rules (`all`, `none`, and `some`) can pass data to their children.  `var` will prioritize `contextData` when attempting to resolve the path.  If `contextData` is null or doesn't have data at the indicated path, the path will be resolved against `data`.
+Several rules (`all`, `none`, and `some`) can pass data to their children.  `var` will prioritize `contextData` when attempting to resolve the path.  If `contextData` is (JSON) null or doesn't have data at the indicated path, the path will be resolved against `data`.
 
 It's definitely recommended to go through the [code for the built-in ruleset](https://github.com/gregsdennis/json-everything/tree/master/JsonLogic/Rules) for examples.
 

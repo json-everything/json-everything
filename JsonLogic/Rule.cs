@@ -39,7 +39,7 @@ public abstract class Rule
 	/// Casts a `string` value to a <see cref="LiteralRule"/>.  Can also be used to create a `null` JSON literal.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator Rule(string? value) => new LiteralRule(value);
+	public static implicit operator Rule(string? value) => value == null ? LiteralRule.Null : new LiteralRule(value);
 	/// <summary>
 	/// Casts a `bool` value to a <see cref="LiteralRule"/>.
 	/// </summary>

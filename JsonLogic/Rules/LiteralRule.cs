@@ -12,7 +12,7 @@ internal class LiteralRule : Rule
 
 	public LiteralRule(JsonNode? value)
 	{
-		_value = value.Copy();
+		_value = ReferenceEquals(JsonNull.SignalNode, value) ? null : value.Copy();
 	}
 
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)

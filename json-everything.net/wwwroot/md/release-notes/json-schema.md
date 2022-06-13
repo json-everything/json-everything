@@ -10,12 +10,15 @@ _`JsonElement` -> `JsonNode` type exchange changes not listed._
   - `IRefResolvable.ResolvePointerSegment()` (and implementations)
   - `Format.Validate()` (and implementations)
   - `JsonSchema.OtherData` (and associated constructor parameter) which is now supported by `UnrecognizedKeyword`
+- Removed all `JsonBuilderExtensions` methods which take `JsonElementProxy` since `JsonNode` defines implicit casts from the appropriate types
+- `LogExtensions.WrongValueKind()` now takes `SchemaValueType` instead of `JsonValueKind`
 
 ## Additional Changes
 
 - Added `JsonNodeExtensions` to provide schema-specific functionality on top of what's provided in Json.More.Net
   - `.GetSchemaValueType()` to get the JSON Schema type represented by a node
   - `.VerifyJsonObject()` to verify that the underlying data of a `JsonObject` can be processed.  See [this issue](https://github.com/dotnet/runtime/issues/70604) for more information.
+- Added `JsonSchemaExtensions.Validate(this JsonSchema, JsonElement, ValidationOptions)` to continue supporting elements
 
 # [2.4.0](https://github.com/gregsdennis/json-everything/pull/270)
 
