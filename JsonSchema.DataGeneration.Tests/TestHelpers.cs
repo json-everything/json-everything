@@ -38,7 +38,7 @@ public static class TestHelpers
 		options ??= ValidationOptions.Default;
 
 		Console.WriteLine(result.ErrorMessage);
-		if (result.Result.ValueKind != JsonValueKind.Undefined)
+		if (result.IsSuccess)
 			Console.WriteLine(JsonSerializer.Serialize(result.Result,
 				new JsonSerializerOptions
 				{

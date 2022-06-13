@@ -8,11 +8,11 @@ internal class ConstGenerator : IPrioritizedDataGenerator
 
 	public bool Applies(RequirementsContext context)
 	{
-		return context.Const.HasValue;
+		return context.ConstIsSet;
 	}
 
 	public GenerationResult Generate(RequirementsContext context)
 	{
-		return GenerationResult.Success(context.Const!.Value);
+		return GenerationResult.Success(context.Const);
 	}
 }

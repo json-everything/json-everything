@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic;
 
@@ -7,21 +7,13 @@ namespace Json.Logic;
 /// </summary>
 public static class RuleExtensions
 {
-	private static readonly JsonElement _nullElement;
-
-	static RuleExtensions()
-	{
-		using var doc = JsonDocument.Parse("null");
-		_nullElement = doc.RootElement.Clone();
-	}
-
 	/// <summary>
 	/// Calls <see cref="Rule.Apply"/> with no data.
 	/// </summary>
 	/// <param name="rule">The rule.</param>
 	/// <returns>The result.</returns>
-	public static JsonElement Apply(this Rule rule)
+	public static JsonNode? Apply(this Rule rule)
 	{
-		return rule.Apply(_nullElement);
+		return rule.Apply(null);
 	}
 }

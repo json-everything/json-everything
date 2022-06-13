@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Patch;
@@ -13,101 +14,77 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		var current = context.Source;
-		var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
-
-		if (message != null)
+		if (operation.Path.Segments.Length == 0)
 		{
-			context.Message = message;
+			context.Message = "Cannot move root value.";
 			return;
 		}
 
-		var from = context.Source;
-		message = EditableJsonElementHelpers.FindTarget(ref from, operation.From);
-
-		if (message != null)
+		if (!operation.From.EvaluateAndGetParent(context.Source, out var source) ||
+		    !operation.From.TryEvaluate(context.Source, out var data))
 		{
-			context.Message = message;
+			context.Message = $"Source path `{operation.Path}` could not be reached.";
 			return;
+		}
+
+		if (!operation.Path.EvaluateAndGetParent(context.Source, out var target))
+		{
+			context.Message = $"Target path `{operation.From}` could not be reached.";
+			return;
+		}
+
+		var lastFromSegment = operation.From.Segments.Last().Value;
+		if (source is JsonObject objSource) 
+			objSource.Remove(lastFromSegment);
+		else if (source is JsonArray arrSource)
+		{
+			var index = lastFromSegment == "-" ? arrSource.Count - 1 : int.Parse(lastFromSegment);
+			arrSource.RemoveAt(index);
 		}
 
 		if (operation.Path.Segments.Length == 0)
 		{
-			context.Source = from;
+			context.Source = data;
 			return;
 		}
 
-		var fromParent = context.Source;
-		EditableJsonElementHelpers.FindParentOfTarget(ref fromParent, operation.From);
-
-		var last = operation.Path.Segments.Last();
-		var fromLast = operation.From.Segments.Last();
-		if (current.Object != null)
+		var lastPathSegment = operation.Path.Segments.Last().Value;
+		if (target is JsonObject objTarget)
 		{
-			context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
-			if (context.Message != null) return;
-
-			current.Object[last.Value] = from;
+			objTarget[lastPathSegment] = data;
 			return;
 		}
-		if (current.Array != null)
+
+		if (target is JsonArray arrTarget)
 		{
-			if (last.Value == "-")
+			int index;
+			if (lastPathSegment == "-")
+				index = arrTarget.Count;
+			else if (!int.TryParse(lastPathSegment, out index))
 			{
-				context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
-				if (context.Message != null) return;
-
-				current.Array.Add(from);
+				context.Message = $"Target path `{operation.Path}` could not be reached.";
 				return;
 			}
-
-			if (!int.TryParse(last.Value, out var index) || 0 > index || index > current.Array.Count)
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-			if ((index != 0 && last.Value[0] == '0') ||
-				(index == 0 && last.Value.Length > 1))
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-
-			context.Message = RemoveSource(fromParent, fromLast.Value, operation.From);
-			if (context.Message != null) return;
-
-			current.Array.Insert(index, from);
-			return;
+			if (0 <= index && index < arrTarget.Count)
+				arrTarget[index] = data;
+			else if (index == arrTarget.Count)
+				arrTarget.Add(data);
+			else
+				context.Message = "Path indicates an index greater than the bounds of the array";
 		}
-
-		context.Message = $"Path `{operation.Path}` is not present in the instance.";
 	}
+}
 
-	private static string? RemoveSource(EditableJsonElement fromParent, string lastSegment, JsonPointer path)
+internal static class PointerExtensions
+{
+	public static bool EvaluateAndGetParent(this JsonPointer pointer, JsonNode? node, out JsonNode? target)
 	{
-		if (fromParent.Object != null)
+		if (pointer == JsonPointer.Empty)
 		{
-			if (fromParent.Object.TryGetValue(lastSegment, out _))
-			{
-				fromParent.Object.Remove(lastSegment);
-				return null;
-			}
+			target = node?.Parent;
+			return target != null;
 		}
-		else if (fromParent.Array != null)
-		{
-			if (lastSegment == "-")
-			{
-				fromParent.Array.RemoveAt(fromParent.Array.Count - 1);
-				return null;
-			}
-
-			if (int.TryParse(lastSegment, out var index) && -1 <= index && index < fromParent.Array.Count)
-			{
-				fromParent.Array.RemoveAt(index);
-				return null;
-			}
-		}
-
-		return $"Path `{path}` is not present in the instance.";
+		var parentPointer = JsonPointer.Create(pointer.Segments.Take(pointer.Segments.Length - 1).ToArray());
+		return parentPointer.TryEvaluate(node, out target);
 	}
 }

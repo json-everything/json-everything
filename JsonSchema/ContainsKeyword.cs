@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -48,18 +49,19 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var count = context.LocalInstance.GetArrayLength();
+		var array = (JsonArray)context.LocalInstance!;
 		var validIndices = new List<int>();
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < array.Count; i++)
 		{
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), context.LocalInstance[i]);
+			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), array[i]);
 			Schema.ValidateSubschema(context);
 			if (context.LocalResult.IsValid)
 				validIndices.Add(i);
@@ -97,11 +99,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 			annotation.AddRange(allIndices);
 		else if (allIndices.Any())
 			localResults.SetAnnotation(Name, allIndices);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

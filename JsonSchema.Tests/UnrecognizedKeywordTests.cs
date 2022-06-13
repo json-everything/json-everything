@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations.Count());
-		Assert.IsTrue("bar".AsJsonElement().IsEquivalentTo((JsonElement)result.Annotations.First().Value));
+		Assert.IsTrue(((JsonNode)"bar").IsEquivalentTo((JsonNode)result.Annotations.First().Value));
 	}
 
 	[Test]

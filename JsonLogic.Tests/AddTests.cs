@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
@@ -53,7 +54,7 @@ public class AddTests
 	[Test]
 	public void AddSingleArrayThrowsError()
 	{
-		var rule = new AddRule(new[] { false.AsJsonElement(), 5.AsJsonElement() }.AsJsonElement());
+		var rule = new AddRule(new JsonArray { false, 5 });
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
@@ -61,7 +62,7 @@ public class AddTests
 	[Test]
 	public void AddSingleObjectThrowsError()
 	{
-		var rule = new AddRule(JsonDocument.Parse(JsonSerializer.Serialize(new { foo = 5 })).RootElement);
+		var rule = new AddRule(new JsonObject{ ["foo"] = 5 });
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
@@ -85,7 +86,7 @@ public class AddTests
 	[Test]
 	public void AddSingleNullThrowsError()
 	{
-		var rule = new AddRule(JsonDocument.Parse("null").RootElement);
+		var rule = new AddRule(LiteralRule.Null);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

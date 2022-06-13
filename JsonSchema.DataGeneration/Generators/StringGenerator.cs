@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Bogus;
 using Bogus.Extensions;
 using Json.More;
@@ -13,7 +13,7 @@ internal class StringGenerator : IDataGenerator
 	private const int _maxStringLength = 1000;
 	private static readonly NumberRangeSet _defaultRange = NumberRangeSet.NonNegative.Floor(0).Ceiling(_maxStringLength);
 	private static readonly Faker _faker = new();
-	private static readonly Dictionary<string, Func<NumberRange, JsonElementProxy>> _formatGenerators =
+	private static readonly Dictionary<string, Func<NumberRange, JsonNode?>> _formatGenerators =
 		new()
 		{
 			[Formats.Date.Key] = GenerateDate,
@@ -39,7 +39,7 @@ internal class StringGenerator : IDataGenerator
 	public static uint DefaultMinLength { get; set; } = 0;
 	public static uint DefaultMaxLength { get; set; } = 100;
 
-	public static StringGenerator Instance { get; } = new StringGenerator();
+	public static StringGenerator Instance { get; } = new();
 
 	private StringGenerator()
 	{
@@ -90,17 +90,17 @@ internal class StringGenerator : IDataGenerator
 		return GenerationResult.Success(data);
 	}
 
-	private static JsonElementProxy GenerateDate(NumberRange numberRange)
+	private static JsonNode? GenerateDate(NumberRange numberRange)
 	{
 		return _faker.Date.Recent().ToString("yyyy-MM-dd");
 	}
 
-	private static JsonElementProxy GenerateDateTime(NumberRange numberRange)
+	private static JsonNode? GenerateDateTime(NumberRange numberRange)
 	{
 		return _faker.Date.Recent().ToString("O");
 	}
 
-	private static JsonElementProxy GenerateDuration(NumberRange arg)
+	private static JsonNode? GenerateDuration(NumberRange arg)
 	{
 		var days = JsonSchemaExtensions.Randomizer.Int(0, 6);
 		var hours = JsonSchemaExtensions.Randomizer.Int(0, 23);
@@ -110,27 +110,27 @@ internal class StringGenerator : IDataGenerator
 		return $"P{days}DT{hours}H{minutes}M{seconds}S";
 	}
 
-	private static JsonElementProxy GenerateEmail(NumberRange arg)
+	private static JsonNode? GenerateEmail(NumberRange arg)
 	{
 		return _faker.Person.Email;
 	}
 
-	private static JsonElementProxy GenerateHostname(NumberRange arg)
+	private static JsonNode? GenerateHostname(NumberRange arg)
 	{
 		return _faker.Internet.DomainName();
 	}
 
-	private static JsonElementProxy GenerateIpv4(NumberRange arg)
+	private static JsonNode? GenerateIpv4(NumberRange arg)
 	{
 		return _faker.Internet.Ip();
 	}
 
-	private static JsonElementProxy GenerateIpv6(NumberRange arg)
+	private static JsonNode? GenerateIpv6(NumberRange arg)
 	{
 		return _faker.Internet.Ipv6();
 	}
 
-	private static JsonElementProxy GenerateJsonPointer(NumberRange arg)
+	private static JsonNode? GenerateJsonPointer(NumberRange arg)
 	{
 		var segmentCount = JsonSchemaExtensions.Randomizer.Int(0, 10);
 		var segments = Enumerable.Range(0, segmentCount)
@@ -141,29 +141,29 @@ internal class StringGenerator : IDataGenerator
 		return $"/{string.Join("/", segments)}";
 	}
 
-	private static JsonElementProxy GenerateRelativeJsonPointer(NumberRange arg)
+	private static JsonNode? GenerateRelativeJsonPointer(NumberRange arg)
 	{
 		var countUp = JsonSchemaExtensions.Randomizer.Int(0, 7);
-		JsonElement pointer = GenerateJsonPointer(arg);
-		return $"{countUp}{pointer.GetString()}";
+		var pointer = GenerateJsonPointer(arg);
+		return $"{countUp}{pointer!.GetValue<string>()}";
 	}
 
-	private static JsonElementProxy GenerateTime(NumberRange arg)
+	private static JsonNode? GenerateTime(NumberRange arg)
 	{
 		return _faker.Date.Recent().ToString("HH':'mm':'ss");
 	}
 
-	private static JsonElementProxy GenerateUri(NumberRange arg)
+	private static JsonNode? GenerateUri(NumberRange arg)
 	{
 		return _faker.Internet.UrlWithPath();
 	}
 
-	private static JsonElementProxy GenerateUriReference(NumberRange arg)
+	private static JsonNode? GenerateUriReference(NumberRange arg)
 	{
 		return _faker.Internet.UrlWithPath();
 	}
 
-	private static JsonElementProxy GenerateUuid(NumberRange arg)
+	private static JsonNode? GenerateUuid(NumberRange arg)
 	{
 		return Guid.NewGuid().ToString("D");
 	}

@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 
@@ -27,8 +28,8 @@ public class SingleOpProcessingTests
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/hello\", \"value\": [\"world\"] }]")!;
 
-		var element = JsonDocument.Parse("{\"something\":\"added\"}").RootElement;
-		var expected = JsonDocument.Parse("{\"something\":\"added\",\"hello\":[\"world\"]}").RootElement;
+		var element = JsonNode.Parse("{\"something\":\"added\"}");
+		var expected = JsonNode.Parse("{\"something\":\"added\",\"hello\":[\"world\"]}");
 
 		var actual = patch.Apply(element);
 
@@ -42,12 +43,12 @@ public class SingleOpProcessingTests
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]")!;
 
-		var element = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{}}").RootElement;
-		var expected = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}").RootElement;
+		var element = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{}}");
+		var expected = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}");
 
 		var actual = patch.Apply(element);
 
-		Console.WriteLine(actual.Result.ToJsonString());
+		Console.WriteLine(actual.Result.AsJsonString());
 
 		Assert.IsNull(actual.Error);
 		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
@@ -59,12 +60,12 @@ public class SingleOpProcessingTests
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]")!;
 
-		var element = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":\"replace me\"}}").RootElement;
-		var expected = JsonDocument.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}").RootElement;
+		var element = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":\"replace me\"}}");
+		var expected = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}");
 
 		var actual = patch.Apply(element);
 
-		Console.WriteLine(actual.Result.ToJsonString());
+		Console.WriteLine(actual.Result.AsJsonString());
 
 		Assert.IsNull(actual.Error);
 		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
@@ -76,13 +77,13 @@ public class SingleOpProcessingTests
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]")!;
 
-		var element = JsonDocument.Parse("{\"something\":\"added\",\"insert here\":{}}").RootElement;
+		var element = JsonNode.Parse("{\"something\":\"added\",\"insert here\":{}}");
 
 		var actual = patch.Apply(element);
 
-		Console.WriteLine(actual.Result.ToJsonString());
+		Console.WriteLine(actual.Result.AsJsonString());
 
-		Assert.AreEqual("Path `/inserted/hello` could not be reached.", actual.Error);
+		Assert.AreEqual("Target path `/inserted/hello` could not be reached.", actual.Error);
 	}
 
 	[Test]
@@ -91,8 +92,8 @@ public class SingleOpProcessingTests
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"replace\", \"path\": \"/something\", \"value\": \"boo\" }]")!;
 
-		var element = JsonDocument.Parse("{\"something\":\"added\"}").RootElement;
-		var expected = JsonDocument.Parse("{\"something\":\"boo\"}").RootElement;
+		var element = JsonNode.Parse("{\"something\":\"added\"}");
+		var expected = JsonNode.Parse("{\"something\":\"boo\"}");
 
 		var actual = patch.Apply(element);
 

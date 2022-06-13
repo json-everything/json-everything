@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Patch;
 
@@ -10,60 +12,41 @@ internal class CopyOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		var current = context.Source;
-		var message = EditableJsonElementHelpers.FindParentOfTarget(ref current, operation.Path);
+		if (Equals(operation.Path, operation.From)) return;
 
-		if (message != null)
+		if (!operation.From.EvaluateAndGetParent(context.Source, out var source) ||
+		    !operation.From.TryEvaluate(context.Source, out var data))
 		{
-			context.Message = message;
+			context.Message = $"Source path `{operation.Path}` could not be reached.";
 			return;
 		}
 
-		var from = context.Source;
-		message = EditableJsonElementHelpers.FindTarget(ref from, operation.From);
-
-		if (message != null)
+		if (!operation.Path.EvaluateAndGetParent(context.Source, out var target))
 		{
-			context.Message = message;
+			context.Message = $"Target path `{operation.From}` could not be reached.";
 			return;
 		}
 
 		if (operation.Path.Segments.Length == 0)
 		{
-			context.Source = from;
+			context.Source = data;
 			return;
 		}
 
-		var last = operation.Path.Segments.Last();
-		if (current.Object != null)
+		var lastPathSegment = operation.Path.Segments.Last().Value;
+		if (target is JsonObject objTarget)
 		{
-			current.Object[last.Value] = from;
+			objTarget[lastPathSegment] = data.Copy();
 			return;
 		}
-		if (current.Array != null)
+
+		if (target is JsonArray arrTarget)
 		{
-			if (last.Value == "-")
-			{
-				current.Array.Add(from);
-				return;
-			}
-
-			if (!int.TryParse(last.Value, out var index) || 0 > index || index > current.Array.Count)
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-			if ((index != 0 && last.Value[0] == '0') ||
-				(index == 0 && last.Value.Length > 1))
-			{
-				context.Message = $"Path `{operation.Path}` is not present in the instance.";
-				return;
-			}
-
-			current.Array.Insert(index, from);
-			return;
+			var index = lastPathSegment == "-" ? arrTarget.Count : int.Parse(lastPathSegment);
+			if (0 < index || index < arrTarget.Count)
+				arrTarget[index] = data;
+			else if (index == arrTarget.Count)
+				arrTarget.Add(data);
 		}
-
-		context.Message = $"Path `{operation.Path}` is not present in the instance.";
 	}
 }

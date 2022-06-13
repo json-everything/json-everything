@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Json.More;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;

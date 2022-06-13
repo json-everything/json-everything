@@ -23,17 +23,6 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	}
 
 	/// <summary>
-	/// Gets the contexts.
-	/// </summary>
-	/// <returns>
-	///	The <see cref="SchemaGenerationContextBase"/>s contained by this object.
-	/// </returns>
-	public IEnumerable<SchemaGenerationContextBase> GetContexts()
-	{
-		return Properties.Values;
-	}
-
-	/// <summary>
 	/// Replaces one context with another.
 	/// </summary>
 	/// <param name="hashCode">The hashcode of the context to replace.</param>

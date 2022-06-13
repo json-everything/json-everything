@@ -155,8 +155,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-		return Reference != null ? Reference.GetHashCode() : 0;
+		return Reference.GetHashCode();
 	}
 }
 

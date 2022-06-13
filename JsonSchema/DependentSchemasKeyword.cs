@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -43,12 +44,16 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
+
+		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
 
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
@@ -58,7 +63,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 			context.Log(() => $"Validating property '{property.Key}'.");
 			var schema = property.Value;
 			var name = property.Key;
-			if (!context.LocalInstance.TryGetProperty(name, out _))
+			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
@@ -82,11 +87,6 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 		else
 			context.LocalResult.Fail(ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -111,7 +110,7 @@ internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 			throw new JsonException("Expected object");
 
 		var schema = JsonSerializer.Deserialize<Dictionary<string, bool>>(ref reader, options);
-		var withUris = schema.ToDictionary(kvp => new Uri(kvp.Key), kvp => kvp.Value);
+		var withUris = schema!.ToDictionary(kvp => new Uri(kvp.Key), kvp => kvp.Value);
 		return new VocabularyKeyword(withUris);
 	}
 	public override void Write(Utf8JsonWriter writer, VocabularyKeyword value, JsonSerializerOptions options)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -40,14 +41,15 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Number)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var number = context.LocalInstance.GetDecimal();
+		var number = context.LocalInstance!.AsValue().GetNumber();
 		if (number % Value == 0)
 			context.LocalResult.Pass();
 		else

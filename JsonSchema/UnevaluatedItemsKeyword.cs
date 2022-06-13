@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -47,10 +48,11 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
@@ -63,6 +65,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 			annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
 			if (annotation != null)
 			{
+				// ReSharper disable once AccessToModifiedClosure
 				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
 				if (annotation is bool) // is only ever true or a number
 				{
@@ -78,6 +81,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
 		if (annotation != null)
 		{
+			// ReSharper disable once AccessToModifiedClosure
 			context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 			if (annotation is bool) // is only ever true or a number
 			{
@@ -107,7 +111,8 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 			return;
 		}
 		context.Log(() => $"No annotations from {Name}.");
-		var indicesToValidate = Enumerable.Range(startIndex, context.LocalInstance.GetArrayLength() - startIndex);
+		var array = (JsonArray)context.LocalInstance!;
+		var indicesToValidate = Enumerable.Range(startIndex, array.Count - startIndex);
 		if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
 		{
 			var validatedByContains = context.LocalResult.GetAllAnnotations<List<int>>(ContainsKeyword.Name).SelectMany(x => x).ToList();
@@ -122,7 +127,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		foreach (var i in indicesToValidate)
 		{
 			context.Log(() => $"Validating item at index {i}.");
-			var item = context.LocalInstance[i];
+			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
 			Schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;
@@ -144,11 +149,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 	{
 		if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
 			localResults.SetAnnotation(Name, true);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

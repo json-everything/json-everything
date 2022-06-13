@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -70,7 +68,7 @@ public static partial class MetaSchemas
 					.Comment("While no longer an official keyword as it is replaced by $defs, this keyword is retained in the meta-schema to prevent incompatible extensions as it remains in common use.")
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(DependenciesKeyword.Name, new JsonSchemaBuilder()
 					.Comment("\"dependencies\" is no longer a keyword, but schema authors should avoid redefining it to facilitate a smooth transition to \"dependentSchemas\" and \"dependentRequired\"")
@@ -120,7 +118,7 @@ public static partial class MetaSchemas
 				),
 				(RecursiveAnchorKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-					.Default(false.AsJsonElement())
+					.Default(false)
 				),
 				(VocabularyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
@@ -138,7 +136,7 @@ public static partial class MetaSchemas
 				(DefsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				)
 			);
 
@@ -167,7 +165,7 @@ public static partial class MetaSchemas
 				(PropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(JsonSchemaBuilder.RecursiveRefRoot())
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(PatternPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
@@ -175,7 +173,7 @@ public static partial class MetaSchemas
 					.PropertyNames(new JsonSchemaBuilder()
 						.Format(Formats.Regex)
 					)
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(DependentSchemasKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
@@ -250,14 +248,14 @@ public static partial class MetaSchemas
 				),
 				(UniqueItemsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-					.Default(false.AsJsonElement())
+					.Default(false)
 				),
 				(MaxContainsKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/nonNegativeInteger")
 				),
 				(MinContainsKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/nonNegativeInteger")
-					.Default(1.AsJsonElement())
+					.Default(1)
 				),
 				(MaxPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/nonNegativeInteger")
@@ -297,24 +295,24 @@ public static partial class MetaSchemas
 				),
 				("nonNegativeIntegerDefault0", new JsonSchemaBuilder()
 					.Ref("#/$defs/nonNegativeInteger")
-					.Default(0.AsJsonElement())
+					.Default(0)
 				),
 				("simpleTypes", new JsonSchemaBuilder()
 					.Enum(
-						"array".AsJsonElement(),
-						"boolean".AsJsonElement(),
-						"integer".AsJsonElement(),
-						"null".AsJsonElement(),
-						"number".AsJsonElement(),
-						"object".AsJsonElement(),
-						"string".AsJsonElement()
+						"array",
+						"boolean",
+						"integer",
+						"null",
+						"number",
+						"object",
+						"string"
 					)
 				),
 				("stringArray", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)
 					.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 					.UniqueItems(true)
-					.Default(new JsonElement[0].AsJsonElement())
+					.Default(new JsonArray())
 				)
 			);
 
@@ -339,15 +337,15 @@ public static partial class MetaSchemas
 				(DefaultKeyword.Name, true),
 				(DeprecatedKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-					.Default(false.AsJsonElement())
+					.Default(false)
 				),
 				(ReadOnlyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-					.Default(false.AsJsonElement())
+					.Default(false)
 				),
 				(WriteOnlyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-					.Default(false.AsJsonElement())
+					.Default(false)
 				),
 				(ExamplesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)

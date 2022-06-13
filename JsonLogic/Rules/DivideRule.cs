@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Json.More;
+﻿using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -15,7 +14,7 @@ internal class DivideRule : Rule
 		_b = b;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var a = _a.Apply(data, contextData);
 		var b = _b.Apply(data, contextData);
@@ -24,11 +23,11 @@ internal class DivideRule : Rule
 		var numberB = b.Numberify();
 
 		if (numberA == null || numberB == null)
-			throw new JsonLogicException($"Cannot divide types {a.ValueKind} and {b.ValueKind}.");
+			throw new JsonLogicException($"Cannot divide types {a.JsonType()} and {b.JsonType()}.");
 
 		if (numberB == 0)
 			throw new JsonLogicException("Cannot divide by zero");
 
-		return (numberA.Value / numberB.Value).AsJsonElement();
+		return numberA.Value / numberB.Value;
 	}
 }

@@ -25,7 +25,7 @@ public class VocabularyTests
 
 		public void Validate(ValidationContext context)
 		{
-			var dateString = context.LocalInstance.GetString();
+			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
 			if (date >= Date)
@@ -89,7 +89,7 @@ public class VocabularyTests
 
 		public void Validate(ValidationContext context)
 		{
-			var dateString = context.LocalInstance.GetString();
+			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
 			if (date <= Date)

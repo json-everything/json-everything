@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -15,10 +15,10 @@ internal class MergeRule : Rule
 		_items = items.ToList();
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var items = _items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
 
-		return items.AsJsonElement();
+		return items.ToJsonArray();
 	}
 }

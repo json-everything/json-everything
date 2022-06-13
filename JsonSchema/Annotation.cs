@@ -14,7 +14,7 @@ public class Annotation
 	/// <summary>
 	/// The annotation value.
 	/// </summary>
-	public object Value { get; }
+	public object? Value { get; }
 	/// <summary>
 	/// The pointer to the keyword that created the annotation.
 	/// </summary>
@@ -28,7 +28,7 @@ public class Annotation
 	/// <param name="owner">The keyword that created the annotation (acts as a key for lookup).</param>
 	/// <param name="value">The annotation value.</param>
 	/// <param name="source">The pointer to the keyword that created the annotation.</param>
-	public Annotation(string owner, object value, in JsonPointer source)
+	public Annotation(string owner, object? value, in JsonPointer source)
 	{
 		Owner = owner;
 		Value = value;

@@ -63,14 +63,15 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 			return;
 		}
 
-		if (context.LocalInstance.ValueKind != JsonValueKind.String)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.String)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var str = context.LocalInstance.GetString()!;
+		var str = context.LocalInstance!.GetValue<string>();
 		if (Value.IsMatch(str))
 			context.LocalResult.Pass();
 		else

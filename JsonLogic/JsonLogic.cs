@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 
 namespace Json.Logic;
@@ -267,49 +267,7 @@ public static class JsonLogic
 	/// </summary>
 	/// <param name="value">The JSON value.</param>
 	/// <returns>A literal rule.</returns>
-	public static Rule Literal(JsonElement value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for an `int`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(int value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for a `long`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(long value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for a `decimal`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(decimal value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for a `float`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(float value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for a `double`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(double value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for a `string`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(string value) => new LiteralRule(value);
-	/// <summary>
-	/// Creates a rule that stands in for a `bool`.
-	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <returns>A literal rule.</returns>
-	public static Rule Literal(bool value) => new LiteralRule(value);
+	public static Rule Literal(JsonNode? value) => new LiteralRule(value);
 
 	/// <summary>
 	/// Creates a `var` rule that accesses data.

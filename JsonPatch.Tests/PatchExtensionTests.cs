@@ -50,12 +50,13 @@ public class PatchExtensionTests
 	{
 		var initial = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
 		var expected = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]");
-		var patchExpected =
-			"[{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"add\",\"path\":\"/4\",\"value\":{\"test\":[1,2,3]}}]";
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(
+			"[{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"add\",\"path\":\"/4\",\"value\":{\"test\":[1,2,3]}}]"
+		);
 
 		var patch = initial.CreatePatch(expected);
 
-		Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -63,12 +64,13 @@ public class PatchExtensionTests
 	{
 		var initial = JsonDocument.Parse("[{\"test\":true},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]},{\"test\":[1,2,3]}]");
 		var expected = JsonDocument.Parse("[{\"test\":false},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":{\"test\":123}},{\"test\":[1,2,3]}]");
-		var patchExpected =
-			"[{\"op\":\"replace\",\"path\":\"/0/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"replace\",\"path\":\"/4/test\",\"value\":{\"test\":123}},{\"op\":\"add\",\"path\":\"/5\",\"value\":{\"test\":[1,2,3]}}]";
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(
+			"[{\"op\":\"replace\",\"path\":\"/0/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"replace\",\"path\":\"/4/test\",\"value\":{\"test\":123}},{\"op\":\"add\",\"path\":\"/5\",\"value\":{\"test\":[1,2,3]}}]"
+		);
 
 		var patch = initial.CreatePatch(expected);
 
-		Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -76,12 +78,13 @@ public class PatchExtensionTests
 	{
 		var initial = JsonDocument.Parse("{\"test\":true, \"test2\":\"string\", \"test3\":{\"test123\":123}}");
 		var expected = JsonDocument.Parse("{\"test\":false, \"test2\":123, \"test3\":[123]}");
-		var patchExpected =
-			"[{\"op\":\"replace\",\"path\":\"/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/test2\",\"value\":123},{\"op\":\"replace\",\"path\":\"/test3\",\"value\":[123]}]";
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(
+			"[{\"op\":\"replace\",\"path\":\"/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/test2\",\"value\":123},{\"op\":\"replace\",\"path\":\"/test3\",\"value\":[123]}]"
+		);
 
 		var patch = initial.CreatePatch(expected);
 
-		Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -100,9 +103,7 @@ public class PatchExtensionTests
 		var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
 		var patch = initial.CreatePatch(target, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 
-		OutputPatch(expected);
-		OutputPatch(patch);
-		Assert.AreEqual(expected, patch);
+		VerifyPatches(expected, patch);
 	}
 
 	[Test]
@@ -122,7 +123,7 @@ public class PatchExtensionTests
 
 		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 
-		Assert.AreEqual(patchExpected, patch);
+		VerifyPatches(patchExpected, patch);
 	}
 
 	[Test]
@@ -140,7 +141,7 @@ public class PatchExtensionTests
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 		var patch = initial.CreatePatch(expected);
 
-		Assert.AreEqual(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -152,7 +153,7 @@ public class PatchExtensionTests
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 		var patch = initial.CreatePatch(expected);
 
-		Assert.AreEqual(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -164,7 +165,7 @@ public class PatchExtensionTests
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 		var patch = initial.CreatePatch(expected);
 
-		Assert.AreEqual(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -176,8 +177,7 @@ public class PatchExtensionTests
 		var patchExpectedStr = "[{\"op\":\"replace\",\"path\":\"/2\",\"value\":1}]";
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 
-		Assert.AreEqual(patchExpectedStr, JsonSerializer.Serialize(patch));
-		Assert.AreEqual(patchExpected, patch);
+		VerifyPatches(patchExpected!, patch);
 	}
 
 	[Test]
@@ -249,12 +249,20 @@ public class PatchExtensionTests
 		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 		var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 
-		Assert.AreEqual(patchExpected, patch);
-		Assert.AreEqual(patchBackExpected, patchBack);
+		VerifyPatches(patchExpected!, patch);
+		VerifyPatches(patchBackExpected!, patchBack);
 	}
 
 	private static void OutputPatch(JsonPatch patch)
 	{
 		Console.WriteLine(JsonSerializer.Serialize(patch, new JsonSerializerOptions { WriteIndented = true }));
+	}
+
+	private static void VerifyPatches(JsonPatch expected, JsonPatch actual)
+	{
+		OutputPatch(expected);
+		OutputPatch(actual);
+
+		Assert.AreEqual(expected, actual);
 	}
 }

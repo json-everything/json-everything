@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -46,12 +47,16 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
+
+		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
 
 		var overallResult = true;
 		var missingDependencies = new Dictionary<string, List<string>>();
@@ -61,7 +66,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 			context.Log(() => $"Validating property '{property.Key}'.");
 			var dependencies = property.Value;
 			var name = property.Key;
-			if (!context.LocalInstance.TryGetProperty(name, out _))
+			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
@@ -71,7 +76,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 				list = missingDependencies[name] = new List<string>();
 			foreach (var dependency in dependencies)
 			{
-				if (context.LocalInstance.TryGetProperty(dependency, out _)) continue;
+				if (obj.TryGetPropertyValue(dependency, out _)) continue;
 
 				overallResult = false;
 				if (context.ApplyOptimizations) break;
@@ -161,7 +166,7 @@ internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRe
 			throw new JsonException("Expected object");
 
 		var requirements = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref reader, options);
-		return new DependentRequiredKeyword(requirements.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
+		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 	{

@@ -1,3 +1,9 @@
+# [1.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Updated all functionality to use `JsonNode` instead of `JsonElement` in line with JsonSchema.Net v3.
+
+Also... OFFICIAL RELEASE!!!  I feel confident enough in this library to release it under a real version!  Thought, the JSON Schema team still advises that this sort of functionality should be used as a development tool, not in production scenarios.
+
 # [0.1.3](https://github.com/gregsdennis/json-everything/pull/262)
 
 Improved handling of conditionals and inferred types.

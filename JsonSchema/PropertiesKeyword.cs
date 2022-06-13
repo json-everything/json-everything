@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -51,12 +53,16 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
+
+		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
@@ -66,14 +72,14 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 			context.Log(() => $"Validating property '{property.Key}'.");
 			var schema = property.Value;
 			var name = property.Key;
-			if (!context.LocalInstance.TryGetProperty(name, out var item))
+			if (!obj.TryGetPropertyValue(name, out var item))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
 			}
 
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{name}")),
-				item,
+				item ?? JsonNull.SignalNode,
 				context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
 			schema.ValidateSubschema(context);
 			var localResult = context.LocalResult.IsValid;
@@ -109,11 +115,6 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 			annotation.AddRange(allProperties);
 		else if (allProperties.Any())
 			localResults.SetAnnotation(Name, allProperties);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

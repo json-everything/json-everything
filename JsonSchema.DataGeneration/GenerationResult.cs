@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Schema.DataGeneration;
@@ -9,12 +10,10 @@ namespace Json.Schema.DataGeneration;
 /// </summary>
 public class GenerationResult
 {
-	internal static GenerationResult NotApplicable { get; } = new(null, null, null);
-
 	/// <summary>
 	/// Gets the resulting JSON data, if successful.
 	/// </summary>
-	public JsonElement Result { get; }
+	public JsonNode? Result { get; }
 	/// <summary>
 	/// Gets the error message from the generation, if unsuccessful.
 	/// </summary>
@@ -29,19 +28,14 @@ public class GenerationResult
 	/// </summary>
 	public bool IsSuccess => ErrorMessage == null && InnerResults == null;
 
-	private GenerationResult(JsonElement? result, string? errorMessage, IEnumerable<GenerationResult>? inner)
+	private GenerationResult(JsonNode? result, string? errorMessage, IEnumerable<GenerationResult>? inner)
 	{
 		Result = result ?? default;
 		ErrorMessage = errorMessage;
 		InnerResults = inner;
 	}
 
-	internal static GenerationResult Success(JsonElement result)
-	{
-		return new GenerationResult(result, null, null);
-	}
-
-	internal static GenerationResult Success(JsonElementProxy result)
+	internal static GenerationResult Success(JsonNode? result)
 	{
 		return new GenerationResult(result, null, null);
 	}

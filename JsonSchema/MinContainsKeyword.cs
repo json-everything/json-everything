@@ -51,10 +51,11 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 			return;
 		}
 
-		if (context.LocalInstance.ValueKind != JsonValueKind.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 

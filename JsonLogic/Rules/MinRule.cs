@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
+
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace Json.Logic.Rules;
@@ -17,13 +17,13 @@ internal class MinRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var items = _items.Select(i => i.Apply(data, contextData)).Select(e => new { e.ValueKind, Value = e.Numberify() }).ToList();
+		var items = _items.Select(i => i.Apply(data, contextData)).Select(e => new { Type = e.JsonType(), Value = e.Numberify() }).ToList();
 		var nulls = items.Where(i => i.Value == null);
 		if (nulls.Any())
-			throw new JsonLogicException($"Cannot find min with {nulls.First().ValueKind}.");
-
-		return items.Min(i => i.Value!.Value).AsJsonElement();
+			throw new JsonLogicException($"Cannot find min with {nulls.First().Type}.");
+		
+		return items.Min(i => i.Value!.Value);
 	}
 }

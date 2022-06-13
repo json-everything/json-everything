@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Updated all functionality to use `JsonNode` instead of `JsonElement`.
+
+## Breaking Changes
+
+_`JsonElement` -> `JsonNode` type exchange changes not listed._
+
+- Remove all `JsonLogic.Literal()` methods and replaced with a single `Liternal(JsonNode?)`.  Typed methods are unnecessary as `JsonNode` contains implicit casts from them.
+- `JsonElementExtensions` converted into `JsonNodeExtensions`.  Same functionality exists, but for `JsonNode` instead.
+- `Rule` and all of its subclasses now take and return `JsonNode?`
+
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/265)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -16,20 +15,19 @@ internal class SubtractRule : Rule
 		_items.AddRange(more);
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		if (_items.Count == 0) return 0.AsJsonElement();
+		if (_items.Count == 0) return 0;
 
 		var value = _items[0].Apply(data, contextData);
 		var number = value.Numberify();
 
 		if (number == null)
-			throw new JsonLogicException($"Cannot subtract {value.ValueKind}.");
+			throw new JsonLogicException($"Cannot subtract {value.JsonType()}.");
 
 		var result = number.Value;
 
-		if (_items.Count == 1)
-			return (-result).AsJsonElement();
+		if (_items.Count == 1) return -result;
 
 		foreach (var item in _items.Skip(1))
 		{
@@ -38,11 +36,11 @@ internal class SubtractRule : Rule
 			number = value.Numberify();
 
 			if (number == null)
-				throw new JsonLogicException($"Cannot subtract {value.ValueKind}.");
+				throw new JsonLogicException($"Cannot subtract {value.JsonType()}.");
 
 			result -= number.Value;
 		}
 
-		return result.AsJsonElement();
+		return result;
 	}
 }

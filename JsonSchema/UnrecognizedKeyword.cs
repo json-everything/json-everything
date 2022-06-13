@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -23,17 +24,17 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKe
 	/// <summary>
 	/// The value of the keyword.
 	/// </summary>
-	public JsonElement Value { get; }
+	public JsonNode? Value { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="UnrecognizedKeyword"/>.
 	/// </summary>
 	/// <param name="name">The name of the keyword.</param>
-	/// <param name="value">Whether items should be unique.</param>
-	public UnrecognizedKeyword(string name, JsonElement value)
+	/// <param name="value">The value of the keyword.</param>
+	public UnrecognizedKeyword(string name, JsonNode? value)
 	{
 		Name = name;
-		Value = value.Clone();
+		Value = value;
 	}
 
 	/// <summary>
@@ -72,7 +73,7 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKe
 	{
 		unchecked
 		{
-			return (Name.GetHashCode() * 397) ^ Value.GetHashCode();
+			return (Name.GetHashCode() * 397) ^ (Value?.GetHashCode() ?? 0);
 		}
 	}
 }
@@ -87,6 +88,6 @@ internal class UnrecognizedKeywordJsonConverter : JsonConverter<UnrecognizedKeyw
 	public override void Write(Utf8JsonWriter writer, UnrecognizedKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(value.Name);
-		writer.WriteValue(value.Value);
+		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

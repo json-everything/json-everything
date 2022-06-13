@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
@@ -50,7 +51,7 @@ public class InTests
 	[Test]
 	public void InStringContainsObjectThrowsError()
 	{
-		var rule = new InRule(JsonDocument.Parse("{}").RootElement, "foo");
+		var rule = new InRule(JsonNode.Parse("{}"), "foo");
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
@@ -58,7 +59,7 @@ public class InTests
 	[Test]
 	public void InArrayContainsFirstReturnsTrue()
 	{
-		var array = new[] { 1.AsJsonElement(), 2.AsJsonElement(), 3.AsJsonElement() }.AsJsonElement();
+		var array = new JsonArray { 1, 2, 3 };
 		var rule = new InRule(2, array);
 
 		JsonAssert.IsTrue(rule.Apply());
@@ -67,7 +68,7 @@ public class InTests
 	[Test]
 	public void InArrayDoesNotContainFirstReturnsFalse()
 	{
-		var array = new[] { 1.AsJsonElement(), 2.AsJsonElement(), 3.AsJsonElement() }.AsJsonElement();
+		var array = new JsonArray { 1, 2, 3 };
 		var rule = new InRule(5, array);
 
 		JsonAssert.IsFalse(rule.Apply());
@@ -76,7 +77,7 @@ public class InTests
 	[Test]
 	public void InObjectThrowsError()
 	{
-		var rule = new InRule(1, JsonDocument.Parse("{}").RootElement);
+		var rule = new InRule(1, JsonNode.Parse("{}"));
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

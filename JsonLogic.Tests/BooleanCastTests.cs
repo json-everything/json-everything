@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using NUnit.Framework;
 
@@ -9,7 +9,7 @@ public class BooleanCastTests
 	[Test]
 	public void EmptyArrayIsFalse()
 	{
-		var rule = new BooleanCastRule(JsonDocument.Parse("[]").RootElement);
+		var rule = new BooleanCastRule(JsonNode.Parse("[]"));
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
@@ -17,7 +17,7 @@ public class BooleanCastTests
 	[Test]
 	public void NonEmptyArrayIsTrue()
 	{
-		var rule = new BooleanCastRule(JsonDocument.Parse("[1]").RootElement);
+		var rule = new BooleanCastRule(JsonNode.Parse("[1]"));
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
@@ -73,16 +73,24 @@ public class BooleanCastTests
 	[Test]
 	public void NullIsFalse()
 	{
-		var rule = new BooleanCastRule(JsonDocument.Parse("null").RootElement);
+		var rule = new BooleanCastRule(JsonNode.Parse("null"));
 
 		JsonAssert.IsFalse(rule.Apply());
 	}
 
 	[Test]
-	public void ObjectThrowsError()
+	public void EmptyObjectIsFalse()
 	{
-		var rule = new BooleanCastRule(JsonDocument.Parse("{}").RootElement);
+		var rule = new BooleanCastRule(JsonNode.Parse("{}"));
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
+	}
+
+	[Test]
+	public void NonEmptyObjectIsTrue()
+	{
+		var rule = new BooleanCastRule(JsonNode.Parse("{\"foo\":1}"));
+
+		JsonAssert.IsTrue(rule.Apply());
 	}
 }

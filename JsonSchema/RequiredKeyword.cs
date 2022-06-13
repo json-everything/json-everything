@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Schema;
@@ -51,20 +52,24 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
+		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+	
 		context.Options.LogIndentLevel++;
 		var notFound = new List<string>();
 		foreach (var property in Properties)
 		{
 			var property1 = property;
 			context.Log(() => $"Checking for property '{property1}'");
-			if (!context.LocalInstance.TryGetProperty(property, out _))
+			if (!obj.TryGetPropertyValue(property, out _))
 				notFound.Add(property);
 			if (notFound.Count != 0 && context.ApplyOptimizations) break;
 		}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Logic.Rules;
 
@@ -22,13 +23,13 @@ public abstract class Rule
 	///     data context to inner operators.
 	/// </param>
 	/// <returns>The result of the rule.</returns>
-	public abstract JsonElement Apply(JsonElement data, JsonElement? contextData = null);
+	public abstract JsonNode? Apply(JsonNode? data, JsonNode? contextData = null);
 
 	/// <summary>
 	/// Casts a JSON value to a <see cref="LiteralRule"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator Rule(JsonElement value) => new LiteralRule(value);
+	public static implicit operator Rule(JsonNode? value) => new LiteralRule(value);
 	/// <summary>
 	/// Casts an `int` value to a <see cref="LiteralRule"/>.
 	/// </summary>
@@ -38,7 +39,7 @@ public abstract class Rule
 	/// Casts a `string` value to a <see cref="LiteralRule"/>.  Can also be used to create a `null` JSON literal.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public static implicit operator Rule(string? value) => new LiteralRule(value);
+	public static implicit operator Rule(string? value) => value == null ? LiteralRule.Null : new LiteralRule(value);
 	/// <summary>
 	/// Casts a `bool` value to a <see cref="LiteralRule"/>.
 	/// </summary>
@@ -105,8 +106,8 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			return new RuleCollection(data);
 		}
 
-		using var doc = JsonDocument.ParseValue(ref reader);
-		return new LiteralRule(doc.RootElement.Clone());
+		var literal = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		return new LiteralRule(literal);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

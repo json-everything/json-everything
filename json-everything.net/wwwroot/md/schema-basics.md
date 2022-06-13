@@ -4,7 +4,7 @@ The occasion may arise when you wish to validate that a JSON object is in the co
 
 More information about JSON Schema can be found at [json-schema.org](http://json-schema.org).
 
-To support JSON Schema, JsonSchema<nsp>.Net exposes the `JsonSchema` type.  This type is implemented as a list of keywords, each of which correspond to one of the keywords defined in the JSON Schema specifications.
+To support JSON Schema, JsonSchema.Net exposes the `JsonSchema` type.  This type is implemented as a list of keywords, each of which correspond to one of the keywords defined in the JSON Schema specifications.
 
 ## Drafts
 
@@ -17,13 +17,13 @@ There are currently six active drafts of the JSON Schema specification:
 - Draft 2019-09
 - Draft 2020-12
 
-JsonSchema<nsp>.Net supports draft 6 and later.
+JsonSchema.Net supports draft 6 and later.
 
 ### Meta-schemas
 
 Each draft defines a meta-schema.  This is a special JSON Schema that describes all of the keywords available for that draft.  They are intended to be used to validate other schemas.  Usually, a schema will declare the draft it should adhere to using the `$schema` keyword.
 
-JsonSchema<nsp>.Net declares the meta-schemas for the supported drafts as members of the `MetaSchemas` static class.
+JsonSchema.Net declares the meta-schemas for the supported drafts as members of the `MetaSchemas` static class.
 
 Draft 2019-09 introduced vocabularies.  As part of this new feature, the meta-schemas for this draft and those which follow it have been split into vocabulary-specific meta-schemas.  Additionally, the specification recognizes that the meta-schemas aren't perfect and may need to be updated occasionally.  To this end, the meta-schemas are versioned with the year and month they are published.  The schemas within this library are named accordingly.
 
@@ -37,7 +37,7 @@ There are two options when building a schema: defining it inline using the fluen
 
 ## Deserialization
 
-JsonSchema<nsp>.Net schemas are fully serializable.
+JsonSchema.Net schemas are fully serializable.
 
 ```c#
 var mySchema = JsonSchema.FromText(content);
@@ -183,19 +183,20 @@ To validate these, all we have to do is pass these into our schema's `Validate(J
 ```csharp
 JsonSchema schema = new JsonSchemaBuilder()
     .Properties(
-        (
-            "myProperty", new JsonSchemaBuilder()
-                .Type(SchemaValueType.String)
-                .MinLength(10)
+        ("myProperty", new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .MinLength(10)
         )
     )
     .Required("myProperty");
-var emptyJson = JsonDocument.Parse("{}").RootElement;
-var booleanJson = JsonDocument.Parse("{\"myProperty\":false}").RootElement;
-var stringJson = JsonDocument.Parse("{\"myProperty\":\"some string\"}").RootElement;
-var shortJson = JsonDocument.Parse("{\"myProperty\":\"short\"}").RootElement;
-var numberJson = JsonDocument.Parse("{\"otherProperty\":35.4}").RootElement;
-var nonObject = JsonDocument.Parse("\"not an object\"").RootElement;
+
+// you can build or parse you JsonNode however you like
+var emptyJson = new JsonObject();
+var booleanJson = JsonNode.Parse("{\"myProperty\":false}");
+var stringJson = new JsonObject { ["myProperty"] = "some string" };
+var shortJson = new JsonObject { ["myProperty"] = "short" };
+var numberJson = new JsonObject { ["otherProperty"] = 35.4 };
+var nonObject = JsonNode.Parse("\"not an object\"");
 
 var emptyResults = schema.Validate(emptyJson);
 var booleanResults = schema.Validate(booleanJson);
@@ -369,9 +370,9 @@ The default output format is Flag, but this can be configured via the `Validatio
 
 ## Value format validation
 
-The `format` keyword has been around a while.  It's available in all of the drafts supported by JsonSchema<nsp>.Net.  Although this keyword is techincally classified as an annotation, the specification does allow (the word used is "SHOULD") that implementation provide some level of validation on it so long as that validation may be configured on and off.
+The `format` keyword has been around a while.  It's available in all of the drafts supported by JsonSchema.Net.  Although this keyword is techincally classified as an annotation, the specification does allow (the word used is "SHOULD") that implementation provide some level of validation on it so long as that validation may be configured on and off.
 
-JsonSchema<nsp>.Net makes a valiant attempt at validating a few of them.  These are hardcoded as static fields on the `Formats` class.  Out of the box, these are available:
+JsonSchema.Net makes a valiant attempt at validating a few of them.  These are hardcoded as static fields on the `Formats` class.  Out of the box, these are available:
 
 - `date`
 - `date-time`
@@ -391,7 +392,7 @@ JsonSchema<nsp>.Net makes a valiant attempt at validating a few of them.  These 
 
 I'm not going to claim that the validation on any of these is perfect, but it will likely suffice for most applications.  In the (rare) event that it doesn't support your needs, they are completely overridable.  Additionally, if you find a method that works better than what's in the library, feel free to [contribute a PR](https://github.com/gregsdennis/json-everything/pulls) and make the library better for everyone.
 
-New formats can be registered via the `Formats.Register()` static method.  This method will overwrite any existing registration for that format, so this can be used to override the default behavior for known formats.  This also makes the format available for deserialization.
+New formats must be registered via the `Formats.Register()` static method.  This method will overwrite any existing registration for that format, so this can be used to override the default behavior for known formats.  This also makes the format available for deserialization.
 
 ***IMPORTANT** Format implementations MUST not contain state as the same instance will be shared by all of the schema instances that use it.
 
@@ -405,11 +406,11 @@ The `ValidationOptions` class gives you a few configuration points for customizi
 
 # Managing references (`$ref`)
 
-JsonSchema<nsp>.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
+JsonSchema.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
 
 ## Schema registration
 
-In order to resolve references more quickly, JsonSchema<nsp>.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
+In order to resolve references more quickly, JsonSchema.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
 
 A `JsonSchema` instance will automatically register itself upon calling `Validate()`.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to validation.
 
@@ -447,7 +448,7 @@ var randomString = JsonSchema.FromFile("random-string.json");
 SchemaRegistry.Global.Register("http://localhost/random-string", randomString);
 ```
 
-Now JsonSchema<nsp>.Net will be able to resolve the reference.
+Now JsonSchema.Net will be able to resolve the reference.
 
 ## Automatic resolution
 

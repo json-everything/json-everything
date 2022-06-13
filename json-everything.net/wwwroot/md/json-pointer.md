@@ -82,4 +82,4 @@ var success = pointer.TryEvaluate(element, out var result);
 
 Relative JSON Pointers are implemented with the `RelativeJsonPointer` struct.  Interactions with this struct are very similar to `JsonPointer`.
 
-Unfortunately, since evaluation of these pointers require parent navigation, a feature which is [currently unsupported by `System.Text.Json`](https://github.com/dotnet/runtime/issues/40452), only the model is available at this time; evaluation is non-functional.
+Since evaluation of these pointers require parent navigation, a feature which is [unsupported by `JsonElement`s](https://github.com/dotnet/runtime/issues/40452), only the `JsonNode`s can be processed.

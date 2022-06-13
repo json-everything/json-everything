@@ -57,7 +57,7 @@ public static class LogExtensions
 	/// </summary>
 	/// <param name="context">The validation context.</param>
 	/// <param name="kind">The value kind</param>
-	public static void WrongValueKind(this ValidationContext context, JsonValueKind kind)
+	public static void WrongValueKind(this ValidationContext context, SchemaValueType kind)
 	{
 		context.Log(() => $"Value type is {kind}. Not applicable.");
 		context.Options.LogIndentLevel--;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -15,23 +16,12 @@ public sealed class UnknownFormat : Format
 	public UnknownFormat(string key) : base(key) { }
 
 	/// <summary>
-	/// Validates an instance against a format.
-	/// </summary>
-	/// <param name="element">The element to validate.</param>
-	/// <returns><code>true</code>.  Override to return another value.</returns>
-	[Obsolete("This method isn\'t called anymore.  It will be removed in the next major version.")]
-	public override bool Validate(JsonElement element)
-	{
-		return true;
-	}
-
-	/// <summary>
 	/// Validates an instance against a format and provides an error message.
 	/// </summary>
-	/// <param name="element">The element to validate.</param>
+	/// <param name="node">The node to validate.</param>
 	/// <param name="errorMessage">An error message.</param>
 	/// <returns><code>true</code>.  Override to return another value.</returns>
-	public override bool Validate(JsonElement element, out string? errorMessage)
+	public override bool Validate(JsonNode? node, out string? errorMessage)
 	{
 		errorMessage = null;
 		return true;

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Logic.Tests.Suite;
@@ -9,22 +9,23 @@ namespace Json.Logic.Tests.Suite;
 [JsonConverter(typeof(TestConverter))]
 public class Test
 {
+#pragma warning disable CS8618
 	public string Logic { get; set; }
-	public JsonElement Data { get; set; }
-	public JsonElement Expected { get; set; }
+	public JsonNode? Data { get; set; }
+	public JsonNode? Expected { get; set; }
+#pragma warning restore CS8618
 }
 
-public class TestConverter : JsonConverter<Test>
+public class TestConverter : JsonConverter<Test?>
 {
-	public override Test Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override Test? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var element = JsonDocument.ParseValue(ref reader).RootElement;
-		if (element.ValueKind != JsonValueKind.Array) return null;
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		if (node is not JsonArray arr) return null;
 
-		var items = element.EnumerateArray().ToList();
-		var logic = JsonSerializer.Serialize(items[0], new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-		var data = items[1];
-		var expected = items[2];
+		var logic = JsonSerializer.Serialize(arr[0], new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+		var data = arr[1];
+		var expected = arr[2];
 
 		return new Test
 		{
@@ -34,7 +35,7 @@ public class TestConverter : JsonConverter<Test>
 		};
 	}
 
-	public override void Write(Utf8JsonWriter writer, Test value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, Test? value, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
 	}

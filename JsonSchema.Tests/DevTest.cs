@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -9,17 +10,8 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var schema = JsonSchema.FromText(@"{}");
-		var instance = JsonDocument.Parse(@"{}").RootElement;
+		var json = JsonNode.Parse("[{\"foo\":1, \"bar\":2, \"foo\":3}]") as JsonArray;
 
-		var validationOptions = new ValidationOptions { OutputFormat = OutputFormat.Basic };
-		var results = schema.Validate(instance, validationOptions);
-
-		var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
-		Console.WriteLine(JsonSerializer.Serialize(schema, serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(instance, serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(results, serializerOptions));
+		var item = json[0];
 	}
 }

@@ -41,14 +41,15 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.String)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.String)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var length = new StringInfo(context.LocalInstance.GetString()).LengthInTextElements;
+		var length = new StringInfo(context.LocalInstance!.GetValue<string>()).LengthInTextElements;
 		if (Value <= length)
 			context.LocalResult.Pass();
 		else

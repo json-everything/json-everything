@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -22,7 +22,7 @@ internal class LessThanEqualRule : Rule
 		_c = c;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		if (_c == null)
 		{
@@ -33,23 +33,23 @@ internal class LessThanEqualRule : Rule
 			var numberB = b.Numberify();
 
 			if (numberA == null || numberB == null)
-				throw new JsonLogicException($"Cannot compare {a.ValueKind} and {b.ValueKind}.");
+				throw new JsonLogicException($"Cannot compare {a.JsonType()} and {b.JsonType()}.");
 
-			return (numberA <= numberB).AsJsonElement();
+			return numberA <= numberB;
 		}
 
-		var low = _a.Apply(data, contextData);
-		var value = _b.Apply(data, contextData);
-		var high = _c.Apply(data, contextData);
-
-		if (low.ValueKind != JsonValueKind.Number)
+		var low = (_a.Apply(data, contextData) as JsonValue)?.GetNumber();
+		if (low == null)
 			throw new JsonLogicException("Lower bound must be a number.");
-		if (value.ValueKind != JsonValueKind.Number)
+		
+		var value = (_b.Apply(data, contextData) as JsonValue)?.GetNumber();
+		if (value == null)
 			throw new JsonLogicException("Value must be a number.");
-		if (high.ValueKind != JsonValueKind.Number)
+
+		var high = (_c.Apply(data, contextData) as JsonValue)?.GetNumber();
+		if (high == null)
 			throw new JsonLogicException("Upper bound must be a number.");
 
-		var val = value.GetDecimal();
-		return (low.GetDecimal() <= val && val <= high.GetDecimal()).AsJsonElement();
+		return low <= value && value <= high;
 	}
 }

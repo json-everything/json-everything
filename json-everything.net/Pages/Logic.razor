@@ -7,8 +7,9 @@
 @using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
+@using System.Text.Json.Nodes
 
-@inject CookieManager _cookieManager;
+@inject CookieManager CookieManager;
 
 <PageTitle>JSON Logic - json-everything.net</PageTitle>
 
@@ -107,10 +108,10 @@
 			await _outputEditor.SetValue($"Rule is invalid\n\n{e.Message}");
 			return;
 		}
-		JsonElement instance;
+		JsonNode? instance;
 		try
 		{
-			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+			instance = JsonNode.Parse(await _instanceEditor.GetValue());
 		}
 		catch (Exception e)
 		{
@@ -131,27 +132,27 @@
 
 	private async Task SaveLogic()
 	{
-		await _cookieManager.SaveEditorValue(_logicEditor, "logic");
+		await CookieManager.SaveEditorValue(_logicEditor, "logic");
 	}
 
 	private async Task LoadSavedLogic()
 	{
-		await _cookieManager.LoadEditorValue(_logicEditor, "logic");
+		await CookieManager.LoadEditorValue(_logicEditor, "logic");
 	}
 
 	private async Task SaveInstance()
 	{
-		await _cookieManager.SaveEditorValue(_instanceEditor, "logic-instance");
+		await CookieManager.SaveEditorValue(_instanceEditor, "logic-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await _cookieManager.LoadEditorValue(_instanceEditor, "logic-instance");
+		await CookieManager.LoadEditorValue(_instanceEditor, "logic-instance");
 	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		await _cookieManager.Initialize();
+		await CookieManager.Initialize();
 	    await _outputEditor.SetValue(string.Empty);
 
 		await LoadSavedLogic();

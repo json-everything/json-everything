@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 
@@ -6,76 +6,27 @@ namespace Json.Logic.Tests;
 
 public static class JsonAssert
 {
-	public static void AreEquivalent(JsonElement expected, JsonElement actual)
+	public static void AreEquivalent(JsonNode? expected, JsonNode? actual)
 	{
 		if (!expected.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expected.ToJsonString()}\nActual: {actual.ToJsonString()}");
+			Assert.Fail($"Expected: {expected.AsJsonString()}\nActual: {actual.AsJsonString()}");
 	}
 
-	public static void AreEquivalent(int expected, JsonElement actual)
+	public static void IsNull(JsonNode? actual)
 	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
+		if (actual != null)
+			Assert.Fail($"Expected: null\nActual: {actual.AsJsonString()}");
 	}
 
-	public static void AreEquivalent(long expected, JsonElement actual)
+	public static void IsTrue(JsonNode? actual)
 	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
+		if (actual is not JsonValue value || !value.TryGetValue(out bool b) || !b)
+			Assert.Fail($"Expected: true\nActual: {actual.AsJsonString()}");
 	}
 
-	public static void AreEquivalent(float expected, JsonElement actual)
+	public static void IsFalse(JsonNode? actual)
 	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void AreEquivalent(double expected, JsonElement actual)
-	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void AreEquivalent(decimal expected, JsonElement actual)
-	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void AreEquivalent(string expected, JsonElement actual)
-	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void AreEquivalent(bool expected, JsonElement actual)
-	{
-		var expectedJson = expected.AsJsonElement();
-		if (!expectedJson.IsEquivalentTo(actual))
-			Assert.Fail($"Expected: {expectedJson.ToJsonString()}\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void IsNull(JsonElement actual)
-	{
-		if (actual.ValueKind != JsonValueKind.Null)
-			Assert.Fail($"Expected: null\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void IsTrue(JsonElement actual)
-	{
-		if (actual.ValueKind != JsonValueKind.True)
-			Assert.Fail($"Expected: true\nActual: {actual.ToJsonString()}");
-	}
-
-	public static void IsFalse(JsonElement actual)
-	{
-		if (actual.ValueKind != JsonValueKind.False)
-			Assert.Fail($"Expected: false\nActual: {actual.ToJsonString()}");
+		if (actual is not JsonValue value || !value.TryGetValue(out bool b) || b)
+			Assert.Fail($"Expected: true\nActual: {actual.AsJsonString()}");
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Json.Pointer;
@@ -65,33 +66,34 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 	{
 		context.EnterKeyword(Name);
 
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
+		var obj = (JsonObject)context.LocalInstance!;
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
-		var instanceProperties = context.LocalInstance.EnumerateObject().ToList();
 		foreach (var entry in Patterns)
 		{
 			var schema = entry.Value;
 			var pattern = entry.Key;
-			foreach (var instanceProperty in instanceProperties.Where(p => pattern.IsMatch(p.Name)))
+			foreach (var instanceProperty in obj.Where(p => pattern.IsMatch(p.Key)))
 			{
-				context.Log(() => $"Validating property '{instanceProperty.Name}'.");
-				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Name}")),
+				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Key}")),
 					instanceProperty.Value,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
 				schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Property '{instanceProperty.Name}' {context.LocalResult.IsValid.GetValidityString()}.");
+				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
 				if (!overallResult && context.ApplyOptimizations) break;
-				evaluatedProperties.Add(instanceProperty.Name);
+				evaluatedProperties.Add(instanceProperty.Key);
 			}
 		}
 		if (InvalidPatterns?.Any() ?? false)
@@ -117,11 +119,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		else
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

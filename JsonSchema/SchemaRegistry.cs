@@ -27,7 +27,7 @@ public class SchemaRegistry
 		public Dictionary<string, Anchor> Anchors => _anchors ??= new Dictionary<string, Anchor>();
 	}
 
-	private static readonly Uri _empty = new Uri("http://everything.json/");
+	private static readonly Uri _empty = new("http://everything.json/");
 
 	private Dictionary<Uri, Registration>? _registered;
 	private Func<Uri, JsonSchema?>? _fetch;

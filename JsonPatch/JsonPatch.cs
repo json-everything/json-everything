@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Patch;
@@ -41,9 +43,9 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// </summary>
 	/// <param name="source">The JSON document.</param>
 	/// <returns>A result object containing the output JSON and a possible error message.</returns>
-	public PatchResult Apply(JsonElement source)
+	public PatchResult Apply(JsonNode? source)
 	{
-		var context = new PatchContext(new EditableJsonElement(source));
+		var context = new PatchContext(source.Copy());
 
 		foreach (var operation in Operations)
 		{

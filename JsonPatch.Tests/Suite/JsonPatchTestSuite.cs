@@ -56,7 +56,7 @@ public class JsonPatchTestSuite
 		{
 			try
 			{
-				result = test.Patch.Apply(test.Doc);
+				result = test.Patch!.Apply(test.Doc);
 
 				Assert.AreNotEqual(test.ExpectsError, result.IsSuccess);
 
@@ -72,8 +72,7 @@ public class JsonPatchTestSuite
 				Console.WriteLine(e.StackTrace);
 				if (result != null)
 				{
-					if (result.Result.ValueKind != JsonValueKind.Undefined)
-						Console.WriteLine(result.Result.GetRawText());
+					Console.WriteLine(result.Result.AsJsonString());
 					Console.WriteLine(result.Error);
 				}
 				if (isOptional)

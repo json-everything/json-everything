@@ -46,11 +46,6 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, I
 		context.ExitKeyword(Name, true);
 	}
 
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
-	}
-
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
 		Schema.RegisterSubschemas(registry, currentUri);

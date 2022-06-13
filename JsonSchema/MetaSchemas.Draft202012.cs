@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -80,7 +78,7 @@ public static partial class MetaSchemas
 					.Comment("\"definitions\" has been replaced by \"$defs\".")
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder().DynamicRef("#meta"))
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 					.Deprecated(true)
 				),
 				(DependenciesKeyword.Name, new JsonSchemaBuilder()
@@ -153,7 +151,7 @@ public static partial class MetaSchemas
 				(DefsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder().DynamicRef("#meta"))
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				)
 			)
 			.Defs(
@@ -210,14 +208,14 @@ public static partial class MetaSchemas
 				),
 				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(PropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.DynamicRef("#meta")
 					)
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(PatternPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
@@ -227,18 +225,18 @@ public static partial class MetaSchemas
 					.PropertyNames(new JsonSchemaBuilder()
 						.Format(Formats.Regex)
 					)
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(DependentSchemasKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.DynamicRef("#meta")
 					)
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(PropertyNamesKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				),
 				(IfKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
@@ -382,7 +380,7 @@ public static partial class MetaSchemas
 					.Type(SchemaValueType.Array)
 					.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 					.UniqueItems(true)
-					.Default(new JsonElement[0].AsJsonElement())
+					.Default(new JsonArray())
 				)
 			);
 

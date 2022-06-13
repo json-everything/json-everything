@@ -1,6 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 using Json.More;
 using Json.Pointer;
 
@@ -18,32 +17,36 @@ internal class MissingSomeRule : Rule
 		_components = components;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var requiredCount = _requiredCount.Apply(data, contextData).Numberify();
 		var components = _components.Apply(data, contextData);
-		if (components.ValueKind != JsonValueKind.Array)
+		if (components is not JsonArray arr)
 			throw new JsonLogicException("Expected array of required paths.");
 
-		var expected = components.EnumerateArray().SelectMany(e => e.Flatten()).ToList();
-		if (expected.Any(e => e.ValueKind != JsonValueKind.String))
+		var expected = arr.SelectMany(e => e.Flatten()).ToList();
+		if (expected.Any(e => e is JsonValue v && !v.TryGetValue(out string? _)))
 			throw new JsonLogicException("Expected array of required paths.");
 
-		if (data.ValueKind != JsonValueKind.Object)
-			return expected.AsJsonElement();
+		if (data is not JsonObject)
+			return expected.ToJsonArray();
 
-		var paths = expected.Select(e => e.GetString()!)
+		var paths = expected.Cast<JsonValue>().Select(e => e.GetValue<string?>()!)
 			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
-			.Select(p => new { Path = p.Path, Value = p.Pointer.Evaluate(data) })
+			.Select(p =>
+			{
+				p.Pointer.TryEvaluate(data, out var value);
+				return new { Path = p.Path, Value = value };
+			})
 			.ToList();
 
 		var missing = paths.Where(p => p.Value == null)
-			.Select(k => k.Path.AsJsonElement());
+			.Select(k => (JsonNode?) k.Path);
 		var found = paths.Count(p => p.Value != null);
 
 		if (found < requiredCount)
-			return missing.AsJsonElement();
+			return missing.ToJsonArray();
 
-		return Array.Empty<JsonElement>().AsJsonElement();
+		return new JsonArray();
 	}
 }

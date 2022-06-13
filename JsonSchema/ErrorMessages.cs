@@ -42,7 +42,7 @@ public static partial class ErrorMessages
 	/// Tuple of the token name (without brackets) and the value which will replace it.
 	/// </param>
 	/// <returns>The detokenized string.</returns>
-	public static string ReplaceTokens(this string message, params (string token, object value)[] parameters)
+	public static string ReplaceTokens(this string message, params (string token, object? value)[] parameters)
 	{
 		var current = message;
 		var values = new object[parameters.Length];

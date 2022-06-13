@@ -4,7 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Json.More.Net</PackageId>
     <Authors>Greg Dennis</Authors>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
     <Description>Provides extended functionality for the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
@@ -13,17 +15,15 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-more.html</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.5.0.0</FileVersion>
     <DocumentationFile>Json.More.xml</DocumentationFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-	  <Nullable>enable</Nullable>
+	<Nullable>enable</Nullable>
    </PropertyGroup>
 
   <ItemGroup>

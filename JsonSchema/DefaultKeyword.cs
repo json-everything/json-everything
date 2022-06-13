@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -23,15 +24,15 @@ public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 	/// <summary>
 	/// The value to use as the default.
 	/// </summary>
-	public JsonElement Value { get; }
+	public JsonNode? Value { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="DefaultKeyword"/>.
 	/// </summary>
 	/// <param name="value">The value to use as the default.</param>
-	public DefaultKeyword(JsonElement value)
+	public DefaultKeyword(JsonNode? value)
 	{
-		Value = value.Clone();
+		Value = value;
 	}
 
 	/// <summary>
@@ -68,7 +69,7 @@ public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		return Value.GetEquivalenceHashCode();
+		return Value?.GetEquivalenceHashCode() ?? 0;
 	}
 }
 
@@ -76,14 +77,13 @@ internal class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 {
 	public override DefaultKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		using var document = JsonDocument.ParseValue(ref reader);
-		var element = document.RootElement;
+		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
 
-		return new DefaultKeyword(element);
+		return new DefaultKeyword(node);
 	}
 	public override void Write(Utf8JsonWriter writer, DefaultKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DefaultKeyword.Name);
-		value.Value.WriteTo(writer);
+		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

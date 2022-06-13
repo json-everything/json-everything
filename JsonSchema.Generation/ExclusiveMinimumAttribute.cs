@@ -1,4 +1,5 @@
 ﻿using System;
+using Json.More;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;

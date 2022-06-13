@@ -1,3 +1,37 @@
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Updated all functionality to use `JsonNode` instead of `JsonElement`.
+
+## Breaking Changes
+
+_`JsonElement` -> `JsonNode` type exchange changes not listed._
+
+- Removed obsolete members
+  - `IRefResolvable.ResolvePointerSegment()` (and implementations)
+  - `Format.Validate()` (and implementations)
+  - `JsonSchema.OtherData` (and associated constructor parameter) which is now supported by `UnrecognizedKeyword`
+- Removed all `JsonBuilderExtensions` methods which take `JsonElementProxy` since `JsonNode` defines implicit casts from the appropriate types
+- `LogExtensions.WrongValueKind()` now takes `SchemaValueType` instead of `JsonValueKind`
+- Removed `JsonSchemaExtensions(this JsonSchema, string, ValidationOptions)` since the implicit cast from `JsonNode` was taking precendence
+
+    ***IMPORTANT** Removal of this extension will only manifest at runtime.  Code that called this extension method will still compile, but the validations will most likely fail.*
+
+## Additional Changes
+
+- Added `JsonNodeExtensions` to provide schema-specific functionality on top of what's provided in Json.More.Net
+  - `.GetSchemaValueType()` to get the JSON Schema type represented by a node
+  - `.VerifyJsonObject()` to verify that the underlying data of a `JsonObject` can be processed.  See [this issue](https://github.com/dotnet/runtime/issues/70604) for more information.
+- Added `JsonSchemaExtensions.Validate(this JsonSchema, JsonElement, ValidationOptions)` to continue supporting elements
+- Added `JsonSchemaBuilderExtensions.Validate(this JsonSchemaBuilder, JsonNode, ValidationOptions)` as a convenience method
+    ```c#
+    // instead of
+    var schema = builder.Build();
+    var results = schema.Validate(json);
+
+    // you can do
+    var results = builder.Validate(json);
+    ```
+
 # [2.4.0](https://github.com/gregsdennis/json-everything/pull/270)
 
 Added `UnrecognizedKeyword` to represent keywords that were not recognized by any known vocabulary.  The values of these keywords are then captured in the validation results as annotations.  As a result of this change `JsonSchema.OtherData` has been marked obsolete.  

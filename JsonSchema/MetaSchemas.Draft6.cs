@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -35,23 +32,23 @@ public static partial class MetaSchemas
 			("nonNegativeIntegerDefault0", new JsonSchemaBuilder()
 				.AllOf(
 					new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger"),
-					new JsonSchemaBuilder().Default(0.AsJsonElement())
+					new JsonSchemaBuilder().Default(0)
 				)
 			),
 			("simpleTypes", new JsonSchemaBuilder()
-				.Enum("array".AsJsonElement(),
-					"boolean".AsJsonElement(),
-					"integer".AsJsonElement(),
-					"null".AsJsonElement(),
-					"number".AsJsonElement(),
-					"object".AsJsonElement(),
-					"string".AsJsonElement())
+				.Enum("array",
+					"boolean",
+					"integer",
+					"null",
+					"number",
+					"object",
+					"string")
 			),
 			("stringArray", new JsonSchemaBuilder()
 				.Type(SchemaValueType.Array)
 				.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 				.UniqueItems(true)
-				.Default(Enumerable.Empty<JsonElement>().AsJsonElement())
+				.Default(new JsonArray())
 			)
 		)
 		.Type(SchemaValueType.Object | SchemaValueType.Boolean)
@@ -111,13 +108,13 @@ public static partial class MetaSchemas
 					JsonSchemaBuilder.RefRoot(),
 					new JsonSchemaBuilder().Ref("#/definitions/schemaArray")
 				)
-				.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+				.Default(new JsonObject())
 			),
 			(MaxItemsKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger")),
 			(MinItemsKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeIntegerDefault0")),
 			(UniqueItemsKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.Boolean)
-				.Default(false.AsJsonElement())
+				.Default(false)
 			),
 			(ContainsKeyword.Name, JsonSchemaBuilder.RefRoot()),
 			(MaxPropertiesKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/nonNegativeInteger")),
@@ -127,18 +124,18 @@ public static partial class MetaSchemas
 			(DefinitionsKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
 				.AdditionalProperties(JsonSchemaBuilder.RefRoot())
-				.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+				.Default(new JsonObject())
 			),
 			(PropertiesKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
 				.AdditionalProperties(JsonSchemaBuilder.RefRoot())
-				.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+				.Default(new JsonObject())
 			),
 			(PatternPropertiesKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
 				.AdditionalProperties(JsonSchemaBuilder.RefRoot())
 				.PropertyNames(new JsonSchemaBuilder().Format(Formats.Regex))
-				.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+				.Default(new JsonObject())
 			),
 			(DependenciesKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
@@ -172,5 +169,5 @@ public static partial class MetaSchemas
 			(OneOfKeyword.Name, new JsonSchemaBuilder().Ref("#/definitions/schemaArray")),
 			(NotKeyword.Name, JsonSchemaBuilder.RefRoot())
 		)
-		.Default(new Dictionary<string, JsonElement>().AsJsonElement());
+		.Default(new JsonObject());
 }

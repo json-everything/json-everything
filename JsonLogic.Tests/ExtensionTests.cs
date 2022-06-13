@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests;
@@ -15,7 +15,7 @@ public class ExtensionTests
 	[TestCase("null", false)]
 	public void Truthiness(string text, bool expected)
 	{
-		var json = JsonDocument.Parse(text).RootElement;
+		var json = JsonNode.Parse(text);
 
 		Assert.AreEqual(expected, json.IsTruthy());
 	}

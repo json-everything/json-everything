@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Json.Schema.Generation;
+﻿namespace Json.Schema.Generation;
 
 /// <summary>
 /// Indicates to the generation system that this object contains contexts.
@@ -13,19 +10,6 @@ namespace Json.Schema.Generation;
 /// </remarks>
 public interface IContextContainer
 {
-	/// <summary>
-	/// Gets the contexts.
-	/// </summary>
-	/// <returns>
-	///	The <see cref="SchemaGenerationContextBase"/>s contained by this object.
-	/// </returns>
-	/// <remarks>
-	/// Only return the contexts contained directly by this object.  Do not fetch
-	/// the child contexts of those contexts.
-	/// </remarks>
-	[Obsolete("This method is no longer used and may be implemented to simply throw an exception.")]
-	IEnumerable<SchemaGenerationContextBase> GetContexts();
-
 	/// <summary>
 	/// Replaces one context with another.
 	/// </summary>

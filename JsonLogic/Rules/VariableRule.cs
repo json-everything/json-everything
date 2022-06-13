@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Json.More;
+﻿using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Logic.Rules;
@@ -23,7 +22,7 @@ internal class VariableRule : Rule
 		_defaultValue = defaultValue;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		if (_path == null) return data;
 
@@ -32,9 +31,10 @@ internal class VariableRule : Rule
 		if (pathString == string.Empty) return contextData ?? data;
 
 		var pointer = JsonPointer.Parse(pathString == string.Empty ? "" : $"/{pathString.Replace('.', '/')}");
-		var pathEval = pointer.Evaluate(contextData ?? data) ?? pointer.Evaluate(data);
-		if (pathEval != null) return pathEval.Value;
+		if (pointer.TryEvaluate(contextData ?? data, out var pathEval) ||
+		    pointer.TryEvaluate(data, out pathEval))
+			return pathEval;
 
-		return _defaultValue?.Apply(data, contextData) ?? ((string?)null).AsJsonElement();
+		return _defaultValue?.Apply(data, contextData) ?? null;
 	}
 }

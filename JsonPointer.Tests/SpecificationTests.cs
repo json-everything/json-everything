@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 
@@ -64,7 +65,7 @@ public class SpecificationTests
 	}
 
 	[TestCaseSource(nameof(ExampleCases))]
-	public void Example(string pointerString, string expectedString)
+	public void UsingElements(string pointerString, string expectedString)
 	{
 		using var target = JsonDocument.Parse(@"{
 				""foo"": [""bar"", ""baz""],
@@ -87,5 +88,31 @@ public class SpecificationTests
 
 		// ReSharper disable once PossibleInvalidOperationException
 		Assert.IsTrue(actual.Value.IsEquivalentTo(expected.RootElement));
+	}
+
+	[TestCaseSource(nameof(ExampleCases))]
+	public void UsingNodes(string pointerString, string expectedString)
+	{
+		var target = JsonNode.Parse(@"{
+				""foo"": [""bar"", ""baz""],
+				"""": 0,
+				""a/b"": 1,
+				""c%d"": 2,
+				""e^f"": 3,
+				""g|h"": 4,
+				""i\\j"": 5,
+				""k\""l"": 6,
+				"" "": 7,
+				""m~n"": 8
+			}");
+
+		var pointer = JsonPointer.Parse(pointerString);
+
+		var success = pointer.TryEvaluate(target, out var actual);
+
+		var expected = JsonNode.Parse(expectedString);
+
+		Assert.IsTrue(success);
+		Assert.IsTrue(actual.IsEquivalentTo(expected));
 	}
 }

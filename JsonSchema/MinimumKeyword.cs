@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -34,20 +35,21 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Provides validation for the keyword.S
 	/// </summary>
 	/// <param name="context">Contextual details for the validation process.</param>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Number)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var number = context.LocalInstance.GetDecimal();
+		var number = context.LocalInstance!.AsValue().GetNumber();
 		if (Value <= number)
 			context.LocalResult.Pass();
 		else

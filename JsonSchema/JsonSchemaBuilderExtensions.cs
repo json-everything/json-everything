@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using Json.More;
 
 namespace Json.Schema;
 
@@ -113,23 +112,11 @@ public static class JsonSchemaBuilderExtensions
 	/// Add a `const` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
-	/// <param name="element">The constant value.</param>
+	/// <param name="node">The constant value.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Const(this JsonSchemaBuilder builder, JsonElement element)
+	public static JsonSchemaBuilder Const(this JsonSchemaBuilder builder, JsonNode? node)
 	{
-		builder.Add(new ConstKeyword(element));
-		return builder;
-	}
-
-	/// <summary>
-	/// Add a `const` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="element">The constant value.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Const(this JsonSchemaBuilder builder, JsonElementProxy element)
-	{
-		builder.Add(new ConstKeyword(element));
+		builder.Add(new ConstKeyword(node));
 		return builder;
 	}
 
@@ -149,23 +136,11 @@ public static class JsonSchemaBuilderExtensions
 	/// Add a `default` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
-	/// <param name="element">The value.</param>
+	/// <param name="node">The value.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Default(this JsonSchemaBuilder builder, JsonElement element)
+	public static JsonSchemaBuilder Default(this JsonSchemaBuilder builder, JsonNode? node)
 	{
-		builder.Add(new DefaultKeyword(element));
-		return builder;
-	}
-
-	/// <summary>
-	/// Add a `default` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="element">The value.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Default(this JsonSchemaBuilder builder, JsonElementProxy element)
-	{
-		builder.Add(new DefaultKeyword(element));
+		builder.Add(new DefaultKeyword(node));
 		return builder;
 	}
 
@@ -367,7 +342,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="elements">The values for the enum.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonElement> elements)
+	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonNode?> elements)
 	{
 		builder.Add(new EnumKeyword(elements));
 		return builder;
@@ -379,19 +354,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="elements">The values for the enum.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonElementProxy> elements)
-	{
-		builder.Add(new EnumKeyword(elements.Select(p => (JsonElement)p)));
-		return builder;
-	}
-
-	/// <summary>
-	/// Add an `enum` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="elements">The values for the enum.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonElement[] elements)
+	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonNode?[] elements)
 	{
 		builder.Add(new EnumKeyword(elements));
 		return builder;
@@ -403,9 +366,12 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="elements">The values for the enum.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonElementProxy[] elements)
+	/// <remarks>
+	/// This overload is provided as a convenience as string-only enums are most common.
+	/// </remarks>
+	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<string> elements)
 	{
-		builder.Add(new EnumKeyword(elements.Select(p => (JsonElement)p)));
+		builder.Add(new EnumKeyword(elements.Select(x => (JsonNode?)x)));
 		return builder;
 	}
 
@@ -415,7 +381,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="elements">The example values.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonElement> elements)
+	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonNode?> elements)
 	{
 		builder.Add(new ExamplesKeyword(elements));
 		return builder;
@@ -427,33 +393,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="elements">The example values.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonElement[] elements)
+	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonNode?[] elements)
 	{
 		builder.Add(new ExamplesKeyword(elements));
-		return builder;
-	}
-
-	/// <summary>
-	/// Add an `examples` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="elements">The example values.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonElementProxy> elements)
-	{
-		builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement)p)));
-		return builder;
-	}
-
-	/// <summary>
-	/// Add an `examples` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="elements">The example values.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonElementProxy[] elements)
-	{
-		builder.Add(new ExamplesKeyword(elements.Select(p => (JsonElement)p)));
 		return builder;
 	}
 
@@ -1067,20 +1009,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="name">The keyword name.</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonElement value)
-	{
-		builder.Add(new UnrecognizedKeyword(name, value));
-		return builder;
-	}
-
-	/// <summary>
-	/// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="name">The keyword name.</param>
-	/// <param name="value">The value.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonElementProxy value)
+	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonNode? value)
 	{
 		builder.Add(new UnrecognizedKeyword(name, value));
 		return builder;
@@ -1144,5 +1073,17 @@ public static class JsonSchemaBuilderExtensions
 	{
 		builder.Add(new WriteOnlyKeyword(value));
 		return builder;
+	}
+
+	/// <summary>
+	/// Convenience method that builds and validates with a single call.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="root">The root instance.</param>
+	/// <param name="options">The options to use for this validation.</param>
+	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
+	public static ValidationResults Validate(this JsonSchemaBuilder builder, JsonNode? root, ValidationOptions? options = null)
+	{
+		return builder.Build().Validate(root, options);
 	}
 }

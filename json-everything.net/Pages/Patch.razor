@@ -7,8 +7,9 @@
 @using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
+@using System.Text.Json.Nodes
 
-@inject CookieManager _cookieManager;
+@inject CookieManager CookieManager;
 
 <PageTitle>JSON Patch - json-everything.net</PageTitle>
 
@@ -111,10 +112,10 @@
 			await _outputEditor.SetValue($"Patch is invalid\n\n{e.Message}");
 			return;
 		}
-		JsonElement instance;
+		JsonNode? instance;
 		try
 		{
-			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+			instance = JsonNode.Parse(await _instanceEditor.GetValue());
 		}
 		catch (Exception e)
 		{
@@ -160,42 +161,37 @@
 
 		var patch = source.CreatePatch(target);
 
-		if (patch != null)
+		var instance = JsonSerializer.Serialize(patch, new JsonSerializerOptions
 		{
-			var instance = JsonSerializer.Serialize(patch, new JsonSerializerOptions
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			});
-			await _outputEditor.SetValue(instance);
-		}
-		else
-			await _outputEditor.SetValue("Unable to create patch");
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		});
+		await _outputEditor.SetValue(instance);
 	}
 
 	private async Task SavePatch()
 	{
-		await _cookieManager.SaveEditorValue(_patchEditor, "patch");
+		await CookieManager.SaveEditorValue(_patchEditor, "patch");
 	}
 
 	private async Task LoadSavedPatch()
 	{
-		await _cookieManager.LoadEditorValue(_patchEditor, "patch");
+		await CookieManager.LoadEditorValue(_patchEditor, "patch");
 	}
 
 	private async Task SaveInstance()
 	{
-		await _cookieManager.SaveEditorValue(_instanceEditor, "patch-instance");
+		await CookieManager.SaveEditorValue(_instanceEditor, "patch-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await _cookieManager.LoadEditorValue(_instanceEditor, "patch-instance");
+		await CookieManager.LoadEditorValue(_instanceEditor, "patch-instance");
 	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		await _cookieManager.Initialize();
+		await CookieManager.Initialize();
 	    await _outputEditor.SetValue(string.Empty);
 
 		await LoadSavedPatch();

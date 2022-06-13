@@ -4,12 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Json.More;
 using Json.Pointer;
-
-#pragma warning disable CS0618
 
 namespace Json.Schema;
 
@@ -23,7 +21,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <summary>
 	/// The empty schema <code>{}</code>.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
-	public static readonly JsonSchema Empty = new(Enumerable.Empty<IJsonSchemaKeyword>(), null);
+	public static readonly JsonSchema Empty = new(Enumerable.Empty<IJsonSchemaKeyword>());
 	/// <summary>
 	/// The <code>true</code> schema.  Passes all instances.
 	/// </summary>
@@ -37,15 +35,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
 	/// </summary>
 	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
-	/// <summary>
-	/// (obsolete) Gets other non-keyword (or unknown keyword) properties in the schema.
-	/// </summary>
-	/// <remarks>
-	/// This property is now obsolete and no longer used.  It will be removed at the next major version.
-	/// Until then, it will remain populated.
-	/// </remarks>
-	[Obsolete("Unrecognized keyword data now appears as UnrecognizedKeyword instances in the Keywords collection.")]
-	public IReadOnlyDictionary<string, JsonElement>? OtherData { get; }
 
 	/// <summary>
 	/// For boolean schemas, gets the value.  Null if 
@@ -58,10 +47,9 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	{
 		BoolValue = value;
 	}
-	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords, IReadOnlyDictionary<string, JsonElement>? otherData)
+	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
 		Keywords = keywords.ToArray();
-		OtherData = otherData;
 	}
 
 	/// <summary>
@@ -106,7 +94,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this validation.</param>
 	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public ValidationResults Validate(JsonElement root, ValidationOptions? options = null)
+	public ValidationResults Validate(JsonNode? root, ValidationOptions? options = null)
 	{
 		options = ValidationOptions.From(options ?? ValidationOptions.Default);
 
@@ -303,8 +291,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
 				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
-				var value = newPointer.Evaluate(unrecognized.Value);
-				var asSchema = FromText(value.ToString());
+				newPointer.TryEvaluate(unrecognized.Value, out var value);
+				var asSchema = FromText(value?.ToString() ?? "null");
 				return (asSchema, currentUri);
 			}
 
@@ -317,11 +305,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	internal void UpdateBaseUri(Uri newUri)
 	{
 		BaseUri = newUri;
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	/// <summary>
@@ -351,7 +334,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		if (BoolValue.HasValue) return BoolValue == other.BoolValue;
 		if (other.BoolValue.HasValue) return false;
 		if (Keywords!.Count != other.Keywords!.Count) return false;
-		if (OtherData?.Count != other.OtherData?.Count) return false;
 
 		if (Keywords != null)
 		{
@@ -362,17 +344,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 				.ToList();
 			if (byKeyword.Count != Keywords.Count) return false;
 			if (!byKeyword.All(k => k.ThisKeyword.Equals(k.OtherKeyword))) return false;
-		}
-
-		if (OtherData != null)
-		{
-			var byKey = OtherData.Join(other.OtherData!,
-					td => td.Key,
-					od => od.Key,
-					(td, od) => new { ThisData = td.Value, OtherData = od.Value })
-				.ToList();
-			if (byKey.Count != OtherData.Count) return false;
-			if (!byKey.All(k => k.ThisData.IsEquivalentTo(k.OtherData))) return false;
 		}
 
 		return true;
@@ -393,7 +364,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		unchecked
 		{
 			var hashCode = Keywords?.GetUnorderedCollectionHashCode() ?? 0;
-			hashCode = (hashCode * 397) ^ (OtherData?.GetStringDictionaryHashCode() ?? 0);
 			hashCode = (hashCode * 397) ^ BoolValue.GetHashCode();
 			return hashCode;
 		}
@@ -414,7 +384,6 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 			throw new JsonException("Expected token");
 
 		var keywords = new List<IJsonSchemaKeyword>();
-		var otherData = new Dictionary<string, JsonElement>();
 
 		do
 		{
@@ -428,11 +397,8 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
 					{
-						using var document = JsonDocument.ParseValue(ref reader);
-						var element = document.RootElement;
-						otherData[keyword] = element.Clone();
-
-						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, element);
+						var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
 						keywords.Add(unrecognizedKeyword);
 						break;
 					}
@@ -447,7 +413,7 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:
-					return new JsonSchema(keywords, otherData);
+					return new JsonSchema(keywords);
 				default:
 					throw new JsonException("Expected keyword or end of schema object");
 			}

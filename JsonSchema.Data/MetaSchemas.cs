@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using Json.More;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema.Data;
 
@@ -38,7 +36,7 @@ public static class MetaSchemas
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
 						.Format(Formats.UriReference))
-					.Default(new Dictionary<string, JsonElement>().AsJsonElement())
+					.Default(new JsonObject())
 				)
 			);
 }

@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Json.More;
+﻿using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -13,13 +12,10 @@ internal class BooleanCastRule : Rule
 		_value = value;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var value = _value.Apply(data, contextData);
 
-		if (value.ValueKind == JsonValueKind.Object)
-			throw new JsonLogicException("Cannot cast objects to boolean");
-
-		return _value.Apply(data, contextData).IsTruthy().AsJsonElement();
+		return _value.Apply(data, contextData).IsTruthy();
 	}
 }

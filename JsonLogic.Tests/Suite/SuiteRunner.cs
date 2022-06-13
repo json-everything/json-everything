@@ -18,7 +18,7 @@ public class SuiteRunner
 		{
 			var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
 
-			string content = null;
+			string content = null!;
 			try
 			{
 				using var client = new HttpClient();
@@ -39,7 +39,7 @@ public class SuiteRunner
 
 			var testSuite = JsonSerializer.Deserialize<TestSuite>(content);
 
-			return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.ToJsonString()}  |  {t.Expected.ToJsonString()}" });
+			return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 		}).Result;
 	}
 
@@ -50,7 +50,7 @@ public class SuiteRunner
 
 		if (rule == null)
 		{
-			Assert.AreEqual(JsonValueKind.Null, test.Expected.ValueKind);
+			Assert.IsNull(test.Expected);
 			return;
 		}
 

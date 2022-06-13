@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -47,10 +48,11 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalInstance.ValueKind != JsonValueKind.Object)
+		var scheamValueType = context.LocalInstance.GetSchemaValueType();
+		if (scheamValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(context.LocalInstance.ValueKind);
+			context.WrongValueKind(scheamValueType);
 			return;
 		}
 
@@ -92,26 +94,30 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 			context.Log(() => $"Annotation from {Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
 			evaluatedProperties.AddRange(annotation);
 		}
-		var unevaluatedProperties = context.LocalInstance.EnumerateObject().Where(p => !evaluatedProperties.Contains(p.Name)).ToList();
+
+		var obj = (JsonObject)context.LocalInstance!;
+		if (!obj.VerifyJsonObject(context)) return;
+	
+		var unevaluatedProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToList();
 		evaluatedProperties.Clear();
 		foreach (var property in unevaluatedProperties)
 		{
-			if (!context.LocalInstance.TryGetProperty(property.Name, out var item))
+			if (!obj.TryGetPropertyValue(property.Key, out var item))
 			{
-				context.Log(() => $"Property '{property.Name}' does not exist. Skipping.");
+				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
 				continue;
 			}
 
-			context.Log(() => $"Validating property '{property.Name}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Name}")), item);
+			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item);
 			Schema.ValidateSubschema(context);
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
-			context.Log(() => $"Property '{property.Name}' {localResult.GetValidityString()}.");
+			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 			context.Pop();
 			if (!overallResult && context.ApplyOptimizations) break;
 			if (localResult)
-				evaluatedProperties.Add(property.Name);
+				evaluatedProperties.Add(property.Key);
 		}
 		context.Options.LogIndentLevel--;
 
@@ -136,11 +142,6 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 			annotation.AddRange(allProperties);
 		else if (allProperties.Any())
 			localResults.SetAnnotation(Name, allProperties);
-	}
-
-	IRefResolvable IRefResolvable.ResolvePointerSegment(string? value)
-	{
-		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Json.More;
@@ -15,7 +17,7 @@ public static class JsonNodeExtensions
 	/// <param name="a">The first element.</param>
 	/// <param name="b">The second element.</param>
 	/// <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
-	public static bool IsEquivalentTo(this JsonNode a, JsonNode b)
+	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
 		switch (a, b)
 		{
@@ -27,16 +29,16 @@ public static class JsonNodeExtensions
 					.GroupBy(p => p.Key)
 					.Select(g => g.ToList())
 					.ToList();
-#pragma warning disable CS8604 // Possible null reference argument.
-				return grouped.All(g => g.Count == 2 &&
-										g[0].Value != null && g[1].Value != null &&
-										g[0].Value.IsEquivalentTo(g[1].Value));
-#pragma warning restore CS8604 // Possible null reference argument.
+				return grouped.All(g => g.Count == 2 && g[0].Value.IsEquivalentTo(g[1].Value));
 			case (JsonArray arrayA, JsonArray arrayB):
 				if (arrayA.Count != arrayB.Count) return false;
 				var zipped = arrayA.Zip(arrayB, (ae, be) => (ae, be));
-				return zipped.All(p => (p.ae == null && p.be == null) ||
-									   (p.ae != null && p.be != null && p.ae.IsEquivalentTo(p.be)));
+				return zipped.All(p => p.ae.IsEquivalentTo(p.be));
+			case (JsonValue aValue, JsonValue bValue):
+				if (aValue.GetValue<object>() is JsonElement aElement &&
+					bValue.GetValue<object>() is JsonElement bElement)
+					return aElement.IsEquivalentTo(bElement);
+				return a.ToJsonString() == b.ToJsonString();
 			default:
 				return a?.ToJsonString() == b?.ToJsonString();
 		}
@@ -95,10 +97,15 @@ public static class JsonNodeExtensions
 					var value = target.AsValue();
 					if (value.TryGetValue<bool>(out var boolA))
 						Add(ref current, boolA);
-					else if (value.TryGetValue<decimal>(out var decimalA))
-						Add(ref current, decimalA);
-					else if (value.TryGetValue<string>(out var stringA))
-						Add(ref current, stringA);
+					else
+					{
+						var number = value.GetNumber();
+						if (number != null)
+							Add(ref current, number);
+						else if (value.TryGetValue<string>(out var stringA))
+							Add(ref current, stringA);
+					}
+
 					break;
 			}
 		}
@@ -106,6 +113,117 @@ public static class JsonNodeExtensions
 		var hash = 0;
 		ComputeHashCode(node, ref hash, 0);
 		return hash;
+	}
 
+	/// <summary>
+	/// Gets JSON string representation for <see cref="JsonNode"/>, including null support.
+	/// </summary>
+	/// <param name="node">A node.</param>
+	/// <returns>JSON string representation.</returns>
+	public static string AsJsonString(this JsonNode? node)
+	{
+		return node?.ToJsonString() ?? "null";
+	}
+
+	/// <summary>
+	/// Gets a node's underlying numeric value.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying numeric value, or null if the node represented a non-numeric value.</returns>
+	public static decimal? GetNumber(this JsonValue value)
+	{
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind != JsonValueKind.Number) return null;
+			return e.GetDecimal();
+		}
+
+		var number = GetInteger(value);
+		if (number != null) return number;
+
+		if (value.TryGetValue(out float f)) return (decimal)f;
+		if (value.TryGetValue(out double d)) return (decimal)d;
+		if (value.TryGetValue(out decimal dc)) return dc;
+
+		return null;
+	}
+
+	/// <summary>
+	/// Gets a node's underlying numeric value if it's an integer.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying numeric value if it's an integer, or null if the node represented a non-integer value.</returns>
+	public static long? GetInteger(this JsonValue value)
+	{
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind != JsonValueKind.Number) return null;
+			var d = e.GetDecimal();
+			if (d == Math.Floor(d)) return (long)d;
+			return null;
+		}
+		if (value.TryGetValue(out byte b)) return b;
+		if (value.TryGetValue(out short s)) return s;
+		if (value.TryGetValue(out ushort us)) return us;
+		if (value.TryGetValue(out int i)) return i;
+		if (value.TryGetValue(out ushort ui)) return ui;
+		if (value.TryGetValue(out long l)) return l;
+		// this doesn't feel right... throw?
+		if (value.TryGetValue(out ulong ul)) return (long)ul;
+
+		return null;
+	}
+
+	/// <summary>
+	/// Creates a copy of a node by passing it through the serializer.
+	/// </summary>
+	/// <param name="source">A node.</param>
+	/// <returns>A duplicate of the node.</returns>
+	/// <remarks>
+	///	`JsonNode` may only be part of a single JSON tree, i.e. have a single parent.
+	/// Copying a node allows its value to be saved to another JSON tree.
+	/// </remarks>
+	public static JsonNode? Copy(this JsonNode? source)
+	{
+		return source.Deserialize<JsonNode?>();
+	}
+
+	/// <summary>
+	/// Convenience method that wraps <see cref="JsonObject.TryGetPropertyValue(string, out JsonNode?)"/>
+	/// and catches argument exceptions.
+	/// </summary>
+	/// <param name="obj">The JSON object.</param>
+	/// <param name="propertyName">The property name</param>
+	/// <param name="node">The node under the property name if it exists and is singular; null otherwise.</param>
+	/// <param name="e">An exception if one was thrown during the access attempt.</param>
+	/// <returns>true if the property exists and is singular within the JSON data.</returns>
+	/// <remarks>
+	/// <see cref="JsonObject.TryGetPropertyValue(string, out JsonNode?)"/> throws an
+	/// <see cref="ArgumentException"/> if the node was parsed from data that has duplicate
+	/// keys.  Please see https://github.com/dotnet/runtime/issues/70604 for more information.
+	/// </remarks>
+	public static bool TryGetValue(this JsonObject obj, string propertyName, out JsonNode? node, out Exception? e)
+	{
+		e = null;
+		try
+		{
+			return obj.TryGetPropertyValue(propertyName, out node);
+		}
+		catch (ArgumentException ae)
+		{
+			e = ae;
+			node = null;
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="JsonArray"/> from an enumerable of nodes.
+	/// </summary>
+	/// <param name="nodes">The nodes.</param>
+	/// <returns>A JSON array.</returns>
+	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
+	{
+		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
 	}
 }

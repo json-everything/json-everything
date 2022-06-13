@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
@@ -7,8 +8,8 @@ internal class ReduceRule : Rule
 {
 	private class Intermediary
 	{
-		public JsonElement Current { get; set; }
-		public JsonElement Accumulator { get; set; }
+		public JsonNode? Current { get; set; }
+		public JsonNode? Accumulator { get; set; }
 	}
 
 	private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
@@ -24,24 +25,23 @@ internal class ReduceRule : Rule
 		_initial = initial;
 	}
 
-	public override JsonElement Apply(JsonElement data, JsonElement? contextData = null)
+	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var input = _input.Apply(data, contextData);
 		var accumulator = _initial.Apply(data, contextData);
 
-		if (input.ValueKind == JsonValueKind.Null) return accumulator;
-		if (input.ValueKind != JsonValueKind.Array)
-			throw new JsonLogicException($"Cannot reduce on {input.ValueKind}.");
+		if (input is null) return accumulator;
+		if (input is not JsonArray arr)
+			throw new JsonLogicException($"Cannot reduce on {input.JsonType()}.");
 
-		foreach (var element in input.EnumerateArray())
+		foreach (var element in arr)
 		{
 			var intermediary = new Intermediary
 			{
 				Current = element,
 				Accumulator = accumulator
 			};
-			using var doc = JsonDocument.Parse(JsonSerializer.Serialize(intermediary, _options));
-			var item = doc.RootElement.Clone();
+			var item = JsonSerializer.SerializeToNode(intermediary, _options);
 
 			accumulator = _rule.Apply(data, item);
 		}
