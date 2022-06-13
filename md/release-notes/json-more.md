@@ -1,3 +1,23 @@
+# [1.6.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Added supporting functionality for `JsonNode`.
+
+- Added `JsonElementExtensions.AsNode()` - wraps a `JsonElement` into a `JsonNode`
+- Updated `JsonNodeEqualityComparer` to properly handle nulls
+- `JsonNodeExtensions`
+    - Updated `.IsEquivalentTo()` and `.ComputeHashCode()` to properly handle nulls
+    - Added `.AsJsonString()` as an alternative to .Net's `.ToJsonString()` that properly handles nulls (return `"null"`)
+    - Added `.GetNumber()` to retrive a JSON number that could be stored as any .Net numeric type
+    - Added `.GetInteger()` to retrive a JSON number that could be stored as any .Net integer type
+    - Added `.Copy()` to copy nodes
+    - Added `.TryGetValue()` to handle cases where the node was parsed from JSON text that contains duplicate keys ([unhandled by .Net](https://github.com/dotnet/runtime/issues/70604))
+    - Added `.ToJsonArray()` to convert any `IEnumerable<JsonNode?>` to a `JsonArray` (.Net only supports `JsonNode?[]`)
+- Added `JsonNull` to serve as a placeholder/signal for when it's necessary to [distinguish between JSON null and .Net null](https://github.com/dotnet/runtime/issues/68128)
+- Added `TypeExtensions`
+    - `.IsInteger()` to determine if the type is an integer type
+    - `.IsFloatingPoint()` to determine if the type is a floating point numeric type
+    - `.IsNumber()` to determine if the type is any numeric type
+
 # [1.5.0](https://github.com/gregsdennis/json-everything/pull/243)
 
 Updated System.Text.Json to version 6 in order to add `JsonNode` support.

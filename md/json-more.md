@@ -18,6 +18,16 @@ Additionally, an `IEqualityComparer<JsonElement>` is supplied (`JsonElementEqual
 
 ***NOTE** Comparers are also supplied for `JsonDocument` and `JsonNode`.*
 
+# Explicitly specifying JSON null with `JsonNode`.
+
+Because `JsonNode` was designed to unify .Net null with JSON null, it's difficult (and sometimes impossible) to determine when a JSON null is explicitly provided vs when it is merely the result of a missing property.  Ordinarily (e.g. during deserialization) this isn't much of a problem.
+
+However, in the case you _do_ need to distinguish between them, you can use the `JsonNull.SignalNode` to indicate that JSON null has been explicitly provided.
+
+Under the covers, it's just a singleton `JsonValue<JsonNull>`.  Use `ReferenceEquals(JsonNull.SignalNode, value)` to identify it.
+
+***IMPORTANT** This is provided exclusively as a signal.  It is not intended to be saved.  Best practice is to continue to save null.  [See the code](https://github.com/gregsdennis/json-everything/blob/595045ec8258f4073ee5666c721609a9c0886490/JsonSchema/ValidationContext.cs#L146-L149) for an example of proper usage.*
+
 # Enum serialization
 
 The `EnumStringConverter<T>` class enables string encoding of enum values.  `T` is the enum.
@@ -49,6 +59,26 @@ To use this converter, apply the `[JsonConverter(typeof(EnumStringConverter<T>))
 
 # Data conversions
 
+## `.AsNode()` extension
+
+Previous versions of the libraries in the `json-everything` suite were built on `JsonElement`.  They have since been migrated to support `JsonNode` directly.
+
+While .Net provides ways to convert value directly into `JsonObject`, `JsonArray`, and `JsonValue`, they [neglected to provide](https://github.com/dotnet/runtime/issues/70427) a single way to convert _any_ value into a `JsonNode`, their base class.  This extension provides that.
+
+```c#
+JsonNode? node = element.AsNode();
+```
+
+Note that this does potentially return null to handle the JSON null case.
+
+## `.ToJsonArray()` extension
+
+.Net provided `JsonArray` with a constructor that takes an array of `JsonNode?`, however they don't support converting _any_ enumerable of nodes into an array.  This extension will handle that for you.
+
+```c#
+JsonArray array = new List<JsonNode?>{ 1, null, false }.ToJsonArray();
+```
+
 ## `.AsJsonElement()` extension
 
 Sometimes you just want a `JsonElement` that represents a simple value, like a string, boolean, or number.  This library exposes several overloads of the `.AsJsonElement()` extension that can do this for you.
@@ -76,6 +106,8 @@ var obj = new Dictionary<string, JsonElement>{
 ```
 
 ## Making methods that require `JsonElement` easier to call
+
+***NOTE** If you're using `JsonNode`, you shouldn't need this as it already defines implicit casts from the appropriate types.*
 
 The `JsonElementProxy` class allows the client to define methods that expect a `JsonElement` to be called with native types by defining implicit casts from those types into the `JsonElementProxy` and then also an implicit cast from the proxy into `JsonElement`.
 

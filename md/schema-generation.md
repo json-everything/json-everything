@@ -269,8 +269,6 @@ public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
         Context = context;
     }
 
-    public IEnumerable<SchemaGeneratorContextBase> GetContexts() => new[] {Context};
-
     public void Replace(int hashCode, SchemaGeneratorContextBase newContext)
     {
         if (Context.Hash == hashCode)
@@ -281,9 +279,9 @@ public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
 }
 ```
 
-There are two methods required by `IContextContainer`: `GetContexts()` and `Replace()`.
+As of v3, `IContextContainer` requires only a single method: `Replace()`.
 
-`GetContexts()` was used in v1.x but is no longer used as of v2.0 and has been marked obsolete with v2.0.1.  This method should have been removed.  Implementations can just throw a `NotImplementedException`.  This will be marked obsolete in a patch of 2.0.0.
+***NOTE** Another method `GetContexts()` was used in v1.x but was no longer used as of v2.0 and was marked obsolete with v2.0.1.*
 
 `Replace()` replaces a context with a given hash code with a new context.  This is called when the system is creating `$ref` intents that point to the new `$defs` intent it's building and distributing them throughout the context tree.  Once all the `$ref`s are distributed, the system will add the `$defs` intent to the root context to be applied at the last step.
 
@@ -321,7 +319,7 @@ public class MaximumAttribute : Attribute, IAttributeHandler<MaximumAttribute>
 
 The `AddConstraints()` method works exactly the same as in the generator class.  A key difference here is that you will need to guard against unrelated types.  For instance, with `MaximumAttribute` above, it doesn't make sense to have `maximum` on a non-numeric type, so we check it before adding the intent.
 
-***NOTE** `.IsNumber()` is an extension method on `Type` that determines if it's a numeric type.  There are a few more of these helper extensions as well.*
+***NOTE** `.IsNumber()` is an extension method on `Type` that determines if it's a numeric type.  It is defined in Json.More.Net.  There are a few more of these helper extensions as well.*
 
 The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler<T>`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method, passing the handler type for `T`.
 

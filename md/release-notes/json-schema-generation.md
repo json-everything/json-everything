@@ -1,3 +1,14 @@
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+
+Updated all functionality to use `JsonNode` instead of `JsonElement` in line with JsonSchema.Net v3.
+
+## Breaking Changes
+
+_`JsonElement` -> `JsonNode` type exchange changes not listed._
+
+- `IContextContainer.GetContexts()` and implementations removed as it was obsolete
+- `TypeExtensions.IsInteger()`, `.IsFloatingPoint()`, and `.IsNumber()` moved to Json.More.Net
+
 # [2.1.1](https://github.com/gregsdennis/json-everything/pull/275)
 
 [#274](https://github.com/gregsdennis/json-everything/issues/274) - Added support for `JsonObject`, `JsonArray`, and `JsonValue`.

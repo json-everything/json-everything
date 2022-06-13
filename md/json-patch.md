@@ -28,14 +28,14 @@ In JsonPatch<nsp>.Net, a `JsonPatch` object can be deserialized directly from th
 var patch = JsonSerializer.Deserialize<JsonPatch>(patchString);
 ```
 
-`JsonPatch` operates on `JsonElement` values.  To apply the patch, parse the document and pass the root element into the `.Apply()` method.
+`JsonPatch` operates on `JsonNode?` values.  To apply the patch, parse the document and pass the root element into the `.Apply()` method.
 
 ```c#
-var doc = JsonDocument.Parse(docString);
-var result = patch.Apply(doc.RootElement);
+var doc = JsonNode.Parse(docString);
+var result = patch.Apply(doc);
 ```
 
-The result contains the altered document, either fully patched or up to the point an error occurred, and possibly an error message.
+The result contains the altered document, either fully patched, or up to the point an error occurred along with an error message.
 
 You can even apply a patch from one object to another!  They don't even need to be of the same type!!
 
@@ -60,8 +60,15 @@ That's it!
 If you know what your start and end states are, but you want to find the differences, you can do that by generating a patch.
 
 ```c#
-var start = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
-var target = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]");
+var start = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
+// you can also build your data inline
+var target = new JsonArray{
+  new JsonObject { ["test"] = "test123" },
+  new JsonObject { ["test"] = "test32132" },
+  new JsonObject { ["test1"] = "test321" },
+  new JsonObject { ["test"] = new JsonArray{ 1, 2, 3 } },
+  new JsonObject { ["test"] = new JsonArray{ 1, 2, 3 } },
+}
 
 var patch = start.CreatePatch(target);
 ```

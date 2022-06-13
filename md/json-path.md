@@ -1,3 +1,5 @@
+***NOTE** JsonPath.Net needs a larger rewrite in order to support `JsonNode` properly.  While the other libraries have been converted already, this one will take a bit longer.*
+
 JSON Path is a query language for JSON documents inspired by what XPath provides for XML documents.  It was [originally proposed](https://goessner.net/articles/JsonPath/) by Matt Goessner, and now a [specification](https://github.com/jsonpath-standard/internet-draft) is in progress.
 
 ## Syntax
