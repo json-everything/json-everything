@@ -227,7 +227,8 @@
 		JsonSchema schema;
 		try
 		{
-			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+			var text = await _schemaEditor.GetValue();
+			schema = JsonSchema.FromText(text);
 		}
 		catch (Exception e)
 		{

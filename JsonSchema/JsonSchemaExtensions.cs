@@ -32,17 +32,4 @@ public static class JsonSchemaExtensions
 	{
 		return jsonSchema.Validate(jsonElement.AsNode(), options);
 	}
-
-	/// <summary>
-	/// Extends <see cref="JsonSchema.Validate(JsonNode?,ValidationOptions)"/> to take <see cref="string"/>.
-	/// </summary>
-	/// <param name="jsonSchema">The schema.</param>
-	/// <param name="jsonString">A string containing a JSON instance to be validated.</param>
-	/// <param name="options">The options to use for this validation.</param>
-	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public static ValidationResults Validate(this JsonSchema jsonSchema, string jsonString, ValidationOptions? options = null)
-	{
-		using var jsonDocument = JsonDocument.Parse(jsonString);
-		return jsonSchema.Validate(jsonDocument, options);
-	}
 }

@@ -12,6 +12,9 @@ _`JsonElement` -> `JsonNode` type exchange changes not listed._
   - `JsonSchema.OtherData` (and associated constructor parameter) which is now supported by `UnrecognizedKeyword`
 - Removed all `JsonBuilderExtensions` methods which take `JsonElementProxy` since `JsonNode` defines implicit casts from the appropriate types
 - `LogExtensions.WrongValueKind()` now takes `SchemaValueType` instead of `JsonValueKind`
+- Removed `JsonSchemaExtensions(this JsonSchema, string, ValidationOptions)` since the implicit cast from `JsonNode` was taking precendence
+
+    ***IMPORTANT** Removal of this extension will only manifest at runtime.  Code that called this extension method will still compile, but the validations will most likely fail.*
 
 ## Additional Changes
 
