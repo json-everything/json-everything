@@ -74,6 +74,9 @@
 		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/logic")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-logic")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-logic")"/>
+		<RadzenPanelMenuItem Text="API Reference" Icon="format_list_numbered" Expanded="true">
+			<ApiIndex AssemblyContaining="@typeof(JsonLogic)"/>
+		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
 	<div class="col-10">
 		<Docs @ref="_docs" Page="playground/logic"/>

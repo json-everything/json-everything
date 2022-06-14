@@ -6,6 +6,7 @@
 
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ApiDocGenerationService DocGenerator
 
 <div>
 	@((MarkupString)_value)
@@ -51,12 +52,15 @@
 		if (Page.StartsWith("type/"))
 		{
 			var typeName = Page[5..];
-			markdown = $"# Look at me!\n\nI'm `{typeName}` API docs!";
+			var type = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(x => x.ExportedTypes)
+				.FirstOrDefault(x => x.FullName == typeName);
+			markdown = type == null
+				? $"***ERROR** Couldn't find type `{typeName}`.  Please report by opening an issue on Github."
+				: DocGenerator.GenerateForType(type);
 		}
 		else
-		{
 			markdown = await Http.GetStringAsync($"/md/{Page}.md");
-		}
 	
 		var pipeline = new MarkdownPipelineBuilder()
 			.UseAdvancedExtensions()

@@ -8,7 +8,7 @@
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 
-@inject CookieManager _cookieManager;
+@inject CookieManager CookieManager;
 
 <PageTitle>JSON Pointer - json-everything.net</PageTitle>
 
@@ -69,6 +69,9 @@
 		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/pointer")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-pointer")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-pointer")"/>
+		<RadzenPanelMenuItem Text="API Reference" Icon="format_list_numbered" Expanded="true">
+			<ApiIndex AssemblyContaining="@typeof(JsonPointer)"/>
+		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
 	<div class="col-10">
 		<Docs @ref="_docs" Page="playground/pointer"/>
@@ -99,7 +102,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await _cookieManager.Initialize();
+		await CookieManager.Initialize();
 	    await _outputEditor.SetValue(string.Empty);
 
 		LoadSavedPath();
@@ -146,24 +149,24 @@
 	{
 		var pointerText = args.Value as string;
 
-		await _cookieManager.Set("pointer", pointerText ?? string.Empty);
+		await CookieManager.Set("pointer", pointerText ?? string.Empty);
 	}
 
 	private void LoadSavedPath()
 	{
-		var pointerText = _cookieManager.Get("pointer") ?? string.Empty;
+		var pointerText = CookieManager.Get("pointer") ?? string.Empty;
 
 		_input.Pointer = pointerText;
 	}
 
 	private async Task SaveInstance()
 	{
-		await _cookieManager.SaveEditorValue(_instanceEditor, "pointer-instance");
+		await CookieManager.SaveEditorValue(_instanceEditor, "pointer-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await _cookieManager.LoadEditorValue(_instanceEditor, "pointer-instance");
+		await CookieManager.LoadEditorValue(_instanceEditor, "pointer-instance");
 	}
 
 	private async Task SetPagePath(MouseEventArgs args)

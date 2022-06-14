@@ -25,6 +25,9 @@
 	<RadzenPanelMenu class="col-2" Click="SetPagePath">
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-more")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-more")"/>
+		<RadzenPanelMenuItem Text="API Reference" Icon="format_list_numbered" Expanded="true">
+			<ApiIndex AssemblyContaining="@typeof(JsonElementEqualityComparer)"/>
+		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
 	<div class="col-10">
 		<Docs @ref="_docs" Page="json-more"/>

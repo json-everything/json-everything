@@ -1,20 +1,18 @@
 ﻿@using Radzen.Blazor
+@using JsonEverythingNet.Services
 
-<RadzenPanelMenuItem Text="@Namespace.Name" Icon="menu_book" Expanded="false" class="ps-3 radzen-menulistitem">
-    @foreach (var ns in Namespace.Namespaces)
-    {
+@foreach (var ns in Namespace.Namespaces)
+{
+    <RadzenPanelMenuItem Text="@ns.Name" Icon="data_object" Expanded="false" class="ps-3 radzen-menulistitem">
 	    <ApiNamespace Namespace="@ns"/>
-    }
-    @foreach (var type in Namespace.Types)
-    {
-	    <RadzenPanelMenuItem Text="@type.Name" Value="@($"type/{type.FullName}")"/>
-    }
-</RadzenPanelMenuItem>
+	</RadzenPanelMenuItem>
+}
+@foreach (var type in Namespace.Types)
+{
+    <RadzenPanelMenuItem Text="@type.CSharpName()" Value="@($"type/{type.FullName}")" class="ps-3 radzen-menulistitem"/>
+}
 
 @code {
-
-	
-
 #pragma warning disable CS8618
     [Parameter]
     public NamespaceNode Namespace { get; set; }
