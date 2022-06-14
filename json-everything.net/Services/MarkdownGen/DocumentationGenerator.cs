@@ -23,15 +23,12 @@ public class DocumentationGenerator
 		_writer = writer;
 		_typeList = typeList;
 
-		_typeLinkConverter = (type, _) => TypeNameWithLinks(type, false, null);
-		_documentMethodDetails = false;
+		_typeLinkConverter = (type, _) => TypeNameWithLinks(type);
 	}
 
 	private readonly DocXmlReader _reader;
 
 	private readonly IMarkdownWriter _writer;
-
-	private readonly bool _documentMethodDetails;
 
 	public static async Task GenerateMarkdown(
 		Type type,
@@ -40,7 +37,7 @@ public class DocumentationGenerator
 	{
 		string GetXmlCommentsFileName(Assembly assembly)
 		{
-			return $"{client.BaseAddress}/xml/{assembly.GetName().Name}.xml";
+			return $"{client.BaseAddress}xml/{assembly.GetName().Name}.xml";
 		}
 
 		var typeList = new OrderedTypeList(type);
@@ -49,17 +46,12 @@ public class DocumentationGenerator
 		await generator.WriteDocumentationForType(typeInfo);
 	}
 
-	private string? TypeNameWithLinks(Type type, bool msdnLinks, string? msdnView)
+	private string? TypeNameWithLinks(Type type)
 	{
-		if (_typeList.TypesToDocumentSet.Contains(type))
-			return type.IsGenericTypeDefinition ? _writer.HeadingLink(TypeTitle(type), type.Name.CleanGenericTypeName()) : _writer.HeadingLink(TypeTitle(type), type.ToNameString());
-		if (msdnLinks &&
-		    type != typeof(string) &&
-		    (!type.IsValueType || type.IsEnum) &&
-		    (type.Assembly.ManifestModule.Name.StartsWith("System.") ||
-		     type.Assembly.ManifestModule.Name.StartsWith("Microsoft.")))
-			return _writer.Link(MsdnUrlForType(type, msdnView),
-				type.IsGenericTypeDefinition ? type.Name.CleanGenericTypeName() : type.ToNameString());
+		//if (_typeList.TypesToDocumentSet.Contains(type))
+		//	return type.IsGenericTypeDefinition
+		//		? _writer.HeadingLink(TypeTitle(type), type.Name.CleanGenericTypeName())
+		//		: _writer.HeadingLink(TypeTitle(type), type.ToNameString());
 		if (type.IsGenericTypeDefinition) return $"{type.Name.CleanGenericTypeName()}";
 		return null;
 	}
@@ -76,13 +68,13 @@ public class DocumentationGenerator
 		var simpleTag = new Regex("<" + tag + "( +)" + attributeName + "( *)=( *)\"(.*?)\"( *)/>");
 		var match = simpleTag.Match(text);
 		if (match.Success)
-			return (match.Groups[4].Value, "", text.Substring(0, match.Index),
+			return (match.Groups[4].Value, "", text[..match.Index],
 				text[(match.Index + match.Length)..]);
 
 		var bigTag = new Regex("<" + tag + "( +)" + attributeName + "( *)=( *)\"(.*?)\"( *)>(.*?)</" + tag + ">");
 		match = bigTag.Match(text);
 		if (match.Success)
-			return (match.Groups[4].Value, match.Groups[6].Value, text.Substring(0, match.Index),
+			return (match.Groups[4].Value, match.Groups[6].Value, text[..match.Index],
 				text[(match.Index + match.Length)..]);
 		return (null, null, text, null);
 	}
@@ -123,26 +115,6 @@ public class DocumentationGenerator
 		if (crefText.Contains(':')) // XML doc Id
 			return crefText[(crefText.IndexOf(":", StringComparison.Ordinal) + 1)..];
 		return crefText;
-	}
-
-	/// <summary>
-	///     Generate URL to the documentation page of the type at https://docs.microsoft.com/
-	/// </summary>
-	/// <param name="type">The type to generate url for</param>
-	/// <param name="view">
-	///     The documentation framework version parameter.
-	///     For example netcore-3.1, netframework-4.8, netstandard-2.1, and so on.
-	///     If not specified then view parameter is omitted.
-	/// </param>
-	/// <returns>URL to the type documentation page</returns>
-	private static string MsdnUrlForType(Type type, string? view = null)
-	{
-		var docLocale = "en-us";
-		var urlParameters = view.IsNullOrEmpty() ? "" : $"?view={view}";
-		var typeNameFragment = type.FullName!.ToLowerInvariant();
-		if (typeNameFragment.Contains('`')) typeNameFragment = typeNameFragment.Replace('`', '-');
-		var url = $"https://docs.microsoft.com/{docLocale}/dotnet/api/{typeNameFragment}{urlParameters}";
-		return url;
 	}
 
 	private static string? RemoveParaTags(string? text)
@@ -190,11 +162,6 @@ public class DocumentationGenerator
 		}
 	}
 
-	/// <summary>
-	///     Write markdown documentation for the class:
-	///     Base class,  summary, remarks, Properties, constructors, methods and fields
-	/// </summary>
-	/// <param name="typeData"></param>
 	private async Task WriteClassDocumentation(TypeCollection.TypeInformation typeData)
 	{
 		_writer.WriteH1(TypeTitle(typeData.Type));
@@ -208,14 +175,26 @@ public class DocumentationGenerator
 		var typeComments = await _reader.GetTypeComments(typeData.Type);
 		_writer.WriteLine(ProcessTags(typeComments.Summary));
 
-		WriteExample(typeComments.Example);
 		WriteRemarks(typeComments.Remarks);
+		WriteExample(typeComments.Example);
 
 		var allProperties = (await _reader.Comments(typeData.Properties)).ToList();
 		var allConstructors = (await _reader.Comments(typeData.Methods.Where(it => it is ConstructorInfo))).ToList();
 		var allMethods = (await _reader.Comments(typeData.Methods
 			.Where(it => !(it is ConstructorInfo) && it is MethodInfo))).ToList();
 		var allFields = (await _reader.Comments(typeData.Fields)).ToList();
+
+		if (allFields.Count > 0)
+		{
+			_writer.WriteH2("Fields");
+			_writer.WriteTableTitle("Name", "Type", "Summary");
+			foreach (var field in allFields)
+				_writer.WriteTableRow(
+					_writer.Bold(field.Info.Name),
+					field.Info.ToTypeNameString(_typeLinkConverter, true),
+					ProcessTags(field.Comments.Summary));
+		}
+
 		if (allProperties.Count > 0)
 		{
 			_writer.WriteH2("Properties");
@@ -230,64 +209,18 @@ public class DocumentationGenerator
 		if (allConstructors.Count > 0)
 		{
 			_writer.WriteH2("Constructors");
-			_writer.WriteTableTitle("Name", "Summary");
-			foreach (var ctor in allConstructors.OrderBy(m => m.Info.GetParameters().Length))
-			{
-				var heading = typeData.Type.ToNameString() + ctor.Info.ToParametersString();
-				heading = _documentMethodDetails ? _writer.HeadingLink(heading, _writer.Bold(heading)) : _writer.Bold(heading);
-				_writer.WriteTableRow(
-					heading,
-					ProcessTags(ctor.Comments.Summary));
-			}
+			foreach (var (info, comments) in allConstructors
+				         .OrderBy(m => m.Info.GetParameters().Length))
+				WriteMethodDetails(typeData.Type.ToNameString(), info, comments);
 		}
 
 		if (allMethods.Count > 0)
 		{
 			_writer.WriteH2("Methods");
-			_writer.WriteTableTitle("Name", "Returns", "Summary");
-			foreach (var method in allMethods
+			foreach (var (info, comments) in allMethods
 				         .OrderBy(m => m.Info.Name)
 				         .ThenBy(m => m.Info.GetParameters().Length))
-			{
-				var methodInfo = (MethodInfo)method.Info;
-				var heading = methodInfo.Name + methodInfo.ToParametersString();
-				heading = _documentMethodDetails ? _writer.HeadingLink(heading, _writer.Bold(heading)) : _writer.Bold(heading);
-				_writer.WriteTableRow(
-					heading,
-					methodInfo.ToTypeNameString(_typeLinkConverter, true),
-					ProcessTags(method.Comments.Summary));
-			}
-		}
-
-		if (allFields.Count > 0)
-		{
-			_writer.WriteH2("Fields");
-			_writer.WriteTableTitle("Name", "Type", "Summary");
-			foreach (var field in allFields)
-				_writer.WriteTableRow(
-					_writer.Bold(field.Info.Name),
-					field.Info.ToTypeNameString(_typeLinkConverter, true),
-					ProcessTags(field.Comments.Summary));
-		}
-
-		if (_documentMethodDetails)
-		{
-			if (allConstructors.Count > 0)
-			{
-				_writer.WriteH2("Constructors");
-				foreach (var (info, comments) in allConstructors
-					         .OrderBy(m => m.Info.GetParameters().Length))
-					WriteMethodDetails(typeData.Type.ToNameString(), info, comments);
-			}
-
-			if (allMethods.Count > 0)
-			{
-				_writer.WriteH2("Methods");
-				foreach (var (info, comments) in allMethods
-					         .OrderBy(m => m.Info.Name)
-					         .ThenBy(m => m.Info.GetParameters().Length))
-					WriteMethodDetails(info.Name, info, comments);
-			}
+				WriteMethodDetails(info.Name, info, comments);
 		}
 	}
 
@@ -329,7 +262,7 @@ public class DocumentationGenerator
 		await WriteClassDocumentation(typeData);
 	}
 
-	public void WriteExample(string? example)
+	private void WriteExample(string? example)
 	{
 		if (example.IsNullOrEmpty()) return;
 
@@ -337,7 +270,7 @@ public class DocumentationGenerator
 		_writer.WriteLine(ProcessTags(example!));
 	}
 
-	public void WriteRemarks(string? remarks)
+	private void WriteRemarks(string? remarks)
 	{
 		if (remarks.IsNullOrEmpty()) return;
 

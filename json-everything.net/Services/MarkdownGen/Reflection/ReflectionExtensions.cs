@@ -399,6 +399,6 @@ public static class ReflectionExtensions
 	public static string CleanGenericTypeName(this string genericTypeName)
 	{
 		var index = genericTypeName.IndexOf('`');
-		return index < 0 ? genericTypeName : genericTypeName.Substring(0, index);
+		return index < 0 ? genericTypeName : genericTypeName[..index];
 	}
 }
