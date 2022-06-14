@@ -19,15 +19,15 @@ namespace Json.Schema;
 public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 {
 	/// <summary>
-	/// The empty schema <code>{}</code>.  Functionally equivalent to <see cref="True"/>.
+	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
 	public static readonly JsonSchema Empty = new(Enumerable.Empty<IJsonSchemaKeyword>());
 	/// <summary>
-	/// The <code>true</code> schema.  Passes all instances.
+	/// The `true` schema.  Passes all instances.
 	/// </summary>
 	public static readonly JsonSchema True = new(true);
 	/// <summary>
-	/// The <code>false</code> schema.  Fails all instances.
+	/// The `false` schema.  Fails all instances.
 	/// </summary>
 	public static readonly JsonSchema False = new(false);
 
@@ -37,7 +37,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
 
 	/// <summary>
-	/// For boolean schemas, gets the value.  Null if 
+	/// For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
 	/// </summary>
 	public bool? BoolValue { get; }
 

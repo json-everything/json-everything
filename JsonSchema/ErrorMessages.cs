@@ -14,7 +14,7 @@ namespace Json.Schema;
 /// <remarks>
 /// Default messages are provided by culture-specific resource files.
 ///
-/// Many messages support tokens in the format <code>[[foo]]</code>.
+/// Many messages support tokens in the format `[[foo]]`.
 /// Each message will specify the tokens it supports.
 /// </remarks>
 public static partial class ErrorMessages
@@ -35,7 +35,7 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
-	/// Replaces tokens in the form of <code>[[token]]</code> with a specified value, serialized as JSON.
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
 	/// </summary>
 	/// <param name="message">The message template.</param>
 	/// <param name="parameters">

@@ -49,4 +49,9 @@
     </None>
   </ItemGroup>
 
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
+		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+	</Target>
+
 </Project>

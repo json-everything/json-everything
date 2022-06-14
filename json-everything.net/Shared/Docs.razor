@@ -6,6 +6,7 @@
 
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ApiDocGenerationService DocGenerator
 
 <div>
 	@((MarkupString)_value)
@@ -17,9 +18,7 @@
 	[Parameter]
 	public string? Page { get; set; }
 
-	public static readonly Regex HeaderPattern = new(@"<h(\d) id=""([-a-z0-9]+)"">\s*(.*)\s*<\/h\d>", RegexOptions.Compiled);
-
-	private const string _headerLinkPattern = "<h$1 id=\"$2\">$3<a id=\"user-content-syntax\" class=\"markdown-anchor m-2\" aria-hidden=\"true\" href=\"[[localPath]]#$2\"><svg class=\"markdown-anchor\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z\"></path></svg></a></h$1>";
+	    private const string _headerLinkPattern = "<h$1 id=\"$2\">$3<a id=\"user-content-syntax\" class=\"markdown-anchor m-2\" aria-hidden=\"true\" href=\"[[localPath]]#$2\"><svg class=\"markdown-anchor\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z\"></path></svg></a></h$1>";
 	private static readonly Regex _tablePattern = new(@"<table>");
 
 	private string _value = "";
@@ -46,7 +45,21 @@
 	{
 		if (string.IsNullOrEmpty(Page)) return;
 
-		var markdown = await Http.GetStringAsync($"/md/{Page}.md");
+		string markdown;
+
+		if (Page.StartsWith("type/"))
+		{
+			var typeName = Page[5..];
+			var type = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(x => x.ExportedTypes)
+				.FirstOrDefault(x => x.FullName == typeName);
+			markdown = type == null
+				? $"***ERROR** Couldn't find type `{typeName}`.  Please report by opening an issue on Github."
+				: await DocGenerator.GenerateForType(type);
+		}
+		else
+			markdown = await Http.GetStringAsync($"/md/{Page}.md");
+	
 		var pipeline = new MarkdownPipelineBuilder()
 			.UseAdvancedExtensions()
 			.UseSyntaxHighlighting()
@@ -54,11 +67,11 @@
 		var html = Markdown.ToHtml(markdown, pipeline);
 		html = html.Replace("<table>", "<table class=\"table\">");
 
-		if (!Page.Contains("release-notes"))
+		if (!Page.Contains("release-notes/") && !Page.Contains("type/"))
 		{
 			var localPath = GetPath();
 			var headerLinkPattern = _headerLinkPattern.Replace("[[localPath]]", localPath);
-			html = HeaderPattern.Replace(html, headerLinkPattern);
+			html = RegexPatterns.HeaderPattern.Replace(html, headerLinkPattern);
 		}
 
 		_value = html;

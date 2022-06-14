@@ -69,6 +69,9 @@
 		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/path")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-path")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-path")"/>
+		<RadzenPanelMenuItem Text="API Reference (work in progress" Icon="format_list_numbered" Expanded="true">
+			<ApiIndex AssemblyContaining="@typeof(JsonPath)"/>
+		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
 	<div class="col-10">
 		<Docs @ref="_docs" Page="playground/path"/>

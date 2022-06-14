@@ -249,3 +249,7 @@ markdown-anchor {
 .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) a {
 	color: #6800B7;
 }
+
+.radzen-menulistitem {
+	background-color: #1f2b31;
+}
