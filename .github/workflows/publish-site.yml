@@ -32,10 +32,10 @@ jobs:
           dotnet-version: 6.0.x
       - name: Install dependencies
         run: dotnet restore
+      - name: Pre-build solution
+        run: dotnet build json-everything.sln -c Release --no-restore
       - name: Build
         run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
-      - name: Verify XML docs
-        run: cat json-everything.net/wwwroot/xml/JsonSchema.Net.xml
       - name: Add .nojekyll file
         run: touch bin/wwwroot/.nojekyll
       - name: Copy index.html files
