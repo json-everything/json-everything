@@ -5,6 +5,12 @@
 /// </summary>
 public class EnumValueComment : CommonComments
 {
+	public EnumValueComment(string name, int value)
+	{
+		Name = name;
+		Value = value;
+	}
+
 	/// <summary>
 	///     The name of the enum value
 	/// </summary>

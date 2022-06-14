@@ -5,6 +5,11 @@
 /// </summary>
 public class InheritdocTag
 {
+	public InheritdocTag(string cref)
+	{
+		Cref = cref;
+	}
+
 	/// <summary>
 	///     Cref attribute value. This value is optional.
 	/// </summary>
