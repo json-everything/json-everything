@@ -46,7 +46,18 @@
 	{
 		if (string.IsNullOrEmpty(Page)) return;
 
-		var markdown = await Http.GetStringAsync($"/md/{Page}.md");
+		string markdown;
+
+		if (Page.StartsWith("type/"))
+		{
+			var typeName = Page[5..];
+			markdown = $"# Look at me!\n\nI'm `{typeName}` API docs!";
+		}
+		else
+		{
+			markdown = await Http.GetStringAsync($"/md/{Page}.md");
+		}
+	
 		var pipeline = new MarkdownPipelineBuilder()
 			.UseAdvancedExtensions()
 			.UseSyntaxHighlighting()

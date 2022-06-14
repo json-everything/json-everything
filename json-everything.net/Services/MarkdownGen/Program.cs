@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using MdDox.MarkdownWriters;
-using MdDox.MarkdownWriters.Interfaces;
-using DocXml.Reflection;
-using LoxSmoke.DocXml;
-using LoxSmoke.DocXml.Reflection;
-using System.ComponentModel.DataAnnotations;
-using MdDox.CommandLineOptions;
+﻿using System.Reflection;
+using JsonEverythingNet.Services.MarkdownGen;
+using JsonEverythingNet.Services.MarkdownGen.CommandLineOptions;
+using JsonEverythingNet.Services.MarkdownGen.MarkdownWriters;
+using JsonEverythingNet.Services.MarkdownGen.MarkdownWriters.Interfaces;
 
 namespace MdDox
 {
@@ -32,21 +22,6 @@ namespace MdDox
 
     class Program
     {
-        static CommandLineOptions.CommandLineOptions Parse(string [] args)
-        {
-	        var options = new CommandLineOptions.CommandLineOptions();
-            if (string.IsNullOrEmpty(options.Format))
-            {
-                options.Format = MarkdownWriters.First().FormatName;
-            }
-            if (options.IgnoreMethods)   options.DocumentMethodDetails = false;
-            if (options.AssemblyName != null && options.OutputFile == null)
-            {
-                options.OutputFile = Path.GetFileNameWithoutExtension(options.AssemblyName) + ".md";
-            }
-            return options;
-        }
-
         static List<IMarkdownWriter> MarkdownWriters = new List<IMarkdownWriter>()
         {
             new GithubMarkdownWriter(),
@@ -56,7 +31,7 @@ namespace MdDox
 
         static void Main(string[] args)
         {
-            var options = Parse(args);
+            var options = new CommandLineOptions();
             if (options == null)
             {
                 return;
