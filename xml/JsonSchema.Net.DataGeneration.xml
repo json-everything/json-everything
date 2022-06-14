@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JsonSchema.Net.DataGeneration</name>
+    </assembly>
+    <members>
+        <member name="T:Json.Schema.DataGeneration.Bound">
+            <summary>
+            Describes a lower or upper bound to a <see cref="T:Json.Schema.DataGeneration.NumberRange"/>.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.Bound.Value">
+            <summary>
+            Gets the bound value.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.Bound.Inclusive">
+            <summary>
+            Gets whether the value is included in the bound.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.#ctor(System.Decimal,System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.DataGeneration.Bound"/>.
+            </summary>
+            <param name="value">The value</param>
+            <param name="inclusive">Whether the value is included. Default is true.</param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_Implicit(System.Int32)~Json.Schema.DataGeneration.Bound">
+            <summary>
+            Converts and integer to an inclusive bound.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_Implicit(System.Decimal)~Json.Schema.DataGeneration.Bound">
+            <summary>
+            Converts a decimal to an inclusive bound.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_Implicit(System.ValueTuple{System.Int32,System.Boolean})~Json.Schema.DataGeneration.Bound">
+            <summary>
+            Converts an integer-bool tuple to a bound.
+            </summary>
+            <param name="pair">The value and its inclusivity.</param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_Implicit(System.ValueTuple{System.Decimal,System.Boolean})~Json.Schema.DataGeneration.Bound">
+            <summary>
+            Converts a decimal-bool tuple to a bound.
+            </summary>
+            <param name="pair">The value and its inclusivity.</param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.CompareTo(Json.Schema.DataGeneration.Bound)">
+            <summary>Defines a generalized comparison method that a value type or class implements to create a type-specific comparison method for ordering or sorting its instances.</summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.Equals(System.Object)">
+            <summary>Indicates whether this instance and a specified object are equal.</summary>
+            <param name="obj">The object to compare with the current instance.</param>
+            <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.Equals(Json.Schema.DataGeneration.Bound)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_Equality(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Compares two bounds for equality
+            </summary>
+            <returns>True if the bounds share a value and inclusivity; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_Inequality(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Compares two bounds for non-equality
+            </summary>
+            <returns>False if the bounds share a value and inclusivity; true otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_LessThan(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Compares two bounds for linear order.
+            </summary>
+            <returns>True if left.Value &lt; right.Value or if right is inclusive and left is not.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_LessThanOrEqual(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Compares two bounds for linear order.
+            </summary>
+            <returns>True if left.Value &lt;= right.Value or if right is inclusive or both are not.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_GreaterThan(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Compares two bounds for linear order.
+            </summary>
+            <returns>True if left.Value &gt; right.Value or if left is inclusive and right is not.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.op_GreaterThanOrEqual(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Compares two bounds for linear order.
+            </summary>
+            <returns>True if left.Value &gt;= right.Value or if left is inclusive or both are not.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.Minimum(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Identifies the minimum of two bounds, including their inclusivity.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.Maximum(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Identifies the maximum of two bounds, including their inclusivity.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.Bound.Complement(Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Identifies the complement of a bound, which is the same value and inverted inclusivity.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.DataGeneration.BoundEqualityComparer">
+            <summary>
+            Comparator for <see cref="T:Json.Schema.DataGeneration.Bound"/>.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.BoundEqualityComparer.Instance">
+            <summary>
+            Static instance of the comparer.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.BoundEqualityComparer.Equals(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>Determines whether the specified objects are equal.</summary>
+            <param name="x">The first object of type T to compare.</param>
+            <param name="y">The second object of type T to compare.</param>
+            <returns>true if the specified objects are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.BoundEqualityComparer.GetHashCode(Json.Schema.DataGeneration.Bound)">
+            <summary>Returns a hash code for the specified object.</summary>
+            <param name="obj">The <see cref="T:System.Object"></see> for which a hash code is to be returned.</param>
+            <returns>A hash code for the specified object.</returns>
+            <exception cref="T:System.ArgumentNullException">The type of <paramref name="obj">obj</paramref> is a reference type and <paramref name="obj">obj</paramref> is null.</exception>
+        </member>
+        <member name="T:Json.Schema.DataGeneration.GenerationResult">
+            <summary>
+            Holds the result of an instance generation operation.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.GenerationResult.Result">
+            <summary>
+            Gets the resulting JSON data, if successful.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.GenerationResult.ErrorMessage">
+            <summary>
+            Gets the error message from the generation, if unsuccessful.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.GenerationResult.InnerResults">
+            <summary>
+            Gets the result objects from nested data generations.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.GenerationResult.IsSuccess">
+            <summary>
+            Gets whether the data generation was successful.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.DataGeneration.JsonSchemaExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:Json.Schema.JsonSchema"/> to generate sample data.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.JsonSchemaExtensions.GenerateData(Json.Schema.JsonSchema)">
+            <summary>
+            Attempts to generate sample data that meets the requirements of the schema.
+            </summary>
+            <param name="schema">The schema.</param>
+            <returns>A result object indicating success and containing the result or error message.</returns>
+        </member>
+        <member name="T:Json.Schema.DataGeneration.NumberRange">
+            <summary>
+            Defines a number range.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.NumberRange.Minimum">
+            <summary>
+            Gets the minimum (lower bound).
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.NumberRange.Maximum">
+            <summary>
+            Gets the maximum (upper bound).
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.#ctor(Json.Schema.DataGeneration.Bound,Json.Schema.DataGeneration.Bound)">
+            <summary>
+            Creates a new number range.
+            </summary>
+            <param name="minimum">The minimum</param>
+            <param name="maximum">The maximum</param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.Intersection(Json.Schema.DataGeneration.NumberRange,Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Calculates the intersection of two number ranges.  May be multiple ranges.
+            </summary>
+            <returns>The resulting set of ranges that exist in both parameters.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.Union(Json.Schema.DataGeneration.NumberRange,Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Calculates the union of two number ranges.  May be multiple ranges.
+            </summary>
+            <returns>The resulting set of ranges that exist in either parameters.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.Difference(Json.Schema.DataGeneration.NumberRange,Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Calculates the set of one range omitting another.  May be multiple ranges.
+            </summary>
+            <param name="a">The source range</param>
+            <param name="b">The operating range.</param>
+            <returns>The resulting set of ranges that exist in the source range but not the operating range.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.Contains(System.Decimal)">
+            <summary>
+            Calculates whether a single value is contained in the range.
+            </summary>
+            <returns>True if the range contains the value; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.ToString">
+            <summary>Returns the fully qualified type name of this instance.</summary>
+            <returns>The fully qualified type name.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.Equals(Json.Schema.DataGeneration.NumberRange)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.Equals(System.Object)">
+            <summary>Indicates whether this instance and a specified object are equal.</summary>
+            <param name="obj">The object to compare with the current instance.</param>
+            <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.op_Equality(Json.Schema.DataGeneration.NumberRange,Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Compares two ranges for equality.
+            </summary>
+            <returns>True if the ranges are the same; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRange.op_Inequality(Json.Schema.DataGeneration.NumberRange,Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Compares two ranges for non-equality.
+            </summary>
+            <returns>False if the ranges are the same; true otherwise.</returns>
+        </member>
+        <member name="T:Json.Schema.DataGeneration.NumberRangeSet">
+            <summary>
+            Managees a collection of number ranges as a single entity.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.NumberRangeSet.None">
+            <summary>
+            Represent the empty set.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.NumberRangeSet.Full">
+            <summary>
+            Represents the full range of representable values.
+            </summary>
+            <remarks>
+            The full range has been limited to [decimal.MinValue / 10 .. decimal.MaxValue / 10] because
+            the _actual_ full range causes problems with the random value generation algorithms.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.NumberRangeSet.NonNegative">
+            <summary>
+            Represents the range of 0 and all positive numbers.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.DataGeneration.NumberRangeSet.Ranges">
+            <summary>
+            Gets the ranges.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.#ctor(Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Creates a new set from a single range.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.#ctor(Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Copies a range set.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.DataGeneration.NumberRange})">
+            <summary>
+            Creates a new set from a collection of ranges.
+            </summary>
+            <param name="other"></param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Union(Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Calculates the union of two sets.
+            </summary>
+            <returns>The resulting set of ranges that exist in either parameters.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Union(Json.Schema.DataGeneration.NumberRangeSet,Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Calculates the union of two sets.
+            </summary>
+            <returns>The resulting set of ranges that exist in either parameters.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Subtract(Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Calculates the set of one set omitting another.
+            </summary>
+            <param name="range">The operating set.</param>
+            <returns>The resulting set of ranges that exist in this set but not the operating set.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Subtract(Json.Schema.DataGeneration.NumberRangeSet,Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Calculates the set of one set omitting another.
+            </summary>
+            <param name="left">The source set.</param>
+            <param name="right">The operating set.</param>
+            <returns>The resulting set of ranges that exist in the source set but not the operating set.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Intersect(Json.Schema.DataGeneration.NumberRange)">
+            <summary>
+            Calculates the intersection of two sets.
+            </summary>
+            <returns>The resulting set of ranges that exist in both parameters.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Intersect(Json.Schema.DataGeneration.NumberRangeSet,Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Calculates the intersection of two sets.
+            </summary>
+            <returns>The resulting set of ranges that exist in both parameters.</returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.GetComplement">
+            <summary>
+            Gets the complement, or inversion, of the set.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Ceiling(System.Decimal)">
+            <summary>
+            Applies a ceiling (upper bound).
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.Floor(System.Decimal)">
+            <summary>
+            Applies a floor (lower bound).
+            </summary>
+            <param name="floor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.op_Implicit(Json.Schema.DataGeneration.NumberRange)~Json.Schema.DataGeneration.NumberRangeSet">
+            <summary>
+            Implicitly converts a single range to a set.
+            </summary>
+            <param name="range"></param>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.op_Addition(Json.Schema.DataGeneration.NumberRangeSet,Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Unions two sets.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.op_Subtraction(Json.Schema.DataGeneration.NumberRangeSet,Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Omits one set from another.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.op_Multiply(Json.Schema.DataGeneration.NumberRangeSet,Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Intersects two sets.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.op_LogicalNot(Json.Schema.DataGeneration.NumberRangeSet)">
+            <summary>
+            Calculates the complement (inversion) of a set.
+            </summary>
+            <param name="set"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Json.Schema.DataGeneration.NumberRangeSet.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+    </members>
+</doc>
