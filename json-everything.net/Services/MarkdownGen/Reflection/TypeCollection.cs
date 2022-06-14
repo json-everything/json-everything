@@ -50,28 +50,27 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// <summary>
         /// All referenced types.
         /// </summary>
-        public Dictionary<Type, TypeInformation> ReferencedTypes { get; set; } 
-            = new Dictionary<Type, TypeInformation>();
+        public Dictionary<Type, TypeInformation> ReferencedTypes { get; set; } = new();
         
         /// <summary>
         /// Types that had their data and functions examined.
         /// </summary>
-        protected HashSet<Type> VisitedPropTypes { get; set; } = new HashSet<Type>();
+        protected HashSet<Type> VisitedPropTypes { get; set; } = new();
         /// <summary>
         /// Types that need to have their properties, methods and fields examined.
         /// </summary>
-        protected Queue<Type> PendingPropTypes { get; set; } = new Queue<Type>();
+        protected Queue<Type> PendingPropTypes { get; set; } = new();
 
         /// <summary>
         /// Cached information from ExamineAssemblies call.
         /// Contains the set of assemblies that should be checked or ignored.
         /// </summary>
-        protected Dictionary<Assembly, bool> CheckAssemblies { get; set; } = new Dictionary<Assembly, bool>();
+        protected Dictionary<Assembly, bool> CheckAssemblies { get; set; } = new();
         /// <summary>
         /// Cached information from the ExamineTypes call.
         /// Contains the set of types that should be ignored.
         /// </summary>
-        protected HashSet<Type> IgnoreTypes { get; set; } = new HashSet<Type>();
+        protected HashSet<Type> IgnoreTypes { get; set; } = new();
 
         /// <summary>
         /// Get all types referenced by the specified type.
@@ -97,19 +96,6 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         {
             var typeCollection = new TypeCollection();
             typeCollection.GetReferencedTypes(assembly, settings);
-            return typeCollection;
-        }
-
-        /// <summary>
-        /// Get all types referenced by the types from the list of assemblies.
-        /// </summary>
-        /// <param name="assemblies"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public static TypeCollection ForReferencedTypes(IEnumerable<Assembly> assemblies, ReflectionSettings settings = null)
-        {
-            var typeCollection = new TypeCollection();
-            typeCollection.GetReferencedTypes(assemblies, settings);
             return typeCollection;
         }
 
@@ -141,26 +127,6 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
             ProcessTypeQueue();
         }
 
-        /// <summary>
-        /// Get all types referenced by the types from specified assemblies.
-        /// Reflection information for the specified type is also returned.
-        /// </summary>
-        /// <param name="assemblies"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        public void GetReferencedTypes(IEnumerable<Assembly> assemblies, ReflectionSettings settings = null)
-        {
-            Init(settings);
-            foreach (var assembly in assemblies)
-            {
-                foreach (var type in assembly.GetTypes())
-                {
-                    PendingPropTypes.Enqueue(type);
-                }
-            }
-            ProcessTypeQueue();
-        }
-
         protected void Init(ReflectionSettings settings)
         {
             Settings = settings ?? ReflectionSettings.Default;
@@ -181,38 +147,9 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
             }
         }
 
-        /// <summary>
-        /// Returns true for types that should be checked.
-        /// </summary>
-        /// <param name="type">Check this type?</param>
-        /// <returns></returns>
-        bool CheckType(Type type)
-        {
-	        return true;
-            if (IgnoreTypes.Contains(type)) return false;
-            // Check if type assembly should be checked or ignored
-            if (Settings.AssemblyFilter != null)
-            {
-                if (!CheckAssemblies.ContainsKey(type.Assembly))
-                {
-                    CheckAssemblies.Add(type.Assembly, Settings.AssemblyFilter(type.Assembly));
-                }
-                if (!CheckAssemblies[type.Assembly]) return false;
-            }
-            // Ignore compiler-generated types
-            // If we have filtering function then ask if type is OK
-            if (!IsCompilerGenerated(type) &&
-                (type.DeclaringType == null || 
-                type.DeclaringType.Name != "<PrivateImplementationDetails>") &&
-                (Settings.TypeFilter == null ||
-                Settings.TypeFilter(type))) return true;
-            IgnoreTypes.Add(type);
-            return false;
-        }
-
         protected void GetReferencedBy(Type type)
         {
-            if (VisitedPropTypes.Contains(type) || !CheckType(type)) return;
+            if (VisitedPropTypes.Contains(type)) return;
             VisitedPropTypes.Add(type);
             var thisTypeInfo = ReferencedTypes[type];
             foreach (var info in type.GetProperties(Settings.PropertyFlags))
@@ -273,9 +210,6 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
                 ReferencedTypes[parentType].ReferencesOut.Add(type);
                 return;
             }
-            // Some types could be wrapped in generic types that should not be checked
-            var checkType = CheckType(type);
-
             if (type.IsConstructedGenericType) // List<int>
             {
                 UnwrapType(parentType, type.GetGenericTypeDefinition());
@@ -288,7 +222,7 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
             }
             else if (type.IsGenericTypeDefinition) // List<>
             {
-                if (checkType) AddTypeToCheckProps(parentType, type);
+                AddTypeToCheckProps(parentType, type);
             }
             else if (type.IsGenericType) // List<int>
             {
@@ -304,7 +238,7 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
             }
             else
             {
-                if (checkType) AddTypeToCheckProps(parentType, type);
+                AddTypeToCheckProps(parentType, type);
             }
         }
 
@@ -317,11 +251,6 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
             PendingPropTypes.Enqueue(type);
         }
 
-        bool IsCompilerGenerated(Type type)
-        {
-            return type.Name.Contains('<') ||
-                   type.CustomAttributes.Any(attr => attr.AttributeType == typeof(CompilerGeneratedAttribute));
-        }
         bool IsCompilerGenerated(FieldInfo fieldInfo)
         {
             return fieldInfo.FieldType.Name.Contains('<') ||

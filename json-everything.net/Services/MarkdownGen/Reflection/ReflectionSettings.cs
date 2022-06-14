@@ -10,12 +10,11 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// <summary>
         /// Default reflection settings.
         /// </summary>
-        public static ReflectionSettings Default => new ReflectionSettings()
+        public static ReflectionSettings Default => new()
         {
             PropertyFlags = 
                 BindingFlags.Instance |
                 BindingFlags.Public |
-                BindingFlags.NonPublic |
                 BindingFlags.Static,
 
             MethodFlags =

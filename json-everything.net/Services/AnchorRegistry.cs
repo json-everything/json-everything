@@ -46,7 +46,7 @@ namespace JsonEverythingNet.Services
 				.Build();
 			var html = Markdown.ToHtml(markdown, pipeline);
 
-			var matches = Docs.HeaderPattern.Matches(html);
+			var matches = RegexPatterns.HeaderPattern.Matches(html);
 			var first = true;
 
 			foreach (Match match in matches)

@@ -75,4 +75,8 @@
 		<Move SourceFiles="@(ResourceFiles)" DestinationFolder="nuspec\%(RecursiveDir)" />
 	</Target>
 
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
+		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+	</Target>
 </Project>

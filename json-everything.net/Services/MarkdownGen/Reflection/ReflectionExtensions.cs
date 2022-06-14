@@ -11,10 +11,9 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// <summary>
         /// A dictionary containing a mapping of type to type names.
         /// </summary>
-        public static Dictionary<Type, string> KnownTypeNames
-            => _knownTypeNames ?? (_knownTypeNames = CreateKnownTypeNamesDictionary());
+        public static Dictionary<Type, string> KnownTypeNames => _knownTypeNames ??= CreateKnownTypeNamesDictionary();
 
-        private static Dictionary<Type, string> _knownTypeNames;
+        private static Dictionary<Type, string>? _knownTypeNames;
 
         /// <summary>
         /// Create a dictionary of standard value types and a string type. 
@@ -67,9 +66,9 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// <param name="type">Type information.</param>
         /// <param name="typeNameConverter">The optional function that converts type name to string.</param>
         /// <returns>Full type name</returns>
-        public static string ToNameString(this Type type, Func<Type, string> typeNameConverter = null)
+        public static string ToNameString(this Type type, Func<Type, string>? typeNameConverter = null)
         {
-            return type.ToNameString(null, typeNameConverter== null ? (Func<Type, Queue<string>, string>)null : (t, _) => typeNameConverter(t));
+            return type.ToNameString(null, typeNameConverter== null ? null : (t, _) => typeNameConverter(t));
         }
 
         /// <summary>
@@ -274,7 +273,7 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// ToNameString() to avoid infinite recursion.  
         /// This is an optional parameter with default value of false.</param>
         /// <returns>Full type name</returns>
-        public static string ToNameString(this Type type, Queue<string> tupleFieldNames, Func<Type, Queue<string>, string> typeNameConverter = null, 
+        public static string ToNameString(this Type type, Queue<string> tupleFieldNames, Func<Type, Queue<string>, string>? typeNameConverter = null, 
             bool invokeTypeNameConverterForGenericType = false)
         {
             if (type.IsByRef)
@@ -347,7 +346,7 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// <summary>
         /// Hash of all possible ValueTuple type definitions for quick check if type is value tuple.
         /// </summary>
-        static HashSet<Type> GenericTuples = new HashSet<Type>(new Type[] {
+        static HashSet<Type> GenericTuples = new(new[] {
             typeof(ValueTuple<>),
             typeof(ValueTuple<,>),
             typeof(ValueTuple<,,>),

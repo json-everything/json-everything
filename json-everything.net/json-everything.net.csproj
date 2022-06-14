@@ -45,6 +45,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\md\release-notes\" />
     <Folder Include="wwwroot\meta\" />
+    <Folder Include="wwwroot\xml\" />
   </ItemGroup>
 
 </Project>

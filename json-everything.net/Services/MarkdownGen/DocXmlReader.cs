@@ -26,6 +26,8 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// </summary>
         protected readonly Func<Assembly, string> assemblyXmlPathFunction;
 
+        private readonly HttpClient _client;
+
         /// <summary>
         /// Default value is true.
         /// When it is set to true DocXmlReader removes leading spaces and an empty
@@ -44,30 +46,6 @@ namespace JsonEverythingNet.Services.MarkdownGen
         public bool UnIndentText { get; set; } = true;
 
         /// <summary>
-        /// Create reader and use specified XML documentation file
-        /// </summary>
-        /// <param name="fileName">The name of the XML documentation file.</param>
-        /// <param name="unindentText">True if extra leading spaces should be removed from comments</param>
-        public DocXmlReader(string fileName, bool unindentText = true)
-        {
-            var document = new XPathDocument(fileName, XmlSpace.Preserve);
-            navigator = document.CreateNavigator();
-            UnIndentText = unindentText;
-        }
-
-        /// <summary>
-        /// Create reader for specified xpath document.
-        /// </summary>
-        /// <param name="xPathDocument">XML documentation</param>
-        /// <param name="unindentText">True if extra leading spaces should be removed from comments</param>
-        public DocXmlReader(XPathDocument xPathDocument, bool unindentText = true)
-        {
-            var document = xPathDocument ?? throw new ArgumentException(nameof(xPathDocument));
-            navigator = document.CreateNavigator();
-            UnIndentText = unindentText;
-        }
-
-        /// <summary>
         /// Open XML documentation files based on assemblies of types. Comment file names 
         /// are generated based on assembly names by replacing assembly location with .xml.
         /// </summary>
@@ -76,33 +54,12 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// If function returns null or if comments file does not exist then all comments for types from that 
         /// assembly would remain empty. </param>
         /// <param name="unindentText">True if extra leading spaces should be removed from comments</param>
-        public DocXmlReader(Func<Assembly, string> assemblyXmlPathFunction = null, bool unindentText = true)
+        public DocXmlReader(Func<Assembly, string> assemblyXmlPathFunction = null, bool unindentText = true, HttpClient client = null)
         {
             assemblyNavigators = new Dictionary<Assembly, XPathNavigator>();
             UnIndentText = unindentText;
             this.assemblyXmlPathFunction = assemblyXmlPathFunction;
-        }
-
-        /// <summary>
-        /// Open XML documentation files based on assemblies of types. Comment file names 
-        /// are generated based on assembly names by replacing assembly location with .xml.
-        /// </summary>
-        /// <param name="assemblies">The list of assemblies for XML documentation</param>
-        /// <param name="assemblyXmlPathFunction">Function that returns path to the assembly XML comment file.
-        /// If function is null then comments file is assumed to have the same file name as assembly.
-        /// If function returns null or if comments file does not exist then all comments for types from that 
-        /// assembly would remain empty. </param>
-        /// <param name="unindentText">True if extra leading spaces should be removed from comments</param>
-        public DocXmlReader(IEnumerable<Assembly> assemblies,
-            Func<Assembly, string> assemblyXmlPathFunction = null, bool unindentText = true)
-        {
-            assemblyNavigators = new Dictionary<Assembly, XPathNavigator>();
-            UnIndentText = unindentText;
-            this.assemblyXmlPathFunction = assemblyXmlPathFunction;
-            foreach (var assembly in assemblies)
-            {
-                GetNavigatorForAssembly(assembly);
-            }
+            _client = client;
         }
 
         #region Public methods
@@ -113,9 +70,9 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// Summary, Remarks, Parameters (if present), Responses (if present), Returns
         /// </summary>
         /// <returns></returns>
-        public MethodComments GetMethodComments(MethodBase methodInfo)
+        public async Task<MethodComments> GetMethodComments(MethodBase methodInfo)
         {
-            return GetMethodComments(methodInfo, false);
+            return await GetMethodComments(methodInfo, false);
         }
 
         /// <summary>
@@ -127,15 +84,15 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// <param name="methodInfo"></param>
         /// <param name="nullIfNoComment">Return null if comment for method is not available</param>
         /// <returns></returns>
-        public MethodComments GetMethodComments(MethodBase methodInfo, bool nullIfNoComment)
+        public async Task<MethodComments> GetMethodComments(MethodBase methodInfo, bool nullIfNoComment)
         {
-            var methodNode = GetXmlMemberNode(methodInfo.MethodId(), methodInfo?.ReflectedType);
+            var methodNode = await GetXmlMemberNode(methodInfo.MethodId(), methodInfo?.ReflectedType);
             if (nullIfNoComment && methodNode == null) return null;
             var comments = new MethodComments();
-            return GetComments(methodInfo, comments, methodNode);
+            return await GetComments(methodInfo, comments, methodNode);
         }
 
-        protected MethodComments GetComments(MethodBase methodInfo, MethodComments comments, XPathNavigator node)
+        protected async Task<MethodComments> GetComments(MethodBase methodInfo, MethodComments comments, XPathNavigator node)
         {
             if (node == null) return comments;
 
@@ -144,7 +101,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
             comments.TypeParameters = GetNamedComments(node, TypeParamXPath, NameAttribute);
             comments.Returns = GetReturnsComment(node);
             comments.Responses = GetNamedComments(node, ResponsesXPath, CodeAttribute);
-            comments = ResolveInheritdocComments(comments, methodInfo);
+            comments = await ResolveInheritdocComments(comments, methodInfo);
             return comments;
         }
 
@@ -154,14 +111,14 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// </summary>
         /// <param name="type"></param>
         /// <returns>TypeComment</returns>
-        public TypeComments GetTypeComments(Type type)
+        public async Task<TypeComments> GetTypeComments(Type type)
         {
             var comments = new TypeComments();
-            var node = GetXmlMemberNode(type.TypeId(), type);
-            return GetComments(type, comments, node);
+            var node = await GetXmlMemberNode(type.TypeId(), type);
+            return await GetComments(type, comments, node);
         }
 
-        protected TypeComments GetComments(Type type, TypeComments comments, XPathNavigator node)
+        protected async Task<TypeComments> GetComments(Type type, TypeComments comments, XPathNavigator node)
         {
             if (node == null) return comments;
             if (type.IsSubclassOf(typeof(Delegate)))
@@ -169,7 +126,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
                 comments.Parameters = GetParametersComments(node);
             }
             GetCommonComments(comments, node);
-            comments = ResolveInheritdocComments(comments, type);
+            comments = await ResolveInheritdocComments(comments, type);
             return comments;
         }
 
@@ -178,9 +135,9 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// </summary>
         /// <param name="memberInfo"></param>
         /// <returns></returns>
-        public string GetMemberComment(MemberInfo memberInfo)
+        public async Task<string> GetMemberComment(MemberInfo memberInfo)
         {
-            return GetSummaryComment(GetXmlMemberNode(memberInfo.MemberId(), memberInfo?.ReflectedType));
+            return GetSummaryComment(await GetXmlMemberNode(memberInfo.MemberId(), memberInfo?.ReflectedType));
         }
 
         /// <summary>
@@ -188,19 +145,19 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// </summary>
         /// <param name="memberInfo"></param>
         /// <returns></returns>
-        public CommonComments GetMemberComments(MemberInfo memberInfo)
+        public async Task<CommonComments> GetMemberComments(MemberInfo memberInfo)
         {
             var comments = new CommonComments();
-            var node = GetXmlMemberNode(memberInfo.MemberId(), memberInfo?.ReflectedType);
-            return GetComments(memberInfo, comments, node);
+            var node = await GetXmlMemberNode(memberInfo.MemberId(), memberInfo?.ReflectedType);
+            return await GetComments(memberInfo, comments, node);
         }
 
-        protected CommonComments GetComments(MemberInfo memberInfo, CommonComments comments, XPathNavigator node)
+        protected async Task<CommonComments> GetComments(MemberInfo memberInfo, CommonComments comments, XPathNavigator node)
         {
             if (node == null) return comments;
 
             GetCommonComments(comments, node);
-            comments = ResolveInheritdocComments(comments, memberInfo);
+            comments = await ResolveInheritdocComments(comments, memberInfo);
             return comments;
         }
 
@@ -212,12 +169,12 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// <param name="fillValues">True if ValueComments list should be filled even if 
         /// none of the enum values have any summary comments</param>
         /// <returns>EnumComment</returns>
-        public EnumComments GetEnumComments(Type enumType, bool fillValues = false)
+        public async Task<EnumComments> GetEnumComments(Type enumType, bool fillValues = false)
         {
             if (!enumType.IsEnum) throw new ArgumentException(nameof(enumType));
 
             var comments = new EnumComments();
-            var typeNode = GetXmlMemberNode(enumType.TypeId(), enumType);
+            var typeNode = await GetXmlMemberNode(enumType.TypeId(), enumType);
             if (typeNode != null)
             {
                 GetCommonComments(comments, typeNode);
@@ -226,7 +183,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
             bool valueCommentsExist = false;
             foreach (var enumName in enumType.GetEnumNames())
             {
-                var valueNode = GetXmlMemberNode(enumType.EnumValueId(enumName), enumType);
+                var valueNode = await GetXmlMemberNode(enumType.EnumValueId(enumName), enumType);
                 valueCommentsExist |= (valueNode != null);
                 var valueComment = new EnumValueComment()
                 {
@@ -269,14 +226,14 @@ namespace JsonEverythingNet.Services.MarkdownGen
             comments.Inheritdoc = GetInheritdocTag(rootNode);
         }
 
-        private XPathNavigator GetXmlMemberNode(string name, Type typeForAssembly, bool searchAllCurrentFiles = false)
+        private async Task<XPathNavigator> GetXmlMemberNode(string name, Type typeForAssembly, bool searchAllCurrentFiles = false)
         {
             if (navigator != null)
             {
                 return navigator.SelectSingleNode(string.Format(MemberXPath, name));
             }
 
-            var node = GetXmlMemberNodeFromDictionary(name, typeForAssembly);
+            var node = await GetXmlMemberNodeFromDictionary(name, typeForAssembly);
             if (node != null ||
                 !searchAllCurrentFiles ||
                 assemblyNavigators.Count <= 1 && typeForAssembly != null) return node;
@@ -288,13 +245,13 @@ namespace JsonEverythingNet.Services.MarkdownGen
             return node;
         }
 
-        private XPathNavigator GetXmlMemberNodeFromDictionary(string name, Type typeForAssembly)
+        private async Task<XPathNavigator> GetXmlMemberNodeFromDictionary(string name, Type typeForAssembly)
         {
-            var typeNavigator = GetNavigatorForAssembly(typeForAssembly?.Assembly);
+            var typeNavigator = await GetNavigatorForAssembly(typeForAssembly?.Assembly);
             return typeNavigator?.SelectSingleNode(string.Format(MemberXPath, name));
         }
 
-        private XPathNavigator GetNavigatorForAssembly(Assembly assembly)
+        private async Task<XPathNavigator> GetNavigatorForAssembly(Assembly assembly)
         {
             if (assembly == null) return null;
             if (assemblyNavigators.TryGetValue(assembly, out var typeNavigator))
@@ -305,12 +262,15 @@ namespace JsonEverythingNet.Services.MarkdownGen
             var commentFileName = assemblyXmlPathFunction == null
                 ? Path.ChangeExtension(assembly.Location, ".xml")
                 : assemblyXmlPathFunction(assembly);
-            if (commentFileName == null || !File.Exists(commentFileName))
+            if (commentFileName == null)
             {
                 assemblyNavigators.Add(assembly, null);
                 return null;
             }
-            var document = new XPathDocument(commentFileName, XmlSpace.Preserve);
+			// TODO: async everything
+            var response = await _client.GetStringAsync(commentFileName);
+            var document = new XmlDocument();
+			document.LoadXml(response);
             var docNavigator = document.CreateNavigator();
             assemblyNavigators.Add(assembly, docNavigator);
             return docNavigator;
@@ -396,11 +356,11 @@ namespace JsonEverythingNet.Services.MarkdownGen
                    string.IsNullOrEmpty(comments.Example);
         }
 
-        private bool GetCrefComments(string cref, Type typeForAssembly, CommonComments comments, 
+        private async Task<bool> GetCrefComments(string cref, Type typeForAssembly, CommonComments comments, 
             Action<XPathNavigator> getCommentAction) 
         {
             if (string.IsNullOrEmpty(cref)) return false;
-            var typeNode = GetXmlMemberNode(cref, typeForAssembly, true);
+            var typeNode = await GetXmlMemberNode(cref, typeForAssembly, true);
             var inheritdoc = comments.Inheritdoc;
             comments.Inheritdoc = null;
             getCommentAction(typeNode);
@@ -408,7 +368,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
             return true;
         }
 
-        private MethodComments ResolveInheritdocComments(MethodComments comments, MethodBase methodInfo)
+        private async Task<MethodComments> ResolveInheritdocComments(MethodComments comments, MethodBase methodInfo)
         {
             if (!NeedsResolving(comments) ||
                 comments?.Parameters?.Count > 0 ||
@@ -418,8 +378,8 @@ namespace JsonEverythingNet.Services.MarkdownGen
 
             // If an explicit cref attribute is specified, the documentation from 
             // the specified namespace/type/member is inherited.
-            if (GetCrefComments(comments.Inheritdoc.Cref, methodInfo.ReflectedType, comments, 
-                (node) => GetComments(methodInfo, comments, node))) return comments;
+            if (await GetCrefComments(comments.Inheritdoc.Cref, methodInfo.ReflectedType, comments, 
+                async (node) => await GetComments(methodInfo, comments, node))) return comments;
 
             // For constructors:
             // - Search backwards up the type inheritance chain for a constructor 
@@ -437,7 +397,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
                         null, CallingConventions.Any, constructorSignature, null);
                     if (baseConstructor != null)
                     {
-                        var newComments = GetMethodComments(baseConstructor);
+                        var newComments = await GetMethodComments(baseConstructor);
                         if (newComments == null) return comments;
                         newComments.Inheritdoc = comments.Inheritdoc;
                         return newComments;
@@ -462,7 +422,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
                 .FirstOrDefault();
             if (interfaceDeclaration != null)
             {
-                var newComments = GetMethodComments(interfaceDeclaration);
+                var newComments = await GetMethodComments(interfaceDeclaration);
                 if (newComments == null) return comments;
                 newComments.Inheritdoc = comments.Inheritdoc;
                 return newComments;
@@ -473,7 +433,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
                 var baseMethod = (methodInfo as MethodInfo)?.GetBaseDefinition();
                 if (baseMethod != null)
                 {
-                    var newComments = GetMethodComments(baseMethod);
+                    var newComments = await GetMethodComments(baseMethod);
                     if (newComments == null) return comments;
                     newComments.Inheritdoc = comments.Inheritdoc;
                     return newComments;
@@ -485,14 +445,14 @@ namespace JsonEverythingNet.Services.MarkdownGen
             return comments;
         }
 
-        private TypeComments ResolveInheritdocComments(TypeComments comments, Type type)
+        private async Task<TypeComments> ResolveInheritdocComments(TypeComments comments, Type type)
         {
             if (!NeedsResolving(comments) ||
                 comments?.Parameters?.Count > 0) return comments;
 
             // If an explicit cref attribute is specified, the documentation from
             // the specified namespace/type/member is inherited. 
-            if (GetCrefComments(comments.Inheritdoc.Cref, type, comments,
+            if (await GetCrefComments(comments.Inheritdoc.Cref, type, comments,
                 (node) => GetComments(type, comments, node))) return comments;
 
             // For types and interfaces:
@@ -502,7 +462,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
             //   working through them in the order listed in the reflection information file (usually alphabetically).
             if (type.BaseType != null && type.BaseType != typeof(object))
             {
-                var newComments = GetTypeComments(type.BaseType);
+                var newComments = await GetTypeComments(type.BaseType);
                 if (newComments != null)
                 {
                     newComments.Parameters = comments.Parameters;
@@ -516,7 +476,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
             {
                 foreach (var intf in interfaces.OrderBy(i => i.FullName))
                 {
-                    var newComments = GetTypeComments(intf);
+                    var newComments = await GetTypeComments(intf);
                     if (newComments != null)
                     {
                         newComments.Parameters = comments.Parameters;
@@ -529,13 +489,13 @@ namespace JsonEverythingNet.Services.MarkdownGen
             return comments;
         }
 
-        private CommonComments ResolveInheritdocComments(CommonComments comments, MemberInfo memberInfo)
+        private async Task<CommonComments> ResolveInheritdocComments(CommonComments comments, MemberInfo memberInfo)
         {
             if (!NeedsResolving(comments)) return comments;
             // If an explicit cref attribute is specified, the documentation from 
             // the specified namespace/type/member is inherited. 
-            GetCrefComments(comments.Inheritdoc.Cref, memberInfo.DeclaringType, comments,
-                (node) => GetComments(memberInfo, comments, node));
+            await GetCrefComments(comments.Inheritdoc.Cref, memberInfo.DeclaringType, comments,
+                async (node) => await GetComments(memberInfo, comments, node));
             return comments;
         }
         #endregion

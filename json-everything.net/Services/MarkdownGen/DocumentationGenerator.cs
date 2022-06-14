@@ -22,44 +22,35 @@ namespace JsonEverythingNet.Services.MarkdownGen
         private Func<Type, Queue<string>, string> typeLinkConverter;
         private bool DocumentMethodDetails { get; set; }
 
-        public static void GenerateMarkdown(
-            OrderedTypeList typeList,
-            string documentTitle,
-            bool documentMethodDetails,
-            bool msdnLinks,
-            string msdnLinkViewParameter,
-            IMarkdownWriter markdownWriter)
-        {
-            // Generate markdown
-            var generator = new DocumentationGenerator(markdownWriter, typeList, msdnLinks, msdnLinkViewParameter, documentMethodDetails);
-            if (documentTitle != null) generator.WriteDocumentTitle(documentTitle);
-            generator.WriteTypeIndex();
-            generator.WriteDocumentationForTypes();
-        }
-
-        public static void GenerateMarkdown(
+        public static async Task GenerateMarkdown(
             Type type,
-            IMarkdownWriter markdownWriter)
+            IMarkdownWriter markdownWriter,
+            HttpClient client)
         {
-	        var typeList = new OrderedTypeList(type);
-			var generator = new DocumentationGenerator(markdownWriter, typeList, documentMethodDetails: true);
+	        string GetXmlCommentsFileName(Assembly assembly)
+	        {
+		        return $"{client.BaseAddress}/xml/{assembly.GetName().Name}.xml";
+	        }
+
+			var typeList = new OrderedTypeList(type);
+			var generator = new DocumentationGenerator(markdownWriter, typeList, GetXmlCommentsFileName, client);
             var typeInfo = typeList.TypesToDocument.First(x => x.Type == type);
-            generator.WriteDocumentationForType(typeInfo);
+            await generator.WriteDocumentationForType(typeInfo);
         }
 
 		public DocumentationGenerator(
-            IMarkdownWriter writer,
-            OrderedTypeList typeList,
-            bool msdnLinks = false,
-            string msdnView = null,
-            bool documentMethodDetails = false)
+			IMarkdownWriter writer,
+			OrderedTypeList typeList,
+			Func<Assembly, string> getXmlCommentsFileName,
+			HttpClient client)
         {
-            Reader = new DocXmlReader();
+
+            Reader = new DocXmlReader(getXmlCommentsFileName, client: client);
             Writer = writer;
 			TypeList = typeList;
 
-			typeLinkConverter = (type, _) => TypeNameWithLinks(type, msdnLinks, msdnView);
-            DocumentMethodDetails = documentMethodDetails;
+			typeLinkConverter = (type, _) => TypeNameWithLinks(type, false, null);
+            DocumentMethodDetails = false;
         }
 
         public string TypeNameWithLinks(Type type, bool msdnLinks, string msdnView)
@@ -84,18 +75,6 @@ namespace JsonEverythingNet.Services.MarkdownGen
                 return $"{type.Name.CleanGenericTypeName()}";
             }
             return null;
-        }
-
-        public void WriteDocumentTitle(string titleText)
-        {
-            Writer.WriteH1(titleText ?? "");
-        }
-
-        public void WritedDateLine()
-        {
-            Writer.Write("Created by ");
-            Writer.WriteLink("https://github.com/loxsmoke/mddox", "mddox");
-            Writer.WriteLine($" on {DateTime.Now.ToShortDateString()}");
         }
 
         static string TypeTitle(Type type)
@@ -199,38 +178,16 @@ namespace JsonEverythingNet.Services.MarkdownGen
             .Trim();
 
         /// <summary>
-        /// Write table of contents. It is a three column table with each cell containing 
-        /// the link to the heading of the type.
-        /// </summary>
-        /// <param name="indexTitleText"></param>
-        public void WriteTypeIndex(string indexTitleText = "All types")
-        {
-            var namesForTOC = TypeList.TypesToDocument
-                .Select(typeData => Writer.HeadingLink(TypeTitle(typeData.Type), TypeTitle(typeData.Type))).ToList();
-            if (namesForTOC.Count == 0) return;
-
-            if (indexTitleText != null) Writer.WriteH1(indexTitleText);
-            Writer.WriteTableTitle(" ", " ", " ");
-            var rowCount = namesForTOC.Count / 3 + (((namesForTOC.Count % 3) == 0) ? 0 : 1);
-            for (var i = 0; i < rowCount; i++)
-            {
-                Writer.WriteTableRow(namesForTOC[i],
-                    rowCount + i < namesForTOC.Count ? namesForTOC[rowCount + i] : " ",
-                    rowCount * 2 + i < namesForTOC.Count ? namesForTOC[rowCount * 2 + i] : " ");
-            }
-        }
-
-        /// <summary>
         /// Write markdown documentation for the enum type:
         /// Examples, Remarks, 
         /// </summary>
         /// <param name="enumType"></param>
-        public void WriteEnumDocumentation(Type enumType)
+        public async Task WriteEnumDocumentation(Type enumType)
         {
             Writer.WriteH1(TypeTitle(enumType));
             Writer.WriteLine("Namespace: " + enumType.Namespace);
 
-            var enumComments = Reader.GetEnumComments(enumType, true);
+            var enumComments = await Reader.GetEnumComments(enumType, true);
             Writer.WriteLine(ProcessTags(enumComments.Summary));
 
             WriteExample(enumComments.Example);
@@ -253,7 +210,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
         /// Base class,  summary, remarks, Properties, constructors, methods and fields
         /// </summary>
         /// <param name="typeData"></param>
-        public void WriteClassDocumentation(TypeCollection.TypeInformation typeData)
+        public async Task WriteClassDocumentation(TypeCollection.TypeInformation typeData)
         {
             Writer.WriteH1(TypeTitle(typeData.Type));
             Writer.WriteLine("Namespace: " + typeData.Type.Namespace);
@@ -265,17 +222,17 @@ namespace JsonEverythingNet.Services.MarkdownGen
                 Writer.WriteLine("Base class: " + typeData.Type.BaseType.ToNameString(typeLinkConverter, true));
             }
 
-            var typeComments = Reader.GetTypeComments(typeData.Type);
+            var typeComments = await Reader.GetTypeComments(typeData.Type);
             Writer.WriteLine(ProcessTags(typeComments.Summary));
 
             WriteExample(typeComments.Example);
             WriteRemarks(typeComments.Remarks);
 
-            var allProperties = Reader.Comments(typeData.Properties).ToList();
-            var allConstructors = Reader.Comments(typeData.Methods.Where(it => it is ConstructorInfo)).ToList();
-            var allMethods = Reader.Comments(typeData.Methods
-                .Where(it => !(it is ConstructorInfo) && (it is MethodInfo))).ToList();
-            var allFields = Reader.Comments(typeData.Fields).ToList();
+            var allProperties = (await Reader.Comments(typeData.Properties)).ToList();
+            var allConstructors = (await Reader.Comments(typeData.Methods.Where(it => it is ConstructorInfo))).ToList();
+            var allMethods = (await Reader.Comments(typeData.Methods
+	            .Where(it => !(it is ConstructorInfo) && it is MethodInfo))).ToList();
+            var allFields = (await Reader.Comments(typeData.Fields)).ToList();
             if (allProperties.Count > 0)
             {
                 Writer.WriteH2("Properties");
@@ -385,23 +342,15 @@ namespace JsonEverythingNet.Services.MarkdownGen
             WriteExample(comments.Example);
         }
 
-        public void WriteDocumentationForTypes()
-        {
-            foreach (var typeData in TypeList.TypesToDocument)
-            {
-	            WriteDocumentationForType(typeData);
-            }
-        }
-
-        private void WriteDocumentationForType(TypeCollection.TypeInformation typeData)
+        private async Task WriteDocumentationForType(TypeCollection.TypeInformation typeData)
         {
 	        if (typeData.Type.IsEnum)
 	        {
-		        WriteEnumDocumentation(typeData.Type);
+		        await WriteEnumDocumentation(typeData.Type);
 		        return;
 	        }
 
-	        WriteClassDocumentation(typeData);
+	        await WriteClassDocumentation(typeData);
         }
 
         public void WriteExample(string example)
