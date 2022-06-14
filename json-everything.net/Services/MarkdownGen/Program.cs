@@ -107,7 +107,6 @@ namespace MdDox
                 DocumentationGenerator.GenerateMarkdown(
                     typeList,
                     GenerateTitle(assembly, options.DocumentTitle),
-                    !options.DoNotShowDocumentDateTime,
                     options.DocumentMethodDetails,
                     msdnLinks, 
                     msdnView,

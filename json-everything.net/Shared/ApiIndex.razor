@@ -30,11 +30,7 @@
 
 	private NamespaceNode BuildNamespaceNode(IEnumerable<Type> types, string rootNamespace)
 	{
-		var namespaceGroups = types.GroupBy(x =>
-		{
-			var lastDot = x.FullName!.LastIndexOf('.');
-			return x.FullName[..lastDot];
-		}).ToList();
+		var namespaceGroups = types.GroupBy(x => x.Namespace).ToList();
 		var localTypes = namespaceGroups.SingleOrDefault(x => x.Key == rootNamespace)?.ToList() ??
 		                 new List<Type>();
 		var namespaces = namespaceGroups.Where(x => x.Key != rootNamespace)

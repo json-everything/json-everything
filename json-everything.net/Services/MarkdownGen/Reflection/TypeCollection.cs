@@ -188,6 +188,7 @@ namespace JsonEverythingNet.Services.MarkdownGen.Reflection
         /// <returns></returns>
         bool CheckType(Type type)
         {
+	        return true;
             if (IgnoreTypes.Contains(type)) return false;
             // Check if type assembly should be checked or ignored
             if (Settings.AssemblyFilter != null)

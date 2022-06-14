@@ -1,9 +1,15 @@
-﻿namespace JsonEverythingNet.Services;
+﻿using JsonEverythingNet.Services.MarkdownGen;
+using JsonEverythingNet.Services.MarkdownGen.MarkdownWriters;
+
+namespace JsonEverythingNet.Services;
 
 public class ApiDocGenerationService
 {
 	public string GenerateForType(Type type)
 	{
-		return $"# Look at me!\n\nI'm `{type.CSharpName()}` API docs!";
+		var writer = new GithubMarkdownWriter();
+		DocumentationGenerator.GenerateMarkdown(type, writer);
+		return writer.FullText;
 	}
+
 }

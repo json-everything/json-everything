@@ -69,7 +69,7 @@
 		var html = Markdown.ToHtml(markdown, pipeline);
 		html = html.Replace("<table>", "<table class=\"table\">");
 
-		if (!Page.Contains("release-notes"))
+		if (!Page.Contains("release-notes/") && !Page.Contains("type/"))
 		{
 			var localPath = GetPath();
 			var headerLinkPattern = _headerLinkPattern.Replace("[[localPath]]", localPath);

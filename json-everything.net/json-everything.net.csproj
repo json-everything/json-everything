@@ -5,7 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>JsonEverythingNet</RootNamespace>
-	<NoWarn>NU1701</NoWarn>
+	  <NoWarn>NU1701</NoWarn>
+	  <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>

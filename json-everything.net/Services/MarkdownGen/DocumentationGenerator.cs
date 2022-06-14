@@ -25,7 +25,6 @@ namespace JsonEverythingNet.Services.MarkdownGen
         public static void GenerateMarkdown(
             OrderedTypeList typeList,
             string documentTitle,
-            bool showDocumentDateTime,
             bool documentMethodDetails,
             bool msdnLinks,
             string msdnLinkViewParameter,
@@ -34,12 +33,21 @@ namespace JsonEverythingNet.Services.MarkdownGen
             // Generate markdown
             var generator = new DocumentationGenerator(markdownWriter, typeList, msdnLinks, msdnLinkViewParameter, documentMethodDetails);
             if (documentTitle != null) generator.WriteDocumentTitle(documentTitle);
-            if (showDocumentDateTime) generator.WritedDateLine();
             generator.WriteTypeIndex();
             generator.WriteDocumentationForTypes();
         }
 
-        public DocumentationGenerator(
+        public static void GenerateMarkdown(
+            Type type,
+            IMarkdownWriter markdownWriter)
+        {
+	        var typeList = new OrderedTypeList(type);
+			var generator = new DocumentationGenerator(markdownWriter, typeList, documentMethodDetails: true);
+            var typeInfo = typeList.TypesToDocument.First(x => x.Type == type);
+            generator.WriteDocumentationForType(typeInfo);
+        }
+
+		public DocumentationGenerator(
             IMarkdownWriter writer,
             OrderedTypeList typeList,
             bool msdnLinks = false,
@@ -48,9 +56,9 @@ namespace JsonEverythingNet.Services.MarkdownGen
         {
             Reader = new DocXmlReader();
             Writer = writer;
-            TypeList = typeList;
+			TypeList = typeList;
 
-            typeLinkConverter = (type, _) => TypeNameWithLinks(type, msdnLinks, msdnView);
+			typeLinkConverter = (type, _) => TypeNameWithLinks(type, msdnLinks, msdnView);
             DocumentMethodDetails = documentMethodDetails;
         }
 
@@ -381,13 +389,19 @@ namespace JsonEverythingNet.Services.MarkdownGen
         {
             foreach (var typeData in TypeList.TypesToDocument)
             {
-                if (typeData.Type.IsEnum)
-                {
-                    WriteEnumDocumentation(typeData.Type);
-                    continue;
-                }
-                WriteClassDocumentation(typeData);
+	            WriteDocumentationForType(typeData);
             }
+        }
+
+        private void WriteDocumentationForType(TypeCollection.TypeInformation typeData)
+        {
+	        if (typeData.Type.IsEnum)
+	        {
+		        WriteEnumDocumentation(typeData.Type);
+		        return;
+	        }
+
+	        WriteClassDocumentation(typeData);
         }
 
         public void WriteExample(string example)
