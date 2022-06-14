@@ -19,7 +19,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-patch.html</PackageReleaseNotes>
-    <DocumentationFile>JsonPatch.xml</DocumentationFile>
+    <DocumentationFile>JsonPatch.Net.xml</DocumentationFile>
 	  <IncludeSymbols>true</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
