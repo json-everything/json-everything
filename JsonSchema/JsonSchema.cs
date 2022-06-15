@@ -56,13 +56,14 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
 	/// </summary>
 	/// <param name="fileName">The filename to load, URL-decoded.</param>
+	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	/// <remarks>The filename needs to not be URL-encoded as <see cref="System.Uri"/> attempts to encode it.</remarks>
-	public static JsonSchema FromFile(string fileName)
+	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
+	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options = null)
 	{
 		var text = File.ReadAllText(fileName);
-		var schema = FromText(text);
+		var schema = FromText(text, options);
 		schema.BaseUri = new Uri(Path.GetFullPath(fileName));
 		return schema;
 	}
@@ -71,21 +72,23 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// Deserializes a <see cref="JsonSchema"/> from text.
 	/// </summary>
 	/// <param name="jsonText">The text to parse.</param>
+	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText)
+	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options = null)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText)!;
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
 	}
 
 	/// <summary>
 	/// Deserializes a <see cref="JsonSchema"/> from a stream.
 	/// </summary>
 	/// <param name="source">A stream.</param>
+	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	public static ValueTask<JsonSchema> FromStream(Stream source)
+	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
 	{
-		return JsonSerializer.DeserializeAsync<JsonSchema>(source)!;
+		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
 	/// <summary>

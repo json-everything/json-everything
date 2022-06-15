@@ -20,6 +20,22 @@ public class CreationTests
 		Assert.True(results.IsValid);
 	}
 	[Test]
+	public void FromTextIgnoringComments()
+	{
+		var options = new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip };
+		var schema = JsonSchema.FromText(@"{
+  ""$id"":""http://my.schema/test1"",
+  // comment here, just passing through
+  ""minimum"":5
+}", options);
+
+		using var json = JsonDocument.Parse("10");
+
+		var results = schema.Validate(json.RootElement);
+
+		Assert.True(results.IsValid);
+	}
+	[Test]
 	public async Task FromStream()
 	{
 		var text = "{\"$id\":\"http://my.schema/test1\",\"minimum\":5}";
