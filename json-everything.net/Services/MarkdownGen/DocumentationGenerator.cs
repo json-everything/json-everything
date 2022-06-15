@@ -217,13 +217,13 @@ public class DocumentationGenerator
 	private void WriteMethodDetails(string name, MethodBase info, MethodComments comments)
 	{
 		_writer.WriteH3(name + info.ToParametersString());
+		_writer.WriteLine(ProcessTags(comments.Summary));
 		_writer.WriteH4("Declaration");
 		var methodInfo = info as MethodInfo;
 		if (methodInfo is not null)
 			_writer.WriteCodeBlock(methodInfo.GenerateCode());
 		else if (info is ConstructorInfo constructorInfo)
 			_writer.WriteCodeBlock(constructorInfo.GenerateCode());
-		_writer.WriteLine(ProcessTags(comments.Summary));
 		if (comments.Parameters.Count > 0)
 		{
 			var parameters = info.GetParameters();
@@ -264,7 +264,8 @@ public class DocumentationGenerator
 		_writer.Write(_writer.Bold("Inheritance:"));
 		while (current != null)
 		{
-			_writer.Write(current.ToNameString(_typeLinkConverter));
+			var nameString = current.ToNameString(_typeLinkConverter);
+			_writer.Write(_writer.Code(nameString));
 			current = current.BaseType;
 			if (current != null)
 				_writer.Write(" 🡒 ");

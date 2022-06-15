@@ -137,6 +137,11 @@ public class GithubMarkdownWriter : IMarkdownWriter
 		return "**" + text + "**";
 	}
 
+	public string Code(string text)
+	{
+		return "`" + text + "`";
+	}
+
 	public string Link(string anchorName, string? text)
 	{
 		return $"[{text}]({anchorName})";

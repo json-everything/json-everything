@@ -22,6 +22,7 @@ public interface IMarkdownWriter
 	void WriteListItem(string text);
 	void WriteCodeBlock(string text);
 	string Bold(string text);
+	string Code(string text);
 	string Link(string anchorName, string? text);
 	string HeadingLink(string anchorName, string? text = null);
 }

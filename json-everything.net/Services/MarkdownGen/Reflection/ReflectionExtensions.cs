@@ -161,9 +161,10 @@ public static class ReflectionExtensions
 				       parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
 				       invokeTypeNameConverterForGenericType);
 
-		return parameterInfo.ParameterType.ToNameStringWithValueTupleNames(
-			parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
-			invokeTypeNameConverterForGenericType);
+		return (parameterInfo.GetCustomAttribute<ParamArrayAttribute>() != null ? "params " : string.Empty) +
+		       parameterInfo.ParameterType.ToNameStringWithValueTupleNames(
+			       parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
+			       invokeTypeNameConverterForGenericType);
 	}
 
 	/// <summary>
