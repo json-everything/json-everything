@@ -44,6 +44,11 @@ public class GithubMarkdownWriter : IMarkdownWriter
 		WriteLine("### " + EscapeSpecialChars(text));
 	}
 
+	public void WriteH4(string text)
+	{
+		WriteLine("#### " + EscapeSpecialChars(text));
+	}
+
 	public void WriteLink(string anchorName, string text)
 	{
 		_allText.Append(Link(anchorName, text));
@@ -67,7 +72,14 @@ public class GithubMarkdownWriter : IMarkdownWriter
 
 	public void WriteListItem(string text)
 	{
-		WriteLine("- " + EscapeSpecialChars(text));
+		_allText.AppendLine("- " + EscapeSpecialChars(text));
+	}
+
+	public void WriteCodeBlock(string text)
+	{
+		_allText.AppendLine("```c#");
+		_allText.AppendLine(text);
+		_allText.AppendLine("```");
 	}
 
 	#endregion

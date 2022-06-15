@@ -47,9 +47,9 @@ public class DocumentationGenerator
 		return type.IsGenericTypeDefinition ? $"{type.Name.CleanGenericTypeName()}" : null;
 	}
 
-	private static string TypeTitle(Type type)
+	private string TypeTitle(Type type)
 	{
-		return type.ToNameString() +
+		return type.ToNameString(_typeLinkConverter) +
 		       (type.IsEnum ? " Enum" :
 			       type.IsValueType ? " Struct" :
 			       type.IsInterface ? " Interface" : " Class");
@@ -143,8 +143,8 @@ public class DocumentationGenerator
 		var enumComments = await _reader.GetEnumComments(enumType, true);
 		_writer.WriteLine(ProcessTags(enumComments.Summary!));
 
-		WriteExample(enumComments.Example);
-		WriteRemarks(enumComments.Remarks);
+		WriteH2Example(enumComments.Example);
+		WriteH2Remarks(enumComments.Remarks);
 
 		if (enumComments.ValueComments.Count > 0)
 		{
@@ -159,19 +159,14 @@ public class DocumentationGenerator
 	private async Task WriteClassDocumentation(TypeCollection.TypeInformation typeData)
 	{
 		_writer.WriteH1(TypeTitle(typeData.Type));
-		_writer.WriteLine("Namespace: " + typeData.Type.Namespace);
+		_writer.WriteLine(_writer.Bold("Namespace:") + " " + typeData.Type.Namespace);
 		WriteInheritance(typeData.Type);
-
-		if (typeData.Type.BaseType != null &&
-		    typeData.Type.BaseType != typeof(object) &&
-		    typeData.Type.BaseType != typeof(ValueType))
-			_writer.WriteLine("Base class: " + typeData.Type.BaseType.ToNameString(_typeLinkConverter, true));
 
 		var typeComments = await _reader.GetTypeComments(typeData.Type);
 		_writer.WriteLine(ProcessTags(typeComments.Summary));
 
-		WriteRemarks(typeComments.Remarks);
-		WriteExample(typeComments.Example);
+		WriteH2Remarks(typeComments.Remarks);
+		WriteH2Example(typeComments.Example);
 
 		var allProperties = (await _reader.Comments(typeData.Properties)).ToList();
 		var allConstructors = (await _reader.Comments(typeData.Methods.Where(it => it is ConstructorInfo))).ToList();
@@ -206,7 +201,7 @@ public class DocumentationGenerator
 			_writer.WriteH2("Constructors");
 			foreach (var (info, comments) in allConstructors
 				         .OrderBy(m => m.Info.GetParameters().Length))
-				WriteMethodDetails(typeData.Type.ToNameString(), info, comments);
+				WriteMethodDetails(typeData.Type.ToNameString(_typeLinkConverter), info, comments);
 		}
 
 		if (allMethods.Count > 0)
@@ -222,6 +217,12 @@ public class DocumentationGenerator
 	private void WriteMethodDetails(string name, MethodBase info, MethodComments comments)
 	{
 		_writer.WriteH3(name + info.ToParametersString());
+		_writer.WriteH4("Declaration");
+		var methodInfo = info as MethodInfo;
+		if (methodInfo is not null)
+			_writer.WriteCodeBlock(methodInfo.GenerateCode());
+		else if (info is ConstructorInfo constructorInfo)
+			_writer.WriteCodeBlock(constructorInfo.GenerateCode());
 		_writer.WriteLine(ProcessTags(comments.Summary));
 		if (comments.Parameters.Count > 0)
 		{
@@ -236,14 +237,14 @@ public class DocumentationGenerator
 
 		_writer.WriteLine("");
 
-		if (info is MethodInfo methodInfo && methodInfo.ReturnType != typeof(void))
+		if (methodInfo != null && methodInfo.ReturnType != typeof(void))
 		{
-			_writer.WriteH3("Returns");
-			_writer.WriteLine(methodInfo.ToTypeNameString(_typeLinkConverter, true));
+			_writer.WriteH4("Returns");
 			_writer.WriteLine(ProcessTags(comments.Returns));
 		}
 
-		WriteExample(comments.Example);
+		WriteH4Remarks(comments.Remarks);
+		WriteH4Example(comments.Example);
 	}
 
 	private async Task WriteDocumentationForType(TypeCollection.TypeInformation typeData)
@@ -260,24 +261,28 @@ public class DocumentationGenerator
 	private void WriteInheritance(Type type)
 	{
 		var current = type;
-		_writer.Write("Inheritance: ");
+		_writer.Write(_writer.Bold("Inheritance:"));
 		while (current != null)
 		{
-			_writer.Write(current.ToNameString());
+			_writer.Write(current.ToNameString(_typeLinkConverter));
 			current = current.BaseType;
 			if (current != null)
 				_writer.Write(" 🡒 ");
 		}
 
-		_writer.WriteLine(null);
-		_writer.WriteLine("Implemented interfaces:");
-		foreach (var intf in type.GetInterfaces())
+		_writer.WriteLine();
+		var interfaces = type.GetInterfaces();
+		if (!interfaces.Any()) return;
+
+		_writer.WriteLine(_writer.Bold("Implemented interfaces:"));
+		foreach (var intf in interfaces)
 		{
-			_writer.WriteListItem(intf.ToNameString());
+			_writer.WriteListItem(intf.ToNameString(_typeLinkConverter));
 		}
+		_writer.WriteLine();
 	}
 
-	private void WriteExample(string? example)
+	private void WriteH2Example(string? example)
 	{
 		if (example.IsNullOrEmpty()) return;
 
@@ -285,11 +290,27 @@ public class DocumentationGenerator
 		_writer.WriteLine(ProcessTags(example!));
 	}
 
-	private void WriteRemarks(string? remarks)
+	private void WriteH2Remarks(string? remarks)
 	{
 		if (remarks.IsNullOrEmpty()) return;
 
 		_writer.WriteH2("Remarks");
+		_writer.WriteLine(ProcessTags(remarks!));
+	}
+
+	private void WriteH4Example(string? example)
+	{
+		if (example.IsNullOrEmpty()) return;
+
+		_writer.WriteH4("Examples");
+		_writer.WriteLine(ProcessTags(example!));
+	}
+
+	private void WriteH4Remarks(string? remarks)
+	{
+		if (remarks.IsNullOrEmpty()) return;
+
+		_writer.WriteH4("Remarks");
 		_writer.WriteLine(ProcessTags(remarks!));
 	}
 }

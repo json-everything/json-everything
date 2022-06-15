@@ -55,7 +55,9 @@ public static class ReflectionExtensions
 
 			{ typeof(void), "void" },
 
-			{ typeof(string), "string" }
+			{ typeof(string), "string" },
+
+			{ typeof(object), "object" }
 		};
 	}
 
@@ -68,21 +70,6 @@ public static class ReflectionExtensions
 	public static bool IsNullable(this Type type)
 	{
 		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-	}
-
-	/// <summary>
-	///     Convert type to the proper type name.
-	///     Optional <paramref name="typeNameConverter" /> function can convert type names to strings
-	///     if type names should be decorated in some way either by converting text to markdown or
-	///     HTML links or adding some formatting.
-	///     This method returns ValueTuple types without field names.
-	/// </summary>
-	/// <param name="type">Type information.</param>
-	/// <param name="typeNameConverter">The optional function that converts type name to string.</param>
-	/// <returns>Full type name</returns>
-	public static string ToNameString(this Type type, Func<Type, string>? typeNameConverter = null)
-	{
-		return type.ToNameString(null, typeNameConverter == null ? null : (t, _) => typeNameConverter(t));
 	}
 
 	/// <summary>
@@ -137,7 +124,10 @@ public static class ReflectionExtensions
 	{
 		var parameters = methodInfo.GetParameters();
 		if (parameters.Length == 0) return "()";
-		return "(" +
+		var extension = methodInfo.GetCustomAttribute<ExtensionAttribute>() != null
+			? "this "
+			: string.Empty;
+		return "(" + extension +
 		       string.Join(", ", parameters.Select(p => p.ToTypeNameString(typeNameConverter, invokeTypeNameConverterForGenericType) + " " + p.Name)) +
 		       ")";
 	}
@@ -170,10 +160,10 @@ public static class ReflectionExtensions
 			       parameterInfo.ParameterType.GetElementType()!.ToNameStringWithValueTupleNames(
 				       parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
 				       invokeTypeNameConverterForGenericType);
-		return
-			parameterInfo.ParameterType.ToNameStringWithValueTupleNames(
-				parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
-				invokeTypeNameConverterForGenericType);
+
+		return parameterInfo.ParameterType.ToNameStringWithValueTupleNames(
+			parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
+			invokeTypeNameConverterForGenericType);
 	}
 
 	/// <summary>

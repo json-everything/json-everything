@@ -62,18 +62,6 @@ public class DocXmlReader
 	#region Public methods
 
 	/// <summary>
-	///     Returns comments for the method or constructor. Returns empty comments object
-	///     if comments for method are missing in XML documentation file.
-	///     Returned comments tags:
-	///     Summary, Remarks, Parameters (if present), Responses (if present), Returns
-	/// </summary>
-	/// <returns></returns>
-	private async Task<MethodComments?> GetMethodComments(MethodBase methodInfo)
-	{
-		return await GetMethodComments(methodInfo, false);
-	}
-
-	/// <summary>
 	///     Returns comments for the class method. May return null object is comments for method
 	///     are missing in XML documentation file.
 	///     Returned comments tags:
@@ -87,10 +75,10 @@ public class DocXmlReader
 		var methodNode = await GetXmlMemberNode(methodInfo.MethodId(), methodInfo.ReflectedType);
 		if (nullIfNoComment && methodNode == null) return null;
 		var comments = new MethodComments();
-		return await GetComments(methodInfo, comments, methodNode);
+		return GetComments(comments, methodNode);
 	}
 
-	private async Task<MethodComments?> GetComments(MethodBase methodInfo, MethodComments comments, XPathNavigator? node)
+	private MethodComments GetComments(MethodComments comments, XPathNavigator? node)
 	{
 		if (node == null) return comments;
 
@@ -99,7 +87,6 @@ public class DocXmlReader
 		comments.TypeParameters = GetNamedComments(node, _typeParamXPath, _nameAttribute);
 		comments.Returns = GetReturnsComment(node);
 		comments.Responses = GetNamedComments(node, _responsesXPath, _codeAttribute);
-		comments = await ResolveInheritdocComments(comments, methodInfo);
 		return comments;
 	}
 
@@ -113,15 +100,14 @@ public class DocXmlReader
 	{
 		var comments = new TypeComments();
 		var node = await GetXmlMemberNode(type.TypeId(), type);
-		return await GetComments(type, comments, node);
+		return GetComments(type, comments, node);
 	}
 
-	private async Task<TypeComments> GetComments(Type type, TypeComments comments, XPathNavigator? node)
+	private TypeComments GetComments(Type type, TypeComments comments, XPathNavigator? node)
 	{
 		if (node == null) return comments;
 		if (type.IsSubclassOf(typeof(Delegate))) comments.Parameters = GetParametersComments(node);
 		GetCommonComments(comments, node);
-		comments = await ResolveInheritdocComments(comments, type);
 		return comments;
 	}
 
@@ -134,15 +120,14 @@ public class DocXmlReader
 	{
 		var comments = new CommonComments();
 		var node = await GetXmlMemberNode(memberInfo.MemberId(), memberInfo.ReflectedType);
-		return await GetComments(memberInfo, comments, node);
+		return GetComments(comments, node);
 	}
 
-	private async Task<CommonComments> GetComments(MemberInfo memberInfo, CommonComments comments, XPathNavigator? node)
+	private CommonComments GetComments(CommonComments comments, XPathNavigator? node)
 	{
 		if (node == null) return comments;
 
 		GetCommonComments(comments, node);
-		comments = await ResolveInheritdocComments(comments, memberInfo);
 		return comments;
 	}
 
@@ -194,12 +179,10 @@ public class DocXmlReader
 	private const string _typeParamXPath = "typeparam";
 	private const string _responsesXPath = "response";
 	private const string _returnsXPath = "returns";
-	public const string InheritdocXPath = "inheritdoc";
 
 	//  XML attribute names
 	private const string _nameAttribute = "name";
 	private const string _codeAttribute = "code";
-	private const string _crefAttribute = "cref";
 
 	#endregion
 
@@ -210,7 +193,6 @@ public class DocXmlReader
 		comments.Summary = GetSummaryComment(rootNode);
 		comments.Remarks = GetRemarksComment(rootNode);
 		comments.Example = GetExampleComment(rootNode);
-		comments.Inheritdoc = GetInheritdocTag(rootNode);
 	}
 
 	private async Task<XPathNavigator?> GetXmlMemberNode(string name, Type? typeForAssembly, bool searchAllCurrentFiles = false)
@@ -321,160 +303,6 @@ public class DocXmlReader
 		}
 
 		return list;
-	}
-
-	private InheritdocTag? GetInheritdocTag(XPathNavigator? rootNode)
-	{
-		if (rootNode == null) return null;
-		var inheritdoc = GetNamedComments(rootNode, InheritdocXPath, _crefAttribute);
-		if (inheritdoc.Count == 0) return null;
-		return new InheritdocTag(inheritdoc.First().Item1);
-	}
-
-	private static bool NeedsResolving(CommonComments? comments)
-	{
-		return comments?.Inheritdoc != null &&
-		       string.IsNullOrEmpty(comments.Summary) &&
-		       string.IsNullOrEmpty(comments.Remarks) &&
-		       string.IsNullOrEmpty(comments.Example);
-	}
-
-	private async Task<bool> GetCrefComments(string? cref, Type? typeForAssembly, CommonComments comments,
-		Func<XPathNavigator?, Task> getCommentAction)
-	{
-		if (string.IsNullOrEmpty(cref)) return false;
-		var typeNode = await GetXmlMemberNode(cref, typeForAssembly, true);
-		var inheritdoc = comments.Inheritdoc;
-		comments.Inheritdoc = null;
-		await getCommentAction(typeNode);
-		comments.Inheritdoc = inheritdoc;
-		return true;
-	}
-
-	private async Task<MethodComments> ResolveInheritdocComments(MethodComments comments, MethodBase methodInfo)
-	{
-		if (!NeedsResolving(comments) ||
-		    comments.Parameters.Count > 0 ||
-		    !string.IsNullOrEmpty(comments.Returns) ||
-		    comments.Responses.Count > 0 ||
-		    comments.TypeParameters.Count > 0) return comments;
-
-		// If an explicit cref attribute is specified, the documentation from 
-		// the specified namespace/type/member is inherited.
-		if (await GetCrefComments(comments.Inheritdoc?.Cref, methodInfo.ReflectedType, comments,
-			    async node => await GetComments(methodInfo, comments, node))) return comments;
-
-		// For constructors:
-		// - Search backwards up the type inheritance chain for a constructor 
-		//   with a matching signature.
-		// - If a match is found, its documentation is inherited.
-		if (methodInfo.IsConstructor)
-		{
-			var baseClass = methodInfo.ReflectedType?.BaseType;
-			var constructorSignature = methodInfo.GetParameters()
-				.Select(p => p.ParameterType).ToArray();
-			while (baseClass != null)
-			{
-				var baseConstructor = baseClass.GetConstructor(
-					BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
-					null, CallingConventions.Any, constructorSignature, null);
-				if (baseConstructor != null)
-				{
-					var newComments = await GetMethodComments(baseConstructor);
-					if (newComments == null) return comments;
-					newComments.Inheritdoc = comments.Inheritdoc;
-					return newComments;
-				}
-
-				baseClass = baseClass.BaseType;
-			}
-
-			return comments;
-		}
-
-		// For virtual members and interface implementations:
-		// - If the member is an override, documentation is inherited from the 
-		//   member it overrides.
-		// - If the member is part of an interface, documentation is inherited 
-		//   from the interface member being implemented.
-		var interfaceDeclaration = methodInfo.ReflectedType?
-			.GetTypeInfo()
-			.ImplementedInterfaces
-			.Select(ii => methodInfo.ReflectedType.GetInterfaceMap(ii))
-			.SelectMany(map => Enumerable.Range(0, map.TargetMethods.Length)
-				.Where(n => map.TargetMethods[n] == methodInfo)
-				.Select(n => map.InterfaceMethods[n]))
-			.FirstOrDefault();
-		if (interfaceDeclaration != null)
-		{
-			var newComments = await GetMethodComments(interfaceDeclaration);
-			if (newComments == null) return comments;
-			newComments.Inheritdoc = comments.Inheritdoc;
-			return newComments;
-		}
-
-		if (methodInfo.IsVirtual)
-		{
-			var baseMethod = (methodInfo as MethodInfo)?.GetBaseDefinition();
-			if (baseMethod != null)
-			{
-				var newComments = await GetMethodComments(baseMethod);
-				if (newComments == null) return comments;
-				newComments.Inheritdoc = comments.Inheritdoc;
-				return newComments;
-			}
-
-			return comments;
-		}
-
-
-		return comments;
-	}
-
-	private async Task<TypeComments> ResolveInheritdocComments(TypeComments comments, Type type)
-	{
-		if (!NeedsResolving(comments) ||
-		    comments.Parameters.Count > 0) return comments;
-
-		// If an explicit cref attribute is specified, the documentation from
-		// the specified namespace/type/member is inherited. 
-		if (await GetCrefComments(comments.Inheritdoc?.Cref, type, comments,
-			    async node => await GetComments(type, comments, node))) return comments;
-
-		// For types and interfaces:
-		// - Inherit documentation from all base classes working backwards up 
-		//   the inheritance chain.
-		// - Inherit documentation from all interface implementations (if any) 
-		//   working through them in the order listed in the reflection information file (usually alphabetically).
-		if (type.BaseType != null && type.BaseType != typeof(object))
-		{
-			var newComments = await GetTypeComments(type.BaseType);
-			newComments.Parameters = comments.Parameters;
-			newComments.Inheritdoc = comments.Inheritdoc;
-			return newComments;
-		}
-
-		var interfaces = type.GetInterfaces();
-		if (interfaces.Length > 0)
-			foreach (var intf in interfaces.OrderBy(i => i.FullName))
-			{
-				var newComments = await GetTypeComments(intf);
-				newComments.Parameters = comments.Parameters;
-				newComments.Inheritdoc = comments.Inheritdoc;
-				return newComments;
-			}
-
-		return comments;
-	}
-
-	private async Task<CommonComments> ResolveInheritdocComments(CommonComments comments, MemberInfo memberInfo)
-	{
-		if (!NeedsResolving(comments)) return comments;
-		// If an explicit cref attribute is specified, the documentation from 
-		// the specified namespace/type/member is inherited. 
-		await GetCrefComments(comments.Inheritdoc?.Cref, memberInfo.DeclaringType, comments,
-			async node => await GetComments(memberInfo, comments, node));
-		return comments;
 	}
 
 	#endregion

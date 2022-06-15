@@ -19,9 +19,4 @@ public class CommonComments
 	///     "example" comment
 	/// </summary>
 	public string? Example { get; set; }
-
-	/// <summary>
-	///     Inheritdoc tag. Null if missing in comments.
-	/// </summary>
-	public InheritdocTag? Inheritdoc { get; set; }
 }
