@@ -11,10 +11,10 @@ namespace JsonEverythingNet.Services
 				Language = "json",
 				Theme = "vs-dark",
 				SelectOnLineNumbers = true,
-				//Scrollbar = new EditorScrollbarOptions
-				//{
-				//	AlwaysConsumeMouseWheel = false,
-				//},
+				Scrollbar = new EditorScrollbarOptions
+				{
+					AlwaysConsumeMouseWheel = false
+				},
 				ScrollBeyondLastLine = false
 			};
 
