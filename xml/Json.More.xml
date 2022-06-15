@@ -4,36 +4,7 @@
         <name>Json.More</name>
     </assembly>
     <members>
-        <member name="T:Json.More.EnumStringConverter`1">
-             <summary>
-             Enum to string converter.
-             </summary>
-             <typeparam name="T">The supported enum.</typeparam>
-             <remarks>
-            	This serializer supports the <see cref="T:System.ComponentModel.DescriptionAttribute"/> to indicate custom value naming.
-            
-             The <see cref="T:System.FlagsAttribute"/> is supported via serializing to an array of base values.  Inclusion
-             of composite values is not supported.
-             </remarks>
-             <example>
-             The attribute can be applied to both the enum type itself:
-             ```c#
-             public enum MyEnum {
-                 Foo,
-                 Bar
-             }
-             ```
-             
-             or to a property of the enum type:
-            
-             ```c#
-             public class MyClass {
-            	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
-            	    public MyEnum Value { get; set; }
-             }
-             ```
-             </example>
-        </member>
+        <!-- Badly formed XML comment ignored for member "T:Json.More.EnumStringConverter`1" -->
         <member name="M:Json.More.EnumStringConverter`1.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>Reads and converts the JSON to type <typeparamref name="T" />.</summary>
             <param name="reader">The reader.</param>
