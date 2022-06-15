@@ -2001,28 +2001,31 @@
             For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
             </summary>
         </member>
-        <member name="M:Json.Schema.JsonSchema.FromFile(System.String)">
+        <member name="M:Json.Schema.JsonSchema.FromFile(System.String,System.Text.Json.JsonSerializerOptions)">
             <summary>
             Loads text from a file and deserializes a <see cref="T:Json.Schema.JsonSchema"/>.
             </summary>
             <param name="fileName">The filename to load, URL-decoded.</param>
+            <param name="options">Serializer options.</param>
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
             <exception cref="T:System.Text.Json.JsonException">Could not deserialize a portion of the schema.</exception>
             <remarks>The filename needs to not be URL-encoded as <see cref="T:System.Uri"/> attempts to encode it.</remarks>
         </member>
-        <member name="M:Json.Schema.JsonSchema.FromText(System.String)">
+        <member name="M:Json.Schema.JsonSchema.FromText(System.String,System.Text.Json.JsonSerializerOptions)">
             <summary>
             Deserializes a <see cref="T:Json.Schema.JsonSchema"/> from text.
             </summary>
             <param name="jsonText">The text to parse.</param>
+            <param name="options">Serializer options.</param>
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
             <exception cref="T:System.Text.Json.JsonException">Could not deserialize a portion of the schema.</exception>
         </member>
-        <member name="M:Json.Schema.JsonSchema.FromStream(System.IO.Stream)">
+        <member name="M:Json.Schema.JsonSchema.FromStream(System.IO.Stream,System.Text.Json.JsonSerializerOptions)">
             <summary>
             Deserializes a <see cref="T:Json.Schema.JsonSchema"/> from a stream.
             </summary>
             <param name="source">A stream.</param>
+            <param name="options">Serializer options.</param>
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
         </member>
         <member name="M:Json.Schema.JsonSchema.Validate(System.Text.Json.Nodes.JsonNode,Json.Schema.ValidationOptions)">

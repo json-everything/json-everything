@@ -1,3 +1,7 @@
+# [3.1.0](https://github.com/gregsdennis/json-everything/pull/285)
+
+[#284](https://github.com/gregsdennis/json-everything/issues/284) - Added optional `JsonSerializerOptions` parameter in `JsonSchema.FromFile()`, `.FromText()`, and `.FromStream()`.
+
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
 
 Updated all functionality to use `JsonNode` instead of `JsonElement`.
