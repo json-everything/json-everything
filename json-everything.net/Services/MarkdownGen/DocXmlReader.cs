@@ -106,7 +106,11 @@ public class DocXmlReader
 	private TypeComments GetComments(Type type, TypeComments comments, XPathNavigator? node)
 	{
 		if (node == null) return comments;
-		if (type.IsSubclassOf(typeof(Delegate))) comments.Parameters = GetParametersComments(node);
+		if (type.IsSubclassOf(typeof(Delegate)))
+		{
+			comments.Parameters = GetParametersComments(node);
+			comments.Returns = GetReturnsComment(node);
+		}
 		GetCommonComments(comments, node);
 		return comments;
 	}

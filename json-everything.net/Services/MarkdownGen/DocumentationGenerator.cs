@@ -52,7 +52,9 @@ public class DocumentationGenerator
 		return type.ToNameString(_typeLinkConverter) +
 		       (type.IsEnum ? " Enum" :
 			       type.IsValueType ? " Struct" :
-			       type.IsInterface ? " Interface" : " Class");
+			       type.IsInterface ? " Interface" :
+			       typeof(Delegate).IsAssignableFrom(type) ? " Delegate" :
+			       "Class");
 	}
 
 	private static (string? cref, string? innerText, string? beforeText, string? afterText) FindTagWithAttribute(
@@ -130,11 +132,6 @@ public class DocumentationGenerator
 			.Trim();
 	}
 
-	/// <summary>
-	///     Write markdown documentation for the enum type:
-	///     Examples, Remarks,
-	/// </summary>
-	/// <param name="enumType"></param>
 	private async Task WriteEnumDocumentation(Type enumType)
 	{
 		_writer.WriteH1(TypeTitle(enumType));
@@ -153,6 +150,44 @@ public class DocumentationGenerator
 			foreach (var prop in enumComments.ValueComments)
 				_writer.WriteTableRow(_writer.Bold(prop.Name),
 					ProcessTags(prop.Summary));
+		}
+	}
+
+	private async Task WriteDelegateDocumentation(TypeCollection.TypeInformation typeData)
+	{
+		_writer.WriteH1(TypeTitle(typeData.Type));
+		_writer.WriteLine(_writer.Bold("Namespace:") + " " + typeData.Type.Namespace);
+		WriteInheritance(typeData.Type);
+
+		var typeComments = await _reader.GetTypeComments(typeData.Type);
+		_writer.WriteLine(ProcessTags(typeComments.Summary));
+
+		_writer.WriteH4("Declaration");
+		var (code, methodInfo) = typeData.Type.GenerateDelegateCode(_typeLinkConverter);
+		_writer.WriteCodeBlock(code);
+
+		WriteH2Remarks(typeComments.Remarks);
+		WriteH2Example(typeComments.Example);
+
+		if (methodInfo == null) return;
+
+		if (typeComments.Parameters.Count > 0)
+		{
+			var parameters = methodInfo.GetParameters();
+			var i = 0;
+			_writer.WriteTableTitle("Parameter", "Type", "Description");
+			foreach (var (paramName, text) in typeComments.Parameters)
+				_writer.WriteTableRow(paramName,
+					parameters[i++].ToTypeNameString(_typeLinkConverter, true),
+					ProcessTags(text));
+		}
+
+		_writer.WriteLine();
+
+		if (methodInfo.ReturnType != typeof(void))
+		{
+			_writer.WriteH4("Returns");
+			_writer.WriteLine(ProcessTags(typeComments.Returns));
 		}
 	}
 
@@ -235,7 +270,7 @@ public class DocumentationGenerator
 					ProcessTags(text));
 		}
 
-		_writer.WriteLine("");
+		_writer.WriteLine();
 
 		if (methodInfo != null && methodInfo.ReturnType != typeof(void))
 		{
@@ -250,12 +285,11 @@ public class DocumentationGenerator
 	private async Task WriteDocumentationForType(TypeCollection.TypeInformation typeData)
 	{
 		if (typeData.Type.IsEnum)
-		{
 			await WriteEnumDocumentation(typeData.Type);
-			return;
-		}
-
-		await WriteClassDocumentation(typeData);
+		else if (typeof(Delegate).IsAssignableFrom(typeData.Type))
+			await WriteDelegateDocumentation(typeData);
+		else
+			await WriteClassDocumentation(typeData);
 	}
 
 	private void WriteInheritance(Type type)

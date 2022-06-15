@@ -13,6 +13,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
 		private const string _sealed = "sealed ";
 		private const string _virtual = "virtual ";
 		private const string _override = "override ";
+		private const string _delegate = "delegate ";
 
 		public static string GenerateCode(this MethodInfo method)
 		{
@@ -57,6 +58,23 @@ namespace JsonEverythingNet.Services.MarkdownGen
 			sb.Append(method.ToParametersString());
 
 			return sb.ToString();
+		}
+
+		public static (string, MethodInfo?) GenerateDelegateCode(this Type del, Func<Type, Queue<string?>?, string?> converter)
+		{
+			var sb = new StringBuilder();
+		
+			var methods = del.GetMethods();
+			var invoke = methods.FirstOrDefault(x => x.Name == nameof(MethodInfo.Invoke));
+			if (invoke != null)
+			{
+				var description = invoke.GenerateCode()
+					.Replace("virtual ", _delegate)
+					.Replace(nameof(MethodInfo.Invoke), del.ToNameString(converter));
+				sb.Append(description);
+			}
+
+			return (sb.ToString(), invoke);
 		}
 	}
 }

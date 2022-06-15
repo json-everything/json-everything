@@ -22,6 +22,7 @@ namespace Json.More;
 /// <example>
 /// The attribute can be applied to both the enum type itself:
 /// ```c#
+/// [JsonConverter(typeof(EnumStringConverter<MyEnum>))]
 /// public enum MyEnum {
 ///     Foo,
 ///     Bar
@@ -32,7 +33,7 @@ namespace Json.More;
 ///
 /// ```c#
 /// public class MyClass {
-///	    [JsonConverter(typeof(EnumStringConverter&lt;MyEnum&gt;))]
+///	    [JsonConverter(typeof(EnumStringConverter<MyEnum>))]
 ///	    public MyEnum Value { get; set; }
 /// }
 /// ```

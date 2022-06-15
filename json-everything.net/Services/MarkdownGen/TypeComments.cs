@@ -13,4 +13,9 @@ public class TypeComments : CommonComments
 	///     Item2 is the body of the comment
 	/// </summary>
 	public List<(string Name, string Text)> Parameters { get; set; } = new();
+
+	/// <summary>
+	///     "returns" comment of the method.
+	/// </summary>
+	public string? Returns { get; set; }
 }
