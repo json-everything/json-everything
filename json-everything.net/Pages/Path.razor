@@ -65,7 +65,7 @@
 </div>
 
 <div class="row my-4 mx-5">
-	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+	<RadzenPanelMenu class="col-3" Click="SetPagePath">
 		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/path")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-path")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-path")"/>
@@ -73,7 +73,7 @@
 			<ApiIndex AssemblyContaining="@typeof(JsonPath)"/>
 		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
-	<div class="col-10">
+	<div class="col-9">
 		<div class="ms-4">
 			<Docs @ref="_docs" Page="playground/path"/>
 		</div>

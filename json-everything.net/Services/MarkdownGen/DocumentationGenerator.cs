@@ -50,11 +50,11 @@ public class DocumentationGenerator
 	private string TypeTitle(Type type)
 	{
 		return type.ToNameString(_typeLinkConverter) +
-		       (type.IsEnum ? " Enum" :
-			       type.IsValueType ? " Struct" :
-			       type.IsInterface ? " Interface" :
-			       typeof(Delegate).IsAssignableFrom(type) ? " Delegate" :
-			       "Class");
+			   (type.IsEnum ? " Enum" :
+				   type.IsValueType ? " Struct" :
+				   type.IsInterface ? " Interface" :
+				   typeof(Delegate).IsAssignableFrom(type) ? " Delegate" :
+				   " Class");
 	}
 
 	private static (string? cref, string? innerText, string? beforeText, string? afterText) FindTagWithAttribute(
@@ -77,7 +77,7 @@ public class DocumentationGenerator
 
 	private string? ProcessTags(string? text)
 	{
-		for (;;)
+		for (; ; )
 		{
 			var (cref, _, beforeText, afterText) = FindTagWithAttribute(text, "seealso", "cref");
 			if (cref != null)
@@ -235,7 +235,7 @@ public class DocumentationGenerator
 		{
 			_writer.WriteH2("Constructors");
 			foreach (var (info, comments) in allConstructors
-				         .OrderBy(m => m.Info.GetParameters().Length))
+						 .OrderBy(m => m.Info.GetParameters().Length))
 				WriteMethodDetails(typeData.Type.ToNameString(_typeLinkConverter), info, comments);
 		}
 
@@ -243,8 +243,8 @@ public class DocumentationGenerator
 		{
 			_writer.WriteH2("Methods");
 			foreach (var (info, comments) in allMethods
-				         .OrderBy(m => m.Info.Name)
-				         .ThenBy(m => m.Info.GetParameters().Length))
+						 .OrderBy(m => m.Info.Name)
+						 .ThenBy(m => m.Info.GetParameters().Length))
 				WriteMethodDetails(info.Name, info, comments);
 		}
 	}
