@@ -13,7 +13,7 @@ public class PredicateFormat : Format
 	/// </summary>
 	/// <param name="element">The element to validate.</param>
 	/// <param name="errorMessage">An error message.</param>
-	/// <returns><code>true</code>.  Override to return another value.</returns>
+	/// <returns>`true`.  Override to return another value.</returns>
 	public delegate bool PredicateWithErrorMessage(JsonNode? element, out string? errorMessage);
 
 	private readonly Func<JsonNode?, bool>? _predicate;
@@ -46,7 +46,7 @@ public class PredicateFormat : Format
 	/// </summary>
 	/// <param name="element">The element to validate.</param>
 	/// <param name="errorMessage"></param>
-	/// <returns><code>true</code>.  Override to return another value.</returns>
+	/// <returns>`true`.  Override to return another value.</returns>
 	public override bool Validate(JsonNode? element, out string? errorMessage)
 	{
 		if (_predicateWithErrorMessage != null)

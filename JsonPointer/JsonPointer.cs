@@ -119,7 +119,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <param name="source">The source string.</param>
 	/// <param name="pointer">The resulting pointer.</param>
 	/// <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="JsonPointerKind.Unspecified"/> (default) allows both.</param>
-	/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 	public static bool TryParse(string source, out JsonPointer? pointer, JsonPointerKind pointerKind = JsonPointerKind.Unspecified)
 	{
@@ -463,7 +463,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <param name="left">A JSON Pointer.</param>
 	/// <param name="right">A JSON Pointer.</param>
-	/// <returns><code>true</code> if the pointers are equal; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the pointers are equal; `false` otherwise.</returns>
 	public static bool operator ==(JsonPointer? left, JsonPointer? right)
 	{
 		return Equals(left, right);
@@ -474,7 +474,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <param name="left">A JSON Pointer.</param>
 	/// <param name="right">A JSON Pointer.</param>
-	/// <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
+	/// <returns>`false` if the pointers are equal; `true` otherwise.</returns>
 	public static bool operator !=(JsonPointer? left, JsonPointer? right)
 	{
 		return !Equals(left, right);

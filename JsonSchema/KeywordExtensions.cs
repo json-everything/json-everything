@@ -112,7 +112,7 @@ public static class KeywordExtensions
 	/// Gets whether the keyword is an applicator (carries the <see cref="ApplicatorAttribute"/> attribute).
 	/// </summary>
 	/// <param name="keyword">The keyword.</param>
-	/// <returns><code>true</code> if the keyword is an applicator; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the keyword is an applicator; `false` otherwise.</returns>
 	public static bool IsApplicator(this IJsonSchemaKeyword keyword)
 	{
 		return keyword.GetType().GetCustomAttribute<ApplicatorAttribute>() != null;

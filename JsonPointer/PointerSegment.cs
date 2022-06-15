@@ -49,7 +49,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <param name="source">The source string.</param>
 	/// <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
 	/// <param name="segment">The resulting segments.</param>
-	/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	public static bool TryParse(string? source, bool uriFormatted, out PointerSegment? segment)
 	{
 		if (source == null)
@@ -207,7 +207,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// </summary>
 	/// <param name="left">A JSON Pointer.</param>
 	/// <param name="right">A JSON Pointer.</param>
-	/// <returns><code>true</code> if the pointers are equal; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the pointers are equal; `false` otherwise.</returns>
 	public static bool operator ==(PointerSegment left, PointerSegment right)
 	{
 		return left.Equals(right);
@@ -218,7 +218,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// </summary>
 	/// <param name="left">A JSON Pointer.</param>
 	/// <param name="right">A JSON Pointer.</param>
-	/// <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
+	/// <returns>`false` if the pointers are equal; `true` otherwise.</returns>
 	public static bool operator !=(PointerSegment left, PointerSegment right)
 	{
 		return !left.Equals(right);

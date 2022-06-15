@@ -29,7 +29,7 @@ public class RegexFormat : Format
 	/// </summary>
 	/// <param name="node">The node to validate.</param>
 	/// <param name="errorMessage">An error message.</param>
-	/// <returns><code>true</code> if the value is a match for the regular expression; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the value is a match for the regular expression; `false` otherwise.</returns>
 	public override bool Validate(JsonNode? node, out string? errorMessage)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String)

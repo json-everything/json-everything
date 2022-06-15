@@ -20,7 +20,7 @@ public sealed class UnknownFormat : Format
 	/// </summary>
 	/// <param name="node">The node to validate.</param>
 	/// <param name="errorMessage">An error message.</param>
-	/// <returns><code>true</code>.  Override to return another value.</returns>
+	/// <returns>`true`.  Override to return another value.</returns>
 	public override bool Validate(JsonNode? node, out string? errorMessage)
 	{
 		errorMessage = null;

@@ -142,7 +142,7 @@ public class RelativeJsonPointer
 	/// </summary>
 	/// <param name="source">The source string.</param>
 	/// <param name="relativePointer">The resulting relative pointer.</param>
-	/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 	public static bool TryParse(string source, out RelativeJsonPointer? relativePointer)
 	{

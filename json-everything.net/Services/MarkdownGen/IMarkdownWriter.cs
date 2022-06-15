@@ -19,6 +19,7 @@ public interface IMarkdownWriter
 	void WriteHeadingLink(string text);
 	void WriteAnchor(string anchorName);
 	void WriteHorizontalRule();
+	void WriteListItem(string text);
 	string Bold(string text);
 	string Link(string anchorName, string? text);
 	string HeadingLink(string anchorName, string? text = null);

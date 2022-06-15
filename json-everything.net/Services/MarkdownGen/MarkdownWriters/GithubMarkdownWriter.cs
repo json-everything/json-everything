@@ -65,6 +65,11 @@ public class GithubMarkdownWriter : IMarkdownWriter
 		WriteLine("---");
 	}
 
+	public void WriteListItem(string text)
+	{
+		WriteLine("- " + EscapeSpecialChars(text));
+	}
+
 	#endregion
 
 	#region Tables

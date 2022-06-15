@@ -16,7 +16,7 @@ public static class EnumerableExtensions
 	/// <param name="collection">The first collection.</param>
 	/// <param name="other">The second collection.</param>
 	/// <typeparam name="T">The element type.</typeparam>
-	/// <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the collections contain the same number of the same elements; `false` otherwise.</returns>
 	public static bool ContentsEqual<T>(this IReadOnlyList<T>? collection, IReadOnlyList<T>? other)
 	{
 		if (collection == null && other == null) return true;
@@ -43,7 +43,7 @@ public static class EnumerableExtensions
 	/// <param name="other">The second collection.</param>
 	/// <param name="comparer">A custom equality comparer.</param>
 	/// <typeparam name="T">The element type.</typeparam>
-	/// <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the collections contain the same number of the same elements; `false` otherwise.</returns>
 	public static bool ContentsEqual<T>(this IReadOnlyList<T>? collection, IReadOnlyList<T>? other, IEqualityComparer<T> comparer)
 	{
 		if (collection == null && other == null) return true;

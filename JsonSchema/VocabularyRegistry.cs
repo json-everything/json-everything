@@ -52,8 +52,8 @@ public class VocabularyRegistry
 	/// </summary>
 	/// <param name="vocabularyId">The URI ID.</param>
 	/// <returns>
-	/// <code>true</code>, if registered in either this or the global registry;
-	/// <code>false</code> otherwise.
+	/// `true`, if registered in either this or the global registry;
+	/// `false` otherwise.
 	/// </returns>
 	public bool IsKnown(Uri vocabularyId)
 	{

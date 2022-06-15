@@ -11,17 +11,13 @@ public class DocumentationGenerator
 	private static readonly string _multilineCode = "```" + Environment.NewLine;
 	private readonly Func<Type, Queue<string?>?, string?> _typeLinkConverter;
 
-	private readonly OrderedTypeList _typeList;
-
 	private DocumentationGenerator(
 		IMarkdownWriter writer,
-		OrderedTypeList typeList,
 		Func<Assembly, string> getXmlCommentsFileName,
 		HttpClient client)
 	{
 		_reader = new DocXmlReader(getXmlCommentsFileName, client);
 		_writer = writer;
-		_typeList = typeList;
 
 		_typeLinkConverter = (type, _) => TypeNameWithLinks(type);
 	}
@@ -41,24 +37,22 @@ public class DocumentationGenerator
 		}
 
 		var typeList = new OrderedTypeList(type);
-		var generator = new DocumentationGenerator(markdownWriter, typeList, GetXmlCommentsFileName, client);
+		var generator = new DocumentationGenerator(markdownWriter, GetXmlCommentsFileName, client);
 		var typeInfo = typeList.TypesToDocument.First(x => x.Type == type);
 		await generator.WriteDocumentationForType(typeInfo);
 	}
 
-	private string? TypeNameWithLinks(Type type)
+	private static string? TypeNameWithLinks(Type type)
 	{
-		//if (_typeList.TypesToDocumentSet.Contains(type))
-		//	return type.IsGenericTypeDefinition
-		//		? _writer.HeadingLink(TypeTitle(type), type.Name.CleanGenericTypeName())
-		//		: _writer.HeadingLink(TypeTitle(type), type.ToNameString());
-		if (type.IsGenericTypeDefinition) return $"{type.Name.CleanGenericTypeName()}";
-		return null;
+		return type.IsGenericTypeDefinition ? $"{type.Name.CleanGenericTypeName()}" : null;
 	}
 
 	private static string TypeTitle(Type type)
 	{
-		return type.ToNameString() + (type.IsEnum ? " Enum" : type.IsValueType ? " Struct" : " Class");
+		return type.ToNameString() +
+		       (type.IsEnum ? " Enum" :
+			       type.IsValueType ? " Struct" :
+			       type.IsInterface ? " Interface" : " Class");
 	}
 
 	private static (string? cref, string? innerText, string? beforeText, string? afterText) FindTagWithAttribute(
@@ -166,6 +160,7 @@ public class DocumentationGenerator
 	{
 		_writer.WriteH1(TypeTitle(typeData.Type));
 		_writer.WriteLine("Namespace: " + typeData.Type.Namespace);
+		WriteInheritance(typeData.Type);
 
 		if (typeData.Type.BaseType != null &&
 		    typeData.Type.BaseType != typeof(object) &&
@@ -260,6 +255,26 @@ public class DocumentationGenerator
 		}
 
 		await WriteClassDocumentation(typeData);
+	}
+
+	private void WriteInheritance(Type type)
+	{
+		var current = type;
+		_writer.Write("Inheritance: ");
+		while (current != null)
+		{
+			_writer.Write(current.ToNameString());
+			current = current.BaseType;
+			if (current != null)
+				_writer.Write(" 🡒 ");
+		}
+
+		_writer.WriteLine(null);
+		_writer.WriteLine("Implemented interfaces:");
+		foreach (var intf in type.GetInterfaces())
+		{
+			_writer.WriteListItem(intf.ToNameString());
+		}
 	}
 
 	private void WriteExample(string? example)

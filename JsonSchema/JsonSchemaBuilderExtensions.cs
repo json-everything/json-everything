@@ -802,7 +802,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="value">The value.</param>
 	/// <returns>The builder.</returns>
 	/// <remarks>
-	/// Per Draft 2019-09, the value must always be <code>true</code>.  This is implied for this method.
+	/// Per Draft 2019-09, the value must always be `true`.  This is implied for this method.
 	/// </remarks>
 	public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder, bool value = true)
 	{

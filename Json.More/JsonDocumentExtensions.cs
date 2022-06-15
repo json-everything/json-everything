@@ -12,7 +12,7 @@ public static class JsonDocumentExtensions
 	/// </summary>
 	/// <param name="a">The first document.</param>
 	/// <param name="b">The second document.</param>
-	/// <returns><code>true</code> if the documents are equivalent; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the documents are equivalent; `false` otherwise.</returns>
 	public static bool IsEquivalentTo(this JsonDocument a, JsonDocument b)
 	{
 		return a.RootElement.IsEquivalentTo(b.RootElement);

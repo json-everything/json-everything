@@ -16,7 +16,7 @@ public static class JsonNodeExtensions
 	/// </summary>
 	/// <param name="a">The first element.</param>
 	/// <param name="b">The second element.</param>
-	/// <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
 	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
 		switch (a, b)

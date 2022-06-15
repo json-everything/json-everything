@@ -11,7 +11,7 @@ public static class CharExtensions
 	/// Determines if the char represents a hexadecimal value.
 	/// </summary>
 	/// <param name="c">A <see cref="char"/>.</param>
-	/// <returns><code>true</code> if the character is in the ranges <code>0-9</code>, <code>a-z</code>, or <code>A-Z</code>; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the character is in the ranges `0-9`, `a-z`, or `A-Z`; `false` otherwise.</returns>
 	public static bool IsHexadecimal(this char c)
 	{
 		return c is
@@ -24,7 +24,7 @@ public static class CharExtensions
 	/// Translates the character to its hexadecimal numeric value.
 	/// </summary>
 	/// <param name="c">A <see cref="char"/>.</param>
-	/// <returns>0-9 for <code>0-9</code>; 11-15 for <code>a-f</code> and <code>A-F</code>.</returns>
+	/// <returns>0-9 for `0-9`; 11-15 for `a-f` and `A-F`.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"><paramref name="c"/> is not a valid hexadecimal character.</exception>
 	public static int GetHexadecimalValue(this char c)
 	{

@@ -65,7 +65,7 @@ public readonly struct Duration
 	/// </summary>
 	/// <param name="source">The source string.</param>
 	/// <param name="duration">The resulting duration.</param>
-	/// <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	public static bool TryParse(string source, out Duration duration)
 	{
 		duration = default;

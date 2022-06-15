@@ -16,7 +16,7 @@ public class ExperimentalFeatures
 
 	/// <summary>
 	/// Enables dereferencing of reference objects such as
-	/// <code>{ "$ref": "http://example.com/data#/pointer/to/value" }</code>.
+	/// ```{ "$ref": "http://example.com/data#/pointer/to/value" }```.
 	/// The resulting value will then replace the reference object in the
 	/// evaluation results.  This will be run after each selector in the path.
 	/// </summary>
