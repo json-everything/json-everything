@@ -87,7 +87,7 @@
             </summary>
             <param name="a">The first document.</param>
             <param name="b">The second document.</param>
-            <returns><code>true</code> if the documents are equivalent; <code>false</code> otherwise.</returns>
+            <returns>`true` if the documents are equivalent; `false` otherwise.</returns>
         </member>
         <member name="M:Json.More.JsonDocumentExtensions.ToJsonDocument``1(``0,System.Text.Json.JsonSerializerOptions)">
             <summary>
@@ -137,7 +137,7 @@
             </summary>
             <param name="a">The first element.</param>
             <param name="b">The second element.</param>
-            <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
+            <returns>`true` if the element are equivalent; `false` otherwise.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">The <see cref="P:System.Text.Json.JsonElement.ValueKind"/> is not valid.</exception>
         </member>
         <member name="M:Json.More.JsonElementExtensions.GetEquivalenceHashCode(System.Text.Json.JsonElement,System.Int32)">
@@ -354,7 +354,7 @@
             </summary>
             <param name="a">The first element.</param>
             <param name="b">The second element.</param>
-            <returns><code>true</code> if the element are equivalent; <code>false</code> otherwise.</returns>
+            <returns>`true` if the element are equivalent; `false` otherwise.</returns>
         </member>
         <member name="M:Json.More.JsonNodeExtensions.GetEquivalenceHashCode(System.Text.Json.Nodes.JsonNode,System.Int32)">
              <summary>

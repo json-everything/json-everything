@@ -1237,7 +1237,7 @@
             </summary>
             <param name="source">The source string.</param>
             <param name="duration">The resulting duration.</param>
-            <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+            <returns>`true` if the parse was successful; `false` otherwise.</returns>
         </member>
         <member name="T:Json.Schema.DynamicAnchorKeyword">
             <summary>
@@ -1359,7 +1359,7 @@
             <param name="collection">The first collection.</param>
             <param name="other">The second collection.</param>
             <typeparam name="T">The element type.</typeparam>
-            <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+            <returns>`true` if the collections contain the same number of the same elements; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Schema.EnumerableExtensions.ContentsEqual``1(System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IReadOnlyList{``0},System.Collections.Generic.IEqualityComparer{``0})">
             <summary>
@@ -1369,7 +1369,7 @@
             <param name="other">The second collection.</param>
             <param name="comparer">A custom equality comparer.</param>
             <typeparam name="T">The element type.</typeparam>
-            <returns><code>true</code> if the collections contain the same number of the same elements; <code>false</code> otherwise.</returns>
+            <returns>`true` if the collections contain the same number of the same elements; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Schema.EnumerableExtensions.GetStringDictionaryHashCode``1(System.Collections.Generic.IDictionary{System.String,``0})">
             <summary>
@@ -1585,7 +1585,7 @@
             </summary>
             <param name="node">The node to validate.</param>
             <param name="errorMessage">An error message.</param>
-            <returns><code>true</code>.  Override to return another value.</returns>
+            <returns>`true`.  Override to return another value.</returns>
         </member>
         <member name="T:Json.Schema.FormatKeyword">
             <summary>
@@ -2644,7 +2644,7 @@
             <param name="value">The value.</param>
             <returns>The builder.</returns>
             <remarks>
-            Per Draft 2019-09, the value must always be <code>true</code>.  This is implied for this method.
+            Per Draft 2019-09, the value must always be `true`.  This is implied for this method.
             </remarks>
         </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.RecursiveRef(Json.Schema.JsonSchemaBuilder,System.Uri)">
@@ -2892,7 +2892,7 @@
             Gets whether the keyword is an applicator (carries the <see cref="T:Json.Schema.ApplicatorAttribute"/> attribute).
             </summary>
             <param name="keyword">The keyword.</param>
-            <returns><code>true</code> if the keyword is an applicator; <code>false</code> otherwise.</returns>
+            <returns>`true` if the keyword is an applicator; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Schema.KeywordExtensions.GetSubschemas(Json.Schema.IJsonSchemaKeyword)">
             <summary>
@@ -3739,7 +3739,7 @@
             </summary>
             <param name="element">The element to validate.</param>
             <param name="errorMessage">An error message.</param>
-            <returns><code>true</code>.  Override to return another value.</returns>
+            <returns>`true`.  Override to return another value.</returns>
         </member>
         <member name="M:Json.Schema.PredicateFormat.#ctor(System.String,System.Func{System.Text.Json.Nodes.JsonNode,System.Boolean})">
             <summary>
@@ -3761,7 +3761,7 @@
             </summary>
             <param name="element">The element to validate.</param>
             <param name="errorMessage"></param>
-            <returns><code>true</code>.  Override to return another value.</returns>
+            <returns>`true`.  Override to return another value.</returns>
         </member>
         <member name="T:Json.Schema.PrefixItemsKeyword">
             <summary>
@@ -4043,7 +4043,7 @@
             </summary>
             <param name="node">The node to validate.</param>
             <param name="errorMessage">An error message.</param>
-            <returns><code>true</code> if the value is a match for the regular expression; <code>false</code> otherwise.</returns>
+            <returns>`true` if the value is a match for the regular expression; `false` otherwise.</returns>
         </member>
         <member name="T:Json.Schema.RequiredKeyword">
             <summary>
@@ -4545,7 +4545,7 @@
             </summary>
             <param name="node">The node to validate.</param>
             <param name="errorMessage">An error message.</param>
-            <returns><code>true</code>.  Override to return another value.</returns>
+            <returns>`true`.  Override to return another value.</returns>
         </member>
         <member name="T:Json.Schema.UnrecognizedKeyword">
             <summary>
@@ -5147,8 +5147,8 @@
             </summary>
             <param name="vocabularyId">The URI ID.</param>
             <returns>
-            <code>true</code>, if registered in either this or the global registry;
-            <code>false</code> otherwise.
+            `true`, if registered in either this or the global registry;
+            `false` otherwise.
             </returns>
         </member>
         <member name="M:Json.Schema.VocabularyRegistry.Get(System.Uri)">

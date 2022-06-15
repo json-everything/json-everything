@@ -14,14 +14,14 @@
             Determines if the char represents a hexadecimal value.
             </summary>
             <param name="c">A <see cref="T:System.Char"/>.</param>
-            <returns><code>true</code> if the character is in the ranges <code>0-9</code>, <code>a-z</code>, or <code>A-Z</code>; <code>false</code> otherwise.</returns>
+            <returns>`true` if the character is in the ranges `0-9`, `a-z`, or `A-Z`; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Pointer.CharExtensions.GetHexadecimalValue(System.Char)">
             <summary>
             Translates the character to its hexadecimal numeric value.
             </summary>
             <param name="c">A <see cref="T:System.Char"/>.</param>
-            <returns>0-9 for <code>0-9</code>; 11-15 for <code>a-f</code> and <code>A-F</code>.</returns>
+            <returns>0-9 for `0-9`; 11-15 for `a-f` and `A-F`.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="c"/> is not a valid hexadecimal character.</exception>
         </member>
         <member name="T:Json.Pointer.EnumerableExtensions">
@@ -90,7 +90,7 @@
             <param name="source">The source string.</param>
             <param name="pointer">The resulting pointer.</param>
             <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="F:Json.Pointer.JsonPointerKind.Unspecified"/> (default) allows both.</param>
-            <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+            <returns>`true` if the parse was successful; `false` otherwise.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
         </member>
         <member name="M:Json.Pointer.JsonPointer.Create(Json.Pointer.PointerSegment[])">
@@ -174,7 +174,7 @@
             </summary>
             <param name="left">A JSON Pointer.</param>
             <param name="right">A JSON Pointer.</param>
-            <returns><code>true</code> if the pointers are equal; <code>false</code> otherwise.</returns>
+            <returns>`true` if the pointers are equal; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Pointer.JsonPointer.op_Inequality(Json.Pointer.JsonPointer,Json.Pointer.JsonPointer)">
             <summary>
@@ -182,7 +182,7 @@
             </summary>
             <param name="left">A JSON Pointer.</param>
             <param name="right">A JSON Pointer.</param>
-            <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
+            <returns>`false` if the pointers are equal; `true` otherwise.</returns>
         </member>
         <member name="T:Json.Pointer.JsonPointerKind">
             <summary>
@@ -259,7 +259,7 @@
             <param name="source">The source string.</param>
             <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
             <param name="segment">The resulting segments.</param>
-            <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+            <returns>`true` if the parse was successful; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Pointer.PointerSegment.Create(System.String,System.Boolean)">
             <summary>
@@ -289,7 +289,7 @@
             </summary>
             <param name="left">A JSON Pointer.</param>
             <param name="right">A JSON Pointer.</param>
-            <returns><code>true</code> if the pointers are equal; <code>false</code> otherwise.</returns>
+            <returns>`true` if the pointers are equal; `false` otherwise.</returns>
         </member>
         <member name="M:Json.Pointer.PointerSegment.op_Inequality(Json.Pointer.PointerSegment,Json.Pointer.PointerSegment)">
             <summary>
@@ -297,7 +297,7 @@
             </summary>
             <param name="left">A JSON Pointer.</param>
             <param name="right">A JSON Pointer.</param>
-            <returns><code>false</code> if the pointers are equal; <code>true</code> otherwise.</returns>
+            <returns>`false` if the pointers are equal; `true` otherwise.</returns>
         </member>
         <member name="M:Json.Pointer.PointerSegment.op_Implicit(System.UInt32)~Json.Pointer.PointerSegment">
             <summary>
@@ -390,7 +390,7 @@
             </summary>
             <param name="source">The source string.</param>
             <param name="relativePointer">The resulting relative pointer.</param>
-            <returns><code>true</code> if the parse was successful; <code>false</code> otherwise.</returns>
+            <returns>`true` if the parse was successful; `false` otherwise.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
         </member>
         <member name="M:Json.Pointer.RelativeJsonPointer.TryEvaluate(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode@)">

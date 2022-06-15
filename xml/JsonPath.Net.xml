@@ -15,7 +15,7 @@
         <member name="P:Json.Path.ExperimentalFeatures.ProcessDataReferences">
             <summary>
             Enables dereferencing of reference objects such as
-            <code>{ "$ref": "http://example.com/data#/pointer/to/value" }</code>.
+            ```{ "$ref": "http://example.com/data#/pointer/to/value" }```.
             The resulting value will then replace the reference object in the
             evaluation results.  This will be run after each selector in the path.
             </summary>
@@ -45,7 +45,7 @@
             </summary>
             <param name="source">The source string.</param>
             <param name="path">The resulting path.</param>
-            <returns><code>true</code> if successful; otherwise <code>false</code>.</returns>
+            <returns>`true` if successful; otherwise `false`.</returns>
         </member>
         <member name="M:Json.Path.JsonPath.Evaluate(System.Text.Json.JsonElement,Json.Path.PathEvaluationOptions)">
             <summary>
