@@ -1,3 +1,7 @@
+# 2.2.1 (no PR)
+
+[#288](https://github.com/gregsdennis/json-everything/pull/288) - Just bumping version to allow dependent packages to pick up the latest Json.More.Net by default, which is transitively pull via this package.
+
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/243)
 
 Updated System.Text.Json to version 6 in order to add `JsonNode` support.
