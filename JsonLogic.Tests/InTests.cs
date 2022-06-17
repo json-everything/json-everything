@@ -79,7 +79,7 @@ public class InTests
 	{
 		var rule = new InRule(1, JsonNode.Parse("{}"));
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 
 	[Test]
@@ -87,7 +87,7 @@ public class InTests
 	{
 		var rule = new InRule(1, LiteralRule.Null);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 
 	[Test]
@@ -95,7 +95,7 @@ public class InTests
 	{
 		var rule = new InRule(1, false);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 
 	[Test]
@@ -103,6 +103,6 @@ public class InTests
 	{
 		var rule = new InRule(1, 4);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 }

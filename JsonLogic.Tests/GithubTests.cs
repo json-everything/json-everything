@@ -103,4 +103,13 @@ public class GithubTests
 
 		JsonAssert.IsTrue(rule.Apply(data));
 	}
+
+	[Test]
+	public void Issue286_InShouldReturnFalseForNonArray()
+	{
+		var rule = JsonSerializer.Deserialize<Rule>("{ \"in\" : [ {\"var\": \"item\"}, {\"var\": \"list\"} ] }");
+		var result = rule.Apply(new JsonObject { ["some_item"] = 123 });
+
+		JsonAssert.IsFalse(result);
+	}
 }

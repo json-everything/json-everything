@@ -34,6 +34,6 @@ internal class InRule : Rule
 		if (source is JsonArray arr)
 			return arr.Any(i => i.IsEquivalentTo(test));
 
-		throw new JsonLogicException($"Cannot apply `in` to {test.JsonType()} and {source.JsonType()}.");
+		return false;
 	}
 }
