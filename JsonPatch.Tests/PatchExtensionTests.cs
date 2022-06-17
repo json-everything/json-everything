@@ -227,10 +227,10 @@ public class PatchExtensionTests
 			"{\"op\":\"replace\",\"path\":\"/InnerObjects/0/Id\",\"value\":\"bed584b0-7ccc-4336-adba-d0d7f7c3c3f2\"}," +
 			"{\"op\":\"replace\",\"path\":\"/InnerObjects/0/Numbers/0\",\"value\":1}," +
 			"{\"op\":\"add\",\"path\":\"/InnerObjects/0/Strings/2\",\"value\":\"test5\"}," +
-			"{\"op\":\"remove\",\"path\":\"/Attributes/0/test\"}," +
-			"{\"op\":\"add\",\"path\":\"/Attributes/0/test1\",\"value\":\"test123\"}," +
+			"{\"op\":\"remove\",\"path\":\"/Attributes/4\"}," +
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":1}," +
-			"{\"op\":\"remove\",\"path\":\"/Attributes/4\"}]";
+			"{\"op\":\"remove\",\"path\":\"/Attributes/0/test\"}," +
+			"{\"op\":\"add\",\"path\":\"/Attributes/0/test1\",\"value\":\"test123\"}]";
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
 
 		var patchBackExpectedStr =
@@ -251,6 +251,62 @@ public class PatchExtensionTests
 
 		VerifyPatches(patchExpected!, patch);
 		VerifyPatches(patchBackExpected!, patchBack);
+	}
+
+	[Test]
+	public void CreatePatch_ClearArray()
+	{
+		var model = new TestModel
+		{
+			Numbers = new int[] { 1, 2, 1 },
+			Strings = new string[] { "asdf " },
+			InnerObjects = new List<TestModel> { new TestModel { Id = Guid.NewGuid() }, new TestModel { Id = Guid.NewGuid() } }
+		};
+		var model2 = new TestModel
+		{
+			Numbers = Array.Empty<int>(),
+			Strings = Array.Empty<string>(),
+			InnerObjects = new List<TestModel>()
+		};
+
+		var patch = model.CreatePatch(model2);
+
+		var final = patch.Apply(model);
+
+		Assert.AreEqual(0, final.Numbers.Length);
+		Assert.AreEqual(0, final.Strings.Length);
+		Assert.AreEqual(0, final.InnerObjects.Count);
+	}
+
+	[Test]
+	public void CreatePatch_RemoveArrayItem()
+	{
+		var model = new TestModel
+		{
+			Numbers = new int[] { 1, 2, 3 },
+			Strings = new string[] { "123", "asdf" },
+			InnerObjects = new List<TestModel> { new TestModel { Id = Guid.NewGuid() }, new TestModel { Id = Guid.NewGuid() } }
+		};
+		var model2 = new
+		{
+			Numbers = new int[] { 1, 3 },
+			Strings = new string[] { "asdf" },
+			InnerObjects = new List<TestModel> { model.InnerObjects[1] }
+		};
+
+		var patch = model.CreatePatch(model2);
+
+		var final = patch.Apply(model);
+
+		Assert.AreEqual(2, final.Numbers.Length);
+		Assert.AreEqual(1, final.Numbers[0]);
+		Assert.AreEqual(3, final.Numbers[1]);
+
+		Assert.AreEqual(1, final.Strings.Length);
+		Assert.AreEqual("asdf", final.Strings[0]);
+
+		Assert.AreEqual(1, final.InnerObjects.Count);
+		Assert.AreEqual(model.InnerObjects[1].Id, final.InnerObjects[0].Id);
 	}
 
 	private static void OutputPatch(JsonPatch patch)
