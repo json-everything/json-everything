@@ -1,6 +1,6 @@
 # 1.0.1 (no PR)
 
-[#288](https://github.com/gregsdennis/json-everything/pull/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
+[#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
 
 # [1.0.0](https://github.com/gregsdennis/json-everything/pull/280)
 
