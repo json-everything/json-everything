@@ -107,21 +107,41 @@ public static class PatchExtensions
 
 	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
 	{
-		for (int i = 0; i < Math.Max(original.Count, target.Count); i++)
+		if (target.Count >= original.Count)
 		{
-			var ui = (uint)i;
-			if (i >= original.Count)
+			for (int i = 0; i < target.Count; i++)
 			{
-				patch.Add(PatchOperation.Add(path.Combine(ui), target[i]));
-				continue;
-			}
+				var ui = (uint)i;
+				if (i >= original.Count)
+				{
+					patch.Add(PatchOperation.Add(path.Combine(ui), target[i]));
+					continue;
+				}
 
-			if (i >= target.Count)
+				PatchForArrayIndex(i, ui);
+			}
+		}
+		else if (target.Count == 0)
+		{
+			patch.Add(PatchOperation.Replace(path, target));
+		}
+		else
+		{
+			int i = original.Count;
+			while (--i >= 0)
 			{
-				patch.Add(PatchOperation.Remove(path.Combine(ui)));
-				continue;
+				var ui = (uint)i;
+				if (i >= target.Count)
+				{
+					patch.Add(PatchOperation.Remove(path.Combine(ui)));
+					continue;
+				}
+				PatchForArrayIndex(i, ui);
 			}
+		}
 
+		void PatchForArrayIndex(int i, uint ui)
+		{
 			var origValue = original[i];
 			var modValue = target[i];
 
