@@ -2,10 +2,10 @@
 
 [#286](https://github.com/gregsdennis/json-everything/pull/286) - `in` operation throws exception when second arg is not array.  Original implementation returns false.
 
-[#288](https://github.com/gregsdennis/json-everything/pull/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
+[#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
 
 
-# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+# [3.0.0](https://github.com/gregsdennis/json-everything/issues/280)
 
 Updated all functionality to use `JsonNode` instead of `JsonElement`.
 
