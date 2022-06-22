@@ -48,3 +48,7 @@ Currently supported:
 - [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)
 - [JSON Patch (RFC 6902)](https://tools.ietf.org/html/rfc6902)
 - [JsonLogic](https://jsonlogic.com) (.Net Standard 2.1)
+
+Please see [json-everything.net](https://json-everything.net) for both documentation and an online playground where you can experiment with these packages.
+
+***DISCLAIMER** My library, `JsonSchema.Net` is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
