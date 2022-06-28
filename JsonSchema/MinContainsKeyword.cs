@@ -107,11 +107,15 @@ internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeywor
 	public override MinContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.Number)
-			throw new JsonException("Expected number");
+			throw new JsonException("Expected a number");
 
-		var number = reader.GetUInt32();
+		var number = reader.GetDecimal();
+		if (number != Math.Floor(number))
+			throw new JsonException("Expected an integer");
+		if (number < 0)
+			throw new JsonException("Expected a positive integer");
 
-		return new MinContainsKeyword(number);
+		return new MinContainsKeyword((uint)number);
 	}
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
