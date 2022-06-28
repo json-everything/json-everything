@@ -88,11 +88,15 @@ internal class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>
 	public override MaxItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.Number)
-			throw new JsonException("Expected number");
+			throw new JsonException("Expected a number");
 
-		var number = reader.GetUInt32();
+		var number = reader.GetDecimal();
+		if (number != Math.Floor(number))
+			throw new JsonException("Expected an integer");
+		if (number < 0)
+			throw new JsonException("Expected a positive integer");
 
-		return new MaxItemsKeyword(number);
+		return new MaxItemsKeyword((uint)number);
 	}
 	public override void Write(Utf8JsonWriter writer, MaxItemsKeyword value, JsonSerializerOptions options)
 	{
