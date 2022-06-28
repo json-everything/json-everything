@@ -1,3 +1,7 @@
+# [3.1.2](https://github.com/gregsdennis/json-everything/pull/294)
+
+Updated `min*`/`max*` keywords to accept numbers with decimals as long as they still represent non-negative integer values, e.g. `1.0`.
+
 # 3.1.1 (no PR)
 
 [#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
