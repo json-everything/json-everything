@@ -75,7 +75,6 @@
 
 <div class="row my-4 mx-5">
 	<RadzenPanelMenu class="col-3" Click="SetPagePath">
-		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/patch")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-patch")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-patch")"/>
 		<RadzenPanelMenuItem Text="API Reference (work in progress" Icon="format_list_numbered" Expanded="true">
@@ -84,7 +83,7 @@
 	</RadzenPanelMenu>
 	<div class="col-9">
 		<div class="ms-4">
-			<Docs @ref="_docs" Page="playground/patch"/>
+			<Docs @ref="_docs" Page="json-patch"/>
 		</div>
 	</div>
 </div>
