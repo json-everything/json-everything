@@ -15,16 +15,12 @@ namespace JsonEverythingNet.Services
 			await Task.WhenAll(
 				RegisterAnchors(client, "json-more"),
 
-				RegisterAnchors(client, "playground/patch"),
 				RegisterAnchors(client, "json-patch"),
 
-				RegisterAnchors(client, "playground/path"),
 				RegisterAnchors(client, "json-path"),
 
-				RegisterAnchors(client, "playground/pointer"),
 				RegisterAnchors(client, "json-pointer"),
 
-				RegisterAnchors(client, "playground/logic"),
 				RegisterAnchors(client, "json-logic"),
 
 				RegisterAnchors(client, "playground/schema"),
@@ -39,25 +35,32 @@ namespace JsonEverythingNet.Services
 
 		private static async Task RegisterAnchors(HttpClient client, string page)
 		{
-			var markdown = await client.GetStringAsync($"/md/{page}.md");
-			var pipeline = new MarkdownPipelineBuilder()
-				.UseAdvancedExtensions()
-				.UseSyntaxHighlighting()
-				.Build();
-			var html = Markdown.ToHtml(markdown, pipeline);
-
-			var matches = RegexPatterns.HeaderPattern.Matches(html);
-			var first = true;
-
-			foreach (Match match in matches)
+			try
 			{
-				var href = match.Groups[2].Value;
+				var markdown = await client.GetStringAsync($"/md/{page}.md");
+				var pipeline = new MarkdownPipelineBuilder()
+					.UseAdvancedExtensions()
+					.UseSyntaxHighlighting()
+					.Build();
+				var html = Markdown.ToHtml(markdown, pipeline);
 
-				_registry[href] = page;
-				if (!first) continue;
+				var matches = RegexPatterns.HeaderPattern.Matches(html);
+				var first = true;
 
-				_firstLinks[page] = href;
-				first = false;
+				foreach (Match match in matches)
+				{
+					var href = match.Groups[2].Value;
+
+					_registry[href] = page;
+					if (!first) continue;
+
+					_firstLinks[page] = href;
+					first = false;
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
 			}
 		}
 
