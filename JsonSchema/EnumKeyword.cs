@@ -69,7 +69,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		if (Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
+			context.LocalResult.Fail(Name, ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

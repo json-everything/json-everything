@@ -63,7 +63,7 @@ public static class JsonNodeExtensions
 		if (!obj.TryGetValue("_", out _, out var e) && e != null)
 		{
 			context.Log(() => "This object has a duplicate key and cannot be processed.");
-			context.LocalResult.Fail("This object has a duplicate key and cannot be processed.");
+			context.LocalResult.Fail("__instance_error", "This object has a duplicate key and cannot be processed.");
 			return false;
 		}
 

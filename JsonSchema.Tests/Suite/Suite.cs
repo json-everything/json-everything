@@ -39,7 +39,7 @@ public class Suite
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Verbose
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		switch (draftFolder)
 		{
@@ -126,7 +126,7 @@ public class Suite
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = collection.Schema.Validate(test.Data, options);
-		//result.ToDetailed();
+		result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)

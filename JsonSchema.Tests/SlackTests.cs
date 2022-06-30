@@ -39,7 +39,7 @@ public class SlackTests
 		var result = schema.Validate(instance, new ValidationOptions
 		{
 			Log = new TestLog(),
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			DefaultBaseUri = new Uri("http://localhost/")
 		});
 

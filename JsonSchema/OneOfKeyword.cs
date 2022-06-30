@@ -60,7 +60,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			var i1 = i;
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+			context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{i}")));
 			schema.ValidateSubschema(context);
 			validCount += context.LocalResult.IsValid ? 1 : 0;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
@@ -68,11 +68,10 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			if (validCount > 1 && context.ApplyOptimizations) break;
 		}
 
-		context.LocalResult.ConsolidateAnnotations();
 		if (validCount == 1)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.OneOf, ("count", validCount));
+			context.LocalResult.Fail(Name, ErrorMessages.OneOf, ("count", validCount));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

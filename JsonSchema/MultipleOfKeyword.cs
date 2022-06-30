@@ -53,7 +53,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		if (number % Value == 0)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MultipleOf, ("received", number), ("divisor", Value));
+			context.LocalResult.Fail(Name, ErrorMessages.MultipleOf, ("received", number), ("divisor", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

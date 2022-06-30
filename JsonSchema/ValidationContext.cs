@@ -18,7 +18,7 @@ public class ValidationContext
 	private readonly Stack<JsonNode?> _localInstances = new();
 	private readonly Stack<JsonPointer> _instanceLocations = new();
 	private readonly Stack<JsonSchema> _localSchemas = new();
-	private readonly Stack<JsonPointer> _schemaLocations = new();
+	private readonly Stack<JsonPointer> _evaluationPaths = new();
 	private readonly Stack<ValidationResults> _localResults = new();
 	private readonly Stack<bool> _dynamicScopeFlags = new();
 	private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new();
@@ -38,7 +38,7 @@ public class ValidationContext
 	/// <summary>
 	/// The current subschema location relative to the schema root.
 	/// </summary>
-	public JsonPointer SchemaLocation => _schemaLocations.Peek();
+	public JsonPointer EvaluationPath => _evaluationPaths.Peek();
 
 	/// <summary>
 	/// The current subschema.
@@ -117,9 +117,9 @@ public class ValidationContext
 		InstanceRoot = instanceRoot;
 		SchemaRoot = schemaRoot;
 		_localInstances.Push(instanceRoot);
-		_instanceLocations.Push(JsonPointer.UrlEmpty);
+		_instanceLocations.Push(JsonPointer.Empty);
 		_localSchemas.Push(schemaRoot);
-		_schemaLocations.Push(JsonPointer.UrlEmpty);
+		_evaluationPaths.Push(JsonPointer.Empty);
 		_localResults.Push(new ValidationResults(this));
 		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(null);
@@ -132,12 +132,12 @@ public class ValidationContext
 	/// </summary>
 	/// <param name="instanceLocation">The location within the data instance root.</param>
 	/// <param name="instance">The data instance.</param>
-	/// <param name="subschemaLocation">The location within the schema root.</param>
+	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
 	/// <param name="newUri">The URI of the subschema.</param>
 	public void Push(in JsonPointer? instanceLocation = null,
 		in JsonNode? instance = null,
-		in JsonPointer? subschemaLocation = null,
+		in JsonPointer? evaluationPath = null,
 		in JsonSchema? subschema = null,
 		Uri? newUri = null)
 	{
@@ -147,7 +147,7 @@ public class ValidationContext
 			_localInstances.Push(null);
 		else
 			_localInstances.Push(instance ?? LocalInstance);
-		_schemaLocations.Push(subschemaLocation ?? SchemaLocation);
+		_evaluationPaths.Push(evaluationPath ?? EvaluationPath);
 		_localSchemas.Push(subschema ?? LocalSchema);
 		var newResult = new ValidationResults(this);
 		LocalResult.AddNestedResult(newResult);
@@ -165,7 +165,7 @@ public class ValidationContext
 		_currentUris.Pop();
 		_instanceLocations.Pop();
 		_localInstances.Pop();
-		_schemaLocations.Pop();
+		_evaluationPaths.Pop();
 		_localSchemas.Pop();
 		_localResults.Pop();
 		_dynamicScopeFlags.Pop();
@@ -184,17 +184,9 @@ public class ValidationContext
 		UpdateCurrentValue(_metaSchemaVocabs, newVocabSet);
 	}
 
-	internal void PullDirectRefNavigation()
-	{
-		_directRefNavigation.Pop();
-		_directRefNavigation.Push(_directRefNavigation.Peek());
-	}
-
 	private static void UpdateCurrentValue<T>(Stack<T> stack, T newValue)
 	{
 		stack.Pop();
-		stack.Pop();
-		stack.Push(newValue);
 		stack.Push(newValue);
 	}
 

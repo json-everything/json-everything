@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -13,44 +14,30 @@ namespace Json.Schema;
 [JsonConverter(typeof(ValidationResultsJsonConverter))]
 public class ValidationResults
 {
-	/// <summary>
-	/// Consolidates annotations from multiple child results onto a single parent result.
-	/// Generally, a keyword will define how it handles its own consolidation.  This action
-	/// must be registered on startup.
-	/// </summary>
-	/// <param name="results">The validation results.</param>
-	public delegate void ContextConsolidator(ValidationResults results);
-
-	private static readonly List<ContextConsolidator> _consolidationActions = new();
-
-	private Uri _currentUri;
+	private readonly Uri _currentUri;
 	private Uri? _absoluteUri;
-	private JsonPointer? _reference;
-	private List<Annotation>? _annotations;
+	private readonly JsonPointer? _reference;
 	private List<ValidationResults>? _nestedResults;
-	private bool _isConsolidating;
+	private Dictionary<string, JsonNode?>? _annotations;
+	private Dictionary<string, string>? _errors;
 
 	/// <summary>
 	/// Indicates whether the validation passed or failed.
 	/// </summary>
-	public bool IsValid { get; private set; }
-	/// <summary>
-	/// The error message, if any.
-	/// </summary>
-	public string? Message { get; private set; }
+	public bool IsValid { get; private set; } = true;
 	/// <summary>
 	/// The schema location that generated this node.
 	/// </summary>
-	public JsonPointer SchemaLocation { get; private set; }
+	public JsonPointer EvaluationPath { get; }
 	/// <summary>
 	/// The instance location that was processed.
 	/// </summary>
-	public JsonPointer InstanceLocation { get; private set; }
+	public JsonPointer InstanceLocation { get; }
 
 	/// <summary>
 	/// The absolute schema location.  Only available if the schema had an absolute URI ID.
 	/// </summary>
-	public Uri? AbsoluteSchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
+	public Uri? SchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
 
 	/// <summary>
 	/// The collection of nested results.
@@ -64,12 +51,14 @@ public class ValidationResults
 	/// Because <see cref="NestedResults"/> is lazily loaded, this property allows the check without
 	/// the side effect of allocating a list object.
 	/// </remarks>
-	public bool HasNestedResults => _nestedResults is not { Count: 0 };
+	public bool HasNestedResults => _nestedResults is not (null or{ Count: 0 });
 
 	/// <summary>
 	/// The collection of annotations from this node.
 	/// </summary>
-	public IEnumerable<Annotation> Annotations => _annotations ??= new List<Annotation>();
+	public IReadOnlyDictionary<string, JsonNode?>? Annotations => _annotations;
+
+	public IReadOnlyDictionary<string, string>? Errors => _errors;
 
 	/// <summary>
 	/// Gets whether there are annotation.
@@ -78,7 +67,9 @@ public class ValidationResults
 	/// Because <see cref="Annotations"/> is lazily loaded, this property allows the check without
 	/// the side effect of allocating a list object.
 	/// </remarks>
-	public bool HasAnnotations => _annotations is not { Count: 0 };
+	public bool HasAnnotations => Annotations is not (null or { Count: 0 });
+
+	public bool HasErrors => Errors is not (null or { Count: 0 });
 
 	/// <summary>
 	/// Gets the parent result.
@@ -87,46 +78,12 @@ public class ValidationResults
 
 	internal bool Exclude { get; private set; }
 
-	private bool Keep => (Message != null && !IsValid) || Annotations.Any() || NestedResults.Any(r => r.Keep);
-
 	internal ValidationResults(ValidationContext context)
 	{
-		SchemaLocation = context.SchemaLocation;
+		EvaluationPath = context.EvaluationPath;
 		_currentUri = context.CurrentUri;
 		InstanceLocation = context.InstanceLocation;
 		_reference = context.Reference;
-	}
-
-	/// <summary>
-	/// Transforms the results to the `details` format.
-	/// </summary>
-	public void ToDetailed()
-	{
-		if (!Annotations.Any() && Message == null && NestedResults.Count == 0) return;
-		if (NestedResults.Count == 1)
-		{
-			NestedResults[0].ToDetailed();
-			CopyFrom(NestedResults[0]);
-			return;
-		}
-
-		var condensed = new List<ValidationResults>();
-		foreach (var result in NestedResults)
-		{
-			result.ToDetailed();
-			if (result.Keep && result.IsValid == IsValid)
-				condensed.Add(result);
-		}
-
-		_nestedResults?.Clear();
-
-		if (condensed.Count == 1)
-			CopyFrom(condensed[0]);
-		else
-		{
-			_nestedResults ??= new List<ValidationResults>();
-			_nestedResults.AddRange(condensed);
-		}
 	}
 
 	/// <summary>
@@ -134,14 +91,12 @@ public class ValidationResults
 	/// </summary>
 	public void ToBasic()
 	{
-		ToDetailed();
 		var children = GetAllChildren().ToList();
 		if (!children.Any()) return;
 
 		children.Remove(this);
-		children.ForEach(r => r._annotations?.Clear());
-		Prep(ref _nestedResults);
-		_nestedResults!.AddRange(children.Where(c => c.Keep));
+		_nestedResults!.Clear();
+		_nestedResults.AddRange(children.Where(c => c.HasAnnotations || c.HasErrors));
 	}
 
 	/// <summary>
@@ -151,63 +106,53 @@ public class ValidationResults
 	{
 		_nestedResults?.Clear();
 		_annotations?.Clear();
-	}
-
-	/// <summary>
-	/// Invokes all consolidation actions.  Should be called at the end of processing an applicator keyword.
-	/// </summary>
-	public void ConsolidateAnnotations()
-	{
-		if (!HasNestedResults) return;
-		foreach (var consolidationAction in _consolidationActions)
-		{
-			_isConsolidating = true;
-			consolidationAction(this);
-			_isConsolidating = false;
-		}
+		_errors?.Clear();
 	}
 
 	/// <summary>
 	/// Sets an annotation.
 	/// </summary>
-	/// <param name="owner">The annotation key.  Typically the name of the keyword.</param>
+	/// <param name="keyword">The annotation key.  Typically the name of the keyword.</param>
 	/// <param name="value">The annotation value.</param>
-	public void SetAnnotation(string owner, object? value)
+	public void SetAnnotation(string keyword, JsonNode? value)
 	{
-		AddAnnotation(new Annotation(owner, value, SchemaLocation) { WasConsolidated = _isConsolidating });
-	}
+		_annotations ??= new();
 
-	/// <summary>
-	/// Registers a consolidation action.
-	/// </summary>
-	/// <param name="consolidateAnnotations">The action.</param>
-	public static void RegisterConsolidationMethod(ContextConsolidator consolidateAnnotations)
-	{
-		_consolidationActions.Add(consolidateAnnotations);
+		_annotations[keyword] = value;
 	}
 
 	/// <summary>
 	/// Tries to get an annotation.
 	/// </summary>
-	/// <param name="key">The annotation key.</param>
+	/// <param name="keyword">The annotation key.</param>
+	/// <param name="annotation"></param>
 	/// <returns>The annotation or null.</returns>
-	public object? TryGetAnnotation(string key)
+	public bool TryGetAnnotation(string keyword, out JsonNode? annotation)
 	{
-		if (!HasAnnotations) return null;
-		return Annotations.LastOrDefault(x => x.Owner == key)?.Value;
+		annotation = null;
+		if (!HasAnnotations) return false;
+		return Annotations!.TryGetValue(keyword, out annotation);
 	}
 
 	/// <summary>
 	/// Gets all annotations of a particular data type for the current validation level.
 	/// </summary>
 	/// <typeparam name="T">The data type.</typeparam>
-	/// <param name="key">The key under which the annotation is stored.  Typically a keyword.</param>
+	/// <param name="keyword">The key under which the annotation is stored.  Typically a keyword.</param>
 	/// <returns>The set of all annotations for the current validation level.</returns>
-	public IEnumerable<T> GetAllAnnotations<T>(string key)
+	public IEnumerable<JsonNode?> GetAllAnnotations(string keyword)
 	{
-		if (!HasAnnotations) return Enumerable.Empty<T>();
-		return Annotations.Where(x => x.Owner == key && x.Value is T)
-			.Select(x => (T)x.Value!);
+		if (HasAnnotations && _annotations!.TryGetValue(keyword, out var annotation))
+			yield return annotation;
+
+		if (!HasNestedResults) yield break;
+
+		var validResults = NestedResults.Where(x => x.IsValid && x.InstanceLocation == InstanceLocation);
+		var allAnnotations = validResults.SelectMany(x => x.GetAllAnnotations(keyword));
+		foreach (var nestedAnnotation in allAnnotations)
+		{
+			yield return nestedAnnotation;
+		}
 	}
 
 	/// <summary>
@@ -215,7 +160,7 @@ public class ValidationResults
 	/// </summary>
 	public void Pass()
 	{
-		IsValid = true;
+		//IsValid = true;
 	}
 
 	/// <summary>
@@ -225,10 +170,13 @@ public class ValidationResults
 	/// <remarks>
 	/// For better support for customization, consider using the overload that takes parameters.
 	/// </remarks>
-	public void Fail(string? message = null)
+	public void Fail(string keyword, string? message = null)
 	{
 		IsValid = false;
-		Message = message;
+		if (message == null) return;
+
+		_errors ??= new();
+		_errors[keyword] = message;
 	}
 
 	/// <summary>
@@ -236,47 +184,11 @@ public class ValidationResults
 	/// </summary>
 	/// <param name="message">The error message.</param>
 	/// <param name="parameters">Parameters to replace in the message.</param>
-	public void Fail(string message, params (string token, object? value)[] parameters)
+	public void Fail(string keyword, string message, params (string token, object? value)[] parameters)
 	{
 		IsValid = false;
-		Message = message.ReplaceTokens(parameters);
-	}
-
-	internal void ImportAnnotations(List<Annotation> annotations)
-	{
-		if (annotations.Count == 0) return;
-		AddAnnotations(annotations);
-	}
-
-	internal void ConsiderAnnotations(IEnumerable<Annotation> annotations)
-	{
-		_annotations ??= new List<Annotation>();
-		_annotations.AddRange(annotations.Select(Annotation.CreateConsolidated));
-	}
-
-	private void AddAnnotation(Annotation annotation)
-	{
-		_annotations ??= new List<Annotation>();
-		_annotations.Add(annotation);
-	}
-
-	private void AddAnnotations(IEnumerable<Annotation> annotations)
-	{
-		_annotations ??= new List<Annotation>();
-		_annotations.AddRange(annotations);
-	}
-
-	private void CopyFrom(ValidationResults other)
-	{
-		//IsValid = other.IsValid;
-		_annotations = other._annotations;
-		Message = other.Message;
-		SchemaLocation = other.SchemaLocation;
-		_currentUri = other._currentUri;
-		InstanceLocation = other.InstanceLocation;
-		_nestedResults = other._nestedResults;
-		_absoluteUri = other._absoluteUri;
-		_reference = other._reference;
+		_errors ??= new();
+		_errors[keyword] = message.ReplaceTokens(parameters);
 	}
 
 	internal void AddNestedResult(ValidationResults results)
@@ -313,24 +225,29 @@ public class ValidationResults
 
 	private Uri? BuildAbsoluteUri()
 	{
-		return BuildAbsoluteUri(SchemaLocation);
+		return BuildAbsoluteUri(EvaluationPath);
 	}
 
 	private IEnumerable<ValidationResults> GetAllChildren()
 	{
 		var all = new List<ValidationResults>();
-		if (Annotations.Any() || Message != null) all.Add(this);
-		all.AddRange(NestedResults.SelectMany(r => r.GetAllChildren()));
+		var toProcess = new Queue<ValidationResults>();
 
-		_nestedResults?.Clear();
+		toProcess.Enqueue(this);
+		while (toProcess.Any())
+		{
+			var current = toProcess.Dequeue();
+			all.Add(current);
+			if (!current.HasNestedResults) continue;
+			
+			foreach (var nestedResult in current.NestedResults)
+			{
+				toProcess.Enqueue(nestedResult);
+			}
+			current._nestedResults?.Clear();
+		}
 
-		return all;
-	}
-
-	private static void Prep<T>(ref List<T>? list)
-	{
-		if (list != null) list.Clear();
-		else list = new List<T>();
+		return all.Skip(1); // don't return the root
 	}
 }
 
@@ -343,88 +260,43 @@ internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
 
 	public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
 	{
-		if (value.Exclude) return;
+		//if (value.Exclude) return;
 
 		writer.WriteStartObject();
 
 		writer.WriteBoolean("valid", value.IsValid);
 
-		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, value.SchemaLocation);
+		writer.WritePropertyName("evaluationPath");
+		JsonSerializer.Serialize(writer, value.EvaluationPath, options);
 
-		if (value.AbsoluteSchemaLocation != null)
+		if (value.SchemaLocation != null)
 		{
-			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.AbsoluteSchemaLocation);
+			writer.WritePropertyName("schemaLocation");
+			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
 		}
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation);
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
 
-		if (!value.IsValid)
+		if (value.IsValid)
 		{
-			if (value.Message != null)
-				writer.WriteString("error", value.Message);
-
-			if (value.NestedResults.Any())
+			if (value.HasAnnotations)
 			{
-				writer.WritePropertyName("errors");
-				JsonSerializer.Serialize(writer, value.NestedResults);
+				writer.WritePropertyName("annotations");
+				JsonSerializer.Serialize(writer, value.Annotations, options);
 			}
 		}
-		else if (value.Annotations.Any(a => !a.WasConsolidated) || value.NestedResults.Any())
+		else if (value.HasErrors)
 		{
-			writer.WritePropertyName("annotations");
-			writer.WriteStartArray();
-
-			var annotations = value.Annotations.Where(a => !a.WasConsolidated).ToList();
-
-			foreach (var result in value.NestedResults)
-			{
-				var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.SchemaLocation));
-				if (annotation != null)
-				{
-					annotations.Remove(annotation);
-
-					WriteAnnotation(writer, value, annotation);
-				}
-				else
-				{
-					JsonSerializer.Serialize(writer, result);
-				}
-			}
-
-			foreach (var annotation in annotations)
-			{
-				WriteAnnotation(writer, value, annotation);
-			}
-
-			writer.WriteEndArray();
+			writer.WritePropertyName("errors");
+			JsonSerializer.Serialize(writer, value.Errors, options);
 		}
 
-		writer.WriteEndObject();
-	}
-
-	private static void WriteAnnotation(Utf8JsonWriter writer, ValidationResults value, Annotation annotation)
-	{
-		writer.WriteStartObject();
-
-		writer.WriteBoolean("valid", value.IsValid);
-
-		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, annotation.Source);
-
-		if (value.AbsoluteSchemaLocation != null)
+		if (value.HasNestedResults)
 		{
-			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.BuildAbsoluteUri(annotation.Source));
+			writer.WritePropertyName("nested");
+			JsonSerializer.Serialize(writer, value.NestedResults, options);
 		}
-
-		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation);
-
-		writer.WritePropertyName("annotation");
-		JsonSerializer.Serialize(writer, annotation.Value);
 
 		writer.WriteEndObject();
 	}

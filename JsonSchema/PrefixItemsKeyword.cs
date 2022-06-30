@@ -28,11 +28,6 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 
 	IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas;
 
-	static PrefixItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
-
 	/// <summary>
 	/// Creates a new <see cref="PrefixItemsKeyword"/>.
 	/// </summary>
@@ -71,7 +66,6 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		}
 
 		var array = (JsonArray)context.LocalInstance!;
-		bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 		var overallResult = true;
 		var maxEvaluations = Math.Min(ArraySchemas.Count, array.Count);
 		for (int i = 0; i < maxEvaluations; i++)
@@ -80,40 +74,23 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 				item ?? JsonNull.SignalNode,
-				context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+				context.EvaluationPath.Combine(PointerSegment.Create($"{i}")));
 			schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;
 			context.Pop();
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
 
-		if (overwriteAnnotation)
-		{
-			if (maxEvaluations == array.Count)
-				context.LocalResult.SetAnnotation(Name, true);
-			else
-				context.LocalResult.SetAnnotation(Name, maxEvaluations);
-		}
+		if (maxEvaluations == array.Count)
+			context.LocalResult.SetAnnotation(Name, true);
+		else
+			context.LocalResult.SetAnnotation(Name, maxEvaluations);
 
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		object value;
-		var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.ToList();
-		if (allAnnotations.OfType<bool>().Any())
-			value = true;
-		else
-			value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
-		if (!Equals(value, -1))
-			localResults.SetAnnotation(Name, value);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

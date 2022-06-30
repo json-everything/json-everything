@@ -105,7 +105,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		if (isValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
+			context.LocalResult.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

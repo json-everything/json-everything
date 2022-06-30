@@ -64,7 +64,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonDocument.Parse("\"a value\"").RootElement;
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 		var serialized = JsonSerializer.Serialize(results);
@@ -76,7 +76,7 @@ public class FormatTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			OnlyKnownFormats = true
 		};
 		options.SchemaRegistry.Register(_formatAssertionMetaSchemaId, _formatAssertionMetaSchema);
@@ -109,7 +109,7 @@ public class FormatTests
 
 		var results = schema.Validate(instance, new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true,
 			OnlyKnownFormats = true
 		});
@@ -140,7 +140,7 @@ public class FormatTests
 
 		var results = schema.Validate(json, new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true
 		});
 

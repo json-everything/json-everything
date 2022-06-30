@@ -45,8 +45,9 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 		if (metaSchema == null)
 		{
-			context.LocalResult.Fail(ErrorMessages.MetaSchemaResolution, ("uri", Schema.OriginalString));
-			context.Log(() => context.LocalResult.Message!);
+			var message = ErrorMessages.MetaSchemaResolution.ReplaceTokens(("uri", Schema.OriginalString));
+			context.LocalResult.Fail(Name, message);
+			context.Log(() => message);
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -72,7 +73,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		if (results.IsValid)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
+			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

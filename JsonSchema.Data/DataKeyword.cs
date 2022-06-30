@@ -75,7 +75,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		}
 		catch (JsonException e)
 		{
-			context.LocalResult.Fail(e.Message);
+			context.LocalResult.Fail(Name, e.Message);
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 			if (!wasResolved)
 			{
-				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", baseUri));
+				context.LocalResult.Fail(Name, ErrorMessages.BaseUriResolution, ("uri", baseUri));
 				node = null;
 				return false;
 			}
@@ -119,14 +119,14 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 			fragment = $"#{fragment}";
 			if (!JsonPointer.TryParse(fragment, out var pointer))
 			{
-				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
+				context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment));
 				node = null;
 				return false;
 			}
 
 			if (!pointer!.TryEvaluate(data, out var resolved))
 			{
-				context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", fragment));
+				context.LocalResult.Fail(Name, ErrorMessages.RefResolution, ("uri", fragment));
 				node = null;
 				return false;
 			}

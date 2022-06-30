@@ -69,7 +69,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 				continue;
 			}
 
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
+			context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{name}")));
 			schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;
 			if (!overallResult && context.ApplyOptimizations) break;
@@ -81,11 +81,10 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 			context.Pop();
 		}
 
-		context.LocalResult.ConsolidateAnnotations();
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
+			context.LocalResult.Fail(Name, ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

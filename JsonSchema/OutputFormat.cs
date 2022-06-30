@@ -14,11 +14,7 @@ public enum OutputFormat
 	/// </summary>
 	Basic,
 	/// <summary>
-	/// Indicates that nodes will be organized in a condensed structure that mimicks the schema.
-	/// </summary>
-	Detailed,
-	/// <summary>
 	/// Indicates that nodes will match the structure of the schema.
 	/// </summary>
-	Verbose
+	Hierarchical
 }

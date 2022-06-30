@@ -51,7 +51,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
 		{
-			context.LocalResult.Fail(ErrorMessages.UnknownFormat, ("format", Value.Key));
+			context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
 			return;
 		}
 
@@ -79,11 +79,11 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		if (!requireValidation || Value.Validate(context.LocalInstance, out var errorMessage))
 			context.LocalResult.Pass();
 		else if (Value is UnknownFormat)
-			context.LocalResult.Fail(errorMessage);
+			context.LocalResult.Fail(Name, errorMessage);
 		else if (errorMessage == null)
-			context.LocalResult.Fail(ErrorMessages.Format, ("format", Value.Key));
+			context.LocalResult.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
 		else
-			context.LocalResult.Fail(ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+			context.LocalResult.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

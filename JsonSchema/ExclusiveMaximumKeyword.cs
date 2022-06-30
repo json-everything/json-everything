@@ -53,7 +53,7 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		if (Value > number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", Value));
+			context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
