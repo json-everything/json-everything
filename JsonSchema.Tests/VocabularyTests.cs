@@ -32,7 +32,7 @@ public class VocabularyTests
 			if (date >= Date)
 				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail("[[provided:O]] must be on or after [[value:O]]",
+				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
 		}
@@ -96,7 +96,7 @@ public class VocabularyTests
 			if (date <= Date)
 				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail("[[provided:O]] must be on or before [[value:O]]",
+				context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
 					("provided", date),
 					("value", Date));
 		}

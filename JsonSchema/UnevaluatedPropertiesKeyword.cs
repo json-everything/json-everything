@@ -29,10 +29,6 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static UnevaluatedPropertiesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="UnevaluatedPropertiesKeyword"/>.
 	/// </summary>
@@ -59,41 +55,38 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		List<string> evaluatedProperties;
-		var annotation = context.LocalResult.GetAllAnnotations<List<string>>(PropertiesKeyword.Name).SelectMany(x => x).ToList();
-		if (!annotation.Any())
-		{
+		var evaluatedProperties = new List<string>();
+		var annotations = context.LocalResult.GetAllAnnotations(PropertiesKeyword.Name).ToList();
+		if (!annotations.Any())
 			context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
-			evaluatedProperties = new List<string>();
-		}
 		else
 		{
-			context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-			evaluatedProperties = annotation;
+			context.Log(() => $"Annotation from {PropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
 		}
-		annotation = context.LocalResult.GetAllAnnotations<List<string>>(PatternPropertiesKeyword.Name).SelectMany(x => x).ToList();
-		if (!annotation.Any())
+		annotations = context.LocalResult.GetAllAnnotations(PatternPropertiesKeyword.Name).ToList();
+		if (!annotations.Any())
 			context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
 		else
 		{
-			context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-			evaluatedProperties.AddRange(annotation);
+			context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
 		}
-		annotation = context.LocalResult.GetAllAnnotations<List<string>>(AdditionalPropertiesKeyword.Name).SelectMany(x => x).ToList();
-		if (!annotation.Any())
+		annotations = context.LocalResult.GetAllAnnotations(AdditionalPropertiesKeyword.Name).ToList();
+		if (!annotations.Any())
 			context.Log(() => $"No annotation from {AdditionalPropertiesKeyword.Name}.");
 		else
 		{
-			context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-			evaluatedProperties.AddRange(annotation);
+			context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
 		}
-		annotation = context.LocalResult.GetAllAnnotations<List<string>>(Name).SelectMany(x => x).ToList();
-		if (!annotation.Any())
+		annotations = context.LocalResult.GetAllAnnotations(Name).ToList();
+		if (!annotations.Any())
 			context.Log(() => $"No annotation from {Name}.");
 		else
 		{
-			context.Log(() => $"Annotation from {Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-			evaluatedProperties.AddRange(annotation);
+			context.Log(() => $"Annotation from {Name}: {annotations.ToJsonArray().AsJsonString()}");
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
@@ -122,27 +115,12 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		}
 		context.Options.LogIndentLevel--;
 
-		context.LocalResult.SetAnnotation(Name, evaluatedProperties);
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
-		context.LocalResult.ConsolidateAnnotations();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allProperties);
-		else if (allProperties.Any())
-			localResults.SetAnnotation(Name, allProperties);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

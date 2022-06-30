@@ -27,10 +27,6 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 	/// </summary>
 	public IReadOnlyDictionary<string, IReadOnlyList<string>> Requirements { get; }
 
-	static DependentRequiredKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="DependentRequiredKeyword"/>.
 	/// </summary>
@@ -96,23 +92,9 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		else
 		{
 			var missing = JsonSerializer.Serialize(missingDependencies);
-			context.LocalResult.Fail(ErrorMessages.DependentRequired, ("missing", missing));
+			context.LocalResult.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
 		}
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allDependentRequired = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allDependentRequired);
-		else if (allDependentRequired.Any())
-			localResults.SetAnnotation(Name, allDependentRequired);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

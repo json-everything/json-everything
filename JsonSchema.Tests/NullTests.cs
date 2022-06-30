@@ -16,7 +16,7 @@ public class NullTests
 	{
 		var json = JsonNode.Parse("{\"foo\": null}");
 
-		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 	}
@@ -26,7 +26,7 @@ public class NullTests
 	{
 		var json = JsonNode.Parse("{}");
 
-		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertInvalid();
 	}

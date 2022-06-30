@@ -80,7 +80,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		if (notFound.Count == 0)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Required, ("missing", notFound));
+			context.LocalResult.Fail(Name, ErrorMessages.Required, ("missing", notFound));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

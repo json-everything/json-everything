@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -28,10 +27,6 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static AdditionalItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="AdditionalItemsKeyword"/>.
 	/// </summary>
@@ -58,22 +53,21 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		var annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
-		if (annotation == null)
+		if (!context.LocalResult.TryGetAnnotation(ItemsKeyword.Name, out var annotation))
 		{
 			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotations from {ItemsKeyword.Name}.");
 			return;
 		}
 		context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
-		if (annotation is bool)
+		if (annotation!.GetValue<object>() is bool)
 		{
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 			return;
 		}
-		var startIndex = (int)annotation;
 
+		var startIndex = (int)annotation.AsValue().GetInteger()!;
 		var array = (JsonArray)context.LocalInstance!;
 		for (int i = startIndex; i < array.Count; i++)
 		{
@@ -93,14 +87,8 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-			localResults.SetAnnotation(Name, true);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

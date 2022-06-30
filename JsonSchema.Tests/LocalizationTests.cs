@@ -18,7 +18,7 @@ public class LocalizationTests
 
 		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
-		var message = results.Message;
+		var message = results.Errors["minimum"];
 
 		Assert.AreEqual("5 is less than or equal to 10", message);
 	}
@@ -38,7 +38,7 @@ public class LocalizationTests
 
 			var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
-			var message = results.Message;
+			var message = results.Errors["minimum"];
 
 			Assert.AreEqual("5 es menor o igual que 10", message);
 		}
@@ -63,7 +63,7 @@ public class LocalizationTests
 
 			var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
-			var message = results.Message;
+			var message = results.Errors["minimum"];
 
 			Assert.AreEqual("This is a custom error message with 5 and 10", message);
 		}

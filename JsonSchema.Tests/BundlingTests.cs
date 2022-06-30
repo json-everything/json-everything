@@ -28,7 +28,7 @@ public class BundlingTests
 
 		var instance = JsonDocument.Parse("[[1, \"other string\"]]");
 
-		var result = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 		Assert.True(result.IsValid);

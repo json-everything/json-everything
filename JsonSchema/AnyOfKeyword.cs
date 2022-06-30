@@ -60,7 +60,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			var i1 = i;
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+			context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{i}")));
 			schema.ValidateSubschema(context);
 			overallResult |= context.LocalResult.IsValid;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
@@ -69,11 +69,9 @@ public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		}
 
 		if (overallResult)
-			context.LocalResult.ConsolidateAnnotations();
-		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

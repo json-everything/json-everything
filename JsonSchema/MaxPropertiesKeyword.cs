@@ -54,7 +54,7 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxProperties
 		if (Value >= number)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
+			context.LocalResult.Fail(Name, ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

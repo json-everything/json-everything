@@ -29,10 +29,6 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		Requirements.Where(x => x.Value.Schema != null)
 			.ToDictionary(x => x.Key, x => x.Value.Schema!);
 
-	static DependenciesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="DependenciesKeyword"/>.
 	/// </summary>
@@ -77,7 +73,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 			if (requirements.Schema != null)
 			{
 				context.Log(() => "Found schema requirement.");
-				context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{name}")));
+				context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{name}")));
 				requirements.Schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
 				if (context.LocalResult.IsValid)
@@ -113,22 +109,8 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Dependencies, ("properties", JsonSerializer.Serialize(evaluatedProperties)));
+			context.LocalResult.Fail(Name, ErrorMessages.Dependencies, ("properties", JsonSerializer.Serialize(evaluatedProperties)));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allDependencies = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allDependencies);
-		else if (allDependencies.Any())
-			localResults.SetAnnotation(Name, allDependencies);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

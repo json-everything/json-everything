@@ -90,6 +90,72 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		context.ExitKeyword(Name);
 	}
 
+	private static bool TryResolve(ValidationContext context, Uri target, out JsonNode? node)
+	{
+		var parts = target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
+		var baseUri = parts[0];
+		var fragment = parts.Length > 1 ? parts[1] : null;
+
+		JsonNode? data;
+		if (!string.IsNullOrEmpty(baseUri))
+		{
+			bool wasResolved;
+			if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newUri))
+				wasResolved = TryDownload(newUri, out data);
+			else
+			{
+				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
+					? context.CurrentUri
+					: context.CurrentUri.GetParentUri();
+				var newBaseUri = new Uri(uriFolder, baseUri);
+				wasResolved = TryDownload(newBaseUri, out data);
+			}
+
+			if (!wasResolved)
+			{
+				context.LocalResult.Fail(Name, ErrorMessages.BaseUriResolution, ("uri", baseUri));
+				node = null;
+				return false;
+			}
+		}
+		else
+			data = context.InstanceRoot;
+
+		if (!string.IsNullOrEmpty(fragment))
+		{
+			fragment = $"#{fragment}";
+			if (!JsonPointer.TryParse(fragment, out var pointer))
+			{
+				context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment));
+				node = null;
+				return false;
+			}
+
+			if (!pointer!.TryEvaluate(data, out var resolved))
+			{
+				context.LocalResult.Fail(Name, ErrorMessages.RefResolution, ("uri", fragment));
+				node = null;
+				return false;
+			}
+			data = resolved;
+		}
+
+		node = data;
+		return true;
+	}
+
+	private static bool TryDownload(Uri uri, out JsonNode? node)
+	{
+		var data = Get(uri);
+		if (data == null)
+		{
+			node = null;
+			return false;
+		}
+		node = JsonNode.Parse(data);
+		return true;
+	}
+
 	/// <summary>
 	/// Provides a simple data fetch method that supports `http`, `https`, and `file` URI schemes.
 	/// </summary>

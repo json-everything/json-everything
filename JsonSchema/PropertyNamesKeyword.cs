@@ -30,11 +30,6 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static PropertyNamesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
-
 	/// <summary>
 	/// Creates a new <see cref="PropertyNamesKeyword"/>.
 	/// </summary>
@@ -77,23 +72,8 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allPropertyNames = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		// TODO: add message
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allPropertyNames);
-		else if (allPropertyNames.Any())
-			localResults.SetAnnotation(Name, allPropertyNames);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

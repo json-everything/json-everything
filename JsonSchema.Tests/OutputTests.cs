@@ -87,7 +87,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Detailed_Success()
 		{
-			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Detailed);
+			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Hierarchical);
 
 			result.AssertValid();
 			Assert.IsEmpty(result.NestedResults);
@@ -97,7 +97,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Detailed_Failure()
 		{
-			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Detailed);
+			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Hierarchical);
 			var expected = @"{
   ""valid"": false,
   ""keywordLocation"": ""#/properties/fails"",
@@ -110,7 +110,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Detailed_Multi_Success()
 		{
-			var result = Validate("{\"multi\":8}", OutputFormat.Detailed);
+			var result = Validate("{\"multi\":8}", OutputFormat.Hierarchical);
 			var expected = @"
 {
   ""valid"": true,
@@ -134,7 +134,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Detailed_Multi_Failure_Both()
 		{
-			var result = Validate("{\"multi\":3.5}", OutputFormat.Detailed);
+			var result = Validate("{\"multi\":3.5}", OutputFormat.Hierarchical);
 			var expected = @"{
   ""valid"": false,
   ""keywordLocation"": ""#/properties/multi/allOf"",
@@ -163,7 +163,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Detailed_Multi_Failure_Integer()
 		{
-			var result = Validate("{\"fails\":8.5}", OutputFormat.Detailed);
+			var result = Validate("{\"fails\":8.5}", OutputFormat.Hierarchical);
 			var expected = @"{
   ""valid"": false,
   ""keywordLocation"": ""#/properties/fails"",
@@ -177,7 +177,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void Detailed_Multi_Failure_Minimum()
 		{
-			var result = Validate("{\"fails\":3}", OutputFormat.Detailed);
+			var result = Validate("{\"fails\":3}", OutputFormat.Hierarchical);
 			var expected = @"{
   ""valid"": false,
   ""keywordLocation"": ""#/properties/fails"",
@@ -191,7 +191,7 @@ namespace Json.Schema.Tests
 		[Test]
 		public void RelativeAndAbsoluteLocations()
 		{
-			var result = Validate("{\"refs\":8.8}", OutputFormat.Detailed);
+			var result = Validate("{\"refs\":8.8}", OutputFormat.Hierarchical);
 			var expected = @"{
   ""valid"": false,
   ""keywordLocation"": ""#/properties/refs/$ref/type"",
@@ -201,8 +201,8 @@ namespace Json.Schema.Tests
 }";
 
 			result.AssertInvalid(expected);
-			Assert.AreEqual("#/properties/refs/$ref/type", result.SchemaLocation.ToString());
-			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.AbsoluteSchemaLocation?.ToString());
+			Assert.AreEqual("#/properties/refs/$ref/type", result.EvaluationPath.ToString());
+			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.SchemaLocation?.ToString());
 		}
 
 		private static ValidationResults Validate(string json, OutputFormat format)

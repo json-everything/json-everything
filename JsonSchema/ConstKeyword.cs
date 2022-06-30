@@ -45,7 +45,7 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 		if (Value.IsEquivalentTo(context.LocalInstance))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Const, ("value", Value.AsJsonString()));
+			context.LocalResult.Fail(Name, ErrorMessages.Const, ("value", Value.AsJsonString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

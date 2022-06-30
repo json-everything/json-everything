@@ -58,7 +58,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		context.EnterKeyword(Name);
 		if (InvalidPattern != null)
 		{
-			context.LocalResult.Fail(ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
+			context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -75,7 +75,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		if (Value.IsMatch(str))
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
+			context.LocalResult.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
