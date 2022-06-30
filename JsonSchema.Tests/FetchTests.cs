@@ -1,6 +1,4 @@
-using System.Linq;
 using System.Text.Json;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -12,13 +10,16 @@ public class FetchTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical
-		};
-		options.SchemaRegistry.Fetch = uri =>
-		{
-			if (uri.AbsoluteUri == "http://my.schema/test1")
-				return JsonSchema.FromText("{\"type\": \"string\"}");
-			return null;
+			OutputFormat = OutputFormat.Hierarchical,
+			SchemaRegistry =
+			{
+				Fetch = uri =>
+				{
+					if (uri.AbsoluteUri == "http://my.schema/test1")
+						return JsonSchema.FromText("{\"type\": \"string\"}");
+					return null;
+				}
+			}
 		};
 		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
@@ -27,7 +28,6 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().NotBe("$ref");
 	}
 	[Test]
 	public void GlobalRegistryFindsRef()
@@ -49,20 +49,22 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().NotBe("$ref");
 	}
 	[Test]
 	public void LocalRegistryMissesRef()
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical
-		};
-		options.SchemaRegistry.Fetch = uri =>
-		{
-			if (uri.AbsoluteUri == "http://my.schema/test2")
-				return JsonSchema.FromText("{\"type\": \"string\"}");
-			return null;
+			OutputFormat = OutputFormat.Hierarchical,
+			SchemaRegistry =
+			{
+				Fetch = uri =>
+				{
+					if (uri.AbsoluteUri == "http://my.schema/test2")
+						return JsonSchema.FromText("{\"type\": \"string\"}");
+					return null;
+				}
+			}
 		};
 		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
@@ -71,7 +73,6 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().Be("$ref");
 	}
 	[Test]
 	public void GlobalRegistryMissesRef()
@@ -93,6 +94,5 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().Be("$ref");
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -692,6 +693,6 @@ public class GithubTests
 
 		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
-		Assert.AreEqual(0, result.NestedResults.Count);
+		result.AssertValid();
 	}
 }
