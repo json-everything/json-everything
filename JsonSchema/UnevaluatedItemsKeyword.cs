@@ -124,8 +124,9 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		{
 			context.Log(() => $"Validating item at index {i}.");
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
+			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name), Schema);
+			context.Validate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

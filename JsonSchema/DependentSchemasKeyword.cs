@@ -69,8 +69,8 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 				continue;
 			}
 
-			context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{name}")));
-			schema.ValidateSubschema(context);
+			context.Push(context.EvaluationPath.Combine(name), schema);
+			context.Validate();
 			overallResult &= context.LocalResult.IsValid;
 			if (!overallResult && context.ApplyOptimizations) break;
 

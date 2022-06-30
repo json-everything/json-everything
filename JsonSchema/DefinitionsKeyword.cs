@@ -41,7 +41,9 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSche
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
+		context.Push(context.EvaluationPath.Combine(Name), true);
 		context.LocalResult.Ignore();
+		context.Pop();
 		context.ExitKeyword(Name, true);
 	}
 

@@ -47,7 +47,9 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 			return;
 		}
 
-		Schema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		context.Validate();
+		context.Pop();
 		var result = context.LocalResult.IsValid;
 		if (result)
 			context.LocalResult.Pass();

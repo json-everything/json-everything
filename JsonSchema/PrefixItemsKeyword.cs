@@ -72,10 +72,11 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		{
 			var schema = ArraySchemas[i];
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+			context.Push(context.InstanceLocation.Combine(i),
 				item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(PointerSegment.Create($"{i}")));
-			schema.ValidateSubschema(context);
+				context.EvaluationPath.Combine(i),
+				schema);
+			context.Validate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Pop();
 			if (!overallResult && context.ApplyOptimizations) break;
