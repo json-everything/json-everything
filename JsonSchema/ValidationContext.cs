@@ -185,9 +185,7 @@ public class ValidationContext
 		if (LocalSchema.BoolValue.HasValue)
 		{
 			this.Log(() => $"Found {(LocalSchema.BoolValue.Value ? "true" : "false")} schema: {LocalSchema.BoolValue.Value.GetValidityString()}");
-			if (LocalSchema.BoolValue.Value)
-				LocalResult.Pass();
-			else
+			if (!LocalSchema.BoolValue.Value)
 				LocalResult.Fail(string.Empty, ErrorMessages.FalseSchema);
 			return;
 		}

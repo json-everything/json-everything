@@ -39,7 +39,6 @@ public class DeprecatedKeyword : IJsonSchemaKeyword, IEquatable<DeprecatedKeywor
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

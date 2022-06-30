@@ -68,9 +68,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			if (validCount > 1 && context.ApplyOptimizations) break;
 		}
 
-		if (validCount == 1)
-			context.LocalResult.Pass();
-		else
+		if (validCount != 1)
 			context.LocalResult.Fail(Name, ErrorMessages.OneOf, ("count", validCount));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

@@ -66,15 +66,12 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var str = context.LocalInstance!.GetValue<string>();
-		if (Value.IsMatch(str))
-			context.LocalResult.Pass();
-		else
+		if (!Value.IsMatch(str))
 			context.LocalResult.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

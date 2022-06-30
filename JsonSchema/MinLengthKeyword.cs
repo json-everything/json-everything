@@ -44,15 +44,12 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var length = new StringInfo(context.LocalInstance!.GetValue<string>()).LengthInTextElements;
-		if (Value <= length)
-			context.LocalResult.Pass();
-		else
+		if (Value > length)
 			context.LocalResult.Fail(Name, ErrorMessages.MinLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

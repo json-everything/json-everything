@@ -117,9 +117,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 		context.Validate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
-		if (result)
-			context.LocalResult.Pass();
-		else
+		if (!result)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

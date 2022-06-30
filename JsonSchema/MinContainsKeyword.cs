@@ -47,7 +47,6 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 			var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.EvaluationPath.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
 			if (containsResult != null)
 				context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -55,23 +54,19 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		if (!context.LocalResult.TryGetAnnotation(ContainsKeyword.Name, out var annotation))
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 			return;
 		}
 
 		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation.AsJsonString()}.");
 		var containsCount = annotation!.AsArray().Count;
-		if (Value <= containsCount)
-			context.LocalResult.Pass();
-		else
+		if (Value > containsCount)
 			context.LocalResult.Fail(Name, ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

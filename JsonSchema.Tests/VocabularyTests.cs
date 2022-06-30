@@ -28,9 +28,7 @@ public class VocabularyTests
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
-			if (date >= Date)
-				context.LocalResult.Pass();
-			else
+			if (date < Date)
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
@@ -92,9 +90,7 @@ public class VocabularyTests
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
-			if (date <= Date)
-				context.LocalResult.Pass();
-			else
+			if (date > Date)
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
 					("provided", date),
 					("value", Date));

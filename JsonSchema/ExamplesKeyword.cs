@@ -54,7 +54,6 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Values.ToJsonArray());
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

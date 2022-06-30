@@ -44,15 +44,12 @@ public class MaxItemsKeyword : IJsonSchemaKeyword, IEquatable<MaxItemsKeyword>
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var number = ((JsonArray)context.LocalInstance!).Count;
-		if (Value >= number)
-			context.LocalResult.Pass();
-		else
+		if (Value < number)
 			context.LocalResult.Fail(Name, ErrorMessages.MaxItems, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

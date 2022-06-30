@@ -171,14 +171,6 @@ public class ValidationResults
 	}
 
 	/// <summary>
-	/// Marks the result as valid.
-	/// </summary>
-	public void Pass()
-	{
-		//IsValid = true;
-	}
-
-	/// <summary>
 	/// Marks the result as invalid.
 	/// </summary>
 	/// <param name="message">(optional) An error message.</param>

@@ -55,7 +55,6 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -77,9 +76,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 			context.Log(() => $"Missing properties: [{string.Join(",", notFound.Select(x => $"'{x}'"))}]");
 		context.Options.LogIndentLevel--;
 
-		if (notFound.Count == 0)
-			context.LocalResult.Pass();
-		else
+		if (notFound.Count != 0)
 			context.LocalResult.Fail(Name, ErrorMessages.Required, ("missing", notFound));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

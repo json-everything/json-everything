@@ -46,7 +46,6 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -87,13 +86,12 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 		{
 			var missing = JsonSerializer.Serialize(missingDependencies);
 			context.LocalResult.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
 		}
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

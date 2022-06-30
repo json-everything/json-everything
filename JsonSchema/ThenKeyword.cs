@@ -44,7 +44,6 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		context.EnterKeyword(Name);
 		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
 			return;
 		}
@@ -53,7 +52,6 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		var ifResult = annotation!.GetValue<bool>();
 		if (!ifResult)
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => $"{Name} does not apply.");
 			return;
 		}

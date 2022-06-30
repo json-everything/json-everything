@@ -44,15 +44,12 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var number = context.LocalInstance!.AsValue().GetNumber();
-		if (number % Value == 0)
-			context.LocalResult.Pass();
-		else
+		if (number % Value != 0)
 			context.LocalResult.Fail(Name, ErrorMessages.MultipleOf, ("received", number), ("divisor", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

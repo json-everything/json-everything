@@ -45,7 +45,6 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, I
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		context.LocalResult.SetAnnotation(Name, valid);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

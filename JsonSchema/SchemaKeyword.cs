@@ -58,7 +58,6 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 
 		if (!context.Options.ValidateMetaSchema)
 		{
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -70,9 +69,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		newOptions.ValidateMetaSchema = false;
 		var results = metaSchema.Validate(schemaAsJson, newOptions);
 
-		if (results.IsValid)
-			context.LocalResult.Pass();
-		else
+		if (!results.IsValid)
 			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

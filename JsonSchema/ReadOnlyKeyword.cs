@@ -39,7 +39,6 @@ public class ReadOnlyKeyword : IJsonSchemaKeyword, IEquatable<ReadOnlyKeyword>
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 
