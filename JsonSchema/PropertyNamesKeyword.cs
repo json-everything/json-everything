@@ -70,7 +70,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		context.Options.LogIndentLevel--;
 
 		if (!overallResult)
-			context.LocalResult.Fail(Name);
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
