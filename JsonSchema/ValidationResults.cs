@@ -86,6 +86,18 @@ public class ValidationResults
 		_reference = context.Reference;
 	}
 
+	private ValidationResults(ValidationResults other)
+	{
+		IsValid = other.IsValid;
+		EvaluationPath = other.EvaluationPath;
+		_currentUri = other._currentUri;
+		_absoluteUri = other._absoluteUri;
+		InstanceLocation = other.InstanceLocation;
+		_reference = other._reference;
+		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
+		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
+	}
+
 	/// <summary>
 	/// Transforms the results to the `basic` format.
 	/// </summary>
@@ -95,6 +107,9 @@ public class ValidationResults
 		if (!children.Any()) return;
 
 		children.Remove(this);
+		children.Insert(0, new ValidationResults(this));
+		_annotations?.Clear();
+		_errors?.Clear();
 		_nestedResults!.Clear();
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 	}
