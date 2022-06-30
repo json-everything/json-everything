@@ -68,9 +68,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

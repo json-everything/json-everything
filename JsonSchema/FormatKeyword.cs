@@ -76,14 +76,16 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 			}
 		}
 
-		if (!requireValidation || Value.Validate(context.LocalInstance, out var errorMessage))
-			context.LocalResult.Pass();
-		else if (Value is UnknownFormat)
-			context.LocalResult.Fail(Name, errorMessage);
-		else if (errorMessage == null)
-			context.LocalResult.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
-		else
-			context.LocalResult.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+		if (requireValidation && !Value.Validate(context.LocalInstance, out var errorMessage))
+		{
+			if (Value is UnknownFormat)
+				context.LocalResult.Fail(Name, errorMessage);
+			else if (errorMessage == null)
+				context.LocalResult.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
+			else
+				context.LocalResult.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+		}
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

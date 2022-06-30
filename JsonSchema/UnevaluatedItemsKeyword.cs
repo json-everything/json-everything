@@ -48,7 +48,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -63,7 +62,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 			context.Log(() => $"Annotations from {PrefixItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
 			if (annotations.Any(x => x!.AsValue().TryGetValue(out bool _))) // is only ever true or a number
 			{
-				context.LocalResult.Pass();
 				context.ExitKeyword(Name, true);
 				return;
 			}
@@ -78,7 +76,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 			context.Log(() => $"Annotations from {ItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
 			if (annotations.Any(x => x!.AsValue().TryGetValue(out bool _))) // is only ever true or a number
 			{
-				context.LocalResult.Pass();
 				context.ExitKeyword(Name, true);
 				return;
 			}
@@ -90,7 +87,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		if (annotations.Any()) // is only ever true
 		{
 			context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -99,7 +95,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		if (annotations.Any()) // is only ever true
 		{
 			context.Log(() => $"Annotation from {Name}: {annotations.ToJsonArray().AsJsonString()}.");
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -135,9 +130,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		context.Options.LogIndentLevel--;
 
 		context.LocalResult.SetAnnotation(Name, true);
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

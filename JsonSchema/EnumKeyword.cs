@@ -66,9 +66,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
-			context.LocalResult.Pass();
-		else
+		if (!Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
 			context.LocalResult.Fail(Name, ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

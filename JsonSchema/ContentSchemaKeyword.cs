@@ -42,7 +42,6 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -51,9 +50,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		context.Validate();
 		context.Pop();
 		var result = context.LocalResult.IsValid;
-		if (result)
-			context.LocalResult.Pass();
-		else
+		if (!result)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

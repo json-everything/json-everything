@@ -48,7 +48,6 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -106,9 +105,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name, ErrorMessages.Dependencies, ("properties", JsonSerializer.Serialize(evaluatedProperties)));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

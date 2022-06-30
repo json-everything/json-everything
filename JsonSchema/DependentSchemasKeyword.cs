@@ -47,7 +47,6 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -81,9 +80,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 			context.Pop();
 		}
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name, ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

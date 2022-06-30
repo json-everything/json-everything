@@ -121,9 +121,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.Validate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
-		if (result)
-			context.LocalResult.Pass();
-		else
+		if (!result)
 			context.LocalResult.Fail(Name);
 
 		context.NavigatedReferences.Remove(navigation);

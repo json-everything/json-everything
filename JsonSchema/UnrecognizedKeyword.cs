@@ -45,7 +45,6 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKe
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
