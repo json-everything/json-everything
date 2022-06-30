@@ -47,7 +47,7 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (result)
-			context.LocalResult.Fail(Name);
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

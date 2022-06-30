@@ -87,7 +87,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 			context.LocalResult.SetAnnotation(Name, maxEvaluations);
 
 		if (!overallResult)
-			context.LocalResult.Fail(Name);
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
