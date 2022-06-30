@@ -61,7 +61,7 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		if (!valid) 
-			context.LocalResult.Fail(Name);
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

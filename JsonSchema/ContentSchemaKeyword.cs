@@ -51,7 +51,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		context.Pop();
 		var result = context.LocalResult.IsValid;
 		if (!result)
-			context.LocalResult.Fail(Name);
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

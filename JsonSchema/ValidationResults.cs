@@ -173,11 +173,22 @@ public class ValidationResults
 	/// <summary>
 	/// Marks the result as invalid.
 	/// </summary>
+	/// <remarks>
+	/// For better support for customization, consider using the overload that takes parameters.
+	/// </remarks>
+	public void Fail()
+	{
+		IsValid = false;
+	}
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
 	/// <param name="message">(optional) An error message.</param>
 	/// <remarks>
 	/// For better support for customization, consider using the overload that takes parameters.
 	/// </remarks>
-	public void Fail(string keyword, string? message = null)
+	public void Fail(string keyword, string? message)
 	{
 		IsValid = false;
 		if (message == null) return;

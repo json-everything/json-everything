@@ -131,7 +131,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 
 		context.LocalResult.SetAnnotation(Name, true);
 		if (!overallResult)
-			context.LocalResult.Fail(Name);
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
