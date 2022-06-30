@@ -45,11 +45,11 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		var scheamValueType = context.LocalInstance.GetSchemaValueType();
-		if (scheamValueType != SchemaValueType.Object)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.LocalResult.Pass();
-			context.WrongValueKind(scheamValueType);
+			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
@@ -62,7 +62,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		else
 		{
 			context.Log(() => $"Annotation from {PropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
 		}
 		annotations = context.LocalResult.GetAllAnnotations(PatternPropertiesKeyword.Name).ToList();
 		if (!annotations.Any())
@@ -70,7 +70,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		else
 		{
 			context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
 		}
 		annotations = context.LocalResult.GetAllAnnotations(AdditionalPropertiesKeyword.Name).ToList();
 		if (!annotations.Any())
@@ -78,7 +78,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		else
 		{
 			context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
 		}
 		annotations = context.LocalResult.GetAllAnnotations(Name).ToList();
 		if (!annotations.Any())
@@ -86,7 +86,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		else
 		{
 			context.Log(() => $"Annotation from {Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j.GetValue<string>())));
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;

@@ -96,7 +96,7 @@ public class ValidationResults
 
 		children.Remove(this);
 		_nestedResults!.Clear();
-		_nestedResults.AddRange(children.Where(c => c.HasAnnotations || c.HasErrors));
+		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 	}
 
 	/// <summary>
@@ -204,28 +204,30 @@ public class ValidationResults
 		Exclude = true;
 	}
 
-	internal Uri? BuildAbsoluteUri(JsonPointer pointer)
+	private Uri? BuildAbsoluteUri()
+	{
+		return BuildAbsoluteUri(EvaluationPath);
+	}
+
+	private Uri? BuildAbsoluteUri(JsonPointer pointer)
 	{
 		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 		if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
 		if (pointer.Segments.All(s => s.Value != RefKeyword.Name &&
-									  s.Value != RecursiveRefKeyword.Name))
-			return null;
+		                              s.Value != RecursiveRefKeyword.Name))
+		{
+			return new Uri(_currentUri, JsonPointer.Create(pointer.Segments, true).ToString());
+		}
 
 		var lastIndexOfRef = pointer.Segments
 			.Select((s, i) => (s, i))
-			.Last(s => s.s.Value == RefKeyword.Name || s.s.Value == RecursiveRefKeyword.Name).i;
+			.Last(s => s.s.Value is RefKeyword.Name or RecursiveRefKeyword.Name).i;
 		var absoluteSegments = pointer.Segments.Skip(lastIndexOfRef + 1);
 
 		if (_reference != null)
 			absoluteSegments = _reference.Segments.Concat(absoluteSegments);
 
 		return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());
-	}
-
-	private Uri? BuildAbsoluteUri()
-	{
-		return BuildAbsoluteUri(EvaluationPath);
 	}
 
 	private IEnumerable<ValidationResults> GetAllChildren()
@@ -247,7 +249,9 @@ public class ValidationResults
 			current._nestedResults?.Clear();
 		}
 
-		return all.Skip(1); // don't return the root
+		// we still include the root because it may have annotations
+		// don't report annotations at the root of the output
+		return all;
 	}
 }
 
@@ -260,7 +264,7 @@ internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
 
 	public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
 	{
-		//if (value.Exclude) return;
+		if (value.Exclude) return;
 
 		writer.WriteStartObject();
 
