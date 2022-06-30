@@ -29,10 +29,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static UnevaluatedItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="UnevaluatedItemsKeyword"/>.
 	/// </summary>
@@ -60,53 +56,49 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 		int startIndex = 0;
-		object? annotation;
-		if (context.Options.ValidatingAs == Draft.Unspecified || context.Options.ValidatingAs.HasFlag(Draft.Draft202012))
-		{
-			annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
-			if (annotation != null)
-			{
-				// ReSharper disable once AccessToModifiedClosure
-				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
-				if (annotation is bool) // is only ever true or a number
-				{
-					context.LocalResult.Pass();
-					context.ExitKeyword(Name, true);
-					return;
-				}
-				startIndex = (int)annotation;
-			}
-			else
-				context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
-		}
-		annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
-		if (annotation != null)
+		var annotations = context.LocalResult.GetAllAnnotations(PrefixItemsKeyword.Name).ToList();
+		if (annotations.Any())
 		{
 			// ReSharper disable once AccessToModifiedClosure
-			context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
-			if (annotation is bool) // is only ever true or a number
+			context.Log(() => $"Annotations from {PrefixItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
+			if (annotations.Any(x => x!.AsValue().TryGetValue(out bool _))) // is only ever true or a number
 			{
 				context.LocalResult.Pass();
 				context.ExitKeyword(Name, true);
 				return;
 			}
-			startIndex = (int)annotation;
+			startIndex = annotations.Max(x => x!.AsValue().TryGetValue(out int i) ? i : 0);
+		}
+		else
+			context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
+		annotations = context.LocalResult.GetAllAnnotations(ItemsKeyword.Name).ToList();
+		if (annotations.Any())
+		{
+			// ReSharper disable once AccessToModifiedClosure
+			context.Log(() => $"Annotations from {ItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
+			if (annotations.Any(x => x!.AsValue().TryGetValue(out bool _))) // is only ever true or a number
+			{
+				context.LocalResult.Pass();
+				context.ExitKeyword(Name, true);
+				return;
+			}
+			startIndex = annotations.Max(x => x!.AsValue().TryGetValue(out int i) ? i : 0);
 		}
 		else
 			context.Log(() => $"No annotations from {ItemsKeyword.Name}.");
-		annotation = context.LocalResult.TryGetAnnotation(AdditionalItemsKeyword.Name);
-		if (annotation is bool) // is only ever true
+		annotations = context.LocalResult.GetAllAnnotations(AdditionalItemsKeyword.Name).ToList();
+		if (annotations.Any()) // is only ever true
 		{
-			context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
+			context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
 		context.Log(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
-		annotation = context.LocalResult.TryGetAnnotation(Name);
-		if (annotation is bool) // is only ever true
+		annotations = context.LocalResult.GetAllAnnotations(Name).ToList();
+		if (annotations.Any()) // is only ever true
 		{
-			context.Log(() => $"Annotation from {Name}: {annotation}.");
+			context.Log(() => $"Annotation from {Name}: {annotations.ToJsonArray().AsJsonString()}.");
 			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
@@ -116,10 +108,13 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		var indicesToValidate = Enumerable.Range(startIndex, array.Count - startIndex);
 		if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
 		{
-			var validatedByContains = context.LocalResult.GetAllAnnotations<List<int>>(ContainsKeyword.Name).SelectMany(x => x).ToList();
+			var validatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
+				.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<int>()))
+				.Distinct()
+				.ToList();
 			if (validatedByContains.Any())
 			{
-				context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
+				context.Log(() => $"Annotations from {ContainsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
 				indicesToValidate = indicesToValidate.Except(validatedByContains);
 			}
 			else
@@ -142,14 +137,8 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-			localResults.SetAnnotation(Name, true);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -40,10 +40,6 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 
 	IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas!;
 
-	static ItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="ItemsKeyword"/>.
 	/// </summary>
@@ -91,19 +87,17 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		}
 
 		var array = (JsonArray)context.LocalInstance!;
-		bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 		var overallResult = true;
 		if (SingleSchema != null)
 		{
 			context.Options.LogIndentLevel++;
 			int startIndex;
-			var annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
-			if (annotation == null)
+			if (!context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name, out var annotation))
 				startIndex = 0;
 			else
 			{
-				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
-				if (annotation is bool)
+				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation.AsJsonString()}");
+				if (annotation!.AsValue().TryGetValue(out bool _))
 				{
 					context.LocalResult.Pass();
 					context.ExitKeyword(Name, true);
@@ -127,17 +121,13 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			}
 			context.Options.LogIndentLevel--;
 
-			if (overwriteAnnotation)
-			{
-				// TODO: add message
-				context.LocalResult.SetAnnotation(Name, true);
-			}
+			context.LocalResult.SetAnnotation(Name, true);
 		}
 		else // array
 		{
 			if (context.Options.ValidatingAs == Draft.Draft202012)
 			{
-				context.LocalResult.Fail(ErrorMessages.InvalidItemsForm);
+				context.LocalResult.Fail(Name, ErrorMessages.InvalidItemsForm);
 				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
 				context.ExitKeyword(Name, false);
 				return;
@@ -152,7 +142,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
 					item ?? JsonNull.SignalNode,
-					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
+					context.EvaluationPath.Combine(PointerSegment.Create($"{i}")));
 				schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
@@ -161,35 +151,17 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			}
 			context.Options.LogIndentLevel--;
 
-			if (overwriteAnnotation)
-			{
-				// TODO: add message
-				if (maxEvaluations == array.Count)
-					context.LocalResult.SetAnnotation(Name, true);
-				else
-					context.LocalResult.SetAnnotation(Name, maxEvaluations);
-			}
+			if (maxEvaluations == array.Count)
+				context.LocalResult.SetAnnotation(Name, true);
+			else
+				context.LocalResult.SetAnnotation(Name, maxEvaluations);
 		}
 
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		object value;
-		var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.ToList();
-		if (allAnnotations.OfType<bool>().Any())
-			value = true;
-		else
-			value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
-		if (!Equals(value, -1))
-			localResults.SetAnnotation(Name, value);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -102,7 +102,7 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 
 		var results = JsonPatchTest.TestSchema.Validate(node, new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true
 		});
 		if (results.IsValid)

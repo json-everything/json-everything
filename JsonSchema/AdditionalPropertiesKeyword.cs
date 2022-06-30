@@ -31,10 +31,6 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static AdditionalPropertiesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="AdditionalPropertiesKeyword"/>.
 	/// </summary>
@@ -61,7 +57,6 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 		List<string> evaluatedProperties;
 		var obj = (JsonObject)context.LocalInstance!;
 		if (!obj.VerifyJsonObject(context)) return;
@@ -80,24 +75,23 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		}
 		else
 		{
-			if (annotation == null)
+			if (!context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name, out var annotation))
 			{
 				context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
 				evaluatedProperties = new List<string>();
 			}
 			else
 			{
-				var annotation1 = annotation;
-				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation1.Select(x => $"'{x}'"))}]");
-				evaluatedProperties = annotation;
+				// ReSharper disable once AccessToModifiedClosure
+				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: {annotation.AsJsonString()}");
+				evaluatedProperties = annotation!.AsArray().Select(x => x!.GetValue<string>()).ToList();
 			}
-			annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
-			if (annotation == null)
+			if (!context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name, out annotation))
 				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
 			else
 			{
-				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-				evaluatedProperties.AddRange(annotation);
+				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: {annotation.AsJsonString()}");
+				evaluatedProperties.AddRange(annotation!.AsArray().Select(x => x!.GetValue<string>()));
 			}
 		}
 		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToList();
@@ -111,7 +105,8 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 			}
 
 			context.Log(() => $"Validating property '{property.Key}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode);
+			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name, property.Key), Schema);
 			Schema.ValidateSubschema(context);
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
@@ -123,30 +118,13 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		}
 		context.Options.LogIndentLevel--;
 
-		if (context.LocalResult.TryGetAnnotation(Name) is List<string> list)
-			list.AddRange(evaluatedProperties);
-		else
-			context.LocalResult.SetAnnotation(Name, evaluatedProperties);
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
 
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allProperties);
-		else if (allProperties.Any())
-			localResults.SetAnnotation(Name, allProperties);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -142,6 +142,6 @@ public class NotGenerationTests
 		var schema = new JsonSchemaBuilder()
 			.Not(new JsonSchemaBuilder().Required("foo"));
 
-		Run(schema, new ValidationOptions { OutputFormat = OutputFormat.Verbose });
+		Run(schema, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 	}
 }

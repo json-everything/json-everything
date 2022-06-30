@@ -127,10 +127,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			case OutputFormat.Basic:
 				results.ToBasic();
 				break;
-			case OutputFormat.Detailed:
-				results.ToDetailed();
-				break;
-			case OutputFormat.Verbose:
+			case OutputFormat.Hierarchical:
 				break;
 			default:
 				throw new ArgumentOutOfRangeException();
@@ -199,7 +196,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			if (BoolValue.Value)
 				context.LocalResult.Pass();
 			else
-				context.LocalResult.Fail(ErrorMessages.FalseSchema);
+				context.LocalResult.Fail(string.Empty, ErrorMessages.FalseSchema);
 			return;
 		}
 
@@ -225,9 +222,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			}
 		}
 
-		var overallResult = true;
 		List<Type>? keywordTypesToProcess = null;
-		var previousAnnotationSet = new List<Annotation>();
 		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 		{
 			// $schema is always processed first, and this should only be set
@@ -236,30 +231,13 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);
-			context.PullDirectRefNavigation();
-			context.LocalResult.ConsiderAnnotations(previousAnnotationSet);
 			keyword.Validate(context);
-			overallResult &= context.LocalResult.IsValid;
 
-			var localAnnotations = context.LocalResult.Annotations
-				.Where(x => x.Source.StartsWith(context.SchemaLocation))
-				.ToList();
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-			previousAnnotationSet.AddRange(localAnnotations);
+			if (!context.LocalResult.IsValid && context.ApplyOptimizations) break;
 		}
 
 		if (context.IsNewDynamicScope)
 			context.Options.SchemaRegistry.ExitingUriScope();
-
-		if (overallResult)
-		{
-			context.LocalResult.Pass();
-			context.LocalResult.ImportAnnotations(previousAnnotationSet);
-		}
-		else
-			context.LocalResult.Fail();
 	}
 
 	internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)

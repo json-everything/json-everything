@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -48,20 +49,19 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 			return;
 		}
 
-		var annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
-		if (annotation is not List<int> validatedIndices)
+		if (!context.LocalResult.TryGetAnnotation(ContainsKeyword.Name, out var annotation))
 		{
 			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 			context.LocalResult.Pass();
 			return;
 		}
 
-		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-		var containsCount = validatedIndices.Count;
+		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation.AsJsonString()}.");
+		var containsCount = annotation!.AsArray().Count;
 		if (Value >= containsCount)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MaxContains, ("received", containsCount), ("limit", Value));
+			context.LocalResult.Fail(Name, ErrorMessages.MaxContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

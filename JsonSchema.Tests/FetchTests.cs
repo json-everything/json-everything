@@ -12,7 +12,7 @@ public class FetchTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
 				Fetch = uri =>
@@ -30,7 +30,7 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
+		results.EvaluationPath.Segments.Last().Value.Should().NotBe("$ref");
 	}
 
 	[Test]
@@ -38,7 +38,7 @@ public class FetchTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		SchemaRegistry.Global.Fetch = uri =>
 		{
@@ -53,7 +53,7 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
+		results.EvaluationPath.Segments.Last().Value.Should().NotBe("$ref");
 	}
 
 	[Test]
@@ -61,7 +61,7 @@ public class FetchTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
 				Fetch = uri =>
@@ -79,7 +79,7 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+		results.EvaluationPath.Segments.Last().Value.Should().Be("$ref");
 	}
 
 	[Test]
@@ -89,7 +89,7 @@ public class FetchTests
 		{
 			var options = new ValidationOptions
 			{
-				OutputFormat = OutputFormat.Detailed
+				OutputFormat = OutputFormat.Hierarchical
 			};
 			SchemaRegistry.Global.Fetch = uri =>
 			{
@@ -104,7 +104,7 @@ public class FetchTests
 			var results = schema.Validate(json.RootElement, options);
 
 			results.AssertInvalid();
-			results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+			results.EvaluationPath.Segments.Last().Value.Should().Be("$ref");
 		}
 		finally
 		{

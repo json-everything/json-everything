@@ -33,7 +33,7 @@ public class SpecExampleTests
 	{
 		Vocabularies.Register();
 
-		ValidationOptions.Default.OutputFormat = OutputFormat.Detailed;
+		ValidationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 
 	[Test]

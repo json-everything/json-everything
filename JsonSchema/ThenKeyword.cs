@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -41,22 +42,28 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		var annotation = context.LocalResult.TryGetAnnotation(IfKeyword.Name);
-		if (annotation == null)
+		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
 		{
 			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
 			return;
 		}
 
-		if (!(bool)annotation)
+		context.Log(() => $"Annotation for {IfKeyword.Name} is {annotation.AsJsonString()}.");
+		var ifResult = annotation!.GetValue<bool>();
+		if (!ifResult)
 		{
 			context.LocalResult.Pass();
-			context.NotApplicable(() => $"Annotation for {IfKeyword.Name} is {annotation}.");
+			context.NotApplicable(() => $"{Name} does not apply.");
 			return;
 		}
 
+		context.Push(evaluationPath: context.EvaluationPath.Combine(Name));
 		Schema.ValidateSubschema(context);
+		var valid = context.LocalResult.IsValid;
+		context.Pop();
+		if (!valid)
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

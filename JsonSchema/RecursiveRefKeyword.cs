@@ -71,7 +71,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 		var navigation = (absoluteReference, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 		{
-			context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
+			context.LocalResult.Fail(Name, ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -83,7 +83,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 		{
 			if (baseSchema == null)
 			{
-				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment!));
+				context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment!));
 				context.ExitKeyword(Name, false);
 				return;
 			}
@@ -93,7 +93,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
+					context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment));
 					context.ExitKeyword(Name, false);
 					return;
 				}
@@ -106,22 +106,21 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 
 		if (schema == null)
 		{
-			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference));
+			context.LocalResult.Fail(Name, ErrorMessages.RefResolution, ("uri", Reference));
 			context.ExitKeyword(Name, false);
 			return;
 		}
 
 		context.NavigatedReferences.Add(navigation);
 
-		context.Push(newUri: newUri);
+		context.Push(newUri: newUri, evaluationPath: context.EvaluationPath.Combine(Name));
 		schema.ValidateSubschema(context);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
-		context.LocalResult.ConsolidateAnnotations();
 		if (result)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

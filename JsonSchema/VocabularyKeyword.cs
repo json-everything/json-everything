@@ -65,7 +65,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
+			context.LocalResult.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

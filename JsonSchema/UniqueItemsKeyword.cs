@@ -73,7 +73,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		else
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("duplicates", pairs));
+			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

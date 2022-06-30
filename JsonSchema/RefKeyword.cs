@@ -70,7 +70,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		var navigation = (absoluteReference, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 		{
-			context.LocalResult.Fail(ErrorMessages.RecursiveRef);
+			context.LocalResult.Fail(Name, ErrorMessages.RecursiveRef);
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -83,7 +83,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		{
 			if (baseSchema == null)
 			{
-				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
+				context.LocalResult.Fail(Name, ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
 				context.ExitKeyword(Name, false);
 				return;
 			}
@@ -93,7 +93,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 				fragment = $"#{fragment}";
 				if (!JsonPointer.TryParse(fragment, out var pointer))
 				{
-					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
+					context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment));
 					context.ExitKeyword(Name, false);
 					return;
 				}
@@ -107,25 +107,24 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 
 		if (schema == null)
 		{
-			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference.OriginalString));
+			context.LocalResult.Fail(Name, ErrorMessages.RefResolution, ("uri", Reference.OriginalString));
 			context.ExitKeyword(Name, false);
 			return;
 		}
 
 		context.NavigatedReferences.Add(navigation);
 
-		context.Push(newUri: newUri);
+		context.Push(newUri: newUri, evaluationPath: context.EvaluationPath.Combine(Name));
 		context.NavigatedByDirectRef = navigatedByDirectRef;
 		if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
 			context.Reference = reference;
 		schema.ValidateSubschema(context);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
-		context.LocalResult.ConsolidateAnnotations();
 		if (result)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 
 		context.NavigatedReferences.Remove(navigation);
 

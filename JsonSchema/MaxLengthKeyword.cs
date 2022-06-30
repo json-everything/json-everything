@@ -53,7 +53,7 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 		if (Value >= length)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MaxLength, ("received", length), ("limit", Value));
+			context.LocalResult.Fail(Name, ErrorMessages.MaxLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

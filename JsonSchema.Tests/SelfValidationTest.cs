@@ -43,7 +43,7 @@ public class SelfValidationTest
 	public void Hardcoded(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema);
-		var validation = schema.Validate(JsonNode.Parse(json), new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Validate(JsonNode.Parse(json), new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}

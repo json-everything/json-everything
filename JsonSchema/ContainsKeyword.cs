@@ -30,10 +30,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static ContainsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="ContainsKeyword"/>.
 	/// </summary>
@@ -72,7 +68,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
 		if (minContainsKeyword is { Value: 0 })
 		{
-			context.LocalResult.SetAnnotation(Name, validIndices);
+			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 			context.LocalResult.Pass();
 			context.NotApplicable(() => $"{MinContainsKeyword.Name} is 0.");
 			return;
@@ -80,26 +76,12 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 
 		if (validIndices.Any())
 		{
-			context.LocalResult.SetAnnotation(Name, validIndices);
+			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 			context.LocalResult.Pass();
 		}
 		else
-			context.LocalResult.Fail(ErrorMessages.Contains);
+			context.LocalResult.Fail(Name, ErrorMessages.Contains);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allIndices = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<int>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<int> annotation)
-			annotation.AddRange(allIndices);
-		else if (allIndices.Any())
-			localResults.SetAnnotation(Name, allIndices);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -40,11 +40,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 
 	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
 
-	static PatternPropertiesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
-
 	/// <summary>
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
 	/// </summary>
@@ -88,7 +83,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Key}")),
 					instanceProperty.Value ?? JsonNull.SignalNode,
-					context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
+					context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")));
 				schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
@@ -101,8 +96,8 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		{
 			foreach (var pattern in InvalidPatterns)
 			{
-				context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-				context.LocalResult.Fail(ErrorMessages.InvalidPattern, ("pattern", pattern));
+				context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")));
+				context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
 				overallResult = false;
 				context.Log(() => $"Discovered invalid pattern '{pattern}'.");
 				context.Pop();
@@ -111,14 +106,11 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		}
 		context.Options.LogIndentLevel--;
 
-		if (context.LocalResult.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(evaluatedProperties);
-		else
-			context.LocalResult.SetAnnotation(Name, evaluatedProperties);
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
 		if (overallResult)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -128,20 +120,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		{
 			schema.RegisterSubschemas(registry, currentUri);
 		}
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allProperties);
-		else if (allProperties.Any())
-			localResults.SetAnnotation(Name, allProperties);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

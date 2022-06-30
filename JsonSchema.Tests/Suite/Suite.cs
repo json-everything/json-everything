@@ -42,7 +42,7 @@ public class Suite
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Verbose
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		switch (draftFolder)
 		{

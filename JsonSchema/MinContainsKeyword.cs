@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -43,7 +44,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 		context.EnterKeyword(Name);
 		if (Value == 0)
 		{
-			var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
+			var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.EvaluationPath.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
 			if (containsResult != null)
 				context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
 			context.LocalResult.Pass();
@@ -59,20 +60,19 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 			return;
 		}
 
-		var annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
-		if (!(annotation is List<int> validatedIndices))
+		if (!context.LocalResult.TryGetAnnotation(ContainsKeyword.Name, out var annotation))
 		{
 			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
 			return;
 		}
 
-		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-		var containsCount = validatedIndices.Count;
+		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation.AsJsonString()}.");
+		var containsCount = annotation!.AsArray().Count;
 		if (Value <= containsCount)
 			context.LocalResult.Pass();
 		else
-			context.LocalResult.Fail(ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
+			context.LocalResult.Fail(Name, ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

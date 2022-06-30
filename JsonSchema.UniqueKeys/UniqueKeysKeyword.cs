@@ -89,7 +89,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 				{
 					if (context.Options.OutputFormat == OutputFormat.Flag)
 					{
-						context.LocalResult.Fail($"Found duplicate items at indices {i} and {j}");
+						context.LocalResult.Fail(Name, $"Found duplicate items at indices {i} and {j}");
 						context.ExitKeyword(Name);
 						return;
 					}
@@ -103,7 +103,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		else
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("pairs", pairs));
+			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("pairs", pairs));
 		}
 		context.ExitKeyword(Name);
 	}

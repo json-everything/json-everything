@@ -145,7 +145,7 @@ public class GithubTests
 	""additionalProperties"": false
 }");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 	}
@@ -156,7 +156,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertInvalid();
 	}
@@ -169,7 +169,7 @@ public class GithubTests
 
 		var result = schema.Validate(instance, new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			ValidateMetaSchema = true
 		});
 
@@ -200,7 +200,7 @@ public class GithubTests
 		var opts = new ValidationOptions
 		{
 			ValidateAs = draft,
-			OutputFormat = OutputFormat.Detailed
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		var element = JsonNode.Parse(instance);
 
@@ -225,7 +225,7 @@ public class GithubTests
 }";
 		var schema = JsonSchema.FromFile(schemaFile);
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -245,7 +245,7 @@ public class GithubTests
 }";
 		var schema = JsonSchema.FromFile(schemaFile);
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -270,7 +270,7 @@ public class GithubTests
 }";
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr)!;
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -413,7 +413,7 @@ public class GithubTests
 		};
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Verbose,
+			OutputFormat = OutputFormat.Hierarchical,
 			DefaultBaseUri = firstBaseUri,
 			SchemaRegistry =
 			{
@@ -426,7 +426,7 @@ public class GithubTests
 		};
 		var result = schema2.Validate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.NestedResults[0].NestedResults[0].AbsoluteSchemaLocation, "http://first.com/schema1.json#");
+		Assert.AreEqual(result.NestedResults[0].NestedResults[0].SchemaLocation, "http://first.com/schema1.json#");
 	}
 
 	[Test]
@@ -470,8 +470,8 @@ public class GithubTests
 		var passing = JsonNode.Parse(passingText);
 		var failing = JsonNode.Parse(failingText);
 
-		schema!.Validate(passing, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertValid();
-		schema.Validate(failing, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
+		schema!.Validate(passing, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertValid();
+		schema.Validate(failing, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
 	}
 
 	[Test]
@@ -483,7 +483,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
+		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
 	}
 
 	[Test]
@@ -498,7 +498,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
+		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
 	}
 
 	[SchemaKeyword(Name)]
@@ -563,7 +563,7 @@ public class GithubTests
 
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		options.SchemaRegistry.Register(new Uri("https://my-external-schema"), externalSchema);
 
@@ -605,7 +605,7 @@ public class GithubTests
 
 		var res = schema.Validate(instance, new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			//ValidateAs = Draft.Draft7,
 			ValidateMetaSchema = true
 		});
@@ -648,7 +648,7 @@ public class GithubTests
 
 		var res = schema.Validate(instance, new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			//ValidateAs = Draft.Draft7,
 			ValidateMetaSchema = true
 		});
@@ -669,7 +669,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"foo\":1,\"bar\":false}");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertInvalid();
 		var nodes = new List<ValidationResults> { result };
@@ -677,7 +677,7 @@ public class GithubTests
 		{
 			var node = nodes.First();
 			nodes.Remove(node);
-			Assert.AreNotEqual("#/additionalProperties", node.SchemaLocation.ToString());
+			Assert.AreNotEqual("#/additionalProperties", node.EvaluationPath.ToString());
 			nodes.AddRange(node.NestedResults);
 		}
 	}

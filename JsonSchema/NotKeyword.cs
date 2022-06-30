@@ -42,13 +42,12 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
+		context.Push(evaluationPath: context.EvaluationPath.Combine(Name));
 		Schema.ValidateSubschema(context);
 		var result = context.LocalResult.IsValid;
-		context.Options.LogIndentLevel++;
-		context.Log(() => $"Subschema {context.LocalResult.IsValid.GetValidityString()}.");
-		context.Options.LogIndentLevel--;
+		context.Pop();
 		if (result)
-			context.LocalResult.Fail();
+			context.LocalResult.Fail(Name);
 		else
 			context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
