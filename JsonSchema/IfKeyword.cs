@@ -40,8 +40,8 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, I
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.Push(evaluationPath: context.EvaluationPath.Combine(Name));
-		Schema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		context.Validate();
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		context.LocalResult.SetAnnotation(Name, valid);

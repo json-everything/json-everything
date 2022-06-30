@@ -30,7 +30,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations.Count());
-		Assert.IsTrue(((JsonNode)"bar").IsEquivalentTo((JsonNode)result.Annotations.First().Value));
+		Assert.IsTrue(((JsonNode)"bar").IsEquivalentTo(result.Annotations.First().Value));
 	}
 
 	[Test]

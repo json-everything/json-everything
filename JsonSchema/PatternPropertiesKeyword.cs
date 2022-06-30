@@ -81,10 +81,11 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 			foreach (var instanceProperty in obj.Where(p => pattern.IsMatch(p.Key)))
 			{
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
-				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Key}")),
+				context.Push(context.InstanceLocation.Combine(instanceProperty.Key),
 					instanceProperty.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")));
-				schema.ValidateSubschema(context);
+					context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")),
+					schema);
+				context.Validate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
@@ -96,7 +97,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		{
 			foreach (var pattern in InvalidPatterns)
 			{
-				context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")));
+				context.Push(context.EvaluationPath.Combine(pattern), false);
 				context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
 				overallResult = false;
 				context.Log(() => $"Discovered invalid pattern '{pattern}'.");

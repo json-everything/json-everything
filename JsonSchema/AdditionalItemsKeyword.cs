@@ -74,8 +74,9 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 			var i1 = i;
 			context.Log(() => $"Validating item at index {i1}.");
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
+			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name), Schema);
+			context.Validate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

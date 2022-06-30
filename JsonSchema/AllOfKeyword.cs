@@ -60,8 +60,8 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			var i1 = i;
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
-			context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{i}")));
-			schema.ValidateSubschema(context);
+			context.Push(context.EvaluationPath.Combine(i), schema);
+			context.Validate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

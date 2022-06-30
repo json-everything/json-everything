@@ -58,8 +58,8 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 			return;
 		}
 
-		context.Push(evaluationPath: context.EvaluationPath.Combine(Name));
-		Schema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		context.Validate();
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		if (!valid) 

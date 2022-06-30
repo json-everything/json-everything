@@ -77,7 +77,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 				item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name, name),
 				schema);
-			schema.ValidateSubschema(context);
+			context.Validate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			evaluatedProperties.Add(name);

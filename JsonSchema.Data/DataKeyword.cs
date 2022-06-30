@@ -79,7 +79,9 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 			return;
 		}
 
-		subschema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), subschema);
+		context.Validate();
+		context.Pop();
 		context.ExitKeyword(Name);
 	}
 
