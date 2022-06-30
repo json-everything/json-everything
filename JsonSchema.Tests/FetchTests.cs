@@ -1,6 +1,4 @@
-using System.Linq;
 using System.Text.Json;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -30,7 +28,6 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().NotBe("$ref");
 	}
 	[Test]
 	public void GlobalRegistryFindsRef()
@@ -52,7 +49,6 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().NotBe("$ref");
 	}
 	[Test]
 	public void LocalRegistryMissesRef()
@@ -77,7 +73,6 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().Be("$ref");
 	}
 	[Test]
 	public void GlobalRegistryMissesRef()
@@ -99,6 +94,5 @@ public class FetchTests
 		var results = schema.Validate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.EvaluationPath.Segments.Last().Value.Should().Be("$ref");
 	}
 }
