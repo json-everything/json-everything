@@ -41,7 +41,7 @@ public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<Anc
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.LocalResult.Pass();
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
 	}
 

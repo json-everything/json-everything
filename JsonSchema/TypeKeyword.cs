@@ -102,9 +102,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 				throw new ArgumentOutOfRangeException();
 		}
 		var expected = Type.ToString().ToLower();
-		if (isValid)
-			context.LocalResult.Pass();
-		else
+		if (!isValid)
 			context.LocalResult.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

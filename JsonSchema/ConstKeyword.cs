@@ -42,9 +42,7 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (Value.IsEquivalentTo(context.LocalInstance))
-			context.LocalResult.Pass();
-		else
+		if (!Value.IsEquivalentTo(context.LocalInstance))
 			context.LocalResult.Fail(Name, ErrorMessages.Const, ("value", Value.AsJsonString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

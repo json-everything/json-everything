@@ -60,7 +60,6 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -87,9 +86,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		else
 			context.LocalResult.SetAnnotation(Name, maxEvaluations);
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

@@ -47,14 +47,12 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		var scheamValueType = context.LocalInstance.GetSchemaValueType();
 		if (scheamValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(scheamValueType);
 			return;
 		}
 
 		if (!Value)
 		{
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -68,13 +66,12 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 					duplicates.Add((i, j));
 			}
 
-		if (!duplicates.Any())
-			context.LocalResult.Pass();
-		else
+		if (duplicates.Any())
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
 			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

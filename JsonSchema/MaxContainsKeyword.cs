@@ -45,22 +45,18 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.WrongValueKind(schemaValueType);
-			context.LocalResult.Pass();
 			return;
 		}
 
 		if (!context.LocalResult.TryGetAnnotation(ContainsKeyword.Name, out var annotation))
 		{
 			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
-			context.LocalResult.Pass();
 			return;
 		}
 
 		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation.AsJsonString()}.");
 		var containsCount = annotation!.AsArray().Count;
-		if (Value >= containsCount)
-			context.LocalResult.Pass();
-		else
+		if (Value < containsCount)
 			context.LocalResult.Fail(Name, ErrorMessages.MaxContains, ("received", containsCount), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

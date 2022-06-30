@@ -45,15 +45,12 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxProperties
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var number = ((JsonObject)context.LocalInstance!).Count;
-		if (Value >= number)
-			context.LocalResult.Pass();
-		else
+		if (Value < number)
 			context.LocalResult.Fail(Name, ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

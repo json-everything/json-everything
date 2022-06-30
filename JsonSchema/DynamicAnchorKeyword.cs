@@ -38,7 +38,6 @@ public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquata
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

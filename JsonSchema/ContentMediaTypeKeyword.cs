@@ -42,13 +42,11 @@ public class ContentMediaTypeKeyword : IJsonSchemaKeyword, IEquatable<ContentMed
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

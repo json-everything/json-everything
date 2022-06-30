@@ -48,8 +48,6 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 		context.Pop();
 		if (result)
 			context.LocalResult.Fail(Name);
-		else
-			context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

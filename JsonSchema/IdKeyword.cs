@@ -45,7 +45,6 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 		if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
 			(context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7))
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => "$ref present; ignoring");
 			return;
 		}
@@ -57,7 +56,6 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 		context.Options.SchemaRegistry.EnteringUriScope(newUri);
 		context.UpdateCurrentUri(newUri);
 		context.LocalSchema.UpdateBaseUri(newUri);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

@@ -49,7 +49,6 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -70,9 +69,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		}
 		context.Options.LogIndentLevel--;
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

@@ -46,7 +46,6 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -55,14 +54,12 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		var overallResult = true;
 		if (!context.LocalResult.TryGetAnnotation(ItemsKeyword.Name, out var annotation))
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotations from {ItemsKeyword.Name}.");
 			return;
 		}
 		context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
 		if (annotation!.GetValue<object>() is bool)
 		{
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 			return;
 		}
@@ -85,9 +82,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		context.Options.LogIndentLevel--;
 		context.LocalResult.SetAnnotation(Name, true);
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail(Name);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

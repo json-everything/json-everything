@@ -64,7 +64,6 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -98,13 +97,12 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 			}
 		}
 
-		if (!matchedIndexPairs.Any())
-			context.LocalResult.Pass();
-		else
+		if (matchedIndexPairs.Any())
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
 			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("pairs", pairs));
 		}
+
 		context.ExitKeyword(Name);
 	}
 

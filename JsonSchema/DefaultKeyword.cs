@@ -43,7 +43,6 @@ public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 

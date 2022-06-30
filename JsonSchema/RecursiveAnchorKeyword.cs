@@ -44,7 +44,6 @@ public class RecursiveAnchorKeyword : IJsonSchemaKeyword, IEquatable<RecursiveAn
 		if (Value)
 			context.CurrentAnchor ??= context.LocalSchema;
 
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, true);
 	}
 
