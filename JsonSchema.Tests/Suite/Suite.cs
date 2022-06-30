@@ -129,7 +129,7 @@ public class Suite
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = collection.Schema.Validate(test.Data, options);
-		result.ToBasic();
+		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
