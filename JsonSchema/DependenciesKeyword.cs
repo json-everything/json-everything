@@ -73,8 +73,8 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 			if (requirements.Schema != null)
 			{
 				context.Log(() => "Found schema requirement.");
-				context.Push(evaluationPath: context.EvaluationPath.Combine(PointerSegment.Create($"{name}")));
-				requirements.Schema.ValidateSubschema(context);
+				context.Push(context.EvaluationPath.Combine(name), requirements.Schema);
+				context.Validate();
 				overallResult &= context.LocalResult.IsValid;
 				if (context.LocalResult.IsValid)
 					evaluatedProperties.Add(name);

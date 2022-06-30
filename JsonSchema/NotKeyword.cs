@@ -42,8 +42,8 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.Push(evaluationPath: context.EvaluationPath.Combine(Name));
-		Schema.ValidateSubschema(context);
+		context.Push(evaluationPath: context.EvaluationPath.Combine(Name), Schema);
+		context.Validate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (result)

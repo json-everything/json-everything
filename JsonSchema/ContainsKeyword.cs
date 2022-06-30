@@ -58,8 +58,9 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		var validIndices = new List<int>();
 		for (int i = 0; i < array.Count; i++)
 		{
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), array[i] ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
+			context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name), Schema);
+			context.Validate();
 			if (context.LocalResult.IsValid)
 				validIndices.Add(i);
 			context.Pop();

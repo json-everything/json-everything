@@ -115,7 +115,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
 
 		options.Log.Write(() => "Beginning validation.");
-		ValidateSubschema(context);
+		context.Validate();
 
 		options.Log.Write(() => "Transforming output.");
 		var results = context.LocalResult;
@@ -181,43 +181,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 
 		return currentUri;
-	}
-
-	/// <summary>
-	/// Validates as a subschema.  To be called from within keywords.
-	/// </summary>
-	/// <param name="context">The validation context for this validation pass.</param>
-	public void ValidateSubschema(ValidationContext context)
-	{
-		if (BoolValue.HasValue)
-		{
-			context.Log(() => $"Found {(BoolValue.Value ? "true" : "false")} schema: {BoolValue.Value.GetValidityString()}");
-			if (BoolValue.Value)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail(string.Empty, ErrorMessages.FalseSchema);
-			return;
-		}
-
-		var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-		var keywords = context.Options.FilterKeywords(Keywords!, metaSchemaUri, context.Options.SchemaRegistry);
-
-		List<Type>? keywordTypesToProcess = null;
-		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
-		{
-			// $schema is always processed first, and this should only be set
-			// after $schema has been evaluated.
-			if (keyword is not SchemaKeyword)
-				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
-			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
-
-			keyword.Validate(context);
-
-			if (!context.LocalResult.IsValid && context.ApplyOptimizations) break;
-		}
-
-		if (context.IsNewDynamicScope)
-			context.Options.SchemaRegistry.ExitingUriScope();
 	}
 
 	internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)

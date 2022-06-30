@@ -86,7 +86,9 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
-		subschema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), subschema);
+		context.Validate();
+		context.Pop();
 		context.ExitKeyword(Name);
 	}
 

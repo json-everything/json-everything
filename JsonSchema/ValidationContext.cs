@@ -135,20 +135,17 @@ public class ValidationContext
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
 	/// <param name="newUri">The URI of the subschema.</param>
-	public void Push(in JsonPointer? instanceLocation = null,
-		in JsonNode? instance = null,
-		in JsonPointer? evaluationPath = null,
-		in JsonSchema? subschema = null,
+	public void Push(in JsonPointer instanceLocation,
+		in JsonNode? instance,
+		in JsonPointer evaluationPath,
+		in JsonSchema subschema,
 		Uri? newUri = null)
 	{
 		_currentUris.Push(newUri ?? CurrentUri);
-		_instanceLocations.Push(instanceLocation ?? InstanceLocation);
-		if (ReferenceEquals(instance, JsonNull.SignalNode))
-			_localInstances.Push(null);
-		else
-			_localInstances.Push(instance ?? LocalInstance);
-		_evaluationPaths.Push(evaluationPath ?? EvaluationPath);
-		_localSchemas.Push(subschema ?? LocalSchema);
+		_instanceLocations.Push(instanceLocation);
+		_localInstances.Push(instance);
+		_evaluationPaths.Push(evaluationPath);
+		_localSchemas.Push(subschema);
 		var newResult = new ValidationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
@@ -156,6 +153,66 @@ public class ValidationContext
 		_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
 		_directRefNavigation.Push(false);
 	}
+
+	/// <summary>
+	/// Pushes the state onto the stack and sets up for a nested layer of validation.
+	/// </summary>
+	/// <param name="evaluationPath">The location within the schema root.</param>
+	/// <param name="subschema">The subschema.</param>
+	/// <param name="newUri">The URI of the subschema.</param>
+	public void Push(in JsonPointer evaluationPath,
+		in JsonSchema subschema,
+		Uri? newUri = null)
+	{
+		_currentUris.Push(newUri ?? CurrentUri);
+		_instanceLocations.Push(InstanceLocation);
+		_localInstances.Push(LocalInstance);
+		_evaluationPaths.Push(evaluationPath);
+		_localSchemas.Push(subschema);
+		var newResult = new ValidationResults(this);
+		LocalResult.AddNestedResult(newResult);
+		_localResults.Push(newResult);
+		_dynamicScopeFlags.Push(false);
+		_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
+		_directRefNavigation.Push(false);
+	}
+
+	/// <summary>
+	/// Validates as a subschema.  To be called from within keywords.
+	/// </summary>
+	public void Validate()
+	{
+		if (LocalSchema.BoolValue.HasValue)
+		{
+			this.Log(() => $"Found {(LocalSchema.BoolValue.Value ? "true" : "false")} schema: {LocalSchema.BoolValue.Value.GetValidityString()}");
+			if (LocalSchema.BoolValue.Value)
+				LocalResult.Pass();
+			else
+				LocalResult.Fail(string.Empty, ErrorMessages.FalseSchema);
+			return;
+		}
+
+		var metaSchemaUri = LocalSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, metaSchemaUri, Options.SchemaRegistry);
+
+		List<Type>? keywordTypesToProcess = null;
+		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
+		{
+			// $schema is always processed first, and this should only be set
+			// after $schema has been evaluated.
+			if (keyword is not SchemaKeyword)
+				keywordTypesToProcess ??= GetKeywordsToProcess()?.ToList();
+			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
+
+			keyword.Validate(this);
+
+			if (!LocalResult.IsValid && ApplyOptimizations) break;
+		}
+
+		if (IsNewDynamicScope)
+			Options.SchemaRegistry.ExitingUriScope();
+	}
+
 
 	/// <summary>
 	/// Pops the state from the stack to return to a previous layer of validation.

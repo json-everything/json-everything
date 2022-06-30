@@ -114,11 +114,11 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 
 		context.NavigatedReferences.Add(navigation);
 
-		context.Push(newUri: newUri, evaluationPath: context.EvaluationPath.Combine(Name));
+		context.Push(context.EvaluationPath.Combine(Name), schema, newUri);
 		context.NavigatedByDirectRef = navigatedByDirectRef;
 		if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
 			context.Reference = reference;
-		schema.ValidateSubschema(context);
+		context.Validate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (result)
