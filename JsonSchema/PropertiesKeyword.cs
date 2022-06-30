@@ -74,7 +74,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 			}
 
 			context.Push(context.InstanceLocation.Combine(name),
-				item ?? JsonNull.SignalNode,
+				item,
 				context.EvaluationPath.Combine(Name, name),
 				schema);
 			context.Validate();
