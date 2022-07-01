@@ -83,7 +83,6 @@ public class ValidationContext
 	public ValidationResults LocalResult => _localResults.Peek();
 
 	internal bool UriChanged { get; set; }
-	//internal ValidationContext ParentContext { get; set; }
 	internal JsonPointer? Reference { get; set; }
 
 	internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs => _metaSchemaVocabs.Peek();
@@ -95,7 +94,6 @@ public class ValidationContext
 		get => _directRefNavigation.Peek();
 		set
 		{
-			//UpdateCurrentValue(_directRefNavigation, value);
 			_directRefNavigation.Pop();
 			_directRefNavigation.Push(value);
 		}

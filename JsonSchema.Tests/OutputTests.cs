@@ -392,6 +392,83 @@ public class OutputTests
 
 		result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+	}
 
+	[Test]
+	public void EtherCondensedOption()
+	{
+		var instance = JsonNode.Parse(@"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""id"": {
+      ""type"": ""string""
+    },
+    ""product"": {
+      ""type"": ""string""
+    },
+    ""field"": {
+      ""type"": ""string""
+    },
+    ""value"": {
+      ""type"": ""string""
+    },
+    ""created"": {
+      ""type"": ""string""
+    },
+    ""updated"": {
+      ""type"": ""string""
+    },
+    ""deleted"": {
+      ""type"": ""string""
+    },
+    ""allOf"": [
+      {
+        ""if"": {
+          ""required"": [
+            ""value""
+          ],
+          ""properties"": {
+            ""value"": {
+              ""type"": ""string""
+            }
+          }
+        },
+        ""then"": {
+          ""properties"": {
+            ""value_blob"": {
+              ""type"": ""null""
+            }
+          }
+        }
+      },
+      {
+        ""if"": {
+          ""required"": [
+            ""value_blob""
+          ],
+          ""properties"": {
+            ""value_blob"": {
+              ""type"": ""string""
+            }
+          }
+        },
+        ""then"": {
+          ""properties"": {
+            ""value"": {
+              ""type"": ""null""
+            }
+          }
+        }
+      }
+    ]
+  }
+}");
+
+		ValidationOptions.Default.Log = null!;
+		var result = MetaSchemas.Draft202012.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+
+		//result.ToBasic();
+
+		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions{WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
 	}
 }
