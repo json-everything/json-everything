@@ -60,7 +60,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			var i1 = i;
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
-			context.Push(context.EvaluationPath.Combine(i), schema);
+			context.Push(context.EvaluationPath.Combine(Name, i), schema);
 			context.Validate();
 			validCount += context.LocalResult.IsValid ? 1 : 0;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");

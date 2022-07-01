@@ -37,7 +37,6 @@ public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquata
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value);
 		context.ExitKeyword(Name, true);
 	}
 

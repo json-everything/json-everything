@@ -105,7 +105,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 
 			context.Log(() => $"Validating property '{property.Key}'.");
 			context.Push(context.InstanceLocation.Combine(property.Key), item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(Name, property.Key), Schema);
+				context.EvaluationPath.Combine(Name), Schema);
 			context.Validate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;

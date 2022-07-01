@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -15,8 +17,8 @@ namespace Json.Schema;
 public class ValidationResults
 {
 	private readonly Uri _currentUri;
-	private Uri? _absoluteUri;
 	private readonly JsonPointer? _reference;
+	private Uri? _schemaLocation;
 	private List<ValidationResults>? _nestedResults;
 	private Dictionary<string, JsonNode?>? _annotations;
 	private Dictionary<string, string>? _errors;
@@ -37,7 +39,7 @@ public class ValidationResults
 	/// <summary>
 	/// The absolute schema location.  Only available if the schema had an absolute URI ID.
 	/// </summary>
-	public Uri? SchemaLocation => _absoluteUri ??= BuildAbsoluteUri();
+	public Uri? SchemaLocation => _schemaLocation ??= BuildSchemaLocation();
 
 	/// <summary>
 	/// The collection of nested results.
@@ -82,8 +84,8 @@ public class ValidationResults
 	{
 		EvaluationPath = context.EvaluationPath;
 		_currentUri = context.CurrentUri;
-		InstanceLocation = context.InstanceLocation;
 		_reference = context.Reference;
+		InstanceLocation = context.InstanceLocation;
 	}
 
 	private ValidationResults(ValidationResults other)
@@ -91,11 +93,26 @@ public class ValidationResults
 		IsValid = other.IsValid;
 		EvaluationPath = other.EvaluationPath;
 		_currentUri = other._currentUri;
-		_absoluteUri = other._absoluteUri;
+		_schemaLocation = other._schemaLocation;
 		InstanceLocation = other.InstanceLocation;
-		_reference = other._reference;
 		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
 		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
+	}
+
+	private Uri BuildSchemaLocation()
+	{
+		var localEvaluationPathStart = 0;
+		for (var i = 0; i < EvaluationPath.Segments.Length; i++)
+		{
+			var segment = EvaluationPath.Segments[i];
+			if (segment.Value is RefKeyword.Name or RecursiveRefKeyword.Name or DynamicRefKeyword.Name)
+				localEvaluationPathStart = i + 1;
+		}
+
+		var fragment = _reference ?? JsonPointer.UrlEmpty;
+		fragment = fragment.Combine(EvaluationPath.Segments.Skip(localEvaluationPathStart).ToArray());
+
+		return new Uri(_currentUri, fragment.ToString());
 	}
 
 	/// <summary>
@@ -112,6 +129,30 @@ public class ValidationResults
 		_errors?.Clear();
 		_nestedResults!.Clear();
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
+	}
+
+	private IEnumerable<ValidationResults> GetAllChildren()
+	{
+		var all = new List<ValidationResults>();
+		var toProcess = new Queue<ValidationResults>();
+
+		toProcess.Enqueue(this);
+		while (toProcess.Any())
+		{
+			var current = toProcess.Dequeue();
+			all.Add(current);
+			if (!current.HasNestedResults) continue;
+
+			foreach (var nestedResult in current.NestedResults.Where(x => x.IsValid == current.IsValid))
+			{
+				toProcess.Enqueue(nestedResult);
+			}
+			current._nestedResults?.Clear();
+		}
+
+		// we still include the root because it may have annotations
+		// don't report annotations at the root of the output
+		return all;
 	}
 
 	/// <summary>
@@ -220,56 +261,6 @@ public class ValidationResults
 	{
 		IsValid = true;
 		Exclude = true;
-	}
-
-	private Uri? BuildAbsoluteUri()
-	{
-		return BuildAbsoluteUri(EvaluationPath);
-	}
-
-	private Uri? BuildAbsoluteUri(JsonPointer pointer)
-	{
-		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-		if (_currentUri == null || !_currentUri.IsAbsoluteUri) return null;
-		if (pointer.Segments.All(s => s.Value != RefKeyword.Name &&
-		                              s.Value != RecursiveRefKeyword.Name))
-		{
-			return new Uri(_currentUri, JsonPointer.Create(pointer.Segments, true).ToString());
-		}
-
-		var lastIndexOfRef = pointer.Segments
-			.Select((s, i) => (s, i))
-			.Last(s => s.s.Value is RefKeyword.Name or RecursiveRefKeyword.Name).i;
-		var absoluteSegments = pointer.Segments.Skip(lastIndexOfRef + 1);
-
-		if (_reference != null)
-			absoluteSegments = _reference.Segments.Concat(absoluteSegments);
-
-		return new Uri(_currentUri, JsonPointer.Create(absoluteSegments, true).ToString());
-	}
-
-	private IEnumerable<ValidationResults> GetAllChildren()
-	{
-		var all = new List<ValidationResults>();
-		var toProcess = new Queue<ValidationResults>();
-
-		toProcess.Enqueue(this);
-		while (toProcess.Any())
-		{
-			var current = toProcess.Dequeue();
-			all.Add(current);
-			if (!current.HasNestedResults) continue;
-			
-			foreach (var nestedResult in current.NestedResults)
-			{
-				toProcess.Enqueue(nestedResult);
-			}
-			current._nestedResults?.Clear();
-		}
-
-		// we still include the root because it may have annotations
-		// don't report annotations at the root of the output
-		return all;
 	}
 }
 
