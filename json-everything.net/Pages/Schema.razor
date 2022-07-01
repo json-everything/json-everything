@@ -15,6 +15,7 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using Vocabularies = Json.Schema.Vocabularies
 
 @inject CookieManager CookieManager;
 @inject NavigationManager NavigationManager;
@@ -412,6 +413,9 @@ namespace JsonEverythingTemp
 	{
 		await CookieManager.Initialize();
 	    await _outputEditor.SetValue(string.Empty);
+
+		Json.Schema.Data.Vocabularies.Register();
+		Json.Schema.UniqueKeys.Vocabularies.Register();
 
 		await LoadSavedSchema();
 		await LoadSavedInstance();
