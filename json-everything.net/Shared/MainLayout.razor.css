@@ -10,6 +10,10 @@ main {
     flex: 1;
 }
 
+article {
+	overflow: hidden;
+}
+
 .sidebar {
     background-color: #5B009F;
 }
@@ -71,10 +75,5 @@ main {
         flex: 1;
         text-align: right;
         width: 0;
-    }
-
-    .top-row, article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
     }
 }

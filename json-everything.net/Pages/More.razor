@@ -6,30 +6,30 @@
 
 <PageTitle>Json.More.Net - json-everything.net</PageTitle>
 
-<div class="navbar">
-	<div class="align-items-center hstack mx-2">
-		<h1 class="display-4">JSON More</h1>
-		<div class="align-items-center mx-3">
-			Helpers and extended support for <code>System.Text.Json</code> models.
-		</div>
-	</div>
-	<div class="align-items-center mt-1">
-		@foreach (var library in _libraries)
-		{
-		    <NugetLibrary Library="library"/>
-		}
-	</div>
-</div>
 
-<div class="row my-4 mx-5">
-	<RadzenPanelMenu class="col-3" Click="SetPagePath">
+<div class="row">
+	<RadzenPanelMenu class="col-2" Click="SetPagePath">
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-more")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-more")"/>
 		<RadzenPanelMenuItem Text="API Reference (work in progress" Icon="format_list_numbered" Expanded="true">
 			<ApiIndex AssemblyContaining="@typeof(JsonElementEqualityComparer)"/>
 		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
-	<div class="col-9">
+	<div class="col-10">
+		<div class="navbar me-2">
+			<div class="align-items-center hstack mx-2">
+				<h1 class="display-4">JSON More</h1>
+				<div class="align-items-center mx-3">
+					Helpers and extended support for <code>System.Text.Json</code> models.
+				</div>
+			</div>
+			<div class="align-items-center mt-1">
+				@foreach (var library in _libraries)
+				{
+					<NugetLibrary Library="library"/>
+				}
+			</div>
+		</div>
 		<div class="ms-4">
 			<Docs @ref="_docs" Page="json-more"/>
 		</div>

@@ -13,77 +13,78 @@
 
 <PageTitle>JSON Patch - json-everything.net</PageTitle>
 
-<div class="navbar">
-	<div class="align-items-center hstack mx-2">
-		<h1 class="display-4">JSON Patch</h1>
-		<div class="align-items-center mx-3">
-			<div>
-				Describe and process alterations to JSON documents
-				<br/>
-				Learn more about
-				<a href="http://jsonpatch.com/" target="_blank">JSON Patch <ExternalLinkIcon/></a>
-			</div>
-		</div>
-	</div>
-	<div class="align-items-center mt-1">
-		@foreach (var library in _libraries)
-		{
-		    <NugetLibrary Library="library"/>
-		}
-	</div>
-</div>
 
-<div class="vstack gap-3 mt-4">
-	<div>
-		<div class="row">
-			<div class="col-5">
-				<label class="w-100">
-					Patch / Source data
-					<div class="editor-input">
-						<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
-						              CssClass="h-100" OnKeyUp="SavePatch"/>
-					</div>
-				</label>
-			</div>
-			<div class="col mx-2 align-items-center row">
-				<div class="vstack gap-3 align-self-center">
-					<button class="btn btn-primary" @onclick="Apply">Apply</button>
-					<hr/>
-					<button class="btn btn-primary" @onclick="Generate">Generate</button>
-				</div>
-			</div>
-			<div class="col-5">
-				<label class="w-100">
-					Data / Target data
-					<div class="editor-input">
-						<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-						              CssClass="h-100" OnKeyUp="SaveInstance"/>
-					</div>
-				</label>
-			</div>
-		</div>
-	</div>
-    
-    <label>
-        Result
-        <div class="editor-input">
-            <MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
-                          CssClass="h-100"/>
-        </div>
-    </label>
-</div>
-
-<div class="row my-4 mx-5">
-	<RadzenPanelMenu class="col-3" Click="SetPagePath">
+<div class="row">
+	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+		<RadzenPanelMenuItem Text="Playground" Icon="article" Value="@("playground/patch")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-patch")"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-patch")"/>
 		<RadzenPanelMenuItem Text="API Reference (work in progress" Icon="format_list_numbered" Expanded="true">
 			<ApiIndex AssemblyContaining="@typeof(JsonPatch)"/>
 		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
-	<div class="col-9">
+	<div class="col-10">
+		<div class="navbar me-2">
+			<div class="align-items-center hstack mx-2">
+				<h1 class="display-4">JSON Patch</h1>
+				<div class="align-items-center mx-3">
+					<div>
+						Describe and process alterations to JSON documents
+						<br/>
+						Learn more about
+						<a href="http://jsonpatch.com/" target="_blank">JSON Patch <ExternalLinkIcon/></a>
+					</div>
+				</div>
+			</div>
+			<div class="align-items-center mt-1">
+				@foreach (var library in _libraries)
+				{
+					<NugetLibrary Library="library"/>
+				}
+			</div>
+		</div>
+
+		<div class="vstack gap-3 mt-4 me-3 @_playgroundStyle">
+			<div>
+				<div class="row">
+					<div class="col-5">
+						<label class="w-100">
+							Patch / Source data
+							<div class="editor-input">
+								<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
+								              CssClass="h-100" OnKeyUp="SavePatch"/>
+							</div>
+						</label>
+					</div>
+					<div class="col mx-2 align-items-center row">
+						<div class="vstack gap-3 align-self-center">
+							<button class="btn btn-primary" @onclick="Apply">Apply</button>
+							<hr/>
+							<button class="btn btn-primary" @onclick="Generate">Generate</button>
+						</div>
+					</div>
+					<div class="col-5">
+						<label class="w-100">
+							Data / Target data
+							<div class="editor-input">
+								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+								              CssClass="h-100" OnKeyUp="SaveInstance"/>
+							</div>
+						</label>
+					</div>
+				</div>
+			</div>
+    
+			<label>
+				Result
+				<div class="editor-input">
+					<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+					              CssClass="h-100"/>
+				</div>
+			</label>
+		</div>
 		<div class="ms-4">
-			<Docs @ref="_docs" Page="json-patch"/>
+			<Docs @ref="_docs" Page="playground/patch"/>
 		</div>
 	</div>
 </div>
@@ -94,6 +95,7 @@
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
 	private Docs _docs;
+	private string _playgroundStyle = "";
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
@@ -206,6 +208,9 @@
 	{
 		if (args is not MenuItemEventArgs menuArgs) return;
 
-		await _docs.SetPage((string)menuArgs.Value);
+		var page = (string)menuArgs.Value;
+		await _docs.SetPage(page);
+	
+		_playgroundStyle = page == "playground/patch" ? "" : "d-none";
 	}
 }

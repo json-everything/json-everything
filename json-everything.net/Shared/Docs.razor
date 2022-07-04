@@ -58,7 +58,18 @@
 				: await DocGenerator.GenerateForType(type);
 		}
 		else
-			markdown = await Http.GetStringAsync($"/md/{Page}.md");
+		{
+			try
+			{
+				markdown = await Http.GetStringAsync($"/md/{Page}.md");
+			}
+			catch (Exception)
+			{
+				Console.WriteLine("Markdown file could not be found.");
+				_value = "";
+				return;
+			}
+		}
 	
 		var pipeline = new MarkdownPipelineBuilder()
 			.UseAdvancedExtensions()
