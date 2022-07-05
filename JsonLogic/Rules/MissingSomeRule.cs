@@ -41,7 +41,7 @@ internal class MissingSomeRule : Rule
 			.ToList();
 
 		var missing = paths.Where(p => p.Value == null)
-			.Select(k => (JsonNode?) k.Path);
+			.Select(k => (JsonNode?)k.Path);
 		var found = paths.Count(p => p.Value != null);
 
 		if (found < requiredCount)

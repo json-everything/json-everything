@@ -21,7 +21,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		}
 
 		if (!operation.From.EvaluateAndGetParent(context.Source, out var source) ||
-		    !operation.From.TryEvaluate(context.Source, out var data))
+			!operation.From.TryEvaluate(context.Source, out var data))
 		{
 			context.Message = $"Source path `{operation.Path}` could not be reached.";
 			return;
@@ -34,7 +34,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		}
 
 		var lastFromSegment = operation.From.Segments.Last().Value;
-		if (source is JsonObject objSource) 
+		if (source is JsonObject objSource)
 			objSource.Remove(lastFromSegment);
 		else if (source is JsonArray arrSource)
 		{

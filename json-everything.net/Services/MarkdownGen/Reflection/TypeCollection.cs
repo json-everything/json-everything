@@ -172,7 +172,7 @@ public class TypeCollection
 	private static bool IsCompilerGenerated(FieldInfo fieldInfo)
 	{
 		return fieldInfo.FieldType.Name.Contains('<') ||
-		       fieldInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(CompilerGeneratedAttribute));
+			   fieldInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(CompilerGeneratedAttribute));
 	}
 
 	/// <summary>

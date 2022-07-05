@@ -18,7 +18,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
 		public static string GenerateCode(this MethodInfo method)
 		{
 			var sb = new StringBuilder();
-		
+
 			if (method.IsPublic) sb.Append(_public);
 			else if (method.IsFamily && !method.IsFamilyAndAssembly) sb.Append(_protected);
 
@@ -46,7 +46,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
 		public static string GenerateCode(this ConstructorInfo method)
 		{
 			var sb = new StringBuilder();
-		
+
 			if (method.IsPublic) sb.Append(_public);
 			else if (method.IsFamily && !method.IsFamilyAndAssembly) sb.Append(_protected);
 
@@ -63,7 +63,7 @@ namespace JsonEverythingNet.Services.MarkdownGen
 		public static (string, MethodInfo?) GenerateDelegateCode(this Type del, Func<Type, Queue<string?>?, string?> converter)
 		{
 			var sb = new StringBuilder();
-		
+
 			var methods = del.GetMethods();
 			var invoke = methods.FirstOrDefault(x => x.Name == nameof(MethodInfo.Invoke));
 			if (invoke != null)

@@ -32,7 +32,7 @@ internal class VariableRule : Rule
 
 		var pointer = JsonPointer.Parse(pathString == string.Empty ? "" : $"/{pathString.Replace('.', '/')}");
 		if (pointer.TryEvaluate(contextData ?? data, out var pathEval) ||
-		    pointer.TryEvaluate(data, out pathEval))
+			pointer.TryEvaluate(data, out pathEval))
 			return pathEval;
 
 		return _defaultValue?.Apply(data, contextData) ?? null;

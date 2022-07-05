@@ -10,7 +10,7 @@ public class DevTest
 	public void Check()
 	{
 		And(
-			StrictEquals(5,10),
+			StrictEquals(5, 10),
 			Literal(true)
 		);
 	}

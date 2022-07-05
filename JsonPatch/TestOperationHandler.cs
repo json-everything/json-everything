@@ -17,7 +17,7 @@ internal class TestOperationHandler : IPatchOperationHandler
 		}
 
 		if (data.IsEquivalentTo(operation.Value)) return;
-		
+
 		context.Message = $"Path `{operation.Path}` is not equal to the indicated value.";
 	}
 }

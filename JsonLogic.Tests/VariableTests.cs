@@ -10,7 +10,7 @@ public class VariableTests
 	public void VariableWithValidPathAndNoDefaultFetchesData()
 	{
 		var rule = new VariableRule("foo");
-		var data = new JsonObject{ ["foo"] = 5, ["bar"] = 10 };
+		var data = new JsonObject { ["foo"] = 5, ["bar"] = 10 };
 
 		JsonAssert.AreEquivalent(5, rule.Apply(data));
 	}

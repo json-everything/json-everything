@@ -23,7 +23,7 @@ internal class MinRule : Rule
 		var nulls = items.Where(i => i.Value == null);
 		if (nulls.Any())
 			throw new JsonLogicException($"Cannot find min with {nulls.First().Type}.");
-		
+
 		return items.Min(i => i.Value!.Value);
 	}
 }

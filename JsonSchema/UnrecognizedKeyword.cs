@@ -20,7 +20,7 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKe
 	/// The name or key of the keyword.
 	/// </summary>
 	public string Name { get; }
-	
+
 	/// <summary>
 	/// The value of the keyword.
 	/// </summary>

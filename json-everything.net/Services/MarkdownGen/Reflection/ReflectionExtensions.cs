@@ -128,8 +128,8 @@ public static class ReflectionExtensions
 			? "this "
 			: string.Empty;
 		return "(" + extension +
-		       string.Join(", ", parameters.Select(p => p.ToTypeNameString(typeNameConverter, invokeTypeNameConverterForGenericType) + " " + p.Name)) +
-		       ")";
+			   string.Join(", ", parameters.Select(p => p.ToTypeNameString(typeNameConverter, invokeTypeNameConverterForGenericType) + " " + p.Name)) +
+			   ")";
 	}
 
 	/// <summary>
@@ -157,14 +157,14 @@ public static class ReflectionExtensions
 	{
 		if (parameterInfo.ParameterType.IsByRef)
 			return (parameterInfo.IsIn ? "in " : parameterInfo.IsOut ? "out " : "ref ") +
-			       parameterInfo.ParameterType.GetElementType()!.ToNameStringWithValueTupleNames(
-				       parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
-				       invokeTypeNameConverterForGenericType);
+				   parameterInfo.ParameterType.GetElementType()!.ToNameStringWithValueTupleNames(
+					   parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
+					   invokeTypeNameConverterForGenericType);
 
 		return (parameterInfo.GetCustomAttribute<ParamArrayAttribute>() != null ? "params " : string.Empty) +
-		       parameterInfo.ParameterType.ToNameStringWithValueTupleNames(
-			       parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
-			       invokeTypeNameConverterForGenericType);
+			   parameterInfo.ParameterType.ToNameStringWithValueTupleNames(
+				   parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>()?.TransformNames, typeNameConverter,
+				   invokeTypeNameConverterForGenericType);
 	}
 
 	/// <summary>
@@ -318,12 +318,12 @@ public static class ReflectionExtensions
 	{
 		if (type.IsByRef)
 			return "ref " +
-			       type.GetElementType()!.ToNameString(tupleFieldNames, typeNameConverter, invokeTypeNameConverterForGenericType);
+				   type.GetElementType()!.ToNameString(tupleFieldNames, typeNameConverter, invokeTypeNameConverterForGenericType);
 
 		var decoratedTypeName = type.IsGenericType ? null : typeNameConverter?.Invoke(type, tupleFieldNames);
 
 		if (decoratedTypeName != null &&
-		    (tupleFieldNames == null || tupleFieldNames.Count == 0))
+			(tupleFieldNames == null || tupleFieldNames.Count == 0))
 			// If there are no tuple field names then return the name from converter
 			// Otherwise do full type name conversion to remove the proper number of tuple field names from the queue and then discard that name
 			return decoratedTypeName;
@@ -345,9 +345,9 @@ public static class ReflectionExtensions
 				// Tuple fields must not go breadth first as that is the order of names in the tupleFieldNamesQueue
 				var tupleFields = type.GetGenericArguments().Select(arg => (argumentType: arg, argumentName: tupleFieldNames?.Dequeue())).ToList();
 				newTypeName = "(" +
-				              string.Join(", ", tupleFields
-					              .Select(arg => arg.argumentType.ToNameString(tupleFieldNames, typeNameConverter, invokeTypeNameConverterForGenericType) +
-					                             (arg.argumentName == null ? "" : " " + arg.argumentName))) + ")";
+							  string.Join(", ", tupleFields
+								  .Select(arg => arg.argumentType.ToNameString(tupleFieldNames, typeNameConverter, invokeTypeNameConverterForGenericType) +
+												 (arg.argumentName == null ? "" : " " + arg.argumentName))) + ")";
 			}
 			else if (type.Name.Contains('`'))
 			{
@@ -365,9 +365,9 @@ public static class ReflectionExtensions
 		else if (type.IsArray)
 		{
 			newTypeName = type.GetElementType()!.ToNameString(tupleFieldNames, typeNameConverter, invokeTypeNameConverterForGenericType) +
-			              "[" +
-			              (type.GetArrayRank() > 1 ? new string(',', type.GetArrayRank() - 1) : "") +
-			              "]";
+						  "[" +
+						  (type.GetArrayRank() > 1 ? new string(',', type.GetArrayRank() - 1) : "") +
+						  "]";
 		}
 		else
 		{

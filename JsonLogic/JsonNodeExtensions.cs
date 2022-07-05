@@ -94,7 +94,7 @@ public static class JsonNodeExtensions
 		if (value.TryGetValue(out string? s)) return decimal.TryParse(s, out var d) ? d : null;
 
 		if (value.TryGetValue(out bool b)) return b ? 1 : 0;
-		
+
 		return value.GetNumber();
 
 	}
@@ -129,7 +129,7 @@ public static class JsonNodeExtensions
 
 		if (a is JsonObject && b is JsonObject) return a.IsEquivalentTo(b);
 		if (a is JsonObject || b is JsonObject) return false;
-		
+
 		if (a is JsonArray && b is JsonArray) return a.IsEquivalentTo(b);
 		if (a is JsonArray aArr)
 		{

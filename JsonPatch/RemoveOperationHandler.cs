@@ -18,7 +18,7 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 		}
 
 		if (!operation.Path.EvaluateAndGetParent(context.Source, out var source) ||
-		    !operation.Path.TryEvaluate(context.Source, out _))
+			!operation.Path.TryEvaluate(context.Source, out _))
 		{
 			context.Message = $"Target path `{operation.Path}` could not be reached.";
 			return;

@@ -111,7 +111,7 @@ public class GithubMarkdownWriter : IMarkdownWriter
 	private string ResolveTag(string text, string tagName, string attributeName)
 	{
 		var regex = new Regex("<" + tagName + "( +)" + attributeName + "( *)=( *)\"(.*?)\"( *)/>");
-		for (;;)
+		for (; ; )
 		{
 			var match = regex.Match(text);
 			if (!match.Success) return text;

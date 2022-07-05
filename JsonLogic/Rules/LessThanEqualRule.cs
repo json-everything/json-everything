@@ -41,7 +41,7 @@ internal class LessThanEqualRule : Rule
 		var low = (_a.Apply(data, contextData) as JsonValue)?.GetNumber();
 		if (low == null)
 			throw new JsonLogicException("Lower bound must be a number.");
-		
+
 		var value = (_b.Apply(data, contextData) as JsonValue)?.GetNumber();
 		if (value == null)
 			throw new JsonLogicException("Value must be a number.");

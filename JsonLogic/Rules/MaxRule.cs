@@ -25,7 +25,7 @@ internal class MaxRule : Rule
 		var nulls = items.Where(i => i.Value == null);
 		if (nulls.Any())
 			throw new JsonLogicException($"Cannot find max with {nulls.First().Type}.");
-		
+
 		return items.Max(i => i.Value!.Value);
 	}
 }

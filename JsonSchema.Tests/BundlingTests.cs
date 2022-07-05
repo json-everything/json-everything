@@ -30,7 +30,7 @@ public class BundlingTests
 
 		var result = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 		Assert.True(result.IsValid);
 	}
 }

@@ -203,8 +203,8 @@ public class DocXmlReader
 	{
 		var node = await GetXmlMemberNodeFromDictionary(name, typeForAssembly);
 		if (node != null ||
-		    !searchAllCurrentFiles ||
-		    _assemblyNavigators.Count <= 1 && typeForAssembly != null) return node;
+			!searchAllCurrentFiles ||
+			_assemblyNavigators.Count <= 1 && typeForAssembly != null) return node;
 		foreach (var docNavigator in _assemblyNavigators.Values)
 		{
 			node = docNavigator?.SelectSingleNode(string.Format(_memberXPath, name));

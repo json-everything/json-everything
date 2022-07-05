@@ -25,7 +25,7 @@ public class JsonNull
 	/// </summary>
 	public static JsonNode SignalNode { get; } = JsonValue.Create(new JsonNull())!;
 
-	private JsonNull(){}
+	private JsonNull() { }
 }
 
 internal class JsonNullConverter : JsonConverter<JsonNull>
@@ -40,4 +40,3 @@ internal class JsonNullConverter : JsonConverter<JsonNull>
 		JsonSerializer.Serialize(writer, (JsonNode?)null, options);
 	}
 }
-

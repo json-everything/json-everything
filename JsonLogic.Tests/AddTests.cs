@@ -62,7 +62,7 @@ public class AddTests
 	[Test]
 	public void AddSingleObjectThrowsError()
 	{
-		var rule = new AddRule(new JsonObject{ ["foo"] = 5 });
+		var rule = new AddRule(new JsonObject { ["foo"] = 5 });
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

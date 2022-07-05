@@ -58,8 +58,8 @@ public static class XmlDocId
 	{
 		if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
 		return (IsIndexerProperty(methodInfo) ? _propertyPrefix : _memberPrefix) + ":" +
-		       GetTypeXmlId(methodInfo.DeclaringType!) + "." +
-		       GetMethodXmlId(methodInfo);
+			   GetTypeXmlId(methodInfo.DeclaringType!) + "." +
+			   GetMethodXmlId(methodInfo);
 	}
 
 	/// <summary>
@@ -83,7 +83,7 @@ public static class XmlDocId
 				return TypeId((Type)memberInfo);
 			case MemberTypes.Event:
 				return EventId(memberInfo);
-			// case MemberTypes.TypeInfo:
+				// case MemberTypes.TypeInfo:
 		}
 
 		throw new NotSupportedException($"{memberInfo.MemberType}");
@@ -104,14 +104,14 @@ public static class XmlDocId
 			var getParameters = (propertyInfo as PropertyInfo)?.GetMethod?.GetParameters();
 			if (getParameters?.Length > 0)
 				return _propertyPrefix + ":" + GetTypeXmlId(propertyInfo.DeclaringType!) + "." +
-				       propertyInfo.Name +
-				       GetParametersXmlId(getParameters, GetGenericClassParams(propertyInfo));
+					   propertyInfo.Name +
+					   GetParametersXmlId(getParameters, GetGenericClassParams(propertyInfo));
 
 			var setParameters = (propertyInfo as PropertyInfo)?.SetMethod?.GetParameters();
 			if (setParameters?.Length > 1)
 				return _propertyPrefix + ":" + GetTypeXmlId(propertyInfo.DeclaringType!) + "." +
-				       propertyInfo.Name +
-				       GetParametersXmlId(setParameters.Take(setParameters.Length - 1), GetGenericClassParams(propertyInfo));
+					   propertyInfo.Name +
+					   GetParametersXmlId(setParameters.Take(setParameters.Length - 1), GetGenericClassParams(propertyInfo));
 		}
 
 		return _propertyPrefix + ":" + GetTypeXmlId(propertyInfo.DeclaringType!) + "." + propertyInfo.Name;
@@ -177,8 +177,8 @@ public static class XmlDocId
 		var outString = isOut ? "@" : "";
 
 		if (type.MemberType == MemberTypes.TypeInfo &&
-		    !type.IsGenericTypeDefinition &&
-		    (type.IsGenericType || args.Length > 0) && (!type.IsClass || isMethodParameter))
+			!type.IsGenericTypeDefinition &&
+			(type.IsGenericType || args.Length > 0) && (!type.IsClass || isMethodParameter))
 		{
 			var paramString = string.Join(",",
 				args.Select(o => GetTypeXmlId(o, false, isMethodParameter, genericClassParams)));
@@ -202,8 +202,8 @@ public static class XmlDocId
 			var index = fullTypeName.IndexOf("[,", StringComparison.Ordinal);
 			var lastIndex = fullTypeName.IndexOf(']', index);
 			fullTypeName = fullTypeName[..(index + 1)] +
-			               string.Join(",", Enumerable.Repeat("0:", lastIndex - index)) +
-			               fullTypeName[lastIndex..];
+						   string.Join(",", Enumerable.Repeat("0:", lastIndex - index)) +
+						   fullTypeName[lastIndex..];
 		}
 
 		return fullTypeName;
@@ -217,8 +217,8 @@ public static class XmlDocId
 	private static string GetMethodXmlId(MethodBase methodInfo)
 	{
 		return $"{ShortMethodName(methodInfo)}" +
-		       GetParametersXmlId(methodInfo.GetParameters(), GetGenericClassParams(methodInfo)) +
-		       ExplicitImplicitPostfix(methodInfo);
+			   GetParametersXmlId(methodInfo.GetParameters(), GetGenericClassParams(methodInfo)) +
+			   ExplicitImplicitPostfix(methodInfo);
 	}
 
 	private static string GetParametersXmlId(IEnumerable<ParameterInfo> parameters, string[] genericClassParams)
@@ -252,7 +252,7 @@ public static class XmlDocId
 	private static string ExplicitImplicitPostfix(MethodBase methodInfo)
 	{
 		if (!methodInfo.IsSpecialName ||
-		    methodInfo.Name != "op_Explicit" && methodInfo.Name != "op_Implicit") return "";
+			methodInfo.Name != "op_Explicit" && methodInfo.Name != "op_Implicit") return "";
 		return "~" + GetTypeXmlId(((MethodInfo)methodInfo).ReturnType);
 	}
 
@@ -265,7 +265,7 @@ public static class XmlDocId
 	{
 		if (methodInfo.IsConstructor) return _constructorNameId;
 		return (IsIndexerProperty(methodInfo) ? "Item" : methodInfo.Name) +
-		       (methodInfo.IsGenericMethod ? "``" + methodInfo.GetGenericArguments().Length : "");
+			   (methodInfo.IsGenericMethod ? "``" + methodInfo.GetGenericArguments().Length : "");
 	}
 
 	private static string[] GetGenericClassParams(MemberInfo info)

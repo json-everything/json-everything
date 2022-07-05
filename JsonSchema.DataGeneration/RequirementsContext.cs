@@ -262,7 +262,7 @@ internal class RequirementsContext
 
 		var broken = new RequirementsContext(this);
 		using var enumerator = breakers.GetEnumerator();
-		while (enumerator.MoveNext() && !enumerator.Current!(broken)) {}
+		while (enumerator.MoveNext() && !enumerator.Current!(broken)) { }
 
 		return broken;
 	}

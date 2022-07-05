@@ -15,7 +15,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 		if (Equals(operation.Path, operation.From)) return;
 
 		if (!operation.From.EvaluateAndGetParent(context.Source, out var source) ||
-		    !operation.From.TryEvaluate(context.Source, out var data))
+			!operation.From.TryEvaluate(context.Source, out var data))
 		{
 			context.Message = $"Source path `{operation.Path}` could not be reached.";
 			return;
