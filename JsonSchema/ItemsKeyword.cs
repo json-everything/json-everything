@@ -151,7 +151,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 				var schema = ArraySchemas[i];
 				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-					item,
+					item ?? JsonNull.SignalNode,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 				schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
