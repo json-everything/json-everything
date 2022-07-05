@@ -1,3 +1,7 @@
+# 3.1.4 (No PR)
+
+Continuation of v3.1.3 - Fixed array-valued `items`.
+
 # [3.1.3](https://github.com/gregsdennis/json-everything/pull/297)
 
 Fixed an issue with handling JSON null in instance data for keywords which change the instance location:
