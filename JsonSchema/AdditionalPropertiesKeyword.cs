@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -110,7 +111,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 			}
 
 			context.Log(() => $"Validating property '{property.Key}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item);
+			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode);
 			Schema.ValidateSubschema(context);
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;

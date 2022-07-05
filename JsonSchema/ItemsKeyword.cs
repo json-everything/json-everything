@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -117,7 +118,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 				var i1 = i;
 				context.Log(() => $"Validating item at index {i1}.");
 				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item);
+				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item ?? JsonNull.SignalNode);
 				SingleSchema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");

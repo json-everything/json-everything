@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -86,7 +87,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 			{
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
 				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Key}")),
-					instanceProperty.Value,
+					instanceProperty.Value ?? JsonNull.SignalNode,
 					context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
 				schema.ValidateSubschema(context);
 				overallResult &= context.LocalResult.IsValid;
