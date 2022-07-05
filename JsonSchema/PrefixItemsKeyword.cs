@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -78,7 +79,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 			var schema = ArraySchemas[i];
 			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
-				item,
+				item ?? JsonNull.SignalNode,
 				context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
 			schema.ValidateSubschema(context);
 			overallResult &= context.LocalResult.IsValid;
