@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -47,5 +48,34 @@ public class SlackTests
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 			WriteIndented = true
 		}));
+	}
+
+	[Test]
+	public void TypeNonNullAndNullFailsValidation()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("test", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object)
+					.AdditionalProperties(new JsonSchemaBuilder()
+						.Type(SchemaValueType.String, SchemaValueType.Null)
+					)
+				)
+			)
+			.Required("test");
+
+		var instance = new JsonObject
+		{
+			["test"] = new JsonObject
+			{
+				["a"] = "aaa",
+				["b"] = null
+			}
+		};
+
+		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+
+		results.AssertValid();
 	}
 }
