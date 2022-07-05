@@ -1,3 +1,17 @@
+# [3.1.3](https://github.com/gregsdennis/json-everything/pull/297)
+
+Fixed an issue with handling JSON null in instance data for keywords which change the instance location:
+
+- `additionalItems`
+- `additionalProperties`
+- `contains`
+- `items`
+- `patternProperties`
+- `prefixItems`
+- `properties`
+- `unevaluatedItems`
+- `unevaluatedProperties`
+
 # [3.1.2](https://github.com/gregsdennis/json-everything/pull/294)
 
 Updated `min*`/`max*` keywords to accept numbers with decimals as long as they still represent non-negative integer values, e.g. `1.0`.
