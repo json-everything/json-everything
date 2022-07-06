@@ -49,6 +49,9 @@
 	{
 		if (args is not MenuItemEventArgs menuArgs) return;
 
-		await _docs.SetPage((string)menuArgs.Value);
+		var page = (string?)menuArgs.Value;
+		if (page == null) return;
+
+		await _docs.SetPage(page);
 	}
 }

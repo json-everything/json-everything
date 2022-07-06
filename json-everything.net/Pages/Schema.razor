@@ -405,7 +405,9 @@ namespace JsonEverythingTemp
 	{
 		if (args is not MenuItemEventArgs menuArgs) return;
 
-		var page = (string)menuArgs.Value;
+		var page = (string?)menuArgs.Value;
+		if (page == null) return;
+
 		await _docs.SetPage(page);
 		_playgroundStyle = page == "playground/schema" ? "" : "d-none";
 	}
