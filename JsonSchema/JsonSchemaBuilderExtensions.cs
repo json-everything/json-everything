@@ -724,6 +724,30 @@ public static class JsonSchemaBuilderExtensions
 	}
 
 	/// <summary>
+	/// Add a `patternProperties` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="props">The property schemas.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> props)
+	{
+		builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => new Regex(x.Key), x => x.Value)));
+		return builder;
+	}
+
+	/// <summary>
+	/// Add a `patternProperties` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="props">The property schemas.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (string pattern, JsonSchema schema)[] props)
+	{
+		builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => new Regex(x.pattern), x => x.schema)));
+		return builder;
+	}
+
+	/// <summary>
 	/// Add a `prefixItems` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
