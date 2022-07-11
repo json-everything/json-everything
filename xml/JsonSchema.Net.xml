@@ -2591,6 +2591,22 @@
             <param name="props">The property schemas.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PatternProperties(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IReadOnlyDictionary{System.String,Json.Schema.JsonSchema})">
+            <summary>
+            Add a `patternProperties` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="props">The property schemas.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PatternProperties(Json.Schema.JsonSchemaBuilder,System.ValueTuple{System.String,Json.Schema.JsonSchema}[])">
+            <summary>
+            Add a `patternProperties` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="props">The property schemas.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PrefixItems(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema[])">
             <summary>
             Add a `prefixItems` keyword.

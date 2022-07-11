@@ -1,0 +1,374 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JsonSchema.Net.OpenApi</name>
+    </assembly>
+    <members>
+        <member name="T:Json.Schema.OpenApi.DiscriminatorKeyword">
+            <summary>
+            Handles `example`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.DiscriminatorKeyword.PropertyName">
+            <summary>
+            The name of the property in the payload that will hold the discriminator value.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.DiscriminatorKeyword.Mapping">
+            <summary>
+            An object to hold mappings between payload values and schema names or references.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.DiscriminatorKeyword.Extensions">
+            <summary>
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.#ctor(System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Text.Json.Nodes.JsonNode})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.OpenApi.DiscriminatorKeyword"/>.
+            </summary>
+            <param name="propertyName">The name of the property in the payload that will hold the discriminator value.</param>
+            <param name="mapping">An object to hold mappings between payload values and schema names or references.</param>
+            <param name="extensions">
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Equals(Json.Schema.OpenApi.DiscriminatorKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.ExampleKeyword">
+            <summary>
+            Handles `example`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.ExampleKeyword.Value">
+            <summary>
+            The example value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.#ctor(System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.OpenApi.ExampleKeyword"/>.
+            </summary>
+            <param name="value">The example value.</param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Equals(Json.Schema.OpenApi.ExampleKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.ExternalDocsKeyword">
+            <summary>
+            Handles `example`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.ExternalDocsKeyword.Url">
+            <summary>
+            The URL for the target documentation. This MUST be in the form of a URL.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.ExternalDocsKeyword.Description">
+            <summary>
+            A description of the target documentation. CommonMark syntax MAY be used for rich text representation.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.ExternalDocsKeyword.Extensions">
+            <summary>
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.#ctor(System.Uri,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Text.Json.Nodes.JsonNode})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.OpenApi.ExternalDocsKeyword"/>.
+            </summary>
+            <param name="url">The URL for the target documentation. This MUST be in the form of a URL.</param>
+            <param name="description">A description of the target documentation. CommonMark syntax MAY be used for rich text representation.</param>
+            <param name="extensions">
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Equals(Json.Schema.OpenApi.ExternalDocsKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.Formats">
+            <summary>
+            Defines formats used by the OpenAPI v3.1 specification.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.Formats.MediaRange">
+             <summary>
+             Defines the `media-range` custom format used by OpenAPI v3.1.
+             </summary>
+             <remarks>
+             Little is defined for this format except that it is intended to be a media
+             type in line with RFC-7231 https://datatracker.ietf.org/doc/html/rfc7231#appendix-D.
+             For more information, see https://github.com/OAI/OpenAPI-Specification/issues/2714.
+            
+             This format carries no logic and will always pass validation.
+             </remarks>
+        </member>
+        <member name="T:Json.Schema.OpenApi.JsonSchemaBuilderExtensions">
+            <summary>
+            Provides a fluent interface for <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaBuilderExtensions.Discriminator(Json.Schema.JsonSchemaBuilder,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Text.Json.Nodes.JsonNode})">
+            <summary>
+            
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="propertyName">The name of the property in the payload that will hold the discriminator value.</param>
+            <param name="mapping">An object to hold mappings between payload values and schema names or references.</param>
+            <param name="extensions">
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaBuilderExtensions.Example(Json.Schema.JsonSchemaBuilder,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="json">The example value.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaBuilderExtensions.ExternalDocs(Json.Schema.JsonSchemaBuilder,System.Uri,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Text.Json.Nodes.JsonNode})">
+            <summary>
+            
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="url">The URL for the target documentation. This MUST be in the form of a URL.</param>
+            <param name="description">A description of the target documentation. CommonMark syntax MAY be used for rich text representation.</param>
+            <param name="extensions">
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaBuilderExtensions.Xml(Json.Schema.JsonSchemaBuilder,System.Uri,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Text.Json.Nodes.JsonNode})">
+            <summary>
+            Adds an `xml` keyword to the schema.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="namespace">The URI of the namespace definition. This MUST be in the form of an absolute URI.</param>
+            <param name="name">Replaces the name of the element/attribute used for the described schema property.
+            When defined within `items`, it will affect the name of the individual XML elements within the list.
+            When defined alongside `type` being `array` (outside the `items`), it will affect the wrapping element and
+            only if `wrapped` is `true`. If `wrapped` is `false`, it will be ignored.</param>
+            <param name="prefix">The prefix to be used for the name.</param>
+            <param name="attribute">Declares whether the property definition translates to an attribute instead of an
+            element. Default value is `false`.</param>
+            <param name="wrapped">
+            MAY be used only for an array definition. Signifies whether the array is wrapped (for example, `<books><book/><book/></books>`)
+            or unwrapped (`<book/><book/>`). Default value is `false`. The definition takes effect only when defined alongside `type`
+            being `array` (outside the `items`).</param>
+            <param name="extensions">
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.MetaSchemas">
+            <summary>
+            Provides meta-schemas defined by OpenAPI.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.MetaSchemas.OpenApiDialectId">
+            <summary>
+            The URI ID of the the OpenAPI v3.1 dialect meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.MetaSchemas.OpenApiMetaId">
+            <summary>
+            The URI ID of the the OpenAPI v3.1 validation meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.MetaSchemas.OpenApiDocumentSchemaId">
+            <summary>
+            The URI ID of the OpenAPI v3.1 document schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.MetaSchemas.OpenApiDialect">
+            <summary>
+            The OpenAPI v3.1 dialect meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.MetaSchemas.OpenApiMeta">
+            <summary>
+            The OpenAPI v3.1 validation meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.MetaSchemas.DocumentSchema">
+            <summary>
+            The OpenAPI v3.1 document schema.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.OpenApi.Vocabularies">
+            <summary>
+            Declares the vocabularies of the supported drafts.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.Vocabularies.OpenApiId">
+            <summary>
+            The data vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OpenApi.Vocabularies.OpenApi">
+            <summary>
+            The data vocabulary.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.Vocabularies.Register(Json.Schema.VocabularyRegistry,Json.Schema.SchemaRegistry)">
+            <summary>
+            Registers the all components required to use the data vocabulary.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.OpenApi.XmlKeyword">
+            <summary>
+            Handles `example`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.XmlKeyword.Namespace">
+            <summary>
+            The URI of the namespace definition. This MUST be in the form of an absolute URI.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.XmlKeyword.Name">
+            <summary>
+            Replaces the name of the element/attribute used for the described schema property.
+            When defined within `items`, it will affect the name of the individual XML elements within the list.
+            When defined alongside `type` being `array` (outside the `items`), it will affect the wrapping element and
+            only if `wrapped` is `true`. If `wrapped` is `false`, it will be ignored.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.XmlKeyword.Prefix">
+            <summary>
+            The prefix to be used for the name.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.XmlKeyword.Attribute">
+            <summary>
+            Declares whether the property definition translates to an attribute instead of an
+            element. Default value is `false`.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.XmlKeyword.Wrapped">
+            <summary>
+            MAY be used only for an array definition. Signifies whether the array is wrapped (for example, `<books><book/><book/></books>`)
+            or unwrapped (`<book/><book/>`). Default value is `false`. The definition takes effect only when defined alongside `type`
+            being `array` (outside the `items`).
+            </summary>
+        </member>
+        <member name="P:Json.Schema.OpenApi.XmlKeyword.Extensions">
+            <summary>
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.#ctor(System.Uri,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Text.Json.Nodes.JsonNode})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.OpenApi.ExternalDocsKeyword"/>.
+            </summary>
+            <param name="namespace">The URI of the namespace definition. This MUST be in the form of an absolute URI.</param>
+            <param name="name">Replaces the name of the element/attribute used for the described schema property.
+            When defined within `items`, it will affect the name of the individual XML elements within the list.
+            When defined alongside `type` being `array` (outside the `items`), it will affect the wrapping element and
+            only if `wrapped` is `true`. If `wrapped` is `false`, it will be ignored.</param>
+            <param name="prefix">The prefix to be used for the name.</param>
+            <param name="attribute">Declares whether the property definition translates to an attribute instead of an
+            element. Default value is `false`.</param>
+            <param name="wrapped">
+            MAY be used only for an array definition. Signifies whether the array is wrapped (for example, `<books><book/><book/></books>`)
+            or unwrapped (`<book/><book/>`). Default value is `false`. The definition takes effect only when defined alongside `type`
+            being `array` (outside the `items`).</param>
+            <param name="extensions">
+            Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+            `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+            The value can be null, a primitive, an array or an object.
+            </param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.Equals(Json.Schema.OpenApi.XmlKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+    </members>
+</doc>
