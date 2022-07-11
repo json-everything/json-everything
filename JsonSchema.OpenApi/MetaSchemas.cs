@@ -17,6 +17,8 @@ public static class MetaSchemas
 	/// </summary>
 	public static readonly Uri OpenApiMetaId = new("https://spec.openapis.org/oas/3.1/meta/base");
 
+	public static readonly Uri OpenApiDocumentSchemaId = new("https://spec.openapis.org/oas/3.1/schema/2022-02-27");
+
 	/// <summary>
 	/// The dialect meta-schema.
 	/// </summary>
@@ -126,7 +128,7 @@ public static class MetaSchemas
 
 	public static readonly JsonSchema DocumentSchema =
 		new JsonSchemaBuilder()
-			.Id("https://spec.openapis.org/oas/3.1/schema/2022-02-27")
+			.Id(OpenApiDocumentSchemaId)
 			.Schema(Schema.MetaSchemas.Draft202012Id)
 			.Description("The description of OpenAPI v3.1.x documents without schema validation, as defined by https://spec.openapis.org/oas/v3.1.0")
 			.Type(SchemaValueType.Object)
@@ -232,7 +234,7 @@ public static class MetaSchemas
 					.Properties(
 						("url", new JsonSchemaBuilder()
 							.Type(SchemaValueType.String)
-							.Format(Schema.Formats.Uri)
+							.Format(Schema.Formats.UriReference)
 						),
 						("description", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 						("variables", new JsonSchemaBuilder()
@@ -438,6 +440,7 @@ public static class MetaSchemas
 						.Properties(
 							("in", new JsonSchemaBuilder().Const("query"))
 						)
+						.Required("in")
 					)
 					.Then(new JsonSchemaBuilder()
 						.Properties(
@@ -510,7 +513,7 @@ public static class MetaSchemas
 												.Default("form")
 												.Enum("form", "spaceDelimited", "pipeDelimited", "deepObject")
 											),
-											("allowReserve", new JsonSchemaBuilder()
+											("allowReserved", new JsonSchemaBuilder()
 												.Default(false)
 												.Type(SchemaValueType.Boolean)
 											)
@@ -536,7 +539,7 @@ public static class MetaSchemas
 								("styles-for-form", new JsonSchemaBuilder()
 									.If(new JsonSchemaBuilder()
 										.Properties(
-											("in", new JsonSchemaBuilder().Const("form"))
+											("style", new JsonSchemaBuilder().Const("form"))
 										)
 										.Required("style")
 									)
@@ -801,6 +804,7 @@ public static class MetaSchemas
 									.Type(SchemaValueType.Boolean)
 								)
 							)
+							.Ref("#/$defs/examples")
 						)
 					)
 					.Ref("#/$defs/specification-extensions")
@@ -862,7 +866,7 @@ public static class MetaSchemas
 					)
 					.UnevaluatedProperties(false)
 					.Defs(
-						("type-apiKey", new JsonSchemaBuilder()
+						("type-apikey", new JsonSchemaBuilder()
 							.If(new JsonSchemaBuilder()
 								.Properties(
 									("type", new JsonSchemaBuilder().Const("apiKey"))
@@ -936,7 +940,7 @@ public static class MetaSchemas
 										.Format(Schema.Formats.Uri)
 									)
 								)
-								.Required("opendIdConnectUrl")
+								.Required("openIdConnectUrl")
 							)
 						)
 					)
