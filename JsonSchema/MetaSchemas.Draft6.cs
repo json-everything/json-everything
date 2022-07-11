@@ -59,7 +59,7 @@ public static partial class MetaSchemas
 			),
 			(SchemaKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.String)
-				.Format(Formats.UriReference)
+				.Format(Formats.Uri)
 			),
 			(RefKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.String)

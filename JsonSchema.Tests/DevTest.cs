@@ -10,8 +10,8 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var json = JsonNode.Parse("[{\"foo\":1, \"bar\":2, \"foo\":3}]") as JsonArray;
+		var json = new JsonObject();
 
-		var item = json[0];
+		Console.WriteLine(JsonSerializer.Serialize(json));
 	}
 }

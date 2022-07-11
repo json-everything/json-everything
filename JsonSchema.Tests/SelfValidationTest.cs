@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -15,14 +16,30 @@ public class SelfValidationTest
 	public static IEnumerable<TestCaseData> TestData =>
 		new[]
 		{
-			new TestCaseData(nameof(MetaSchemas.Draft6), MetaSchemas.Draft6),
-			new TestCaseData(nameof(MetaSchemas.Draft7), MetaSchemas.Draft7),
-			new TestCaseData(nameof(MetaSchemas.Draft201909), MetaSchemas.Draft201909),
-			new TestCaseData(nameof(MetaSchemas.Draft202012), MetaSchemas.Draft202012),
+			new TestCaseData(MetaSchemas.Draft6) { TestName = nameof(MetaSchemas.Draft6) },
+
+			new TestCaseData(MetaSchemas.Draft7) { TestName = nameof(MetaSchemas.Draft7) },
+
+			new TestCaseData(MetaSchemas.Draft201909) { TestName = nameof(MetaSchemas.Draft201909) },
+			new TestCaseData(MetaSchemas.Core201909) { TestName = nameof(MetaSchemas.Core201909) },
+			new TestCaseData(MetaSchemas.Applicator201909) { TestName = nameof(MetaSchemas.Applicator201909) },
+			new TestCaseData(MetaSchemas.Validation201909) { TestName = nameof(MetaSchemas.Validation201909) },
+			new TestCaseData(MetaSchemas.Metadata201909) { TestName = nameof(MetaSchemas.Metadata201909) },
+			new TestCaseData(MetaSchemas.Format201909) { TestName = nameof(MetaSchemas.Format201909) },
+			new TestCaseData(MetaSchemas.Content201909) { TestName = nameof(MetaSchemas.Content201909) },
+
+			new TestCaseData(MetaSchemas.Draft202012) { TestName = nameof(MetaSchemas.Draft202012) },
+			new TestCaseData(MetaSchemas.Core202012) { TestName = nameof(MetaSchemas.Core202012) },
+			new TestCaseData(MetaSchemas.Applicator202012) { TestName = nameof(MetaSchemas.Applicator202012) },
+			new TestCaseData(MetaSchemas.Metadata202012) { TestName = nameof(MetaSchemas.Metadata202012) },
+			new TestCaseData(MetaSchemas.FormatAnnotation202012) { TestName = nameof(MetaSchemas.FormatAnnotation202012) },
+			new TestCaseData(MetaSchemas.FormatAssertion202012) { TestName = nameof(MetaSchemas.FormatAssertion202012) },
+			new TestCaseData(MetaSchemas.Content202012) { TestName = nameof(MetaSchemas.Content202012) },
+			new TestCaseData(MetaSchemas.Unevaluated202012) { TestName = nameof(MetaSchemas.Unevaluated202012) },
 		};
 
 	[TestCaseSource(nameof(TestData))]
-	public void Hardcoded(string testName, JsonSchema schema)
+	public void Hardcoded(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema);
 		var validation = schema.Validate(JsonDocument.Parse(json).RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
@@ -31,12 +48,11 @@ public class SelfValidationTest
 	}
 
 	[TestCaseSource(nameof(TestData))]
-	[Ignore("Schema equality not a feature yet")]
-	public void Online(string testName, JsonSchema schema)
+	public void Online(JsonSchema schema)
 	{
 		try
 		{
-			var localSchemaJson = JsonSerializer.Serialize(schema);
+			var localSchemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
 
 			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
 			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson);
@@ -55,7 +71,7 @@ public class SelfValidationTest
 				localValidation.AssertValid();
 
 				Console.WriteLine("Asserting json equality");
-				Assert.AreEqual(onlineSchemaJson, localSchemaJson);
+				Assert.AreEqual(onlineSchema, schema);
 			}
 			catch (Exception)
 			{
@@ -85,8 +101,7 @@ public class SelfValidationTest
 	}
 
 	[TestCaseSource(nameof(TestData))]
-	[Ignore("Schema equality not a feature yet")]
-	public void RoundTrip(string testName, JsonSchema schema)
+	public void RoundTrip(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
 		Console.WriteLine(json);

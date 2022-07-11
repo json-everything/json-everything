@@ -150,13 +150,14 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.Applicator201909Id, true))
 			.RecursiveAnchor()
 			.Title("Applicator vocabulary meta-schema")
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 			.Properties(
 				(AdditionalItemsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
 				(UnevaluatedItemsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
 				(ItemsKeyword.Name, new JsonSchemaBuilder()
 					.AnyOf(
-						JsonSchemaBuilder.RefRoot(),
-						new JsonSchemaBuilder().Ref("#/defs/schemaArray")
+						JsonSchemaBuilder.RecursiveRefRoot(),
+						new JsonSchemaBuilder().Ref("#/$defs/schemaArray")
 					)
 				),
 				(ContainsKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot()),
@@ -349,6 +350,7 @@ public static partial class MetaSchemas
 				),
 				(ExamplesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)
+					.Items(true)
 				)
 			);
 
@@ -384,7 +386,7 @@ public static partial class MetaSchemas
 				(ContentMediaTypeKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
-				(ContentMediaEncodingKeyword.Name, new JsonSchemaBuilder()
+				(ContentEncodingKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
 				(ContentSchemaKeyword.Name, JsonSchemaBuilder.RecursiveRefRoot())
