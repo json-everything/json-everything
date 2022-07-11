@@ -158,7 +158,7 @@ public static partial class MetaSchemas
 				)
 			),
 			(PropertyNamesKeyword.Name, JsonSchemaBuilder.RefRoot()),
-			(ConstKeyword.Name, JsonSchema.Empty),
+			(ConstKeyword.Name, true),
 			(EnumKeyword.Name, new JsonSchemaBuilder()
 				.Type(SchemaValueType.Array)
 				.Items(true)
@@ -177,7 +177,7 @@ public static partial class MetaSchemas
 			),
 			(FormatKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
 			(ContentMediaTypeKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
-			(ContentMediaEncodingKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
+			(ContentEncodingKeyword.Name, new JsonSchemaBuilder().Type(SchemaValueType.String)),
 			(IfKeyword.Name, JsonSchemaBuilder.RefRoot()),
 			(ThenKeyword.Name, JsonSchemaBuilder.RefRoot()),
 			(ElseKeyword.Name, JsonSchemaBuilder.RefRoot()),

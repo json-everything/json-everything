@@ -58,7 +58,7 @@ public static partial class MetaSchemas
 				(Vocabularies.Unevaluated202012Id, true),
 				(Vocabularies.Validation202012Id, true),
 				(Vocabularies.Metadata202012Id, true),
-				(Vocabularies.FormatAnnotation202012Id, false),
+				(Vocabularies.FormatAnnotation202012Id, true),
 				(Vocabularies.Content202012Id, true)
 			)
 			.DynamicAnchor("meta")
@@ -66,6 +66,7 @@ public static partial class MetaSchemas
 			.AllOf(
 				new JsonSchemaBuilder().Ref("meta/core"),
 				new JsonSchemaBuilder().Ref("meta/applicator"),
+				new JsonSchemaBuilder().Ref("meta/unevaluated"),
 				new JsonSchemaBuilder().Ref("meta/validation"),
 				new JsonSchemaBuilder().Ref("meta/meta-data"),
 				new JsonSchemaBuilder().Ref("meta/format-annotation"),
@@ -78,8 +79,8 @@ public static partial class MetaSchemas
 					.Comment("\"definitions\" has been replaced by \"$defs\".")
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder().DynamicRef("#meta"))
-					.Default(new JsonObject())
 					.Deprecated(true)
+					.Default(new JsonObject())
 				),
 				(DependenciesKeyword.Name, new JsonSchemaBuilder()
 					.Comment("\"dependencies\" has been split and replaced by \"dependentSchemas\" and \"dependentRequired\" in order to serve their differing semantics.")
@@ -91,6 +92,7 @@ public static partial class MetaSchemas
 						)
 					)
 					.Deprecated(true)
+					.Default(new JsonObject())
 				),
 				(RecursiveAnchorKeyword.Name, new JsonSchemaBuilder()
 					.Comment("\"$recursiveAnchor\" has been replaced by \"$dynamicAnchor\".")
@@ -122,7 +124,7 @@ public static partial class MetaSchemas
 					.Pattern("^[^#]*#?$")
 				),
 				(SchemaKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/uriReferenceString")
+					.Ref("#/$defs/uriString")
 				),
 				(RefKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/uriReferenceString")
@@ -151,7 +153,6 @@ public static partial class MetaSchemas
 				(DefsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder().DynamicRef("#meta"))
-					.Default(new JsonObject())
 				)
 			)
 			.Defs(
@@ -196,6 +197,7 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.Applicator202012Id, true))
 			.DynamicAnchor("meta")
 			.Title("Applicator vocabulary meta-schema")
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 			.Properties(
 				(PrefixItemsKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/schemaArray")
@@ -208,7 +210,6 @@ public static partial class MetaSchemas
 				),
 				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
-					.Default(new JsonObject())
 				),
 				(PropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
@@ -236,7 +237,6 @@ public static partial class MetaSchemas
 				),
 				(PropertyNamesKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
-					.Default(new JsonObject())
 				),
 				(IfKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
@@ -470,7 +470,7 @@ public static partial class MetaSchemas
 				(ContentMediaTypeKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
-				(ContentMediaEncodingKeyword.Name, new JsonSchemaBuilder()
+				(ContentEncodingKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 				),
 				(ContentSchemaKeyword.Name, new JsonSchemaBuilder()

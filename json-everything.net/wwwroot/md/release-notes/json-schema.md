@@ -1,3 +1,10 @@
+# [3.1.5](https://github.com/gregsdennis/json-everything/pull/299)
+
+🤦There were multiple issues with the meta-schemas because the self-validation tests were initially disabled (equality hadn't been implemented yet).  Re-enabling these tests highlighted several problems.
+
+- All meta-schemas adjusted to conform to online versions.
+- It's `contentEncoding` not `contentMediaEncoding`...
+
 # 3.1.4 (No PR)
 
 Continuation of v3.1.3 - Fixed array-valued `items`.

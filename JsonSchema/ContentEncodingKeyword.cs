@@ -13,10 +13,10 @@ namespace Json.Schema;
 [SchemaDraft(Draft.Draft202012)]
 [Vocabulary(Vocabularies.Content201909Id)]
 [Vocabulary(Vocabularies.Content202012Id)]
-[JsonConverter(typeof(ContentMediaEncodingKeywordJsonConverter))]
-public class ContentMediaEncodingKeyword : IJsonSchemaKeyword, IEquatable<ContentMediaEncodingKeyword>
+[JsonConverter(typeof(ContentEncodingKeywordJsonConverter))]
+public class ContentEncodingKeyword : IJsonSchemaKeyword, IEquatable<ContentEncodingKeyword>
 {
-	internal const string Name = "contentMediaEncoding";
+	internal const string Name = "contentEncoding";
 
 	/// <summary>
 	/// The encoding value.
@@ -24,10 +24,10 @@ public class ContentMediaEncodingKeyword : IJsonSchemaKeyword, IEquatable<Conten
 	public string Value { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="ContentMediaEncodingKeyword"/>.
+	/// Creates a new <see cref="ContentEncodingKeyword"/>.
 	/// </summary>
 	/// <param name="value">The encoding value.</param>
-	public ContentMediaEncodingKeyword(string value)
+	public ContentEncodingKeyword(string value)
 	{
 		Value = value ?? throw new ArgumentNullException(nameof(value));
 	}
@@ -55,7 +55,7 @@ public class ContentMediaEncodingKeyword : IJsonSchemaKeyword, IEquatable<Conten
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ContentMediaEncodingKeyword? other)
+	public bool Equals(ContentEncodingKeyword? other)
 	{
 		if (ReferenceEquals(null, other)) return false;
 		if (ReferenceEquals(this, other)) return true;
@@ -67,7 +67,7 @@ public class ContentMediaEncodingKeyword : IJsonSchemaKeyword, IEquatable<Conten
 	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
 	public override bool Equals(object obj)
 	{
-		return Equals(obj as ContentMediaEncodingKeyword);
+		return Equals(obj as ContentEncodingKeyword);
 	}
 
 	/// <summary>Serves as the default hash function.</summary>
@@ -78,19 +78,19 @@ public class ContentMediaEncodingKeyword : IJsonSchemaKeyword, IEquatable<Conten
 	}
 }
 
-internal class ContentMediaEncodingKeywordJsonConverter : JsonConverter<ContentMediaEncodingKeyword>
+internal class ContentEncodingKeywordJsonConverter : JsonConverter<ContentEncodingKeyword>
 {
-	public override ContentMediaEncodingKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override ContentEncodingKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.String)
 			throw new JsonException("Expected string");
 
 		var str = reader.GetString()!;
 
-		return new ContentMediaEncodingKeyword(str);
+		return new ContentEncodingKeyword(str);
 	}
-	public override void Write(Utf8JsonWriter writer, ContentMediaEncodingKeyword value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, ContentEncodingKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(ContentMediaEncodingKeyword.Name, value.Value);
+		writer.WriteString(ContentEncodingKeyword.Name, value.Value);
 	}
 }
