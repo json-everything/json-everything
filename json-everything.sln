@@ -96,6 +96,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json-everything.net", "json-everything.net\json-everything.net.csproj", "{38C3F2AF-B356-456D-BC5F-C382085F3798}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi", "JsonSchema.OpenApi\JsonSchema.OpenApi.csproj", "{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAPI", "OpenAPI", "{EF7AC22E-9DD7-4F23-8542-74A0D315E5E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1", "3.1", "{B22CB191-B36C-41AE-9DE6-864C0A677641}"
+	ProjectSection(SolutionItems) = preProject
+		Meta-Schemas\OpenAPI\3.1\openapi-dialect-base.json = Meta-Schemas\OpenAPI\3.1\openapi-dialect-base.json
+		Meta-Schemas\OpenAPI\3.1\openapi-meta-base.json = Meta-Schemas\OpenAPI\3.1\openapi-meta-base.json
+		Meta-Schemas\OpenAPI\3.1\schema.json = Meta-Schemas\OpenAPI\3.1\schema.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi.Tests", "JsonSchema.OpenApi.Tests\JsonSchema.OpenApi.Tests.csproj", "{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -241,6 +254,18 @@ Global
 		{38C3F2AF-B356-456D-BC5F-C382085F3798}.Localization|Any CPU.Build.0 = Release|Any CPU
 		{38C3F2AF-B356-456D-BC5F-C382085F3798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38C3F2AF-B356-456D-BC5F-C382085F3798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Localization|Any CPU.Build.0 = Debug|Any CPU
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}.Localization|Any CPU.Build.0 = Debug|Any CPU
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -270,6 +295,10 @@ Global
 		{354C3913-ED0D-41C3-A006-7740A98C8E27} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{0776DED0-94A7-4034-BDDB-610C0197FE4E} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{FABD51FE-F729-4D02-8295-66A6687C6240} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
+		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
+		{EF7AC22E-9DD7-4F23-8542-74A0D315E5E2} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
+		{B22CB191-B36C-41AE-9DE6-864C0A677641} = {EF7AC22E-9DD7-4F23-8542-74A0D315E5E2}
+		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
