@@ -9,18 +9,20 @@ namespace Json.Schema.OpenApi;
 public static class MetaSchemas
 {
 	/// <summary>
-	/// The URI ID of the dialect meta-schema.
+	/// The URI ID of the the OpenAPI v3.1 dialect meta-schema.
 	/// </summary>
 	public static readonly Uri OpenApiDialectId = new("https://spec.openapis.org/oas/3.1/dialect/base");
 	/// <summary>
-	/// The URI ID of the validation meta-schema.
+	/// The URI ID of the the OpenAPI v3.1 validation meta-schema.
 	/// </summary>
 	public static readonly Uri OpenApiMetaId = new("https://spec.openapis.org/oas/3.1/meta/base");
-
+	/// <summary>
+	/// The URI ID of the OpenAPI v3.1 document schema.
+	/// </summary>
 	public static readonly Uri OpenApiDocumentSchemaId = new("https://spec.openapis.org/oas/3.1/schema/2022-02-27");
 
 	/// <summary>
-	/// The dialect meta-schema.
+	/// The OpenAPI v3.1 dialect meta-schema.
 	/// </summary>
 	public static readonly JsonSchema OpenApiDialect =
 		new JsonSchemaBuilder()
@@ -45,7 +47,7 @@ public static class MetaSchemas
 			);
 
 	/// <summary>
-	/// The validation meta-schema.
+	/// The OpenAPI v3.1 validation meta-schema.
 	/// </summary>
 	public static readonly JsonSchema OpenApiMeta =
 		new JsonSchemaBuilder()
@@ -126,6 +128,9 @@ public static class MetaSchemas
 				)
 			);
 
+	/// <summary>
+	/// The OpenAPI v3.1 document schema.
+	/// </summary>
 	public static readonly JsonSchema DocumentSchema =
 		new JsonSchemaBuilder()
 			.Id(OpenApiDocumentSchemaId)
