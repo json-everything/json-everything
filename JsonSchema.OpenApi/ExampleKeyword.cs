@@ -25,7 +25,7 @@ public class ExampleKeyword : IJsonSchemaKeyword, IEquatable<ExampleKeyword>
 	/// <summary>
 	/// Creates a new <see cref="ExampleKeyword"/>.
 	/// </summary>
-	/// <param name="value">The constant value.</param>
+	/// <param name="value">The example value.</param>
 	public ExampleKeyword(JsonNode? value)
 	{
 		Value = value;

@@ -19,30 +19,46 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 {
 	internal const string Name = "discriminator";
 
+	private readonly JsonNode? _json;
+
 	/// <summary>
-	/// Gets the property name.
+	/// The name of the property in the payload that will hold the discriminator value.
 	/// </summary>
 	public string PropertyName { get; }
 	/// <summary>
-	/// Gets the mapping information.
+	/// An object to hold mappings between payload values and schema names or references.
 	/// </summary>
 	public IReadOnlyDictionary<string, string>? Mapping { get; }
 	/// <summary>
-	/// Gets the extension data.
+	/// Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+	/// The value can be null, a primitive, an array or an object.
 	/// </summary>
 	public IReadOnlyDictionary<string, JsonNode?>? Extensions { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="DiscriminatorKeyword"/>.
 	/// </summary>
-	/// <param name="propertyName"></param>
-	/// <param name="mapping"></param>
-	/// <param name="extensions"></param>
+	/// <param name="propertyName">The name of the property in the payload that will hold the discriminator value.</param>
+	/// <param name="mapping">An object to hold mappings between payload values and schema names or references.</param>
+	/// <param name="extensions">
+	/// Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+	/// The value can be null, a primitive, an array or an object.
+	/// </param>
 	public DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		PropertyName = propertyName;
 		Mapping = mapping;
 		Extensions = extensions;
+
+		_json = JsonSerializer.SerializeToNode(this);
+	}
+
+	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
+		: this(propertyName, mapping, extensions)
+	{
+		_json = json;
 	}
 
 	/// <summary>
@@ -52,9 +68,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-
-		// todo ??? 
-
+		context.LocalResult.SetAnnotation(Name, _json);
 		context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
@@ -150,7 +164,7 @@ internal class DiscriminatorKeywordJsonConverter : JsonConverter<DiscriminatorKe
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new DiscriminatorKeyword(model!.PropertyName, model.Mapping, extensionData);
+		return new DiscriminatorKeyword(model!.PropertyName, model.Mapping, extensionData, node);
 	}
 	public override void Write(Utf8JsonWriter writer, DiscriminatorKeyword value, JsonSerializerOptions options)
 	{

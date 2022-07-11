@@ -18,30 +18,45 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 {
 	internal const string Name = "externalDocs";
 
+	private JsonNode? _json;
+
 	/// <summary>
-	/// Gets the URL.
+	/// The URL for the target documentation. This MUST be in the form of a URL.
 	/// </summary>
 	public Uri Url { get; }
 	/// <summary>
-	/// Gets the description.
+	/// A description of the target documentation. CommonMark syntax MAY be used for rich text representation.
 	/// </summary>
 	public string? Description { get; }
 	/// <summary>
-	/// Gets the extension data.
+	/// Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+	/// The value can be null, a primitive, an array or an object.
 	/// </summary>
 	public IReadOnlyDictionary<string, JsonNode?>? Extensions { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="ExternalDocsKeyword"/>.
 	/// </summary>
-	/// <param name="url"></param>
-	/// <param name="description"></param>
-	/// <param name="extensions"></param>
+	/// <param name="url">The URL for the target documentation. This MUST be in the form of a URL.</param>
+	/// <param name="description">A description of the target documentation. CommonMark syntax MAY be used for rich text representation.</param>
+	/// <param name="extensions">
+	/// Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+	/// The value can be null, a primitive, an array or an object.
+	/// </param>
 	public ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		Url = url;
 		Description = description;
 		Extensions = extensions;
+
+		_json = JsonSerializer.SerializeToNode(this);
+	}
+	internal ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
+		: this(url, description, extensions)
+	{
+		_json = json;
 	}
 
 	/// <summary>
@@ -132,7 +147,7 @@ internal class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDocsKeyw
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new ExternalDocsKeyword(model!.Url, model.Description, extensionData);
+		return new ExternalDocsKeyword(model!.Url, model.Description, extensionData, node);
 	}
 	public override void Write(Utf8JsonWriter writer, ExternalDocsKeyword value, JsonSerializerOptions options)
 	{

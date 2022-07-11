@@ -21,40 +21,61 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 	internal const string _Name = "xml";
 #pragma warning restore IDE1006 // Naming Styles
 
+	private readonly JsonNode? _json;
+
 	/// <summary>
-	/// Gets the namespace.
+	/// The URI of the namespace definition. This MUST be in the form of an absolute URI.
 	/// </summary>
 	public Uri? Namespace { get; }
 	/// <summary>
-	/// Gets the name.
+	/// Replaces the name of the element/attribute used for the described schema property.
+	/// When defined within `items`, it will affect the name of the individual XML elements within the list.
+	/// When defined alongside `type` being `array` (outside the `items`), it will affect the wrapping element and
+	/// only if `wrapped` is `true`. If `wrapped` is `false`, it will be ignored.
 	/// </summary>
 	public string? Name { get; }
 	/// <summary>
-	/// Gets the prefix.
+	/// The prefix to be used for the name.
 	/// </summary>
 	public string? Prefix { get; }
 	/// <summary>
-	/// Gets whether there is an attribute.
+	/// Declares whether the property definition translates to an attribute instead of an
+	/// element. Default value is `false`.
 	/// </summary>
 	public bool? Attribute { get; }
 	/// <summary>
-	/// Gets whether the item is wrapped.
+	/// MAY be used only for an array definition. Signifies whether the array is wrapped (for example, `<books><book/><book/></books>`)
+	/// or unwrapped (`<book/><book/>`). Default value is `false`. The definition takes effect only when defined alongside `type`
+	/// being `array` (outside the `items`).
 	/// </summary>
 	public bool? Wrapped { get; }
 	/// <summary>
-	/// Gets the extension data.
+	/// Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+	/// The value can be null, a primitive, an array or an object.
 	/// </summary>
 	public IReadOnlyDictionary<string, JsonNode?>? Extensions { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="ExternalDocsKeyword"/>.
 	/// </summary>
-	/// <param name="namespace"></param>
-	/// <param name="name"></param>
-	/// <param name="prefix"></param>
-	/// <param name="wrapped"></param>
-	/// <param name="extensions"></param>
-	/// <param name="attribute"></param>
+	/// <param name="namespace">The URI of the namespace definition. This MUST be in the form of an absolute URI.</param>
+	/// <param name="name">Replaces the name of the element/attribute used for the described schema property.
+	/// When defined within `items`, it will affect the name of the individual XML elements within the list.
+	/// When defined alongside `type` being `array` (outside the `items`), it will affect the wrapping element and
+	/// only if `wrapped` is `true`. If `wrapped` is `false`, it will be ignored.</param>
+	/// <param name="prefix">The prefix to be used for the name.</param>
+	/// <param name="attribute">Declares whether the property definition translates to an attribute instead of an
+	/// element. Default value is `false`.</param>
+	/// <param name="wrapped">
+	/// MAY be used only for an array definition. Signifies whether the array is wrapped (for example, `<books><book/><book/></books>`)
+	/// or unwrapped (`<book/><book/>`). Default value is `false`. The definition takes effect only when defined alongside `type`
+	/// being `array` (outside the `items`).</param>
+	/// <param name="extensions">
+	/// Allows extensions to the OpenAPI Schema. The field name MUST begin with `x-`, for example,
+	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
+	/// The value can be null, a primitive, an array or an object.
+	/// </param>
 	public XmlKeyword(Uri? @namespace, string? name, string? prefix, bool? attribute, bool? wrapped, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		Namespace = @namespace;
@@ -63,6 +84,14 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 		Attribute = attribute;
 		Wrapped = wrapped;
 		Extensions = extensions;
+
+		_json = JsonSerializer.SerializeToNode(this);
+	}
+
+	internal XmlKeyword(Uri? @namespace, string? name, string? prefix, bool? attribute, bool? wrapped, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
+		: this(@namespace, name, prefix, attribute, wrapped, extensions)
+	{
+		_json = json;
 	}
 
 	/// <summary>
@@ -72,9 +101,7 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(_Name);
-
-		// todo ??? 
-
+		context.LocalResult.SetAnnotation(_Name, _json);
 		context.LocalResult.Pass();
 		context.ExitKeyword(_Name, context.LocalResult.IsValid);
 	}
@@ -164,7 +191,7 @@ internal class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new XmlKeyword(model!.Namespace, model.Name, model.Prefix, model.Attribute, model.Wrapped, extensionData);
+		return new XmlKeyword(model!.Namespace, model.Name, model.Prefix, model.Attribute, model.Wrapped, extensionData, node);
 	}
 	public override void Write(Utf8JsonWriter writer, XmlKeyword value, JsonSerializerOptions options)
 	{
