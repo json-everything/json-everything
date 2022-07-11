@@ -15,6 +15,7 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using Json.Schema.OpenApi
 
 @inject CookieManager CookieManager;
 @inject NavigationManager NavigationManager;
@@ -170,6 +171,7 @@
 		LibraryVersion.GetFor<JsonSchema>(),
 		LibraryVersion.GetFor<DataKeyword>(),
 		LibraryVersion.GetFor<UniqueKeysKeyword>(),
+		LibraryVersion.GetFor<DiscriminatorKeyword>(),
 		LibraryVersion.GetFor<ISchemaRefiner>(),
 		LibraryVersion.GetFor<Bound>()
 	};
@@ -422,6 +424,7 @@ namespace JsonEverythingTemp
 
 		Json.Schema.Data.Vocabularies.Register();
 		Json.Schema.UniqueKeys.Vocabularies.Register();
+		Json.Schema.OpenApi.Vocabularies.Register();
 
 		await LoadSavedSchema();
 		await LoadSavedInstance();
