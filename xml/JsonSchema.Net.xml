@@ -716,39 +716,39 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
-        <member name="T:Json.Schema.ContentMediaEncodingKeyword">
+        <member name="T:Json.Schema.ContentEncodingKeyword">
             <summary>
             Handles `contentMediaEncoding`.
             </summary>
         </member>
-        <member name="P:Json.Schema.ContentMediaEncodingKeyword.Value">
+        <member name="P:Json.Schema.ContentEncodingKeyword.Value">
             <summary>
             The encoding value.
             </summary>
         </member>
-        <member name="M:Json.Schema.ContentMediaEncodingKeyword.#ctor(System.String)">
+        <member name="M:Json.Schema.ContentEncodingKeyword.#ctor(System.String)">
             <summary>
-            Creates a new <see cref="T:Json.Schema.ContentMediaEncodingKeyword"/>.
+            Creates a new <see cref="T:Json.Schema.ContentEncodingKeyword"/>.
             </summary>
             <param name="value">The encoding value.</param>
         </member>
-        <member name="M:Json.Schema.ContentMediaEncodingKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.ContentEncodingKeyword.Validate(Json.Schema.ValidationContext)">
             <summary>
             Provides validation for the keyword.
             </summary>
             <param name="context">Contextual details for the validation process.</param>
         </member>
-        <member name="M:Json.Schema.ContentMediaEncodingKeyword.Equals(Json.Schema.ContentMediaEncodingKeyword)">
+        <member name="M:Json.Schema.ContentEncodingKeyword.Equals(Json.Schema.ContentEncodingKeyword)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
             <param name="other">An object to compare with this object.</param>
             <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
         </member>
-        <member name="M:Json.Schema.ContentMediaEncodingKeyword.Equals(System.Object)">
+        <member name="M:Json.Schema.ContentEncodingKeyword.Equals(System.Object)">
             <summary>Determines whether the specified object is equal to the current object.</summary>
             <param name="obj">The object to compare with the current object.</param>
             <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
         </member>
-        <member name="M:Json.Schema.ContentMediaEncodingKeyword.GetHashCode">
+        <member name="M:Json.Schema.ContentEncodingKeyword.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
