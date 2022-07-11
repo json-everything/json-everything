@@ -104,6 +104,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1", "3.1", "{B22CB191-B36
 	ProjectSection(SolutionItems) = preProject
 		Meta-Schemas\OpenAPI\3.1\openapi-meta-base.json = Meta-Schemas\OpenAPI\3.1\openapi-meta-base.json
 		Meta-Schemas\OpenAPI\3.1\openapi-dialect-base.json = Meta-Schemas\OpenAPI\3.1\openapi-dialect-base.json
+		Meta-Schemas\OpenAPI\3.1\schema.json = Meta-Schemas\OpenAPI\3.1\schema.json
 	EndProjectSection
 EndProject
 Global
