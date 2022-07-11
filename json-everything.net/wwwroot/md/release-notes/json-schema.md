@@ -1,3 +1,7 @@
+# [3.1.5](https://github.com/gregsdennis/json-everything/pull/300)
+
+Added `JsonSchemaBuilderExtensions.PatternProperties()` overloads that take strings in place of `Regex`es.  There is no syntax highlighting support for these overloads, however.
+
 # [3.1.5](https://github.com/gregsdennis/json-everything/pull/299)
 
 🤦There were multiple issues with the meta-schemas because the self-validation tests were initially disabled (equality hadn't been implemented yet).  Re-enabling these tests highlighted several problems.
