@@ -13,6 +13,9 @@
 "pkg:schema-data":
   - JsonSchema.Data/**/*
 
+"pkg:schema-openapi":
+  - JsonSchema.OpenApi/**/*
+
 "pkg:schema-unique-keys":
   - JsonSchema.UniqueKeys/**/*
 

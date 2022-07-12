@@ -549,6 +549,66 @@ jobs:
           msg: |
             ${{ steps.analyze-schema-data.outputs.REPORT }}
 
+  analyze-schema-openapi:
+    if: github.event_name == 'pull_request'
+    needs: build
+    name: Analyze JsonSchema.Net.OpenApi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-schema-openapi
+        with:
+          paths: JsonSchema.OpenApi/**
+      - if: steps.changed-schema-openapi.outputs.changed == 'true'
+        uses: actions/checkout@v3
+      - if: steps.changed-schema-openapi.outputs.changed == 'true'
+        name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 3.1.301
+
+      - if: steps.changed-schema-openapi.outputs.changed == 'true'
+        name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+        # Set up
+      - if: steps.changed-schema-openapi.outputs.changed == 'true'
+        name: Create local manifest file
+        run: dotnet new tool-manifest
+      - if: steps.changed-schema-openapi.outputs.changed == 'true'
+        name: Install analyzer
+        run: dotnet tool install SemVerAnalyzer
+
+      - if: steps.changed-schema-openapi.outputs.changed == 'true'
+        name: Analyze schema openapi
+        id: analyze-schema-openapi
+        # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
+        run: |
+          dotnet analyze-semver -a artifacts/DLLs/JsonSchema.OpenApi/bin/Release/netstandard2.0/JsonSchema.Net.OpenApi.dll -o semver-report-schema-openapi.md -c .github/semver_config.json
+          unset HAS_REPORT
+          unset REPORT
+          if [ -s semver-report-schema-openapi.md ]
+          then
+            HAS_REPORT='true'
+            REPORT=$(<semver-report-schema-openapi.md)
+            REPORT="${REPORT//'%'/'%25'}"
+            REPORT="${REPORT//$'\n'/'%0A'}"
+            REPORT="${REPORT//$'\r'/'%0D'}"
+            echo "::set-output name=REPORT::${REPORT}"
+          fi
+          echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+
+        # Report
+      - if: steps.analyze-schema-openapi.outputs.HAS_REPORT
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: |
+            ${{ steps.analyze-schema-openapi.outputs.REPORT }}
+
   analyze-schema-unique-keys:
     if: github.event_name == 'pull_request'
     needs: build
