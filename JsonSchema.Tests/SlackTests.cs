@@ -74,7 +74,7 @@ public class SlackTests
 			}
 		};
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 	}
