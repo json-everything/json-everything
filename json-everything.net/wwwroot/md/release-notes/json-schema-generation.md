@@ -1,3 +1,7 @@
+# [3.0.2](https://github.com/gregsdennis/json-everything/pull/301)
+
+[#296](https://github.com/gregsdennis/json-everything/pull/296) - Updated handling logic for `[JsonIgnore]` to consider the attribute's `Condition` property.
+
 # 3.0.1 (no PR)
 
 [#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
