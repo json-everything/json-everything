@@ -35,6 +35,8 @@
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Examples (work in progress)" Icon="format_list_numbered" Expanded="true">
 			<RadzenPanelMenuItem Text="Version Selection" Value="@("examples/schema/version-selection")"/>
+			<RadzenPanelMenuItem Text="Managing External Schemas" Value="@("examples/schema/external-schemas")"/>
+			<RadzenPanelMenuItem Text="Managing Options" Value="@("examples/schema/managing-options")"/>
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Expanded="true">
 			<RadzenPanelMenuItem Text="JsonSchema.Net" Value="@("release-notes/json-schema")"/>
@@ -184,7 +186,7 @@
 
 	private class SchemaOptionsModel
 	{
-		public OutputFormat OutputFormat { get; set; } = OutputFormat.Detailed;
+		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
 		public Draft Draft { get; set; } = Draft.Draft202012;
 		public string? DefaultBaseUri { get; set; }
 		public bool ValidateFormat { get; set; }
