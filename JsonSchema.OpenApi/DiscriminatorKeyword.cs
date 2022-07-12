@@ -69,7 +69,6 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, _json);
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
