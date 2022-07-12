@@ -102,7 +102,6 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 	{
 		context.EnterKeyword(_Name);
 		context.LocalResult.SetAnnotation(_Name, _json);
-		context.LocalResult.Pass();
 		context.ExitKeyword(_Name, context.LocalResult.IsValid);
 	}
 

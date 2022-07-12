@@ -69,7 +69,6 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 
 		// todo ??? 
 
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
