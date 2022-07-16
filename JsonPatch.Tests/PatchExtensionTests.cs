@@ -258,8 +258,8 @@ public class PatchExtensionTests
 	{
 		var model = new TestModel
 		{
-			Numbers = new int[] { 1, 2, 1 },
-			Strings = new string[] { "asdf " },
+			Numbers = new[] { 1, 2, 1 },
+			Strings = new[] { "asdf " },
 			InnerObjects = new List<TestModel> { new TestModel { Id = Guid.NewGuid() }, new TestModel { Id = Guid.NewGuid() } }
 		};
 		var model2 = new TestModel
@@ -273,9 +273,9 @@ public class PatchExtensionTests
 
 		var final = patch.Apply(model);
 
-		Assert.AreEqual(0, final.Numbers.Length);
-		Assert.AreEqual(0, final.Strings.Length);
-		Assert.AreEqual(0, final.InnerObjects.Count);
+		Assert.AreEqual(0, final!.Numbers!.Length);
+		Assert.AreEqual(0, final.Strings!.Length);
+		Assert.AreEqual(0, final.InnerObjects!.Count);
 	}
 
 	[Test]
@@ -283,14 +283,14 @@ public class PatchExtensionTests
 	{
 		var model = new TestModel
 		{
-			Numbers = new int[] { 1, 2, 3 },
-			Strings = new string[] { "123", "asdf" },
+			Numbers = new[] { 1, 2, 3 },
+			Strings = new[] { "123", "asdf" },
 			InnerObjects = new List<TestModel> { new TestModel { Id = Guid.NewGuid() }, new TestModel { Id = Guid.NewGuid() } }
 		};
 		var model2 = new
 		{
-			Numbers = new int[] { 1, 3 },
-			Strings = new string[] { "asdf" },
+			Numbers = new[] { 1, 3 },
+			Strings = new[] { "asdf" },
 			InnerObjects = new List<TestModel> { model.InnerObjects[1] }
 		};
 
@@ -298,14 +298,14 @@ public class PatchExtensionTests
 
 		var final = patch.Apply(model);
 
-		Assert.AreEqual(2, final.Numbers.Length);
+		Assert.AreEqual(2, final!.Numbers!.Length);
 		Assert.AreEqual(1, final.Numbers[0]);
 		Assert.AreEqual(3, final.Numbers[1]);
 
-		Assert.AreEqual(1, final.Strings.Length);
+		Assert.AreEqual(1, final.Strings!.Length);
 		Assert.AreEqual("asdf", final.Strings[0]);
 
-		Assert.AreEqual(1, final.InnerObjects.Count);
+		Assert.AreEqual(1, final.InnerObjects!.Count);
 		Assert.AreEqual(model.InnerObjects[1].Id, final.InnerObjects[0].Id);
 	}
 

@@ -3,25 +3,37 @@ using Json.Pointer;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `var` operation.
+/// </summary>
 [Operator("var")]
-internal class VariableRule : Rule
+public class VariableRule : Rule
 {
 	private readonly Rule? _path;
 	private readonly Rule? _defaultValue;
 
-	public VariableRule()
+	internal VariableRule()
 	{
 	}
-	public VariableRule(Rule path)
+	internal VariableRule(Rule path)
 	{
 		_path = path;
 	}
-	public VariableRule(Rule path, Rule defaultValue)
+	internal VariableRule(Rule path, Rule defaultValue)
 	{
 		_path = path;
 		_defaultValue = defaultValue;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		if (_path == null) return data;

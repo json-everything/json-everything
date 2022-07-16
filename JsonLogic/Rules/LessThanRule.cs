@@ -1,28 +1,41 @@
 ﻿using System.Text.Json.Nodes;
 using Json.More;
+#pragma warning disable CS1570
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `<` operation.
+/// </summary>
 [Operator("<")]
-internal class LessThanRule : Rule
+public class LessThanRule : Rule
 {
 	private readonly Rule _a;
 	private readonly Rule _b;
 	private readonly Rule? _c;
 
-	public LessThanRule(Rule a, Rule b)
+	internal LessThanRule(Rule a, Rule b)
 	{
 		_a = a;
 		_b = b;
 	}
 
-	public LessThanRule(Rule a, Rule b, Rule c)
+	internal LessThanRule(Rule a, Rule b, Rule c)
 	{
 		_a = a;
 		_b = b;
 		_c = c;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		if (_c == null)

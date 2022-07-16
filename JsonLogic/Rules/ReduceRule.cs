@@ -3,8 +3,11 @@ using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `reduce` operation.
+/// </summary>
 [Operator("reduce")]
-internal class ReduceRule : Rule
+public class ReduceRule : Rule
 {
 	private class Intermediary
 	{
@@ -18,13 +21,22 @@ internal class ReduceRule : Rule
 	private readonly Rule _rule;
 	private readonly Rule _initial;
 
-	public ReduceRule(Rule input, Rule rule, Rule initial)
+	internal ReduceRule(Rule input, Rule rule, Rule initial)
 	{
 		_input = input;
 		_rule = rule;
 		_initial = initial;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var input = _input.Apply(data, contextData);

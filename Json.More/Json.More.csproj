@@ -17,14 +17,15 @@
     <LangVersion>latest</LangVersion>
     <DocumentationFile>Json.More.xml</DocumentationFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-	<Nullable>enable</Nullable>
-   </PropertyGroup>
+	  <NoWarn>CS1570</NoWarn>
+		<Nullable>enable</Nullable>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="6.0.2" />

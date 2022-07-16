@@ -5,16 +5,28 @@ using Json.Pointer;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `missing` operation.
+/// </summary>
 [Operator("missing")]
-internal class MissingRule : Rule
+public class MissingRule : Rule
 {
 	private readonly Rule[] _components;
 
-	public MissingRule(params Rule[] components)
+	internal MissingRule(params Rule[] components)
 	{
 		_components = components;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var expected = _components.SelectMany(c => c.Apply(data, contextData).Flatten())

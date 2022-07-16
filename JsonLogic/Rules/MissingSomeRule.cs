@@ -5,18 +5,30 @@ using Json.Pointer;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `missing_some` operation.
+/// </summary>
 [Operator("missing_some")]
-internal class MissingSomeRule : Rule
+public class MissingSomeRule : Rule
 {
 	private readonly Rule _requiredCount;
 	private readonly Rule _components;
 
-	public MissingSomeRule(Rule requiredCount, Rule components)
+	internal MissingSomeRule(Rule requiredCount, Rule components)
 	{
 		_requiredCount = requiredCount;
 		_components = components;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var requiredCount = _requiredCount.Apply(data, contextData).Numberify();

@@ -4,18 +4,30 @@ using Json.More;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `in` operation.
+/// </summary>
 [Operator("in")]
-internal class InRule : Rule
+public class InRule : Rule
 {
 	private readonly Rule _test;
 	private readonly Rule _source;
 
-	public InRule(Rule test, Rule source)
+	internal InRule(Rule test, Rule source)
 	{
 		_test = test;
 		_source = source;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var test = _test.Apply(data, contextData);

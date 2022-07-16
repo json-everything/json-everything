@@ -4,25 +4,37 @@ using Json.More;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `substr` operation.
+/// </summary>
 [Operator("substr")]
-internal class SubstrRule : Rule
+public class SubstrRule : Rule
 {
 	private readonly Rule _input;
 	private readonly Rule _start;
 	private readonly Rule? _count;
 
-	public SubstrRule(Rule input, Rule start)
+	internal SubstrRule(Rule input, Rule start)
 	{
 		_input = input;
 		_start = start;
 	}
-	public SubstrRule(Rule input, Rule start, Rule count)
+	internal SubstrRule(Rule input, Rule start, Rule count)
 	{
 		_input = input;
 		_start = start;
 		_count = count;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var input = _input.Apply(data, contextData);

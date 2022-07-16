@@ -4,17 +4,29 @@ using System.Text.Json.Nodes;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `if` and `?:` operations.
+/// </summary>
 [Operator("if")]
 [Operator("?:")]
-internal class IfRule : Rule
+public class IfRule : Rule
 {
 	private readonly List<Rule> _components;
 
-	public IfRule(params Rule[] components)
+	internal IfRule(params Rule[] components)
 	{
 		_components = new List<Rule>(components);
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		bool condition;
