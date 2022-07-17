@@ -1,31 +1,78 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+html,
+body,
+#app,
+#page {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  flex-grow: 0;
+}
+
+article {
+  overflow: hidden;
+  flex-grow: 1;
+  position: relative;
+}
+
+.fill-remaining {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.col-8-stretch {
+  flex: 1 0 66.66667%;
+}
+
+.scroll {
+  overflow-y: auto;
+}
+
+.mw-content {
+  min-width: fit-content;
 }
 
 h1:focus {
-  outline: none;
+	outline: none;
 }
 
-a, .btn-link {
-  color: #0071c1;
+a,
+.btn-link {
+	color: #0071c1;
 }
 
 .content {
-  padding-top: 1.1rem;
+	padding-top: 1.1rem;
 }
 
 .valid.modified:not([type=checkbox]) {
-  outline: 1px solid #26b050;
+	outline: 1px solid #26b050;
 }
 
 .invalid {
-  outline: 1px solid red;
+	outline: 1px solid red;
 }
 
 .validation-message {
-  color: red;
+	color: red;
 }
 
 .brand-colors {
@@ -35,33 +82,33 @@ a, .btn-link {
 }
 
 #blazor-error-ui {
-  background-color: #1e1e1e;
-  bottom: 0;
-  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-  display: none;
-  left: 0;
-  padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
+	background-color: #1e1e1e;
+	bottom: 0;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+	display: none;
+	left: 0;
+	padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
 }
 
-  #blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-  }
+#blazor-error-ui .dismiss {
+	cursor: pointer;
+	position: absolute;
+	right: 0.75rem;
+	top: 0.5rem;
+}
 
 .blazor-error-boundary {
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
-  color: #1e1e1e;
-  padding: 1rem 1rem 1rem 3.7rem;
+	background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
+	color: #1e1e1e;
+	padding: 1rem 1rem 1rem 3.7rem;
 }
 
-  .blazor-error-boundary::after {
-    content: "An error has occurred."
-  }
+.blazor-error-boundary::after {
+	content: "An error has occurred."
+}
 
 a.navbar-brand {
 	white-space: normal;
@@ -70,58 +117,62 @@ a.navbar-brand {
 }
 
 .text-muted-light {
-  color: #CCBCD9 !important;
+	color: #CCBCD9 !important;
 }
 
 .highlight {
-    border-radius: 4px;
-    transition-duration: .15s;
-    transition-timing-function: cubic-bezier(.65, .1, .43, .89);
+	border-radius: 4px;
+	transition-duration: .15s;
+	transition-timing-function: cubic-bezier(.65, .1, .43, .89);
 }
 
 /*--- BUTTON ---*/
 
 .btn-primary {
-    background-color: #6800B7;
-    border-color: #6800B7;
-    color: #fff;
-    transition-duration: .15s;
-    transition-timing-function: cubic-bezier(.65, .1, .43, .89);
+	background-color: #6800B7;
+	border-color: #6800B7;
+	color: #fff;
+	transition-duration: .15s;
+	transition-timing-function: cubic-bezier(.65, .1, .43, .89);
 }
 
-  .btn-primary:hover {
-    background-color: #8b69c3;
-    border-color: #8b69c3;
-    color: #fff;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
-  }
+.btn-primary:hover {
+	background-color: #8b69c3;
+	border-color: #8b69c3;
+	color: #fff;
+	transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
 
-  .btn-primary:focus, .btn-primary.focus {
-      background-color: #6800B7;
-      border-color: #6800B7;
-      box-shadow: none;
-  }
+.btn-primary:focus,
+.btn-primary.focus {
+	background-color: #6800B7;
+	border-color: #6800B7;
+	box-shadow: none;
+}
 
-  .btn-primary.disabled, .btn-primary:disabled {
-    background-color: #473a52;
-    border-color: #473a52;
-    color: #fff;
-    opacity: 0.5;
-  }
+.btn-primary.disabled,
+.btn-primary:disabled {
+	background-color: #473a52;
+	border-color: #473a52;
+	color: #fff;
+	opacity: 0.5;
+}
 
-  .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
-  .show > .btn-primary.dropdown-toggle {
-    background-color: #6800B7;
-    border-color: #6800B7;
-    color: #fff;
-  }
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show>.btn-primary.dropdown-toggle {
+	background-color: #6800B7;
+	border-color: #6800B7;
+	color: #fff;
+}
 
-    .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
-    .show > .btn-primary.dropdown-toggle:focus {
-        box-shadow: none;
-        background-color: #813ab5;
-        border-color: #813ab5;
-    }
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show>.btn-primary.dropdown-toggle:focus {
+	box-shadow: none;
+	background-color: #813ab5;
+	border-color: #813ab5;
+}
 
 /*--- LIBRARY ---*/
 
@@ -180,7 +231,7 @@ blockquote {
 	unicode-bidi: normal;
 }
 
-blockquote > p {
+blockquote>p {
 	margin-bottom: 0;
 }
 
@@ -195,42 +246,42 @@ markdown-anchor {
 
 /*--- RADZEN OVERRIDES ---*/
 
-.rz-tabview-top > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+.rz-tabview-top>.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
 	border-top-color: #6800B7;
 }
 
-.rz-tabview-top > .rz-tabview-nav .rz-tabview-selected {
+.rz-tabview-top>.rz-tabview-nav .rz-tabview-selected {
 	border-bottom-color: #ffffff;
 	margin-bottom: -1px;
 	border-top-color: #6800B7;
 }
 
-.rz-tabview-bottom > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+.rz-tabview-bottom>.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
 	border-bottom-color: #6800B7;
 }
 
-.rz-tabview-bottom > .rz-tabview-nav .rz-tabview-selected {
+.rz-tabview-bottom>.rz-tabview-nav .rz-tabview-selected {
 	border-top-color: #ffffff;
 	margin-top: -1px;
 	padding-top: 1px;
 	border-bottom-color: #6800B7;
 }
 
-.rz-tabview-left > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+.rz-tabview-left>.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
 	border-left-color: #6800B7;
 }
 
-.rz-tabview-left > .rz-tabview-nav .rz-tabview-selected {
+.rz-tabview-left>.rz-tabview-nav .rz-tabview-selected {
 	border-right-color: #ffffff;
 	margin-right: -1px;
 	border-left-color: #6800B7;
 }
 
-.rz-tabview-right > .rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
+.rz-tabview-right>.rz-tabview-nav li:hover:not(.rz-tabview-selected):not(.rz-state-disabled) {
 	border-right-color: #6800B7;
 }
 
-.rz-tabview-right > .rz-tabview-nav .rz-tabview-selected {
+.rz-tabview-right>.rz-tabview-nav .rz-tabview-selected {
 	border-left-color: #ffffff;
 	margin-left: -1px;
 	padding-left: 1px;
