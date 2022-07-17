@@ -22,8 +22,8 @@
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
-<div class="row">
-	<RadzenPanelMenu class="col-2" Click="SetPagePath">
+<div class="row fill-remaining">
+	<RadzenPanelMenu class="col-2 mh-100 mw-content" Click="SetPagePath">
 		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/schema")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Expanded="true">
 			<RadzenPanelMenuItem Text="Overview" Value="@("schema-basics")"/>
@@ -54,7 +54,7 @@
 			<ApiIndex AssemblyContaining="@typeof(UniqueKeysKeyword)"/>
 		</RadzenPanelMenuItem>
 	</RadzenPanelMenu>
-	<div class="col-10">
+	<div class="col-8-stretch mh-100 scroll">
 		<div class="navbar me-2">
 			<div class="align-items-center hstack mx-2">
 				<h1 class="display-4">JSON Schema</h1>
