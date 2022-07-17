@@ -51,7 +51,18 @@
 		{
 			var typeName = Page[5..];
 			var type = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(x => x.ExportedTypes)
+				.SelectMany(x =>
+				{
+					try
+					{
+						return x.ExportedTypes;
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine($"Failed to load types for assembly '{x.FullName}'");
+						return Enumerable.Empty<Type>();
+					}
+				})
 				.FirstOrDefault(x => x.FullName == typeName);
 			markdown = type == null
 				? $"***ERROR** Couldn't find type `{typeName}`.  Please report by opening an issue on Github."
