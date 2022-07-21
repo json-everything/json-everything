@@ -81,10 +81,10 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	{
 		if (reader.TokenType == JsonTokenType.StartObject)
 		{
-			var data = JsonSerializer.Deserialize<Dictionary<string, ArgumentCollection>>(ref reader, options)!;
+			var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
 
-			if (data.Count != 1)
-				throw new JsonException("Rules must contain exactly one operator key with an array of arguments.");
+			if (node is not JsonObject { Count: 1 } data)
+				throw new JsonException("Rules must be objects that contain exactly one operator key with an array of arguments.");
 
 			var (op, args) = data.First();
 
@@ -92,12 +92,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			if (ruleType == null)
 				throw new JsonException($"Cannot identify rule for {op}");
 
-			var value = args ?? new ArgumentCollection((Rule?)null);
-
-			return (Rule)Activator.CreateInstance(ruleType,
-				value.Cast<object>()
-					.Select(o => o ?? new LiteralRule(null))
-					.ToArray());
+			return (Rule)args.Deserialize(ruleType, options)!;
 		}
 
 		if (reader.TokenType == JsonTokenType.StartArray)
