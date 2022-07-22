@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.Logic.Rules;
 
@@ -68,5 +70,22 @@ public class IfRule : Rule
 		}
 
 		throw new NotImplementedException("Something went wrong. This shouldn't happen.");
+	}
+}
+
+internal class IfRuleJsonConverter : JsonConverter<IfRule>
+{
+	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null) return new IfRule();
+
+		return new IfRule(parameters);
+	}
+
+	public override void Write(Utf8JsonWriter writer, IfRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

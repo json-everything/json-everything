@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -7,6 +10,7 @@ namespace Json.Logic.Rules;
 /// Handles the `===` operation.
 /// </summary>
 [Operator("===")]
+[JsonConverter(typeof(StrictEqualsRuleJsonConverter))]
 public class StrictEqualsRule : Rule
 {
 	private readonly Rule _a;
@@ -30,5 +34,23 @@ public class StrictEqualsRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return _a.Apply(data, contextData).IsEquivalentTo(_b.Apply(data, contextData));
+	}
+}
+
+internal class StrictEqualsRuleJsonConverter : JsonConverter<StrictEqualsRule>
+{
+	public override StrictEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not { Length: 2 })
+			throw new JsonException("The === rule needs an array with 2 parameters.");
+
+		return new StrictEqualsRule(parameters[0], parameters[1]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, StrictEqualsRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

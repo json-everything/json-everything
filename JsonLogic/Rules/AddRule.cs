@@ -55,9 +55,9 @@ internal class AddRuleJsonConverter : JsonConverter<AddRule>
 {
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<List<Rule>>(ref reader, options);
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
 
-		if (parameters == null || parameters.Count == 0)
+		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The + rule needs an array of parameters.");
 
 		return new AddRule(parameters[0], parameters.Skip(1).ToArray());

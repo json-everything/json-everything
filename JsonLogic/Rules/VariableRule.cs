@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.Pointer;
 
 namespace Json.Logic.Rules;
@@ -7,14 +10,12 @@ namespace Json.Logic.Rules;
 /// Handles the `var` operation.
 /// </summary>
 [Operator("var")]
+[JsonConverter(typeof(VariableRuleJsonConverter))]
 public class VariableRule : Rule
 {
 	private readonly Rule? _path;
 	private readonly Rule? _defaultValue;
 
-	internal VariableRule()
-	{
-	}
 	internal VariableRule(Rule path)
 	{
 		_path = path;
@@ -48,5 +49,29 @@ public class VariableRule : Rule
 			return pathEval;
 
 		return _defaultValue?.Apply(data, contextData) ?? null;
+	}
+}
+
+internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
+{
+	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+
+		var parameters = node is JsonArray
+			? node.Deserialize<Rule[]>()
+			: new[] { node.Deserialize<Rule>()! };
+
+		if (parameters is not ({ Length: 1 } or { Length: 2 }))
+			throw new JsonException("The var rule needs an array with either 1 or 2 parameters.");
+
+		if (parameters.Length == 1) return new VariableRule(parameters[0]);
+
+		return new VariableRule(parameters[0], parameters[1]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, VariableRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

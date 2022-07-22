@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.Logic.Rules;
 
@@ -38,5 +41,23 @@ public class AndRule : Rule
 		}
 
 		return first;
+	}
+}
+
+internal class AndRuleJsonConverter : JsonConverter<AndRule>
+{
+	public override AndRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null || parameters.Length == 0)
+			throw new JsonException("The and rule needs an array of parameters.");
+
+		return new AndRule(parameters[0], parameters.Skip(1).ToArray());
+	}
+
+	public override void Write(Utf8JsonWriter writer, AndRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

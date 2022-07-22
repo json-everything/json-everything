@@ -1,5 +1,7 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.Logic.Rules;
 
@@ -7,6 +9,7 @@ namespace Json.Logic.Rules;
 /// Handles the `reduce` operation.
 /// </summary>
 [Operator("reduce")]
+[JsonConverter(typeof(ReduceRuleJsonConverter))]
 public class ReduceRule : Rule
 {
 	private class Intermediary
@@ -59,5 +62,23 @@ public class ReduceRule : Rule
 		}
 
 		return accumulator;
+	}
+}
+
+internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>
+{
+	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not { Length: 3 })
+			throw new JsonException("The reduce rule needs an array with 3 parameters.");
+
+		return new ReduceRule(parameters[0], parameters[1], parameters[2]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, ReduceRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

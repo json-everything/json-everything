@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
 
@@ -9,6 +12,7 @@ namespace Json.Logic.Rules;
 /// Handles the `missing` operation.
 /// </summary>
 [Operator("missing")]
+[JsonConverter(typeof(MissingRuleJsonConverter))]
 public class MissingRule : Rule
 {
 	private readonly Rule[] _components;
@@ -48,5 +52,22 @@ public class MissingRule : Rule
 			.Select(k => (JsonNode?)k.Path)
 			.ToJsonArray();
 
+	}
+}
+
+internal class MissingRuleJsonConverter : JsonConverter<MissingRule>
+{
+	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null) return new MissingRule();
+
+		return new MissingRule(parameters);
+	}
+
+	public override void Write(Utf8JsonWriter writer, MissingRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

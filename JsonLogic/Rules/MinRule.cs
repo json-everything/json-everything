@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -10,6 +13,7 @@ namespace Json.Logic.Rules;
 /// Handles the `min` operation.
 /// </summary>
 [Operator("min")]
+[JsonConverter(typeof(MinRuleJsonConverter))]
 public class MinRule : Rule
 {
 	private readonly List<Rule> _items;
@@ -37,5 +41,23 @@ public class MinRule : Rule
 			throw new JsonLogicException($"Cannot find min with {nulls.First().Type}.");
 
 		return items.Min(i => i.Value!.Value);
+	}
+}
+
+internal class MinRuleJsonConverter : JsonConverter<MinRule>
+{
+	public override MinRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null || parameters.Length == 0)
+			throw new JsonException("The min rule needs an array of parameters.");
+
+		return new MinRule(parameters[0], parameters.Skip(1).ToArray());
+	}
+
+	public override void Write(Utf8JsonWriter writer, MinRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

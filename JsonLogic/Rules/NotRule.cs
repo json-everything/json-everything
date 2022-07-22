@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.Logic.Rules;
 
@@ -6,6 +9,7 @@ namespace Json.Logic.Rules;
 /// Handles the `!` operation.
 /// </summary>
 [Operator("!")]
+[JsonConverter(typeof(NotRuleJsonConverter))]
 public class NotRule : Rule
 {
 	private readonly Rule _value;
@@ -29,5 +33,23 @@ public class NotRule : Rule
 		var value = _value.Apply(data, contextData);
 
 		return !value.IsTruthy();
+	}
+}
+
+internal class NotRuleJsonConverter : JsonConverter<NotRule>
+{
+	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not { Length: 1 })
+			throw new JsonException("The ! rule needs an array with a single parameter.");
+
+		return new NotRule(parameters[0]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, NotRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

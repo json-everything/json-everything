@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -8,6 +11,7 @@ namespace Json.Logic.Rules;
 /// Handles the `in` operation.
 /// </summary>
 [Operator("in")]
+[JsonConverter(typeof(InRuleJsonConverter))]
 public class InRule : Rule
 {
 	private readonly Rule _test;
@@ -47,5 +51,23 @@ public class InRule : Rule
 			return arr.Any(i => i.IsEquivalentTo(test));
 
 		return false;
+	}
+}
+
+internal class InRuleJsonConverter : JsonConverter<InRule>
+{
+	public override InRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not { Length: 2 })
+			throw new JsonException("The in rule needs an array with 2 parameters.");
+
+		return new InRule(parameters[0], parameters[1]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, InRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

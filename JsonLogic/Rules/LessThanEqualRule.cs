@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 #pragma warning disable CS1570
 
@@ -64,5 +67,25 @@ public class LessThanEqualRule : Rule
 			throw new JsonLogicException("Upper bound must be a number.");
 
 		return low <= value && value <= high;
+	}
+}
+
+internal class LessThanEqualRuleJsonConverter : JsonConverter<LessThanEqualRule>
+{
+	public override LessThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not ({ Length: 2 } or { Length: 3 }))
+			throw new JsonException("The <= rule needs an array with either 2 or 3 parameters.");
+
+		if (parameters.Length == 2) return new LessThanEqualRule(parameters[0], parameters[1]);
+
+		return new LessThanEqualRule(parameters[0], parameters[1], parameters[2]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, LessThanEqualRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 #pragma warning disable CS1570
 
@@ -8,6 +11,7 @@ namespace Json.Logic.Rules;
 /// Handles the `<` operation.
 /// </summary>
 [Operator("<")]
+[JsonConverter(typeof(LessThanRuleJsonConverter))]
 public class LessThanRule : Rule
 {
 	private readonly Rule _a;
@@ -65,5 +69,25 @@ public class LessThanRule : Rule
 			throw new JsonLogicException("Upper bound must be a number.");
 
 		return low < value && value < high;
+	}
+}
+
+internal class LessThanRuleJsonConverter : JsonConverter<LessThanRule>
+{
+	public override LessThanRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not ({ Length: 2 } or { Length: 3 }))
+			throw new JsonException("The < rule needs an array with either 2 or 3 parameters.");
+
+		if (parameters.Length == 2) return new LessThanRule(parameters[0], parameters[1]);
+
+		return new LessThanRule(parameters[0], parameters[1], parameters[2]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, LessThanRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

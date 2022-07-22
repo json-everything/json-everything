@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -10,6 +13,7 @@ namespace Json.Logic.Rules;
 /// Handles the `max` operation.
 /// </summary>
 [Operator("max")]
+[JsonConverter(typeof(MaxRuleJsonConverter))]
 public class MaxRule : Rule
 {
 	private readonly List<Rule> _items;
@@ -39,5 +43,23 @@ public class MaxRule : Rule
 			throw new JsonLogicException($"Cannot find max with {nulls.First().Type}.");
 
 		return items.Max(i => i.Value!.Value);
+	}
+}
+
+internal class MaxRuleJsonConverter : JsonConverter<MaxRule>
+{
+	public override MaxRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null || parameters.Length == 0)
+			throw new JsonException("The max rule needs an array of parameters.");
+
+		return new MaxRule(parameters[0], parameters.Skip(1).ToArray());
+	}
+
+	public override void Write(Utf8JsonWriter writer, MaxRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

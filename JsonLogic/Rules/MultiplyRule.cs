@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.Logic.Rules;
 
@@ -7,6 +11,7 @@ namespace Json.Logic.Rules;
 /// Handles the `*` operation.
 /// </summary>
 [Operator("*")]
+[JsonConverter(typeof(MultiplyRuleJsonConverter))]
 public class MultiplyRule : Rule
 {
 	private readonly List<Rule> _items;
@@ -43,5 +48,23 @@ public class MultiplyRule : Rule
 		}
 
 		return result;
+	}
+}
+
+internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
+{
+	public override MultiplyRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null || parameters.Length == 0)
+			throw new JsonException("The * rule needs an array of parameters.");
+
+		return new MultiplyRule(parameters[0], parameters.Skip(1).ToArray());
+	}
+
+	public override void Write(Utf8JsonWriter writer, MultiplyRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.Logic.Rules;
 
@@ -6,6 +9,7 @@ namespace Json.Logic.Rules;
 /// Handles the `==` operation.
 /// </summary>
 [Operator("==")]
+[JsonConverter(typeof(LooseEqualsRuleJsonConverter))]
 public class LooseEqualsRule : Rule
 {
 	private readonly Rule _a;
@@ -32,5 +36,23 @@ public class LooseEqualsRule : Rule
 		var b = _b.Apply(data, contextData);
 
 		return a.LooseEquals(b);
+	}
+}
+
+internal class LooseEqualsRuleJsonConverter : JsonConverter<LooseEqualsRule>
+{
+	public override LooseEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not { Length: 2 })
+			throw new JsonException("The == rule needs an array with 2 parameters.");
+
+		return new LooseEqualsRule(parameters[0], parameters[1]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, LooseEqualsRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

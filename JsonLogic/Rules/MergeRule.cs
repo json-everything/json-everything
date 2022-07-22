@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -9,6 +12,7 @@ namespace Json.Logic.Rules;
 /// Handles the `merge` operation.
 /// </summary>
 [Operator("merge")]
+[JsonConverter(typeof(MergeRuleJsonConverter))]
 public class MergeRule : Rule
 {
 	private readonly List<Rule> _items;
@@ -32,5 +36,22 @@ public class MergeRule : Rule
 		var items = _items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
 
 		return items.ToJsonArray();
+	}
+}
+
+internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
+{
+	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters == null) return new MergeRule();
+
+		return new MergeRule(parameters);
+	}
+
+	public override void Write(Utf8JsonWriter writer, MergeRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }
