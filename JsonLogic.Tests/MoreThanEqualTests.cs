@@ -63,10 +63,10 @@ public class MoreThanEqualTests
 	}
 
 	[Test]
-	public void MoreThanEqualNullThrowsError()
+	public void MoreThanEqualNullCastsNullToZero()
 	{
 		var rule = new MoreThanEqualRule(LiteralRule.Null, 2);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 }
