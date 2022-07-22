@@ -63,11 +63,11 @@ public class LessThanTests
 	}
 
 	[Test]
-	public void LessThanNullThrowsError()
+	public void LessThanNullCastsNullToZero()
 	{
 		var rule = new LessThanRule(LiteralRule.Null, 2);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsTrue(rule.Apply());
 	}
 
 	[Test]

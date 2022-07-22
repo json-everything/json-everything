@@ -1,5 +1,11 @@
 # 3.0.1 (no PR)
 
+[#302](https://github.com/gregsdennis/json-everything/issues/302) - Predefined rule types should be public to enable analysis.
+
+[#286](https://github.com/gregsdennis/json-everything/pull/286) - Remainder of operators aligned to function like the pre-existing playground.
+
+# 3.0.1 (no PR)
+
 [#286](https://github.com/gregsdennis/json-everything/pull/286) - `in` operation throws exception when second arg is not array.  Original implementation returns false.
 
 [#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.

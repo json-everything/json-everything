@@ -89,6 +89,8 @@ public static class JsonNodeExtensions
 	/// </returns>
 	public static decimal? Numberify(this JsonNode? node)
 	{
+		if (node is null) return 0;
+
 		if (node is not JsonValue value) return null;
 
 		if (value.TryGetValue(out string? s)) return decimal.TryParse(s, out var d) ? d : null;

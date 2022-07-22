@@ -84,10 +84,10 @@ public class AddTests
 	}
 
 	[Test]
-	public void AddSingleNullThrowsError()
+	public void AddSingleNullReturns0()
 	{
 		var rule = new AddRule(LiteralRule.Null);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.AreEquivalent(0, rule.Apply());
 	}
 }

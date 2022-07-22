@@ -1,22 +1,38 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
 
 namespace Json.Logic.Rules;
 
+/// <summary>
+/// Handles the `missing_some` operation.
+/// </summary>
 [Operator("missing_some")]
-internal class MissingSomeRule : Rule
+[JsonConverter(typeof(MissingSomeRuleJsonConverter))]
+public class MissingSomeRule : Rule
 {
 	private readonly Rule _requiredCount;
 	private readonly Rule _components;
 
-	public MissingSomeRule(Rule requiredCount, Rule components)
+	internal MissingSomeRule(Rule requiredCount, Rule components)
 	{
 		_requiredCount = requiredCount;
 		_components = components;
 	}
 
+	/// <summary>
+	/// Applies the rule to the input data.
+	/// </summary>
+	/// <param name="data">The input data.</param>
+	/// <param name="contextData">
+	///     Optional secondary data.  Used by a few operators to pass a secondary
+	///     data context to inner operators.
+	/// </param>
+	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var requiredCount = _requiredCount.Apply(data, contextData).Numberify();
@@ -48,5 +64,23 @@ internal class MissingSomeRule : Rule
 			return missing.ToJsonArray();
 
 		return new JsonArray();
+	}
+}
+
+internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>
+{
+	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+
+		if (parameters is not { Length: 2 })
+			throw new JsonException("The missing_some rule needs an array with 2 parameters.");
+
+		return new MissingSomeRule(parameters[0], parameters[1]);
+	}
+
+	public override void Write(Utf8JsonWriter writer, MissingSomeRule value, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
 	}
 }

@@ -63,11 +63,11 @@ public class LessThanEqualTests
 	}
 
 	[Test]
-	public void LessThanEqualNullThrowsError()
+	public void LessThanEqualNullCastsNullToZero()
 	{
 		var rule = new LessThanEqualRule(LiteralRule.Null, 2);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsTrue(rule.Apply());
 	}
 	[Test]
 	public void BetweenValueInRangeReturnsTrue()

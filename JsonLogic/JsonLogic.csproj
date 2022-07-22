@@ -15,9 +15,9 @@
 		<PackageTags>json logic json-logic jsonlogic</PackageTags>
 		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-logic.html</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.0.1</Version>
+		<Version>3.1.0</Version>
 		<AssemblyVersion>3.0.0.0</AssemblyVersion>
-		<FileVersion>3.0.1.0</FileVersion>
+		<FileVersion>3.1.0.0</FileVersion>
 		<DocumentationFile>JsonLogic.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -26,6 +26,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
+		<NoWarn>CS1570</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
