@@ -535,5 +535,575 @@
              existing registration.
              </remarks>
         </member>
+        <member name="T:Json.Logic.Rules.AddRule">
+            <summary>
+            Handles the `+` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.AddRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.AllRule">
+            <summary>
+            Handles the `all` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.AllRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.AndRule">
+            <summary>
+            Handles the `and` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.AndRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.BooleanCastRule">
+            <summary>
+            Handles the `!!` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.BooleanCastRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.CatRule">
+            <summary>
+            Handles the `cat` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.CatRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.DivideRule">
+            <summary>
+            Handles the `/` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.DivideRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.FilterRule">
+            <summary>
+            Handles the `filter` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.FilterRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.IfRule">
+            <summary>
+            Handles the `if` and `?:` operations.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.IfRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.InRule">
+            <summary>
+            Handles the `in` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.InRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Json.Logic.Rules.LessThanEqualRule" -->
+        <member name="M:Json.Logic.Rules.LessThanEqualRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Json.Logic.Rules.LessThanRule" -->
+        <member name="M:Json.Logic.Rules.LessThanRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.LiteralRule">
+            <summary>
+            Provides a stand-in "rule" for literal values.
+            </summary>
+            <remarks>This is not exactly part of the specification, but it helps things in this library.</remarks>
+        </member>
+        <member name="M:Json.Logic.Rules.LiteralRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.LogRule">
+            <summary>
+            Handles the `log` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.LogRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.LooseEqualsRule">
+            <summary>
+            Handles the `==` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.LooseEqualsRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.LooseNotEqualsRule">
+            <summary>
+            Handles the `!=` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.LooseNotEqualsRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MapRule">
+            <summary>
+            Handles the `map` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MapRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MaxRule">
+            <summary>
+            Handles the `max` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MaxRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MergeRule">
+            <summary>
+            Handles the `merge` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MergeRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MinRule">
+            <summary>
+            Handles the `min` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MinRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MissingRule">
+            <summary>
+            Handles the `missing` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MissingRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MissingSomeRule">
+            <summary>
+            Handles the `missing_some` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MissingSomeRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.ModRule">
+            <summary>
+            Handles the `%` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.ModRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MoreThanEqualRule">
+            <summary>
+            Handles the `>=` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MoreThanEqualRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MoreThanRule">
+            <summary>
+            Handles the `>` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MoreThanRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.MultiplyRule">
+            <summary>
+            Handles the `*` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.MultiplyRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.NoneRule">
+            <summary>
+            Handles the `none` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.NoneRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.NotRule">
+            <summary>
+            Handles the `!` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.NotRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.OrRule">
+            <summary>
+            Handles the `or` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.OrRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.ReduceRule">
+            <summary>
+            Handles the `reduce` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.ReduceRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.RuleCollection">
+            <summary>
+            Provides a stand-in "rule" for collections of rules.
+            </summary>
+            <remarks>This is not exactly part of the specification, but it helps things in this library.</remarks>
+        </member>
+        <member name="M:Json.Logic.Rules.RuleCollection.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.SomeRule">
+            <summary>
+            Handles the `some` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.SomeRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.StrictEqualsRule">
+            <summary>
+            Handles the `===` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.StrictEqualsRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.StrictNotEqualsRule">
+            <summary>
+            Handles the `!==` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.StrictNotEqualsRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.SubstrRule">
+            <summary>
+            Handles the `substr` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.SubstrRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.SubtractRule">
+            <summary>
+            Handles the `-` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.SubtractRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
+        <member name="T:Json.Logic.Rules.VariableRule">
+            <summary>
+            Handles the `var` operation.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.Rules.VariableRule.Apply(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Applies the rule to the input data.
+            </summary>
+            <param name="data">The input data.</param>
+            <param name="contextData">
+                Optional secondary data.  Used by a few operators to pass a secondary
+                data context to inner operators.
+            </param>
+            <returns>The result of the rule.</returns>
+        </member>
     </members>
 </doc>
