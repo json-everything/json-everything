@@ -11,6 +11,7 @@ namespace Json.Logic.Rules;
 /// Handles the `<=` operation.
 /// </summary>
 [Operator("<=")]
+[JsonConverter(typeof(LessThanEqualRuleJsonConverter))]
 public class LessThanEqualRule : Rule
 {
 	private readonly Rule _a;

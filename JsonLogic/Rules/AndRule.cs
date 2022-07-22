@@ -11,6 +11,7 @@ namespace Json.Logic.Rules;
 /// Handles the `and` operation.
 /// </summary>
 [Operator("and")]
+[JsonConverter(typeof(AndRuleJsonConverter))]
 public class AndRule : Rule
 {
 	private readonly List<Rule> _items;

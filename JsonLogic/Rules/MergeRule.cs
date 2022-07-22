@@ -43,7 +43,12 @@ internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
 {
 	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+
+		var parameters = node is JsonArray
+			? node.Deserialize<Rule[]>()
+			: new[] { node.Deserialize<Rule>()! };
+
 
 		if (parameters == null) return new MergeRule();
 

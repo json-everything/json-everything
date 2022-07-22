@@ -40,7 +40,11 @@ internal class NotRuleJsonConverter : JsonConverter<NotRule>
 {
 	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+	
+		var parameters = node is JsonArray
+			? node.Deserialize<Rule[]>()
+			: new[] { node.Deserialize<Rule>()! };
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The ! rule needs an array with a single parameter.");

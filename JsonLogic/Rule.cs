@@ -92,7 +92,9 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			if (ruleType == null)
 				throw new JsonException($"Cannot identify rule for {op}");
 
-			return (Rule)args.Deserialize(ruleType, options)!;
+			return args is null 
+				? (Rule)JsonSerializer.Deserialize("[]", ruleType, options)!
+				: (Rule)args.Deserialize(ruleType, options)!;
 		}
 
 		if (reader.TokenType == JsonTokenType.StartArray)

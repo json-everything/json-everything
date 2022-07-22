@@ -11,6 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("if")]
 [Operator("?:")]
+[JsonConverter(typeof(IfRuleJsonConverter))]
 public class IfRule : Rule
 {
 	private readonly List<Rule> _components;

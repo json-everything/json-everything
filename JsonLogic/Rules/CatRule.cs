@@ -11,6 +11,7 @@ namespace Json.Logic.Rules;
 /// Handles the `cat` operation.
 /// </summary>
 [Operator("cat")]
+[JsonConverter(typeof(CatRuleJsonConverter))]
 public class CatRule : Rule
 {
 	private readonly List<Rule> _items;
@@ -51,7 +52,11 @@ internal class CatRuleJsonConverter : JsonConverter<CatRule>
 {
 	public override CatRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+
+		var parameters = node is JsonArray
+			? node.Deserialize<Rule[]>()
+			: new[] { node.Deserialize<Rule>()! };
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The cat rule needs an array of parameters.");

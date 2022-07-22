@@ -16,6 +16,9 @@ public class VariableRule : Rule
 	private readonly Rule? _path;
 	private readonly Rule? _defaultValue;
 
+	internal VariableRule()
+	{
+	}
 	internal VariableRule(Rule path)
 	{
 		_path = path;
@@ -62,12 +65,15 @@ internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
 			? node.Deserialize<Rule[]>()
 			: new[] { node.Deserialize<Rule>()! };
 
-		if (parameters is not ({ Length: 1 } or { Length: 2 }))
-			throw new JsonException("The var rule needs an array with either 1 or 2 parameters.");
+		if (parameters is not ({ Length: 0 } or { Length: 1 } or { Length: 2 }))
+			throw new JsonException("The var rule needs an array with 0, 1, or 2 parameters.");
 
-		if (parameters.Length == 1) return new VariableRule(parameters[0]);
-
-		return new VariableRule(parameters[0], parameters[1]);
+		return parameters.Length switch
+		{
+			0 => new VariableRule(),
+			1 => new VariableRule(parameters[0]),
+			_ => new VariableRule(parameters[0], parameters[1])
+		};
 	}
 
 	public override void Write(Utf8JsonWriter writer, VariableRule value, JsonSerializerOptions options)
