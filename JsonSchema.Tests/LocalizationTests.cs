@@ -15,7 +15,7 @@ public class LocalizationTests
 
 		var instance = JsonDocument.Parse("5");
 
-		var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		var message = results.Errors["minimum"];
 
@@ -35,7 +35,7 @@ public class LocalizationTests
 
 			var instance = JsonDocument.Parse("5");
 
-			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 			var message = results.Errors["minimum"];
 
@@ -60,7 +60,7 @@ public class LocalizationTests
 
 			var instance = JsonDocument.Parse("5");
 
-			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 			var message = results.Errors["minimum"];
 

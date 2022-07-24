@@ -24,6 +24,7 @@ public static class JsonNodeExtensions
 		if (node is JsonValue value)
 		{
 			var obj = value.GetValue<object>();
+			if (obj is JsonNull) return SchemaValueType.Null;
 			if (obj is JsonElement element) return GetSchemaValueType(element);
 			var objType = obj.GetType();
 			if (objType.IsInteger()) return SchemaValueType.Integer;
