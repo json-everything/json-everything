@@ -127,7 +127,10 @@ public class ValidationResults
 		children.Insert(0, new ValidationResults(this));
 		_annotations?.Clear();
 		_errors?.Clear();
-		_nestedResults!.Clear();
+		if (_nestedResults == null)
+			_nestedResults = new List<ValidationResults>();
+		else
+			_nestedResults.Clear();
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 	}
 
