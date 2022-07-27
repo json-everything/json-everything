@@ -21,12 +21,14 @@ public class DevTest
 					.Title("foo's title")
 					.Description("foo's description")
 					.Type(SchemaValueType.String)
+					.Pattern("^foo ")
+					.MinLength(10)
 				)
 			)
 			.Required("foo")
 			.AdditionalProperties(false);
 
-		var instance = new JsonObject { ["foo"] = new JsonObject { ["definitely"] = "not a string" } };
+		var instance = new JsonObject { ["foo"] = "baz" };
 
 		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 

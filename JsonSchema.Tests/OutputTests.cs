@@ -54,16 +54,15 @@ public class OutputTests
 		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Basic);
 		var expected = @"{
   ""valid"": true,
-  ""keywordLocation"": ""#"",
-  ""instanceLocation"": ""#"",
-  ""annotations"": [
+  ""nested"": [
     {
       ""valid"": true,
-      ""keywordLocation"": ""#/properties"",
-      ""instanceLocation"": ""#"",
-      ""annotation"": [
-        ""passes""
-      ]
+      ""evaluationPath"": """",
+      ""schemaLocation"": ""https://test.com/schema#"",
+      ""instanceLocation"": """",
+      ""annotations"": {
+        ""properties"": [ ""passes"" ]
+      }
     }
   ]
 }";
@@ -77,53 +76,114 @@ public class OutputTests
 		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Basic);
 		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
 }";
 
 		result.AssertInvalid(expected);
 	}
 
 	[Test]
-	public void Detailed_Success()
+	public void Hierarchical_Success()
 	{
 		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": true,
+  ""annotations"": {
+    ""properties"": [
+      ""passes""
+    ]
+  },
+  ""nested"": [
+    {
+      ""valid"": true,
+      ""evaluationPath"": ""/properties/passes"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/passes"",
+      ""instanceLocation"": ""/passes""
+    }
+  ]
+}";
 
-		result.AssertValid();
-		Assert.IsEmpty(result.NestedResults);
-		Assert.IsNotEmpty(result.Annotations);
+		result.AssertValid(expected);
 	}
 
 	[Test]
-	public void Detailed_Failure()
+	public void Hierarchical_Failure()
 	{
 		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
-}";
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}
+";
 		result.AssertInvalid(expected);
 	}
 
 	[Test]
-	public void Detailed_Multi_Success()
+	public void Hierarchical_Multi_Success()
 	{
 		var result = Validate("{\"multi\":8}", OutputFormat.Hierarchical);
-		var expected = @"
-{
+		var expected = @"{
   ""valid"": true,
-  ""keywordLocation"": ""#"",
-  ""instanceLocation"": ""#"",
-  ""annotations"": [
+  ""annotations"": {
+    ""properties"": [
+      ""multi""
+    ]
+  },
+  ""nested"": [
     {
       ""valid"": true,
-      ""keywordLocation"": ""#/properties"",
-      ""instanceLocation"": ""#"",
-      ""annotation"": [
-        ""multi""
+      ""evaluationPath"": ""/properties/multi"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/multi"",
+      ""instanceLocation"": ""/multi"",
+      ""nested"": [
+        {
+          ""valid"": true,
+          ""evaluationPath"": ""/properties/multi/allOf/0"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/0"",
+          ""instanceLocation"": ""/multi"",
+          ""nested"": [
+            {
+              ""valid"": true,
+              ""evaluationPath"": ""/properties/multi/allOf/0/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/integer"",
+              ""instanceLocation"": ""/multi""
+            }
+          ]
+        },
+        {
+          ""valid"": true,
+          ""evaluationPath"": ""/properties/multi/allOf/1"",
+          ""schemaLocation"": ""https://test.com/schema#/$defs/integer/properties/multi/allOf/1"",
+          ""instanceLocation"": ""/multi"",
+          ""nested"": [
+            {
+              ""valid"": true,
+              ""evaluationPath"": ""/properties/multi/allOf/1/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/minimum"",
+              ""instanceLocation"": ""/multi""
+            }
+          ]
+        }
       ]
     }
   ]
@@ -133,27 +193,53 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Detailed_Multi_Failure_Both()
+	public void Hierarchical_Multi_Failure_Both()
 	{
 		var result = Validate("{\"multi\":3.5}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/multi/allOf"",
-  ""instanceLocation"": ""#/multi"",
-  ""errors"": [
+  ""nested"": [
     {
       ""valid"": false,
-      ""keywordLocation"": ""#/properties/multi/allOf/0/$ref/type"",
-      ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
-      ""instanceLocation"": ""#/multi"",
-      ""error"": ""Value is \""number\"" but should be \""integer\""""
-    },
-    {
-      ""valid"": false,
-      ""keywordLocation"": ""#/properties/multi/allOf/1/$ref/minimum"",
-      ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/minimum/minimum"",
-      ""instanceLocation"": ""#/multi"",
-      ""error"": ""3.5 is less than or equal to 5""
+      ""evaluationPath"": ""/properties/multi"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/multi"",
+      ""instanceLocation"": ""/multi"",
+      ""nested"": [
+        {
+          ""valid"": false,
+          ""evaluationPath"": ""/properties/multi/allOf/0"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/0"",
+          ""instanceLocation"": ""/multi"",
+          ""nested"": [
+            {
+              ""valid"": false,
+              ""evaluationPath"": ""/properties/multi/allOf/0/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/integer"",
+              ""instanceLocation"": ""/multi"",
+              ""errors"": {
+                ""type"": ""Value is \""number\"" but should be \""integer\""""
+              }
+            }
+          ]
+        },
+        {
+          ""valid"": false,
+          ""evaluationPath"": ""/properties/multi/allOf/1"",
+          ""schemaLocation"": ""https://test.com/schema#/$defs/integer/properties/multi/allOf/1"",
+          ""instanceLocation"": ""/multi"",
+          ""nested"": [
+            {
+              ""valid"": false,
+              ""evaluationPath"": ""/properties/multi/allOf/1/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/minimum"",
+              ""instanceLocation"": ""/multi"",
+              ""errors"": {
+                ""minimum"": ""3.5 is less than or equal to 5""
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }";
@@ -162,28 +248,44 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Detailed_Multi_Failure_Integer()
+	public void Hierarchical_Multi_Failure_Integer()
 	{
 		var result = Validate("{\"fails\":8.5}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
 }";
 
 		result.AssertInvalid(expected);
 	}
 
 	[Test]
-	public void Detailed_Multi_Failure_Minimum()
+	public void Hierarchical_Multi_Failure_Minimum()
 	{
 		var result = Validate("{\"fails\":3}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
 }";
 
 		result.AssertInvalid(expected);
@@ -195,15 +297,28 @@ public class OutputTests
 		var result = Validate("{\"refs\":8.8}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/refs/$ref/type"",
-  ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
-  ""instanceLocation"": ""#/refs"",
-  ""error"": ""Value is \""number\"" but should be \""integer\""""
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/refs"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/refs"",
+      ""instanceLocation"": ""/refs"",
+      ""nested"": [
+        {
+          ""valid"": false,
+          ""evaluationPath"": ""/properties/refs/$ref"",
+          ""schemaLocation"": ""https://test.com/schema#/$defs/integer"",
+          ""instanceLocation"": ""/refs"",
+          ""errors"": {
+            ""type"": ""Value is \""number\"" but should be \""integer\""""
+          }
+        }
+      ]
+    }
+  ]
 }";
 
 		result.AssertInvalid(expected);
-		Assert.AreEqual("#/properties/refs/$ref/type", result.EvaluationPath.ToString());
-		Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.SchemaLocation?.ToString());
 	}
 
 		private static ValidationResults Validate(string json, OutputFormat format)

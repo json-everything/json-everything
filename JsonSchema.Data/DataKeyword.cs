@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema.Data;
 
@@ -68,17 +70,21 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		var data = new Dictionary<string, JsonNode>();
-		var failedReferences = new List<IDataResourceIdentifier>();
+		var data = new JsonObject();
 		foreach (var reference in References)
 		{
 			if (!reference.Value.TryResolve(context, out var resolved))
 				failedReferences.Add(reference.Value);
 
-			data.Add(reference.Key, resolved!);
+			data.Add(reference.Key, resolved!.Copy());
 		}
 
-		if (failedReferences.Any())
+		JsonSchema subschema;
+		try
+		{
+			subschema = data.Deserialize<JsonSchema>()!;
+		}
+		catch (JsonException e)
 		{
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
 		}
@@ -88,7 +94,10 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 		context.Push(context.EvaluationPath.Combine(Name), subschema);
 		context.Validate();
+		var dataResult = context.LocalResult.IsValid;
 		context.Pop();
+		if (!dataResult)
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name);
 	}
 
