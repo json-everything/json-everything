@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -37,9 +35,13 @@ public class ValidationResults
 	public JsonPointer InstanceLocation { get; }
 
 	/// <summary>
-	/// The absolute schema location.  Only available if the schema had an absolute URI ID.
+	/// The absolute schema location.
 	/// </summary>
-	public Uri? SchemaLocation => _schemaLocation ??= BuildSchemaLocation();
+	/// <remarks>
+	/// If the schema did not have an absolute `$id`, the value from
+	/// <see cref="ValidationOptions.DefaultBaseUri"/> will be used.
+	/// </remarks>
+	public Uri SchemaLocation => _schemaLocation ??= BuildSchemaLocation();
 
 	/// <summary>
 	/// The collection of nested results.
@@ -60,17 +62,19 @@ public class ValidationResults
 	/// </summary>
 	public IReadOnlyDictionary<string, JsonNode?>? Annotations => _annotations;
 
+	/// <summary>
+	/// The collection of error from this node.
+	/// </summary>
 	public IReadOnlyDictionary<string, string>? Errors => _errors;
 
 	/// <summary>
-	/// Gets whether there are annotation.
+	/// Gets whether this node has annotations.
 	/// </summary>
-	/// <remarks>
-	/// Because <see cref="Annotations"/> is lazily loaded, this property allows the check without
-	/// the side effect of allocating a list object.
-	/// </remarks>
 	public bool HasAnnotations => Annotations is not (null or { Count: 0 });
 
+	/// <summary>
+	/// Gets whether this node has errors.
+	/// </summary>
 	public bool HasErrors => Errors is not (null or { Count: 0 });
 
 	/// <summary>
@@ -124,7 +128,7 @@ public class ValidationResults
 		if (!children.Any()) return;
 
 		children.Remove(this);
-		children.Insert(0, new ValidationResults(this));
+		children.Insert(0, new ValidationResults(this) { Parent = this });
 		_annotations?.Clear();
 		_errors?.Clear();
 		if (_nestedResults == null)
@@ -196,7 +200,6 @@ public class ValidationResults
 	/// <summary>
 	/// Gets all annotations of a particular data type for the current validation level.
 	/// </summary>
-	/// <typeparam name="T">The data type.</typeparam>
 	/// <param name="keyword">The key under which the annotation is stored.  Typically a keyword.</param>
 	/// <returns>The set of all annotations for the current validation level.</returns>
 	public IEnumerable<JsonNode?> GetAllAnnotations(string keyword)
@@ -228,6 +231,7 @@ public class ValidationResults
 	/// <summary>
 	/// Marks the result as invalid.
 	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
 	/// <param name="message">(optional) An error message.</param>
 	/// <remarks>
 	/// For better support for customization, consider using the overload that takes parameters.
@@ -244,6 +248,7 @@ public class ValidationResults
 	/// <summary>
 	/// Marks the result as invalid.
 	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
 	/// <param name="message">The error message.</param>
 	/// <param name="parameters">Parameters to replace in the message.</param>
 	public void Fail(string keyword, string message, params (string token, object? value)[] parameters)
@@ -282,17 +287,21 @@ internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
 
 		writer.WriteBoolean("valid", value.IsValid);
 
-		writer.WritePropertyName("evaluationPath");
-		JsonSerializer.Serialize(writer, value.EvaluationPath, options);
-
-		if (value.SchemaLocation != null)
+		if (value.Parent != null)
 		{
-			writer.WritePropertyName("schemaLocation");
-			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
-		}
+			writer.WritePropertyName("evaluationPath");
+			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
 
-		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			// this can still be null if the root schema is a boolean
+			if (value.SchemaLocation != null!)
+			{
+				writer.WritePropertyName("schemaLocation");
+				JsonSerializer.Serialize(writer, value.SchemaLocation, options);
+			}
+
+			writer.WritePropertyName("instanceLocation");
+			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		}
 
 		if (value.IsValid)
 		{
