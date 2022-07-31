@@ -32,20 +32,22 @@ public class OutputTests
 	public void Flag_Success()
 	{
 		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Flag);
+		var expected = @"{
+  ""valid"": true
+}";
 
-		result.AssertValid();
-		Assert.IsEmpty(result.NestedResults);
-		Assert.IsEmpty(result.Annotations);
+		result.AssertValid(expected);
 	}
 
 	[Test]
 	public void Flag_Failure()
 	{
 		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Flag);
+		var expected = @"{
+  ""valid"": false
+}";
 
-		result.AssertInvalid();
-		Assert.IsEmpty(result.NestedResults);
-		Assert.IsEmpty(result.Annotations);
+		result.AssertInvalid(expected);
 	}
 
 	[Test]
@@ -98,6 +100,9 @@ public class OutputTests
 		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""annotations"": {
     ""properties"": [
       ""passes""
@@ -122,6 +127,9 @@ public class OutputTests
 		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""nested"": [
     {
       ""valid"": false,
@@ -133,8 +141,7 @@ public class OutputTests
       }
     }
   ]
-}
-";
+}";
 		result.AssertInvalid(expected);
 	}
 
@@ -144,6 +151,9 @@ public class OutputTests
 		var result = Validate("{\"multi\":8}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""annotations"": {
     ""properties"": [
       ""multi""
@@ -198,6 +208,9 @@ public class OutputTests
 		var result = Validate("{\"multi\":3.5}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""nested"": [
     {
       ""valid"": false,
@@ -253,6 +266,9 @@ public class OutputTests
 		var result = Validate("{\"fails\":8.5}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""nested"": [
     {
       ""valid"": false,
@@ -275,6 +291,9 @@ public class OutputTests
 		var result = Validate("{\"fails\":3}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""nested"": [
     {
       ""valid"": false,
@@ -297,6 +316,9 @@ public class OutputTests
 		var result = Validate("{\"refs\":8.8}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
   ""nested"": [
     {
       ""valid"": false,
@@ -425,6 +447,33 @@ public class OutputTests
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("unevaluatedItems"));
+	}
+
+	[Test]
+	public void FalseSchemaFailsEverything()
+	{
+		JsonSchema schema = false;
+
+		var instance = JsonDocument.Parse("[1,2]").RootElement;
+
+		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+
+		var expected = @"{
+  ""valid"": false,
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": """",
+      ""schemaLocation"": ""https://json-everything/base#"",
+      ""instanceLocation"": """",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
 	}
 
 	[Test]
@@ -584,6 +633,10 @@ public class OutputTests
 
 		//result.ToBasic();
 
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions{WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
+		{
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		}));
 	}
 }

@@ -84,6 +84,8 @@ public class ValidationResults
 
 	internal bool Exclude { get; private set; }
 
+	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
+
 	internal ValidationResults(ValidationContext context)
 	{
 		EvaluationPath = context.EvaluationPath;
@@ -136,6 +138,7 @@ public class ValidationResults
 		else
 			_nestedResults.Clear();
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
+		Format = OutputFormat.Basic;
 	}
 
 	private IEnumerable<ValidationResults> GetAllChildren()
@@ -170,6 +173,7 @@ public class ValidationResults
 		_nestedResults?.Clear();
 		_annotations?.Clear();
 		_errors?.Clear();
+		Format = OutputFormat.Flag;
 	}
 
 	/// <summary>
@@ -287,7 +291,7 @@ internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
 
 		writer.WriteBoolean("valid", value.IsValid);
 
-		if (value.Parent != null)
+		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
 			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
