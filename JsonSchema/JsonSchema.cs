@@ -108,7 +108,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 		var currentUri = baseUri == options.DefaultBaseUri
 			? BaseUri ?? baseUri
-			: baseUri ?? options.DefaultBaseUri;
+			: baseUri;
 
 		var context = new ValidationContext(options, currentUri, root, this);
 
