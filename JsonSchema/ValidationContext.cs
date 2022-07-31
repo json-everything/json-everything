@@ -105,12 +105,12 @@ public class ValidationContext
 
 #pragma warning disable 8618
 	internal ValidationContext(ValidationOptions options,
-		Uri currentUri,
+		Uri? currentUri,
 		JsonNode? instanceRoot,
 		JsonSchema schemaRoot)
 	{
 		Options = options;
-		_currentUris.Push(currentUri);
+		_currentUris.Push(currentUri ?? options.DefaultBaseUri);
 		InstanceRoot = instanceRoot;
 		SchemaRoot = schemaRoot;
 		_localInstances.Push(instanceRoot);
