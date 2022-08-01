@@ -71,7 +71,7 @@ Please see [json-everything.net](https://json-everything.net) for both documenta
 
 If you don't find what you're looking for here, please try one of these excellent projects:
 
-- [JsonCons.Net](https://github.com/danielaparker/JsonCons.Net) by @danielaparker
+- [JsonCons.Net](https://github.com/danielaparker/JsonCons.Net) by [@danielaparker](https://github.com/danielaparker)
   - JSON Pointer
   - JSON Patch
   - JSON Merge Patch
