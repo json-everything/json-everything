@@ -13,7 +13,7 @@ This is best explained with an example.  Suppose we have a meta-schema **M**, a 
 ```json
 // meta-schema M
 {
-  "$schema": "https://myserver.net/meta-schema",                           // 1
+  "$schema": "https://json-schema.org/draft/2020-12/schema",               // 1
   "$id": "https://myserver.net/meta-schema",
   "$vocabulary": {
     "https://json-schema.org/draft/2020-12/vocab/core": true,              // 2
@@ -57,7 +57,7 @@ This is best explained with an example.  Suppose we have a meta-schema **M**, a 
 }
 ```
 
-1. We declare a meta-schema.  The meta-schema should validate itself, so we declare `$schema` to be the same as `$id`.
+1. We declare a meta-schema.  In this case, it's the draft 2020-12 meta-schema.  This will validate our schema and declare the set of rules it should be processed with.
 2. We list the vocabularies that the JsonSchema.Net should know about in order to process schemas that declare this meta-schema as their `$schema` (see #5).  This includes all of the vocabularies from 2020-12 (because we want all of the 2020-12 capabilities) as well as the vocab for this meta-schema.  We'll explain a bit more about this later.
 3. We also need all of the syntactic validation from 2020-12, so we include it in an `allOf`.
 4. We define a new keyword, `minDate`, that takes a date-formatted string value.
