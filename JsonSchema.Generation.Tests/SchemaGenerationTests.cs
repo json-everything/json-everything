@@ -169,6 +169,31 @@ public class SchemaGenerationTests
 		[JsonIgnore]
 		public int IgnoreThis { get; set; }
 
+		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+		public string DontIgnoreThis { get; set; }
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+		public string DontIgnoreThisWhenWritingDefault { get; set; }
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public string DontIgnoreThisWhenWritingNull { get; set; }
+
+		[JsonExclude]
+		public string IgnoreThisWithJsonExclude { get; set; }
+
+		[JsonIgnore]
+		[JsonExclude]
+		public double IgnoreThisBoth { get; set; }
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+		[JsonExclude]
+		public double Ignore_ExcludesTrumpsIgnore { get; set; }
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+		[JsonExclude]
+		public double Ignore_ExcludesTrumpsIgnoreWhenWritingDefault { get; set; }
+
+
 		[JsonPropertyName("rename-this")]
 		public string RenameThis { get; set; }
 
@@ -243,6 +268,9 @@ public class SchemaGenerationTests
 					.Ref("#/$defs/integer")
 				),
 				("Target", JsonSchemaBuilder.RefRoot()),
+				("DontIgnoreThis", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("DontIgnoreThisWhenWritingDefault", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("DontIgnoreThisWhenWritingNull", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 				("rename-this", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 				("StrictNumber", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
 				("OtherStrictNumber", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
