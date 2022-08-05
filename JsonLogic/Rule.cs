@@ -72,6 +72,13 @@ public abstract class Rule
 /// </summary>
 public class LogicComponentConverter : JsonConverter<Rule>
 {
+	/// <summary>
+	/// Indicates whether <see langword="null" /> should be passed to the converter
+	/// on serialization, and whether <see cref="F:System.Text.Json.JsonTokenType.Null" />
+	/// should be passed on deserialization.
+	/// </summary>
+	public override bool HandleNull => true;
+
 	/// <summary>Reads and converts the JSON to type <see cref="Rule"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>

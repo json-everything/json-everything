@@ -122,4 +122,20 @@ public class GithubTests
 		Assert.IsInstanceOf<AddRule>(rule);
 		Assert.IsTrue(rule.Apply().IsEquivalentTo(3));
 	}
+
+	[Test]
+	public void Issue313_VarEqualsNull()
+	{
+		var node = JsonNode.Parse(@"{
+  ""=="": [
+    {""var"": ""value""},
+    null
+  ]
+}");
+
+		var rule = node.Deserialize<Rule>();
+		var result = rule.Apply(JsonNode.Parse("{\"value\": null}"));
+
+		Assert.IsTrue(result.IsEquivalentTo(true));
+	}
 }
