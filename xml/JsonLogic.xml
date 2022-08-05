@@ -483,6 +483,13 @@
             Provides serialization for all <see cref="T:Json.Logic.Rule"/> derivatives.
             </summary>
         </member>
+        <member name="P:Json.Logic.LogicComponentConverter.HandleNull">
+            <summary>
+            Indicates whether <see langword="null" /> should be passed to the converter
+            on serialization, and whether <see cref="F:System.Text.Json.JsonTokenType.Null" />
+            should be passed on deserialization.
+            </summary>
+        </member>
         <member name="M:Json.Logic.LogicComponentConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>Reads and converts the JSON to type <see cref="T:Json.Logic.Rule"/>.</summary>
             <param name="reader">The reader.</param>
