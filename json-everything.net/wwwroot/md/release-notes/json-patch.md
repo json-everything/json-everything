@@ -1,4 +1,8 @@
-# 2.0.1 (no PR)
+# [2.0.3](https://github.com/gregsdennis/json-everything/pull/317)
+
+[#315](https://github.com/gregsdennis/json-everything/pull/315) - [@z4kn4fein](https://github.com/z4kn4fein) noticed that the serializer options weren't actually being passed into the `.Apply()` call.
+
+# 2.0.2 (no PR)
 
 [#291](https://github.com/gregsdennis/json-everything/pull/291) - Improved patch generation for arrays.
 

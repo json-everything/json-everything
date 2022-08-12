@@ -39,7 +39,7 @@ public static class PatchExtensions
 	/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
 	public static TTarget? Apply<TOriginal, TTarget>(this JsonPatch patch, TOriginal obj, JsonSerializerOptions? options = null)
 	{
-		var node = JsonSerializer.SerializeToNode(obj);
+		var node = JsonSerializer.SerializeToNode(obj, options);
 		var patchResult = patch.Apply(node);
 		if (!patchResult.IsSuccess)
 			throw new InvalidOperationException($"{patchResult.Error} Operation: {patchResult.Operation}");

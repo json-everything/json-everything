@@ -309,6 +309,23 @@ public class PatchExtensionTests
 		Assert.AreEqual(model.InnerObjects[1].Id, final.InnerObjects[0].Id);
 	}
 
+	[Test]
+	public void ApplyPatch_Respect_SerializationOptions()
+	{
+		var model = new TestModel
+		{
+			Numbers = new int[0],
+		};
+
+		var patchStr = "[{\"op\":\"add\",\"path\":\"/numbers/-\",\"value\":5}]";
+		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr)!;
+
+		var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+		var final = patch.Apply(model, options);
+
+		Assert.AreEqual(5, final?.Numbers?[0]);
+	}
+
 	private static void OutputPatch(JsonPatch patch)
 	{
 		Console.WriteLine(JsonSerializer.Serialize(patch, new JsonSerializerOptions { WriteIndented = true }));
