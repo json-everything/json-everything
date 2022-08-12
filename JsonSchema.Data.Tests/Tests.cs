@@ -7,17 +7,17 @@ namespace Json.Schema.Data.Tests;
 public class Tests
 {
 	private static JsonSchema InstanceRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://gregsdennis.github.io/json-everything/meta/data")
+		.Schema("https://json-everything.net/meta/data-2022")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
-				.Data(("minimum", "#/minValue"))
+				.Data(("minimum", "/minValue"))
 			)
 		);
 
 	private static JsonSchema ExternalRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://gregsdennis.github.io/json-everything/meta/data")
+		.Schema("https://json-everything.net/meta/data-2022")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
