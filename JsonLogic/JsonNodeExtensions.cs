@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -93,7 +94,7 @@ public static class JsonNodeExtensions
 
 		if (node is not JsonValue value) return null;
 
-		if (value.TryGetValue(out string? s)) return decimal.TryParse(s, out var d) ? d : null;
+		if (value.TryGetValue(out string? s)) return decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var d) ? d : null;
 
 		if (value.TryGetValue(out bool b)) return b ? 1 : 0;
 

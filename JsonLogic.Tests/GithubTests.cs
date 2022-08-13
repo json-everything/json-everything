@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
@@ -137,5 +138,14 @@ public class GithubTests
 		var result = rule.Apply(JsonNode.Parse("{\"value\": null}"));
 
 		Assert.IsTrue(result.IsEquivalentTo(true));
+	}
+
+	[Test]
+	public void Issue318_CanParseStringAsFloatingPointNumberInAnyCulture()
+	{
+		CultureInfo.CurrentCulture = new CultureInfo("de-AT");
+		var number = JsonValue.Create("3.14").Numberify();
+
+		Assert.AreEqual(3.14d, number);
 	}
 }
