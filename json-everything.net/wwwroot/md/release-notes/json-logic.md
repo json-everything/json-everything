@@ -1,4 +1,8 @@
-# 3.1.0 (no PR)
+# [3.1.2](https://github.com/gregsdennis/json-everything/pull/320)
+
+[#318](https://github.com/gregsdennis/json-everything/issues/318)/[#319](https://github.com/gregsdennis/json-everything/pull/319) - Conversions to numbers shouldn't be culture-dependent.  Thanks to [@warappa](https://github.com/warappa) for reporting and fixing this.
+
+# 3.1.1 (no PR)
 
 [#313](https://github.com/gregsdennis/json-everything/issues/313) - Deserialization of nulls resulted in an actual null rule instead of a variable rule with a null value.  Thanks to [@jhspinpanel](https://github.com/jhspinpanel) for reporting this.
 
