@@ -15,6 +15,10 @@ public class Suite
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
+	private const bool _useExternal = false;
+	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/tests";
+	private const string _externalRemoteSchemasPath = @"../../../../../JSON-Schema-Test-Suite/remotes";
+
 	public static IEnumerable<TestCaseData> TestCases()
 	{
 		return GetTests("draft6")
@@ -25,7 +29,10 @@ public class Suite
 
 	private static IEnumerable<TestCaseData> GetTests(string draftFolder)
 	{
-		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _testCasesPath, $"{draftFolder}/")
+		// ReSharper disable once HeuristicUnreachableCode
+		var testCasesPath = _useExternal ? _externalTestCasesPath : _testCasesPath;
+
+		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath, $"{draftFolder}/")
 			.AdjustForPlatform();
 		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
@@ -79,7 +86,8 @@ public class Suite
 	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
-		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _remoteSchemasPath)
+		// ReSharper disable once HeuristicUnreachableCode
+		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(remotesPath)) throw new Exception("Cannot find remotes folder");
 
@@ -162,5 +170,11 @@ public class Suite
 			Console.WriteLine(e.Message);
 			return false;
 		}
+	}
+
+	[Test]
+	public void EnsureUsingLocalTestsBeforeMerging()
+	{
+		Assert.IsFalse(_useExternal);
 	}
 }
