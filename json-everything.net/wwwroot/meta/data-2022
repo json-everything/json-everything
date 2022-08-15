@@ -7,6 +7,8 @@
         "https://json-schema.org/draft/2020-12/vocab/validation": true,
         "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
         "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+        "https://json-schema.org/draft/2020-12/vocab/content": true,
+        "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
         "https://json-everything.net/vocabs-data-2022": true
     },
     "$dynamicAnchor": "meta",
@@ -24,6 +26,21 @@
                     { "format": "json-pointer" },
                     { "format": "relative-json-pointer" }
                 ]
+            },
+            "propertyNames": {
+                "not": {
+                    "anyOf": [
+                        { "const": "$id" },
+                        { "const": "$schema" },
+                        { "const": "$ref" },
+                        { "const": "$anchor" },
+                        { "const": "$dynamicRef" },
+                        { "const": "$dynamicAnchor" },
+                        { "const": "$vocabulary" },
+                        { "const": "$comment" },
+                        { "const": "$defs" }
+                    ]
+                }
             },
             "default": {}
         }
