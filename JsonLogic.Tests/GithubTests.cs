@@ -143,9 +143,18 @@ public class GithubTests
 	[Test]
 	public void Issue318_CanParseStringAsFloatingPointNumberInAnyCulture()
 	{
-		CultureInfo.CurrentCulture = new CultureInfo("de-AT");
-		var number = JsonValue.Create("3.14").Numberify();
+		var culture = CultureInfo.CurrentCulture;
 
-		Assert.AreEqual(3.14d, number);
+		try
+		{
+			CultureInfo.CurrentCulture = new CultureInfo("de-AT");
+			var number = JsonValue.Create("3.14").Numberify();
+
+			Assert.AreEqual(3.14d, number);
+		}
+		finally
+		{
+			CultureInfo.CurrentCulture = culture;
+		}
 	}
 }
