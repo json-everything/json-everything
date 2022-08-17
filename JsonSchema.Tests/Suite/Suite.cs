@@ -17,6 +17,7 @@ public class Suite
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
 	private const bool _useExternal = false;
+	private const bool _runDraftNext = false;
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../JSON-Schema-Test-Suite/remotes";
 
@@ -25,7 +26,8 @@ public class Suite
 		return GetTests("draft6")
 			.Concat(GetTests("draft7"))
 			.Concat(GetTests("draft2019-09"))
-			.Concat(GetTests("draft2020-12"));
+			.Concat(GetTests("draft2020-12"))
+			.Concat(_runDraftNext ? GetTests("draft-next") : Enumerable.Empty<TestCaseData>());
 	}
 
 	private static IEnumerable<TestCaseData> GetTests(string draftFolder)
@@ -175,8 +177,9 @@ public class Suite
 	}
 
 	[Test]
-	public void EnsureUsingLocalTestsBeforeMerging()
+	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
 		Assert.IsFalse(_useExternal);
+		Assert.IsFalse(_runDraftNext);
 	}
 }
