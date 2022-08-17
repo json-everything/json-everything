@@ -16,37 +16,48 @@ The intent for this keyword is to cover the use cases discussed across several i
 
 The ID for this vocabulary is `https://json-everything.net/vocabs-data-2022` (the URI to this document).
 
-A draft 2020-12 meta-schema which includes this vocabulary has been defined for convenience.  The ID for the meta-schema is `https://json-everything.net/meta/data-2022`, and it can also be found at this address.
+A draft 2020-12 meta-schema which includes this vocabulary has been defined for convenience.  The ID (`$id`) for the meta-schema is `https://json-everything.net/meta/data-2022`, and it can also be found at this address.
 
-## 3. The `data` Keyword
+## 3. Definitions
 
-### 3.1 Syntax and Semantics
+### 3.1 Formed Schema
+
+The schema object created as a result of dereferencing all of the values in the `data` keyword as described in section 4.1.
+
+### 3.2 Host Schema
+
+The schema object which contains the `data` keyword.  The processing rules that govern this schema also govern the formed schema, as specified by section 4.2.
+
+## 4. The `data` Keyword
+
+### 4.1 Syntax and Semantics
 
 The value of `data` must be an object.  The keys of the object are interpreted as JSON Schema keywords, and the values MUST be one of
 
-- JSON Pointers per [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901)
+- JSON Pointers per [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901) 
 - [Relative JSON Pointers](https://json-schema.org/draft/2019-09/relative-json-pointer.html)
-- URI references per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), potentially with JSON Pointer fragments
+- URI-encoded JSON Pointer identifier per [RFC 6901, §6](https://www.rfc-editor.org/rfc/rfc6901#section-6)
+- Absolute URIs per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), optionally with a JSON Pointer fragment identifier
 
 `data` MUST NOT contain any keys which are defined by the JSON Schema Core Vocabulary.
 
 `data` operates in two phases:
 
-1. All of the values are dereferenced per sections 3.2 and 3.3.
-2. The resolved object is then interpreted as a schema (the "formed schema") which is applied to the instance at the current location.
+1. All of the values are dereferenced per sections 4.2 and 4.3.
+2. The resolved object is then interpreted as a schema which is applied to the instance at the current location.
 
 The validation and annotation results of `data` are those of the formed schema.  More detail regarding output can be found in section 3.4.
 
-### 3.2 Contextual Behavior
+### 4.2 Contextual Behavior
 
-`data` MUST be processed contextually in the same manner as the schema in which it is used.  Specifically,
+`data` MUST be processed contextually in the same manner as the host schema.  Specifically,
 
 - URI resolution MUST be performed in the same manner as `$ref` (per section 3.3).
-- Keys that are ignored by the parent schema MUST also be ignored by the formed subschema.
+- Keys that are ignored by the host schema MUST also be ignored by the formed schema.
 
-Implementations SHOULD validate the formed schema against the containing schema's meta-schema (as specified by `$schema`) to ensure that it is a syntactically valid schema object.
+Implementations SHOULD validate the formed schema against the host schema's meta-schema (as specified by `$schema`) to ensure that it is a syntactically valid schema object.
 
-### 3.3 URI Resolution
+### 4.3 URI Resolution
 
 The values of `data` are dereferenced in different ways depending on the format of the value.
 
@@ -54,28 +65,27 @@ If the value is a JSON Pointer, it is resolved against the instance root.
 
 If the value is a Relative JSON Pointer, it is resolved against the instance at the location currently being evaluated.
 
-If the value is a URI reference, it must be resolved in accordance with the rules of `$ref` resolution for the relevant JSON Schema specification (e.g. [draft 2020-12, §8.2](https://json-schema.org/draft/2020-12/json-schema-core.html#name-base-uri-anchors-and-derefe)).  However, unlike `$ref` which requires that the indicated data must represent a valid schema object, a `data` reference can identify any value which is valid for the associated keyword.
+Otherwise, it must be resolved in accordance with the rules of `$ref` resolution for the relevant JSON Schema specification (e.g. [draft 2020-12, §8.2](https://json-schema.org/draft/2020-12/json-schema-core.html#name-base-uri-anchors-and-derefe)).  However, unlike `$ref` which requires that the indicated data must represent a valid schema object, a `data` reference can identify any value which is valid for the associated keyword.
 
-Implementations SHOULD provide a means to pre-load and cache any external reference but MAY be configured to fetch external documents at evaluation time.  Documents fetched from URIs which contain a JSON Pointer fragment MUST be interpreted using a media type that allows resolution of such fragments.
+Because JSON Pointers and Relative JSON Pointers are syntactically valid URIs, the value MUST be checked in the sequence indicated above in order to properly identify the pointer types from other URIs.
 
-If any single reference cannot be resolved, validation MUST fail; otherwise the full value at the specified location is returned.
+For each successfully resolved reference, the full value at the specified location MUST be returned.
 
-If the resolved value is not valid for the associated keyword, validation MUST fail.
+If a reference cannot be resolved, or if a resolved value is not valid for the associated keyword, evaluation MUST halt.  Implementations SHOULD use native features of their language to report the failure as appropriate.  Implementations MAY continue to attempt to resolve other references so that multiple resolution failures can be reported together, however further schema evaluation MUST NOT continue.
 
-### 3.4 Errors
+#### 4.3.1 External Data Access
 
-The `data` keyword can generate two validation failure states as specified by this document:
+Implementations SHOULD provide a means to pre-load and cache any external references prior to evaluation but MAY be configured to fetch external documents at evaluation time.  Documents fetched from URIs which contain a JSON Pointer fragment MUST be interpreted using a media type that allows resolution of such fragments.
 
-- a URI reference cannot be resolved, and
-- a URI reference can be resolved but the returned value is invalid for the associated keyword.
+Users should be aware that fetching data from external location may carry certain security risks not covered by this document.
 
-To make debugging `data` simpler, implementations SHOULD provide an error message indicating what the failure was and for which key it occurred.
+### 4.4 Output
 
-If both of these succeed, the evaluation output of the formed schema is reported into the overall schema output incorporating "data" into the evaluation path and following on with additional pointer segments as navigable within the formed schema.
+The evaluation output of the formed schema is reported into the overall schema output incorporating "data" into the evaluation path and following on with additional pointer segments as navigable within the formed schema.
 
-Annotation results of the formed schema are retained so that they can be processed by other keywords such as `unevaluatedItems` and `unevaluatedProperties`.
+Annotation results of the formed schema are retained as per the host schema so that they can be processed by other keywords such as `unevaluatedItems` and `unevaluatedProperties`.
 
-## 4. A Short Example
+## 5. A Short Example
 
 The following defines a schema to validate an object instance with a `foo` property that must contain an integer value less than or equal to the value in the instance's `minValue` property.
 
