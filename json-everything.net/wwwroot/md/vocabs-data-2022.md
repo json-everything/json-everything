@@ -77,7 +77,7 @@ If a reference cannot be resolved, or if a resolved value is not valid for the a
 
 Implementations SHOULD provide a means to pre-load and cache any external references prior to evaluation but MAY be configured to fetch external documents at evaluation time.  Documents fetched from URIs which contain a JSON Pointer fragment MUST be interpreted using a media type that allows resolution of such fragments.
 
-Users should be aware that fetching data from external location may carry certain security risks not covered by this document.
+Users should be aware that fetching data from external locations may carry certain security risks not covered by this document.
 
 ### 4.4 Output
 
