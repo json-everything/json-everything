@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -19,7 +20,15 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 	{
 		if (ReferenceEquals(null, other)) return false;
 		if (ReferenceEquals(this, other)) return true;
-		return Schemas.Equals(other.Schemas);
+		if (Schemas.Count != other.Schemas.Count) return false;
+		var byKey = Schemas.Join(other.Schemas,
+				td => td.Key,
+				od => od.Key,
+				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
+			.ToList();
+		if (byKey.Count != Schemas.Count) return false;
+
+		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}
 
 	public override bool Equals(object? obj)
