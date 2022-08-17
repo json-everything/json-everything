@@ -83,7 +83,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Get = _ => "{\"minValue\":5}";
+			DataKeyword.Fetch = _ => "{\"minValue\":5}";
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -94,7 +94,7 @@ public class Tests
 		}
 		finally
 		{
-			DataKeyword.Get = null!;
+			DataKeyword.Fetch = null!;
 		}
 	}
 
@@ -103,7 +103,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Get = _ => "{\"minValue\":15}";
+			DataKeyword.Fetch = _ => "{\"minValue\":15}";
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -114,7 +114,7 @@ public class Tests
 		}
 		finally
 		{
-			DataKeyword.Get = null!;
+			DataKeyword.Fetch = null!;
 		}
 	}
 }

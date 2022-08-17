@@ -23,8 +23,6 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 {
 	internal const string Name = "data";
 
-	private static Func<Uri, string>? _get;
-
 	/// <summary>
 	/// Gets or sets a method to download external references.
 	/// </summary>
@@ -32,11 +30,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// The default method simply attempts to download the resource.  There is no
 	/// caching involved.
 	/// </remarks>
-	public static Func<Uri, string> Get
-	{
-		get => _get ??= SimpleDownload;
-		set => _get = value;
-	}
+	public static Func<Uri, JsonNode?>? Fetch { get; set; }
 
 	/// <summary>
 	/// The collection of keywords and references.
@@ -139,17 +133,30 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 	private static bool TryDownload(Uri uri, out JsonNode? node)
 	{
-		var data = Get(uri);
-		if (data == null)
+		if (Fetch == null)
 		{
 			node = null;
 			return false;
 		}
-		node = JsonNode.Parse(data);
-		return true;
+
+		try
+		{
+			node = Fetch(uri);
+			return true;
+		}
+		catch (Exception e)
+		{
+			throw new RefResolutionException(uri, e);
+		}
 	}
 
-	private static string SimpleDownload(Uri uri)
+	/// <summary>
+	/// Provides a simple data fetch method that supports `http`, `https`, and `file` URI schemes.
+	/// </summary>
+	/// <param name="uri">The URI to fetch.</param>
+	/// <returns>A JSON string representing the data</returns>
+	/// <exception cref="Exception"></exception>
+	public static JsonNode? SimpleDownload(Uri uri)
 	{
 		switch (uri.Scheme)
 		{
