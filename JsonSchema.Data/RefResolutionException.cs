@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Json.Schema.Data;
 
 // ReSharper disable once CheckNamespace
 namespace Json.Schema;
@@ -14,16 +16,15 @@ public class RefResolutionException : Exception
 	/// <summary>
 	/// The URI that could not be resolved.
 	/// </summary>
-	public Uri Uri { get; }
+	public IEnumerable<string> References { get; }
 
 	/// <summary>
 	/// Thrown when a reference cannot be resolved.
 	/// </summary>
-	/// <param name="uri">The URI that could not be resolved.</param>
-	/// <param name="inner">The inner exception.</param>
-	public RefResolutionException(Uri uri, Exception inner)
-		: base($"An error occurred attempting to resolve URI `{uri}`", inner)
+	/// <param name="references">The references that could not be resolved.</param>
+	public RefResolutionException(IEnumerable<string> references)
+		: base("An error occurred attempting to resolve one or more references")
 	{
-		Uri = uri;
+		References = references;
 	}
 }

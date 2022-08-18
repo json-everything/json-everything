@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
@@ -62,9 +63,7 @@ public class Tests
 		var instanceData = "{\"minValue\":true,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Validate(instance);
-
-		result.AssertInvalid();
+		Assert.Throws<JsonException>(() => InstanceRef.Validate(instance));
 	}
 
 	[Test]
@@ -73,9 +72,7 @@ public class Tests
 		var instanceData = "{\"minValu\":5,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Validate(instance);
-
-		result.AssertInvalid();
+		Assert.Throws<RefResolutionException>(() => InstanceRef.Validate(instance));
 	}
 
 	[Test]
@@ -83,7 +80,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Fetch = _ => "{\"minValue\":5}";
+			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":5}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -103,7 +100,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Fetch = _ => "{\"minValue\":15}";
+			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":15}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;

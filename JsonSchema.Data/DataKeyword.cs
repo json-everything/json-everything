@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,15 +34,26 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	public static Func<Uri, JsonNode?>? Fetch { get; set; }
 
 	/// <summary>
+	/// Provides a registry for known external data sources.
+	/// </summary>
+	/// <remarks>
+	/// This property stores full JSON documents retrievable by URI.  If the desired
+	/// value exists as a sub-value of a document, a JSON Pointer URI fragment identifier
+	/// should be used in the `data` keyword do identify the exact value location.
+	/// </remarks>
+	public static ConcurrentDictionary<Uri, JsonValue?> ExternalDataRegistry { get; } = new();
+
+
+	/// <summary>
 	/// The collection of keywords and references.
 	/// </summary>
-	public IReadOnlyDictionary<string, Uri> References { get; }
+	public IReadOnlyDictionary<string, IDataResourceIdentifier> References { get; }
 
 	/// <summary>
 	/// Creates an instance of the <see cref="DataKeyword"/> class.
 	/// </summary>
 	/// <param name="references">The collection of keywords and references.</param>
-	public DataKeyword(IReadOnlyDictionary<string, Uri> references)
+	public DataKeyword(IReadOnlyDictionary<string, IDataResourceIdentifier> references)
 	{
 		References = references;
 	}
@@ -50,104 +62,33 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// Provides validation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the validation process.</param>
+	/// <exception cref="JsonException">
+	/// Thrown when the formed schema contains values that are invalid for the associated
+	/// keywords.
+	/// </exception>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
 		var data = new Dictionary<string, JsonNode>();
+		var failedReferences = new List<IDataResourceIdentifier>();
 		foreach (var reference in References)
 		{
-			if (!TryResolve(context, reference.Value, out var resolved)) return;
+			if (!reference.Value.TryResolve(context, out var resolved))
+				failedReferences.Add(reference.Value);
 
 			data.Add(reference.Key, resolved!);
 		}
 
+		if (failedReferences.Any())
+		{
+			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
+		}
+
 		var json = JsonSerializer.Serialize(data);
-		JsonSchema subschema;
-		try
-		{
-			subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
-		}
-		catch (JsonException e)
-		{
-			context.LocalResult.Fail(e.Message);
-			return;
-		}
+		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
 		subschema.ValidateSubschema(context);
 		context.ExitKeyword(Name);
-	}
-
-	private static bool TryResolve(ValidationContext context, Uri target, out JsonNode? node)
-	{
-		var parts = target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-		var baseUri = parts[0];
-		var fragment = parts.Length > 1 ? parts[1] : null;
-
-		JsonNode? data;
-		if (!string.IsNullOrEmpty(baseUri))
-		{
-			bool wasResolved;
-			if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newUri))
-				wasResolved = TryDownload(newUri, out data);
-			else
-			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
-				var newBaseUri = new Uri(uriFolder, baseUri);
-				wasResolved = TryDownload(newBaseUri, out data);
-			}
-
-			if (!wasResolved)
-			{
-				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", baseUri));
-				node = null;
-				return false;
-			}
-		}
-		else
-			data = context.InstanceRoot;
-
-		if (!string.IsNullOrEmpty(fragment))
-		{
-			fragment = $"#{fragment}";
-			if (!JsonPointer.TryParse(fragment, out var pointer))
-			{
-				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
-				node = null;
-				return false;
-			}
-
-			if (!pointer!.TryEvaluate(data, out var resolved))
-			{
-				context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", fragment));
-				node = null;
-				return false;
-			}
-			data = resolved;
-		}
-
-		node = data;
-		return true;
-	}
-
-	private static bool TryDownload(Uri uri, out JsonNode? node)
-	{
-		if (Fetch == null)
-		{
-			node = null;
-			return false;
-		}
-
-		try
-		{
-			node = Fetch(uri);
-			return true;
-		}
-		catch (Exception e)
-		{
-			throw new RefResolutionException(uri, e);
-		}
 	}
 
 	/// <summary>
@@ -155,7 +96,9 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// </summary>
 	/// <param name="uri">The URI to fetch.</param>
 	/// <returns>A JSON string representing the data</returns>
-	/// <exception cref="Exception"></exception>
+	/// <exception cref="FormatException">
+	/// Thrown when the URI scheme is not `http`, `https`, or `file`.
+	/// </exception>
 	public static JsonNode? SimpleDownload(Uri uri)
 	{
 		switch (uri.Scheme)
@@ -167,7 +110,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 				var filename = Uri.UnescapeDataString(uri.AbsolutePath);
 				return File.ReadAllText(filename);
 			default:
-				throw new Exception($"URI scheme '{uri.Scheme}' is not supported.  Only HTTP(S) and local file system URIs are allowed.");
+				throw new FormatException($"URI scheme '{uri.Scheme}' is not supported.  Only HTTP(S) and local file system URIs are allowed.");
 		}
 	}
 
@@ -213,7 +156,7 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 			throw new JsonException("Expected object");
 
 		var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)!
-			.ToDictionary(kvp => kvp.Key, kvp => new Uri(kvp.Value, UriKind.RelativeOrAbsolute));
+			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
 		return new DataKeyword(references);
 	}
 
