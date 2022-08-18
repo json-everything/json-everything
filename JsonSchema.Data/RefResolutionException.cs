@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Json.Schema.Data;
 
 // ReSharper disable once CheckNamespace
 namespace Json.Schema;

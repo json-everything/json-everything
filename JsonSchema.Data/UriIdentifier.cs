@@ -5,16 +5,32 @@ using Json.Pointer;
 
 namespace Json.Schema.Data;
 
+/// <summary>
+/// Handles data references that are URIs.
+/// </summary>
 public class UriIdentifier : IDataResourceIdentifier
 {
+	/// <summary>
+	/// The URI target.
+	/// </summary>
 	public Uri Target { get; }
 
+	/// <summary>
+	/// Creates a new instance of <see cref="UriIdentifier"/>.
+	/// </summary>
+	/// <param name="target">The target.</param>
 	public UriIdentifier(Uri target)
 	{
 		Target = target;
 	}
 
-	public bool TryResolve(ValidationContext context, out JsonNode? node)
+	/// <summary>
+	/// Attempts to resolve the reference.
+	/// </summary>
+	/// <param name="context">The schema evaluation context.</param>
+	/// <param name="value">If return is true, the value at the indicated location.</param>
+	/// <returns>true if resolution is successful; false otherwise.</returns>
+	public bool TryResolve(ValidationContext context, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 		var baseUri = parts[0];
@@ -38,7 +54,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			if (!wasResolved)
 			{
 				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", baseUri));
-				node = null;
+				value = null;
 				return false;
 			}
 		}
@@ -51,20 +67,20 @@ public class UriIdentifier : IDataResourceIdentifier
 			if (!JsonPointer.TryParse(fragment, out var pointer))
 			{
 				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
-				node = null;
+				value = null;
 				return false;
 			}
 
 			if (!pointer!.TryEvaluate(data, out var resolved))
 			{
 				context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", fragment));
-				node = null;
+				value = null;
 				return false;
 			}
 			data = resolved;
 		}
 
-		node = data;
+		value = data;
 		return true;
 	}
 
@@ -80,6 +96,8 @@ public class UriIdentifier : IDataResourceIdentifier
 		return true;
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		return Target.ToString();

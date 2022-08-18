@@ -36,9 +36,9 @@ public static class MetaSchemas
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
 						.OneOf(
-							new JsonSchemaBuilder().Format(Formats.UriReference),
 							new JsonSchemaBuilder().Format(Formats.JsonPointer),
-							new JsonSchemaBuilder().Format(Formats.RelativeJsonPointer)
+							new JsonSchemaBuilder().Format(Formats.RelativeJsonPointer),
+							new JsonSchemaBuilder().Format(Formats.UriReference)
 						)
 					)
 					.Default(new JsonObject())
