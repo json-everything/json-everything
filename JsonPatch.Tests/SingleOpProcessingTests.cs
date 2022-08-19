@@ -107,6 +107,7 @@ public class SingleOpProcessingTests
 	[TestCase(0, 2, new[] { 3, 1, 2, 4 })]
 	[TestCase(1, 3, new[] { 1, 4, 2, 3 })]
 	[TestCase(2, 3, new[] { 1, 2, 4, 3 })]
+	[TestCase(3, 1, new[] { 1, 3, 4, 2 })]
 	public void Move_Array(int to, int from, int[] expected)
 	{
 		var patchStr = "[{ \"op\": \"move\", \"path\": \"/Numbers/" + to + "\", \"from\": \"/Numbers/" + from + "\" }]";
