@@ -135,7 +135,7 @@ Once you have validated the instance, you'll need to record the results.  These 
 
 - `Pass()` - Sets a successful validation.
 - `Fail(string? message)` - Sets a failed validation along with an optional error message.
-- `Ignore()` - Marks the resultss from this keyword to be excluded from the output.  This used for keywords such as `$defs`.  You probably won't need to set this.
+- `Ignore()` - Marks the results from this keyword to be excluded from the output.  This used for keywords such as `$defs`.  You probably won't need to set this.
 
 If your keyword contains one or more subschemas, you may need to push a new context onto the stack.  This takes the data from the current context and applies changes based on the optional inputs.  To do this, use the `.Push()` method, which will allow you to update some of the properties.
 
