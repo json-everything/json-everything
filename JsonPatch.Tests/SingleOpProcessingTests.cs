@@ -100,4 +100,22 @@ public class SingleOpProcessingTests
 		Assert.IsNull(actual.Error);
 		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
 	}
+
+	[TestCase(0, 1, new[] { 2, 1, 3, 4 })]
+	[TestCase(1, 0, new[] { 2, 1, 3, 4 })]
+	[TestCase(1, 2, new[] { 1, 3, 2, 4 })]
+	[TestCase(0, 2, new[] { 3, 1, 2, 4 })]
+	[TestCase(1, 3, new[] { 1, 4, 2, 3 })]
+	[TestCase(2, 3, new[] { 1, 2, 4, 3 })]
+	public void Move_Array(int to, int from, int[] expected)
+	{
+		var patchStr = "[{ \"op\": \"move\", \"path\": \"/Numbers/" + to + "\", \"from\": \"/Numbers/" + from + "\" }]";
+		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr)!;
+
+		var element = new { Numbers = new[] { 1, 2, 3, 4 } };
+
+		var actual = patch.Apply(element);
+
+		CollectionAssert.AreEqual(expected, actual?.Numbers);
+	}
 }
