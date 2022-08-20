@@ -66,7 +66,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 				return;
 			}
 			if (0 <= index && index < arrTarget.Count)
-				arrTarget[index] = data;
+				arrTarget.Insert(index, data);
 			else if (index == arrTarget.Count)
 				arrTarget.Add(data);
 			else

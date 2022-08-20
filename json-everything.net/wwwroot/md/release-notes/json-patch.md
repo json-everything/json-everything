@@ -1,3 +1,7 @@
+# [2.0.4](https://github.com/gregsdennis/json-everything/pull/323)
+
+[#322](https://github.com/gregsdennis/json-everything/pull/322) - [@z4kn4fein](https://github.com/z4kn4fein) discovered and fixed an issue in the `move` operation logic.
+
 # [2.0.3](https://github.com/gregsdennis/json-everything/pull/317)
 
 [#315](https://github.com/gregsdennis/json-everything/pull/315) - [@z4kn4fein](https://github.com/z4kn4fein) noticed that the serializer options weren't actually being passed into the `.Apply()` call.
