@@ -36,8 +36,8 @@ The value of `data` must be an object.  The keys of the object are interpreted a
 
 - JSON Pointers per [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901) 
 - [Relative JSON Pointers](https://json-schema.org/draft/2019-09/relative-json-pointer.html)
-- URI-encoded JSON Pointer identifier per [RFC 6901, §6](https://www.rfc-editor.org/rfc/rfc6901#section-6)
-- Absolute URIs per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), optionally with a JSON Pointer fragment identifier
+- fragment-only IRI using IRI-encoded JSON Pointer identifier per [RFC 6901, §6](https://www.rfc-editor.org/rfc/rfc6901#section-6)
+- Absolute IRIs per [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987), optionally including an additional IRI-encoded JSON Pointer fragment identifier
 
 `data` MUST NOT contain any keys which are defined by the JSON Schema Core Vocabulary.
 
@@ -52,12 +52,14 @@ The validation and annotation results of `data` are those of the formed schema. 
 
 `data` MUST be processed contextually in the same manner as the host schema.  Specifically,
 
-- URI resolution MUST be performed in the same manner as `$ref` (per section 3.3).
+- IRI resolution MUST be performed in the same manner as `$ref` (per section 3.3).
 - Keys that are ignored by the host schema MUST also be ignored by the formed schema.
 
-Implementations SHOULD validate the formed schema against the host schema's meta-schema (as specified by `$schema`) to ensure that it is a syntactically valid schema object.
+Implementations SHOULD validate that the resolved data forms a valid schema against the host schema's meta-schema (as specified by `$schema`).
 
-### 4.3 URI Resolution
+***NOTE** It is not necessary for an implementation to validate using the meta-schema.  Other mechanisms internal to the implementation (such as deserialization) may suffice to perform this task.*
+
+### 4.3 IRI Resolution
 
 The values of `data` are dereferenced in different ways depending on the format of the value.
 
@@ -67,7 +69,7 @@ If the value is a Relative JSON Pointer, it is resolved against the instance at 
 
 Otherwise, it must be resolved in accordance with the rules of `$ref` resolution for the relevant JSON Schema specification (e.g. [draft 2020-12, §8.2](https://json-schema.org/draft/2020-12/json-schema-core.html#name-base-uri-anchors-and-derefe)).  However, unlike `$ref` which requires that the indicated data must represent a valid schema object, a `data` reference can identify any value which is valid for the associated keyword.
 
-Because JSON Pointers and Relative JSON Pointers are syntactically valid URIs, the value MUST be checked in the sequence indicated above in order to properly identify the pointer types from other URIs.
+Because JSON Pointers and Relative JSON Pointers are syntactically valid IRIs, the value MUST be checked in the sequence indicated above in order to properly identify the pointer types from other IRIs.
 
 For each successfully resolved reference, the full value at the specified location MUST be returned.
 
@@ -75,7 +77,7 @@ If a reference cannot be resolved, or if a resolved value is not valid for the a
 
 #### 4.3.1 External Data Access
 
-Implementations SHOULD provide a means to pre-load and cache any external references prior to evaluation but MAY be configured to fetch external documents at evaluation time.  Documents fetched from URIs which contain a JSON Pointer fragment MUST be interpreted using a media type that allows resolution of such fragments.
+Implementations SHOULD provide a means to pre-load and cache any external references prior to evaluation but MAY be configured to fetch external documents at evaluation time.  Documents fetched from IRIs which contain a JSON Pointer fragment MUST be interpreted using a media type, such as `application/schema-instance+json`, that allows resolution of such fragments.
 
 Users should be aware that fetching data from external locations may carry certain security risks not covered by this document.
 
