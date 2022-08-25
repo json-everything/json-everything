@@ -203,7 +203,26 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 
 		var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-		var keywords = context.Options.FilterKeywords(Keywords!, metaSchemaUri, context.Options.SchemaRegistry);
+		var keywords = context.Options.FilterKeywords(Keywords!, metaSchemaUri, context.Options.SchemaRegistry).ToList();
+
+		if (context.MetaSchemaVocabs == null && !keywords.OfType<SchemaKeyword>().Any())
+		{
+			switch (context.Options.ValidateAs)
+			{
+				case Draft.Draft6:
+					keywords.Add(new SchemaKeyword(MetaSchemas.Draft6Id));
+					break;
+				case Draft.Draft7:
+					keywords.Add(new SchemaKeyword(MetaSchemas.Draft7Id));
+					break;
+				case Draft.Draft201909:
+					keywords.Add(new SchemaKeyword(MetaSchemas.Draft201909Id));
+					break;
+				case Draft.Draft202012:
+					keywords.Add(new SchemaKeyword(MetaSchemas.Draft202012Id));
+					break;
+			}
+		}
 
 		var overallResult = true;
 		List<Type>? keywordTypesToProcess = null;
