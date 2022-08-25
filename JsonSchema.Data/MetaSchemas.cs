@@ -11,7 +11,7 @@ public static class MetaSchemas
 	/// <summary>
 	/// The data vocabulary meta-schema ID.
 	/// </summary>
-	public static readonly Uri DataId = new("https://gregsdennis.github.io/json-everything/meta/data");
+	public static readonly Uri DataId = new("https://json-everything.net/meta/data-2022");
 
 	/// <summary>
 	/// The data vocabulary meta-schema.
@@ -35,7 +35,12 @@ public static class MetaSchemas
 				(DataKeyword.Name, new JsonSchemaBuilder()
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
-						.Format(Formats.UriReference))
+						.OneOf(
+							new JsonSchemaBuilder().Format(Formats.JsonPointer),
+							new JsonSchemaBuilder().Format(Formats.RelativeJsonPointer),
+							new JsonSchemaBuilder().Format(Formats.UriReference)
+						)
+					)
 					.Default(new JsonObject())
 				)
 			);

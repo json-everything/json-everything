@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
@@ -7,17 +8,32 @@ namespace Json.Schema.Data.Tests;
 public class Tests
 {
 	private static JsonSchema InstanceRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://gregsdennis.github.io/json-everything/meta/data")
+		.Schema("https://json-everything.net/meta/data-2022")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
-				.Data(("minimum", "#/minValue"))
+				.Data(("minimum", "/minValue"))
+			)
+		);
+
+	private static JsonSchema InstanceRelativeRef { get; } = new JsonSchemaBuilder()
+		.Schema("https://json-everything.net/meta/data-2022")
+		.Type(SchemaValueType.Object)
+		.Properties(
+			("foo", new JsonSchemaBuilder()
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("bar", new JsonSchemaBuilder()
+						.Type(SchemaValueType.Integer)
+						.Data(("minimum", "2/minValue"))
+					)
+				)
 			)
 		);
 
 	private static JsonSchema ExternalRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://gregsdennis.github.io/json-everything/meta/data")
+		.Schema("https://json-everything.net/meta/data-2022")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
@@ -57,14 +73,34 @@ public class Tests
 	}
 
 	[Test]
+	public void InstanceRelativeRef_Passing()
+	{
+		var instanceData = "{\"minValue\":5,\"foo\":{\"bar\":10}}";
+		var instance = JsonDocument.Parse(instanceData).RootElement;
+
+		var result = InstanceRelativeRef.Validate(instance);
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void InstanceRelativeRef_Failing()
+	{
+		var instanceData = "{\"minValue\":15,\"foo\":{\"bar\":10}}";
+		var instance = JsonDocument.Parse(instanceData).RootElement;
+
+		var result = InstanceRelativeRef.Validate(instance);
+
+		result.AssertInvalid();
+	}
+
+	[Test]
 	public void InstanceRef_InvalidValueType()
 	{
 		var instanceData = "{\"minValue\":true,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Validate(instance);
-
-		result.AssertInvalid();
+		Assert.Throws<JsonException>(() => InstanceRef.Validate(instance));
 	}
 
 	[Test]
@@ -73,9 +109,7 @@ public class Tests
 		var instanceData = "{\"minValu\":5,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Validate(instance);
-
-		result.AssertInvalid();
+		Assert.Throws<RefResolutionException>(() => InstanceRef.Validate(instance));
 	}
 
 	[Test]
@@ -83,7 +117,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Get = _ => "{\"minValue\":5}";
+			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":5}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -94,7 +128,7 @@ public class Tests
 		}
 		finally
 		{
-			DataKeyword.Get = null!;
+			DataKeyword.Fetch = null!;
 		}
 	}
 
@@ -103,7 +137,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Get = _ => "{\"minValue\":15}";
+			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":15}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -114,7 +148,7 @@ public class Tests
 		}
 		finally
 		{
-			DataKeyword.Get = null!;
+			DataKeyword.Fetch = null!;
 		}
 	}
 }

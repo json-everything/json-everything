@@ -1,0 +1,52 @@
+{
+  "$id": "https://json-everything.net/meta/data-2022",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$vocabulary": {
+    "https://json-schema.org/draft/2020-12/vocab/core": true,
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+    "https://json-schema.org/draft/2020-12/vocab/validation": true,
+    "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+    "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+    "https://json-schema.org/draft/2020-12/vocab/content": true,
+    "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
+    "https://json-everything.net/vocabs-data-2022": true
+  },
+  "$dynamicAnchor": "meta",
+
+  "title": "Referenced data meta-schema",
+  "allOf": [
+    { "$ref": "https://json-schema.org/draft/2020-12/schema" }
+  ],
+  "properties": {
+    "data": {
+      "additionalProperties": {
+        "type": "string",
+        "oneOf": [
+          { "format": "json-pointer" },
+          { "format": "relative-json-pointer" },
+          {
+            "format": "iri-reference",
+            "pattern": "^#"
+          },
+          { "format": "iri" }
+        ]
+      },
+      "propertyNames": {
+        "not": {
+          "anyOf": [
+            { "const": "$id" },
+            { "const": "$schema" },
+            { "const": "$ref" },
+            { "const": "$anchor" },
+            { "const": "$dynamicRef" },
+            { "const": "$dynamicAnchor" },
+            { "const": "$vocabulary" },
+            { "const": "$comment" },
+            { "const": "$defs" }
+          ]
+        }
+      },
+      "default": {}
+    }
+  }
+}

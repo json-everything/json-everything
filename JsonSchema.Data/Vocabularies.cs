@@ -8,7 +8,7 @@ public static class Vocabularies
 	/// <summary>
 	/// The data vocabulary ID.
 	/// </summary>
-	public const string DataId = "https://gregsdennis.github.io/json-everything/vocabs-data";
+	public const string DataId = "https://json-everything.net/vocabs-data-2022";
 
 	/// <summary>
 	/// The data vocabulary.
