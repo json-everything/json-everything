@@ -14,7 +14,7 @@ The intent for this keyword is to cover the use cases discussed across several i
 
 ## 2. Declarations
 
-The ID for this vocabulary is `https://json-everything.net/vocabs-data-2022` (the URI to this document).
+The ID for this vocabulary is `https://json-everything.net/vocabs-data-2022`.
 
 A draft 2020-12 meta-schema which includes this vocabulary has been defined for convenience.  The ID (`$id`) for the meta-schema is `https://json-everything.net/meta/data-2022`, and it can also be found at this address.
 
