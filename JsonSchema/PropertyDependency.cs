@@ -64,11 +64,13 @@ internal class PropertyDependencyJsonConverter : JsonConverter<PropertyDependenc
 {
 	public override PropertyDependency? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		var schemas = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options);
+
+		return new PropertyDependency(schemas!);
 	}
 
 	public override void Write(Utf8JsonWriter writer, PropertyDependency value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		JsonSerializer.Serialize(writer, value.Schemas, options);
 	}
 }
