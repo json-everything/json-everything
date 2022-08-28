@@ -12,13 +12,16 @@ public class FetchTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed
-		};
-		options.SchemaRegistry.Fetch = uri =>
-		{
-			if (uri.AbsoluteUri == "http://my.schema/test1")
-				return JsonSchema.FromText("{\"type\": \"string\"}");
-			return null;
+			OutputFormat = OutputFormat.Detailed,
+			SchemaRegistry =
+			{
+				Fetch = uri =>
+				{
+					if (uri.AbsoluteUri == "http://my.schema/test1")
+						return JsonSchema.FromText("{\"type\": \"string\"}");
+					return null;
+				}
+			}
 		};
 		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
@@ -56,13 +59,16 @@ public class FetchTests
 	{
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Detailed
-		};
-		options.SchemaRegistry.Fetch = uri =>
-		{
-			if (uri.AbsoluteUri == "http://my.schema/test2")
-				return JsonSchema.FromText("{\"type\": \"string\"}");
-			return null;
+			OutputFormat = OutputFormat.Detailed,
+			SchemaRegistry =
+			{
+				Fetch = uri =>
+				{
+					if (uri.AbsoluteUri == "http://my.schema/test2")
+						return JsonSchema.FromText("{\"type\": \"string\"}");
+					return null;
+				}
+			}
 		};
 		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 

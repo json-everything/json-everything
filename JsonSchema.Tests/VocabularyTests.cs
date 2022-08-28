@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
 
@@ -36,14 +37,14 @@ public class VocabularyTests
 					("value", Date));
 		}
 
-		public bool Equals(MinDateKeyword other)
+		public bool Equals(MinDateKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return Date.Equals(other.Date);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return Equals(obj as MinDateKeyword);
 		}
@@ -62,7 +63,7 @@ public class VocabularyTests
 				throw new JsonException("Expected string");
 
 			var dateString = reader.GetString();
-			var date = DateTime.Parse(dateString, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+			var date = DateTime.Parse(dateString!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 			return new MinDateKeyword(date);
 		}
 
@@ -100,14 +101,14 @@ public class VocabularyTests
 					("value", Date));
 		}
 
-		public bool Equals(MaxDateKeyword other)
+		public bool Equals(MaxDateKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return Date.Equals(other.Date);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return Equals(obj as MaxDateKeyword);
 		}
@@ -126,7 +127,7 @@ public class VocabularyTests
 				throw new JsonException("Expected string");
 
 			var dateString = reader.GetString();
-			var date = DateTime.Parse(dateString, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+			var date = DateTime.Parse(dateString!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 			return new MaxDateKeyword(date);
 		}
 
@@ -185,7 +186,7 @@ public class VocabularyTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
-		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
+		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new ValidationOptions
 		{
@@ -209,7 +210,7 @@ public class VocabularyTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
-		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
+		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new ValidationOptions();
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
@@ -230,7 +231,7 @@ public class VocabularyTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
-		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
+		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new ValidationOptions
 		{
@@ -256,7 +257,7 @@ public class VocabularyTests
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
 
-		var schemaAsJson = JsonDocument.Parse(JsonSerializer.Serialize(schema)).RootElement;
+		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
 		var results = DatesMetaSchema.Validate(schemaAsJson);
 
 		Console.WriteLine(schemaAsJson);
@@ -273,7 +274,7 @@ public class VocabularyTests
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
 
-		var schemaAsJson = JsonDocument.Parse(JsonSerializer.Serialize(schema)).RootElement;
+		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
 		var options = new ValidationOptions();
 		options.VocabularyRegistry.Register(DatesVocabulary);
 		var results = DatesMetaSchema.Validate(schemaAsJson, options);

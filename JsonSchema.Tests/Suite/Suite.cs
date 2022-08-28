@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Humanizer;
 using Json.More;
 using NUnit.Framework;
@@ -68,7 +69,7 @@ public class Suite
 				PropertyNameCaseInsensitive = true
 			});
 
-			foreach (var collection in collections)
+			foreach (var collection in collections!)
 			{
 				collection.IsOptional = fileName.Contains("optional");
 				foreach (var test in collection.Tests)
@@ -119,7 +120,7 @@ public class Suite
 		Console.WriteLine();
 		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 		Console.WriteLine();
-		Console.WriteLine(test.Data.ToJsonString());
+		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
 
 		if (!InstanceIsDeserializable(test.Data))
@@ -144,26 +145,27 @@ public class Suite
 		options.OutputFormat = OutputFormat.Flag;
 		var result = collection.Schema.Validate(test.Data, options);
 
-		if (collection.IsOptional && result?.IsValid != test.Valid)
+		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
 		Assert.AreEqual(test.Valid, result.IsValid);
 	}
 
-	private static bool InstanceIsDeserializable(in JsonElement testData)
+	private static bool InstanceIsDeserializable(in JsonNode? testData)
 	{
 		try
 		{
-			switch (testData.ValueKind)
+			var value = testData?.GetValue<object>();
+			Console.WriteLine("Found value {0}", value.GetType());
+			if (value is null) return true;
+			if (value is string) return false;
+			if (value is JsonElement element) return element.TryGetDecimal(out _);
+			if (value.GetType().IsNumber())
 			{
-				case JsonValueKind.Undefined:
-					return false;
-				case JsonValueKind.Number:
-					// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
-					testData.GetDecimal();
-					return true;
-				default:
-					return true;
+				// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
+				return true;
 			}
+
+			return true;
 		}
 		catch (Exception e)
 		{

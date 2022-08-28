@@ -1,12 +1,11 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Nodes;
+#pragma warning disable CS8618
 
 namespace Json.Schema.Tests.Suite;
 
 public class TestCase
 {
 	public string Description { get; set; }
-	[JsonConverter(typeof(EmbeddedDataJsonConverter))]
-	public JsonElement Data { get; set; }
+	public JsonNode? Data { get; set; }
 	public bool Valid { get; set; }
 }

@@ -10,8 +10,10 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var json = new JsonObject();
+		var node = JsonNode.Parse("1238723762349702529873649378023892834969761287612402596");
 
-		Console.WriteLine(JsonSerializer.Serialize(json));
+		var value = node.GetValue<object>();
+
+		Console.WriteLine(value.GetType());
 	}
 }

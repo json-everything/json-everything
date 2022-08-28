@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -13,9 +14,9 @@ public class LocalizationTests
 			.Type(SchemaValueType.Number)
 			.Minimum(10);
 
-		var instance = JsonDocument.Parse("5");
+		var instance = JsonNode.Parse("5");
 
-		var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 		var message = results.Message;
 
@@ -33,9 +34,9 @@ public class LocalizationTests
 				.Type(SchemaValueType.Number)
 				.Minimum(10);
 
-			var instance = JsonDocument.Parse("5");
+			var instance = JsonNode.Parse("5");
 
-			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+			var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var message = results.Message;
 
@@ -58,9 +59,9 @@ public class LocalizationTests
 				.Type(SchemaValueType.Number)
 				.Minimum(10);
 
-			var instance = JsonDocument.Parse("5");
+			var instance = JsonNode.Parse("5");
 
-			var results = schema.Validate(instance.RootElement, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+			var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 			var message = results.Message;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests
@@ -206,11 +207,11 @@ namespace Json.Schema.Tests
 
 		private static ValidationResults Validate(string json, OutputFormat format)
 		{
-			var instance = JsonDocument.Parse(json);
+			var instance = JsonNode.Parse(json);
 			var options = ValidationOptions.From(ValidationOptions.Default);
 			options.OutputFormat = format;
 
-			var result = _schema.Validate(instance.RootElement, options);
+			var result = _schema.Validate(instance, options);
 			return result;
 		}
 
@@ -223,7 +224,7 @@ namespace Json.Schema.Tests
 				)
 				.AdditionalProperties(false);
 
-			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
+			var instance = JsonNode.Parse("{\"foo\": null}");
 
 			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -242,7 +243,7 @@ namespace Json.Schema.Tests
 				)
 				.UnevaluatedProperties(false);
 
-			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
+			var instance = JsonNode.Parse("{\"foo\": null}");
 
 			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -266,7 +267,7 @@ namespace Json.Schema.Tests
 				.Ref("#/$defs/reffed")
 				.UnevaluatedProperties(false);
 
-			var instance = JsonDocument.Parse("{\"foo\": null}").RootElement;
+			var instance = JsonNode.Parse("{\"foo\": null}");
 
 			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -283,7 +284,7 @@ namespace Json.Schema.Tests
 				.Items(new JsonSchema[] { true, false })
 				.AdditionalItems(false);
 
-			var instance = JsonDocument.Parse("[1,2]").RootElement;
+			var instance = JsonNode.Parse("[1,2]");
 
 			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -300,7 +301,7 @@ namespace Json.Schema.Tests
 				.Items(new JsonSchema[] { true, false })
 				.UnevaluatedItems(false);
 
-			var instance = JsonDocument.Parse("[1,2]").RootElement;
+			var instance = JsonNode.Parse("[1,2]");
 
 			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 

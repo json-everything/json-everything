@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -42,7 +43,7 @@ public class SelfValidationTest
 	public void Hardcoded(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema);
-		var validation = schema.Validate(JsonDocument.Parse(json).RootElement, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Validate(JsonNode.Parse(json), new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
 		validation.AssertValid();
 	}
@@ -57,8 +58,8 @@ public class SelfValidationTest
 			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
 			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson);
 
-			var localValidation = schema.Validate(JsonDocument.Parse(onlineSchemaJson).RootElement);
-			var onlineValidation = onlineSchema.Validate(JsonDocument.Parse(localSchemaJson).RootElement);
+			var localValidation = schema.Validate(JsonNode.Parse(onlineSchemaJson));
+			var onlineValidation = onlineSchema!.Validate(JsonNode.Parse(localSchemaJson));
 
 			try
 			{

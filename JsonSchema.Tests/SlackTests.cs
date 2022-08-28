@@ -34,7 +34,7 @@ public class SlackTests
 				}";
 
 		var schema = JsonSchema.FromText(json);
-		var instance = JsonDocument.Parse(json).RootElement;
+		var instance = JsonNode.Parse(json);
 
 		var result = schema.Validate(instance, new ValidationOptions
 		{

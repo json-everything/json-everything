@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -13,7 +14,7 @@ public class NullTests
 	[Test]
 	public void PropertyWithNullValuePasses()
 	{
-		var json = JsonDocument.Parse("{\"foo\": null}").RootElement;
+		var json = JsonNode.Parse("{\"foo\": null}");
 
 		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
@@ -23,7 +24,7 @@ public class NullTests
 	[Test]
 	public void MissingPropertyFails()
 	{
-		var json = JsonDocument.Parse("{}").RootElement;
+		var json = JsonNode.Parse("{}");
 
 		var result = _schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 

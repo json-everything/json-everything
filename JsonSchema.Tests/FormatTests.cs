@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -13,9 +14,9 @@ public class FormatTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format(Formats.Ipv4);
 
-		var value = JsonDocument.Parse("\"100.2.54.3\"");
+		var value = JsonNode.Parse("\"100.2.54.3\"");
 
-		var result = schema.Validate(value.RootElement, new ValidationOptions { RequireFormatValidation = true });
+		var result = schema.Validate(value, new ValidationOptions { RequireFormatValidation = true });
 
 		Assert.True(result.IsValid);
 	}
@@ -25,9 +26,9 @@ public class FormatTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format(Formats.Ipv4);
 
-		var value = JsonDocument.Parse("\"100.2.5444.3\"");
+		var value = JsonNode.Parse("\"100.2.5444.3\"");
 
-		var result = schema.Validate(value.RootElement, new ValidationOptions { RequireFormatValidation = true });
+		var result = schema.Validate(value, new ValidationOptions { RequireFormatValidation = true });
 
 		Assert.False(result.IsValid);
 	}
@@ -62,7 +63,7 @@ public class FormatTests
 	""format"": ""something-dumb""
 }}";
 		var schema = JsonSchema.FromText(schemaText);
-		var instance = JsonDocument.Parse("\"a value\"").RootElement;
+		var instance = JsonNode.Parse("\"a value\"");
 
 		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
 
@@ -87,7 +88,7 @@ public class FormatTests
 	""format"": ""something-dumb""
 }}";
 		var schema = JsonSchema.FromText(schemaText);
-		var instance = JsonDocument.Parse("\"a value\"").RootElement;
+		var instance = JsonNode.Parse("\"a value\"");
 
 		var results = schema.Validate(instance, options);
 
@@ -105,7 +106,7 @@ public class FormatTests
 	""format"": ""something-dumb""
 }}";
 		var schema = JsonSchema.FromText(schemaText);
-		var instance = JsonDocument.Parse("\"a value\"").RootElement;
+		var instance = JsonNode.Parse("\"a value\"");
 
 		var results = schema.Validate(instance, new ValidationOptions
 		{
@@ -134,7 +135,7 @@ public class FormatTests
 	{
 		Formats.Register(new RegexBasedFormat());
 
-		var json = JsonDocument.Parse(jsonText).RootElement;
+		var json = JsonNode.Parse(jsonText);
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format("hexadecimal");
 
