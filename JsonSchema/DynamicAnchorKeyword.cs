@@ -14,7 +14,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]
 public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<DynamicAnchorKeyword>
 {
-	internal const string Name = "$dynamicAnchor";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$dynamicAnchor";
 
 	/// <summary>
 	/// Gets the anchor value.

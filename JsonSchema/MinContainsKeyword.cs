@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MinContainsKeywordJsonConverter))]
 public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyword>
 {
-	internal const string Name = "minContains";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "minContains";
 
 	/// <summary>
 	/// The minimum expected matching items.

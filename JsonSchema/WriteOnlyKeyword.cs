@@ -15,7 +15,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(WriteOnlyKeywordJsonConverter))]
 public class WriteOnlyKeyword : IJsonSchemaKeyword, IEquatable<WriteOnlyKeyword>
 {
-	internal const string Name = "writeOnly";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "writeOnly";
 
 	/// <summary>
 	/// Whether the instance is read-only.

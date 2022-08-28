@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MaxPropertiesKeywordJsonConverter))]
 public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxPropertiesKeyword>
 {
-	internal const string Name = "maxProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "maxProperties";
 
 	/// <summary>
 	/// The maximum expected number of properties.

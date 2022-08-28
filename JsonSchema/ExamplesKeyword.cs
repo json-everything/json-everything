@@ -21,7 +21,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ExamplesKeywordJsonConverter))]
 public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 {
-	internal const string Name = "examples";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "examples";
 
 	/// <summary>
 	/// The collection of example values.

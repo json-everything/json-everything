@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(VocabularyKeywordJsonConverter))]
 public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeyword>
 {
-	internal const string Name = "$vocabulary";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$vocabulary";
 
 	/// <summary>
 	/// The collection of vocabulary requirements.

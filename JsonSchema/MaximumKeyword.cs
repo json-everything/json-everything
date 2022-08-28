@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MaximumKeywordJsonConverter))]
 public class MaximumKeyword : IJsonSchemaKeyword, IEquatable<MaximumKeyword>
 {
-	internal const string Name = "maximum";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "maximum";
 
 	/// <summary>
 	/// The maximum expected value.

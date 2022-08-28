@@ -14,7 +14,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(RecursiveAnchorKeywordJsonConverter))]
 public class RecursiveAnchorKeyword : IJsonSchemaKeyword, IEquatable<RecursiveAnchorKeyword>
 {
-	internal const string Name = "$recursiveAnchor";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$recursiveAnchor";
 
 	/// <summary>
 	/// Gets the value.

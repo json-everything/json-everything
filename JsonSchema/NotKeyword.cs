@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(NotKeywordJsonConverter))]
 public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<NotKeyword>
 {
-	internal const string Name = "not";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "not";
 
 	/// <summary>
 	/// The schema to not match.

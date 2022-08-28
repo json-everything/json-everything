@@ -22,7 +22,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(AllOfKeywordJsonConverter))]
 public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<AllOfKeyword>
 {
-	internal const string Name = "allOf";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "allOf";
 
 	/// <summary>
 	/// The keywords schema collection.

@@ -16,7 +16,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(CommentKeywordJsonConverter))]
 public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 {
-	internal const string Name = "$comment";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$comment";
 
 	/// <summary>
 	/// The comment value.

@@ -24,7 +24,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
 public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
 {
-	internal const string Name = "items";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "items";
 
 	/// <summary>
 	/// The schema for the "single schema" form.

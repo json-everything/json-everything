@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MinPropertiesKeywordJsonConverter))]
 public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinPropertiesKeyword>
 {
-	internal const string Name = "minProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "minProperties";
 
 	/// <summary>
 	/// The minimum expected number of properties.

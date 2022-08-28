@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MaxLengthKeywordJsonConverter))]
 public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 {
-	internal const string Name = "maxLength";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "maxLength";
 
 	/// <summary>
 	/// The maximum expected string length.

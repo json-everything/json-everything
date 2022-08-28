@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MinItemsKeywordJsonConverter))]
 public class MinItemsKeyword : IJsonSchemaKeyword, IEquatable<MinItemsKeyword>
 {
-	internal const string Name = "minItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "minItems";
 
 	/// <summary>
 	/// The expected minimum number of items.

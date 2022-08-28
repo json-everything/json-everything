@@ -16,7 +16,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ContentMediaTypeKeywordJsonConverter))]
 public class ContentMediaTypeKeyword : IJsonSchemaKeyword, IEquatable<ContentMediaTypeKeyword>
 {
-	internal const string Name = "contentMediaType";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "contentMediaType";
 
 	/// <summary>
 	/// The media type.

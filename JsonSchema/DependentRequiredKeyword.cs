@@ -20,7 +20,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependentRequiredKeywordJsonConverter))]
 public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<DependentRequiredKeyword>
 {
-	internal const string Name = "dependentRequired";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "dependentRequired";
 
 	/// <summary>
 	/// The collection of "required"-type dependencies.

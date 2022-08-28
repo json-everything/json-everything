@@ -20,7 +20,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
 public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<AdditionalItemsKeyword>
 {
-	internal const string Name = "additionalItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "additionalItems";
 
 	/// <summary>
 	/// The schema by which to validation additional items.

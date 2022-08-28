@@ -20,7 +20,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(RequiredKeywordJsonConverter))]
 public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 {
-	internal const string Name = "required";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "required";
 
 	/// <summary>
 	/// The required properties.

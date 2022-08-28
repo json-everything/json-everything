@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
 public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DependenciesKeyword>
 {
-	internal const string Name = "dependencies";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "dependencies";
 
 	/// <summary>
 	/// The collection of dependencies.

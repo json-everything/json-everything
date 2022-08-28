@@ -14,7 +14,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
 public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
 {
-	internal const string Name = "$dynamicRef";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$dynamicRef";
 
 	/// <summary>
 	/// The URI reference.

@@ -17,7 +17,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(IfKeywordJsonConverter))]
 public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<IfKeyword>
 {
-	internal const string Name = "if";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "if";
 
 	/// <summary>
 	/// The schema to match.

@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ElseKeywordJsonConverter))]
 public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ElseKeyword>
 {
-	internal const string Name = "else";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "else";
 
 	/// <summary>
 	/// The schema to match.

@@ -16,7 +16,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ContentEncodingKeywordJsonConverter))]
 public class ContentEncodingKeyword : IJsonSchemaKeyword, IEquatable<ContentEncodingKeyword>
 {
-	internal const string Name = "contentEncoding";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "contentEncoding";
 
 	/// <summary>
 	/// The encoding value.

@@ -21,7 +21,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
 public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DependentSchemasKeyword>
 {
-	internal const string Name = "dependentSchemas";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "dependentSchemas";
 
 	/// <summary>
 	/// The collection of "schema"-type dependencies.

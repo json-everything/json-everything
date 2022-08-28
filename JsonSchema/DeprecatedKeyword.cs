@@ -15,7 +15,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DeprecatedKeywordJsonConverter))]
 public class DeprecatedKeyword : IJsonSchemaKeyword, IEquatable<DeprecatedKeyword>
 {
-	internal const string Name = "deprecated";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "deprecated";
 
 	/// <summary>
 	/// Whether the schema is deprecated.
