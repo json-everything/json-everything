@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MultipleOfKeywordJsonConverter))]
 public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeyword>
 {
-	internal const string Name = "multipleOf";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "multipleOf";
 
 	/// <summary>
 	/// The expected divisor of a value.

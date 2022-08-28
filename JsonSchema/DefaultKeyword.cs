@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DefaultKeywordJsonConverter))]
 public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 {
-	internal const string Name = "default";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "default";
 
 	/// <summary>
 	/// The value to use as the default.

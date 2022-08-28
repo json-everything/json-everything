@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
 public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ThenKeyword>
 {
-	internal const string Name = "then";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "then";
 
 	/// <summary>
 	/// The schema to match.

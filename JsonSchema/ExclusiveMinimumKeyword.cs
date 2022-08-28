@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ExclusiveMinimumKeywordJsonConverter))]
 public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveMinimumKeyword>
 {
-	internal const string Name = "exclusiveMinimum";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "exclusiveMinimum";
 
 	/// <summary>
 	/// The minimum value.

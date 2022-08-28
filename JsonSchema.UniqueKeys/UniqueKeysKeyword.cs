@@ -38,7 +38,10 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		}
 	}
 
-	internal const string Name = "uniqueKeys";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "uniqueKeys";
 
 	/// <summary>
 	/// The collection of keywords and references.

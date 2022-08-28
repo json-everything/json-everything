@@ -23,7 +23,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
 public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContainsKeyword>
 {
-	internal const string Name = "contains";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "contains";
 
 	/// <summary>
 	/// The schema to match.

@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(FormatKeywordJsonConverter))]
 public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 {
-	internal const string Name = "format";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "format";
 
 	private static readonly Uri[] _formatAssertionIds =
 	{

@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternKeywordJsonConverter))]
 public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 {
-	internal const string Name = "pattern";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "pattern";
 
 	/// <summary>
 	/// The regular expression.

@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(MinLengthKeywordJsonConverter))]
 public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 {
-	internal const string Name = "minLength";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "minLength";
 
 	/// <summary>
 	/// The minimum expected string length.

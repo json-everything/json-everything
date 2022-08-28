@@ -17,7 +17,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(AnchorKeywordJsonConverter))]
 public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<AnchorKeyword>
 {
-	internal const string Name = "$anchor";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$anchor";
 	internal static readonly Regex AnchorPattern = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
 
 	/// <summary>

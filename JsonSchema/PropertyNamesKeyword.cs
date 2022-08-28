@@ -23,7 +23,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertyNamesKeywordJsonConverter))]
 public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<PropertyNamesKeyword>
 {
-	internal const string Name = "propertyNames";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "propertyNames";
 
 	/// <summary>
 	/// The schema to match.

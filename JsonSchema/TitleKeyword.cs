@@ -17,7 +17,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(TitleKeywordJsonConverter))]
 public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 {
-	internal const string Name = "title";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "title";
 
 	/// <summary>
 	/// The title.

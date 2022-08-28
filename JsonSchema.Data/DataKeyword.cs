@@ -22,7 +22,10 @@ namespace Json.Schema.Data;
 [JsonConverter(typeof(DataKeywordJsonConverter))]
 public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 {
-	internal const string Name = "data";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "data";
 
 	/// <summary>
 	/// Gets or sets a method to download external references.

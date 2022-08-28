@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(PrefixItemsKeywordJsonConverter))]
 public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<PrefixItemsKeyword>
 {
-	internal const string Name = "prefixItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "prefixItems";
 
 	/// <summary>
 	/// The collection of schemas for the "schema array" form.

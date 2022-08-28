@@ -24,7 +24,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
 public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
 {
-	internal const string Name = "additionalProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "additionalProperties";
 
 	/// <summary>
 	/// The schema by which to validation additional properties.

@@ -20,7 +20,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(TypeKeywordJsonConverter))]
 public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 {
-	internal const string Name = "type";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "type";
 
 	/// <summary>
 	/// The expected type.

@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(IdKeywordJsonConverter))]
 public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 {
-	internal const string Name = "$id";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$id";
 
 	/// <summary>
 	/// The ID.

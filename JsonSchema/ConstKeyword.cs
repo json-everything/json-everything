@@ -19,7 +19,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ConstKeywordJsonConverter))]
 public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 {
-	internal const string Name = "const";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "const";
 
 	/// <summary>
 	/// The constant value.

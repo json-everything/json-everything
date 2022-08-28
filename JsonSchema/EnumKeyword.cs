@@ -21,7 +21,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(EnumKeywordJsonConverter))]
 public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 {
-	internal const string Name = "enum";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "enum";
 
 	private readonly HashSet<JsonNode?> _values;
 

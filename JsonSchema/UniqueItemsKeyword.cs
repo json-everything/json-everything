@@ -21,7 +21,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(UniqueItemsKeywordJsonConverter))]
 public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyword>
 {
-	internal const string Name = "uniqueItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "uniqueItems";
 
 	/// <summary>
 	/// Whether items should be unique.

@@ -22,7 +22,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(OneOfKeywordJsonConverter))]
 public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<OneOfKeyword>
 {
-	internal const string Name = "oneOf";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "oneOf";
 
 	/// <summary>
 	/// The keywords schema collection.

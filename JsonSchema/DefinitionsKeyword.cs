@@ -16,7 +16,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(DefinitionsKeywordJsonConverter))]
 public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DefinitionsKeyword>
 {
-	internal const string Name = "definitions";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "definitions";
 
 	/// <summary>
 	/// The collection of schema definitions.

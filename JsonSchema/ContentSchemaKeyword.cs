@@ -16,7 +16,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(ContentSchemaKeywordJsonConverter))]
 public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContentSchemaKeyword>
 {
-	internal const string Name = "contentSchema";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "contentSchema";
 
 	/// <summary>
 	/// The schema against which to validate the content.

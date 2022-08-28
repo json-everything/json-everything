@@ -18,7 +18,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(RefKeywordJsonConverter))]
 public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 {
-	internal const string Name = "$ref";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$ref";
 
 	/// <summary>
 	/// The URI reference.

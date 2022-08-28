@@ -22,7 +22,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
 public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<UnevaluatedPropertiesKeyword>
 {
-	internal const string Name = "unevaluatedProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "unevaluatedProperties";
 
 	/// <summary>
 	/// The schema by which to validation additional properties.

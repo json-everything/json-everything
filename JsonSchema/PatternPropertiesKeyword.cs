@@ -24,7 +24,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
 public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<PatternPropertiesKeyword>
 {
-	internal const string Name = "patternProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "patternProperties";
 
 	/// <summary>
 	/// The pattern-keyed schemas.
