@@ -16,8 +16,8 @@ public class Suite
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
-	private const bool _useExternal = false;
-	private const bool _runDraftNext = false;
+	private const bool _useExternal = true;
+	private const bool _runDraftNext = true;
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../JSON-Schema-Test-Suite/remotes";
 
@@ -77,7 +77,7 @@ public class Suite
 				foreach (var test in collection.Tests)
 				{
 					var optional = collection.IsOptional ? "(optional)/" : null;
-					var name = $"{draftFolder}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
+					var name = $"{draftFolder}/{shortFileName}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
 					allTests.Add(new TestCaseData(collection, test, shortFileName, options) { TestName = name });
 				}
 			}
@@ -156,11 +156,11 @@ public class Suite
 	{
 		try
 		{
-			var value = testData?.GetValue<object>();
-			Console.WriteLine("Found value {0}", value.GetType());
+			var value = (testData as JsonValue)?.GetValue<object>();
 			if (value is null) return true;
 			if (value is string) return false;
-			if (value is JsonElement element) return element.TryGetDecimal(out _);
+			if (value is JsonElement { ValueKind: JsonValueKind.Number } element)
+				return element.TryGetDecimal(out _);
 			if (value.GetType().IsNumber())
 			{
 				// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
