@@ -15,7 +15,7 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
 public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<PropertyDependenciesKeyword>
 {
-	internal const string Name = "propertyDependencies";
+	public const string Name = "propertyDependencies";
 
 	/// <summary>
 	/// Gets the collection of dependencies.
@@ -135,11 +135,13 @@ internal class PropertyDependenciesKeywordJsonConverter : JsonConverter<Property
 {
 	public override PropertyDependenciesKeyword? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		var dependencies = JsonSerializer.Deserialize<Dictionary<string, PropertyDependency>>(ref reader, options);
+
+		return new PropertyDependenciesKeyword(dependencies!);
 	}
 
 	public override void Write(Utf8JsonWriter writer, PropertyDependenciesKeyword value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		JsonSerializer.Serialize(writer, value.Dependencies, options);
 	}
 }
