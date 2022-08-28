@@ -8,7 +8,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema.Data;
 
@@ -70,101 +69,29 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		var data = new JsonObject();
+		var data = new Dictionary<string, JsonNode>();
+		var failedReferences = new List<IDataResourceIdentifier>();
 		foreach (var reference in References)
 		{
 			if (!reference.Value.TryResolve(context, out var resolved))
 				failedReferences.Add(reference.Value);
 
-			data.Add(reference.Key, resolved!.Copy());
+			data.Add(reference.Key, resolved!);
 		}
 
-		JsonSchema subschema;
-		try
-		{
-			subschema = data.Deserialize<JsonSchema>()!;
-		}
-		catch (JsonException e)
-		{
+		if (failedReferences.Any())
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
-		}
 
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
 		context.Push(context.EvaluationPath.Combine(Name), subschema);
 		context.Validate();
-		var dataResult = context.LocalResult.IsValid;
+		var result = context.LocalResult.IsValid;
 		context.Pop();
-		if (!dataResult)
+		if (!result)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name);
-	}
-
-	private static bool TryResolve(ValidationContext context, Uri target, out JsonNode? node)
-	{
-		var parts = target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-		var baseUri = parts[0];
-		var fragment = parts.Length > 1 ? parts[1] : null;
-
-		JsonNode? data;
-		if (!string.IsNullOrEmpty(baseUri))
-		{
-			bool wasResolved;
-			if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newUri))
-				wasResolved = TryDownload(newUri, out data);
-			else
-			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
-				var newBaseUri = new Uri(uriFolder, baseUri);
-				wasResolved = TryDownload(newBaseUri, out data);
-			}
-
-			if (!wasResolved)
-			{
-				context.LocalResult.Fail(Name, ErrorMessages.BaseUriResolution, ("uri", baseUri));
-				node = null;
-				return false;
-			}
-		}
-		else
-			data = context.InstanceRoot;
-
-		if (!string.IsNullOrEmpty(fragment))
-		{
-			fragment = $"#{fragment}";
-			if (!JsonPointer.TryParse(fragment, out var pointer))
-			{
-				context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment));
-				node = null;
-				return false;
-			}
-
-			if (!pointer!.TryEvaluate(data, out var resolved))
-			{
-				context.LocalResult.Fail(Name, ErrorMessages.RefResolution, ("uri", fragment));
-				node = null;
-				return false;
-			}
-			data = resolved;
-		}
-
-		node = data;
-		return true;
-	}
-
-	private static bool TryDownload(Uri uri, out JsonNode? node)
-	{
-		var data = Get(uri);
-		if (data == null)
-		{
-			node = null;
-			return false;
-		}
-		node = JsonNode.Parse(data);
-		return true;
 	}
 
 	/// <summary>
