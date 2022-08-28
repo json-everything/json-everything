@@ -15,6 +15,9 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
 public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<PropertyDependenciesKeyword>
 {
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
 	public const string Name = "propertyDependencies";
 
 	/// <summary>
