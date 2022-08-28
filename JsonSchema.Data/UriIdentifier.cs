@@ -53,7 +53,7 @@ public class UriIdentifier : IDataResourceIdentifier
 
 			if (!wasResolved)
 			{
-				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", baseUri));
+				context.LocalResult.Fail(DataKeyword.Name, ErrorMessages.BaseUriResolution, ("uri", baseUri));
 				value = null;
 				return false;
 			}
@@ -66,14 +66,14 @@ public class UriIdentifier : IDataResourceIdentifier
 			fragment = $"#{fragment}";
 			if (!JsonPointer.TryParse(fragment, out var pointer))
 			{
-				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
+				context.LocalResult.Fail(DataKeyword.Name, ErrorMessages.PointerParse, ("fragment", fragment));
 				value = null;
 				return false;
 			}
 
 			if (!pointer!.TryEvaluate(data, out var resolved))
 			{
-				context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", fragment));
+				context.LocalResult.Fail(DataKeyword.Name, ErrorMessages.RefResolution, ("uri", fragment));
 				value = null;
 				return false;
 			}
