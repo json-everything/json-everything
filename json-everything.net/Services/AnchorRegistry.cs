@@ -29,7 +29,10 @@ namespace JsonEverythingNet.Services
 				RegisterAnchors(client, "schema-generation"),
 				RegisterAnchors(client, "schema-vocabs"),
 				RegisterAnchors(client, "vocabs-data-2022"),
-				RegisterAnchors(client, "vocabs-unique-keys")
+				RegisterAnchors(client, "vocabs-unique-keys"),
+				RegisterAnchors(client, "examples/schema/external-schemas"),
+				RegisterAnchors(client, "examples/schema/managing-options"),
+				RegisterAnchors(client, "examples/schema/version-selection")
 			);
 		}
 

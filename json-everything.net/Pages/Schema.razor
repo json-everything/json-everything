@@ -26,26 +26,40 @@
 	<RadzenPanelMenu class="col-2 mh-100 mw-content" Click="SetPagePath">
 		<RadzenPanelMenuItem Text="Playground" Icon="science" Value="@("playground/schema")"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Expanded="true">
-			<RadzenPanelMenuItem Text="Overview" Value="@("schema-basics")"/>
-			<RadzenPanelMenuItem Text="Vocabularies" Value="@("schema-vocabs")"/>
-			<RadzenPanelMenuItem Text="Schema Generation" Value="@("schema-generation")"/>
-			<RadzenPanelMenuItem Text="Data Generation" Value="@("schema-datagen")"/>
-			<RadzenPanelMenuItem Text="Vocabulary: data" Value="@("vocabs-data-2022")"/>
-			<RadzenPanelMenuItem Text="Vocabulary: uniqueKeys" Value="@("vocabs-unique-keys")"/>
+			<RadzenPanelMenuItem Text="Overview" Value="@("schema-basics")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-basics"))"/>
+			<RadzenPanelMenuItem Text="Vocabularies" Value="@("schema-vocabs")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-vocabs"))"/>
+			<RadzenPanelMenuItem Text="Schema Generation" Value="@("schema-generation")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-generation"))"/>
+			<RadzenPanelMenuItem Text="Data Generation" Value="@("schema-datagen")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-datagen"))"/>
+			<RadzenPanelMenuItem Text="Vocabulary: data" Value="@("vocabs-data-2022")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-data-2022"))"/>
+			<RadzenPanelMenuItem Text="Vocabulary: uniqueKeys" Value="@("vocabs-unique-keys")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-unique-keys"))"/>
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Examples (work in progress)" Icon="format_list_numbered" Expanded="true">
-			<RadzenPanelMenuItem Text="Version Selection" Value="@("examples/schema/version-selection")"/>
-			<RadzenPanelMenuItem Text="Managing External Schemas" Value="@("examples/schema/external-schemas")"/>
-			<RadzenPanelMenuItem Text="Managing Options" Value="@("examples/schema/managing-options")"/>
+			<RadzenPanelMenuItem Text="Version Selection" Value="@("examples/schema/version-selection")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/version-selection"))"/>
+			<RadzenPanelMenuItem Text="Managing External Schemas" Value="@("examples/schema/external-schemas")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/external-schemas"))"/>
+			<RadzenPanelMenuItem Text="Managing Options" Value="@("examples/schema/managing-options")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/managing-options"))"/>
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Expanded="true">
-			<RadzenPanelMenuItem Text="JsonSchema.Net" Value="@("release-notes/json-schema")"/>
-			<RadzenPanelMenuItem Text="JsonSchema.Net.Generation" Value="@("release-notes/json-schema-generation")"/>
-			<RadzenPanelMenuItem Text="JsonSchema.Net.DataGeneration" Value="@("release-notes/json-schema-datageneration")"/>
-			<RadzenPanelMenuItem Text="JsonSchema.Net.Data" Value="@("release-notes/json-schema-data")"/>
-			<RadzenPanelMenuItem Text="JsonSchema.Net.UniqueKeys" Value="@("release-notes/json-schema-unique-keys")"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net" Value="@("release-notes/json-schema")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-schema"))"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.Generation" Value="@("release-notes/json-schema-generation")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-schema-generation"))"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.DataGeneration" Value="@("release-notes/json-schema-datageneration")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-schema-datageneration"))"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.Data" Value="@("release-notes/json-schema-data")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-schema-data"))"/>
+			<RadzenPanelMenuItem Text="JsonSchema.Net.UniqueKeys" Value="@("release-notes/json-schema-unique-keys")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-schema-unique-keys"))"/>
 		</RadzenPanelMenuItem>
-		<RadzenPanelMenuItem Text="API Reference (work in progress)" Icon="format_list_numbered" Expanded="true">
+		<RadzenPanelMenuItem Text="API Reference" Icon="format_list_numbered" Expanded="true">
 			<ApiIndex AssemblyContaining="@typeof(JsonSchema)"/>
 			<ApiIndex AssemblyContaining="@typeof(ISchemaRefiner)"/>
 			<ApiIndex AssemblyContaining="@typeof(NumberRange)"/>
@@ -157,6 +171,7 @@
 </div>
 
 @code {	
+    private const string _pageName = "json-schema";
     private const string _generateDataText = "Generate Data";
     private const string _generateSchemaText = "Generate Schema";
 
