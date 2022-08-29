@@ -29,8 +29,8 @@ public class UnrecognizedKeywordTests
 		var result = schema!.Validate("{}", new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(1, result.Annotations.Count());
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo((JsonNode?)result.Annotations.First().Value));
+		Assert.AreEqual(1, result.Annotations!.Count);
+		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations.First().Value));
 	}
 
 	[Test]
