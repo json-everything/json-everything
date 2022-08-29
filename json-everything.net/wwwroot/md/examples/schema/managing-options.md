@@ -45,7 +45,7 @@ As mentioned in the [Handling Externally-defined Schemas](#handling-externally-d
 SchemaRegistry.Global.Register(schema);
 ```
 
-When the validation runs, a new, empty registry is created and set onto the options.  When the validator encounters a `$ref` keyword with a URI for an external document, it calls `options.SchemaRegistry.Get()` to retrieve the referenced schema.  Note that this is the options objects local copy.  Since you haven't set anything there, nothing is found.  So it then checks the global registry and finds it.
+When the validation runs, a new, empty registry is created and set onto the options.  When the validator encounters a `$ref` keyword with a URI for an external document, it calls `options.SchemaRegistry.Get()` to retrieve the referenced schema.  Note that this is the options object's local copy.  Since you haven't set anything there, nothing is found.  So it then checks the global registry and finds it.
 
 It's doing this for you:
 

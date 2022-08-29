@@ -4,7 +4,7 @@ JSON Schema has multiple ways to reference other schemas.  This is done to both 
 
 References typically come in two flavors: internal and external.  Internal references can be identified by the `$ref` keyword along with a fragment-only URI in the form of a JSON Pointer, such as `#/$defs/foo`.  However, it's common to define your schemas across several files.  These are external references and the value for `$ref` in these cases needs to indicate the file, e.g. `https://my-example.org/schema`.
 
-***NOTE** You _can_ reference a subschema of an external document by giving the patht to the file and a pointer to a subschema, but this isn't usually done.  Instead, that subschema would be extracted into its own file to be referenced by both schemas.*
+***NOTE** You _can_ reference a subschema of an external document by giving the path to the file and a pointer to a subschema, but this isn't usually done.  Instead, that subschema would be extracted into its own file to be referenced by both schemas.*
 
 ## Resolving references
 
@@ -29,9 +29,9 @@ It's best practice to ensure all of your schemas declare an `$id` keyword at the
 
 ## Dynamically loading references
 
-An alternative to preloading schemas is setting up an automatic download by setting the `SchemaRegistry.Default.Fetch` function property.
+An alternative to preloading schemas is setting up an automatic download by setting the `SchemaRegistry.Global.Fetch` function property.
 
-***DISCLAIMER** Automatically downloading external data is [explicitly recommended against](https://json-schema.org/draft/2020-12/json-schema-core.html#name-schema-references) by the specficiation.  This functionality is added for convenience and disabled by default.*
+***DISCLAIMER** Automatically downloading external data is [explicitly recommended against](https://json-schema.org/draft/2020-12/json-schema-core.html#name-schema-references) by the specification.  This functionality is added for convenience and disabled by default.*
 
 ```c#
 JsonSchema? DownloadSchema(Uri uri)
