@@ -1,4 +1,4 @@
-# 3.0.0 (https://github.com/gregsdennis/json-everything/pull/316)
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/316)
 
 Supports the 2022 version of the vocabulary.  This is a breaking change from the previous version.
 

@@ -1,4 +1,4 @@
-# [3.1.5](https://github.com/gregsdennis/json-everything/pull/300)
+# [3.2.0](https://github.com/gregsdennis/json-everything/pull/300)
 
 Added `JsonSchemaBuilderExtensions.PatternProperties()` overloads that take strings in place of `Regex`es.  There is no syntax highlighting support for these overloads, however.
 
