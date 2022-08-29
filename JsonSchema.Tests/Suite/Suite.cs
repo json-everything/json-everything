@@ -16,7 +16,8 @@ public class Suite
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
-	private const bool _useExternal = false;
+	private const bool _useExternal = true;
+	private const bool _runDraftNext = true;
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../JSON-Schema-Test-Suite/remotes";
 
@@ -25,7 +26,8 @@ public class Suite
 		return GetTests("draft6")
 			.Concat(GetTests("draft7"))
 			.Concat(GetTests("draft2019-09"))
-			.Concat(GetTests("draft2020-12"));
+			.Concat(GetTests("draft2020-12"))
+			.Concat(_runDraftNext ? GetTests("draft-next") : Enumerable.Empty<TestCaseData>());
 	}
 
 	private static IEnumerable<TestCaseData> GetTests(string draftFolder)
@@ -63,6 +65,12 @@ public class Suite
 		foreach (var fileName in fileNames)
 		{
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
+
+			// adjust for format
+			options.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
+											  // uri-template will throw an exception as it's explicitly unsupported
+											  shortFileName != "uri-template";
+
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
 			{
@@ -75,8 +83,9 @@ public class Suite
 				foreach (var test in collection.Tests)
 				{
 					var optional = collection.IsOptional ? "(optional)/" : null;
-					var name = $"{draftFolder}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
-					allTests.Add(new TestCaseData(collection, test, shortFileName, options) { TestName = name });
+					var name = $"{draftFolder}/{shortFileName}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
+					var optionsCopy = ValidationOptions.From(options);
+					allTests.Add(new TestCaseData(collection, test, shortFileName, optionsCopy) { TestName = name });
 				}
 			}
 		}
@@ -127,7 +136,7 @@ public class Suite
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = collection.Schema.Validate(test.Data, options);
-		//result.ToDetailed();
+		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
@@ -154,11 +163,11 @@ public class Suite
 	{
 		try
 		{
-			var value = testData?.GetValue<object>();
-			Console.WriteLine("Found value {0}", value.GetType());
+			var value = (testData as JsonValue)?.GetValue<object>();
 			if (value is null) return true;
 			if (value is string) return false;
-			if (value is JsonElement element) return element.TryGetDecimal(out _);
+			if (value is JsonElement { ValueKind: JsonValueKind.Number } element)
+				return element.TryGetDecimal(out _);
 			if (value.GetType().IsNumber())
 			{
 				// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
@@ -175,8 +184,9 @@ public class Suite
 	}
 
 	[Test]
-	public void EnsureUsingLocalTestsBeforeMerging()
+	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
 		Assert.IsFalse(_useExternal);
+		Assert.IsFalse(_runDraftNext);
 	}
 }
