@@ -1,3 +1,7 @@
+# [3.0.3](https://github.com/gregsdennis/json-everything/pull/327)
+
+[#325](https://github.com/gregsdennis/json-everything/issues/325) - [@jnystad](https://github.com/jnystad) found an issue with `[Nullable]` where it was propagating to other properties of the same type and suggested a fix.
+
 # [3.0.2](https://github.com/gregsdennis/json-everything/pull/301)
 
 [#296](https://github.com/gregsdennis/json-everything/pull/296) - Updated handling logic for `[JsonIgnore]` to consider the attribute's `Condition` property.
