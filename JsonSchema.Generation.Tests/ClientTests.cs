@@ -236,4 +236,26 @@ public class ClientTests
 		Assert.AreEqual(1, personRefiner.FoundAttributes[nameof(Person.LastName)].Count);
 		Assert.IsTrue(personRefiner.FoundAttributes[nameof(Person.LastName)][0] == typeof(MyAttribute2));
 	}
+
+	private class TypeWithSomeNullableOthersNot
+	{
+		[Nullable(true)]
+		public string Nullable { get; set; }
+		public string NotNullable { get; set; }
+	}
+
+	[Test]
+	public void Issue325_NullableBleedingAcrossMembers()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Nullable", new JsonSchemaBuilder().Type(SchemaValueType.String | SchemaValueType.Null)),
+				("NotNullable", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<TypeWithSomeNullableOthersNot>();
+
+		AssertEqual(expected, actual);
+	}
 }

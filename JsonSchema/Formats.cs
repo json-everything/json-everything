@@ -179,7 +179,8 @@ public static class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		throw new NotSupportedException("The UriTemplate class has not been ported to .Net Standard/Core yet.");
+		// The UriTemplate class has not been ported to .Net Standard/Core yet.
+		return false;
 		//return System.UriTemplate.Match(node.GetValue<string>());
 	}
 

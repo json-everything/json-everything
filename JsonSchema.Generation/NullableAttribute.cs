@@ -8,7 +8,7 @@ namespace Json.Schema.Generation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class NullableAttribute : Attribute
+public class NullableAttribute : Attribute, IAttributeHandler
 {
 	/// <summary>
 	/// Gets whether `null` should be included in the `type` keyword.
@@ -22,5 +22,9 @@ public class NullableAttribute : Attribute
 	public NullableAttribute(bool isNullable)
 	{
 		IsNullable = isNullable;
+	}
+
+	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
+	{
 	}
 }
