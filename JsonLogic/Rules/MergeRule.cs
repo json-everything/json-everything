@@ -15,11 +15,11 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MergeRuleJsonConverter))]
 public class MergeRule : Rule
 {
-	private readonly List<Rule> _items;
+	internal List<Rule> Items { get; }
 
 	internal MergeRule(params Rule[] items)
 	{
-		_items = items.ToList();
+		Items = items.ToList();
 	}
 
 	/// <summary>
@@ -33,7 +33,7 @@ public class MergeRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var items = _items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
+		var items = Items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
 
 		return items.ToJsonArray();
 	}
@@ -57,6 +57,9 @@ internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
 
 	public override void Write(Utf8JsonWriter writer, MergeRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("merge");
+		writer.WriteRules(value.Items, options);
+		writer.WriteEndObject();
 	}
 }

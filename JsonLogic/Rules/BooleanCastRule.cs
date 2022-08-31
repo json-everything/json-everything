@@ -12,11 +12,11 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(BooleanCastRuleJsonConverter))]
 public class BooleanCastRule : Rule
 {
-	private readonly Rule _value;
+	internal Rule Value { get; }
 
 	internal BooleanCastRule(Rule value)
 	{
-		_value = value;
+		Value = value;
 	}
 
 	/// <summary>
@@ -30,9 +30,9 @@ public class BooleanCastRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var value = _value.Apply(data, contextData);
+		var value = Value.Apply(data, contextData);
 
-		return _value.Apply(data, contextData).IsTruthy();
+		return Value.Apply(data, contextData).IsTruthy();
 	}
 }
 
@@ -50,6 +50,11 @@ internal class BooleanCastRuleJsonConverter : JsonConverter<BooleanCastRule>
 
 	public override void Write(Utf8JsonWriter writer, BooleanCastRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("!!");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Value, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

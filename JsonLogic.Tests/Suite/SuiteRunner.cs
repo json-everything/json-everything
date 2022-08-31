@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Json.More;
@@ -12,6 +13,8 @@ namespace Json.Logic.Tests.Suite;
 
 public class SuiteRunner
 {
+	private static readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
 	public static IEnumerable<TestCaseData> Suite()
 	{
 		return Task.Run(async () =>
@@ -55,5 +58,9 @@ public class SuiteRunner
 		}
 
 		JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
+
+		var serialized = JsonSerializer.Serialize(rule, _serializerOptions);
+
+		Assert.AreEqual(test.Logic, serialized);
 	}
 }

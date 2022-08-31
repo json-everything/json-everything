@@ -14,20 +14,20 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(LessThanEqualRuleJsonConverter))]
 public class LessThanEqualRule : Rule
 {
-	private readonly Rule _a;
-	private readonly Rule _b;
-	private readonly Rule? _c;
+	internal Rule A { get; }
+	internal Rule B { get; }
+	internal Rule? C { get; }
 
 	internal LessThanEqualRule(Rule a, Rule b)
 	{
-		_a = a;
-		_b = b;
+		A = a;
+		B = b;
 	}
 	internal LessThanEqualRule(Rule a, Rule b, Rule c)
 	{
-		_a = a;
-		_b = b;
-		_c = c;
+		A = a;
+		B = b;
+		C = c;
 	}
 
 	/// <summary>
@@ -41,10 +41,10 @@ public class LessThanEqualRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		if (_c == null)
+		if (C == null)
 		{
-			var a = _a.Apply(data, contextData);
-			var b = _b.Apply(data, contextData);
+			var a = A.Apply(data, contextData);
+			var b = B.Apply(data, contextData);
 
 			var numberA = a.Numberify();
 			var numberB = b.Numberify();
@@ -55,15 +55,15 @@ public class LessThanEqualRule : Rule
 			return numberA <= numberB;
 		}
 
-		var low = (_a.Apply(data, contextData) as JsonValue)?.GetNumber();
+		var low = (A.Apply(data, contextData) as JsonValue)?.GetNumber();
 		if (low == null)
 			throw new JsonLogicException("Lower bound must be a number.");
 
-		var value = (_b.Apply(data, contextData) as JsonValue)?.GetNumber();
+		var value = (B.Apply(data, contextData) as JsonValue)?.GetNumber();
 		if (value == null)
 			throw new JsonLogicException("Value must be a number.");
 
-		var high = (_c.Apply(data, contextData) as JsonValue)?.GetNumber();
+		var high = (C.Apply(data, contextData) as JsonValue)?.GetNumber();
 		if (high == null)
 			throw new JsonLogicException("Upper bound must be a number.");
 
@@ -87,6 +87,14 @@ internal class LessThanEqualRuleJsonConverter : JsonConverter<LessThanEqualRule>
 
 	public override void Write(Utf8JsonWriter writer, LessThanEqualRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("<=");
+		writer.WriteStartArray();
+		writer.WriteRule(value.A, options);
+		writer.WriteRule(value.B, options);
+		if (value.C != null)
+			writer.WriteRule(value.C, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

@@ -20,15 +20,15 @@ public class ReduceRule : Rule
 
 	private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-	private readonly Rule _input;
-	private readonly Rule _rule;
-	private readonly Rule _initial;
+	internal Rule Input { get; }
+	internal Rule Rule { get; }
+	internal Rule Initial { get; }
 
 	internal ReduceRule(Rule input, Rule rule, Rule initial)
 	{
-		_input = input;
-		_rule = rule;
-		_initial = initial;
+		Input = input;
+		Rule = rule;
+		Initial = initial;
 	}
 
 	/// <summary>
@@ -42,8 +42,8 @@ public class ReduceRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var input = _input.Apply(data, contextData);
-		var accumulator = _initial.Apply(data, contextData);
+		var input = Input.Apply(data, contextData);
+		var accumulator = Initial.Apply(data, contextData);
 
 		if (input is null) return accumulator;
 		if (input is not JsonArray arr)
@@ -58,7 +58,7 @@ public class ReduceRule : Rule
 			};
 			var item = JsonSerializer.SerializeToNode(intermediary, _options);
 
-			accumulator = _rule.Apply(data, item);
+			accumulator = Rule.Apply(data, item);
 		}
 
 		return accumulator;
@@ -79,6 +79,13 @@ internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>
 
 	public override void Write(Utf8JsonWriter writer, ReduceRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("reduce");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Input, options);
+		writer.WriteRule(value.Rule, options);
+		writer.WriteRule(value.Initial, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

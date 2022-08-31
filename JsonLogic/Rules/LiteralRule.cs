@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.More;
 
 namespace Json.Logic.Rules;
@@ -8,15 +11,16 @@ namespace Json.Logic.Rules;
 /// </summary>
 /// <remarks>This is not exactly part of the specification, but it helps things in this library.</remarks>
 [Operator("")]
+[JsonConverter(typeof(LiteralRuleJsonConverter))]
 public class LiteralRule : Rule
 {
-	private readonly JsonNode? _value;
+	internal JsonNode? Value { get; }
 
 	internal static readonly LiteralRule Null = new(null);
 
 	internal LiteralRule(JsonNode? value)
 	{
-		_value = ReferenceEquals(JsonNull.SignalNode, value) ? null : value.Copy();
+		Value = ReferenceEquals(JsonNull.SignalNode, value) ? null : value.Copy();
 	}
 
 	/// <summary>
@@ -30,6 +34,20 @@ public class LiteralRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		return _value;
+		return Value;
+	}
+}
+
+internal class LiteralRuleJsonConverter : JsonConverter<LiteralRule>
+{
+	public override LiteralRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		// this is handled by Rule
+		throw new NotImplementedException();
+	}
+
+	public override void Write(Utf8JsonWriter writer, LiteralRule value, JsonSerializerOptions options)
+	{
+		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

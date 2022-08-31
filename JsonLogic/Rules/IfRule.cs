@@ -14,11 +14,11 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(IfRuleJsonConverter))]
 public class IfRule : Rule
 {
-	private readonly List<Rule> _components;
+	internal List<Rule> Components { get; }
 
 	internal IfRule(params Rule[] components)
 	{
-		_components = new List<Rule>(components);
+		Components = new List<Rule>(components);
 	}
 
 	/// <summary>
@@ -33,22 +33,22 @@ public class IfRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		bool condition;
-		switch (_components.Count)
+		switch (Components.Count)
 		{
 			case 0:
 				return null;
 			case 1:
-				return _components[0].Apply(data, contextData);
+				return Components[0].Apply(data, contextData);
 			case 2:
-				condition = _components[0].Apply(data, contextData).IsTruthy();
-				var thenResult = _components[1];
+				condition = Components[0].Apply(data, contextData).IsTruthy();
+				var thenResult = Components[1];
 
 				return condition
 					? thenResult.Apply(data, contextData)
 					: null;
 			default:
-				var currentCondition = _components[0];
-				var currentTrueResult = _components[1];
+				var currentCondition = Components[0];
+				var currentTrueResult = Components[1];
 				var elseIndex = 2;
 
 				while (currentCondition != null)
@@ -58,14 +58,14 @@ public class IfRule : Rule
 					if (condition)
 						return currentTrueResult.Apply(data, contextData);
 
-					if (elseIndex == _components.Count) return null;
+					if (elseIndex == Components.Count) return null;
 
-					currentCondition = _components[elseIndex++];
+					currentCondition = Components[elseIndex++];
 
-					if (elseIndex >= _components.Count)
+					if (elseIndex >= Components.Count)
 						return currentCondition.Apply(data, contextData);
 
-					currentTrueResult = _components[elseIndex++];
+					currentTrueResult = Components[elseIndex++];
 				}
 				break;
 		}
@@ -87,6 +87,9 @@ internal class IfRuleJsonConverter : JsonConverter<IfRule>
 
 	public override void Write(Utf8JsonWriter writer, IfRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("if");
+		writer.WriteRules(value.Components, options);
+		writer.WriteEndObject();
 	}
 }

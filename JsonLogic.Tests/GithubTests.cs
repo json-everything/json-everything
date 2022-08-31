@@ -121,7 +121,7 @@ public class GithubTests
 		var rule = JsonSerializer.Deserialize<Rule>("{ \"+\" : [ 1, 2 ] }");
 		
 		Assert.IsInstanceOf<AddRule>(rule);
-		Assert.IsTrue(rule.Apply().IsEquivalentTo(3));
+		Assert.IsTrue(rule!.Apply().IsEquivalentTo(3));
 	}
 
 	[Test]
@@ -135,7 +135,7 @@ public class GithubTests
 }");
 
 		var rule = node.Deserialize<Rule>();
-		var result = rule.Apply(JsonNode.Parse("{\"value\": null}"));
+		var result = rule!.Apply(JsonNode.Parse("{\"value\": null}"));
 
 		Assert.IsTrue(result.IsEquivalentTo(true));
 	}

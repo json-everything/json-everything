@@ -12,11 +12,11 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(LogRuleJsonConverter))]
 public class LogRule : Rule
 {
-	private readonly Rule _log;
+	internal Rule Log { get; }
 
 	internal LogRule(Rule log)
 	{
-		_log = log;
+		Log = log;
 	}
 
 	/// <summary>
@@ -30,7 +30,7 @@ public class LogRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var log = _log.Apply(data, contextData);
+		var log = Log.Apply(data, contextData);
 
 		Console.WriteLine(log);
 
@@ -52,6 +52,9 @@ internal class LogRuleJsonConverter : JsonConverter<LogRule>
 
 	public override void Write(Utf8JsonWriter writer, LogRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("log");
+		writer.WriteRule(value.Log, options);
+		writer.WriteEndObject();
 	}
 }

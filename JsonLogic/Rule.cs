@@ -120,7 +120,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, Rule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteRule(value, options);
 	}
 }
 

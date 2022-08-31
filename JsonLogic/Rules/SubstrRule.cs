@@ -13,20 +13,20 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(SubstrRuleJsonConverter))]
 public class SubstrRule : Rule
 {
-	private readonly Rule _input;
-	private readonly Rule _start;
-	private readonly Rule? _count;
+	internal Rule Input { get; }
+	internal Rule Start { get; }
+	internal Rule? Count { get; }
 
 	internal SubstrRule(Rule input, Rule start)
 	{
-		_input = input;
-		_start = start;
+		Input = input;
+		Start = start;
 	}
 	internal SubstrRule(Rule input, Rule start, Rule count)
 	{
-		_input = input;
-		_start = start;
-		_count = count;
+		Input = input;
+		Start = start;
+		Count = count;
 	}
 
 	/// <summary>
@@ -40,8 +40,8 @@ public class SubstrRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var input = _input.Apply(data, contextData);
-		var start = _start.Apply(data, contextData);
+		var input = Input.Apply(data, contextData);
+		var start = Start.Apply(data, contextData);
 
 		if (input is not JsonValue inputValue || !inputValue.TryGetValue(out string? stringInput))
 			throw new JsonLogicException($"Cannot substring a {input.JsonType()}.");
@@ -56,9 +56,9 @@ public class SubstrRule : Rule
 			numberStart = Math.Max(stringInput.Length + numberStart, 0);
 		if (numberStart >= stringInput.Length) return string.Empty;
 
-		if (_count == null) return stringInput[numberStart..];
+		if (Count == null) return stringInput[numberStart..];
 
-		var count = _count.Apply(data, contextData);
+		var count = Count.Apply(data, contextData);
 		if (count is not JsonValue countValue || countValue.GetInteger() == null)
 			throw new JsonLogicException("Count value must be an integer");
 
@@ -88,6 +88,14 @@ internal class SubstrRuleJsonConverter : JsonConverter<SubstrRule>
 
 	public override void Write(Utf8JsonWriter writer, SubstrRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("substr");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Input, options);
+		writer.WriteRule(value.Start, options);
+		if (value.Count != null)
+			writer.WriteRule(value.Count, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

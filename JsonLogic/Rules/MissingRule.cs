@@ -15,11 +15,11 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MissingRuleJsonConverter))]
 public class MissingRule : Rule
 {
-	private readonly Rule[] _components;
+	internal Rule[] Components { get; }
 
 	internal MissingRule(params Rule[] components)
 	{
-		_components = components;
+		Components = components;
 	}
 
 	/// <summary>
@@ -33,7 +33,7 @@ public class MissingRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var expected = _components.SelectMany(c => c.Apply(data, contextData).Flatten())
+		var expected = Components.SelectMany(c => c.Apply(data, contextData).Flatten())
 			.OfType<JsonValue>()
 			.Where(v => v.TryGetValue(out string? _));
 
@@ -72,6 +72,9 @@ internal class MissingRuleJsonConverter : JsonConverter<MissingRule>
 
 	public override void Write(Utf8JsonWriter writer, MissingRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("missing");
+		writer.WriteRules(value.Components, options);
+		writer.WriteEndObject();
 	}
 }

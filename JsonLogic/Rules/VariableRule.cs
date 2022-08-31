@@ -13,20 +13,20 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(VariableRuleJsonConverter))]
 public class VariableRule : Rule
 {
-	private readonly Rule? _path;
-	private readonly Rule? _defaultValue;
+	internal Rule? Path { get; }
+	internal Rule? DefaultValue { get; }
 
 	internal VariableRule()
 	{
 	}
 	internal VariableRule(Rule path)
 	{
-		_path = path;
+		Path = path;
 	}
 	internal VariableRule(Rule path, Rule defaultValue)
 	{
-		_path = path;
-		_defaultValue = defaultValue;
+		Path = path;
+		DefaultValue = defaultValue;
 	}
 
 	/// <summary>
@@ -40,9 +40,9 @@ public class VariableRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		if (_path == null) return data;
+		if (Path == null) return data;
 
-		var path = _path.Apply(data, contextData);
+		var path = Path.Apply(data, contextData);
 		var pathString = path.Stringify()!;
 		if (pathString == string.Empty) return contextData ?? data;
 
@@ -51,7 +51,7 @@ public class VariableRule : Rule
 			pointer.TryEvaluate(data, out pathEval))
 			return pathEval;
 
-		return _defaultValue?.Apply(data, contextData) ?? null;
+		return DefaultValue?.Apply(data, contextData) ?? null;
 	}
 }
 
@@ -78,6 +78,14 @@ internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
 
 	public override void Write(Utf8JsonWriter writer, VariableRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("var");
+		writer.WriteStartArray();
+		if (value.Path != null)
+			writer.WriteRule(value.Path, options);
+		if (value.DefaultValue != null)
+			writer.WriteRule(value.DefaultValue, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }
