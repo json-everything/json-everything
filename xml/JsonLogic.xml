@@ -398,6 +398,28 @@
             Adapted from [@marvindv/jsonlogic_rs](https://github.com/marvindv/jsonlogic_rs/blob/b2ad93af575f19c6b220a6a54d599e104e72a630/src/operators/logic.rs#L33).
             </remarks>
         </member>
+        <member name="T:Json.Logic.JsonWriterExtensions">
+            <summary>
+            Provides extended functionality for serializing rules.
+            </summary>
+        </member>
+        <member name="M:Json.Logic.JsonWriterExtensions.WriteRule(System.Text.Json.Utf8JsonWriter,Json.Logic.Rule,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Writes a rule to the stream, taking its specific type into account.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="rule">The rule.</param>
+            <param name="options">Serializer options.</param>
+        </member>
+        <member name="M:Json.Logic.JsonWriterExtensions.WriteRules(System.Text.Json.Utf8JsonWriter,System.Collections.Generic.IEnumerable{Json.Logic.Rule},System.Text.Json.JsonSerializerOptions,System.Boolean)">
+            <summary>
+            Writes a rule to the stream, taking its specific type into account.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="rules">The rules.</param>
+            <param name="options">Serializer options.</param>
+            <param name="unwrapSingle">Unwraps single items instead of writing an array.</param>
+        </member>
         <member name="T:Json.Logic.OperatorAttribute">
             <summary>
             Decorates <see cref="T:Json.Logic.Rule"/> implementations to identify a rule.
@@ -488,6 +510,11 @@
             Indicates whether <see langword="null" /> should be passed to the converter
             on serialization, and whether <see cref="F:System.Text.Json.JsonTokenType.Null" />
             should be passed on deserialization.
+            </summary>
+        </member>
+        <member name="P:Json.Logic.LogicComponentConverter.SaveSource">
+            <summary>
+            Gets or sets whether to save the source data for re-serialization; default is true.
             </summary>
         </member>
         <member name="M:Json.Logic.LogicComponentConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">

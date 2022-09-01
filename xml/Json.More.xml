@@ -341,11 +341,12 @@
              - https://github.com/dotnet/runtime/issues/33388
              </remarks>
         </member>
-        <member name="M:Json.More.JsonNodeExtensions.AsJsonString(System.Text.Json.Nodes.JsonNode)">
+        <member name="M:Json.More.JsonNodeExtensions.AsJsonString(System.Text.Json.Nodes.JsonNode,System.Text.Json.JsonSerializerOptions)">
             <summary>
             Gets JSON string representation for <see cref="T:System.Text.Json.Nodes.JsonNode"/>, including null support.
             </summary>
             <param name="node">A node.</param>
+            <param name="options">Serializer options</param>
             <returns>JSON string representation.</returns>
         </member>
         <member name="M:Json.More.JsonNodeExtensions.GetNumber(System.Text.Json.Nodes.JsonValue)">
