@@ -59,7 +59,7 @@ internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("merge");
-		writer.WriteRules(value.Items, options);
+		writer.WriteRules(value.Items, options, false);
 		writer.WriteEndObject();
 	}
 }

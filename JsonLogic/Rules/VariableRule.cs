@@ -80,12 +80,16 @@ internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("var");
-		writer.WriteStartArray();
-		if (value.Path != null)
-			writer.WriteRule(value.Path, options);
 		if (value.DefaultValue != null)
+		{
+			writer.WriteStartArray();
+			writer.WriteRule(value.Path, options);
 			writer.WriteRule(value.DefaultValue, options);
-		writer.WriteEndArray();
+			writer.WriteEndArray();
+		}
+		else
+			writer.WriteRule(value.Path, options);
+
 		writer.WriteEndObject();
 	}
 }

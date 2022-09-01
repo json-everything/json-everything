@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
@@ -13,8 +14,6 @@ namespace Json.Logic.Tests.Suite;
 
 public class SuiteRunner
 {
-	private static readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
-
 	public static IEnumerable<TestCaseData> Suite()
 	{
 		return Task.Run(async () =>
@@ -58,9 +57,29 @@ public class SuiteRunner
 		}
 
 		JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
-
-		var serialized = JsonSerializer.Serialize(rule, _serializerOptions);
-
-		Assert.AreEqual(test.Logic, serialized);
 	}
+
+	private static readonly JsonSerializerOptions _spellingTestSerializerOptions =
+		new()
+		{
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			Converters = { new LogicComponentConverter { SaveSource = false } }
+		};
+
+	[TestCaseSource(nameof(Suite))]
+	public void SpellingTest(Test test)
+	{
+		var node = JsonNode.Parse(test.Logic);
+		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, _spellingTestSerializerOptions);
+
+		var serialized = JsonSerializer.SerializeToNode(rule);
+
+		if (node.IsEquivalentTo(serialized)) return;
+
+		Console.WriteLine($"Expected: {node.AsJsonString(_spellingTestSerializerOptions)}");
+		Console.WriteLine($"Actual:   {serialized.AsJsonString(_spellingTestSerializerOptions)}");
+		Assert.Inconclusive();
+	}
+
+
 }

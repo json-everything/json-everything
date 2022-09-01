@@ -14,6 +14,8 @@ namespace Json.Logic;
 [JsonConverter(typeof(LogicComponentConverter))]
 public abstract class Rule
 {
+	internal JsonNode? Source { get; set; }
+
 	/// <summary>
 	/// Applies the rule to the input data.
 	/// </summary>
@@ -79,6 +81,11 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// </summary>
 	public override bool HandleNull => true;
 
+	/// <summary>
+	/// Gets or sets whether to save the source data for re-serialization; default is true.
+	/// </summary>
+	public bool SaveSource { get; set; } = true;
+
 	/// <summary>Reads and converts the JSON to type <see cref="Rule"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
@@ -86,10 +93,11 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <returns>The converted value.</returns>
 	public override Rule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		if (reader.TokenType == JsonTokenType.StartObject)
-		{
-			var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		Rule rule;
 
+		if (node is JsonObject)
+		{
 			if (node is not JsonObject { Count: 1 } data)
 				throw new JsonException("Rules must be objects that contain exactly one operator key with an array of arguments.");
 
@@ -99,19 +107,21 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			if (ruleType == null)
 				throw new JsonException($"Cannot identify rule for {op}");
 
-			return args is null 
+			rule = args is null 
 				? (Rule)JsonSerializer.Deserialize("[]", ruleType, options)!
 				: (Rule)args.Deserialize(ruleType, options)!;
 		}
-
-		if (reader.TokenType == JsonTokenType.StartArray)
+		else if (node is JsonArray)
 		{
-			var data = JsonSerializer.Deserialize<List<Rule>>(ref reader, options)!;
-			return new RuleCollection(data);
+			var data = node.Deserialize<List<Rule>>(options)!;
+			rule = new RuleCollection(data);
 		}
+		else
+			rule = new LiteralRule(node);
 
-		var literal = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-		return new LiteralRule(literal);
+		if (SaveSource)
+			rule.Source = node;
+		return rule;
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -120,6 +130,12 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, Rule value, JsonSerializerOptions options)
 	{
+		if (value.Source != null)
+		{
+			JsonSerializer.Serialize(writer, value.Source, options);
+			return;
+		}
+
 		writer.WriteRule(value, options);
 	}
 }

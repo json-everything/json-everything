@@ -56,9 +56,7 @@ internal class NotRuleJsonConverter : JsonConverter<NotRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("!");
-		writer.WriteStartArray();
 		writer.WriteRule(value.Value, options);
-		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}
 }
