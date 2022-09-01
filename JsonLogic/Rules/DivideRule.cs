@@ -12,13 +12,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(DivideRuleJsonConverter))]
 public class DivideRule : Rule
 {
-	private readonly Rule _a;
-	private readonly Rule _b;
+	internal Rule A { get; }
+	internal Rule B { get; }
 
 	internal DivideRule(Rule a, Rule b)
 	{
-		_a = a;
-		_b = b;
+		A = a;
+		B = b;
 	}
 
 	/// <summary>
@@ -32,8 +32,8 @@ public class DivideRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var a = _a.Apply(data, contextData);
-		var b = _b.Apply(data, contextData);
+		var a = A.Apply(data, contextData);
+		var b = B.Apply(data, contextData);
 
 		var numberA = a.Numberify();
 		var numberB = b.Numberify();
@@ -62,6 +62,12 @@ internal class DivideRuleJsonConverter : JsonConverter<DivideRule>
 
 	public override void Write(Utf8JsonWriter writer, DivideRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("/");
+		writer.WriteStartArray();
+		writer.WriteRule(value.A, options);
+		writer.WriteRule(value.B, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

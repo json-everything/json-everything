@@ -14,12 +14,12 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MultiplyRuleJsonConverter))]
 public class MultiplyRule : Rule
 {
-	private readonly List<Rule> _items;
+	internal List<Rule> Items { get; }
 
 	internal MultiplyRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> { a };
-		_items.AddRange(more);
+		Items = new List<Rule> { a };
+		Items.AddRange(more);
 	}
 
 	/// <summary>
@@ -35,7 +35,7 @@ public class MultiplyRule : Rule
 	{
 		decimal result = 1;
 
-		foreach (var item in _items)
+		foreach (var item in Items)
 		{
 			var value = item.Apply(data, contextData);
 
@@ -65,6 +65,9 @@ internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
 
 	public override void Write(Utf8JsonWriter writer, MultiplyRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("*");
+		writer.WriteRules(value.Items, options);
+		writer.WriteEndObject();
 	}
 }

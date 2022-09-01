@@ -14,12 +14,12 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(AndRuleJsonConverter))]
 public class AndRule : Rule
 {
-	private readonly List<Rule> _items;
+	internal List<Rule> Items { get; }
 
 	internal AndRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> { a };
-		_items.AddRange(more);
+		Items = new List<Rule> { a };
+		Items.AddRange(more);
 	}
 
 	/// <summary>
@@ -33,7 +33,7 @@ public class AndRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var items = _items.Select(i => i.Apply(data, contextData));
+		var items = Items.Select(i => i.Apply(data, contextData));
 		JsonNode? first = false;
 		foreach (var x in items)
 		{
@@ -59,6 +59,9 @@ internal class AndRuleJsonConverter : JsonConverter<AndRule>
 
 	public override void Write(Utf8JsonWriter writer, AndRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("and");
+		writer.WriteRules(value.Items, options);
+		writer.WriteEndObject();
 	}
 }

@@ -14,12 +14,12 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(SubtractRuleJsonConverter))]
 public class SubtractRule : Rule
 {
-	private readonly List<Rule> _items;
+	internal List<Rule> Items;
 
 	internal SubtractRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> { a };
-		_items.AddRange(more);
+		Items = new List<Rule> { a };
+		Items.AddRange(more);
 	}
 
 	/// <summary>
@@ -33,9 +33,9 @@ public class SubtractRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		if (_items.Count == 0) return 0;
+		if (Items.Count == 0) return 0;
 
-		var value = _items[0].Apply(data, contextData);
+		var value = Items[0].Apply(data, contextData);
 		var number = value.Numberify();
 
 		if (number == null)
@@ -43,9 +43,9 @@ public class SubtractRule : Rule
 
 		var result = number.Value;
 
-		if (_items.Count == 1) return -result;
+		if (Items.Count == 1) return -result;
 
-		foreach (var item in _items.Skip(1))
+		foreach (var item in Items.Skip(1))
 		{
 			value = item.Apply(data, contextData);
 
@@ -75,6 +75,9 @@ internal class SubtractRuleJsonConverter : JsonConverter<SubtractRule>
 
 	public override void Write(Utf8JsonWriter writer, SubtractRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("-");
+		writer.WriteRules(value.Items, options);
+		writer.WriteEndObject();
 	}
 }

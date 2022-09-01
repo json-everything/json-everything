@@ -1,3 +1,7 @@
+# [3.2.0](https://github.com/gregsdennis/json-everything/pull/329)
+
+[#328](https://github.com/gregsdennis/json-everything/issues/328) - Added serialization support.
+
 # [3.1.2](https://github.com/gregsdennis/json-everything/pull/320)
 
 [#318](https://github.com/gregsdennis/json-everything/issues/318)/[#319](https://github.com/gregsdennis/json-everything/pull/319) - Conversions to numbers shouldn't be culture-dependent.  Thanks to [@warappa](https://github.com/warappa) for reporting and fixing this.

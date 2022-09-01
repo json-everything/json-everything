@@ -1,3 +1,7 @@
+# [1.7.0](https://github.com/gregsdennis/json-everything/pull/328)
+
+Added optional parameter for serializer option in `.AsJsonString()` extensions.
+
 # [1.6.0](https://github.com/gregsdennis/json-everything/pull/280)
 
 Added supporting functionality for `JsonNode`.

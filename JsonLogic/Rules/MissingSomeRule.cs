@@ -15,13 +15,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MissingSomeRuleJsonConverter))]
 public class MissingSomeRule : Rule
 {
-	private readonly Rule _requiredCount;
-	private readonly Rule _components;
+	internal Rule RequiredCount { get; }
+	internal Rule Components { get; }
 
 	internal MissingSomeRule(Rule requiredCount, Rule components)
 	{
-		_requiredCount = requiredCount;
-		_components = components;
+		RequiredCount = requiredCount;
+		Components = components;
 	}
 
 	/// <summary>
@@ -35,8 +35,8 @@ public class MissingSomeRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var requiredCount = _requiredCount.Apply(data, contextData).Numberify();
-		var components = _components.Apply(data, contextData);
+		var requiredCount = RequiredCount.Apply(data, contextData).Numberify();
+		var components = Components.Apply(data, contextData);
 		if (components is not JsonArray arr)
 			throw new JsonLogicException("Expected array of required paths.");
 
@@ -81,6 +81,12 @@ internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>
 
 	public override void Write(Utf8JsonWriter writer, MissingSomeRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("missing_some");
+		writer.WriteStartArray();
+		writer.WriteRule(value.RequiredCount, options);
+		writer.WriteRule(value.Components, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

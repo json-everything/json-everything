@@ -14,13 +14,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(FilterRuleJsonConverter))]
 public class FilterRule : Rule
 {
-	private readonly Rule _input;
-	private readonly Rule _rule;
+	internal Rule Input { get; }
+	internal Rule Rule { get; }
 
 	internal FilterRule(Rule input, Rule rule)
 	{
-		_input = input;
-		_rule = rule;
+		Input = input;
+		Rule = rule;
 	}
 
 	/// <summary>
@@ -34,12 +34,12 @@ public class FilterRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var input = _input.Apply(data, contextData);
+		var input = Input.Apply(data, contextData);
 
 		if (input is not JsonArray arr)
 			return new JsonArray();
 
-		return arr.Where(i => _rule.Apply(data, i).IsTruthy()).ToJsonArray();
+		return arr.Where(i => Rule.Apply(data, i).IsTruthy()).ToJsonArray();
 	}
 }
 
@@ -57,6 +57,12 @@ internal class FilterRuleJsonConverter : JsonConverter<FilterRule>
 
 	public override void Write(Utf8JsonWriter writer, FilterRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("filter");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Input, options);
+		writer.WriteRule(value.Rule, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

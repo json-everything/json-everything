@@ -14,13 +14,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MapRuleJsonConverter))]
 public class MapRule : Rule
 {
-	private readonly Rule _input;
-	private readonly Rule _rule;
+	internal Rule Input { get; }
+	internal Rule Rule { get; }
 
 	internal MapRule(Rule input, Rule rule)
 	{
-		_input = input;
-		_rule = rule;
+		Input = input;
+		Rule = rule;
 	}
 
 	/// <summary>
@@ -34,12 +34,12 @@ public class MapRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var input = _input.Apply(data, contextData);
+		var input = Input.Apply(data, contextData);
 
 		if (input is not JsonArray arr)
 			return new JsonArray();
 
-		return arr.Select(i => _rule.Apply(data, i)).ToJsonArray();
+		return arr.Select(i => Rule.Apply(data, i)).ToJsonArray();
 	}
 }
 
@@ -57,6 +57,12 @@ internal class MapRuleJsonConverter : JsonConverter<MapRule>
 
 	public override void Write(Utf8JsonWriter writer, MapRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("map");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Input, options);
+		writer.WriteRule(value.Rule, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

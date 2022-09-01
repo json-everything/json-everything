@@ -119,10 +119,11 @@ public static class JsonNodeExtensions
 	/// Gets JSON string representation for <see cref="JsonNode"/>, including null support.
 	/// </summary>
 	/// <param name="node">A node.</param>
+	/// <param name="options">Serializer options</param>
 	/// <returns>JSON string representation.</returns>
-	public static string AsJsonString(this JsonNode? node)
+	public static string AsJsonString(this JsonNode? node, JsonSerializerOptions? options = null)
 	{
-		return node?.ToJsonString() ?? "null";
+		return node?.ToJsonString(options) ?? "null";
 	}
 
 	/// <summary>

@@ -14,12 +14,12 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(AddRuleJsonConverter))]
 public class AddRule : Rule
 {
-	private readonly List<Rule> _items;
+	internal List<Rule> Items { get; }
 
 	internal AddRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> { a };
-		_items.AddRange(more);
+		Items = new List<Rule> { a };
+		Items.AddRange(more);
 	}
 
 	/// <summary>
@@ -35,7 +35,7 @@ public class AddRule : Rule
 	{
 		decimal result = 0;
 
-		foreach (var item in _items)
+		foreach (var item in Items)
 		{
 			var value = item.Apply(data, contextData);
 
@@ -69,6 +69,9 @@ internal class AddRuleJsonConverter : JsonConverter<AddRule>
 
 	public override void Write(Utf8JsonWriter writer, AddRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("+");
+		writer.WriteRules(value.Items, options);
+		writer.WriteEndObject();
 	}
 }

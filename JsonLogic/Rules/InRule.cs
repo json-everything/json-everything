@@ -14,13 +14,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(InRuleJsonConverter))]
 public class InRule : Rule
 {
-	private readonly Rule _test;
-	private readonly Rule _source;
+	internal Rule Test { get; }
+	internal Rule Source { get; }
 
 	internal InRule(Rule test, Rule source)
 	{
-		_test = test;
-		_source = source;
+		Test = test;
+		Source = source;
 	}
 
 	/// <summary>
@@ -34,8 +34,8 @@ public class InRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var test = _test.Apply(data, contextData);
-		var source = _source.Apply(data, contextData);
+		var test = Test.Apply(data, contextData);
+		var source = Source.Apply(data, contextData);
 
 		if (source is JsonValue value && value.TryGetValue(out string? stringSource))
 		{
@@ -68,6 +68,12 @@ internal class InRuleJsonConverter : JsonConverter<InRule>
 
 	public override void Write(Utf8JsonWriter writer, InRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("in");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Test, options);
+		writer.WriteRule(value.Source, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

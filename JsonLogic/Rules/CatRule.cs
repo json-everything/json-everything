@@ -14,12 +14,12 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(CatRuleJsonConverter))]
 public class CatRule : Rule
 {
-	private readonly List<Rule> _items;
+	internal List<Rule> Items { get; }
 
 	internal CatRule(Rule a, params Rule[] more)
 	{
-		_items = new List<Rule> { a };
-		_items.AddRange(more);
+		Items = new List<Rule> { a };
+		Items.AddRange(more);
 	}
 
 	/// <summary>
@@ -35,7 +35,7 @@ public class CatRule : Rule
 	{
 		var result = string.Empty;
 
-		foreach (var item in _items)
+		foreach (var item in Items)
 		{
 			var value = item.Apply(data, contextData);
 
@@ -66,6 +66,9 @@ internal class CatRuleJsonConverter : JsonConverter<CatRule>
 
 	public override void Write(Utf8JsonWriter writer, CatRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("cat");
+		writer.WriteRules(value.Items, options);
+		writer.WriteEndObject();
 	}
 }

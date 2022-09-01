@@ -12,13 +12,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(LooseEqualsRuleJsonConverter))]
 public class LooseEqualsRule : Rule
 {
-	private readonly Rule _a;
-	private readonly Rule _b;
+	internal Rule A { get; }
+	internal Rule B { get; }
 
 	internal LooseEqualsRule(Rule a, Rule b)
 	{
-		_a = a;
-		_b = b;
+		A = a;
+		B = b;
 	}
 
 	/// <summary>
@@ -32,8 +32,8 @@ public class LooseEqualsRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var a = _a.Apply(data, contextData);
-		var b = _b.Apply(data, contextData);
+		var a = A.Apply(data, contextData);
+		var b = B.Apply(data, contextData);
 
 		return a.LooseEquals(b);
 	}
@@ -53,6 +53,12 @@ internal class LooseEqualsRuleJsonConverter : JsonConverter<LooseEqualsRule>
 
 	public override void Write(Utf8JsonWriter writer, LooseEqualsRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("==");
+		writer.WriteStartArray();
+		writer.WriteRule(value.A, options);
+		writer.WriteRule(value.B, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

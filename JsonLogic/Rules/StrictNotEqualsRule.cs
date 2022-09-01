@@ -13,13 +13,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(StrictNotEqualsRuleJsonConverter))]
 public class StrictNotEqualsRule : Rule
 {
-	private readonly Rule _a;
-	private readonly Rule _b;
+	internal Rule A { get; }
+	internal Rule B { get; }
 
 	internal StrictNotEqualsRule(Rule a, Rule b)
 	{
-		_a = a;
-		_b = b;
+		A = a;
+		B = b;
 	}
 
 	/// <summary>
@@ -33,7 +33,7 @@ public class StrictNotEqualsRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		return !_a.Apply(data, contextData).IsEquivalentTo(_b.Apply(data, contextData));
+		return !A.Apply(data, contextData).IsEquivalentTo(B.Apply(data, contextData));
 	}
 }
 
@@ -51,6 +51,12 @@ internal class StrictNotEqualsRuleJsonConverter : JsonConverter<StrictNotEqualsR
 
 	public override void Write(Utf8JsonWriter writer, StrictNotEqualsRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("!==");
+		writer.WriteStartArray();
+		writer.WriteRule(value.A, options);
+		writer.WriteRule(value.B, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }

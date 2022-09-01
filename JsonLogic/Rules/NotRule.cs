@@ -12,11 +12,11 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(NotRuleJsonConverter))]
 public class NotRule : Rule
 {
-	private readonly Rule _value;
+	internal Rule Value { get; }
 
 	internal NotRule(Rule value)
 	{
-		_value = value;
+		Value = value;
 	}
 
 	/// <summary>
@@ -30,7 +30,7 @@ public class NotRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var value = _value.Apply(data, contextData);
+		var value = Value.Apply(data, contextData);
 
 		return !value.IsTruthy();
 	}
@@ -54,6 +54,9 @@ internal class NotRuleJsonConverter : JsonConverter<NotRule>
 
 	public override void Write(Utf8JsonWriter writer, NotRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("!");
+		writer.WriteRule(value.Value, options);
+		writer.WriteEndObject();
 	}
 }

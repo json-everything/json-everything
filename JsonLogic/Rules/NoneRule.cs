@@ -13,13 +13,13 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(NoneRuleJsonConverter))]
 public class NoneRule : Rule
 {
-	private readonly Rule _input;
-	private readonly Rule _rule;
+	internal Rule Input { get; }
+	internal Rule Rule { get; }
 
 	internal NoneRule(Rule input, Rule rule)
 	{
-		_input = input;
-		_rule = rule;
+		Input = input;
+		Rule = rule;
 	}
 
 	/// <summary>
@@ -33,12 +33,12 @@ public class NoneRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var input = _input.Apply(data, contextData);
+		var input = Input.Apply(data, contextData);
 
 		if (input is not JsonArray arr)
 			throw new JsonLogicException("Input must evaluate to an array.");
 
-		return !arr.Select(value => _rule.Apply(data, value))
+		return !arr.Select(value => Rule.Apply(data, value))
 			.Any(result => result.IsTruthy());
 	}
 }
@@ -57,6 +57,12 @@ internal class NoneRuleJsonConverter : JsonConverter<NoneRule>
 
 	public override void Write(Utf8JsonWriter writer, NoneRule value, JsonSerializerOptions options)
 	{
-		throw new NotImplementedException();
+		writer.WriteStartObject();
+		writer.WritePropertyName("none");
+		writer.WriteStartArray();
+		writer.WriteRule(value.Input, options);
+		writer.WriteRule(value.Rule, options);
+		writer.WriteEndArray();
+		writer.WriteEndObject();
 	}
 }
