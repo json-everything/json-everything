@@ -1,3 +1,7 @@
+# [3.2.1](https://github.com/gregsdennis/json-everything/pull/330)
+
+Fixed absolute schema location in output.  The JSON Schema team identified some edge cases involving `$dynamicRef` where the wrong URI was reported.
+
 # [3.2.0](https://github.com/gregsdennis/json-everything/pull/300)
 
 Added `JsonSchemaBuilderExtensions.PatternProperties()` overloads that take strings in place of `Regex`es.  There is no syntax highlighting support for these overloads, however.
