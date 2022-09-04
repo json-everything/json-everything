@@ -121,7 +121,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		}
 
 		context.NavigatedReferences.Add(navigation);
-		context.Push(newUri: newUri);
+		context.Push(newUri: schema.BaseUri ?? newUri);
 		schema.ValidateSubschema(context);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
