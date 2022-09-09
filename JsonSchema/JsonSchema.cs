@@ -158,6 +158,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
 		var refMatters = refKeyword != null &&
 						 (registry.ValidatingAs == Draft.Draft6 || registry.ValidatingAs == Draft.Draft7);
+		UpdateBaseUri(currentUri);
 		if (idKeyword != null && !refMatters)
 		{
 			currentUri = idKeyword.UpdateUri(currentUri);
