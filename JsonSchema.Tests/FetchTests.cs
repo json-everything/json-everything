@@ -32,6 +32,7 @@ public class FetchTests
 		results.AssertInvalid();
 		results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
 	}
+
 	[Test]
 	public void GlobalRegistryFindsRef()
 	{
@@ -54,6 +55,7 @@ public class FetchTests
 		results.AssertInvalid();
 		results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
 	}
+
 	[Test]
 	public void LocalRegistryMissesRef()
 	{
@@ -79,6 +81,7 @@ public class FetchTests
 		results.AssertInvalid();
 		results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
 	}
+
 	[Test]
 	public void GlobalRegistryMissesRef()
 	{
@@ -100,5 +103,16 @@ public class FetchTests
 
 		results.AssertInvalid();
 		results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+	}
+
+	[Test]
+	public void RefContainsBadJson()
+	{
+		SchemaRegistry.Global.Fetch = _ => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}");
+		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+
+		using var json = JsonDocument.Parse("10");
+
+		Assert.Throws<JsonException>(() => schema.Validate(json.RootElement));
 	}
 }
