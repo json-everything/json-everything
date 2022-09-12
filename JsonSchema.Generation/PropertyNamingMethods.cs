@@ -43,7 +43,7 @@ public static class PropertyNamingMethods
 	/// </summary>
 	public static readonly PropertyNamingMethod KebabCase = x => x.Kebaberize();
 	/// <summary>
-	/// Updates property names to lower kebab case (e.g. `UPPER-KEBAB-CASE`).
+	/// Updates property names to upper kebab case (e.g. `UPPER-KEBAB-CASE`).
 	/// </summary>
 	public static readonly PropertyNamingMethod UpperKebabCase = x => x.Kebaberize().ToUpperInvariant();
 }
