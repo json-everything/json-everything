@@ -1304,7 +1304,7 @@
         </member>
         <member name="F:Json.Schema.Generation.PropertyNamingMethods.UpperKebabCase">
             <summary>
-            Updates property names to lower kebab case (e.g. `UPPER-KEBAB-CASE`).
+            Updates property names to upper kebab case (e.g. `UPPER-KEBAB-CASE`).
             </summary>
         </member>
         <member name="T:Json.Schema.Generation.PropertyOrder">
