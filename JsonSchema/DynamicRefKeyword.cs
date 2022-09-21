@@ -90,7 +90,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 
 		JsonSchema? schema;
 		if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-			schema = baseSchema ?? GetSchema(newUri, fragment);
+			schema = GetSchema(newUri, fragment);
 		else
 		{
 			if (baseSchema == null)
