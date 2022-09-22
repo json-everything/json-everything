@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `minContains`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
@@ -45,33 +44,8 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 	public void Validate(ValidationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (Value == 0)
-		{
-			var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.EvaluationPath.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
-			if (containsResult != null)
-				context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
-			context.ExitKeyword(Name, true);
-			return;
-		}
-
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		if (!context.LocalResult.TryGetAnnotation(ContainsKeyword.Name, out var annotation))
-		{
-			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
-			return;
-		}
-
-		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation.AsJsonString()}.");
-		var containsCount = annotation!.AsArray().Count;
-		if (Value > containsCount)
-			context.LocalResult.Fail(Name, ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		context.LocalResult.SetAnnotation(Name, Value);
+		context.ExitKeyword(Name);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -118,24 +92,5 @@ internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeywor
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinContainsKeyword.Name, value.Value);
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _minContains;
-
-	/// <summary>
-	/// Gets or sets the error message for <see cref="MinContainsKeyword"/>.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[received]] - the number of matching items provided in the JSON instance
-	///   - [[limit]] - the lower limit specified in the schema
-	/// </remarks>
-	public static string MinContains
-	{
-		get => _minContains ?? Get();
-		set => _minContains = value;
 	}
 }

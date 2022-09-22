@@ -123,8 +123,11 @@
   <data name="Error_Const" xml:space="preserve">
     <value>Expected [[value]]</value>
   </data>
-  <data name="Error_Contains" xml:space="preserve">
-    <value>Expected array to contain at least one item that matched the schema, but it did not</value>
+  <data name="Error_ContainsTooFew" xml:space="preserve">
+    <value>Value does not contain at least [[minimum]] matching items</value>
+  </data>
+  <data name="Error_ContainsTooMany" xml:space="preserve">
+    <value>El valor contiene más de [[maximum]] elementos coincidentes</value>
   </data>
   <data name="Error_Dependencies" xml:space="preserve">
     <value>The following properties failed their requirements: [[properties]]</value>
@@ -159,9 +162,6 @@
   <data name="Error_InvalidPattern" xml:space="preserve">
     <value>The regular expression [[pattern]] is either invalid or not supported</value>
   </data>
-  <data name="Error_MaxContains" xml:space="preserve">
-    <value>Value has more than [[limit]] items that matched the schema provided by "contains"</value>
-  </data>
   <data name="Error_Maximum" xml:space="preserve">
     <value>[[received]] is greater than or equal to [[limit]]</value>
   </data>
@@ -179,9 +179,6 @@
   </data>
   <data name="Error_MetaSchemaValidation" xml:space="preserve">
     <value>Cannot validate current schema against meta-schema [[uri]]</value>
-  </data>
-  <data name="Error_MinContains" xml:space="preserve">
-    <value>Value has fewer than [[limit]] items that matched the schema provided by "contains"</value>
   </data>
   <data name="Error_Minimum" xml:space="preserve">
     <value>[[received]] is less than or equal to [[limit]]</value>
