@@ -11,8 +11,10 @@ namespace Json.Schema;
 [SchemaDraft(Draft.Draft7)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Content201909Id)]
 [Vocabulary(Vocabularies.Content202012Id)]
+[Vocabulary(Vocabularies.ContentNextId)]
 [JsonConverter(typeof(ContentMediaTypeKeywordJsonConverter))]
 public class ContentMediaTypeKeyword : IJsonSchemaKeyword, IEquatable<ContentMediaTypeKeyword>
 {

@@ -10,7 +10,9 @@ namespace Json.Schema;
 [SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]
 public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<DynamicAnchorKeyword>
 {

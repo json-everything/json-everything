@@ -16,8 +16,10 @@ namespace Json.Schema;
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
 public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DependentSchemasKeyword>
 {

@@ -12,9 +12,12 @@ namespace Json.Schema;
 [SchemaDraft(Draft.Draft7)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Format201909Id)]
 [Vocabulary(Vocabularies.FormatAnnotation202012Id)]
 [Vocabulary(Vocabularies.FormatAssertion202012Id)]
+[Vocabulary(Vocabularies.FormatAnnotationNextId)]
+[Vocabulary(Vocabularies.FormatAssertionNextId)]
 [JsonConverter(typeof(FormatKeywordJsonConverter))]
 public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 {

@@ -12,8 +12,10 @@ namespace Json.Schema;
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MaxContainsKeywordJsonConverter))]
 public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyword>
 {

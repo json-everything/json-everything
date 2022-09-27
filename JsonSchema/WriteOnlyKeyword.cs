@@ -10,8 +10,10 @@ namespace Json.Schema;
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Metadata201909Id)]
 [Vocabulary(Vocabularies.Metadata202012Id)]
+[Vocabulary(Vocabularies.MetadataNextId)]
 [JsonConverter(typeof(WriteOnlyKeywordJsonConverter))]
 public class WriteOnlyKeyword : IJsonSchemaKeyword, IEquatable<WriteOnlyKeyword>
 {

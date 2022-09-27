@@ -27,5 +27,9 @@ public enum Draft
 	/// <summary>
 	/// JSON Schema Draft 2020-12.
 	/// </summary>
-	Draft202012 = 1 << 3
+	Draft202012 = 1 << 3,
+	/// <summary>
+	/// JSON Schema Draft Next.
+	/// </summary>
+	DraftNext = 1 << 4
 }

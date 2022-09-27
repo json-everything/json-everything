@@ -78,6 +78,16 @@ public class SchemaRegistry
 		MetaSchemas.FormatAnnotation202012.RegisterSubschemas(this, MetaSchemas.FormatAnnotation202012Id);
 		MetaSchemas.FormatAssertion202012.RegisterSubschemas(this, MetaSchemas.FormatAssertion202012Id);
 		MetaSchemas.Content202012.RegisterSubschemas(this, MetaSchemas.Content202012Id);
+
+		MetaSchemas.DraftNext.RegisterSubschemas(this, MetaSchemas.DraftNextId);
+		MetaSchemas.CoreNext.RegisterSubschemas(this, MetaSchemas.CoreNextId);
+		MetaSchemas.ApplicatorNext.RegisterSubschemas(this, MetaSchemas.ApplicatorNextId);
+		MetaSchemas.ValidationNext.RegisterSubschemas(this, MetaSchemas.ValidationNextId);
+		MetaSchemas.MetadataNext.RegisterSubschemas(this, MetaSchemas.MetadataNextId);
+		MetaSchemas.UnevaluatedNext.RegisterSubschemas(this, MetaSchemas.UnevaluatedNextId);
+		MetaSchemas.FormatAnnotationNext.RegisterSubschemas(this, MetaSchemas.FormatAnnotationNextId);
+		MetaSchemas.FormatAssertionNext.RegisterSubschemas(this, MetaSchemas.FormatAssertionNextId);
+		MetaSchemas.ContentNext.RegisterSubschemas(this, MetaSchemas.ContentNextId);
 	}
 
 	/// <summary>

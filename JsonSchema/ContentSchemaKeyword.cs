@@ -11,8 +11,10 @@ namespace Json.Schema;
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Content201909Id)]
 [Vocabulary(Vocabularies.Content202012Id)]
+[Vocabulary(Vocabularies.ContentNextId)]
 [JsonConverter(typeof(ContentSchemaKeywordJsonConverter))]
 public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContentSchemaKeyword>
 {

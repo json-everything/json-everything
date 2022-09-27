@@ -10,7 +10,9 @@ namespace Json.Schema;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
 public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
 {
