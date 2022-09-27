@@ -128,7 +128,7 @@ public class ValidationOptions
 
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri? metaSchemaId, SchemaRegistry registry)
 	{
-		var currentlyValidatingAs = ValidatingAs;
+		var currentlyValidatingAs = ValidateAs;
 		ValidatingAs = Draft.Unspecified;
 		while (metaSchemaId != null && ValidatingAs == Draft.Unspecified)
 		{

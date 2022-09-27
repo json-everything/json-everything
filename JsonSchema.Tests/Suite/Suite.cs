@@ -56,8 +56,10 @@ public class Suite
 				options.ValidateAs = Draft.Draft201909;
 				break;
 			case "draft2020-12":
-				// will set this when implementing the next draft
-				//options.ValidateAs = Draft.Draft202012;
+				options.ValidateAs = Draft.Draft202012;
+				break;
+			case "draft-next":
+				// options.ValidateAs = Draft.DraftNext;
 				break;
 		}
 

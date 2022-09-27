@@ -43,9 +43,7 @@ public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 	/// <param name="context">Contextual details for the validation process.</param>
 	public void Validate(ValidationContext context)
 	{
-		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value);
-		context.ExitKeyword(Name, true);
+		context.Log(() => "$comment is to be ignored");
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

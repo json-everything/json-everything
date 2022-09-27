@@ -51,7 +51,9 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not (SchemaValueType.Array or SchemaValueType.Object))
+		// verify this logic
+		if (schemaValueType != SchemaValueType.Array &&
+		    schemaValueType != SchemaValueType.Object)
 		{
 			context.WrongValueKind(schemaValueType);
 			return;
@@ -73,6 +75,12 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		}
 		else
 		{
+			if (context.Options.ValidatingAs != Draft.Unspecified &&
+			    context.Options.ValidatingAs < Draft.DraftNext)
+			{
+				context.WrongValueKind(schemaValueType);
+				return;
+			}
 			var obj = (JsonObject)context.LocalInstance!;
 			foreach (var kvp in obj)
 			{

@@ -75,7 +75,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 			if (patternPropertiesKeyword != null)
 				evaluatedProperties.AddRange(obj
 					.Select(x => x.Key)
-					.Where(x => patternPropertiesKeyword.Patterns.All(p => !p.Key.IsMatch(x))));
+					.Where(x => patternPropertiesKeyword.Patterns.Any(p => p.Key.IsMatch(x))));
 		}
 		else
 		{
