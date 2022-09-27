@@ -106,7 +106,9 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		context.Log(() => $"No annotations from {Name}.");
 		var array = (JsonArray)context.LocalInstance!;
 		var indicesToValidate = Enumerable.Range(startIndex, array.Count - startIndex);
-		if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
+		if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) ||
+		    context.Options.ValidatingAs.HasFlag(Draft.DraftNext) ||
+		    context.Options.ValidatingAs == Draft.Unspecified)
 		{
 			var validatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
 				.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<int>()))

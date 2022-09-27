@@ -16,6 +16,7 @@ namespace Json.Schema.UniqueKeys;
 [SchemaPriority(int.MinValue)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.UniqueKeysId)]
 [JsonConverter(typeof(UniqueKeysKeywordJsonConverter))]
 public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeyword>

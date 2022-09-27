@@ -138,11 +138,14 @@ public class ValidationOptions
 				MetaSchemas.Draft7IdValue => Draft.Draft7,
 				MetaSchemas.Draft201909IdValue => Draft.Draft201909,
 				MetaSchemas.Draft202012IdValue => Draft.Draft202012,
+				MetaSchemas.DraftNextIdValue => Draft.DraftNext,
 				_ => currentlyValidatingAs
 			};
 			if (metaSchemaId == MetaSchemas.Draft6Id || metaSchemaId == MetaSchemas.Draft7Id)
 				return DisallowSiblingRef(keywords, ValidatingAs);
-			if (metaSchemaId == MetaSchemas.Draft201909Id || metaSchemaId == MetaSchemas.Draft202012Id)
+			if (metaSchemaId == MetaSchemas.Draft201909Id ||
+			    metaSchemaId == MetaSchemas.Draft202012Id ||
+			    metaSchemaId == MetaSchemas.DraftNextId)
 				return AllowSiblingRef(keywords, ValidatingAs);
 			var metaSchema = registry.Get(metaSchemaId);
 			if (metaSchema == null) return ByOption(keywords);
@@ -168,6 +171,7 @@ public class ValidationOptions
 			case Draft.Unspecified:
 			case Draft.Draft201909:
 			case Draft.Draft202012:
+			case Draft.DraftNext:
 			default:
 				return AllowSiblingRef(keywords, ValidateAs);
 		}

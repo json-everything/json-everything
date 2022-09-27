@@ -54,8 +54,13 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		{
 			case Draft.Unspecified:
 			case Draft.Draft201909:
-			case Draft.Draft202012:
 				vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
+				break;
+			case Draft.Draft202012:
+				vocabularies[new Uri(Vocabularies.Core202012Id)] = true;
+				break;
+			case Draft.DraftNext:
+				vocabularies[new Uri(Vocabularies.CoreNextId)] = true;
 				break;
 		}
 		foreach (var kvp in vocabularies)

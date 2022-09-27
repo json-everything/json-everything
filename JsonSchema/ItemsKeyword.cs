@@ -127,7 +127,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		}
 		else // array
 		{
-			if (context.Options.ValidatingAs == Draft.Draft202012)
+			if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) ||
+			    context.Options.ValidatingAs.HasFlag(Draft.DraftNext))
 			{
 				context.LocalResult.Fail(Name, ErrorMessages.InvalidItemsForm);
 				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");

@@ -19,6 +19,7 @@ namespace Json.Schema.Data;
 [SchemaPriority(int.MinValue)]
 [SchemaDraft(Draft.Draft201909)]
 [SchemaDraft(Draft.Draft202012)]
+[SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.DataId)]
 [JsonConverter(typeof(DataKeywordJsonConverter))]
 public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
