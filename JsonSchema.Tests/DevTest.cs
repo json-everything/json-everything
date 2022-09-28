@@ -28,14 +28,15 @@ public class DevTest
 			.Required("foo")
 			.AdditionalProperties(false);
 
-		var instance = new JsonObject { ["foo"] = "baz" };
+		var instance = new JsonObject { ["foo"] = "foo awe;ovinawe" };
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
 			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			Converters = { new Pre202012ValidationResultsJsonConverter() }
 		}));
 	}
 }

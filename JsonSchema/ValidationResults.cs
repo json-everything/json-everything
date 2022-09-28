@@ -330,3 +330,161 @@ internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
 		writer.WriteEndObject();
 	}
 }
+
+public class Pre202012ValidationResultsJsonConverter : JsonConverter<ValidationResults>
+{
+	/// <summary>
+	/// Holder for an annotation value.
+	/// </summary>
+	private class Annotation
+	{
+		/// <summary>
+		/// The keyword that created the annotation (acts as a key for lookup).
+		/// </summary>
+		public string Owner { get; }
+		/// <summary>
+		/// The annotation value.
+		/// </summary>
+		public object? Value { get; }
+		/// <summary>
+		/// The pointer to the keyword that created the annotation.
+		/// </summary>
+		public JsonPointer Source { get; }
+
+		/// <summary>
+		/// Creates a new <see cref="Annotation"/>.
+		/// </summary>
+		/// <param name="owner">The keyword that created the annotation (acts as a key for lookup).</param>
+		/// <param name="value">The annotation value.</param>
+		/// <param name="source">The pointer to the keyword that created the annotation.</param>
+		public Annotation(string owner, object? value, in JsonPointer source)
+		{
+			Owner = owner;
+			Value = value;
+			Source = source;
+		}
+	}
+
+	public override ValidationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
+	}
+
+	public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
+	{
+		if (value.Exclude) return;
+
+		writer.WriteStartObject();
+
+		writer.WriteBoolean("valid", value.IsValid);
+
+		writer.WritePropertyName("keywordLocation");
+		JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+
+		if (value.SchemaLocation != null)
+		{
+			writer.WritePropertyName("absoluteKeywordLocation");
+			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
+		}
+
+		writer.WritePropertyName("instanceLocation");
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+
+		if (!value.IsValid)
+		{
+			if (value.HasErrors && value.Errors!.TryGetValue(string.Empty, out var localError))
+				writer.WriteString("error", localError);
+
+			if ((value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty)) || value.NestedResults.Any())
+			{
+				writer.WritePropertyName("errors");
+				JsonSerializer.Serialize(writer, value.NestedResults, options);
+
+				if (value.HasErrors)
+				{
+					foreach (var error in value.Errors!)
+					{
+						WriteError(writer, value, error.Key, error.Value, options);
+					}
+				}
+			}
+		}
+		else if ((value.HasAnnotations && value.Annotations!.Any()) || value.NestedResults.Any())
+		{
+			writer.WritePropertyName("annotations");
+			writer.WriteStartArray();
+
+			var annotations = value.Annotations.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToList();
+
+			foreach (var result in value.NestedResults)
+			{
+				var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
+				if (annotation != null)
+				{
+					WriteAnnotation(writer, value, annotation, options);
+				}
+				else
+				{
+					JsonSerializer.Serialize(writer, result, options);
+				}
+			}
+
+			foreach (var annotation in annotations)
+			{
+				WriteAnnotation(writer, value, annotation, options);
+			}
+
+			writer.WriteEndArray();
+		}
+
+		writer.WriteEndObject();
+	}
+
+	private static void WriteError(Utf8JsonWriter writer, ValidationResults value, string keyword, string error, JsonSerializerOptions options)
+	{
+		writer.WriteStartObject();
+
+		writer.WriteBoolean("valid", value.IsValid);
+
+		writer.WritePropertyName("keywordLocation");
+		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
+
+		if (value.SchemaLocation != null)
+		{
+			writer.WritePropertyName("absoluteKeywordLocation");
+			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
+		}
+
+		writer.WritePropertyName("instanceLocation");
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+
+		writer.WritePropertyName("error");
+		JsonSerializer.Serialize(writer, error, options);
+
+		writer.WriteEndObject();
+	}
+
+	private static void WriteAnnotation(Utf8JsonWriter writer, ValidationResults value, Annotation annotation, JsonSerializerOptions options)
+	{
+		writer.WriteStartObject();
+
+		writer.WriteBoolean("valid", value.IsValid);
+
+		writer.WritePropertyName("keywordLocation");
+		JsonSerializer.Serialize(writer, annotation.Source, options);
+
+		if (value.SchemaLocation != null)
+		{
+			writer.WritePropertyName("absoluteKeywordLocation");
+			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
+		}
+
+		writer.WritePropertyName("instanceLocation");
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+
+		writer.WritePropertyName("annotation");
+		JsonSerializer.Serialize(writer, annotation.Value, options);
+
+		writer.WriteEndObject();
+	}
+}
