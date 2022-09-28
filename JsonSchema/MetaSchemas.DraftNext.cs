@@ -119,21 +119,21 @@ public static partial class MetaSchemas
 			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
 			.Properties(
 				(IdKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/uriReferenceString")
+					.Ref("#/$defs/iriReferenceString")
 					.Comment("Non-empty fragments not allowed.")
 					.Pattern("^[^#]*#?$")
 				),
 				(SchemaKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/uriString")
+					.Ref("#/$defs/iriString")
 				),
 				(RefKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/uriReferenceString")
+					.Ref("#/$defs/iriReferenceString")
 				),
 				(AnchorKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/anchorString")
 				),
 				(DynamicRefKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/uriReferenceString")
+					.Ref("#/$defs/iriReferenceString")
 				),
 				(DynamicAnchorKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/anchorString")
@@ -141,7 +141,7 @@ public static partial class MetaSchemas
 				(VocabularyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.PropertyNames(new JsonSchemaBuilder()
-						.Ref("#/$defs/uriString")
+						.Ref("#/$defs/iriString")
 					)
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.Type(SchemaValueType.Boolean)
@@ -159,12 +159,12 @@ public static partial class MetaSchemas
 				("anchorString", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Pattern("^[A-Za-z_][-A-Za-z0-9._]*$")),
-				("uriString", new JsonSchemaBuilder()
+				("iriString", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
-					.Format(Formats.Uri)),
-				("uriReferenceString", new JsonSchemaBuilder()
+					.Format(Formats.Iri)),
+				("iriReferenceString", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
-					.Format(Formats.UriReference))
+					.Format(Formats.IriReference))
 			);
 
 	/// <summary>
@@ -234,6 +234,17 @@ public static partial class MetaSchemas
 						.DynamicRef("#meta")
 					)
 					.Default(new JsonObject())
+				),
+				(PropertyDependenciesKeyword.Name, new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object)
+					.AdditionalProperties(new JsonSchemaBuilder()
+						.Type(SchemaValueType.Object)
+						.AdditionalProperties(new JsonSchemaBuilder()
+							.DynamicRef("#meta")
+							.Default(new JsonObject())
+						)
+						.Default(new JsonObject())
+					)
 				),
 				(PropertyNamesKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")

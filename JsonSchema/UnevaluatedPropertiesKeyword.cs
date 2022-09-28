@@ -84,6 +84,14 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 			context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
 			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
 		}
+		annotations = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name).ToList();
+		if (!annotations.Any())
+			context.Log(() => $"No annotation from {ContainsKeyword.Name}.");
+		else
+		{
+			context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
+			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
+		}
 		annotations = context.LocalResult.GetAllAnnotations(Name).ToList();
 		if (!annotations.Any())
 			context.Log(() => $"No annotation from {Name}.");

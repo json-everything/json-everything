@@ -109,6 +109,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1", "3.1", "{B22CB191-B36
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi.Tests", "JsonSchema.OpenApi.Tests\JsonSchema.OpenApi.Tests.csproj", "{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "next", "next", "{763E70E4-7B8E-4E05-AA64-1DD1EB6ED8EC}"
+	ProjectSection(SolutionItems) = preProject
+		Meta-Schemas\Next\applicator.json = Meta-Schemas\Next\applicator.json
+		Meta-Schemas\Next\content.json = Meta-Schemas\Next\content.json
+		Meta-Schemas\Next\core.json = Meta-Schemas\Next\core.json
+		Meta-Schemas\Next\format-annotation.json = Meta-Schemas\Next\format-annotation.json
+		Meta-Schemas\Next\format-assertion.json = Meta-Schemas\Next\format-assertion.json
+		Meta-Schemas\Next\meta-data.json = Meta-Schemas\Next\meta-data.json
+		Meta-Schemas\Next\schema.json = Meta-Schemas\Next\schema.json
+		Meta-Schemas\Next\unevaluated.json = Meta-Schemas\Next\unevaluated.json
+		Meta-Schemas\Next\validation.json = Meta-Schemas\Next\validation.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -299,6 +312,7 @@ Global
 		{EF7AC22E-9DD7-4F23-8542-74A0D315E5E2} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
 		{B22CB191-B36C-41AE-9DE6-864C0A677641} = {EF7AC22E-9DD7-4F23-8542-74A0D315E5E2}
 		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
+		{763E70E4-7B8E-4E05-AA64-1DD1EB6ED8EC} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
