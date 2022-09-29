@@ -124,6 +124,13 @@
 									</InputSelect>
 								</label>
 								<label class="my-2">
+									Output structure<br/>
+									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Draft" class="form-control">
+										<option value="@Draft.Draft202012">Draft 2020-12</option>
+										<option value="@Draft.DraftNext">Draft-Next (preview)</option>
+									</InputSelect>
+								</label>
+								<label class="my-2">
 									Default base URI<br/>
 									<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI" class="form-control"/>
 								</label>
@@ -203,6 +210,7 @@
 	{
 		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
 		public Draft Draft { get; set; } = Draft.Draft202012;
+		public Draft OutputStructure { get; set; } = Draft.Draft202012;
 		public string? DefaultBaseUri { get; set; }
 		public bool ValidateFormat { get; set; }
 
@@ -246,11 +254,12 @@
 
 	private static string GetDescription(Draft draft) => draft switch
 	{
+		Draft.Unspecified => "Draft 2020-12",
 		Draft.Draft6 => "Draft 6",
 		Draft.Draft7 => "Draft 7",
 		Draft.Draft201909 => "Draft 2019-09",
-		Draft.Unspecified => "Draft 2020-12",
 		Draft.Draft202012 => "Draft 2020-12",
+		Draft.DraftNext => "Draft-Next (preview)",
 		_ => "Draft 2020-12"
 	};
 
@@ -280,11 +289,14 @@
 
 		var results = schema.Validate(instance, _options.ToValidationOptions());
 
-		var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		});
+		};
+		if (_options.OutputStructure == Draft.Draft202012)
+			serializerOptions.Converters.Add(new Pre202012ValidationResultsJsonConverter());
+		var resultText = JsonSerializer.Serialize(results, serializerOptions);
 
 		await _outputEditor.SetValue(resultText);
 	}
@@ -364,7 +376,7 @@ namespace JsonEverythingTemp
 			{
 				Console.WriteLine("You may expect a list of what compilation errors there are, but unfortunately " +
 				                  "Roslyn doesn't seem to be giving that information out (or I don't know how to " +
-				                  "interpret it.  So instead, here are the errors in raw form.  Good luck.  If you " +
+				                  "interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
 				                  "know what these mean, please drop a line in a GitHub issue.");
 				await _instanceEditor.SetValue("Compilation error");
 				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
