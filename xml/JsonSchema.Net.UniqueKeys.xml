@@ -61,6 +61,11 @@
             Represents the `data` keyword.
             </summary>
         </member>
+        <member name="F:Json.Schema.UniqueKeys.UniqueKeysKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.UniqueKeys.UniqueKeysKeyword.Keys">
             <summary>
             The collection of keywords and references.

@@ -9,6 +9,11 @@
             Represents the `data` keyword.
             </summary>
         </member>
+        <member name="F:Json.Schema.Data.DataKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.Data.DataKeyword.Fetch">
             <summary>
             Gets or sets a method to download external references.
@@ -239,11 +244,12 @@
             The URI that could not be resolved.
             </summary>
         </member>
-        <member name="M:Json.Schema.RefResolutionException.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Json.Schema.RefResolutionException.#ctor(System.Collections.Generic.IEnumerable{System.String},System.Exception)">
             <summary>
             Thrown when a reference cannot be resolved.
             </summary>
             <param name="references">The references that could not be resolved.</param>
+            <param name="innerException">The exception that caused this error.</param>
         </member>
     </members>
 </doc>

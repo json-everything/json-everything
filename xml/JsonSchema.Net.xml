@@ -9,6 +9,11 @@
             Handles `additionalItems`.
             </summary>
         </member>
+        <member name="F:Json.Schema.AdditionalItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.AdditionalItemsKeyword.Schema">
             <summary>
             The schema by which to validation additional items.
@@ -45,6 +50,11 @@
             Handles `additionalProperties`.
             </summary>
         </member>
+        <member name="F:Json.Schema.AdditionalPropertiesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.AdditionalPropertiesKeyword.Schema">
             <summary>
             The schema by which to validation additional properties.
@@ -79,6 +89,11 @@
         <member name="T:Json.Schema.AllOfKeyword">
             <summary>
             Handles `allOf`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.AllOfKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.AllOfKeyword.Schemas">
@@ -123,6 +138,11 @@
             Handles `$anchor`.
             </summary>
         </member>
+        <member name="F:Json.Schema.AnchorKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.AnchorKeyword.Anchor">
             <summary>
             The value of the anchor.
@@ -154,37 +174,14 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
-        <member name="T:Json.Schema.Annotation">
-            <summary>
-            Holder for an annotation value.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Annotation.Owner">
-            <summary>
-            The keyword that created the annotation (acts as a key for lookup).
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Annotation.Value">
-            <summary>
-            The annotation value.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Annotation.Source">
-            <summary>
-            The pointer to the keyword that created the annotation.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Annotation.#ctor(System.String,System.Object,Json.Pointer.JsonPointer@)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Annotation"/>.
-            </summary>
-            <param name="owner">The keyword that created the annotation (acts as a key for lookup).</param>
-            <param name="value">The annotation value.</param>
-            <param name="source">The pointer to the keyword that created the annotation.</param>
-        </member>
         <member name="T:Json.Schema.AnyOfKeyword">
             <summary>
             Handles `anyOf`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.AnyOfKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.AnyOfKeyword.Schemas">
@@ -238,6 +235,11 @@
             Handles `$comment`.
             </summary>
         </member>
+        <member name="F:Json.Schema.CommentKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.CommentKeyword.Value">
             <summary>
             The comment value.
@@ -272,6 +274,11 @@
         <member name="T:Json.Schema.ConstKeyword">
             <summary>
             Handles `const`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.ConstKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.ConstKeyword.Value">
@@ -325,11 +332,25 @@
               - [[value]] - the value in the schema
             </remarks>
         </member>
-        <member name="P:Json.Schema.ErrorMessages.Contains">
+        <member name="P:Json.Schema.ErrorMessages.ContainsTooFew">
             <summary>
-            Gets or sets the error message for <see cref="T:Json.Schema.ContainsKeyword"/>.
+            Gets or sets the error message for <see cref="T:Json.Schema.ContainsKeyword"/> when there are too few matching items.
             </summary>
-            <remarks>No tokens are supported.</remarks>
+            <remarks>
+            Available tokens are:
+              - [[received]] - the number of matching items provided in the JSON instance
+              - [[minimum]] - the lower limit specified in the schema
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.ErrorMessages.ContainsTooMany">
+            <summary>
+            Gets or sets the error message for <see cref="T:Json.Schema.ContainsKeyword"/> when there are too many matching items.
+            </summary>
+            <remarks>
+            Available tokens are:
+              - [[received]] - the number of matching items provided in the JSON instance
+              - [[maximum]] - the upper limit specified in the schema
+            </remarks>
         </member>
         <member name="P:Json.Schema.ErrorMessages.Dependencies">
             <summary>
@@ -449,16 +470,6 @@
             </summary>
             <remarks>No tokens are supported.</remarks>
         </member>
-        <member name="P:Json.Schema.ErrorMessages.MaxContains">
-            <summary>
-            Gets or sets the error message for <see cref="T:Json.Schema.MaxContainsKeyword"/>.
-            </summary>
-            <remarks>
-            Available tokens are:
-              - [[received]] - the number of matching items provided in the JSON instance
-              - [[limit]] - the upper limit specified in the schema
-            </remarks>
-        </member>
         <member name="P:Json.Schema.ErrorMessages.Maximum">
             <summary>
             Gets or sets the error message for <see cref="T:Json.Schema.MinimumKeyword"/>.
@@ -497,16 +508,6 @@
             Available tokens are:
               - [[received]] - the number of properties provided in the JSON instance
               - [[limit]] - the upper limit specified in the schema
-            </remarks>
-        </member>
-        <member name="P:Json.Schema.ErrorMessages.MinContains">
-            <summary>
-            Gets or sets the error message for <see cref="T:Json.Schema.MinContainsKeyword"/>.
-            </summary>
-            <remarks>
-            Available tokens are:
-              - [[received]] - the number of matching items provided in the JSON instance
-              - [[limit]] - the lower limit specified in the schema
             </remarks>
         </member>
         <member name="P:Json.Schema.ErrorMessages.Minimum">
@@ -685,6 +686,11 @@
             Handles `contains`.
             </summary>
         </member>
+        <member name="F:Json.Schema.ContainsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ContainsKeyword.Schema">
             <summary>
             The schema to match.
@@ -719,6 +725,11 @@
         <member name="T:Json.Schema.ContentEncodingKeyword">
             <summary>
             Handles `contentMediaEncoding`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.ContentEncodingKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.ContentEncodingKeyword.Value">
@@ -757,6 +768,11 @@
             Handles `contentMediaType`.
             </summary>
         </member>
+        <member name="F:Json.Schema.ContentMediaTypeKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ContentMediaTypeKeyword.Value">
             <summary>
             The media type.
@@ -791,6 +807,11 @@
         <member name="T:Json.Schema.ContentSchemaKeyword">
             <summary>
             Handles `contentSchema`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.ContentSchemaKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.ContentSchemaKeyword.Schema">
@@ -829,6 +850,11 @@
             Handles `default`.
             </summary>
         </member>
+        <member name="F:Json.Schema.DefaultKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.DefaultKeyword.Value">
             <summary>
             The value to use as the default.
@@ -863,6 +889,11 @@
         <member name="T:Json.Schema.DefinitionsKeyword">
             <summary>
             Handles `definitions`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.DefinitionsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.DefinitionsKeyword.Definitions">
@@ -901,6 +932,11 @@
             Handles `$defs`.
             </summary>
         </member>
+        <member name="F:Json.Schema.DefsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.DefsKeyword.Definitions">
             <summary>
             The collection of schema definitions.
@@ -935,6 +971,11 @@
         <member name="T:Json.Schema.DependenciesKeyword">
             <summary>
             Handles `dependencies`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.DependenciesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.DependenciesKeyword.Requirements">
@@ -1014,6 +1055,11 @@
             Handles `dependentRequired`.
             </summary>
         </member>
+        <member name="F:Json.Schema.DependentRequiredKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.DependentRequiredKeyword.Requirements">
             <summary>
             The collection of "required"-type dependencies.
@@ -1048,6 +1094,11 @@
         <member name="T:Json.Schema.DependentSchemasKeyword">
             <summary>
             Handles `dependentSchemas`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.DependentSchemasKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.DependentSchemasKeyword.Schemas">
@@ -1086,6 +1137,11 @@
             Handles `deprecated`.
             </summary>
         </member>
+        <member name="F:Json.Schema.DeprecatedKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.DeprecatedKeyword.Value">
             <summary>
             Whether the schema is deprecated.
@@ -1120,6 +1176,11 @@
         <member name="T:Json.Schema.DescriptionKeyword">
             <summary>
             Handles `description`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.DescriptionKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.DescriptionKeyword.Value">
@@ -1183,6 +1244,11 @@
             JSON Schema Draft 2020-12.
             </summary>
         </member>
+        <member name="F:Json.Schema.Draft.DraftNext">
+            <summary>
+            JSON Schema Draft Next.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Duration">
             <summary>
             Represents an ISO 8601 ABNF duration value.
@@ -1244,6 +1310,11 @@
             Handles `$dynamicAnchor`.
             </summary>
         </member>
+        <member name="F:Json.Schema.DynamicAnchorKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.DynamicAnchorKeyword.Value">
             <summary>
             Gets the anchor value.
@@ -1280,6 +1351,11 @@
             Handles `$dynamicRef`.
             </summary>
         </member>
+        <member name="F:Json.Schema.DynamicRefKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.DynamicRefKeyword.Reference">
             <summary>
             The URI reference.
@@ -1314,6 +1390,11 @@
         <member name="T:Json.Schema.ElseKeyword">
             <summary>
             Handles `else`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.ElseKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.ElseKeyword.Schema">
@@ -1409,6 +1490,11 @@
             Handles `enum`.
             </summary>
         </member>
+        <member name="F:Json.Schema.EnumKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.EnumKeyword.Values">
             <summary>
             The collection of enum values.
@@ -1454,6 +1540,11 @@
             Handles `examples`.
             </summary>
         </member>
+        <member name="F:Json.Schema.ExamplesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ExamplesKeyword.Values">
             <summary>
             The collection of example values.
@@ -1496,6 +1587,11 @@
             Handles `exclusiveMaximum`.
             </summary>
         </member>
+        <member name="F:Json.Schema.ExclusiveMaximumKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ExclusiveMaximumKeyword.Value">
             <summary>
             The maximum value.
@@ -1530,6 +1626,11 @@
         <member name="T:Json.Schema.ExclusiveMinimumKeyword">
             <summary>
             Handles `exclusiveMinimum`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.ExclusiveMinimumKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.ExclusiveMinimumKeyword.Value">
@@ -1590,6 +1691,11 @@
         <member name="T:Json.Schema.FormatKeyword">
             <summary>
             Handles `format`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.FormatKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.FormatKeyword.Value">
@@ -1752,6 +1858,11 @@
             Handles `$id`.
             </summary>
         </member>
+        <member name="F:Json.Schema.IdKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.IdKeyword.Id">
             <summary>
             The ID.
@@ -1786,6 +1897,11 @@
         <member name="T:Json.Schema.IfKeyword">
             <summary>
             Handles `if`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.IfKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.IfKeyword.Schema">
@@ -1894,6 +2010,11 @@
         <member name="T:Json.Schema.ItemsKeyword">
             <summary>
             Handles `items`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.ItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.ItemsKeyword.SingleSchema">
@@ -2042,12 +2163,6 @@
             </summary>
             <param name="registry">The registry into which the subschema should be registered.</param>
             <param name="currentUri">The current URI.</param>
-        </member>
-        <member name="M:Json.Schema.JsonSchema.ValidateSubschema(Json.Schema.ValidationContext)">
-            <summary>
-            Validates as a subschema.  To be called from within keywords.
-            </summary>
-            <param name="context">The validation context for this validation pass.</param>
         </member>
         <member name="M:Json.Schema.JsonSchema.op_Implicit(System.Boolean)~Json.Schema.JsonSchema">
             <summary>
@@ -2980,6 +3095,11 @@
             Handles `maxContains`.
             </summary>
         </member>
+        <member name="F:Json.Schema.MaxContainsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.MaxContainsKeyword.Value">
             <summary>
             The maximum expected matching items.
@@ -3014,6 +3134,11 @@
         <member name="T:Json.Schema.MaximumKeyword">
             <summary>
             Handles `maximum`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MaximumKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.MaximumKeyword.Value">
@@ -3052,6 +3177,11 @@
             Handles `maxItems`.
             </summary>
         </member>
+        <member name="F:Json.Schema.MaxItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.MaxItemsKeyword.Value">
             <summary>
             The expected maximum number of items.
@@ -3088,6 +3218,11 @@
             Handles `maxLength`.
             </summary>
         </member>
+        <member name="F:Json.Schema.MaxLengthKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.MaxLengthKeyword.Value">
             <summary>
             The maximum expected string length.
@@ -3122,6 +3257,11 @@
         <member name="T:Json.Schema.MaxPropertiesKeyword">
             <summary>
             Handles `maxProperties`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MaxPropertiesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.MaxPropertiesKeyword.Value">
@@ -3340,9 +3480,104 @@
             The Draft 7 Core meta-schema.
             </summary>
         </member>
+        <member name="F:Json.Schema.MetaSchemas.DraftNextId">
+            <summary>
+            The Draft 2020-12 meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.CoreNextId">
+            <summary>
+            The Draft 2020-12 Core meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.UnevaluatedNextId">
+            <summary>
+            The Draft 2020-12 Unevaluated meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.ApplicatorNextId">
+            <summary>
+            The Draft 2020-12 Applicator meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.ValidationNextId">
+            <summary>
+            The Draft 2020-12 Validation meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.MetadataNextId">
+            <summary>
+            The Draft 2020-12 Metadata meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAnnotationNextId">
+            <summary>
+            The Draft 2020-12 Format-Annotation meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAssertionNextId">
+            <summary>
+            The Draft 2020-12 Format-Assertion meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.ContentNextId">
+            <summary>
+            The Draft 2020-12 Content meta-schema ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.DraftNext">
+            <summary>
+            The Draft 2020-12 meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.CoreNext">
+            <summary>
+            The Draft 2020-12 Core meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.UnevaluatedNext">
+            <summary>
+            The Draft 2020-12 Unevaluated meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.ApplicatorNext">
+            <summary>
+            The Draft 2020-12 Applicator meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.ValidationNext">
+            <summary>
+            The Draft 2020-12 Validation meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.MetadataNext">
+            <summary>
+            The Draft 2020-12 Metadata meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAnnotationNext">
+            <summary>
+            The Draft 2020-12 Format-Annotation meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.FormatAssertionNext">
+            <summary>
+            The Draft 2020-12 Format-Assertion meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MetaSchemas.ContentNext">
+            <summary>
+            The Draft 2020-12 Content meta-schema.
+            </summary>
+        </member>
         <member name="T:Json.Schema.MinContainsKeyword">
             <summary>
             Handles `minContains`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MinContainsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.MinContainsKeyword.Value">
@@ -3381,6 +3616,11 @@
             Handles `minimum`.
             </summary>
         </member>
+        <member name="F:Json.Schema.MinimumKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.MinimumKeyword.Value">
             <summary>
             The minimum expected value.
@@ -3415,6 +3655,11 @@
         <member name="T:Json.Schema.MinItemsKeyword">
             <summary>
             Handles `minItems`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MinItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.MinItemsKeyword.Value">
@@ -3453,6 +3698,11 @@
             Handles `minLength`.
             </summary>
         </member>
+        <member name="F:Json.Schema.MinLengthKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.MinLengthKeyword.Value">
             <summary>
             The minimum expected string length.
@@ -3487,6 +3737,11 @@
         <member name="T:Json.Schema.MinPropertiesKeyword">
             <summary>
             Handles `minProperties`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.MinPropertiesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.MinPropertiesKeyword.Value">
@@ -3525,6 +3780,11 @@
             Handles `multipleOf`.
             </summary>
         </member>
+        <member name="F:Json.Schema.MultipleOfKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.MultipleOfKeyword.Value">
             <summary>
             The expected divisor of a value.
@@ -3561,6 +3821,11 @@
             Handles `not`.
             </summary>
         </member>
+        <member name="F:Json.Schema.NotKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.NotKeyword.Schema">
             <summary>
             The schema to not match.
@@ -3595,6 +3860,11 @@
         <member name="T:Json.Schema.OneOfKeyword">
             <summary>
             Handles `oneOf`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.OneOfKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.OneOfKeyword.Schemas">
@@ -3649,12 +3919,7 @@
             Indicates that all nodes will be listed as children of the top node.
             </summary>
         </member>
-        <member name="F:Json.Schema.OutputFormat.Detailed">
-            <summary>
-            Indicates that nodes will be organized in a condensed structure that mimicks the schema.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.OutputFormat.Verbose">
+        <member name="F:Json.Schema.OutputFormat.Hierarchical">
             <summary>
             Indicates that nodes will match the structure of the schema.
             </summary>
@@ -3662,6 +3927,11 @@
         <member name="T:Json.Schema.PatternKeyword">
             <summary>
             Handles `pattern`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.PatternKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.PatternKeyword.Value">
@@ -3706,6 +3976,11 @@
         <member name="T:Json.Schema.PatternPropertiesKeyword">
             <summary>
             Handles `patternProperties`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.PatternPropertiesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.PatternPropertiesKeyword.Patterns">
@@ -3787,6 +4062,11 @@
             Handles `items`.
             </summary>
         </member>
+        <member name="F:Json.Schema.PrefixItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.PrefixItemsKeyword.ArraySchemas">
             <summary>
             The collection of schemas for the "schema array" form.
@@ -3833,6 +4113,11 @@
             Handles `properties`.
             </summary>
         </member>
+        <member name="F:Json.Schema.PropertiesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.PropertiesKeyword.Properties">
             <summary>
             The property schemas.
@@ -3864,9 +4149,85 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.PropertyDependenciesKeyword">
+            <summary>
+            Handles the `propertyDependencies` keyword.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.PropertyDependenciesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.PropertyDependenciesKeyword.Dependencies">
+            <summary>
+            Gets the collection of dependencies.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.PropertyDependenciesKeyword.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,Json.Schema.PropertyDependency})">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Schema.PropertyDependenciesKeyword"/>.
+            </summary>
+            <param name="dependencies">The collection of dependencies.</param>
+        </member>
+        <member name="M:Json.Schema.PropertyDependenciesKeyword.Validate(Json.Schema.ValidationContext)">
+            <summary>
+            Provides validation for the keyword.
+            </summary>
+            <param name="context">Contextual details for the validation process.</param>
+        </member>
+        <member name="M:Json.Schema.PropertyDependenciesKeyword.Equals(Json.Schema.PropertyDependenciesKeyword)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyDependenciesKeyword.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyDependenciesKeyword.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.PropertyDependency">
+            <summary>
+            Represents a single entry in the `propertyDependencies` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.PropertyDependency.Schemas">
+            <summary>
+            Gets the collection of value-dependent schemas for this property.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,Json.Schema.JsonSchema})">
+            <summary>
+            Creates a new instance of <see cref="T:Json.Schema.PropertyDependency"/>.
+            </summary>
+            <param name="schemas">The collection of value-dependent schemas for this property</param>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.Equals(Json.Schema.PropertyDependency)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
         <member name="T:Json.Schema.PropertyNamesKeyword">
             <summary>
             Handles `propertyNames`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.PropertyNamesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.PropertyNamesKeyword.Schema">
@@ -3905,6 +4266,11 @@
             Handles `readOnly`.
             </summary>
         </member>
+        <member name="F:Json.Schema.ReadOnlyKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ReadOnlyKeyword.Value">
             <summary>
             Whether the instance is read-only.
@@ -3939,6 +4305,11 @@
         <member name="T:Json.Schema.RecursiveAnchorKeyword">
             <summary>
             Handles `$recursiveAnchor`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.RecursiveAnchorKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.RecursiveAnchorKeyword.Value">
@@ -3977,6 +4348,11 @@
             Handles `$recursiveRef`.
             </summary>
         </member>
+        <member name="F:Json.Schema.RecursiveRefKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.RecursiveRefKeyword.Reference">
             <summary>
             The URI reference.
@@ -4011,6 +4387,11 @@
         <member name="T:Json.Schema.RefKeyword">
             <summary>
             Handles `$ref`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.RefKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.RefKeyword.Reference">
@@ -4069,6 +4450,11 @@
             Handles `requires`.
             </summary>
         </member>
+        <member name="F:Json.Schema.RequiredKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.RequiredKeyword.Properties">
             <summary>
             The required properties.
@@ -4125,6 +4511,11 @@
         <member name="T:Json.Schema.SchemaKeyword">
             <summary>
             Handles `$schema`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.SchemaKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.SchemaKeyword.Schema">
@@ -4324,6 +4715,11 @@
             Handles `then`.
             </summary>
         </member>
+        <member name="F:Json.Schema.ThenKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ThenKeyword.Schema">
             <summary>
             The schema to match.
@@ -4360,6 +4756,11 @@
             Handles `title`.
             </summary>
         </member>
+        <member name="F:Json.Schema.TitleKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.TitleKeyword.Value">
             <summary>
             The title.
@@ -4394,6 +4795,11 @@
         <member name="T:Json.Schema.TypeKeyword">
             <summary>
             Handles `type`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.TypeKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.TypeKeyword.Type">
@@ -4444,6 +4850,11 @@
             Handles `unevaluatedItems`.
             </summary>
         </member>
+        <member name="F:Json.Schema.UnevaluatedItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.UnevaluatedItemsKeyword.Schema">
             <summary>
             The schema by which to validation unevaluated items.
@@ -4480,6 +4891,11 @@
             Handles `unevaluatedProperties`.
             </summary>
         </member>
+        <member name="F:Json.Schema.UnevaluatedPropertiesKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
+            </summary>
+        </member>
         <member name="P:Json.Schema.UnevaluatedPropertiesKeyword.Schema">
             <summary>
             The schema by which to validation additional properties.
@@ -4514,6 +4930,11 @@
         <member name="T:Json.Schema.UniqueItemsKeyword">
             <summary>
             Handles `uniqueItems`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.UniqueItemsKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.UniqueItemsKeyword.Value">
@@ -4639,7 +5060,7 @@
             The root schema.
             </summary>
         </member>
-        <member name="P:Json.Schema.ValidationContext.SchemaLocation">
+        <member name="P:Json.Schema.ValidationContext.EvaluationPath">
             <summary>
             The current subschema location relative to the schema root.
             </summary>
@@ -4690,9 +5111,22 @@
             </summary>
             <param name="instanceLocation">The location within the data instance root.</param>
             <param name="instance">The data instance.</param>
-            <param name="subschemaLocation">The location within the schema root.</param>
+            <param name="evaluationPath">The location within the schema root.</param>
             <param name="subschema">The subschema.</param>
             <param name="newUri">The URI of the subschema.</param>
+        </member>
+        <member name="M:Json.Schema.ValidationContext.Push(Json.Pointer.JsonPointer@,Json.Schema.JsonSchema@,System.Uri)">
+            <summary>
+            Pushes the state onto the stack and sets up for a nested layer of validation.
+            </summary>
+            <param name="evaluationPath">The location within the schema root.</param>
+            <param name="subschema">The subschema.</param>
+            <param name="newUri">The URI of the subschema.</param>
+        </member>
+        <member name="M:Json.Schema.ValidationContext.Validate">
+            <summary>
+            Validates as a subschema.  To be called from within keywords.
+            </summary>
         </member>
         <member name="M:Json.Schema.ValidationContext.Pop">
             <summary>
@@ -4782,25 +5216,12 @@
             The results object for validations.
             </summary>
         </member>
-        <member name="T:Json.Schema.ValidationResults.ContextConsolidator">
-            <summary>
-            Consolidates annotations from multiple child results onto a single parent result.
-            Generally, a keyword will define how it handles its own consolidation.  This action
-            must be registered on startup.
-            </summary>
-            <param name="results">The validation results.</param>
-        </member>
         <member name="P:Json.Schema.ValidationResults.IsValid">
             <summary>
             Indicates whether the validation passed or failed.
             </summary>
         </member>
-        <member name="P:Json.Schema.ValidationResults.Message">
-            <summary>
-            The error message, if any.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.ValidationResults.SchemaLocation">
+        <member name="P:Json.Schema.ValidationResults.EvaluationPath">
             <summary>
             The schema location that generated this node.
             </summary>
@@ -4810,10 +5231,14 @@
             The instance location that was processed.
             </summary>
         </member>
-        <member name="P:Json.Schema.ValidationResults.AbsoluteSchemaLocation">
+        <member name="P:Json.Schema.ValidationResults.SchemaLocation">
             <summary>
-            The absolute schema location.  Only available if the schema had an absolute URI ID.
+            The absolute schema location.
             </summary>
+            <remarks>
+            If the schema did not have an absolute `$id`, the value from
+            <see cref="P:Json.Schema.ValidationOptions.DefaultBaseUri"/> will be used.
+            </remarks>
         </member>
         <member name="P:Json.Schema.ValidationResults.NestedResults">
             <summary>
@@ -4834,23 +5259,24 @@
             The collection of annotations from this node.
             </summary>
         </member>
+        <member name="P:Json.Schema.ValidationResults.Errors">
+            <summary>
+            The collection of error from this node.
+            </summary>
+        </member>
         <member name="P:Json.Schema.ValidationResults.HasAnnotations">
             <summary>
-            Gets whether there are annotation.
+            Gets whether this node has annotations.
             </summary>
-            <remarks>
-            Because <see cref="P:Json.Schema.ValidationResults.Annotations"/> is lazily loaded, this property allows the check without
-            the side effect of allocating a list object.
-            </remarks>
+        </member>
+        <member name="P:Json.Schema.ValidationResults.HasErrors">
+            <summary>
+            Gets whether this node has errors.
+            </summary>
         </member>
         <member name="P:Json.Schema.ValidationResults.Parent">
             <summary>
             Gets the parent result.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.ValidationResults.ToDetailed">
-            <summary>
-            Transforms the results to the `details` format.
             </summary>
         </member>
         <member name="M:Json.Schema.ValidationResults.ToBasic">
@@ -4863,59 +5289,81 @@
             Transforms the results to the `flag` format.
             </summary>
         </member>
-        <member name="M:Json.Schema.ValidationResults.ConsolidateAnnotations">
-            <summary>
-            Invokes all consolidation actions.  Should be called at the end of processing an applicator keyword.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.ValidationResults.SetAnnotation(System.String,System.Object)">
+        <member name="M:Json.Schema.ValidationResults.SetAnnotation(System.String,System.Text.Json.Nodes.JsonNode)">
             <summary>
             Sets an annotation.
             </summary>
-            <param name="owner">The annotation key.  Typically the name of the keyword.</param>
+            <param name="keyword">The annotation key.  Typically the name of the keyword.</param>
             <param name="value">The annotation value.</param>
         </member>
-        <member name="M:Json.Schema.ValidationResults.RegisterConsolidationMethod(Json.Schema.ValidationResults.ContextConsolidator)">
-            <summary>
-            Registers a consolidation action.
-            </summary>
-            <param name="consolidateAnnotations">The action.</param>
-        </member>
-        <member name="M:Json.Schema.ValidationResults.TryGetAnnotation(System.String)">
+        <member name="M:Json.Schema.ValidationResults.TryGetAnnotation(System.String,System.Text.Json.Nodes.JsonNode@)">
             <summary>
             Tries to get an annotation.
             </summary>
-            <param name="key">The annotation key.</param>
+            <param name="keyword">The annotation key.</param>
+            <param name="annotation"></param>
             <returns>The annotation or null.</returns>
         </member>
-        <member name="M:Json.Schema.ValidationResults.GetAllAnnotations``1(System.String)">
+        <member name="M:Json.Schema.ValidationResults.GetAllAnnotations(System.String)">
             <summary>
             Gets all annotations of a particular data type for the current validation level.
             </summary>
-            <typeparam name="T">The data type.</typeparam>
-            <param name="key">The key under which the annotation is stored.  Typically a keyword.</param>
+            <param name="keyword">The key under which the annotation is stored.  Typically a keyword.</param>
             <returns>The set of all annotations for the current validation level.</returns>
         </member>
-        <member name="M:Json.Schema.ValidationResults.Pass">
-            <summary>
-            Marks the result as valid.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.ValidationResults.Fail(System.String)">
+        <member name="M:Json.Schema.ValidationResults.Fail">
             <summary>
             Marks the result as invalid.
             </summary>
+            <remarks>
+            For better support for customization, consider using the overload that takes parameters.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.ValidationResults.Fail(System.String,System.String)">
+            <summary>
+            Marks the result as invalid.
+            </summary>
+            <param name="keyword">The keyword that failed validation.</param>
             <param name="message">(optional) An error message.</param>
             <remarks>
             For better support for customization, consider using the overload that takes parameters.
             </remarks>
         </member>
-        <member name="M:Json.Schema.ValidationResults.Fail(System.String,System.ValueTuple{System.String,System.Object}[])">
+        <member name="M:Json.Schema.ValidationResults.Fail(System.String,System.String,System.ValueTuple{System.String,System.Object}[])">
             <summary>
             Marks the result as invalid.
             </summary>
+            <param name="keyword">The keyword that failed validation.</param>
             <param name="message">The error message.</param>
             <param name="parameters">Parameters to replace in the message.</param>
+        </member>
+        <member name="T:Json.Schema.Pre202012ValidationResultsJsonConverter.Annotation">
+            <summary>
+            Holder for an annotation value.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Pre202012ValidationResultsJsonConverter.Annotation.Owner">
+            <summary>
+            The keyword that created the annotation (acts as a key for lookup).
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Pre202012ValidationResultsJsonConverter.Annotation.Value">
+            <summary>
+            The annotation value.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Pre202012ValidationResultsJsonConverter.Annotation.Source">
+            <summary>
+            The pointer to the keyword that created the annotation.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Pre202012ValidationResultsJsonConverter.Annotation.#ctor(System.String,System.Object,Json.Pointer.JsonPointer@)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Pre202012ValidationResultsJsonConverter.Annotation"/>.
+            </summary>
+            <param name="owner">The keyword that created the annotation (acts as a key for lookup).</param>
+            <param name="value">The annotation value.</param>
+            <param name="source">The pointer to the keyword that created the annotation.</param>
         </member>
         <member name="T:Json.Schema.Vocabularies">
             <summary>
@@ -5062,6 +5510,86 @@
             The Draft 2020-12 Content vocabulary.
             </summary>
         </member>
+        <member name="F:Json.Schema.Vocabularies.CoreNextId">
+            <summary>
+            The Draft 2020-12 Core vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.UnevaluatedNextId">
+            <summary>
+            The Draft 2020-12 Unevaluated vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.ApplicatorNextId">
+            <summary>
+            The Draft 2020-12 Applicator vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.ValidationNextId">
+            <summary>
+            The Draft 2020-12 Validation vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.MetadataNextId">
+            <summary>
+            The Draft 2020-12 Metadata vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAnnotationNextId">
+            <summary>
+            The Draft 2020-12 Format vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAssertionNextId">
+            <summary>
+            The Draft 2020-12 Format vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.ContentNextId">
+            <summary>
+            The Draft 2020-12 Content vocabulary ID.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.CoreNext">
+            <summary>
+            The Draft 2020-12 Core vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.UnevaluatedNext">
+            <summary>
+            The Draft 2020-12 Unevaluated vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.ApplicatorNext">
+            <summary>
+            The Draft 2020-12 Applicator vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.ValidationNext">
+            <summary>
+            The Draft 2020-12 Validation vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.MetadataNext">
+            <summary>
+            The Draft 2020-12 Metadata vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAnnotationNext">
+            <summary>
+            The Draft 2020-12 Format-Annotation vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.FormatAssertionNext">
+            <summary>
+            The Draft 2020-12 Format-Assertion vocabulary.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Vocabularies.ContentNext">
+            <summary>
+            The Draft 2020-12 Content vocabulary.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Vocabulary">
             <summary>
             Represents a Draft 2019-09 and later vocabulary.
@@ -5110,6 +5638,11 @@
         <member name="T:Json.Schema.VocabularyKeyword">
             <summary>
             Handles `$vocabulary`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.VocabularyKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.VocabularyKeyword.Vocabulary">
@@ -5180,6 +5713,11 @@
         <member name="T:Json.Schema.WriteOnlyKeyword">
             <summary>
             Handles `writeOnly`.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.WriteOnlyKeyword.Name">
+            <summary>
+            The JSON name of the keyword.
             </summary>
         </member>
         <member name="P:Json.Schema.WriteOnlyKeyword.Value">

@@ -299,6 +299,13 @@
             <param name="right">A JSON Pointer.</param>
             <returns>`false` if the pointers are equal; `true` otherwise.</returns>
         </member>
+        <member name="M:Json.Pointer.PointerSegment.op_Implicit(System.Int32)~Json.Pointer.PointerSegment">
+            <summary>
+            Implicitly casts an <see cref="T:System.UInt32"/> to a <see cref="T:Json.Pointer.PointerSegment"/>.
+            </summary>
+            <param name="value">A pointer segment that represents the value.</param>
+            <remarks>No URI encoding is performed for implicit casts.</remarks>
+        </member>
         <member name="M:Json.Pointer.PointerSegment.op_Implicit(System.UInt32)~Json.Pointer.PointerSegment">
             <summary>
             Implicitly casts an <see cref="T:System.UInt32"/> to a <see cref="T:Json.Pointer.PointerSegment"/>.
