@@ -189,6 +189,6 @@ public class Suite
 	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
 		Assert.IsFalse(_useExternal);
-		Assert.IsFalse(_runDraftNext);
+		//Assert.IsFalse(_runDraftNext);
 	}
 }
