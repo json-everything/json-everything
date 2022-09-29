@@ -3,7 +3,7 @@ name: Publish json-everything.net
 on:
   push:
     branches:
-      - master # Default release branch
+      - draft-next # Default release branch
     paths:
       - Json.More/**
       - JsonLogic/**
@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: checkout draft-next
+        run: git checkout draft-next
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
