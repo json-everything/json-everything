@@ -35,7 +35,7 @@ public class Suite
 		var fileNames = Directory.GetFiles(testsPath, "*.json");
 		var options = new ValidationOptions
 		{
-			OutputFormat = OutputFormat.Verbose
+			OutputFormat = OutputFormat.Hierarchical
 		};
 
 		var allTests = new List<TestCaseData>();
@@ -142,7 +142,7 @@ public class Suite
 		{
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
 			var contents = File.ReadAllText(fileName);
-			
+
 			var name = $"${shortFileName}";
 			allTests.Add(new TestCaseData(contents) { TestName = name });
 		}
