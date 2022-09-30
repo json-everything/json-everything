@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -149,6 +150,14 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 {
+	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Select(GetKeyword).ToArray();
+
+	private static string GetKeyword(Type keywordType)
+	{
+		var field = keywordType.GetField("Name", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+		return (string)field!.GetValue(null);
+	}
+
 	public override DataKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
@@ -156,6 +165,10 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 
 		var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)!
 			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
+
+		if (references.Keys.Intersect(_coreKeywords).Any())
+			throw new JsonException("Core keywords are explicitly disallowed.");
+
 		return new DataKeyword(references);
 	}
 

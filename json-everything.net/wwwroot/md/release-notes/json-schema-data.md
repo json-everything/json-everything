@@ -1,3 +1,7 @@
+# [3.0.1](https://github.com/gregsdennis/json-everything/pull/316)
+
+Fixed bug where URI-encoded JSON Pointers where being handled as instance locations instead of schema locations.  (Thanks new [test suite](https://github.com/gregsdennis/json-schema-vocab-test-suites)!)
+
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/316)
 
 Supports the 2022 version of the vocabulary.  This is a breaking change from the previous version.

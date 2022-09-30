@@ -10,3 +10,6 @@
 [submodule "ref-repos/jsonpath-compliance-test-suite"]
 	path = ref-repos/jsonpath-compliance-test-suite
 	url = https://github.com/jsonpath-standard/jsonpath-compliance-test-suite.git
+[submodule "ref-repos/json-schema-vocab-test-suites"]
+	path = ref-repos/json-schema-vocab-test-suites
+	url = https://github.com/gregsdennis/json-schema-vocab-test-suites.git

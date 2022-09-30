@@ -24,4 +24,10 @@ git checkout main
 git pull
 cd ..
 
+cd json-schema-vocab-test-suites
+git fetch
+git checkout main
+git pull
+cd ..
+
 cd ..
