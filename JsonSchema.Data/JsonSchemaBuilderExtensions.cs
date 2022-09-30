@@ -37,7 +37,9 @@ public static class JsonSchemaBuilderExtensions
 
 	internal static IDataResourceIdentifier CreateResourceIdentifier(string identifier)
 	{
-		if (JsonPointer.TryParse(identifier, out var jp)) return new JsonPointerIdentifier(jp!);
+		if (JsonPointer.TryParse(identifier, out var jp))
+			if (!jp!.IsUriEncoded)
+				return new JsonPointerIdentifier(jp);
 		if (RelativeJsonPointer.TryParse(identifier, out var rjp)) return new RelativeJsonPointerIdentifier(rjp!);
 		if (Uri.TryCreate(identifier, UriKind.RelativeOrAbsolute, out var uri)) return new UriIdentifier(uri);
 

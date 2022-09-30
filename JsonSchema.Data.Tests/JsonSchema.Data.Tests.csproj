@@ -7,6 +7,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<RootNamespace>Json.Schema.Data.Tests</RootNamespace>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
