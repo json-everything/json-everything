@@ -15,11 +15,13 @@ namespace Json.Schema.Data.Tests.Suite;
 public class Suite
 {
 	private const string _testCasesPath = @"../../../../ref-repos/json-schema-vocab-test-suites/tests/data";
-	private const string _remoteSchemasPath = @"../../../../ref-repos/json-schema-vocab-test-suites/tests/data/external-sources";
+	private const string _remoteSchemasPath = _testCasesPath + "/external-sources";
+	private const string _coreSchemasPath = _testCasesPath + "/core";
 
 	private const bool _useExternal = false;
 	private const string _externalTestCasesPath = @"../../../../../json-schema-vocab-test-suites/tests/data";
-	private const string _externalRemoteSchemasPath = @"../../../../../json-schema-vocab-test-suites/tests/data/external-sources";
+	private const string _externalRemoteSchemasPath = _externalTestCasesPath + "/external-sources";
+	private const string _externalCoreSchemasPath = _externalTestCasesPath + "/core";
 
 	public static IEnumerable<TestCaseData> TestCases()
 	{
@@ -109,9 +111,6 @@ public class Suite
 		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
 
-		if (!InstanceIsDeserializable(test.Data))
-			Assert.Inconclusive("Instance not deserializable");
-
 		if (test.Error)
 		{
 			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.Validate(test.Data, options));
@@ -127,28 +126,34 @@ public class Suite
 		Assert.AreEqual(test.Valid, result.IsValid);
 	}
 
-	private static bool InstanceIsDeserializable(in JsonNode? testData)
+	public static IEnumerable<TestCaseData> CoreTestCases()
 	{
-		try
-		{
-			var value = (testData as JsonValue)?.GetValue<object>();
-			if (value is null) return true;
-			if (value is string) return false;
-			if (value is JsonElement { ValueKind: JsonValueKind.Number } element)
-				return element.TryGetDecimal(out _);
-			if (value.GetType().IsNumber())
-			{
-				// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
-				return true;
-			}
+		// ReSharper disable once HeuristicUnreachableCode
+		var testCasesPath = _useExternal ? _externalCoreSchemasPath : _coreSchemasPath;
 
-			return true;
-		}
-		catch (Exception e)
+		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
+			.AdjustForPlatform();
+		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
+
+		var fileNames = Directory.GetFiles(testsPath, "*.json");
+
+		var allTests = new List<TestCaseData>();
+		foreach (var fileName in fileNames)
 		{
-			Console.WriteLine(e.Message);
-			return false;
+			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
+			var contents = File.ReadAllText(fileName);
+			
+			var name = $"${shortFileName}";
+			allTests.Add(new TestCaseData(contents) { TestName = name });
 		}
+
+		return allTests;
+	}
+
+	[TestCaseSource(nameof(CoreTestCases))]
+	public void CoreKeywordsAreInvalid(string schemaText)
+	{
+		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText));
 	}
 
 	[Test]
