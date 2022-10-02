@@ -93,7 +93,7 @@
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
 	private Docs _docs;
-	private string _playgroundStyle = "";
+	private string _playgroundStyle = "d-none";
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
@@ -165,6 +165,8 @@
 
 		await LoadSavedLogic();
 		await LoadSavedInstance();
+
+		_playgroundStyle = _docs.Page == "playground/logic" ? "" : "d-none";
 	}
 
 	private async Task SetPagePath(MouseEventArgs args)

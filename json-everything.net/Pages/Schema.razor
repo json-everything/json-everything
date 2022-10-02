@@ -180,7 +180,7 @@
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
 	private Docs _docs;
-	private string _playgroundStyle = "";
+	private string _playgroundStyle = "d-none";
 
 	private readonly SchemaOptionsModel _options = new();
 
@@ -448,6 +448,8 @@ namespace JsonEverythingTemp
 		await LoadSavedInstance();
 		LoadSavedSettings();
 		await LoadAssemblyReferences();
+
+		_playgroundStyle = _docs.Page == "playground/schema" ? "" : "d-none";
 	}
 
 	private async Task LoadAssemblyReferences()

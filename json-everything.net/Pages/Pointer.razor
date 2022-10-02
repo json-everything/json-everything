@@ -90,7 +90,7 @@
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
 	private Docs _docs;
-	private string _playgroundStyle = "";
+	private string _playgroundStyle = "d-none";
 
 	private readonly InputModel _input = new();
 
@@ -115,6 +115,8 @@
 
 		LoadSavedPath();
 		await LoadSavedInstance();
+
+		_playgroundStyle = _docs.Page == "playground/pointer" ? "" : "d-none";
 	}
 
 	private async Task Evaluate()
