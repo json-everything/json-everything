@@ -26,7 +26,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	public const string Name = "additionalItems";
 
 	/// <summary>
-	/// The schema by which to validation additional items.
+	/// The schema by which to evaluate additional items.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
@@ -40,10 +40,10 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -72,11 +72,11 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		for (int i = startIndex; i < array.Count; i++)
 		{
 			var i1 = i;
-			context.Log(() => $"Validating item at index {i1}.");
+			context.Log(() => $"Evaluating item at index {i1}.");
 			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			context.Validate();
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

@@ -40,23 +40,23 @@ public class Suite
 		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		};
 		switch (draftFolder)
 		{
 			case "draft6":
-				options.ValidateAs = Draft.Draft6;
+				options.EvaluateAs = Draft.Draft6;
 				break;
 			case "draft7":
-				options.ValidateAs = Draft.Draft7;
+				options.EvaluateAs = Draft.Draft7;
 				break;
 			case "draft2019-09":
-				options.ValidateAs = Draft.Draft201909;
+				options.EvaluateAs = Draft.Draft201909;
 				break;
 			case "draft2020-12":
-				options.ValidateAs = Draft.Draft202012;
+				options.EvaluateAs = Draft.Draft202012;
 				break;
 			case "draft-next":
 				// options.ValidateAs = Draft.DraftNext;
@@ -86,7 +86,7 @@ public class Suite
 				{
 					var optional = collection.IsOptional ? "(optional) / " : null;
 					var name = $"{draftFolder} / {shortFileName} / {optional}{collection.Description} / {test.Description}";
-					var optionsCopy = ValidationOptions.From(options);
+					var optionsCopy = EvaluationOptions.From(options);
 					allTests.Add(new TestCaseData(collection, test, shortFileName, optionsCopy) { TestName = name });
 				}
 			}
@@ -114,7 +114,7 @@ public class Suite
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
+	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -137,7 +137,7 @@ public class Suite
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
-		var result = collection.Schema.Validate(test.Data, options);
+		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
@@ -148,13 +148,13 @@ public class Suite
 
 	//[TestCaseSource(nameof(TestCases))]
 	// This is for local runs only.
-	public void Benchmark(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
+	public void Benchmark(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
 		options.OutputFormat = OutputFormat.Flag;
-		var result = collection.Schema.Validate(test.Data, options);
+		var result = collection.Schema.Evaluate(test.Data, options);
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");

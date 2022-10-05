@@ -30,7 +30,7 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// <param name="context">The schema evaluation context.</param>
 	/// <param name="value">If return is true, the value at the indicated location.</param>
 	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(ValidationContext context, out JsonNode? value)
+	public bool TryResolve(EvaluationContext context, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 		var baseUri = parts[0];

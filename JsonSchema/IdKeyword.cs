@@ -41,14 +41,14 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
-			(context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7))
+			(context.Options.EvaluatingAs == Draft.Draft6 || context.Options.EvaluatingAs == Draft.Draft7))
 		{
 			context.NotApplicable(() => "$ref present; ignoring");
 			return;

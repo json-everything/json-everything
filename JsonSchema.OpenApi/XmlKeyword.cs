@@ -95,10 +95,10 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(_Name);
 		context.LocalResult.SetAnnotation(_Name, _json);

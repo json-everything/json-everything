@@ -30,7 +30,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 	public const string Name = "unevaluatedProperties";
 
 	/// <summary>
-	/// The schema by which to validation additional properties.
+	/// The schema by which to evaluate additional properties.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
@@ -44,10 +44,10 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -114,10 +114,10 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 				continue;
 			}
 
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			context.Validate();
+			context.Evaluate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");

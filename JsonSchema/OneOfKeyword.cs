@@ -53,10 +53,10 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var validCount = 0;
@@ -66,7 +66,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
 			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			context.Validate();
+			context.Evaluate();
 			validCount += context.LocalResult.IsValid ? 1 : 0;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

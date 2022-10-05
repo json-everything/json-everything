@@ -47,7 +47,7 @@ public class Tests
 	{
 		Vocabularies.Register();
 
-		ValidationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
+		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 
 	[Test]
@@ -56,7 +56,7 @@ public class Tests
 		var instanceData = "{\"minValue\":5,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Validate(instance);
+		var result = InstanceRef.Evaluate(instance);
 
 		result.AssertValid();
 	}
@@ -67,7 +67,7 @@ public class Tests
 		var instanceData = "{\"minValue\":15,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Validate(instance);
+		var result = InstanceRef.Evaluate(instance);
 
 		result.AssertInvalid();
 	}
@@ -78,7 +78,7 @@ public class Tests
 		var instanceData = "{\"minValue\":5,\"foo\":{\"bar\":10}}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRelativeRef.Validate(instance);
+		var result = InstanceRelativeRef.Evaluate(instance);
 
 		result.AssertValid();
 	}
@@ -89,7 +89,7 @@ public class Tests
 		var instanceData = "{\"minValue\":15,\"foo\":{\"bar\":10}}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRelativeRef.Validate(instance);
+		var result = InstanceRelativeRef.Evaluate(instance);
 
 		result.AssertInvalid();
 	}
@@ -100,7 +100,7 @@ public class Tests
 		var instanceData = "{\"minValue\":true,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		Assert.Throws<JsonException>(() => InstanceRef.Validate(instance));
+		Assert.Throws<JsonException>(() => InstanceRef.Evaluate(instance));
 	}
 
 	[Test]
@@ -109,7 +109,7 @@ public class Tests
 		var instanceData = "{\"minValu\":5,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		Assert.Throws<RefResolutionException>(() => InstanceRef.Validate(instance));
+		Assert.Throws<RefResolutionException>(() => InstanceRef.Evaluate(instance));
 	}
 
 	[Test]
@@ -122,7 +122,7 @@ public class Tests
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
 
-			var result = ExternalRef.Validate(instance);
+			var result = ExternalRef.Evaluate(instance);
 
 			result.AssertValid();
 		}
@@ -142,7 +142,7 @@ public class Tests
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
 
-			var result = ExternalRef.Validate(instance);
+			var result = ExternalRef.Evaluate(instance);
 
 			result.AssertInvalid();
 		}

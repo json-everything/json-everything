@@ -41,16 +41,16 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var overallResult = true;
 		var violations = new List<Uri>();
 		var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
-		switch (context.Options.ValidatingAs)
+		switch (context.Options.EvaluatingAs)
 		{
 			case Draft.Unspecified:
 			case Draft.Draft201909:

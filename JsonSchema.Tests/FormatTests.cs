@@ -16,7 +16,7 @@ public class FormatTests
 
 		var value = JsonNode.Parse("\"100.2.54.3\"");
 
-		var result = schema.Validate(value, new ValidationOptions { RequireFormatValidation = true });
+		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
 		Assert.True(result.IsValid);
 	}
@@ -28,7 +28,7 @@ public class FormatTests
 
 		var value = JsonNode.Parse("\"100.2.5444.3\"");
 
-		var result = schema.Validate(value, new ValidationOptions { RequireFormatValidation = true });
+		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
 		Assert.False(result.IsValid);
 	}
@@ -65,7 +65,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse("\"a value\"");
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 		var serialized = JsonSerializer.Serialize(results);
@@ -75,7 +75,7 @@ public class FormatTests
 	[Test]
 	public void UnknownFormat_Assertion_FailsValidation()
 	{
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			OnlyKnownFormats = true
@@ -90,7 +90,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse("\"a value\"");
 
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		results.AssertInvalid();
 		var serialized = JsonSerializer.Serialize(results);
@@ -108,7 +108,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse("\"a value\"");
 
-		var results = schema.Validate(instance, new ValidationOptions
+		var results = schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true,
@@ -139,7 +139,7 @@ public class FormatTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format("hexadecimal");
 
-		var results = schema.Validate(json, new ValidationOptions
+		var results = schema.Evaluate(json, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true

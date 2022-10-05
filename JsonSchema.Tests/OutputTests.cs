@@ -343,13 +343,13 @@ public class OutputTests
 		result.AssertInvalid(expected);
 	}
 
-		private static ValidationResults Validate(string json, OutputFormat format)
+		private static EvaluationResults Validate(string json, OutputFormat format)
 		{
 			var instance = JsonNode.Parse(json);
-			var options = ValidationOptions.From(ValidationOptions.Default);
+			var options = EvaluationOptions.From(EvaluationOptions.Default);
 			options.OutputFormat = format;
 
-			var result = _schema.Validate(instance, options);
+			var result = _schema.Evaluate(instance, options);
 			return result;
 		}
 
@@ -364,7 +364,7 @@ public class OutputTests
 
 			var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
 		var serialized = JsonSerializer.Serialize(result);
 		Console.WriteLine(serialized);
@@ -383,7 +383,7 @@ public class OutputTests
 
 			var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
 		var serialized = JsonSerializer.Serialize(result);
 		Console.WriteLine(serialized);
@@ -407,7 +407,7 @@ public class OutputTests
 
 			var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
 		var serialized = JsonSerializer.Serialize(result);
 		Console.WriteLine(serialized);
@@ -424,7 +424,7 @@ public class OutputTests
 
 			var instance = JsonNode.Parse("[1,2]");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
 		var serialized = JsonSerializer.Serialize(result);
 		Console.WriteLine(serialized);
@@ -441,7 +441,7 @@ public class OutputTests
 
 			var instance = JsonNode.Parse("[1,2]");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
 		var serialized = JsonSerializer.Serialize(result);
 		Console.WriteLine(serialized);
@@ -456,7 +456,7 @@ public class OutputTests
 
 		var instance = JsonDocument.Parse("[1,2]").RootElement;
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
 		var expected = @"{
   ""valid"": false,
@@ -530,11 +530,11 @@ public class OutputTests
   ""bar"": {""bar-prop"": 20}
 }");
 
-		var validationOptions = new ValidationOptions
+		var validationOptions = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		};
-		var result = schema.Validate(failing, validationOptions);
+		var result = schema.Evaluate(failing, validationOptions);
 
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -549,7 +549,7 @@ public class OutputTests
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 		Console.WriteLine();
 
-		result = schema.Validate(passing, validationOptions);
+		result = schema.Evaluate(passing, validationOptions);
 
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 		Console.WriteLine();
@@ -628,8 +628,8 @@ public class OutputTests
   }
 }");
 
-		ValidationOptions.Default.Log = null!;
-		var result = MetaSchemas.Draft202012.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		EvaluationOptions.Default.Log = null!;
+		var result = MetaSchemas.Draft202012.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		//result.ToBasic();
 

@@ -11,7 +11,7 @@ namespace Json.Schema.Tests;
 
 public static class ResultsExtensions
 {
-	public static void AssertInvalid(this ValidationResults results, string? expected = null)
+	public static void AssertInvalid(this EvaluationResults results, string? expected = null)
 	{
 		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
@@ -23,7 +23,7 @@ public static class ResultsExtensions
 		AssertEquivalent(results, expected);
 	}
 
-	public static void AssertValid(this ValidationResults results, string? expected = null)
+	public static void AssertValid(this EvaluationResults results, string? expected = null)
 	{
 		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
@@ -35,7 +35,7 @@ public static class ResultsExtensions
 		AssertEquivalent(results, expected);
 	}
 
-	private static void AssertEquivalent(ValidationResults results, string? expected = null)
+	private static void AssertEquivalent(EvaluationResults results, string? expected = null)
 	{
 		if (expected == null) return;
 

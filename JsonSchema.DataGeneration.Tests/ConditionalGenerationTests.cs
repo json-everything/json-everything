@@ -67,7 +67,7 @@ public class ConditionalGenerationTests
 			.Then(new JsonSchemaBuilder().Type(SchemaValueType.Object))
 			.Else(true);
 
-		Run(schema, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 	}
 
 	[Test]
@@ -98,6 +98,6 @@ public class ConditionalGenerationTests
 			)
 			.Required("people");
 
-		Run(schema, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 	}
 }

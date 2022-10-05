@@ -5,9 +5,9 @@ using System.Linq;
 namespace Json.Schema;
 
 /// <summary>
-/// Allows configuration of the validation process.
+/// Allows configuration of the evaluation process.
 /// </summary>
-public class ValidationOptions
+public class EvaluationOptions
 {
 	private Uri? _defaultBaseUri;
 	private ILog? _log;
@@ -15,18 +15,18 @@ public class ValidationOptions
 	/// <summary>
 	/// The default settings.
 	/// </summary>
-	public static ValidationOptions Default { get; } = new();
+	public static EvaluationOptions Default { get; } = new();
 
 	/// <summary>
 	/// Indicates which schema draft to process as.  This will filter the keywords
 	/// of a schema based on their support.
 	/// </summary>
-	public Draft ValidateAs { get; set; }
+	public Draft EvaluateAs { get; set; }
 	/// <summary>
 	/// Indicates whether the schema should be validated against its `$schema` value.
 	/// this is not typically necessary.
 	/// </summary>
-	public bool ValidateMetaSchema { get; set; }
+	public bool ValidateAgainstMetaSchema { get; set; }
 	/// <summary>
 	/// Specifies the output format.
 	/// </summary>
@@ -92,29 +92,29 @@ public class ValidationOptions
 	/// </summary>
 	public bool ProcessCustomKeywords { get; set; }
 
-	internal Draft ValidatingAs { get; private set; }
+	internal Draft EvaluatingAs { get; private set; }
 
-	static ValidationOptions()
+	static EvaluationOptions()
 	{
 		Default.SchemaRegistry.InitializeMetaSchemas();
 	}
 
 	/// <summary>
-	/// Create a new instance of the <see cref="ValidationOptions"/> class.
+	/// Create a new instance of the <see cref="EvaluationOptions"/> class.
 	/// </summary>
-	public ValidationOptions()
+	public EvaluationOptions()
 	{
 		SchemaRegistry = new SchemaRegistry(this);
 	}
 
-	internal static ValidationOptions From(ValidationOptions other)
+	internal static EvaluationOptions From(EvaluationOptions other)
 	{
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			ValidateAs = other.ValidateAs,
+			EvaluateAs = other.EvaluateAs,
 			OutputFormat = other.OutputFormat,
 			DefaultBaseUri = other.DefaultBaseUri,
-			ValidateMetaSchema = other.ValidateMetaSchema,
+			ValidateAgainstMetaSchema = other.ValidateAgainstMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
 			ProcessCustomKeywords = other.ProcessCustomKeywords,
 			LogIndentLevel = other.LogIndentLevel,
@@ -128,25 +128,25 @@ public class ValidationOptions
 
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri? metaSchemaId, SchemaRegistry registry)
 	{
-		var currentlyValidatingAs = ValidateAs;
-		ValidatingAs = Draft.Unspecified;
-		while (metaSchemaId != null && ValidatingAs == Draft.Unspecified)
+		var currentlyEvaluatingAs = EvaluateAs;
+		EvaluatingAs = Draft.Unspecified;
+		while (metaSchemaId != null && EvaluatingAs == Draft.Unspecified)
 		{
-			ValidatingAs = metaSchemaId.OriginalString switch
+			EvaluatingAs = metaSchemaId.OriginalString switch
 			{
 				MetaSchemas.Draft6IdValue => Draft.Draft6,
 				MetaSchemas.Draft7IdValue => Draft.Draft7,
 				MetaSchemas.Draft201909IdValue => Draft.Draft201909,
 				MetaSchemas.Draft202012IdValue => Draft.Draft202012,
 				MetaSchemas.DraftNextIdValue => Draft.DraftNext,
-				_ => currentlyValidatingAs
+				_ => currentlyEvaluatingAs
 			};
 			if (metaSchemaId == MetaSchemas.Draft6Id || metaSchemaId == MetaSchemas.Draft7Id)
-				return DisallowSiblingRef(keywords, ValidatingAs);
+				return DisallowSiblingRef(keywords, EvaluatingAs);
 			if (metaSchemaId == MetaSchemas.Draft201909Id ||
 			    metaSchemaId == MetaSchemas.Draft202012Id ||
 			    metaSchemaId == MetaSchemas.DraftNextId)
-				return AllowSiblingRef(keywords, ValidatingAs);
+				return AllowSiblingRef(keywords, EvaluatingAs);
 			var metaSchema = registry.Get(metaSchemaId);
 			if (metaSchema == null) return ByOption(keywords);
 			var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
@@ -155,25 +155,25 @@ public class ValidationOptions
 			metaSchemaId = newMetaSchemaId;
 		}
 
-		if (ValidatingAs == Draft.Unspecified)
-			ValidatingAs = currentlyValidatingAs;
+		if (EvaluatingAs == Draft.Unspecified)
+			EvaluatingAs = currentlyEvaluatingAs;
 
 		return ByOption(keywords);
 	}
 
 	private IEnumerable<IJsonSchemaKeyword> ByOption(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
-		switch (ValidateAs)
+		switch (EvaluateAs)
 		{
 			case Draft.Draft6:
 			case Draft.Draft7:
-				return DisallowSiblingRef(keywords, ValidateAs);
+				return DisallowSiblingRef(keywords, EvaluateAs);
 			case Draft.Unspecified:
 			case Draft.Draft201909:
 			case Draft.Draft202012:
 			case Draft.DraftNext:
 			default:
-				return AllowSiblingRef(keywords, ValidateAs);
+				return AllowSiblingRef(keywords, EvaluateAs);
 		}
 	}
 

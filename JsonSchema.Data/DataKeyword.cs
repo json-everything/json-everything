@@ -64,14 +64,14 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
+	/// <param name="context">Contextual details for the evaluation process.</param>
 	/// <exception cref="JsonException">
 	/// Thrown when the formed schema contains values that are invalid for the associated
 	/// keywords.
 	/// </exception>
-	public void Validate(ValidationContext context)
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var data = new Dictionary<string, JsonNode>();
@@ -91,7 +91,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
 		context.Push(context.EvaluationPath.Combine(Name), subschema);
-		context.Validate();
+		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)

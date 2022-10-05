@@ -7,7 +7,7 @@ namespace Json.Schema;
 /// </summary>
 /// <remarks>
 /// Apply this attribute to your schema keyword if it contains subschemas
-/// that also provide validations.
+/// that also provide evaluations.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public class ApplicatorAttribute : Attribute

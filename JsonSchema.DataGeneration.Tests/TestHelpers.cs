@@ -8,11 +8,11 @@ namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
-	public static void Run(JsonSchema schema, ValidationOptions? options = null)
+	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
 		var result = schema.GenerateData();
 
-		options ??= ValidationOptions.Default;
+		options ??= EvaluationOptions.Default;
 
 		Assert.IsTrue(result.IsSuccess, "failed generation");
 		Console.WriteLine(JsonSerializer.Serialize(result.Result,
@@ -21,7 +21,7 @@ public static class TestHelpers
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			}));
-		var validation = schema.Validate(result.Result, options);
+		var validation = schema.Evaluate(result.Result, options);
 		Console.WriteLine(JsonSerializer.Serialize(validation,
 			new JsonSerializerOptions
 			{
@@ -31,11 +31,11 @@ public static class TestHelpers
 		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
-	public static void RunFailure(JsonSchema schema, ValidationOptions? options = null)
+	public static void RunFailure(JsonSchema schema, EvaluationOptions? options = null)
 	{
 		var result = schema.GenerateData();
 
-		options ??= ValidationOptions.Default;
+		options ??= EvaluationOptions.Default;
 
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)

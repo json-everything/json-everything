@@ -41,10 +41,10 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
@@ -61,7 +61,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		if (vocabularyKeyword != null)
 			context.UpdateMetaSchemaVocabs(vocabularyKeyword.Vocabulary);
 
-		if (!context.Options.ValidateMetaSchema)
+		if (!context.Options.ValidateAgainstMetaSchema)
 		{
 			context.ExitKeyword(Name, true);
 			return;
@@ -70,9 +70,9 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		context.Log(() => "Validating against meta-schema.");
 		using var document = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema));
 		var schemaAsJson = document.RootElement;
-		var newOptions = ValidationOptions.From(context.Options);
-		newOptions.ValidateMetaSchema = false;
-		var results = metaSchema.Validate(schemaAsJson, newOptions);
+		var newOptions = EvaluationOptions.From(context.Options);
+		newOptions.ValidateAgainstMetaSchema = false;
+		var results = metaSchema.Evaluate(schemaAsJson, newOptions);
 
 		if (!results.IsValid)
 			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));

@@ -60,10 +60,10 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 
@@ -89,7 +89,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 					instanceProperty.Value ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")),
 					schema);
-				context.Validate();
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();

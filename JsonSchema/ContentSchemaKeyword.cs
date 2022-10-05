@@ -24,24 +24,24 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	public const string Name = "contentSchema";
 
 	/// <summary>
-	/// The schema against which to validate the content.
+	/// The schema against which to evaluate the content.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="ContentSchemaKeyword"/>.
 	/// </summary>
-	/// <param name="value">The schema against which to validate the content.</param>
+	/// <param name="value">The schema against which to evaluate the content.</param>
 	public ContentSchemaKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -52,7 +52,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Validate();
+		context.Evaluate();
 		context.Pop();
 		var result = context.LocalResult.IsValid;
 		if (!result)

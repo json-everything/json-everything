@@ -1100,14 +1100,27 @@ public static class JsonSchemaBuilderExtensions
 	}
 
 	/// <summary>
-	/// Convenience method that builds and validates with a single call.
+	/// Convenience method that builds and evaluates with a single call.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
 	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this validation.</param>
-	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public static ValidationResults Validate(this JsonSchemaBuilder builder, JsonNode? root, ValidationOptions? options = null)
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	public static EvaluationResults Evaluate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
 	{
-		return builder.Build().Validate(root, options);
+		return builder.Build().Evaluate(root, options);
+	}
+
+	/// <summary>
+	/// Convenience method that builds and evaluates with a single call.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="root">The root instance.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	[Obsolete("Use Evalute() instead.")]
+	public static EvaluationResults Validate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
+	{
+		return builder.Build().Evaluate(root, options);
 	}
 }

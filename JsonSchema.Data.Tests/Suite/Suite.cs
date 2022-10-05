@@ -33,7 +33,7 @@ public class Suite
 		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json");
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		};
@@ -55,7 +55,7 @@ public class Suite
 				{
 					var optional = collection.IsOptional ? "(optional)/" : null;
 					var name = $"{shortFileName}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
-					var optionsCopy = ValidationOptions.From(options);
+					var optionsCopy = EvaluationOptions.From(options);
 					allTests.Add(new TestCaseData(collection, test, shortFileName, optionsCopy) { TestName = name });
 				}
 			}
@@ -88,7 +88,7 @@ public class Suite
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, ValidationOptions options)
+	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -113,11 +113,11 @@ public class Suite
 
 		if (test.Error)
 		{
-			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.Validate(test.Data, options));
+			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.Evaluate(test.Data, options));
 			return;
 		}
 
-		var result = collection.Schema.Validate(test.Data, options);
+		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 

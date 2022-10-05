@@ -9,15 +9,15 @@ using Json.Pointer;
 namespace Json.Schema;
 
 /// <summary>
-/// The results object for validations.
+/// The results object for evaluations.
 /// </summary>
-[JsonConverter(typeof(ValidationResultsJsonConverter))]
-public class ValidationResults
+[JsonConverter(typeof(EvaluationResultsJsonConverter))]
+public class EvaluationResults
 {
 	private readonly Uri _currentUri;
 	private readonly JsonPointer? _reference;
 	private Uri? _schemaLocation;
-	private List<ValidationResults>? _nestedResults;
+	private List<EvaluationResults>? _nestedResults;
 	private Dictionary<string, JsonNode?>? _annotations;
 	private Dictionary<string, string>? _errors;
 
@@ -39,14 +39,14 @@ public class ValidationResults
 	/// </summary>
 	/// <remarks>
 	/// If the schema did not have an absolute `$id`, the value from
-	/// <see cref="ValidationOptions.DefaultBaseUri"/> will be used.
+	/// <see cref="EvaluationOptions.DefaultBaseUri"/> will be used.
 	/// </remarks>
 	public Uri SchemaLocation => _schemaLocation ??= BuildSchemaLocation();
 
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public IReadOnlyList<ValidationResults> NestedResults => _nestedResults ??= new List<ValidationResults>();
+	public IReadOnlyList<EvaluationResults> NestedResults => _nestedResults ??= new List<EvaluationResults>();
 
 	/// <summary>
 	/// Gets whether there are nested results.
@@ -80,13 +80,13 @@ public class ValidationResults
 	/// <summary>
 	/// Gets the parent result.
 	/// </summary>
-	public ValidationResults? Parent { get; private set; }
+	public EvaluationResults? Parent { get; private set; }
 
 	internal bool Exclude { get; private set; }
 
 	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
 
-	internal ValidationResults(ValidationContext context)
+	internal EvaluationResults(EvaluationContext context)
 	{
 		EvaluationPath = context.EvaluationPath;
 		_currentUri = context.CurrentUri;
@@ -94,7 +94,7 @@ public class ValidationResults
 		InstanceLocation = context.InstanceLocation;
 	}
 
-	private ValidationResults(ValidationResults other)
+	private EvaluationResults(EvaluationResults other)
 	{
 		IsValid = other.IsValid;
 		EvaluationPath = other.EvaluationPath;
@@ -130,21 +130,21 @@ public class ValidationResults
 		if (!children.Any()) return;
 
 		children.Remove(this);
-		children.Insert(0, new ValidationResults(this) { Parent = this });
+		children.Insert(0, new EvaluationResults(this) { Parent = this });
 		_annotations?.Clear();
 		_errors?.Clear();
 		if (_nestedResults == null)
-			_nestedResults = new List<ValidationResults>();
+			_nestedResults = new List<EvaluationResults>();
 		else
 			_nestedResults.Clear();
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 		Format = OutputFormat.Basic;
 	}
 
-	private IEnumerable<ValidationResults> GetAllChildren()
+	private IEnumerable<EvaluationResults> GetAllChildren()
 	{
-		var all = new List<ValidationResults>();
-		var toProcess = new Queue<ValidationResults>();
+		var all = new List<EvaluationResults>();
+		var toProcess = new Queue<EvaluationResults>();
 
 		toProcess.Enqueue(this);
 		while (toProcess.Any())
@@ -202,10 +202,10 @@ public class ValidationResults
 	}
 
 	/// <summary>
-	/// Gets all annotations of a particular data type for the current validation level.
+	/// Gets all annotations of a particular data type for the current evaluation level.
 	/// </summary>
 	/// <param name="keyword">The key under which the annotation is stored.  Typically a keyword.</param>
-	/// <returns>The set of all annotations for the current validation level.</returns>
+	/// <returns>The set of all annotations for the current evaluation level.</returns>
 	public IEnumerable<JsonNode?> GetAllAnnotations(string keyword)
 	{
 		if (HasAnnotations && _annotations!.TryGetValue(keyword, out var annotation))
@@ -262,9 +262,9 @@ public class ValidationResults
 		_errors[keyword] = message.ReplaceTokens(parameters);
 	}
 
-	internal void AddNestedResult(ValidationResults results)
+	internal void AddNestedResult(EvaluationResults results)
 	{
-		_nestedResults ??= new List<ValidationResults>();
+		_nestedResults ??= new List<EvaluationResults>();
 		_nestedResults.Add(results);
 		results.Parent = this;
 	}
@@ -276,14 +276,14 @@ public class ValidationResults
 	}
 }
 
-internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
+internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 {
-	public override ValidationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
 	}
 
-	public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
 
@@ -331,7 +331,10 @@ internal class ValidationResultsJsonConverter : JsonConverter<ValidationResults>
 	}
 }
 
-public class Pre202012ValidationResultsJsonConverter : JsonConverter<ValidationResults>
+/// <summary>
+/// Produces output formats specified by 2019-09 and 2020-12.
+/// </summary>
+public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 {
 	/// <summary>
 	/// Holder for an annotation value.
@@ -365,12 +368,21 @@ public class Pre202012ValidationResultsJsonConverter : JsonConverter<ValidationR
 		}
 	}
 
-	public override ValidationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	/// <summary>Reads and converts the JSON to type <typeparamref name="T" />.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
+	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
 	}
 
-	public override void Write(Utf8JsonWriter writer, ValidationResults value, JsonSerializerOptions options)
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
 
@@ -440,7 +452,7 @@ public class Pre202012ValidationResultsJsonConverter : JsonConverter<ValidationR
 		writer.WriteEndObject();
 	}
 
-	private static void WriteError(Utf8JsonWriter writer, ValidationResults value, string keyword, string error, JsonSerializerOptions options)
+	private static void WriteError(Utf8JsonWriter writer, EvaluationResults value, string keyword, string error, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 
@@ -464,7 +476,7 @@ public class Pre202012ValidationResultsJsonConverter : JsonConverter<ValidationR
 		writer.WriteEndObject();
 	}
 
-	private static void WriteAnnotation(Utf8JsonWriter writer, ValidationResults value, Annotation annotation, JsonSerializerOptions options)
+	private static void WriteAnnotation(Utf8JsonWriter writer, EvaluationResults value, Annotation annotation, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 

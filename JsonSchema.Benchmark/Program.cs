@@ -33,7 +33,7 @@ namespace Json.Schema.Benchmark
 				var schema = JsonSchema.FromText(schemaText);
 				var instance = JsonDocument.Parse(instanceText);
 
-				return schema.Validate(instance.RootElement).IsValid;
+				return schema.Evaluate(instance.RootElement).IsValid;
 			}, iterations);
 #pragma warning restore CS1998
 		}

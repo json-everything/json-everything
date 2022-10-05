@@ -30,13 +30,13 @@ public class DevTest
 
 		var instance = new JsonObject { ["foo"] = "foo awe;ovinawe" };
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Converters = { new Pre202012ValidationResultsJsonConverter() }
+			Converters = { new Pre202012EvaluationResultsJsonConverter() }
 		}));
 	}
 }

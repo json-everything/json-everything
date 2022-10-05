@@ -40,10 +40,10 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var parts = Reference.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
@@ -123,7 +123,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			context.Reference = reference;
 		context.Push(context.EvaluationPath.Combine(Name), schema, newUri);
 		context.NavigatedByDirectRef = navigatedByDirectRef;
-		context.Validate();
+		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)

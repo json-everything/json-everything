@@ -100,7 +100,7 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 	{
 		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
 
-		var results = JsonPatchTest.TestSchema.Validate(node, new ValidationOptions
+		var results = JsonPatchTest.TestSchema.Evaluate(node, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true

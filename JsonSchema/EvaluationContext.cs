@@ -7,9 +7,9 @@ using Json.Pointer;
 namespace Json.Schema;
 
 /// <summary>
-/// Provides a single source of data for validation operations.
+/// Provides a single source of data for evaluation operations.
 /// </summary>
-public class ValidationContext
+public class EvaluationContext
 {
 	private JsonSchema? _currentAnchorBackup;
 
@@ -18,7 +18,7 @@ public class ValidationContext
 	private readonly Stack<JsonPointer> _instanceLocations = new();
 	private readonly Stack<JsonSchema> _localSchemas = new();
 	private readonly Stack<JsonPointer> _evaluationPaths = new();
-	private readonly Stack<ValidationResults> _localResults = new();
+	private readonly Stack<EvaluationResults> _localResults = new();
 	private readonly Stack<bool> _dynamicScopeFlags = new();
 	private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new();
 	private readonly Stack<bool> _directRefNavigation = new();
@@ -26,9 +26,9 @@ public class ValidationContext
 	private JsonSchema? _currentAnchor;
 
 	/// <summary>
-	/// The option set for the validation.
+	/// The option set for the evaluation.
 	/// </summary>
-	public ValidationOptions Options { get; }
+	public EvaluationOptions Options { get; }
 
 	/// <summary>
 	/// The root schema.
@@ -78,9 +78,9 @@ public class ValidationContext
 	}
 
 	/// <summary>
-	/// The result object for the current validation.
+	/// The result object for the current evaluation.
 	/// </summary>
-	public ValidationResults LocalResult => _localResults.Peek();
+	public EvaluationResults LocalResult => _localResults.Peek();
 
 	internal bool UriChanged { get; set; }
 	internal JsonPointer? Reference { get; set; }
@@ -105,7 +105,7 @@ public class ValidationContext
 	public bool ApplyOptimizations => Options.OutputFormat == OutputFormat.Flag && !_requireAnnotations.Peek();
 
 #pragma warning disable 8618
-	internal ValidationContext(ValidationOptions options,
+	internal EvaluationContext(EvaluationOptions options,
 		Uri? currentUri,
 		JsonNode? instanceRoot,
 		JsonSchema schemaRoot)
@@ -118,7 +118,7 @@ public class ValidationContext
 		_instanceLocations.Push(JsonPointer.Empty);
 		_localSchemas.Push(schemaRoot);
 		_evaluationPaths.Push(JsonPointer.Empty);
-		_localResults.Push(new ValidationResults(this));
+		_localResults.Push(new EvaluationResults(this));
 		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(null);
 		_directRefNavigation.Push(false);
@@ -127,7 +127,7 @@ public class ValidationContext
 #pragma warning restore 8618
 
 	/// <summary>
-	/// Pushes the state onto the stack and sets up for a nested layer of validation.
+	/// Pushes the state onto the stack and sets up for a nested layer of evaluation.
 	/// </summary>
 	/// <param name="instanceLocation">The location within the data instance root.</param>
 	/// <param name="instance">The data instance.</param>
@@ -145,7 +145,7 @@ public class ValidationContext
 		_localInstances.Push(instance);
 		_evaluationPaths.Push(evaluationPath);
 		_localSchemas.Push(subschema);
-		var newResult = new ValidationResults(this);
+		var newResult = new EvaluationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
 		_dynamicScopeFlags.Push(false);
@@ -154,7 +154,7 @@ public class ValidationContext
 	}
 
 	/// <summary>
-	/// Pushes the state onto the stack and sets up for a nested layer of validation.
+	/// Pushes the state onto the stack and sets up for a nested layer of evaluation.
 	/// </summary>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
@@ -169,7 +169,7 @@ public class ValidationContext
 		_evaluationPaths.Push(evaluationPath);
 		_localSchemas.Push(subschema);
 		_requireAnnotations.Push(_requireAnnotations.Peek() || RequiresAnnotationCollection(localSubschema));
-		var newResult = new ValidationResults(this);
+		var newResult = new EvaluationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
 		_dynamicScopeFlags.Push(false);
@@ -178,9 +178,9 @@ public class ValidationContext
 	}
 
 	/// <summary>
-	/// Validates as a subschema.  To be called from within keywords.
+	/// Evaluates as a subschema.  To be called from within keywords.
 	/// </summary>
-	public void Validate()
+	public void Evaluate()
 	{
 		if (LocalSchema.BoolValue.HasValue)
 		{
@@ -202,7 +202,7 @@ public class ValidationContext
 				keywordTypesToProcess ??= GetKeywordsToProcess()?.ToList();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 
-			keyword.Validate(this);
+			keyword.Evaluate(this);
 
 			if (!LocalResult.IsValid && ApplyOptimizations) break;
 		}
@@ -218,7 +218,7 @@ public class ValidationContext
 	}
 
 	/// <summary>
-	/// Pops the state from the stack to return to a previous layer of validation.
+	/// Pops the state from the stack to return to a previous layer of evaluation.
 	/// </summary>
 	public void Pop()
 	{

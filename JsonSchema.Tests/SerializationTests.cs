@@ -117,7 +117,7 @@ public class SerializationTests
 
 		var json = JsonNode.Parse("{\"foo\":1, \"bar\":2, \"foo\":false}");
 
-		var results = schema.Validate(json);
+		var results = schema.Evaluate(json);
 
 		Assert.IsFalse(results.IsValid);
 	}

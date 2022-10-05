@@ -77,10 +77,10 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -113,11 +113,11 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			for (int i = startIndex; i < array.Count; i++)
 			{
 				var i1 = i;
-				context.Log(() => $"Validating item at index {i1}.");
+				context.Log(() => $"Evaluating item at index {i1}.");
 				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name), SingleSchema);
-				context.Validate();
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
@@ -129,8 +129,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		}
 		else // array
 		{
-			if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) ||
-			    context.Options.ValidatingAs.HasFlag(Draft.DraftNext))
+			if (context.Options.EvaluatingAs.HasFlag(Draft.Draft202012) ||
+			    context.Options.EvaluatingAs.HasFlag(Draft.DraftNext))
 			{
 				context.LocalResult.Fail(Name, ErrorMessages.InvalidItemsForm);
 				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
@@ -142,14 +142,14 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			for (int i = 0; i < maxEvaluations; i++)
 			{
 				var i1 = i;
-				context.Log(() => $"Validating item at index {i1}.");
+				context.Log(() => $"Evaluating item at index {i1}.");
 				var schema = ArraySchemas[i];
 				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(i),
 					item ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(i),
 					schema);
-				context.Validate();
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();

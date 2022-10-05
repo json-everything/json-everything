@@ -47,10 +47,10 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -68,7 +68,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		var evaluatedProperties = new List<string>();
 		foreach (var property in Properties)
 		{
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var schema = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out var item))
@@ -81,7 +81,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 				item,
 				context.EvaluationPath.Combine(Name, name),
 				schema);
-			context.Validate();
+			context.Evaluate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			evaluatedProperties.Add(name);

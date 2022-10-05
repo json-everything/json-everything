@@ -214,10 +214,10 @@
 		public string? DefaultBaseUri { get; set; }
 		public bool ValidateFormat { get; set; }
 
-		public ValidationOptions ToValidationOptions() => new()
+		public EvaluationOptions ToValidationOptions() => new()
 		{
 			OutputFormat = OutputFormat,
-			ValidateAs = Draft,
+			EvaluateAs = Draft,
 			DefaultBaseUri = Uri.TryCreate(DefaultBaseUri, UriKind.Absolute, out var uri)
 				? uri
 				: null!,
@@ -287,7 +287,7 @@
 			return;
 		}
 
-		var results = schema.Validate(instance, _options.ToValidationOptions());
+		var results = schema.Evaluate(instance, _options.ToValidationOptions());
 
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -295,7 +295,7 @@
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
 		if (_options.OutputStructure == Draft.Draft202012)
-			serializerOptions.Converters.Add(new Pre202012ValidationResultsJsonConverter());
+			serializerOptions.Converters.Add(new Pre202012EvaluationResultsJsonConverter());
 		var resultText = JsonSerializer.Serialize(results, serializerOptions);
 
 		await _outputEditor.SetValue(resultText);

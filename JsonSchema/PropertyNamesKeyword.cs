@@ -45,10 +45,10 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -63,10 +63,10 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		var overallResult = true;
 		foreach (var name in obj.Select(p => p.Key))
 		{
-			context.Log(() => $"Validating property name '{name}'.");
+			context.Log(() => $"Evaluating property name '{name}'.");
 			context.Push(context.InstanceLocation.Combine(name), name,
 				context.EvaluationPath.Combine(name), Schema);
-			context.Validate();
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

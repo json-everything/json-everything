@@ -41,10 +41,10 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
@@ -62,7 +62,7 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Validate();
+		context.Evaluate();
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		if (!valid) 

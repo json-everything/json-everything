@@ -37,10 +37,10 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -57,7 +57,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		var overallResult = true;
 		foreach (var property in Dependencies)
 		{
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var dependency = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out var value))
@@ -80,7 +80,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 			}
 
 			context.Push(context.EvaluationPath.Combine(name, stringValue), schema);
-			context.Validate();
+			context.Evaluate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");

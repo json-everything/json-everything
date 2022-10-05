@@ -30,24 +30,24 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 	public const string Name = "unevaluatedItems";
 
 	/// <summary>
-	/// The schema by which to validation unevaluated items.
+	/// The schema by which to evaluate unevaluated items.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="UnevaluatedItemsKeyword"/>.
 	/// </summary>
-	/// <param name="value">The schema by which to validation unevaluated items.</param>
+	/// <param name="value">The schema by which to evaluate unevaluated items.</param>
 	public UnevaluatedItemsKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -105,30 +105,30 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		}
 		context.Log(() => $"No annotations from {Name}.");
 		var array = (JsonArray)context.LocalInstance!;
-		var indicesToValidate = Enumerable.Range(startIndex, array.Count - startIndex);
-		if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) ||
-		    context.Options.ValidatingAs.HasFlag(Draft.DraftNext) ||
-		    context.Options.ValidatingAs == Draft.Unspecified)
+		var indicesToEvaluate = Enumerable.Range(startIndex, array.Count - startIndex);
+		if (context.Options.EvaluatingAs.HasFlag(Draft.Draft202012) ||
+		    context.Options.EvaluatingAs.HasFlag(Draft.DraftNext) ||
+		    context.Options.EvaluatingAs == Draft.Unspecified)
 		{
-			var validatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
+			var evaluatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
 				.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<int>()))
 				.Distinct()
 				.ToList();
-			if (validatedByContains.Any())
+			if (evaluatedByContains.Any())
 			{
 				context.Log(() => $"Annotations from {ContainsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
-				indicesToValidate = indicesToValidate.Except(validatedByContains);
+				indicesToEvaluate = indicesToEvaluate.Except(evaluatedByContains);
 			}
 			else
 				context.Log(() => $"No annotations from {ContainsKeyword.Name}.");
 		}
-		foreach (var i in indicesToValidate)
+		foreach (var i in indicesToEvaluate)
 		{
-			context.Log(() => $"Validating item at index {i}.");
+			context.Log(() => $"Evaluating item at index {i}.");
 			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			context.Validate();
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

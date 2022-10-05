@@ -26,7 +26,7 @@ public class UnrecognizedKeywordTests
 
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
 
-		var result = schema!.Validate("{}", new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = schema!.Evaluate("{}", new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);

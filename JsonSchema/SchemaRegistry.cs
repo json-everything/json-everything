@@ -32,12 +32,12 @@ public class SchemaRegistry
 	private Dictionary<Uri, Registration>? _registered;
 	private Func<Uri, JsonSchema?>? _fetch;
 	private Stack<Uri>? _scopes;
-	private readonly ValidationOptions _options;
+	private readonly EvaluationOptions _options;
 
 	/// <summary>
 	/// The global registry.
 	/// </summary>
-	public static SchemaRegistry Global => ValidationOptions.Default.SchemaRegistry;
+	public static SchemaRegistry Global => EvaluationOptions.Default.SchemaRegistry;
 
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
@@ -48,9 +48,9 @@ public class SchemaRegistry
 		set => _fetch = value;
 	}
 
-	internal Draft ValidatingAs => _options.ValidatingAs;
+	internal Draft EvaluatingAs => _options.EvaluatingAs;
 
-	internal SchemaRegistry(ValidationOptions options)
+	internal SchemaRegistry(EvaluationOptions options)
 	{
 		_options = options;
 	}

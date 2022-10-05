@@ -42,10 +42,10 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -62,7 +62,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		var evaluatedProperties = new List<string>();
 		foreach (var property in Requirements)
 		{
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var requirements = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out _))
@@ -76,7 +76,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 			{
 				context.Log(() => "Found schema requirement.");
 				context.Push(context.EvaluationPath.Combine(name), requirements.Schema);
-				context.Validate();
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				if (context.LocalResult.IsValid)
 					evaluatedProperties.Add(name);

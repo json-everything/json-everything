@@ -39,14 +39,14 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, I
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Validate();
+		context.Evaluate();
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		context.LocalResult.SetAnnotation(Name, valid);

@@ -8,7 +8,7 @@ public class FetchTests
 	[Test]
 	public void LocalRegistryFindsRef()
 	{
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
@@ -25,7 +25,7 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Validate(json.RootElement, options);
+		var results = schema.Evaluate(json.RootElement, options);
 
 		results.AssertInvalid();
 	}
@@ -35,7 +35,7 @@ public class FetchTests
 	{
 		try
 		{
-			var options = new ValidationOptions
+			var options = new EvaluationOptions
 			{
 				OutputFormat = OutputFormat.Hierarchical
 			};
@@ -49,7 +49,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			var results = schema.Validate(json.RootElement, options);
+			var results = schema.Evaluate(json.RootElement, options);
 
 			results.AssertInvalid();
 		}
@@ -62,7 +62,7 @@ public class FetchTests
 	[Test]
 	public void LocalRegistryMissesRef()
 	{
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
@@ -79,7 +79,7 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Validate(json.RootElement, options);
+		var results = schema.Evaluate(json.RootElement, options);
 
 		results.AssertInvalid();
 	}
@@ -89,7 +89,7 @@ public class FetchTests
 	{
 		try
 		{
-			var options = new ValidationOptions
+			var options = new EvaluationOptions
 			{
 				OutputFormat = OutputFormat.Hierarchical
 			};
@@ -103,7 +103,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			var results = schema.Validate(json.RootElement, options);
+			var results = schema.Evaluate(json.RootElement, options);
 
 			results.AssertInvalid();
 		}
@@ -123,7 +123,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			Assert.Throws<JsonException>(() => schema.Validate(json.RootElement));
+			Assert.Throws<JsonException>(() => schema.Evaluate(json.RootElement));
 		}
 		finally
 		{

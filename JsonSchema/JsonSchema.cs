@@ -92,14 +92,14 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	}
 
 	/// <summary>
-	/// Validates an instance against this schema.
+	/// Evaluates an instance against this schema.
 	/// </summary>
 	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this validation.</param>
-	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public ValidationResults Validate(JsonNode? root, ValidationOptions? options = null)
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
-		options = ValidationOptions.From(options ?? ValidationOptions.Default);
+		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
 		options.Log.Write(() => "Registering subschemas.");
 		var baseUri = RegisterSubschemasAndGetBaseUri(options.SchemaRegistry, BaseUri ?? options.DefaultBaseUri);
@@ -110,12 +110,12 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			? BaseUri ?? baseUri
 			: baseUri;
 
-		var context = new ValidationContext(options, currentUri, root, this);
+		var context = new EvaluationContext(options, currentUri, root, this);
 
 		context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
 
-		options.Log.Write(() => "Beginning validation.");
-		context.Validate();
+		options.Log.Write(() => "Beginning evaluation.");
+		context.Evaluate();
 
 		options.Log.Write(() => "Transforming output.");
 		var results = context.LocalResult;
@@ -133,7 +133,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 				throw new ArgumentOutOfRangeException();
 		}
 
-		options.Log.Write(() => $"Validation complete: {results.IsValid.GetValidityString()}");
+		options.Log.Write(() => $"Evaluation complete: {results.IsValid.GetValidityString()}");
 		return results;
 	}
 
@@ -154,7 +154,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
 		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
 		var refMatters = refKeyword != null &&
-						 (registry.ValidatingAs == Draft.Draft6 || registry.ValidatingAs == Draft.Draft7);
+						 (registry.EvaluatingAs == Draft.Draft6 || registry.EvaluatingAs == Draft.Draft7);
 		UpdateBaseUri(currentUri);
 		if (idKeyword != null && !refMatters)
 		{

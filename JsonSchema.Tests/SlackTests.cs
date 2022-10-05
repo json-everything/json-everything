@@ -36,7 +36,7 @@ public class SlackTests
 		var schema = JsonSchema.FromText(json);
 		var instance = JsonNode.Parse(json);
 
-		var result = schema.Validate(instance, new ValidationOptions
+		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
 			Log = new TestLog(),
 			OutputFormat = OutputFormat.Hierarchical,
@@ -74,7 +74,7 @@ public class SlackTests
 			}
 		};
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 	}

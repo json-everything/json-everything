@@ -44,10 +44,10 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -67,7 +67,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 			{
 				context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name), Schema);
-				context.Validate();
+				context.Evaluate();
 				if (context.LocalResult.IsValid)
 					validIndices.Add(i);
 				context.Pop();
@@ -75,8 +75,8 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		}
 		else
 		{
-			if (context.Options.ValidatingAs != Draft.Unspecified &&
-			    context.Options.ValidatingAs < Draft.DraftNext)
+			if (context.Options.EvaluatingAs != Draft.Unspecified &&
+			    context.Options.EvaluatingAs < Draft.DraftNext)
 			{
 				context.WrongValueKind(schemaValueType);
 				return;
@@ -86,7 +86,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 			{
 				context.Push(context.InstanceLocation.Combine(kvp.Key), kvp.Value ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name), Schema);
-				context.Validate();
+				context.Evaluate();
 				if (context.LocalResult.IsValid)
 					validIndices.Add(kvp.Key!);
 				context.Pop();

@@ -55,10 +55,10 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 	internal static PatternKeyword InvalidRegex(string pattern) => new(pattern);
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		if (InvalidPattern != null)

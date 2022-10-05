@@ -25,7 +25,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -152,7 +152,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -252,12 +252,12 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			ValidateMetaSchema = true
+			ValidateAgainstMetaSchema = true
 		};
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -275,9 +275,9 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var options = new ValidationOptions();
+		var options = new EvaluationOptions();
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -349,13 +349,13 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			ValidateMetaSchema = true
+			ValidateAgainstMetaSchema = true
 		};
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
 		options.VocabularyRegistry.Register(DatesVocabulary);
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -373,7 +373,7 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.AddDays(-1));
 
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
-		var results = DatesMetaSchema.Validate(schemaAsJson);
+		var results = DatesMetaSchema.Evaluate(schemaAsJson);
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
@@ -389,9 +389,9 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.AddDays(-1));
 
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
-		var options = new ValidationOptions();
+		var options = new EvaluationOptions();
 		options.VocabularyRegistry.Register(DatesVocabulary);
-		var results = DatesMetaSchema.Validate(schemaAsJson, options);
+		var results = DatesMetaSchema.Evaluate(schemaAsJson, options);
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();

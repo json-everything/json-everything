@@ -42,10 +42,10 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -63,7 +63,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		foreach (var property in Requirements)
 		{
 			context.Options.LogIndentLevel++;
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var dependencies = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out _))

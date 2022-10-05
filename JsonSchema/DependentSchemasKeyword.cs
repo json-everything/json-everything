@@ -43,10 +43,10 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -64,7 +64,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 		foreach (var property in Schemas)
 		{
 			context.Options.LogIndentLevel++;
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var schema = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out _))
@@ -74,7 +74,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 			}
 
 			context.Push(context.EvaluationPath.Combine(name), schema);
-			context.Validate();
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			if (!overallResult && context.ApplyOptimizations) break;
 
