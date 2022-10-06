@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
+// ReSharper disable AccessToModifiedClosure
 
 namespace Json.Schema;
 

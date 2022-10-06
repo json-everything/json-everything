@@ -165,7 +165,7 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	public override RefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var uri = reader.GetString();
-		return new RefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
+		return new RefKeyword(new Uri(uri!, UriKind.RelativeOrAbsolute));
 
 
 	}

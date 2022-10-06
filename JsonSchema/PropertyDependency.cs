@@ -62,7 +62,7 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 
 internal class PropertyDependencyJsonConverter : JsonConverter<PropertyDependency>
 {
-	public override PropertyDependency? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var schemas = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options);
 
