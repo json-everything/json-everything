@@ -38,11 +38,11 @@
             The value can be null, a primitive, an array or an object.
             </param>
         </member>
-        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Evaluate(Json.Schema.EvaluationContext)">
             <summary>
-            Provides validation for the keyword.
+            Performs evaluation for the keyword.
             </summary>
-            <param name="context">Contextual details for the validation process.</param>
+            <param name="context">Contextual details for the evaluation process.</param>
         </member>
         <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Equals(Json.Schema.OpenApi.DiscriminatorKeyword)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -74,11 +74,11 @@
             </summary>
             <param name="value">The example value.</param>
         </member>
-        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Evaluate(Json.Schema.EvaluationContext)">
             <summary>
-            Provides validation for the keyword.
+            Performs evaluation for the keyword.
             </summary>
-            <param name="context">Contextual details for the validation process.</param>
+            <param name="context">Contextual details for the evaluation process.</param>
         </member>
         <member name="M:Json.Schema.OpenApi.ExampleKeyword.Equals(Json.Schema.OpenApi.ExampleKeyword)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -128,11 +128,11 @@
             The value can be null, a primitive, an array or an object.
             </param>
         </member>
-        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Evaluate(Json.Schema.EvaluationContext)">
             <summary>
-            Provides validation for the keyword.
+            Performs evaluation for the keyword.
             </summary>
-            <param name="context">Contextual details for the validation process.</param>
+            <param name="context">Contextual details for the evaluation process.</param>
         </member>
         <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Equals(Json.Schema.OpenApi.ExternalDocsKeyword)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -350,11 +350,11 @@
             The value can be null, a primitive, an array or an object.
             </param>
         </member>
-        <member name="M:Json.Schema.OpenApi.XmlKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.Evaluate(Json.Schema.EvaluationContext)">
             <summary>
-            Provides validation for the keyword.
+            Performs evaluation for the keyword.
             </summary>
-            <param name="context">Contextual details for the validation process.</param>
+            <param name="context">Contextual details for the evaluation process.</param>
         </member>
         <member name="M:Json.Schema.OpenApi.XmlKeyword.Equals(Json.Schema.OpenApi.XmlKeyword)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>

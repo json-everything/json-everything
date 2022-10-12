@@ -77,11 +77,11 @@
             </summary>
             <param name="references">The collection of keywords and references.</param>
         </member>
-        <member name="M:Json.Schema.UniqueKeys.UniqueKeysKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.UniqueKeys.UniqueKeysKeyword.Evaluate(Json.Schema.EvaluationContext)">
             <summary>
-            Provides validation for the keyword.
+            Performs evaluation for the keyword.
             </summary>
-            <param name="context">Contextual details for the validation process.</param>
+            <param name="context">Contextual details for the evaluation process.</param>
         </member>
         <member name="M:Json.Schema.UniqueKeys.UniqueKeysKeyword.Equals(Json.Schema.UniqueKeys.UniqueKeysKeyword)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>

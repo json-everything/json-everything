@@ -44,11 +44,11 @@
             </summary>
             <param name="references">The collection of keywords and references.</param>
         </member>
-        <member name="M:Json.Schema.Data.DataKeyword.Validate(Json.Schema.ValidationContext)">
+        <member name="M:Json.Schema.Data.DataKeyword.Evaluate(Json.Schema.EvaluationContext)">
             <summary>
-            Provides validation for the keyword.
+            Performs evaluation for the keyword.
             </summary>
-            <param name="context">Contextual details for the validation process.</param>
+            <param name="context">Contextual details for the evaluation process.</param>
             <exception cref="T:System.Text.Json.JsonException">
             Thrown when the formed schema contains values that are invalid for the associated
             keywords.
@@ -83,7 +83,7 @@
             Provides an abstraction for different resource identifier types.
             </summary>
         </member>
-        <member name="M:Json.Schema.Data.IDataResourceIdentifier.TryResolve(Json.Schema.ValidationContext,System.Text.Json.Nodes.JsonNode@)">
+        <member name="M:Json.Schema.Data.IDataResourceIdentifier.TryResolve(Json.Schema.EvaluationContext,System.Text.Json.Nodes.JsonNode@)">
             <summary>
             Attempts to resolve the reference.
             </summary>
@@ -107,7 +107,7 @@
             </summary>
             <param name="target">The target.</param>
         </member>
-        <member name="M:Json.Schema.Data.JsonPointerIdentifier.TryResolve(Json.Schema.ValidationContext,System.Text.Json.Nodes.JsonNode@)">
+        <member name="M:Json.Schema.Data.JsonPointerIdentifier.TryResolve(Json.Schema.EvaluationContext,System.Text.Json.Nodes.JsonNode@)">
             <summary>
             Attempts to resolve the reference.
             </summary>
@@ -171,7 +171,7 @@
             </summary>
             <param name="target">The target.</param>
         </member>
-        <member name="M:Json.Schema.Data.RelativeJsonPointerIdentifier.TryResolve(Json.Schema.ValidationContext,System.Text.Json.Nodes.JsonNode@)">
+        <member name="M:Json.Schema.Data.RelativeJsonPointerIdentifier.TryResolve(Json.Schema.EvaluationContext,System.Text.Json.Nodes.JsonNode@)">
             <summary>
             Attempts to resolve the reference.
             </summary>
@@ -199,7 +199,7 @@
             </summary>
             <param name="target">The target.</param>
         </member>
-        <member name="M:Json.Schema.Data.UriIdentifier.TryResolve(Json.Schema.ValidationContext,System.Text.Json.Nodes.JsonNode@)">
+        <member name="M:Json.Schema.Data.UriIdentifier.TryResolve(Json.Schema.EvaluationContext,System.Text.Json.Nodes.JsonNode@)">
             <summary>
             Attempts to resolve the reference.
             </summary>
