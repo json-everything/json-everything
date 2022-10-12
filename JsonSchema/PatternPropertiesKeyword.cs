@@ -87,7 +87,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
 				context.Push(context.InstanceLocation.Combine(instanceProperty.Key),
 					instanceProperty.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(PointerSegment.Create($"{pattern}")),
+					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{pattern}")),
 					schema);
 				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
