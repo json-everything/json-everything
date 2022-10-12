@@ -97,7 +97,7 @@
 							@SchemaEditorLabel
 							<div class="editor-input">
 								<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="HandleSchemaChanged"/>
+								              CssClass="h-100"/>
 							</div>
 						</label>
 					</div>
@@ -156,7 +156,7 @@
 							Instance
 							<div class="editor-input">
 								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="HandleInstanceChanged"/>
+								              CssClass="h-100"/>
 							</div>
 						</label>
 					</div>
@@ -177,10 +177,10 @@
 	</div>
 </div>
 
-@code {	
-    private const string _pageName = "json-schema";
-    private const string _generateDataText = "Generate Data";
-    private const string _generateSchemaText = "Generate Schema";
+@code {
+	private const string _pageName = "json-schema";
+	private const string _generateDataText = "Generate Data";
+	private const string _generateSchemaText = "Generate Schema";
 
 #pragma warning disable CS8618
 	private MonacoEditor _schemaEditor;
@@ -265,6 +265,9 @@
 
 	private async Task Validate()
 	{
+		await HandleSchemaChanged();
+		await HandleInstanceChanged();
+
 		JsonSchema schema;
 		try
 		{
@@ -303,6 +306,9 @@
 
 	private async Task Generate()
 	{
+		await HandleSchemaChanged();
+		await HandleInstanceChanged();
+
 		switch (_inputLanguage)
 		{
 			case "json":
@@ -375,9 +381,9 @@ namespace JsonEverythingTemp
 			if (!emitResult.Success)
 			{
 				Console.WriteLine("You may expect a list of what compilation errors there are, but unfortunately " +
-				                  "Roslyn doesn't seem to be giving that information out (or I don't know how to " +
-				                  "interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
-				                  "know what these mean, please drop a line in a GitHub issue.");
+										"Roslyn doesn't seem to be giving that information out (or I don't know how to " +
+										"interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
+										"know what these mean, please drop a line in a GitHub issue.");
 				await _instanceEditor.SetValue("Compilation error");
 				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
 				//	.Select(x => GetErrorDetails(source, x)));
@@ -450,7 +456,7 @@ namespace JsonEverythingTemp
 	protected override async Task OnInitializedAsync()
 	{
 		await CookieManager.Initialize();
-	    await _outputEditor.SetValue(string.Empty);
+		await _outputEditor.SetValue(string.Empty);
 
 		Json.Schema.Data.Vocabularies.Register();
 		Json.Schema.UniqueKeys.Vocabularies.Register();
@@ -471,7 +477,7 @@ namespace JsonEverythingTemp
 		{
 			BaseAddress = new Uri(NavigationManager.BaseUri)
 		};
- 
+
 		var references = new List<MetadataReference>();
 
 		foreach (var reference in refs.Where(x => !x.IsDynamic))
@@ -484,7 +490,7 @@ namespace JsonEverythingTemp
 			var stream = await client.GetStreamAsync($"_framework/{reference.FullName!.Split(',')[0]}.dll");
 			references.Add(MetadataReference.CreateFromStream(stream));
 		}
- 
+
 		_references = references;
 	}
 }

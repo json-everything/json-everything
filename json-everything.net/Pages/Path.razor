@@ -60,7 +60,7 @@
 							Data
 							<div class="editor-input">
 								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="SaveInstance"/>
+								              CssClass="h-100"/>
 							</div>
 						</Label>
 						<div class="col mx-2 align-items-center row">
@@ -120,6 +120,8 @@
 
 	private async Task Evaluate()
 	{
+		await SaveInstance();
+
 		JsonPath path;
 		try
 		{

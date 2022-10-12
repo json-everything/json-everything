@@ -52,7 +52,7 @@
 							Logic
 							<div class="editor-input">
 								<MonacoEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="SaveLogic"/>
+								              CssClass="h-100"/>
 							</div>
 						</label>
 					</div>
@@ -64,7 +64,7 @@
 							Data
 							<div class="editor-input">
 								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="SaveInstance"/>
+								              CssClass="h-100"/>
 							</div>
 						</label>
 					</div>
@@ -106,6 +106,9 @@
 
 	private async Task Apply()
 	{
+		await SaveLogic();
+		await SaveInstance();
+
 		Rule rule;
 		try
 		{
