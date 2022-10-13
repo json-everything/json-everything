@@ -105,21 +105,21 @@
 						<div class="vstack gap-3">
 							<EditForm Model="_options" class="vstack">
 								<label class="my-2">
-									Output format<br/>
-									<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
-										@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
-										{
-											<option value="@format">@format</option>
-										}
-									</InputSelect>
-								</label>
-								<label class="my-2">
 									Draft (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
 									<InputSelect @bind-Value="_options.Draft" DisplayName="Draft" class="form-control">
 										@foreach (Draft draft in Enum.GetValues(typeof(Draft)))
 										{
 											if (draft == Draft.Unspecified) continue;
 											<option value="@draft">@GetDescription(draft)</option>
+										}
+									</InputSelect>
+								</label>
+								<label class="my-2">
+									Output format<br/>
+									<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
+										@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
+										{
+											<option value="@format">@format</option>
 										}
 									</InputSelect>
 								</label>
