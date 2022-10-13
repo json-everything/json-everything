@@ -94,7 +94,7 @@ or just
 builder.Required("prop1", "prop2");
 ```
 
-### Now You're Cooking With Fire
+### Now You're Cooking With Gas
 
 Lastly, we have the extension methods which take advantage of C# 7 tuples.  These include keywords like `$defs` and `properties` which take objects in their JSON form.
 
@@ -401,8 +401,10 @@ New formats must be registered via the `Formats.Register()` static method.  This
 The `ValidationOptions` class gives you a few configuration points for customizing how the validation process behaves.  It is an instance class and can be passed into the `JsonSchema.Validate()` method.  If no options are explicitly passed, a copy of `JsonSchemaOptions.Default` will be used.
 
 - `ValidateAs` - Indicates which schema draft to process as.  This will filter the keywords of a schema based on their support.  This means that if any keyword is not supported by this draft, it will be ignored.
-- `ValidateMetaSchema` - Indicates whether the schema should be validated against its `$schema` value (its meta-schema).  This is not typically necessary.
+- `ValidateMetaSchema` - Indicates whether the schema should be validated against its `$schema` value (its meta-schema).  This is not typically necessary.  Note that the evaluation process will still attempt to resolve the meta-schema. \*
 - `OutputFormat` - You already read about output formats above.  This is the property that controls it all.  By default, a single "flag" node is returned.  This also yields the fastest validation times it enables certain optimizations.
+
+_\* If you're using a custom meta-schema, you'll need to load it per the [Schema Registration](#schema-registration) section below.  Custom meta-schemas form a chain of meta-schemas (e.g. your custom meta-schema may reference another which references the draft 7 meta-schema).  Ultimately, the chain MUST end at a JSON-Schema-defined meta-schema as this defines the processing rules for the schema.  An error will be produced if the meta-schema chain ends at a meta-schema that is unrecognized._
 
 # Managing references (`$ref`)
 
