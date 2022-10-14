@@ -26,6 +26,8 @@ public static class MetaSchemas
 				(Schema.Vocabularies.Validation202012Id, true),
 				(Schema.Vocabularies.Metadata202012Id, true),
 				(Schema.Vocabularies.FormatAnnotation202012Id, true),
+				(Schema.Vocabularies.Content202012Id, true),
+				(Schema.Vocabularies.Unevaluated202012Id, true),
 				(Vocabularies.DataId, true)
 			)
 			.DynamicAnchor("meta")
