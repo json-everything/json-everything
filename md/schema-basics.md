@@ -402,9 +402,9 @@ The `ValidationOptions` class gives you a few configuration points for customizi
 
 - `ValidateAs` - Indicates which schema draft to process as.  This will filter the keywords of a schema based on their support.  This means that if any keyword is not supported by this draft, it will be ignored.
 - `ValidateMetaSchema` - Indicates whether the schema should be validated against its `$schema` value (its meta-schema).  This is not typically necessary.  Note that the evaluation process will still attempt to resolve the meta-schema. \*
-- `OutputFormat` - You already read about output formats above.  This is the property that controls it all.  By default, a single "flag" node is returned.  This also yields the fastest validation times it enables certain optimizations.
+- `OutputFormat` - You already read about output formats above.  This is the property that controls it all.  By default, a single "flag" node is returned.  This also yields the fastest validation times as it enables certain optimizations.
 
-_\* If you're using a custom meta-schema, you'll need to load it per the [Schema Registration](#schema-registration) section below.  Custom meta-schemas form a chain of meta-schemas (e.g. your custom meta-schema may reference another which references the draft 7 meta-schema).  Ultimately, the chain MUST end at a JSON-Schema-defined meta-schema as this defines the processing rules for the schema.  An error will be produced if the meta-schema chain ends at a meta-schema that is unrecognized._
+_\* If you're using a custom meta-schema, you'll need to load it per the [Schema Registration](json-schema#schema-registration) section below.  Custom meta-schemas form a chain of meta-schemas (e.g. your custom meta-schema may reference another which references the draft 7 meta-schema).  Ultimately, the chain MUST end at a JSON-Schema-defined meta-schema as this defines the processing rules for the schema.  An error will be produced if the meta-schema chain ends at a meta-schema that is unrecognized._
 
 # Managing references (`$ref`)
 
