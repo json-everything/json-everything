@@ -15,7 +15,8 @@
 
 <div class="row fill-remaining">
 	<RadzenPanelMenu class="col-2 mh-100 mw-content" Click="SetPagePath">
-		<RadzenPanelMenuItem Text="Playground" Icon="article" Value="@("playground/pointer")"/>
+		<RadzenPanelMenuItem Text="Playground" Icon="article" Value="@("playground/pointer")"
+		                     Path="@(_pageName)"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-pointer")"
 		                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("json-pointer"))"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-pointer")"/>
