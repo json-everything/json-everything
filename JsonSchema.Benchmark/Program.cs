@@ -1,57 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+using BenchmarkDotNet.Running;
+using Json.Schema.Benchmark.Suite;
 
-namespace Json.Schema.Benchmark
+namespace Json.Schema.Benchmark;
+
+class Program
 {
-	class Program
+	static void Main(string[] args)
 	{
-		static async Task Main(string[] args)
-		{
-			await RunFull(1);
-			Console.WriteLine();
-			await RunFull(10000);
-		}
+		TestSuiteRunner.LoadRemoteSchemas();
 
-		private static async Task RunFull(int iterations)
-		{
-			var schemaText = await File.ReadAllTextAsync("SimplePropsSchema.json");
-			var instanceText = await File.ReadAllTextAsync("SimplePropsInstance.json");
-
-			await Time($"NJsonSchema {iterations} runs", async () =>
-			{
-				var schema = await NJsonSchema.JsonSchema.FromJsonAsync(schemaText);
-				return !schema.Validate(instanceText).Any();
-			}, iterations);
-
-#pragma warning disable CS1998
-			await Time($"json-everything {iterations} runs", async () =>
-			{
-				var schema = JsonSchema.FromText(schemaText);
-				var instance = JsonDocument.Parse(instanceText);
-
-				return schema.Evaluate(instance.RootElement).IsValid;
-			}, iterations);
-#pragma warning restore CS1998
-		}
-
-		private static async Task Time(string testName, Func<Task<bool>> action, int iterations)
-		{
-			var watch = new Stopwatch();
-			watch.Start();
-
-			for (int i = 0; i < iterations; i++)
-			{
-				await action();
-			}
-
-			watch.Stop();
-
-			Console.Write($"{testName}: ");
-			Console.WriteLine(watch.ElapsedMilliseconds);
-		}
+		var summary = BenchmarkRunner.Run<TestSuiteRunner>();
 	}
 }

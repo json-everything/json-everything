@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Json.Schema.Benchmark</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NJsonSchema" Version="10.5.2" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,9 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SimplePropsInstance.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="SimplePropsSchema.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

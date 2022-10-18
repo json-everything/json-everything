@@ -107,7 +107,12 @@ public class EvaluationOptions
 		SchemaRegistry = new SchemaRegistry(this);
 	}
 
-	internal static EvaluationOptions From(EvaluationOptions other)
+	/// <summary>
+	/// Creates a deep copy of the options.
+	/// </summary>
+	/// <param name="other">The source options.</param>
+	/// <returns>A new options instance with the same settings.</returns>
+	public static EvaluationOptions From(EvaluationOptions other)
 	{
 		var options = new EvaluationOptions
 		{
