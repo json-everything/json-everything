@@ -38,8 +38,8 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Schemas.Count) return false;
+			.ToArray();
+		if (byKey.Length != Schemas.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

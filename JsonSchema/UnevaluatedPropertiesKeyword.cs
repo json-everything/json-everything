@@ -105,7 +105,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		var obj = (JsonObject)context.LocalInstance!;
 		if (!obj.VerifyJsonObject(context)) return;
 
-		var unevaluatedProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToList();
+		var unevaluatedProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
 		evaluatedProperties.Clear();
 		foreach (var property in unevaluatedProperties)
 		{

@@ -39,7 +39,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	/// <param name="values">The collection of example values.</param>
 	public ExamplesKeyword(params JsonNode?[] values)
 	{
-		Values = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Values = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -48,7 +48,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	/// <param name="values">The collection of example values.</param>
 	public ExamplesKeyword(IEnumerable<JsonNode?> values)
 	{
-		Values = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Values = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>

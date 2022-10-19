@@ -115,8 +115,8 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Properties.Count) return false;
+			.ToArray();
+		if (byKey.Length != Properties.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

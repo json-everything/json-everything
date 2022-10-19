@@ -111,7 +111,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 			var evaluatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
 				.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<int>()))
 				.Distinct()
-				.ToList();
+				.ToArray();
 			if (evaluatedByContains.Any())
 			{
 				context.Log(() => $"Annotations from {ContainsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");

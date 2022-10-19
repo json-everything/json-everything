@@ -109,8 +109,8 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Schemas.Count) return false;
+			.ToArray();
+		if (byKey.Length != Schemas.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

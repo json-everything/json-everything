@@ -426,7 +426,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 			writer.WritePropertyName("annotations");
 			writer.WriteStartArray();
 
-			var annotations = value.Annotations.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToList();
+			var annotations = value.Annotations.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
 
 			foreach (var result in value.NestedResults)
 			{

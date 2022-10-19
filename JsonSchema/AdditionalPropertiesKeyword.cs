@@ -97,7 +97,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 				evaluatedProperties.AddRange(annotation!.AsArray().Select(x => x!.GetValue<string>()));
 			}
 		}
-		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToList();
+		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
 		evaluatedProperties.Clear();
 		foreach (var property in additionalProperties)
 		{

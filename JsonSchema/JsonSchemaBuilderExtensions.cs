@@ -236,7 +236,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DependentRequired(this JsonSchemaBuilder builder, params (string name, IEnumerable<string> properties)[] deps)
 	{
-		builder.Add(new DependentRequiredKeyword(deps.ToDictionary(x => x.name, x => (IReadOnlyList<string>)x.properties.ToList())));
+		builder.Add(new DependentRequiredKeyword(deps.ToDictionary(x => x.name, x => (IReadOnlyList<string>)x.properties.ToArray())));
 		return builder;
 	}
 

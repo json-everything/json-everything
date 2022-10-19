@@ -38,7 +38,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	/// <param name="values">The required properties.</param>
 	public RequiredKeyword(params string[] values)
 	{
-		Properties = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Properties = values ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -47,7 +47,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	/// <param name="values">The required properties.</param>
 	public RequiredKeyword(IEnumerable<string> values)
 	{
-		Properties = values as List<string> ?? values.ToList();
+		Properties = values.ToReadOnlyList();
 	}
 
 	/// <summary>

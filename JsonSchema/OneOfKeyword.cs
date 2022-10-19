@@ -39,7 +39,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	/// <param name="values">The keywords schema collection.</param>
 	public OneOfKeyword(params JsonSchema[] values)
 	{
-		Schemas = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -48,7 +48,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	/// <param name="values">The keywords schema collection.</param>
 	public OneOfKeyword(IEnumerable<JsonSchema> values)
 	{
-		Schemas = values.ToList();
+		Schemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>

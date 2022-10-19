@@ -9,7 +9,7 @@ using Json.More;
 
 namespace Json.Schema.Benchmark.Suite;
 
-[MemoryDiagnoser(false)]
+[MemoryDiagnoser]
 public class TestSuiteRunner
 {
 	private const string _benchmarkOffset = @"../../../../";

@@ -63,7 +63,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 	/// </remarks>
 	public ItemsKeyword(params JsonSchema[] values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
@@ -72,7 +72,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 	/// <param name="values">The collection of schemas for the "schema array" form.</param>
 	public ItemsKeyword(IEnumerable<JsonSchema> values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>

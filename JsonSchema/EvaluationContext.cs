@@ -193,13 +193,13 @@ public class EvaluationContext
 		var metaSchemaUri = LocalSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
 		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, metaSchemaUri, Options.SchemaRegistry);
 
-		List<Type>? keywordTypesToProcess = null;
+		HashSet<Type>? keywordTypesToProcess = null;
 		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
 		{
 			// $schema is always processed first, and this should only be set
 			// after $schema has been evaluated.
 			if (keyword is not SchemaKeyword)
-				keywordTypesToProcess ??= GetKeywordsToProcess()?.ToList();
+				keywordTypesToProcess ??= GetKeywordsToProcess();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 
 			keyword.Evaluate(this);
@@ -255,10 +255,12 @@ public class EvaluationContext
 		CurrentAnchor = _currentAnchorBackup;
 	}
 
-	internal IEnumerable<Type>? GetKeywordsToProcess()
+	private HashSet<Type> GetKeywordsToProcess()
 	{
-		return MetaSchemaVocabs?.Keys
-			.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
-							 Enumerable.Empty<Type>());
+		return MetaSchemaVocabs == null
+			? new HashSet<Type>()
+			: new HashSet<Type>(MetaSchemaVocabs.Keys
+				.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
+				                 Enumerable.Empty<Type>()));
 	}
 }

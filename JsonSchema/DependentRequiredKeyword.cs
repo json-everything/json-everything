@@ -112,8 +112,8 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Requirements.Count) return false;
+			.ToArray();
+		if (byKey.Length != Requirements.Count) return false;
 
 		return byKey.All(g => g.ThisDef.ContentsEqual(g.OtherDef));
 	}

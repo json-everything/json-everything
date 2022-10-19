@@ -74,8 +74,8 @@ public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaColle
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Definitions.Count) return false;
+			.ToArray();
+		if (byKey.Length != Definitions.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

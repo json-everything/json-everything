@@ -42,7 +42,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	/// </remarks>
 	public PrefixItemsKeyword(params JsonSchema[] values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
@@ -51,7 +51,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	/// <param name="values">The collection of schemas for the "schema array" form.</param>
 	public PrefixItemsKeyword(IEnumerable<JsonSchema> values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>

@@ -286,8 +286,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 					tk => tk.Keyword(),
 					ok => ok.Keyword(),
 					(tk, ok) => new { ThisKeyword = tk, OtherKeyword = ok })
-				.ToList();
-			if (byKeyword.Count != Keywords.Count) return false;
+				.ToArray();
+			if (byKeyword.Length != Keywords.Count) return false;
 			if (!byKeyword.All(k => k.ThisKeyword.Equals(k.OtherKeyword))) return false;
 		}
 

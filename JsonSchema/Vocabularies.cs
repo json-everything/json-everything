@@ -21,7 +21,7 @@ public static partial class Vocabularies
 				Type = t,
 				Vocabularies = t.GetCustomAttributes<VocabularyAttribute>()
 			})
-			.ToList();
+			.ToArray();
 
 		Core201909 = new Vocabulary(
 			Core201909Id,

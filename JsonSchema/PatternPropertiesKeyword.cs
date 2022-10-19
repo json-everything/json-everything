@@ -137,8 +137,8 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 				td => td.Key.ToString(),
 				od => od.Key.ToString(),
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Patterns.Count) return false;
+			.ToArray();
+		if (byKey.Length != Patterns.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

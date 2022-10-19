@@ -90,8 +90,8 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 				tv => tv.Key.OriginalString,
 				ov => ov.Key.OriginalString,
 				(tv, ov) => new { ThisVocab = tv.Value, OtherVocab = ov.Value })
-			.ToList();
-		if (Vocabulary.Count != byUri.Count) return false;
+			.ToArray();
+		if (Vocabulary.Count != byUri.Length) return false;
 		return byUri.All(x => x.ThisVocab == x.OtherVocab);
 	}
 

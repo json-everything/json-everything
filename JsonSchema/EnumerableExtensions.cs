@@ -153,4 +153,10 @@ public static class EnumerableExtensions
 		}
 		return result;
 	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> values)
+	{
+		return values as IReadOnlyList<T> ?? values.ToArray();
+	}
 }

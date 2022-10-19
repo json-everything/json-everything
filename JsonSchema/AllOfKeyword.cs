@@ -39,7 +39,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	/// <param name="values">The set of schemas.</param>
 	public AllOfKeyword(params JsonSchema[] values)
 	{
-		Schemas = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -48,7 +48,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	/// <param name="values">The set of schemas.</param>
 	public AllOfKeyword(IEnumerable<JsonSchema> values)
 	{
-		Schemas = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
