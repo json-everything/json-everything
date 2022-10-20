@@ -255,12 +255,12 @@ public class EvaluationContext
 		CurrentAnchor = _currentAnchorBackup;
 	}
 
-	private HashSet<Type> GetKeywordsToProcess()
+	private HashSet<Type>? GetKeywordsToProcess()
 	{
 		return MetaSchemaVocabs == null
-			? new HashSet<Type>()
+			? null
 			: new HashSet<Type>(MetaSchemaVocabs.Keys
 				.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
-				                 Enumerable.Empty<Type>()));
+								 Enumerable.Empty<Type>()));
 	}
 }
