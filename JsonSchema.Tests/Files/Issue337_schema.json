@@ -1,0 +1,45 @@
+{
+  "type": "object",
+  "properties": {
+    "mailpieceId": {
+      "$ref": "#/definitions/MailpieceId"
+    },
+    "timestamp": {
+      "$ref": "#/definitions/DateTime",
+      "description": "The timestamp of this state"
+    },
+    "state": {
+      "$ref": "#/definitions/State",
+      "description": "The clearance state of the parcel"
+    }
+  },
+  "required": [
+    "mailpieceId",
+    "timestamp",
+    "state"
+  ],
+  "additionalProperties": true,
+  "$id": "#ClearanceEvent",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {
+    "MailpieceId": {
+      "type": "string",
+      "description": "18 digits swiss barcode (alt Sendungsnummer, Identcode, shipment number)",
+      "pattern": "(98|99)[0-9]{16}",
+      "$id": "#MailpieceId"
+    },
+    "DateTime": {
+      "type": "string",
+      "description": "<a href=\"https://swagger.io/docs/specification/data-models/data-types/#string\">String @format date-time</a>,\nas defined by <a href=\"https://tools.ietf.org/html/rfc3339#section-5.6\">RFC 3339, section 5.6</a>,\nfor example: <code>2014-05-22T10:42:42.542+00:00</code>.",
+      "format": "date-time"
+    },
+    "State": {
+      "type": "string",
+      "enum": [
+        "DENIED",
+        "GRANTED"
+      ],
+      "$id": "#State"
+    }
+  }
+}

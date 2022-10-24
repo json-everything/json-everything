@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -694,5 +696,52 @@ public class GithubTests
 		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
 
 		Assert.AreEqual(0, result.NestedResults.Count);
+	}
+
+	[Test]
+	public void Issue337_IntermittentEnumFailures()
+	{
+		var testLog = ValidationOptions.Default.Log;
+		ValidationResults? failed = null;
+
+		try
+		{
+			ValidationOptions.Default.Log = null!;
+			var options = new ValidationOptions
+			{
+				Log = null!,
+				OutputFormat = OutputFormat.Basic
+			};
+
+			var schemaText = GetResource(337, "schema");
+			var instanceText = GetResource(337, "instance");
+
+			var schema = JsonSchema.FromText(schemaText);
+			var instance = JsonNode.Parse(instanceText);
+
+			Parallel.ForEach(Enumerable.Range(1, 100000).ToList().AsParallel(), i =>
+			{
+				var result = schema.Validate(instance, options);
+
+				if (!result.IsValid && failed == null)
+				{
+					failed = result;
+				}
+			});
+		}
+		finally
+		{
+			ValidationOptions.Default.Log = testLog;
+
+			if (failed != null)
+			{
+				Console.WriteLine(JsonSerializer.Serialize(failed, new JsonSerializerOptions
+				{
+					WriteIndented = true,
+					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+				}));
+				Assert.Fail();
+			}
+		}
 	}
 }
