@@ -758,25 +758,39 @@ public class GithubTests
 
 		try
 		{
-			var instanceText = "\"GRANTED\"";
+			var arrayText = "[\"DENIED\",\"GRANTED\"]";
+			var valueText = "\"GRANTED\"";
 
-			var a = JsonNode.Parse(instanceText);
-			var b = JsonNode.Parse(instanceText);
+			var array = JsonNode.Parse(arrayText)!.AsArray();
+			var value = JsonNode.Parse(valueText);
 
 			Parallel.ForEach(Enumerable.Range(1, 1000000).ToList().AsParallel(), i =>
 			{
-				var aHash = JsonNodeEqualityComparer.Instance.GetHashCode(a);
-				var bHash = JsonNodeEqualityComparer.Instance.GetHashCode(b);
+				var array0 = array[0];
+				var array1 = array[1];
+				var array0Hash = JsonNodeEqualityComparer.Instance.GetHashCode(array0);
+				var array1Hash = JsonNodeEqualityComparer.Instance.GetHashCode(array1);
+				var valueHash = JsonNodeEqualityComparer.Instance.GetHashCode(value);
 
-				if (a != b && failed == null)
+				if (array0Hash != valueHash && array1Hash != valueHash)
 				{
-					failed = $"Hashcode failed: {aHash} != {bHash}";
+					failed ??= $@"Hashcode failed on iteration {i}
+
+value: {valueHash}
+array[0]: {array0Hash} - {array0.ToJsonString()}
+array[1]: {array1Hash} - {array1.ToJsonString()}";
 					return;
 				}
 
-				if (!JsonNodeEqualityComparer.Instance.Equals(a, b))
+				if (!JsonNodeEqualityComparer.Instance.Equals(array0, value) &&
+					!JsonNodeEqualityComparer.Instance.Equals(array1, value))
 				{
-					failed = "Equals failed";
+					failed ??= "Equals failed";
+				}
+
+				if (!array.Contains(value, JsonNodeEqualityComparer.Instance))
+				{
+					failed ??= "Contains failed";
 				}
 			});
 		}
