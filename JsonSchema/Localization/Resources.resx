@@ -136,7 +136,7 @@
     <value>The following properties failed their dependent schemas: [[failed]]</value>
   </data>
   <data name="Error_Enum" xml:space="preserve">
-    <value>Expected value `[[received]]` to match one of the values specified by the enum `[[values]]`</value>
+    <value>Expected value to match one of the values specified by the enum</value>
   </data>
   <data name="Error_ExclusiveMaximum" xml:space="preserve">
     <value>[[received]] is not greater than [[limit]]</value>

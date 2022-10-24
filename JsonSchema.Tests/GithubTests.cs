@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -702,11 +703,15 @@ public class GithubTests
 	public void Issue337_IntermittentEnumFailures()
 	{
 		var testLog = ValidationOptions.Default.Log;
+		var enumError = ErrorMessages.Enum;
+
 		ValidationResults? failed = null;
 
 		try
 		{
 			ValidationOptions.Default.Log = null!;
+			ErrorMessages.Enum = "Expected value `[[received]]` to match one of the values specified by the enum `[[values]]`";
+
 			var options = new ValidationOptions
 			{
 				Log = null!,
@@ -732,6 +737,7 @@ public class GithubTests
 		finally
 		{
 			ValidationOptions.Default.Log = testLog;
+			ErrorMessages.Enum = enumError;
 
 			if (failed != null)
 			{
@@ -740,6 +746,45 @@ public class GithubTests
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 				}));
+				Assert.Fail();
+			}
+		}
+	}
+
+	[Test]
+	public void Issue337_ParallelComparisons()
+	{
+		string? failed = null;
+
+		try
+		{
+			var instanceText = "\"GRANTED\"";
+
+			var a = JsonNode.Parse(instanceText);
+			var b = JsonNode.Parse(instanceText);
+
+			Parallel.ForEach(Enumerable.Range(1, 1000000).ToList().AsParallel(), i =>
+			{
+				var aHash = JsonNodeEqualityComparer.Instance.GetHashCode(a);
+				var bHash = JsonNodeEqualityComparer.Instance.GetHashCode(b);
+
+				if (a != b && failed == null)
+				{
+					failed = $"Hashcode failed: {aHash} != {bHash}";
+					return;
+				}
+
+				if (!JsonNodeEqualityComparer.Instance.Equals(a, b))
+				{
+					failed = "Equals failed";
+				}
+			});
+		}
+		finally
+		{
+			if (failed != null)
+			{
+				Console.WriteLine(failed);
 				Assert.Fail();
 			}
 		}
