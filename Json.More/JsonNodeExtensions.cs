@@ -68,6 +68,14 @@ public static class JsonNodeExtensions
 			}
 		}
 
+		static void AddElement(ref int current, JsonElement newValue)
+		{
+			unchecked
+			{
+				current = current * 397 ^ newValue.GetEquivalenceHashCode();
+			}
+		}
+
 		// ReSharper disable once InconsistentNaming
 		void ComputeHashCode(JsonNode? target, ref int current, int depth)
 		{
@@ -97,13 +105,15 @@ public static class JsonNodeExtensions
 					var value = target.AsValue();
 					if (value.TryGetValue<bool>(out var boolA))
 						Add(ref current, boolA);
+					else if (value.TryGetValue<string>(out var stringA))
+						Add(ref current, stringA);
+					else if (value.TryGetValue<JsonElement>(out var element))
+						AddElement(ref current, element);
 					else
 					{
 						var number = value.GetNumber();
 						if (number != null)
 							Add(ref current, number);
-						else if (value.TryGetValue<string>(out var stringA))
-							Add(ref current, stringA);
 					}
 
 					break;
