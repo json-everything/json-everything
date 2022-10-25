@@ -700,6 +700,7 @@ public class GithubTests
 	}
 
 	[Test]
+	[Ignore("JsonElement.GetString() isn't thread safe.  See https://github.com/dotnet/runtime/issues/77421#issuecomment-1290198540")]
 	public void Issue337_IntermittentEnumFailures()
 	{
 		var testLog = ValidationOptions.Default.Log;
