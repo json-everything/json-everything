@@ -370,7 +370,7 @@ The default output format is Flag, but this can be configured via the `Validatio
 
 ## Value format validation
 
-The `format` keyword has been around a while.  It's available in all of the drafts supported by JsonSchema.Net.  Although this keyword is techincally classified as an annotation, the specification does allow (the word used is "SHOULD") that implementation provide some level of validation on it so long as that validation may be configured on and off.
+The `format` keyword has been around a while.  It's available in all of the drafts supported by JsonSchema.Net.  Although this keyword is technically classified as an annotation, the specification does allow (the word used is "SHOULD") that implementation provide some level of validation on it so long as that validation may be configured on and off.
 
 JsonSchema.Net makes a valiant attempt at validating a few of them.  These are hardcoded as static fields on the `Formats` class.  Out of the box, these are available:
 

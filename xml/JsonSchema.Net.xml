@@ -1701,6 +1701,13 @@
             Create a new instance of the <see cref="T:Json.Schema.EvaluationOptions"/> class.
             </summary>
         </member>
+        <member name="M:Json.Schema.EvaluationOptions.From(Json.Schema.EvaluationOptions)">
+            <summary>
+            Creates a deep copy of the options.
+            </summary>
+            <param name="other">The source options.</param>
+            <returns>A new options instance with the same settings.</returns>
+        </member>
         <member name="T:Json.Schema.EvaluationResults">
             <summary>
             The results object for evaluations.
