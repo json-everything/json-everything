@@ -88,7 +88,7 @@ public class ValidationOptions
 	/// <summary>
 	/// Specifies whether custom keywords that aren't defined in vocabularies
 	/// should be processed.  Only applies to vocab-enabled JSON Schema versions
-	/// (e.g. draft 2019-09 & 20200-12).  Default is false.
+	/// (e.g. draft 2019-09 &amp; 20200-12).  Default is false.
 	/// </summary>
 	public bool ProcessCustomKeywords { get; set; }
 
