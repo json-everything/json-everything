@@ -232,7 +232,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		{
 			// $schema is always processed first, and this should only be set
 			// after $schema has been evaluated.
-			if (keyword is not SchemaKeyword)
+			if (keyword is not SchemaKeyword && !context.Options.ProcessCustomKeywords)
 				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 

@@ -85,34 +85,48 @@ public class FetchTests
 	[Test]
 	public void GlobalRegistryMissesRef()
 	{
-		var options = new ValidationOptions
+		try
 		{
-			OutputFormat = OutputFormat.Detailed
-		};
-		SchemaRegistry.Global.Fetch = uri =>
+			var options = new ValidationOptions
+			{
+				OutputFormat = OutputFormat.Detailed
+			};
+			SchemaRegistry.Global.Fetch = uri =>
+			{
+				if (uri.AbsoluteUri == "http://my.schema/test2")
+					return JsonSchema.FromText("{\"type\": \"string\"}");
+				return null;
+			};
+			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+
+			using var json = JsonDocument.Parse("10");
+
+			var results = schema.Validate(json.RootElement, options);
+
+			results.AssertInvalid();
+			results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+		}
+		finally
 		{
-			if (uri.AbsoluteUri == "http://my.schema/test2")
-				return JsonSchema.FromText("{\"type\": \"string\"}");
-			return null;
-		};
-		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
-
-		using var json = JsonDocument.Parse("10");
-
-		var results = schema.Validate(json.RootElement, options);
-
-		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+			SchemaRegistry.Global.Fetch = null!;
+		}
 	}
 
 	[Test]
 	public void RefContainsBadJson()
 	{
-		SchemaRegistry.Global.Fetch = _ => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}");
-		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+		try
+		{
+			SchemaRegistry.Global.Fetch = _ => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}");
+			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
-		using var json = JsonDocument.Parse("10");
+			using var json = JsonDocument.Parse("10");
 
-		Assert.Throws<JsonException>(() => schema.Validate(json.RootElement));
+			Assert.Throws<JsonException>(() => schema.Validate(json.RootElement));
+		}
+		finally
+		{
+			SchemaRegistry.Global.Fetch = null!;
+		}
 	}
 }

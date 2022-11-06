@@ -13,6 +13,7 @@ public class VocabularyTests
 	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 	[JsonConverter(typeof(MinDateJsonConverter))]
+	[Vocabulary("http://mydates.com/vocabulary")]
 	public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 	{
 		internal const string Name = "minDate";
@@ -75,8 +76,73 @@ public class VocabularyTests
 	}
 
 	[SchemaKeyword(Name)]
+	[SchemaDraft(Draft.Draft7 | Draft.Draft201909 | Draft.Draft202012)]
+	[JsonConverter(typeof(NonVocabMinDateJsonConverter))]
+	public class NonVocabMinDateKeyword : IJsonSchemaKeyword, IEquatable<NonVocabMinDateKeyword>
+	{
+		internal const string Name = "minDate-nv";
+
+		public DateTime Date { get; }
+
+		public NonVocabMinDateKeyword(DateTime date)
+		{
+			Date = date;
+		}
+
+		public void Validate(ValidationContext context)
+		{
+			var dateString = context.LocalInstance!.GetValue<string>();
+			var date = DateTime.Parse(dateString);
+
+			if (date >= Date)
+				context.LocalResult.Pass();
+			else
+				context.LocalResult.Fail("[[provided:O]] must be on or after [[value:O]]",
+					("provided", date),
+					("value", Date));
+		}
+
+		public bool Equals(NonVocabMinDateKeyword? other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Date.Equals(other.Date);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return Equals(obj as NonVocabMinDateKeyword);
+		}
+
+		public override int GetHashCode()
+		{
+			return Date.GetHashCode();
+		}
+	}
+
+	private class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>
+	{
+		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType != JsonTokenType.String)
+				throw new JsonException("Expected string");
+
+			var dateString = reader.GetString();
+			var date = DateTime.Parse(dateString!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+			return new NonVocabMinDateKeyword(date);
+		}
+
+		public override void Write(Utf8JsonWriter writer, NonVocabMinDateKeyword value, JsonSerializerOptions options)
+		{
+			writer.WritePropertyName(NonVocabMinDateKeyword.Name);
+			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
+		}
+	}
+
+	[SchemaKeyword(Name)]
 	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
 	[JsonConverter(typeof(MaxDateJsonConverter))]
+	[Vocabulary("http://mydates.com/vocabulary")]
 	public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
 	{
 		internal const string Name = "maxDate";
@@ -170,6 +236,7 @@ public class VocabularyTests
 	public void Setup()
 	{
 		SchemaKeywordRegistry.Register<MinDateKeyword>();
+		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>();
 		SchemaKeywordRegistry.Register<MaxDateKeyword>();
 	}
 
@@ -177,6 +244,7 @@ public class VocabularyTests
 	public void TearDown()
 	{
 		SchemaKeywordRegistry.Unregister<MinDateKeyword>();
+		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>();
 		SchemaKeywordRegistry.Unregister<MaxDateKeyword>();
 	}
 
@@ -185,7 +253,7 @@ public class VocabularyTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
-			.MinDate(DateTime.Now.AddDays(-1));
+			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new ValidationOptions
@@ -199,9 +267,8 @@ public class VocabularyTests
 		Console.WriteLine();
 		Console.WriteLine(instance);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(results, _serializerOptions));
 
-		Assert.IsFalse(results.IsValid);
+		results.AssertInvalid();
 	}
 
 	[Test]
@@ -209,7 +276,7 @@ public class VocabularyTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
-			.MinDate(DateTime.Now.AddDays(-1));
+			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new ValidationOptions();
@@ -220,9 +287,62 @@ public class VocabularyTests
 		Console.WriteLine();
 		Console.WriteLine(instance);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(results, _serializerOptions));
 
-		Assert.IsTrue(results.IsValid);
+		results.AssertValid();
+	}
+
+	[Test]
+	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_NoCustomKeywords()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft201909Id)
+			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
+		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+
+		var results = schema.Validate(instance);
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		Console.WriteLine();
+		Console.WriteLine(instance);
+		Console.WriteLine();
+
+		results.AssertValid();
+	}
+
+	[Test]
+	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_WithCustomKeywords()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft201909Id)
+			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
+		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+
+		var results = schema.Validate(instance, new ValidationOptions{ProcessCustomKeywords = true});
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		Console.WriteLine();
+		Console.WriteLine(instance);
+		Console.WriteLine();
+
+		results.AssertInvalid();
+	}
+
+	[Test]
+	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft7()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft7Id)
+			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
+		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+
+		var results = schema.Validate(instance);
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		Console.WriteLine();
+		Console.WriteLine(instance);
+		Console.WriteLine();
+
+		results.AssertInvalid();
 	}
 
 	[Test]
@@ -230,7 +350,7 @@ public class VocabularyTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
-			.MinDate(DateTime.Now.AddDays(-1));
+			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new ValidationOptions
@@ -245,9 +365,8 @@ public class VocabularyTests
 		Console.WriteLine();
 		Console.WriteLine(instance);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(results, _serializerOptions));
 
-		Assert.IsTrue(results.IsValid);
+		results.AssertValid();
 	}
 
 	[Test]
@@ -262,9 +381,8 @@ public class VocabularyTests
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(results, _serializerOptions));
 
-		Assert.IsFalse(results.IsValid);
+		results.AssertInvalid();
 	}
 
 	[Test]
@@ -281,8 +399,7 @@ public class VocabularyTests
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(results, _serializerOptions));
 
-		Assert.IsTrue(results.IsValid);
+		results.AssertValid();
 	}
 }

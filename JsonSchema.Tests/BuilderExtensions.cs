@@ -9,6 +9,11 @@ public static class BuilderExtensions
 		builder.Add(new VocabularyTests.MinDateKeyword(date));
 		return builder;
 	}
+	public static JsonSchemaBuilder NonVocabMinDate(this JsonSchemaBuilder builder, DateTime date)
+	{
+		builder.Add(new VocabularyTests.NonVocabMinDateKeyword(date));
+		return builder;
+	}
 	public static JsonSchemaBuilder MaxDate(this JsonSchemaBuilder builder, DateTime date)
 	{
 		builder.Add(new VocabularyTests.MaxDateKeyword(date));

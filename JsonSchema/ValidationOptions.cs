@@ -85,6 +85,13 @@ public class ValidationOptions
 	/// </remarks>
 	public bool OnlyKnownFormats { get; set; }
 
+	/// <summary>
+	/// Specifies whether custom keywords that aren't defined in vocabularies
+	/// should be processed.  Only applies to vocab-enabled JSON Schema versions
+	/// (e.g. draft 2019-09 &amp; 20200-12).  Default is false.
+	/// </summary>
+	public bool ProcessCustomKeywords { get; set; }
+
 	internal Draft ValidatingAs { get; private set; }
 
 	static ValidationOptions()
@@ -109,6 +116,7 @@ public class ValidationOptions
 			DefaultBaseUri = other.DefaultBaseUri,
 			ValidateMetaSchema = other.ValidateMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
+			ProcessCustomKeywords = other.ProcessCustomKeywords,
 			LogIndentLevel = other.LogIndentLevel,
 			Log = other._log ?? Default.Log,
 			OnlyKnownFormats = other.OnlyKnownFormats,
