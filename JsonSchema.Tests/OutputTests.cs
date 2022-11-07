@@ -146,6 +146,40 @@ public class OutputTests
 	}
 
 	[Test]
+	public void Hierarchical_Failure_WithDroppedAnnotations()
+	{
+		var instance = JsonNode.Parse("{\"fails\":\"value\"}");
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = OutputFormat.Hierarchical;
+		options.PreserveDroppedAnnotations = true;
+
+		var result = _schema.Evaluate(instance, options);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
+  ""droppedAnnotations"": {
+    ""properties"": [
+      ""fails""
+    ]
+  },
+  ""nested"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
 	public void Hierarchical_Multi_Success()
 	{
 		var result = Validate("{\"multi\":8}", OutputFormat.Hierarchical);
@@ -343,15 +377,15 @@ public class OutputTests
 		result.AssertInvalid(expected);
 	}
 
-		private static EvaluationResults Validate(string json, OutputFormat format)
-		{
-			var instance = JsonNode.Parse(json);
-			var options = EvaluationOptions.From(EvaluationOptions.Default);
-			options.OutputFormat = format;
+	private static EvaluationResults Validate(string json, OutputFormat format)
+	{
+		var instance = JsonNode.Parse(json);
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = format;
 
-			var result = _schema.Evaluate(instance, options);
-			return result;
-		}
+		var result = _schema.Evaluate(instance, options);
+		return result;
+	}
 
 	[Test]
 	public void AdditionalPropertiesDoesNotGiveExtraErrors()

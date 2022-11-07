@@ -92,6 +92,13 @@ public class EvaluationOptions
 	/// </summary>
 	public bool ProcessCustomKeywords { get; set; }
 
+	/// <summary>
+	/// If enabled, annotations that are dropped as a result of a failing
+	/// subschema will be reported in a `droppedAnnotations` property in
+	/// the output.
+	/// </summary>
+	public bool PreserveDroppedAnnotations { get; set; }
+
 	internal Draft EvaluatingAs { get; private set; }
 
 	static EvaluationOptions()
@@ -125,6 +132,7 @@ public class EvaluationOptions
 			LogIndentLevel = other.LogIndentLevel,
 			Log = other._log ?? Default.Log,
 			OnlyKnownFormats = other.OnlyKnownFormats,
+			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations
 		};
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 		options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);

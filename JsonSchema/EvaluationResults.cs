@@ -86,12 +86,15 @@ public class EvaluationResults
 
 	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
 
+	internal bool IncludeDroppedAnnotations { get; private set; }
+
 	internal EvaluationResults(EvaluationContext context)
 	{
 		EvaluationPath = context.EvaluationPath;
 		_currentUri = context.CurrentUri;
 		_reference = context.Reference;
 		InstanceLocation = context.InstanceLocation;
+		IncludeDroppedAnnotations = context.Options.PreserveDroppedAnnotations;
 	}
 
 	private EvaluationResults(EvaluationResults other)
@@ -103,6 +106,7 @@ public class EvaluationResults
 		InstanceLocation = other.InstanceLocation;
 		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
 		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
+		IncludeDroppedAnnotations = IncludeDroppedAnnotations;
 	}
 
 	private Uri BuildSchemaLocation()
@@ -315,10 +319,18 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 				JsonSerializer.Serialize(writer, value.Annotations, options);
 			}
 		}
-		else if (value.HasErrors)
+		else
 		{
-			writer.WritePropertyName("errors");
-			JsonSerializer.Serialize(writer, value.Errors, options);
+			if (value.HasErrors)
+			{
+				writer.WritePropertyName("errors");
+				JsonSerializer.Serialize(writer, value.Errors, options);
+			}
+			if (value.IncludeDroppedAnnotations && value.HasAnnotations)
+			{
+				writer.WritePropertyName("droppedAnnotations");
+				JsonSerializer.Serialize(writer, value.Annotations, options);
+			}
 		}
 
 		if (value.HasNestedResults)
