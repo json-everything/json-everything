@@ -87,15 +87,13 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
-			if (date >= Date)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail("[[provided:O]] must be on or after [[value:O]]",
+			if (date < Date)
+				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
 		}
@@ -313,7 +311,7 @@ public class VocabularyTests
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Validate(instance, new ValidationOptions{ProcessCustomKeywords = true});
+		var results = schema.Validate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
