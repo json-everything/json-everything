@@ -198,7 +198,7 @@ public class EvaluationContext
 		{
 			// $schema is always processed first, and this should only be set
 			// after $schema has been evaluated.
-			if (keyword is not SchemaKeyword)
+			if (keyword is not SchemaKeyword && !Options.ProcessCustomKeywords)
 				keywordTypesToProcess ??= GetKeywordsToProcess();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 
