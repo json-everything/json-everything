@@ -1696,6 +1696,20 @@
             assertion behavior.
             </remarks>
         </member>
+        <member name="P:Json.Schema.EvaluationOptions.ProcessCustomKeywords">
+            <summary>
+            Specifies whether custom keywords that aren't defined in vocabularies
+            should be processed.  Only applies to vocab-enabled JSON Schema versions
+            (e.g. draft 2019-09 &amp; 20200-12).  Default is false.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.EvaluationOptions.PreserveDroppedAnnotations">
+            <summary>
+            If enabled, annotations that are dropped as a result of a failing
+            subschema will be reported in a `droppedAnnotations` property in
+            the output.
+            </summary>
+        </member>
         <member name="M:Json.Schema.EvaluationOptions.#ctor">
             <summary>
             Create a new instance of the <see cref="T:Json.Schema.EvaluationOptions"/> class.

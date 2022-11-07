@@ -1,3 +1,7 @@
+# [3.3.0](https://github.com/gregsdennis/json-everything/pull/344)
+
+[#340](https://github.com/gregsdennis/json-everything/issues/340) - Added `ValidationOptions.ProcessCustomKeywords` to allow custom keywords for schema versions 2019-09 and later.
+
 # [3.2.1](https://github.com/gregsdennis/json-everything/pull/330)
 
 Fixed absolute schema location in output.  The JSON Schema team identified some edge cases involving `$dynamicRef` where the wrong URI was reported.
