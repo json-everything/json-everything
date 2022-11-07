@@ -132,6 +132,10 @@
 									</InputSelect>
 								</label>
 								<label class="my-2">
+									<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
+									Preserve dropped annotations
+								</label>
+								<label class="my-2">
 									Default base URI<br/>
 									<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI" class="form-control"/>
 								</label>
@@ -214,6 +218,7 @@
 		public Draft OutputStructure { get; set; } = Draft.Draft202012;
 		public string? DefaultBaseUri { get; set; }
 		public bool ValidateFormat { get; set; }
+		public bool IncludeDroppedAnnotations { get; set; }
 
 		public EvaluationOptions ToValidationOptions() => new()
 		{
@@ -222,7 +227,8 @@
 			DefaultBaseUri = Uri.TryCreate(DefaultBaseUri, UriKind.Absolute, out var uri)
 				? uri
 				: null!,
-			RequireFormatValidation = ValidateFormat
+			RequireFormatValidation = ValidateFormat,
+			PreserveDroppedAnnotations = IncludeDroppedAnnotations
 		};
 	}
 
