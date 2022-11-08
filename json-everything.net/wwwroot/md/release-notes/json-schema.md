@@ -1,3 +1,50 @@
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/326) (coming soon)
+
+This update adds support for the latest version of JSON Schema while also making a few architectural changes to ease the burden for implementing custom keywords.
+
+It also renames several methods from "Validate" to "Evaluate" to reflect the idea that processing a schema has more uses than merely validation.  Extension methods have been created (and marked with `[Obsolete]`) to ease the transition in consuming code.  These extension methods will be removed with the next major version.
+
+## Breaking Changes
+
+- `JsonSchema.Validate()` renamed to `JsonSchema.Evaluate()`
+- `ValidationOptions`
+  - renamed to `EvaluationOptions`
+  - `ValidateAs` renamed to `EvaluateAs`
+  - `ValidateMetaSchema` renamed to `ValidateAgainstMetaSchema`
+- `ValidationResults`
+  - renamed to `EvaluationResults`
+  - `ConsolidateAnnotations()` removed
+  - `TryGetAnnotation()` updated to well-known "try" pattern: `bool TryGetAnnotations(string, out JsonNode)`
+  - `Pass()` removed (keyword is assumed to pass unless `Fail` is called)
+- `Annotation` type removed (annotations are simply saved as `JsonNode`s in `EvaluationResults`)
+- `ValidationContext`
+  - renamed to `EvaluationContext`
+  - `ValidationOptions` renamed to `EvaluationOptions`
+  - `Push()` optional parameters removed and overloads created
+    - `Push(JsonPointer instanceLocation, JsonNode? instance, JsonPointer evaluationPath, JsonSchema subschema, Uri? newUri = null)` used for new schema & instance locations (e.g. keywords like `properties`)
+    - `Push(JsonPointer evaluationPath, JsonSchema subschema, Uri? newUri = null)` used for new schema locations evaluating the same instance location (e.g. keywords like `anyOf`)
+- `JsonSchema.ValidateSubschema()` removed, replaced with `EvaluationContext.Evaluate()`
+- `IJsonSchemaKeyword.Validate()` renamed to `IJsonSchemaKeyword.Evaluate()` (applies to all keyword types as well)
+- `ErrorMessages` & associated string resources
+  - `Contains` replaced with `ContainsTooFew` and `ContainsTooMany`
+  - `MaxContains` and `MinContains` removed
+- `JsonSchemaExtensions.Validate()` renamed to `JsonSchemaExtensions.Evaluate()`
+
+### Changes Driven by JSON Schema
+
+- Output formats are now `Flag`, `Basic`, and `Hierarchical`.
+- Output structure now modelled after JSON Schema `draft-next` output
+  - `ValidationResults.SchemaLocation` renamed to `EvaluationResults.EvaluationPath`
+  - `ValidationResults.AbsoluteSchemaLocation` renamed to `EvaluationResults.SchemaLocation` (note the same property name and different function)
+
+## Additional Changes
+
+- Exposed static property `Name` on all keywords.
+- Added `JsonSchemaExtensions.Validate()` extensions to help ease transition from "Validate" to "Evaluate"
+- Added `PropertyDependenciesKeyword`
+- Added `MetaSchemas.DraftNext` and associated properties
+- Added `Vocabularies.DraftNext` and associated properties
+
 # [3.3.2](https://github.com/gregsdennis/json-everything/pull/347)
 
 Fixed issue where annotation collection is skipped but shouldn't be when output format is configured to `flag` and `unevaluated*` keywords are present in the schema.
