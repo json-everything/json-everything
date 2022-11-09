@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -18,6 +19,8 @@ public static class SchemaKeywordRegistry
 {
 	private static readonly ConcurrentDictionary<string, Type> _keywords;
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
+
+	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
 	static SchemaKeywordRegistry()
 	{

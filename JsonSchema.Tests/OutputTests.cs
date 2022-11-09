@@ -27,6 +27,12 @@ public class OutputTests
 					)
 				)
 			);
+	JsonSerializerOptions _serializerOptions = new()
+	{
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+
 
 	[Test]
 	public void Flag_Success()
@@ -400,7 +406,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
-		var serialized = JsonSerializer.Serialize(result);
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("additionalProperties"));
@@ -419,7 +425,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
-		var serialized = JsonSerializer.Serialize(result);
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("unevaluatedProperties"));
@@ -443,7 +449,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
-		var serialized = JsonSerializer.Serialize(result);
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.True(serialized.Contains("unevaluatedProperties"));
@@ -460,7 +466,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
-		var serialized = JsonSerializer.Serialize(result);
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("additionalItems"));
@@ -478,7 +484,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
-		var serialized = JsonSerializer.Serialize(result);
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("unevaluatedItems"));
@@ -571,26 +577,20 @@ public class OutputTests
 		};
 		var result = schema.Evaluate(failing, validationOptions);
 
-		var serializerOptions = new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
 		result.ToBasic();
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
 		result = schema.Evaluate(passing, validationOptions);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
 		result.ToBasic();
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 	}
 
 	[Test]
@@ -668,10 +668,73 @@ public class OutputTests
 
 		//result.ToBasic();
 
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}));
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
+	}
+
+	[Test]
+	public void IgnoreTitleAnnotations()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Id("https://test.com/schema")
+			.Title("a title")
+			.Default("default value")
+			.Type(SchemaValueType.String);
+		JsonNode? instance = "a string";
+		var expected = @"{
+  ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
+  ""annotations"": {
+    ""default"": ""default value""
+  }
+}";
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = OutputFormat.Hierarchical;
+		options.IgnoreAnnotationsFrom<TitleKeyword>();
+		var result = schema.Evaluate(instance, options);
+
+		result.AssertValid(expected);
+	}
+
+	[Test]
+	public void CollectButDoNotReportPropertiesAnnotations()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Id("https://test.com/schema")
+			.Title("a title")
+			.Type(SchemaValueType.Object)
+			.Properties(("foo", true))
+			.AdditionalProperties(false);
+		var instance = new JsonObject { ["foo"] = 1 };
+		var expected = @"{
+  ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema#"",
+  ""instanceLocation"": """",
+  ""annotations"": {
+    ""title"": ""a title"",
+    ""additionalProperties"": []
+  },
+  ""nested"": [
+    {
+      ""valid"": true,
+      ""evaluationPath"": ""/properties/foo"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/foo"",
+      ""instanceLocation"": ""/foo""
+    }
+  ]
+}";
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = OutputFormat.Hierarchical;
+		options.IgnoreAnnotationsFrom<PropertiesKeyword>();
+		var result = schema.Evaluate(instance, options);
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		Console.WriteLine();
+		Console.WriteLine(JsonSerializer.Serialize(instance, _serializerOptions));
+		Console.WriteLine();
+
+		result.AssertValid(expected);
 	}
 }

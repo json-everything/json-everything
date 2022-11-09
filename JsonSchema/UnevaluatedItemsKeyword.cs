@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `unevaluatedItems`.
 /// </summary>
-[Applicator]
 [SchemaPriority(30)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
@@ -19,6 +18,11 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAttributesFrom(typeof(PrefixItemsKeyword))]
+[DependsOnAttributesFrom(typeof(ItemsKeyword))]
+[DependsOnAttributesFrom(typeof(AdditionalItemsKeyword))]
+[DependsOnAttributesFrom(typeof(ContainsKeyword))]
+[DependsOnAttributesFrom(typeof(UnevaluatedItemsKeyword))]
 [JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
 public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
 {

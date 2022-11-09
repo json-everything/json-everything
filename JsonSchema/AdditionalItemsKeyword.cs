@@ -9,13 +9,13 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `additionalItems`.
 /// </summary>
-[Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
+[DependsOnAttributesFrom(typeof(ItemsKeyword))]
 [JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
 public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalItemsKeyword>
 {

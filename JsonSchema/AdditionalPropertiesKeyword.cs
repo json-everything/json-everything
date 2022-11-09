@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `additionalProperties`.
 /// </summary>
-[Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
@@ -22,6 +21,8 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAttributesFrom(typeof(PropertiesKeyword))]
+[DependsOnAttributesFrom(typeof(PatternPropertiesKeyword))]
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
 public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
 {

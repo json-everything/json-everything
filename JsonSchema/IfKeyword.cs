@@ -7,7 +7,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `if`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]

@@ -10,7 +10,7 @@ namespace Json.Schema;
 /// </summary>
 public static class KeywordExtensions
 {
-	private static readonly Dictionary<Type, string> _attributes =
+	private static readonly Dictionary<Type, string> _keywordNames =
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
@@ -18,6 +18,16 @@ public static class KeywordExtensions
 						!t.IsInterface &&
 						t != typeof(UnrecognizedKeyword))
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
+	private static readonly Type[] _keywordDependencies =
+		typeof(IJsonSchemaKeyword).Assembly
+			.GetTypes()
+			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
+						!t.IsAbstract &&
+						!t.IsInterface &&
+						t != typeof(UnrecognizedKeyword))
+			.SelectMany(t => t.GetCustomAttributes<DependsOnAttributesFromAttribute>().Select(x => x.DependentType))
+			.Distinct()
+			.ToArray();
 
 	/// <summary>
 	/// Gets the keyword string.
@@ -33,13 +43,36 @@ public static class KeywordExtensions
 		if (keyword is UnrecognizedKeyword unrecognized) return unrecognized.Name;
 
 		var keywordType = keyword.GetType();
-		if (!_attributes.TryGetValue(keywordType, out var name))
+		if (!_keywordNames.TryGetValue(keywordType, out var name))
 		{
 			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
 			if (name == null)
 				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 
-			_attributes[keywordType] = name;
+			_keywordNames[keywordType] = name;
+		}
+
+		return name;
+	}
+
+	/// <summary>
+	/// Gets the keyword string.
+	/// </summary>
+	/// <param name="keywordType">The keyword type.</param>
+	/// <returns>The keyword string.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="keywordType"/> is null.</exception>
+	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
+	public static string Keyword(this Type keywordType)
+	{
+		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
+
+		if (!_keywordNames.TryGetValue(keywordType, out var name))
+		{
+			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
+			if (name == null)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
+
+			_keywordNames[keywordType] = name;
 		}
 
 		return name;
@@ -124,5 +157,12 @@ public static class KeywordExtensions
 		}
 
 		return supportedVersions;
+	}
+
+	internal static bool ProducesDependentAnnotations(this Type keywordType)
+	{
+		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
+
+		return _keywordDependencies.Contains(keywordType);
 	}
 }
