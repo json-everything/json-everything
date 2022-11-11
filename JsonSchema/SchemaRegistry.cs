@@ -216,7 +216,7 @@ public class SchemaRegistry
 			var schema = Fetch(uri) ?? Global.Fetch(uri);
 			if (schema == null) return null;
 
-			RegisterSchema(uri, schema);
+			Register(uri, schema);
 			//schema.RegisterSubschemas(this, uri);
 			registration = CheckRegistry(_registered!, uri);
 		}

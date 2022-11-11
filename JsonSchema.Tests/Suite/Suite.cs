@@ -82,8 +82,8 @@ public class Suite
 				collection.IsOptional = fileName.Contains("optional");
 				foreach (var test in collection.Tests)
 				{
-					var optional = collection.IsOptional ? "(optional)/" : null;
-					var name = $"{draftFolder}/{shortFileName}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
+					var optional = collection.IsOptional ? "(optional) / " : null;
+					var name = $"{draftFolder} / {shortFileName} / {optional}{collection.Description} / {test.Description}";
 					var optionsCopy = ValidationOptions.From(options);
 					allTests.Add(new TestCaseData(collection, test, shortFileName, optionsCopy) { TestName = name });
 				}
