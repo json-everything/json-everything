@@ -23,6 +23,7 @@ public class ValidationContext
 	private readonly Stack<bool> _dynamicScopeFlags = new();
 	private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new();
 	private readonly Stack<bool> _directRefNavigation = new();
+	private readonly Stack<bool> _requireAnnotations = new();
 	private JsonSchema? _currentAnchor;
 
 	/// <summary>
@@ -104,7 +105,7 @@ public class ValidationContext
 	/// <summary>
 	/// Whether processing optimizations can be applied (output format = flag).
 	/// </summary>
-	public bool ApplyOptimizations => Options.OutputFormat == OutputFormat.Flag;
+	public bool ApplyOptimizations => Options.OutputFormat == OutputFormat.Flag && !_requireAnnotations.Peek();
 
 #pragma warning disable 8618
 	internal ValidationContext(ValidationOptions options,
@@ -124,6 +125,7 @@ public class ValidationContext
 		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(null);
 		_directRefNavigation.Push(false);
+		_requireAnnotations.Push(RequiresAnnotationCollection(schemaRoot));
 	}
 #pragma warning restore 8618
 
@@ -148,13 +150,21 @@ public class ValidationContext
 		else
 			_localInstances.Push(instance ?? LocalInstance);
 		_schemaLocations.Push(subschemaLocation ?? SchemaLocation);
-		_localSchemas.Push(subschema ?? LocalSchema);
+		var localSubschema = subschema ?? LocalSchema;
+		_localSchemas.Push(localSubschema);
+		_requireAnnotations.Push(_requireAnnotations.Peek() || RequiresAnnotationCollection(localSubschema));
 		var newResult = new ValidationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
 		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
 		_directRefNavigation.Push(false);
+	}
+
+	private bool RequiresAnnotationCollection(JsonSchema schema)
+	{
+		return schema.Keywords?.Any(x => x.GetType() == typeof(UnevaluatedPropertiesKeyword) ||
+										 x.GetType() == typeof(UnevaluatedItemsKeyword)) ?? false;
 	}
 
 	/// <summary>
