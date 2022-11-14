@@ -9,7 +9,7 @@ namespace Json.Schema;
 /// Apply this attribute to your schema keyword to indicate a dependency on another keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
-public class DependsOnAttributesFromAttribute : Attribute
+public class DependsOnAnnotationsFromAttribute : Attribute
 {
 	/// <summary>
 	/// The dependent type.
@@ -17,10 +17,10 @@ public class DependsOnAttributesFromAttribute : Attribute
 	public Type DependentType { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="DependsOnAttributesFromAttribute"/> instance.
+	/// Creates a new <see cref="DependsOnAnnotationsFromAttribute"/> instance.
 	/// </summary>
 	/// <param name="type">The dependent type.</param>
-	public DependsOnAttributesFromAttribute(Type type)
+	public DependsOnAnnotationsFromAttribute(Type type)
 	{
 		DependentType = type ?? throw new ArgumentNullException(nameof(type));
 	}

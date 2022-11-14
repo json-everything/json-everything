@@ -18,11 +18,11 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAttributesFrom(typeof(PrefixItemsKeyword))]
-[DependsOnAttributesFrom(typeof(ItemsKeyword))]
-[DependsOnAttributesFrom(typeof(AdditionalItemsKeyword))]
-[DependsOnAttributesFrom(typeof(ContainsKeyword))]
-[DependsOnAttributesFrom(typeof(UnevaluatedItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(ItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(AdditionalItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(ContainsKeyword))]
+[DependsOnAnnotationsFrom(typeof(UnevaluatedItemsKeyword))]
 [JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
 public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
 {

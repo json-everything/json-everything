@@ -25,7 +25,7 @@ public static class KeywordExtensions
 						!t.IsAbstract &&
 						!t.IsInterface &&
 						t != typeof(UnrecognizedKeyword))
-			.SelectMany(t => t.GetCustomAttributes<DependsOnAttributesFromAttribute>().Select(x => x.DependentType))
+			.SelectMany(t => t.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType))
 			.Distinct()
 			.ToArray();
 

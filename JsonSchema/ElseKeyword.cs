@@ -17,7 +17,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAttributesFrom(typeof(IfKeyword))]
+[DependsOnAnnotationsFrom(typeof(IfKeyword))]
 [JsonConverter(typeof(ElseKeywordJsonConverter))]
 public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ElseKeyword>
 {
