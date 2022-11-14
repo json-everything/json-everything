@@ -81,6 +81,18 @@ a,
 	border-color: #6800B7;
 }
 
+.div-hcenter {
+	display: inline-block;
+}
+
+.announcement-border {
+	background-color: #e3d3f0;
+	border-color: #6800B7;
+	border-width: 1px;
+	border-radius: 3px;
+	border-style: solid;
+}
+
 #blazor-error-ui {
 	background-color: #1e1e1e;
 	bottom: 0;
