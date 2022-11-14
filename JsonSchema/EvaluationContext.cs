@@ -145,6 +145,7 @@ public class EvaluationContext
 		_localInstances.Push(instance);
 		_evaluationPaths.Push(evaluationPath);
 		_localSchemas.Push(subschema);
+		_requireAnnotations.Push(_requireAnnotations.Peek() || RequiresAnnotationCollection(subschema));
 		var newResult = new EvaluationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
@@ -168,7 +169,7 @@ public class EvaluationContext
 		_localInstances.Push(LocalInstance);
 		_evaluationPaths.Push(evaluationPath);
 		_localSchemas.Push(subschema);
-		_requireAnnotations.Push(_requireAnnotations.Peek() || RequiresAnnotationCollection(localSubschema));
+		_requireAnnotations.Push(_requireAnnotations.Peek() || RequiresAnnotationCollection(subschema));
 		var newResult = new EvaluationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
