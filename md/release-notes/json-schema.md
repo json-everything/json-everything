@@ -1,3 +1,11 @@
+# [3.3.2](https://github.com/gregsdennis/json-everything/pull/347)
+
+Fixed issue where annotation collection is skipped but shouldn't be when output format is configured to `flag` and `unevaluated*` keywords are present in the schema.
+
+# [3.3.1](https://github.com/gregsdennis/json-everything/pull/346)
+
+Fixed issue where dynamically-loaded schemas were not scanned for URI identifier keywords.  Was not an issue if all referenced schemas were explicitly reloaded.
+
 # [3.3.0](https://github.com/gregsdennis/json-everything/pull/344)
 
 [#340](https://github.com/gregsdennis/json-everything/issues/340) - Added `ValidationOptions.ProcessCustomKeywords` to allow custom keywords for schema versions 2019-09 and later.
