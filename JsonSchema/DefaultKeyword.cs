@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -49,6 +51,11 @@ public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
 		context.ExitKeyword(Name, true);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -48,6 +49,11 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSche
 		context.LocalResult.Ignore();
 		context.Pop();
 		context.ExitKeyword(Name, true);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

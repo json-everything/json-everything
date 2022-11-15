@@ -113,6 +113,11 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
+	}
+
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
 		foreach (var requirement in Requirements.Values)

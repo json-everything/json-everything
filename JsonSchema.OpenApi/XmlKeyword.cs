@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema.OpenApi;
 
@@ -103,6 +104,11 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 		context.EnterKeyword(_Name);
 		context.LocalResult.SetAnnotation(_Name, _json);
 		context.ExitKeyword(_Name, context.LocalResult.IsValid);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

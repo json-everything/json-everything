@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -62,6 +64,11 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 		context.UpdateCurrentUri(newUri);
 		context.LocalSchema.UpdateBaseUri(newUri);
 		context.ExitKeyword(Name, true);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	internal Uri UpdateUri(Uri? currentUri)

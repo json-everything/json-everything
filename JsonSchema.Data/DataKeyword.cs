@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema.Data;
 
@@ -97,6 +98,11 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		if (!result)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>

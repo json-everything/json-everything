@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -48,6 +50,11 @@ public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<Anc
 		context.EnterKeyword(Name);
 		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)

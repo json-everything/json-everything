@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -74,6 +75,11 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		if (!Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
 			context.LocalResult.Fail(Name, ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

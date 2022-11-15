@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -57,6 +60,21 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		if (Value > length)
 			context.LocalResult.Fail(Name, ErrorMessages.MinLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		return new[]
+		{
+			new Requirement(evaluationPath, baseUri, instanceLocation,
+				(node, _) => new KeywordResult
+			{
+				EvaluationPath = evaluationPath,
+				InstanceLocation = instanceLocation,
+				ValidationResult = node.GetSchemaValueType() != SchemaValueType.String || node.GetValue<string>().Length >= Value
+				// TODO: add message
+			})
+		};
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

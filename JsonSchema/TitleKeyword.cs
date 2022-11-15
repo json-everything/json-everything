@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -47,6 +49,21 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
 		context.ExitKeyword(Name, true);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		return new[]
+		{
+			new Requirement(evaluationPath, baseUri, instanceLocation,
+				(_, _) => new KeywordResult
+			{
+				EvaluationPath = evaluationPath,
+				InstanceLocation = instanceLocation,
+				ValidationResult = true,
+				Annotation = Value
+			})
+		};
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

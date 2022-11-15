@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -93,6 +94,34 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		var annotation = JsonSerializer.SerializeToNode(Properties.Keys);
+		var relevantEvaluationPaths = Properties.Keys.Select(k => evaluationPath.Combine(k));
+
+		foreach (var property in Properties)
+		{
+			foreach (var subschema in property.Value.GenerateRequirements(evaluationPath.Combine(property.Key), instanceLocation.Combine(property.Key)))
+			{
+				yield return subschema;
+			}
+		}
+
+		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+			(_, cache) =>
+		{
+			var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.EvaluationPath));
+			return new KeywordResult
+			{
+				EvaluationPath = evaluationPath,
+				InstanceLocation = instanceLocation,
+				ValidationResult = relevantResults.All(x => x.ValidationResult),
+				Annotation = annotation
+				// TODO: add message
+			};
+		});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -84,6 +85,21 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		if (notFound.Count != 0)
 			context.LocalResult.Fail(Name, ErrorMessages.Required, ("missing", notFound));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		return new[]
+		{
+			new Requirement(evaluationPath, baseUri, instanceLocation,
+				(node, _) => new KeywordResult
+			{
+				EvaluationPath = evaluationPath,
+				InstanceLocation = instanceLocation,
+				ValidationResult = node is not JsonObject o || Properties.All(x => o.ContainsKey(x))
+				// TODO: add message
+			})
+		};
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

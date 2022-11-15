@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -69,5 +73,35 @@ public static class JsonNodeExtensions
 		}
 
 		return true;
+	}
+
+	internal static Dictionary<JsonPointer, JsonNode?> GenerateCatalog(this JsonNode? node)
+	{
+		var catalog = new Dictionary<JsonPointer, JsonNode?>();
+		GenerateCatalog(node, catalog, JsonPointer.Empty);
+
+		return catalog;
+	}
+
+	private static void GenerateCatalog(JsonNode? node, Dictionary<JsonPointer, JsonNode?> catalog, JsonPointer currentLocation)
+	{
+		catalog[currentLocation] = node ?? JsonNull.SignalNode;
+		switch (node)
+		{
+			case JsonObject o:
+				foreach (var property in o)
+				{
+					var newLocation = currentLocation.Combine(property.Key);
+					GenerateCatalog(property.Value, catalog, newLocation);
+				}
+				break;
+			case JsonArray a:
+				for (int i = 0; i < a.Count; i++)
+				{
+					var newLocation = currentLocation.Combine(i);
+					GenerateCatalog(a[i], catalog, newLocation);
+				}
+				break;
+		}
 	}
 }

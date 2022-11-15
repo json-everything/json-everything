@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Pointer;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -517,6 +518,11 @@ public class GithubTests
 		}
 
 		public void Evaluate(EvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 		{
 			throw new NotImplementedException();
 		}

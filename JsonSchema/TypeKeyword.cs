@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -110,6 +113,47 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		if (!isValid)
 			context.LocalResult.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		bool IsInteger(JsonNode? node)
+		{
+			if (Type.HasFlag(SchemaValueType.Number)) return true;
+			
+			if (Type.HasFlag(SchemaValueType.Integer))
+			{
+				var number = node.AsValue().GetNumber();
+				return number == Math.Truncate(number!.Value);
+			}
+
+			return false;
+		}
+
+		return new[]
+		{
+			new Requirement(evaluationPath, baseUri, instanceLocation,
+				(node, _) =>
+			{
+				var schemaValueType = node.GetSchemaValueType();
+				return new KeywordResult
+				{
+					EvaluationPath = evaluationPath,
+					InstanceLocation = instanceLocation,
+					ValidationResult = schemaValueType switch
+					{
+						SchemaValueType.Object => Type.HasFlag(SchemaValueType.Object),
+						SchemaValueType.Array => Type.HasFlag(SchemaValueType.Object),
+						SchemaValueType.Boolean => Type.HasFlag(SchemaValueType.Object),
+						SchemaValueType.String => Type.HasFlag(SchemaValueType.Object),
+						SchemaValueType.Number => IsInteger(node),
+						SchemaValueType.Integer => Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number),
+						SchemaValueType.Null => Type.HasFlag(SchemaValueType.Object),
+						_ => throw new ArgumentOutOfRangeException()
+					}
+				};
+			})
+		};
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

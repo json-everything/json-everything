@@ -91,6 +91,38 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
+	private List<IRequirement> _requirements;
+
+	public void Compile()
+	{
+		_requirements = this.GenerateRequirements().ToList();
+	}
+
+	public KeywordResult EvaluateCompiled(JsonNode? instance)
+	{
+		var instanceCatalog = instance.GenerateCatalog();
+		var pertinentRequirements = _requirements.Join(instanceCatalog,
+			r => r.InstanceLocation,
+			i => i.Key,
+			(r, i) => new { Requirement = r, Instance = i.Value });
+		var cache = new List<KeywordResult>();
+
+		foreach (var check in pertinentRequirements)
+		{
+			cache.Add(check.Requirement.Evaluate(check.Instance, cache));
+		}
+
+		var localResults = cache.Where(x => x.EvaluationPath == JsonPointer.Empty);
+
+		return new KeywordResult
+		{
+			EvaluationPath = JsonPointer.Empty,
+			SchemaLocation = BaseUri,
+			InstanceLocation = JsonPointer.Empty,
+			ValidationResult = localResults.All(x => x.ValidationResult)
+		};
+	}
+
 	/// <summary>
 	/// Evaluates an instance against this schema.
 	/// </summary>

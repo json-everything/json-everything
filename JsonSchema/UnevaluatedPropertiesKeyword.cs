@@ -135,6 +135,11 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
+	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	{
+		throw new NotImplementedException();
+	}
+
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
 		Schema.RegisterSubschemas(registry, currentUri);
