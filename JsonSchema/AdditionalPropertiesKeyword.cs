@@ -129,9 +129,54 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		throw new NotImplementedException();
+		var propertiesEvalPath = evaluationPath.GetSibling(PropertiesKeyword.Name);
+
+		IEnumerable<(string Key, Requirement Requirement)> GetDynamicRequirements(IEnumerable<string> targetProperties)
+		{
+			foreach (var property in targetProperties)
+			{
+				foreach (var requirement in Schema.GenerateRequirements(evaluationPath, instanceLocation.Combine(property)))
+				{
+					yield return (property, requirement);
+				}
+			}
+		}
+
+		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+			(node, cache) =>
+			{
+				// TODO: return null or placeholder if not object?
+				if (node is not JsonObject obj) return null!;
+
+				var propertiesResults = cache.SingleOrDefault(x => x.EvaluationPath == propertiesEvalPath);
+				var propertiesNames = propertiesResults?.Annotation!.AsArray().Select(x => x!.GetValue<string>());
+
+				var targetPropertyNames = (propertiesNames != null
+					? obj.Where(x => !propertiesNames.Contains(x.Key))
+					: obj).Select(x => x.Key).ToArray();
+				var annotation = JsonSerializer.SerializeToNode(targetPropertyNames);
+
+				var dynamicRequirements = GetDynamicRequirements(targetPropertyNames);
+				var relevantResults = new List<KeywordResult>();
+				foreach (var check in dynamicRequirements)
+				{
+					var instance = node[check.Key];
+					var localResult = check.Requirement.Evaluate(instance, cache);
+					cache.Add(localResult);
+					relevantResults.Add(localResult);
+				}
+
+				return new KeywordResult
+				{
+					EvaluationPath = evaluationPath,
+					InstanceLocation = instanceLocation,
+					ValidationResult = relevantResults.All(x => x.ValidationResult),
+					Annotation = annotation
+					// TODO: add message
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

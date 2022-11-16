@@ -87,19 +87,16 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		return new[]
-		{
-			new Requirement(evaluationPath, baseUri, instanceLocation,
-				(node, _) => new KeywordResult
+		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+			(node, _) => new KeywordResult
 			{
 				EvaluationPath = evaluationPath,
 				InstanceLocation = instanceLocation,
 				ValidationResult = node is not JsonObject o || Properties.All(x => o.ContainsKey(x))
 				// TODO: add message
-			})
-		};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

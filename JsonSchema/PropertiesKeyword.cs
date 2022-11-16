@@ -96,7 +96,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		var annotation = JsonSerializer.SerializeToNode(Properties.Keys);
 		var relevantEvaluationPaths = Properties.Keys.Select(k => evaluationPath.Combine(k));

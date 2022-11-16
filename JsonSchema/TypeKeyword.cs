@@ -115,7 +115,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		bool IsInteger(JsonNode? node)
 		{
@@ -130,10 +130,8 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 			return false;
 		}
 
-		return new[]
-		{
-			new Requirement(evaluationPath, baseUri, instanceLocation,
-				(node, _) =>
+		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+			(node, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
 				return new KeywordResult
@@ -152,8 +150,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 						_ => throw new ArgumentOutOfRangeException()
 					}
 				};
-			})
-		};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

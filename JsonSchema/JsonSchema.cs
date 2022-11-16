@@ -91,7 +91,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
-	private List<IRequirement> _requirements;
+	private List<Requirement>? _requirements;
 
 	public void Compile()
 	{
@@ -100,6 +100,9 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 	public KeywordResult EvaluateCompiled(JsonNode? instance)
 	{
+		if (_requirements == null)
+			Compile();
+
 		var instanceCatalog = instance.GenerateCatalog();
 		var pertinentRequirements = _requirements.Join(instanceCatalog,
 			r => r.InstanceLocation,
@@ -112,7 +115,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			cache.Add(check.Requirement.Evaluate(check.Instance, cache));
 		}
 
-		var localResults = cache.Where(x => x.EvaluationPath == JsonPointer.Empty);
+		var localResults = cache.Where(x => x.EvaluationPath.Segments.Length == 1);
 
 		return new KeywordResult
 		{

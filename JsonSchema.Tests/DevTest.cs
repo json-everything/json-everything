@@ -12,6 +12,8 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
+		EvaluationOptions.Default.Log = null!;
+
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Title("foo object schema")
@@ -24,13 +26,18 @@ public class DevTest
 					.MinLength(10)
 				)
 			)
-			.Required("foo", "bar");
+			.Required("foo")
+			.AdditionalProperties(false);
 
-		var instance = new JsonObject { ["foo"] = "foo awe;ovinawe" };
+		var instance = new JsonObject
+		{
+			["foo"] = "foo awe;ovinawe",
+			["bar"] = "disallowed"
+		};
 
 		schema.Compile();
 
-		Stopwatch sw = new Stopwatch();
+		var sw = new Stopwatch();
 		sw.Start();
 		var compiledResults = schema.EvaluateCompiled(instance);
 		sw.Stop();

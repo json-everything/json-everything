@@ -76,23 +76,20 @@ public static class JsonSchemaExtensions
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 
-	internal static IEnumerable<IRequirement> GenerateRequirements(this JsonSchema schema)
+	internal static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema)
 	{
-		var requirements = new List<IRequirement>();
-		GenerateRequirements(schema, requirements, JsonPointer.Empty, JsonPointer.Empty);
-
-		return requirements;
+		return GenerateRequirements(schema, JsonPointer.Empty, JsonPointer.Empty);
 	}
 
-	internal static IEnumerable<IRequirement> GenerateRequirements(this JsonSchema schema, JsonPointer evaluationPath, JsonPointer instanceLocation)
+	internal static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, JsonPointer evaluationPath, JsonPointer instanceLocation)
 	{
-		var requirements = new List<IRequirement>();
+		var requirements = new List<Requirement>();
 		GenerateRequirements(schema, requirements, evaluationPath, instanceLocation);
 
 		return requirements;
 	}
 
-	private static void GenerateRequirements(JsonSchema schema, List<IRequirement> requirements, JsonPointer evaluationPath, JsonPointer instanceLocation)
+	private static void GenerateRequirements(JsonSchema schema, List<Requirement> requirements, JsonPointer evaluationPath, JsonPointer instanceLocation)
 	{
 		if (schema.BoolValue == true)
 		{
@@ -121,21 +118,22 @@ public static class JsonSchemaExtensions
 			return;
 		}
 
-		requirements.AddRange(schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri, instanceLocation)));
+		requirements.AddRange(schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath.Combine(k.Keyword()), schema.BaseUri, instanceLocation)));
 	}
 }
 
-public interface IRequirement
+public static class PointerExtensions
 {
-	public JsonPointer EvaluationPath { get; }
-	public Uri SchemaLocation { get; }
-	public JsonPointer InstanceLocation { get; }
-
-	Func<JsonNode?, List<KeywordResult>, KeywordResult> Evaluate { get; }
+	public static JsonPointer GetSibling(this JsonPointer pointer, PointerSegment newSegment)
+	{
+		return JsonPointer.Create(pointer.Segments.Take(pointer.Segments.Length - 1).Append(newSegment), false);
+	}
 }
 
-public class Requirement : IRequirement
+public class Requirement
 {
+	public string Keyword { get; }
+	public int Priority { get; }
 	public JsonPointer EvaluationPath { get; }
 	public Uri SchemaLocation { get; }
 	public JsonPointer InstanceLocation { get; }
@@ -148,20 +146,6 @@ public class Requirement : IRequirement
 		EvaluationPath = evaluationPath;
 		InstanceLocation = instanceLocation;
 		Evaluate = evaluate;
-	}
-}
-
-public class AggregateRequirement : IRequirement
-{
-	public JsonPointer EvaluationPath { get; set; }
-	public Uri SchemaLocation { get; set; }
-	public JsonPointer InstanceLocation { get; set; }
-
-	public Func<JsonNode?, List<KeywordResult>, KeywordResult> Evaluate { get; }
-
-	public AggregateRequirement(Func<IEnumerable<KeywordResult>, KeywordResult> aggregate)
-	{
-		Evaluate = (_, cache) => aggregate(cache);
 	}
 }
 

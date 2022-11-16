@@ -51,19 +51,16 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		return new[]
-		{
-			new Requirement(evaluationPath, baseUri, instanceLocation,
-				(_, _) => new KeywordResult
+		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+			(_, _) => new KeywordResult
 			{
 				EvaluationPath = evaluationPath,
 				InstanceLocation = instanceLocation,
 				ValidationResult = true,
 				Annotation = Value
-			})
-		};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

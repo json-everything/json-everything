@@ -78,7 +78,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<IRequirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		throw new NotImplementedException();
 	}
