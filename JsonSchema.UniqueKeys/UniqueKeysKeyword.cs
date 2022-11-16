@@ -110,7 +110,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		context.ExitKeyword(Name);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		throw new NotImplementedException();
 	}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -115,7 +114,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		bool IsInteger(JsonNode? node)
 		{
@@ -130,23 +129,24 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 			return false;
 		}
 
-		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
 				return new KeywordResult
 				{
-					EvaluationPath = evaluationPath,
+					SubschemaPath = subschemaPath,
+					Keyword = Name,
 					InstanceLocation = instanceLocation,
 					ValidationResult = schemaValueType switch
 					{
 						SchemaValueType.Object => Type.HasFlag(SchemaValueType.Object),
-						SchemaValueType.Array => Type.HasFlag(SchemaValueType.Object),
-						SchemaValueType.Boolean => Type.HasFlag(SchemaValueType.Object),
-						SchemaValueType.String => Type.HasFlag(SchemaValueType.Object),
+						SchemaValueType.Array => Type.HasFlag(SchemaValueType.Array),
+						SchemaValueType.Boolean => Type.HasFlag(SchemaValueType.Boolean),
+						SchemaValueType.String => Type.HasFlag(SchemaValueType.String),
 						SchemaValueType.Number => IsInteger(node),
 						SchemaValueType.Integer => Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number),
-						SchemaValueType.Null => Type.HasFlag(SchemaValueType.Object),
+						SchemaValueType.Null => Type.HasFlag(SchemaValueType.Null),
 						_ => throw new ArgumentOutOfRangeException()
 					}
 				};

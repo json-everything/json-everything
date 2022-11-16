@@ -78,9 +78,32 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		throw new NotImplementedException();
+		var relevantEvaluationPaths = Enumerable.Range(0, Schemas.Count).Select(i => subschemaPath.Combine(Name, i));
+
+		for (var i = 0; i < Schemas.Count; i++)
+		{
+			var subschema = Schemas[i];
+			foreach (var requirement in subschema.GenerateRequirements(subschemaPath.Combine(Name, i), instanceLocation))
+			{
+				yield return requirement;
+			}
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(_, cache) =>
+			{
+				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
+				return new KeywordResult
+				{
+					SubschemaPath = subschemaPath,
+					Keyword = Name,
+					InstanceLocation = instanceLocation,
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
+					// TODO: add message
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

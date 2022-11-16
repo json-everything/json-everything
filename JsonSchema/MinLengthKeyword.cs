@@ -62,12 +62,13 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, _) => new KeywordResult
 			{
-				EvaluationPath = evaluationPath,
+				SubschemaPath = subschemaPath,
+				Keyword = Name,
 				InstanceLocation = instanceLocation,
 				ValidationResult = node.GetSchemaValueType() != SchemaValueType.String || node.GetValue<string>().Length >= Value
 				// TODO: add message

@@ -96,32 +96,32 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		var annotation = JsonSerializer.SerializeToNode(Properties.Keys);
-		var relevantEvaluationPaths = Properties.Keys.Select(k => evaluationPath.Combine(k));
+		var relevantEvaluationPaths = Properties.Keys.Select(k => subschemaPath.Combine(Name, k));
 
 		foreach (var property in Properties)
 		{
-			foreach (var subschema in property.Value.GenerateRequirements(evaluationPath.Combine(property.Key), instanceLocation.Combine(property.Key)))
+			foreach (var subschema in property.Value.GenerateRequirements(subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key)))
 			{
 				yield return subschema;
 			}
 		}
 
-		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+		yield return new Requirement(subschemaPath, instanceLocation,
 			(_, cache) =>
-		{
-			var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.EvaluationPath));
-			return new KeywordResult
 			{
-				EvaluationPath = evaluationPath,
-				InstanceLocation = instanceLocation,
-				ValidationResult = relevantResults.All(x => x.ValidationResult),
-				Annotation = annotation
-				// TODO: add message
-			};
-		});
+				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
+				return new KeywordResult
+				{
+					SubschemaPath = subschemaPath,
+					Keyword = Name,
+					InstanceLocation = instanceLocation,
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
+					Annotation = annotation
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

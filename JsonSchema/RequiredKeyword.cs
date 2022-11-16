@@ -87,12 +87,13 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, _) => new KeywordResult
 			{
-				EvaluationPath = evaluationPath,
+				SubschemaPath = subschemaPath,
+				Keyword = Name,
 				InstanceLocation = instanceLocation,
 				ValidationResult = node is not JsonObject o || Properties.All(x => o.ContainsKey(x))
 				// TODO: add message

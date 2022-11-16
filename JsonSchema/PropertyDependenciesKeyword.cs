@@ -95,7 +95,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		throw new NotImplementedException();
 	}

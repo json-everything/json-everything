@@ -141,7 +141,8 @@ public class EvaluationResults
 			_nestedResults = new List<EvaluationResults>();
 		else
 			_nestedResults.Clear();
-		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
+		_nestedResults.AddRange(children);
+		//_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 		Format = OutputFormat.Basic;
 	}
 

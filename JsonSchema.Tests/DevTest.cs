@@ -15,25 +15,13 @@ public class DevTest
 		EvaluationOptions.Default.Log = null!;
 
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Title("foo object schema")
-			.Properties(
-				("foo", new JsonSchemaBuilder()
-					.Title("foo's title")
-					.Description("foo's description")
-					.Type(SchemaValueType.String)
-					//.Pattern("^foo ")
-					.MinLength(10)
-				)
-			)
-			.Required("foo")
-			.AdditionalProperties(false);
+			.Type(SchemaValueType.Integer)
+			.OneOf(
+				new JsonSchemaBuilder().MultipleOf(3),
+				new JsonSchemaBuilder().MultipleOf(2)
+			);
 
-		var instance = new JsonObject
-		{
-			["foo"] = "foo awe;ovinawe",
-			["bar"] = "disallowed"
-		};
+		JsonNode instance = 9;
 
 		schema.Compile();
 
@@ -47,7 +35,7 @@ public class DevTest
 		sw.Reset();
 
 		sw.Start();
-		var legacyResults = schema.Evaluate(instance);
+		var legacyResults = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.Basic});
 		sw.Stop();
 		Console.WriteLine(JsonSerializer.Serialize(legacyResults, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 		Console.WriteLine($"elapsed: {sw.ElapsedTicks}");

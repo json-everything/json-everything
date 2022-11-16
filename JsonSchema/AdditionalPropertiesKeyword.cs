@@ -129,28 +129,26 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		var propertiesEvalPath = evaluationPath.GetSibling(PropertiesKeyword.Name);
-
 		IEnumerable<(string Key, Requirement Requirement)> GetDynamicRequirements(IEnumerable<string> targetProperties)
 		{
 			foreach (var property in targetProperties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(evaluationPath, instanceLocation.Combine(property)))
+				foreach (var requirement in Schema.GenerateRequirements(subschemaPath.Combine(Name), instanceLocation.Combine(property)))
 				{
 					yield return (property, requirement);
 				}
 			}
 		}
 
-		yield return new Requirement(evaluationPath, baseUri, instanceLocation,
+		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, cache) =>
 			{
 				// TODO: return null or placeholder if not object?
 				if (node is not JsonObject obj) return null!;
 
-				var propertiesResults = cache.SingleOrDefault(x => x.EvaluationPath == propertiesEvalPath);
+				var propertiesResults = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == PropertiesKeyword.Name);
 				var propertiesNames = propertiesResults?.Annotation!.AsArray().Select(x => x!.GetValue<string>());
 
 				var targetPropertyNames = (propertiesNames != null
@@ -170,13 +168,14 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 
 				return new KeywordResult
 				{
-					EvaluationPath = evaluationPath,
+					SubschemaPath = subschemaPath,
+					Keyword = Name,
 					InstanceLocation = instanceLocation,
-					ValidationResult = relevantResults.All(x => x.ValidationResult),
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
 					Annotation = annotation
 					// TODO: add message
 				};
-			});
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

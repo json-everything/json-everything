@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -93,12 +94,32 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 	private List<Requirement>? _requirements;
 
-	public void Compile()
+	private class JsonPointerComparer : IComparer<JsonPointer>
 	{
-		_requirements = this.GenerateRequirements().ToList();
+		public static JsonPointerComparer Instance { get; } = new();
+
+		public int Compare(JsonPointer x, JsonPointer y)
+		{
+			var segmentPairs = x.Segments.Zip(y.Segments, (a, b) => (a, b));
+			foreach (var pair in segmentPairs)
+			{
+				var segmentResult = string.Compare(pair.a.Value, pair.b.Value, StringComparison.InvariantCulture);
+				if (segmentResult != 0) return segmentResult;
+			}
+
+			return x.Segments.Length.CompareTo(y.Segments.Length);
+		}
 	}
 
-	public KeywordResult EvaluateCompiled(JsonNode? instance)
+	public void Compile()
+	{
+		_requirements = this.GenerateRequirements()
+			.OrderByDescending(x => x.SubschemaPath, JsonPointerComparer.Instance)
+			.ThenBy(x => x.Priority)
+			.ToList();
+	}
+
+	public EvaluationResults2 EvaluateCompiled(JsonNode? instance)
 	{
 		if (_requirements == null)
 			Compile();
@@ -115,15 +136,41 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			cache.Add(check.Requirement.Evaluate(check.Instance, cache));
 		}
 
-		var localResults = cache.Where(x => x.EvaluationPath.Segments.Length == 1);
+		var localResults = cache.Where(x => x.SubschemaPath.Segments.Length == 0);
 
-		return new KeywordResult
+		var output = new EvaluationResults2
 		{
-			EvaluationPath = JsonPointer.Empty,
-			SchemaLocation = BaseUri,
-			InstanceLocation = JsonPointer.Empty,
-			ValidationResult = localResults.All(x => x.ValidationResult)
+			IsValid = localResults.All(x => x.ValidationResult != false)
 		};
+		// this just creates an expanded basic output currently
+		output.NestedResults.AddRange(cache.GroupBy(x => x.SubschemaPath)
+			.OrderBy(x => x.Key, JsonPointerComparer.Instance)
+			.Select(x =>
+			{
+				var first = x.First();
+				var result = new EvaluationResults2
+				{
+					EvaluationPath = x.Key,
+					InstanceLocation = first.InstanceLocation,
+					SchemaLocation = first.SchemaLocation,
+					IsValid = x.All(k => k.ValidationResult != false)
+				};
+				var errors = x.Where(k => !k.ValidationResult != false && k.Error != null);
+				foreach (var error in errors)
+				{
+					result.Errors[error.Keyword] = error.Error!;
+				}
+
+				var annotations = x.Where(k => k.ValidationResult != false && k.Annotation != null);
+				foreach (var annotation in annotations)
+				{
+					result.Annotations[annotation.Keyword] = annotation.Annotation;
+				}
+
+				return result;
+			}));
+		
+		return output;
 	}
 
 	/// <summary>

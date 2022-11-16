@@ -146,6 +146,39 @@ public class Suite
 		Assert.AreEqual(test.Valid, result.IsValid);
 	}
 
+	[TestCaseSource(nameof(TestCases))]
+	public void TestCompiled(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
+	{
+		var serializerOptions = new JsonSerializerOptions
+		{
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
+
+		Console.WriteLine();
+		Console.WriteLine();
+		Console.WriteLine(fileName);
+		Console.WriteLine(collection.Description);
+		Console.WriteLine(test.Description);
+		Console.WriteLine(test.Valid ? "valid" : "invalid");
+		Console.WriteLine();
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine();
+		Console.WriteLine(test.Data.AsJsonString());
+		Console.WriteLine();
+
+		if (!InstanceIsDeserializable(test.Data))
+			Assert.Inconclusive("Instance not deserializable");
+
+		var result = collection.Schema.EvaluateCompiled(test.Data);
+		//result.ToBasic();
+		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+
+		if (collection.IsOptional && result.IsValid != test.Valid)
+			Assert.Inconclusive("Test optional");
+		Assert.AreEqual(test.Valid, result.IsValid);
+	}
+
 	//[TestCaseSource(nameof(TestCases))]
 	// This is for local runs only.
 	public void Benchmark(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)

@@ -93,70 +93,32 @@ public static class JsonSchemaExtensions
 	{
 		if (schema.BoolValue == true)
 		{
-			requirements.Add(new Requirement(evaluationPath, schema.BaseUri, instanceLocation,
+			requirements.Add(new Requirement(evaluationPath, instanceLocation,
 				(_, _) => new KeywordResult
-			{
-				EvaluationPath = evaluationPath,
-				SchemaLocation = schema.BaseUri ?? new Uri("https://json-everything.net/base"),
-				InstanceLocation = instanceLocation,
-				ValidationResult = true
-			}));
+				{
+					SubschemaPath = evaluationPath,
+					SchemaLocation = schema.BaseUri ?? new Uri("https://json-everything.net/base"),
+					InstanceLocation = instanceLocation,
+					ValidationResult = true
+				}));
 			return;
 		}
 
 		if (schema.BoolValue == false)
 		{
-			requirements.Add(new Requirement(evaluationPath, schema.BaseUri, instanceLocation,
+			requirements.Add(new Requirement(evaluationPath, instanceLocation,
 				(_, _) => new KeywordResult
-			{
-				EvaluationPath = evaluationPath,
-				SchemaLocation = schema.BaseUri ?? new Uri("https://json-everything.net/base"),
-				InstanceLocation = instanceLocation,
-				ValidationResult = false,
-				Message = "All values fail the false schema"
-			}));
+				{
+					SubschemaPath = evaluationPath,
+					Keyword = string.Empty,
+					SchemaLocation = schema.BaseUri ?? new Uri("https://json-everything.net/base"),
+					InstanceLocation = instanceLocation,
+					ValidationResult = false,
+					Error = "All values fail the false schema"
+				}));
 			return;
 		}
 
-		requirements.AddRange(schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath.Combine(k.Keyword()), schema.BaseUri, instanceLocation)));
+		requirements.AddRange(schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri, instanceLocation)));
 	}
-}
-
-public static class PointerExtensions
-{
-	public static JsonPointer GetSibling(this JsonPointer pointer, PointerSegment newSegment)
-	{
-		return JsonPointer.Create(pointer.Segments.Take(pointer.Segments.Length - 1).Append(newSegment), false);
-	}
-}
-
-public class Requirement
-{
-	public string Keyword { get; }
-	public int Priority { get; }
-	public JsonPointer EvaluationPath { get; }
-	public Uri SchemaLocation { get; }
-	public JsonPointer InstanceLocation { get; }
-
-	public Func<JsonNode?, List<KeywordResult>, KeywordResult> Evaluate { get; }
-
-	public Requirement(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation, Func<JsonNode?, List<KeywordResult>, KeywordResult> evaluate)
-	{
-		// TODO: schema location is schema's base uri + evaluation path after final $ref
-		EvaluationPath = evaluationPath;
-		InstanceLocation = instanceLocation;
-		Evaluate = evaluate;
-	}
-}
-
-public class KeywordResult
-{
-	public JsonPointer EvaluationPath { get; set; }
-	public Uri SchemaLocation { get; set; }
-	public JsonPointer InstanceLocation { get; set; }
-
-	// use JsonNull for null
-	public JsonNode? Annotation { get; set; }
-	public bool ValidationResult { get; set; }
-	public string Message { get; set; }
 }

@@ -61,9 +61,33 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _) =>
+			{
+				var schemaValueType = node.GetSchemaValueType();
+				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
+				{
+					return new KeywordResult
+					{
+						SubschemaPath = subschemaPath,
+						Keyword = Name,
+						InstanceLocation = instanceLocation
+					};
+				}
+
+				var number = node!.AsValue().GetNumber();
+				var isValid = number % Value == 0;
+				return new KeywordResult
+				{
+					SubschemaPath = subschemaPath,
+					Keyword = Name,
+					InstanceLocation = instanceLocation,
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.MultipleOf.ReplaceTokens(("received", number), ("divisor", Value))
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

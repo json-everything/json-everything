@@ -48,7 +48,7 @@ public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 		context.Log(() => "$comment is to be ignored");
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer evaluationPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
 		throw new NotImplementedException();
 	}
