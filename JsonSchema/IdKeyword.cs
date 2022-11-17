@@ -68,7 +68,7 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
 	{
-		throw new NotImplementedException();
+		return Enumerable.Empty<Requirement>();
 	}
 
 	internal Uri UpdateUri(Uri? currentUri)

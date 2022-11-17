@@ -103,7 +103,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 
 		foreach (var property in Properties)
 		{
-			foreach (var subschema in property.Value.GenerateRequirements(subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key)))
+			foreach (var subschema in property.Value.GenerateRequirements(baseUri, subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key)))
 			{
 				yield return subschema;
 			}

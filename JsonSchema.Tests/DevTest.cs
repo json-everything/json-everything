@@ -15,9 +15,10 @@ public class DevTest
 		EvaluationOptions.Default.Log = null!;
 
 		JsonSchema schema = new JsonSchemaBuilder()
+			.Id("https://somethingrandom.here/schema")
 			.Type(SchemaValueType.Integer)
 			.OneOf(
-				new JsonSchemaBuilder().MultipleOf(3),
+				new JsonSchemaBuilder().Id("https://something.else/schema").MultipleOf(3),
 				new JsonSchemaBuilder().MultipleOf(2)
 			);
 

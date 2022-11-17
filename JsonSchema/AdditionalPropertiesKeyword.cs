@@ -135,7 +135,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		{
 			foreach (var property in targetProperties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(subschemaPath.Combine(Name), instanceLocation.Combine(property)))
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(property)))
 				{
 					yield return (property, requirement);
 				}

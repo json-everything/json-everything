@@ -72,6 +72,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 					return new KeywordResult
 					{
 						SubschemaPath = subschemaPath,
+						SchemaLocation = subschemaPath.Resolve(baseUri),
 						Keyword = Name,
 						InstanceLocation = instanceLocation
 					};
@@ -82,6 +83,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 				return new KeywordResult
 				{
 					SubschemaPath = subschemaPath,
+					SchemaLocation = subschemaPath.Resolve(baseUri),
 					Keyword = Name,
 					InstanceLocation = instanceLocation,
 					ValidationResult = isValid,

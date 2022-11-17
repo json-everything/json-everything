@@ -208,4 +208,25 @@ public class EvaluationOptions
 
 		return keywords.Where(k => k.SupportsDraft(draft));
 	}
+
+	// This method is for checking to see if the options have changed from the last
+	// time they were used to compile a schema.  It is not intended to operate in
+	// place of GetHashCode().
+	internal int GetHashValue()
+	{
+		unchecked
+		{
+			var hashCode = (_defaultBaseUri != null ? _defaultBaseUri.GetHashCode() : 0);
+			hashCode = (hashCode * 397) ^ (_log?.GetHashCode() ?? 0);
+			hashCode = (hashCode * 397) ^ (int)EvaluateAs;
+			hashCode = (hashCode * 397) ^ ValidateAgainstMetaSchema.GetHashCode();
+			hashCode = (hashCode * 397) ^ (int)OutputFormat;
+			hashCode = (hashCode * 397) ^ LogIndentLevel;
+			hashCode = (hashCode * 397) ^ RequireFormatValidation.GetHashCode();
+			hashCode = (hashCode * 397) ^ OnlyKnownFormats.GetHashCode();
+			hashCode = (hashCode * 397) ^ ProcessCustomKeywords.GetHashCode();
+			hashCode = (hashCode * 397) ^ PreserveDroppedAnnotations.GetHashCode();
+			return hashCode;
+		}
+	}
 }

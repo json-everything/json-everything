@@ -76,49 +76,58 @@ public static class JsonSchemaExtensions
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 
-	internal static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema)
+	// only called from JsonSchema
+	internal static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, EvaluationOptions options)
 	{
-		return GenerateRequirements(schema, JsonPointer.Empty, JsonPointer.Empty);
+		return GenerateRequirements(schema, options.DefaultBaseUri, JsonPointer.Empty, JsonPointer.Empty);
 	}
 
-	internal static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, JsonPointer evaluationPath, JsonPointer instanceLocation)
-	{
-		var requirements = new List<Requirement>();
-		GenerateRequirements(schema, requirements, evaluationPath, instanceLocation);
-
-		return requirements;
-	}
-
-	private static void GenerateRequirements(JsonSchema schema, List<Requirement> requirements, JsonPointer evaluationPath, JsonPointer instanceLocation)
+	// called from everything else
+	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation)
 	{
 		if (schema.BoolValue == true)
 		{
-			requirements.Add(new Requirement(evaluationPath, instanceLocation,
+			yield return new Requirement(evaluationPath, instanceLocation,
 				(_, _) => new KeywordResult
 				{
 					SubschemaPath = evaluationPath,
-					SchemaLocation = schema.BaseUri ?? new Uri("https://json-everything.net/base"),
+					SchemaLocation = evaluationPath.Resolve(baseUri),
 					InstanceLocation = instanceLocation,
 					ValidationResult = true
-				}));
-			return;
+				});
+			yield break;
 		}
 
 		if (schema.BoolValue == false)
 		{
-			requirements.Add(new Requirement(evaluationPath, instanceLocation,
+			yield return new Requirement(evaluationPath, instanceLocation,
 				(_, _) => new KeywordResult
 				{
 					SubschemaPath = evaluationPath,
+					SchemaLocation = evaluationPath.Resolve(baseUri),
 					Keyword = string.Empty,
-					SchemaLocation = schema.BaseUri ?? new Uri("https://json-everything.net/base"),
 					InstanceLocation = instanceLocation,
 					ValidationResult = false,
 					Error = "All values fail the false schema"
-				}));
-			return;
+				});
+			yield break;
 		}
 
-		requirements.AddRange(schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri, instanceLocation)));
+		CheckForNewBaseUri(schema, baseUri);
+
+		foreach (var requirement in schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri!, instanceLocation)))
+		{
+			yield return requirement;
+		}
+	}
+
+	private static void CheckForNewBaseUri(JsonSchema schema, Uri currentBaseUri)
+	{
+		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
+
+		schema.BaseUri = idKeyword == null
+			? currentBaseUri
+			// TODO: resolve this against the current base URI
+			: idKeyword.Id;
 	}
 }

@@ -85,7 +85,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		for (var i = 0; i < Schemas.Count; i++)
 		{
 			var subschema = Schemas[i];
-			foreach (var requirement in subschema.GenerateRequirements(subschemaPath.Combine(Name, i), instanceLocation))
+			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation))
 			{
 				yield return requirement;
 			}
@@ -99,6 +99,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 				return new KeywordResult
 				{
 					SubschemaPath = subschemaPath,
+					SchemaLocation = subschemaPath.Resolve(baseUri),
 					Keyword = Name,
 					InstanceLocation = instanceLocation,
 					ValidationResult = groupedBySubschema.Count(x => x.All(y => y.ValidationResult != false)) == 1

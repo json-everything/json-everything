@@ -42,7 +42,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	internal Uri? BaseUri { get; private set; }
+	internal Uri? BaseUri { get; set; }
 
 	private JsonSchema(bool value)
 	{
@@ -93,6 +93,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	}
 
 	private List<Requirement>? _requirements;
+	private EvaluationOptions? _options;
 
 	private class JsonPointerComparer : IComparer<JsonPointer>
 	{
@@ -111,21 +112,30 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 	}
 
-	public void Compile()
+	public void Compile(EvaluationOptions? options = null)
 	{
-		_requirements = this.GenerateRequirements()
+		CompileIfNeeded(options);
+	}
+
+	private void CompileIfNeeded(EvaluationOptions? options)
+	{
+		if (_options != null && options == null) return;
+		options ??= EvaluationOptions.Default;
+		if (_options != null && _options.GetHashValue() == options.GetHashValue()) return;
+
+		_options = options;
+		_requirements = this.GenerateRequirements(_options)
 			.OrderByDescending(x => x.SubschemaPath, JsonPointerComparer.Instance)
 			.ThenBy(x => x.Priority)
 			.ToList();
 	}
 
-	public EvaluationResults2 EvaluateCompiled(JsonNode? instance)
+	public EvaluationResults2 EvaluateCompiled(JsonNode? instance, EvaluationOptions? options = null)
 	{
-		if (_requirements == null)
-			Compile();
+		CompileIfNeeded(options);
 
 		var instanceCatalog = instance.GenerateCatalog();
-		var pertinentRequirements = _requirements.Join(instanceCatalog,
+		var pertinentRequirements = _requirements!.Join(instanceCatalog,
 			r => r.InstanceLocation,
 			i => i.Key,
 			(r, i) => new { Requirement = r, Instance = i.Value });
@@ -133,7 +143,9 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 		foreach (var check in pertinentRequirements)
 		{
-			cache.Add(check.Requirement.Evaluate(check.Instance, cache));
+			var keywordResult = check.Requirement.Evaluate(check.Instance, cache);
+			if (keywordResult != null)
+				cache.Add(keywordResult);
 		}
 
 		var localResults = cache.Where(x => x.SubschemaPath.Segments.Length == 0);
