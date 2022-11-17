@@ -100,7 +100,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		context.ExitKeyword(Name);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		throw new NotImplementedException();
 	}

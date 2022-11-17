@@ -23,6 +23,8 @@ public static class JsonPointerExtensions
 		else
 			pointerFragment = JsonPointer.Create(pointer.Segments, true).ToString();
 
-		return new Uri(baseUri, pointerFragment);
+		return pointerFragment != "#"
+			? new Uri(baseUri, pointerFragment)
+			: baseUri;
 	}
 }

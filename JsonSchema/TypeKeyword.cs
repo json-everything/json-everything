@@ -114,7 +114,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		bool IsInteger(JsonNode? node)
 		{
@@ -129,26 +129,31 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 			return false;
 		}
 
+		var expected = Type.ToString().ToLower();
+
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
+				var isValid = schemaValueType switch
+				{
+					SchemaValueType.Object => Type.HasFlag(SchemaValueType.Object),
+					SchemaValueType.Array => Type.HasFlag(SchemaValueType.Array),
+					SchemaValueType.Boolean => Type.HasFlag(SchemaValueType.Boolean),
+					SchemaValueType.String => Type.HasFlag(SchemaValueType.String),
+					SchemaValueType.Number => IsInteger(node),
+					SchemaValueType.Integer => Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number),
+					SchemaValueType.Null => Type.HasFlag(SchemaValueType.Null),
+					_ => throw new ArgumentOutOfRangeException()
+				};
 				return new KeywordResult
 				{
 					SubschemaPath = subschemaPath,
+					SchemaLocation = subschemaPath.Resolve(baseUri),
 					Keyword = Name,
 					InstanceLocation = instanceLocation,
-					ValidationResult = schemaValueType switch
-					{
-						SchemaValueType.Object => Type.HasFlag(SchemaValueType.Object),
-						SchemaValueType.Array => Type.HasFlag(SchemaValueType.Array),
-						SchemaValueType.Boolean => Type.HasFlag(SchemaValueType.Boolean),
-						SchemaValueType.String => Type.HasFlag(SchemaValueType.String),
-						SchemaValueType.Number => IsInteger(node),
-						SchemaValueType.Integer => Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number),
-						SchemaValueType.Null => Type.HasFlag(SchemaValueType.Null),
-						_ => throw new ArgumentOutOfRangeException()
-					}
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.Type.ReplaceTokens(("received", schemaValueType), ("expected", expected))
 				};
 			});
 	}

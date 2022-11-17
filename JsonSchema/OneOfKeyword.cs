@@ -78,14 +78,14 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		var relevantEvaluationPaths = Enumerable.Range(0, Schemas.Count).Select(i => subschemaPath.Combine(Name, i));
 
 		for (var i = 0; i < Schemas.Count; i++)
 		{
 			var subschema = Schemas[i];
-			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation))
+			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation, options))
 			{
 				yield return requirement;
 			}
@@ -96,14 +96,15 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			{
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 				var groupedBySubschema = relevantResults.GroupBy(x => x.SubschemaPath);
+				var validCount = groupedBySubschema.Count(x => x.All(y => y.ValidationResult != false));
 				return new KeywordResult
 				{
 					SubschemaPath = subschemaPath,
 					SchemaLocation = subschemaPath.Resolve(baseUri),
 					Keyword = Name,
 					InstanceLocation = instanceLocation,
-					ValidationResult = groupedBySubschema.Count(x => x.All(y => y.ValidationResult != false)) == 1
-					// TODO: add message
+					ValidationResult = validCount == 1,
+					Error = ErrorMessages.OneOf.ReplaceTokens(("count", validCount))
 				};
 			});
 	}

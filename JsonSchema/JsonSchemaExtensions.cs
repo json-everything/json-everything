@@ -76,14 +76,8 @@ public static class JsonSchemaExtensions
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 
-	// only called from JsonSchema
-	internal static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, EvaluationOptions options)
-	{
-		return GenerateRequirements(schema, options.DefaultBaseUri, JsonPointer.Empty, JsonPointer.Empty);
-	}
-
 	// called from everything else
-	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation)
+	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		if (schema.BoolValue == true)
 		{
@@ -113,21 +107,10 @@ public static class JsonSchemaExtensions
 			yield break;
 		}
 
-		CheckForNewBaseUri(schema, baseUri);
-
-		foreach (var requirement in schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri!, instanceLocation)))
+		// TODO: maybe get base uri from parent schema
+		foreach (var requirement in schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri!, instanceLocation, options)))
 		{
 			yield return requirement;
 		}
-	}
-
-	private static void CheckForNewBaseUri(JsonSchema schema, Uri currentBaseUri)
-	{
-		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
-
-		schema.BaseUri = idKeyword == null
-			? currentBaseUri
-			// TODO: resolve this against the current base URI
-			: idKeyword.Id;
 	}
 }

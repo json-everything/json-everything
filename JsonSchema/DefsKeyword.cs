@@ -55,9 +55,16 @@ public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaColle
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		// Generate these but throw them away.
+		// This effectively scans for $ids, etc.
+		foreach (var def in Definitions)
+		{
+			var _ = def.Value.GenerateRequirements(baseUri, subschemaPath.Combine(Name, def.Key), instanceLocation, options).Any();
+		}
+
+		return Enumerable.Empty<Requirement>();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

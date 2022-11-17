@@ -51,7 +51,7 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(_, _) => new KeywordResult

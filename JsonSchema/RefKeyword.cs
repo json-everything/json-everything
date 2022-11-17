@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -135,9 +136,39 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		var newUri = new Uri(baseUri, Reference);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Path));
+		var fragment = JsonPointer.Parse(newUri.Fragment);
+
+		var targetBase = options.SchemaRegistry.Get(newBaseUri);
+		if (targetBase == null)
+			throw new JsonException($"Cannot resolve base schema from `{newUri}`");
+		var targetSchema = targetBase.FindSubschema(fragment, newBaseUri).Item1;
+		if (targetSchema == null)
+			throw new JsonException($"Cannot resolve schema from fragment `{newUri}`");
+
+		var relevantEvaluationPath = subschemaPath.Combine(Name);
+
+		foreach (var requirement in targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options))
+		{
+			yield return requirement;
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(_, cache) =>
+			{
+				var relevantResults = cache.Where(x => relevantEvaluationPath == x.SubschemaPath);
+				return new KeywordResult
+				{
+					SubschemaPath = subschemaPath,
+					SchemaLocation = subschemaPath.Resolve(baseUri),
+					Keyword = Name,
+					InstanceLocation = instanceLocation,
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

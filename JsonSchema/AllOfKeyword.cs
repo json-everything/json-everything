@@ -78,14 +78,14 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		var relevantEvaluationPaths = Enumerable.Range(0, Schemas.Count).Select(i => subschemaPath.Combine(Name, i));
 
 		for (var i = 0; i < Schemas.Count; i++)
 		{
 			var subschema = Schemas[i];
-			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation))
+			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation, options))
 			{
 				yield return requirement;
 			}
@@ -98,10 +98,10 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 				return new KeywordResult
 				{
 					SubschemaPath = subschemaPath,
+					SchemaLocation = subschemaPath.Resolve(baseUri),
 					Keyword = Name,
 					InstanceLocation = instanceLocation,
 					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
-					// TODO: add message
 				};
 			});
 	}

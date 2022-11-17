@@ -52,7 +52,7 @@ public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<Anc
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		throw new NotImplementedException();
 	}

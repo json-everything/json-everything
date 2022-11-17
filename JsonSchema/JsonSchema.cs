@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -114,6 +113,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 	public void Compile(EvaluationOptions? options = null)
 	{
+		_options = null;
+		_requirements = null;
 		CompileIfNeeded(options);
 	}
 
@@ -124,10 +125,55 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		if (_options != null && _options.GetHashValue() == options.GetHashValue()) return;
 
 		_options = options;
-		_requirements = this.GenerateRequirements(_options)
+		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry);
+		_requirements = this.GenerateRequirements(options.DefaultBaseUri, JsonPointer.Empty, JsonPointer.Empty, options)
 			.OrderByDescending(x => x.SubschemaPath, JsonPointerComparer.Instance)
 			.ThenBy(x => x.Priority)
 			.ToList();
+	}
+
+	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, SchemaRegistry registry)
+	{
+		if (schema.BoolValue.HasValue) return;
+
+		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
+
+		if (idKeyword == null)
+			schema.BaseUri = currentBaseUri;
+		else
+		{
+			schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
+			registry.RegisterSchema(schema.BaseUri, schema);
+		}
+
+		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
+
+		foreach (var subschema in subschemas)
+		{
+			PopulateBaseUris(subschema, schema.BaseUri, registry);
+		}
+	}
+
+	private static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	{
+		switch (keyword)
+		{
+			case ISchemaContainer container:
+				yield return container.Schema;
+				break;
+			case ISchemaCollector collector:
+				foreach (var schema in collector.Schemas)
+				{
+					yield return schema;
+				}
+				break;
+			case IKeyedSchemaCollector collector:
+				foreach (var schema in collector.Schemas.Values)
+				{
+					yield return schema;
+				}
+				break;
+		}
 	}
 
 	public EvaluationResults2 EvaluateCompiled(JsonNode? instance, EvaluationOptions? options = null)
@@ -248,7 +294,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
 		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
 		var refMatters = refKeyword != null &&
-						 (registry.EvaluatingAs == Draft.Draft6 || registry.EvaluatingAs == Draft.Draft7);
+						 registry.EvaluatingAs is Draft.Draft6 or Draft.Draft7;
 		UpdateBaseUri(currentUri);
 		if (idKeyword != null && !refMatters)
 		{
