@@ -90,13 +90,20 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _) => new KeywordResult
+			(node, _, _) =>
 			{
-				SubschemaPath = subschemaPath,
-				Keyword = Name,
-				InstanceLocation = instanceLocation,
-				ValidationResult = node is not JsonObject o || Properties.All(x => o.ContainsKey(x))
-				// TODO: add message
+				if (node.GetSchemaValueType() != SchemaValueType.Object) return null;
+
+				var obj = node!.AsObject();
+				var notFound = Properties.Where(property => !obj.ContainsKey(property)).ToList();
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = notFound.Count == 0,
+					Error = notFound.Count == 0
+						? null
+						: ErrorMessages.Required.ReplaceTokens(("missing", notFound))
+				};
 			});
 	}
 

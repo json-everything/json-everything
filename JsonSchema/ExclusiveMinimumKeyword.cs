@@ -63,7 +63,20 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				if (node.GetSchemaValueType() is not (SchemaValueType.Integer or SchemaValueType.Number)) return null;
+
+				var value = node!.AsValue().GetNumber();
+				var isValid = value > Value;
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.ExclusiveMinimum.ReplaceTokens(("received", value), ("limit", Value))
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

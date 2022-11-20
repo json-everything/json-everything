@@ -39,7 +39,7 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 	/// <param name="value">The constant value.</param>
 	public ConstKeyword(JsonNode? value)
 	{
-		Value = value;
+		Value = value ?? JsonNull.SignalNode;
 	}
 
 	/// <summary>
@@ -56,7 +56,17 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				var isValid = Value.IsEquivalentTo(node);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.Const.ReplaceTokens(("value", Value.AsJsonString()))
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

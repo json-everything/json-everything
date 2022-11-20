@@ -131,47 +131,37 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		IEnumerable<(string Key, Requirement Requirement)> GetDynamicRequirements(IEnumerable<string> targetProperties)
+		IEnumerable<Requirement> GetDynamicRequirements(IEnumerable<string> targetProperties)
 		{
 			foreach (var property in targetProperties)
 			{
 				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(property), options))
 				{
-					yield return (property, requirement);
+					yield return requirement;
 				}
 			}
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache) =>
+			(node, cache, catalog) =>
 			{
-				// TODO: return null or placeholder if not object?
 				if (node is not JsonObject obj) return null!;
 
-				var propertiesResults = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == PropertiesKeyword.Name);
-				var propertiesNames = propertiesResults?.Annotation!.AsArray().Select(x => x!.GetValue<string>());
+				var propertiesNames = cache.GetLocalAnnotation(subschemaPath, PropertiesKeyword.Name)?.AsArray().Select(x => x!.GetValue<string>());
+				var patternPropertiesNames = cache.GetLocalAnnotation(subschemaPath, PatternPropertiesKeyword.Name)?.AsArray().Select(x => x!.GetValue<string>());
 
-				var targetPropertyNames = (propertiesNames != null
-					? obj.Where(x => !propertiesNames.Contains(x.Key))
-					: obj).Select(x => x.Key).ToArray();
+				var evaluatedProperties = (propertiesNames ?? Enumerable.Empty<string>())
+					.Union(patternPropertiesNames ?? Enumerable.Empty<string>());
+
+				var targetPropertyNames = obj.Where(x => !evaluatedProperties.Contains(x.Key)).Select(x => x.Key).ToArray();
 				var annotation = JsonSerializer.SerializeToNode(targetPropertyNames);
 
 				var dynamicRequirements = GetDynamicRequirements(targetPropertyNames);
-				var relevantResults = new List<KeywordResult>();
-				foreach (var check in dynamicRequirements)
-				{
-					var instance = node[check.Key];
-					var localResult = check.Requirement.Evaluate(instance, cache);
-					cache.Add(localResult);
-					relevantResults.Add(localResult);
-				}
+				dynamicRequirements.Evaluate(cache, catalog);
 
-				return new KeywordResult
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					SubschemaPath = subschemaPath,
-					Keyword = Name,
-					InstanceLocation = instanceLocation,
-					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
+					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
 					Annotation = annotation
 					// TODO: add message
 				};

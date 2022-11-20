@@ -64,28 +64,15 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _) =>
+			(node, _, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
-				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
-				{
-					return new KeywordResult
-					{
-						SubschemaPath = subschemaPath,
-						SchemaLocation = subschemaPath.Resolve(baseUri),
-						Keyword = Name,
-						InstanceLocation = instanceLocation
-					};
-				}
+				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return null;
 
 				var number = node!.AsValue().GetNumber();
 				var isValid = number % Value == 0;
-				return new KeywordResult
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					SubschemaPath = subschemaPath,
-					SchemaLocation = subschemaPath.Resolve(baseUri),
-					Keyword = Name,
-					InstanceLocation = instanceLocation,
 					ValidationResult = isValid,
 					Error = isValid ? null : ErrorMessages.MultipleOf.ReplaceTokens(("received", number), ("divisor", Value))
 				};

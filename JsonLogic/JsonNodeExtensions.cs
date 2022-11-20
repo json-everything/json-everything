@@ -183,7 +183,7 @@ public static class JsonNodeExtensions
 	//            .map(|a| a == b.as_f64().unwrap())
 	//            .unwrap_or(false),
 	//        // 6. If Type(a) is bool return ToNumber(a)==b
-	//        (Bool(_), _) => coerce_to_f64(a)
+	//        (Bool(_), _, _) => coerce_to_f64(a)
 	//            .map(|a| is_abstract_equal(&Value::Number(serde_json::Number::from_f64(a).unwrap()), b))
 	//            .unwrap_or(false),
 	//        // 7. If Type(b) is bool return a==ToNumber(b)

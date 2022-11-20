@@ -149,24 +149,15 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		if (targetSchema == null)
 			throw new JsonException($"Cannot resolve schema from fragment `{newUri}`");
 
-		var relevantEvaluationPath = subschemaPath.Combine(Name);
-
-		foreach (var requirement in targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options))
-		{
-			yield return requirement;
-		}
-
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache) =>
+			(node, cache, catalog) =>
 			{
-				var relevantResults = cache.Where(x => relevantEvaluationPath == x.SubschemaPath);
-				return new KeywordResult
+				var dynamicRequirements = targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options);
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					SubschemaPath = subschemaPath,
-					SchemaLocation = subschemaPath.Resolve(baseUri),
-					Keyword = Name,
-					InstanceLocation = instanceLocation,
-					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
+					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)
 				};
 			});
 	}

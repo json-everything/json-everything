@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -93,7 +94,46 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		IEnumerable<(int Index, Requirement Requirement)> GetDynamicRequirements(int startIndex, int itemCount)
+		{
+			for (var i = startIndex; i < itemCount; i++)
+			{
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				{
+					yield return (i, requirement);
+				}
+			}
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonArray arr) return null;
+
+				var itemsResults = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == ItemsKeyword.Name);
+				var itemsAnnotation = itemsResults?.Annotation!.AsValue();
+				int lastIndex = 0;
+				// don't need to check the boolean as it's only going to be true
+				if (itemsAnnotation != null && itemsAnnotation.TryGetValue<bool>(out _)) return null;
+
+				itemsAnnotation?.TryGetValue(out lastIndex);
+				
+				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
+				var relevantResults = new List<KeywordResult>();
+				foreach (var check in dynamicRequirements)
+				{
+					var instance = node[check.Index];
+					var localResult = check.Requirement.Evaluate(instance, cache, catalog);
+					cache.Add(localResult);
+					relevantResults.Add(localResult);
+				}
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
+					Annotation = true
+				};
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

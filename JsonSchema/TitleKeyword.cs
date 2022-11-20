@@ -54,12 +54,8 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, _) => new KeywordResult
+			(_, _, _) => new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 			{
-				SubschemaPath = subschemaPath,
-				Keyword = Name,
-				InstanceLocation = instanceLocation,
-				ValidationResult = true,
 				Annotation = Value
 			});
 	}

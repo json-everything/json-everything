@@ -57,13 +57,6 @@ public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaColle
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		// Generate these but throw them away.
-		// This effectively scans for $ids, etc.
-		foreach (var def in Definitions)
-		{
-			var _ = def.Value.GenerateRequirements(baseUri, subschemaPath.Combine(Name, def.Key), instanceLocation, options).Any();
-		}
-
 		return Enumerable.Empty<Requirement>();
 	}
 

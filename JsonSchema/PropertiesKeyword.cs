@@ -110,14 +110,14 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache) =>
+			(node, cache, _) =>
 			{
+				if (node is not JsonObject) return null;
+
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
-				return new KeywordResult
+				
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					SubschemaPath = subschemaPath,
-					Keyword = Name,
-					InstanceLocation = instanceLocation,
 					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
 					Annotation = annotation
 				};

@@ -92,17 +92,14 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache) =>
+			(_, cache, _) =>
 			{
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 				var groupedBySubschema = relevantResults.GroupBy(x => x.SubschemaPath);
 				var validCount = groupedBySubschema.Count(x => x.All(y => y.ValidationResult != false));
-				return new KeywordResult
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					SubschemaPath = subschemaPath,
-					SchemaLocation = subschemaPath.Resolve(baseUri),
-					Keyword = Name,
-					InstanceLocation = instanceLocation,
 					ValidationResult = validCount == 1,
 					Error = ErrorMessages.OneOf.ReplaceTokens(("count", validCount))
 				};

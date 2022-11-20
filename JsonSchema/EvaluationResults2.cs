@@ -20,15 +20,15 @@ public class EvaluationResults2
 	/// <summary>
 	/// Indicates whether the validation passed or failed.
 	/// </summary>
-	public bool IsValid { get; set; }
+	public bool IsValid { get; internal set; }
 	/// <summary>
 	/// The schema location that generated this node.
 	/// </summary>
-	public JsonPointer EvaluationPath { get; set; }
+	public JsonPointer EvaluationPath { get; internal set; }
 	/// <summary>
 	/// The instance location that was processed.
 	/// </summary>
-	public JsonPointer InstanceLocation { get; set; }
+	public JsonPointer InstanceLocation { get; internal set; }
 
 	/// <summary>
 	/// The absolute schema location.
@@ -37,7 +37,7 @@ public class EvaluationResults2
 	/// If the schema did not have an absolute `$id`, the value from
 	/// <see cref="EvaluationOptions.DefaultBaseUri"/> will be used.
 	/// </remarks>
-	public Uri SchemaLocation { get; set; }
+	public Uri SchemaLocation { get; internal set; }
 
 	/// <summary>
 	/// The collection of nested results.
@@ -74,6 +74,8 @@ public class EvaluationResults2
 	public bool HasErrors => Errors is not (null or { Count: 0 });
 
 	internal bool IncludeDroppedAnnotations { get; private set; }
+
+	internal EvaluationResults2(){}
 }
 
 internal class EvaluationResults2JsonConverter : JsonConverter<EvaluationResults2>

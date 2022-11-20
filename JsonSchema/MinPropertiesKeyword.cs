@@ -63,7 +63,20 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				if (node.GetSchemaValueType() != SchemaValueType.Object) return null;
+
+				var value = node!.AsObject().Count;
+				var isValid = value >= Value;
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.MinProperties.ReplaceTokens(("received", value), ("limit", Value))
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

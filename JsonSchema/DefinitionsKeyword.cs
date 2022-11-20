@@ -53,7 +53,7 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSche
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		return Enumerable.Empty<Requirement>();
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

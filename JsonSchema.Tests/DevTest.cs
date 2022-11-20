@@ -15,16 +15,10 @@ public class DevTest
 		EvaluationOptions.Default.Log = null!;
 
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Id("https://somethingrandom.here/schema")
-			.OneOf(
-				new JsonSchemaBuilder().Id("https://something.else/schema").Type(SchemaValueType.Integer).MultipleOf(3),
-				new JsonSchemaBuilder().Ref("http://inside.def/schema")
-			)
-			.Defs(
-				("target", new JsonSchemaBuilder().Id("http://inside.def/schema").Type(SchemaValueType.String))
-			);
+			.Defs(("foo", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+			.Ref("#/$defs/foo");
 
-		JsonNode instance = "hello";
+		JsonNode instance = true;
 
 		schema.Compile();
 

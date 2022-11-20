@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -50,7 +51,7 @@ public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		return Enumerable.Empty<Requirement>();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

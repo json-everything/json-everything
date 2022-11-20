@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 
@@ -7,15 +6,16 @@ namespace Json.Schema;
 
 public class Requirement
 {
+	public delegate KeywordResult? EvaluationFunction(JsonNode? node, List<KeywordResult> resultCache, Dictionary<JsonPointer, JsonNode?> instanceCatalog);
+
 	public int Priority { get; }
 	public JsonPointer SubschemaPath { get; }
 	public JsonPointer InstanceLocation { get; set; }
 
-	public Func<JsonNode?, List<KeywordResult>, KeywordResult?> Evaluate { get; }
+	public EvaluationFunction Evaluate { get; }
 
-	public Requirement(JsonPointer subschemaPath, JsonPointer instanceLocation, Func<JsonNode?, List<KeywordResult>, KeywordResult?> evaluate, int priority = 0)
+	public Requirement(JsonPointer subschemaPath, JsonPointer instanceLocation, EvaluationFunction evaluate, int priority = 0)
 	{
-		// TODO: schema location is schema's base uri + evaluation path after final $ref
 		SubschemaPath = subschemaPath;
 		InstanceLocation = instanceLocation;
 		Evaluate = evaluate;

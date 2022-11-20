@@ -81,7 +81,41 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		IEnumerable<(string Key, Requirement Requirement)> GetDynamicRequirements(IEnumerable<string> properties)
+		{
+			foreach (var property in properties)
+			{
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options))
+				{
+					yield return (property, requirement);
+				}
+			}
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonObject obj) return null!;
+
+				var propertyNames = obj.Select(x => x.Key);
+
+				var dynamicRequirements = GetDynamicRequirements(propertyNames);
+				var relevantResults = new List<KeywordResult>();
+				foreach (var check in dynamicRequirements)
+				{
+					var localResult = check.Requirement.Evaluate(check.Key, cache, catalog);
+					if (localResult == null) continue;
+
+					cache.Add(localResult);
+					relevantResults.Add(localResult);
+				}
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
+					// TODO: add error message
+				};
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

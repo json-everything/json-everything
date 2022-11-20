@@ -51,7 +51,11 @@ public class DeprecatedKeyword : IJsonSchemaKeyword, IEquatable<DeprecatedKeywor
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(_, _, _) => new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+			{
+				Annotation = Value
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

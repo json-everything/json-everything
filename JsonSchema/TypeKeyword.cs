@@ -132,7 +132,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		var expected = Type.ToString().ToLower();
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _) =>
+			(node, _, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
 				var isValid = schemaValueType switch
@@ -146,14 +146,12 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 					SchemaValueType.Null => Type.HasFlag(SchemaValueType.Null),
 					_ => throw new ArgumentOutOfRangeException()
 				};
-				return new KeywordResult
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					SubschemaPath = subschemaPath,
-					SchemaLocation = subschemaPath.Resolve(baseUri),
-					Keyword = Name,
-					InstanceLocation = instanceLocation,
 					ValidationResult = isValid,
-					Error = isValid ? null : ErrorMessages.Type.ReplaceTokens(("received", schemaValueType), ("expected", expected))
+					Error = isValid
+						? null
+						: ErrorMessages.Type.ReplaceTokens(("received", schemaValueType), ("expected", expected))
 				};
 			});
 	}

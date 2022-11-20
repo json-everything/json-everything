@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -111,6 +112,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 	}
 
+	internal bool RequirementsGenerationActive { get; set; }
+
 	public void Compile(EvaluationOptions? options = null)
 	{
 		_options = null;
@@ -125,21 +128,25 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		if (_options != null && _options.GetHashValue() == options.GetHashValue()) return;
 
 		_options = options;
-		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry);
+		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry, true);
 		_requirements = this.GenerateRequirements(options.DefaultBaseUri, JsonPointer.Empty, JsonPointer.Empty, options)
 			.OrderByDescending(x => x.SubschemaPath, JsonPointerComparer.Instance)
 			.ThenBy(x => x.Priority)
 			.ToList();
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, SchemaRegistry registry)
+	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, SchemaRegistry registry, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
 
 		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
 
 		if (idKeyword == null)
+		{
 			schema.BaseUri = currentBaseUri;
+			if (selfRegister)
+				registry.RegisterSchema(schema.BaseUri, schema);
+		}
 		else
 		{
 			schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
@@ -181,18 +188,9 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		CompileIfNeeded(options);
 
 		var instanceCatalog = instance.GenerateCatalog();
-		var pertinentRequirements = _requirements!.Join(instanceCatalog,
-			r => r.InstanceLocation,
-			i => i.Key,
-			(r, i) => new { Requirement = r, Instance = i.Value });
-		var cache = new List<KeywordResult>();
 
-		foreach (var check in pertinentRequirements)
-		{
-			var keywordResult = check.Requirement.Evaluate(check.Instance, cache);
-			if (keywordResult != null)
-				cache.Add(keywordResult);
-		}
+		var cache = new List<KeywordResult>();
+		_requirements!.Evaluate(cache, instanceCatalog);
 
 		var localResults = cache.Where(x => x.SubschemaPath.Segments.Length == 0);
 

@@ -65,13 +65,18 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _) => new KeywordResult
+			(node, _, _) =>
 			{
-				SubschemaPath = subschemaPath,
-				Keyword = Name,
-				InstanceLocation = instanceLocation,
-				ValidationResult = node.GetSchemaValueType() != SchemaValueType.String || node.GetValue<string>().Length >= Value
-				// TODO: add message
+				if (node.GetSchemaValueType() != SchemaValueType.String) return null;
+
+				var value = node!.GetValue<string>();
+				var isValid = value.Length >= Value;
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.MinLength.ReplaceTokens(("received", value.Length), ("limit", Value))
+				};
 			});
 	}
 
