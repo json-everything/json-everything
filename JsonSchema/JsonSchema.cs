@@ -129,7 +129,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 		_options = options;
 		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry, true);
-		_requirements = this.GenerateRequirements(options.DefaultBaseUri, JsonPointer.Empty, JsonPointer.Empty, options)
+		_requirements = this.GenerateRequirements(BaseUri!, JsonPointer.Empty, JsonPointer.Empty, options)
 			.OrderByDescending(x => x.SubschemaPath, JsonPointerComparer.Instance)
 			.ThenBy(x => x.Priority)
 			.ToList();
@@ -152,6 +152,10 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
 			registry.RegisterSchema(schema.BaseUri, schema);
 		}
+
+		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
+		if (anchorKeyword != null) 
+			registry.RegisterAnchor(schema.BaseUri, anchorKeyword.Anchor, schema);
 
 		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
 

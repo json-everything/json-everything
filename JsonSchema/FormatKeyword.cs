@@ -99,7 +99,33 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		if (Value is UnknownFormat && options.OnlyKnownFormats)
+		{
+			yield return new Requirement(subschemaPath, instanceLocation,
+				(_, _, _) => new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					Error = ErrorMessages.UnknownFormat.ReplaceTokens(("format", Value.Key))
+				});
+			yield break;
+		}
+
+		var requireValidation = options.RequireFormatValidation;
+		if (!requireValidation)
+		{
+			// TODO: this needs to be finished once meta-schemas are being processed
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				var isValid = Value.Validate(node, out var error);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid ? null : error
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

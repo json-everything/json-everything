@@ -119,7 +119,39 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonObject obj) return null;
+
+				var allPatternChecks = Patterns.Join(obj,
+						p => true,
+						o => true,
+						(p, o) => new
+						{
+							Pattern = p,
+							Value = o,
+							IsMatch = p.Key.IsMatch(o.Key)
+						})
+					.Where(x => x.IsMatch)
+					.ToList();
+				var annotation = allPatternChecks.Select(x => x.Value.Key).Distinct().ToArray();
+				var relevantEvaluationPaths = allPatternChecks.Select(x => x.Pattern.Key.ToString()).Distinct().Select(x => subschemaPath.Combine(Name, x));
+
+				var dynamicRequirements = allPatternChecks.SelectMany(x => x.Pattern.Value.GenerateRequirements(baseUri,
+					subschemaPath.Combine(Name, x.Pattern.Key.ToString()),
+					instanceLocation.Combine(x.Value.Key),
+					options));
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
+					Annotation = JsonSerializer.SerializeToNode(annotation)
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -77,7 +77,6 @@ public static class JsonSchemaExtensions
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 
-	// called from everything else
 	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		if (schema.BoolValue == true || (!schema.BoolValue.HasValue && !schema.Keywords!.Any()))

@@ -94,13 +94,13 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		IEnumerable<(int Index, Requirement Requirement)> GetDynamicRequirements(int startIndex, int itemCount)
+		IEnumerable<Requirement> GetDynamicRequirements(int startIndex, int itemCount)
 		{
 			for (var i = startIndex; i < itemCount; i++)
 			{
 				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
 				{
-					yield return (i, requirement);
+					yield return requirement;
 				}
 			}
 		}
@@ -119,18 +119,11 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 				itemsAnnotation?.TryGetValue(out lastIndex);
 				
 				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
-				var relevantResults = new List<KeywordResult>();
-				foreach (var check in dynamicRequirements)
-				{
-					var instance = node[check.Index];
-					var localResult = check.Requirement.Evaluate(instance, cache, catalog);
-					cache.Add(localResult);
-					relevantResults.Add(localResult);
-				}
+				dynamicRequirements.Evaluate(cache, catalog);
 
 				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
-					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
+					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
 					Annotation = true
 				};
 			}, 10);

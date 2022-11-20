@@ -140,17 +140,28 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	{
 		var newUri = new Uri(baseUri, Reference);
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Path));
-		var fragment = JsonPointer.Parse(newUri.Fragment);
 
-		var targetBase = options.SchemaRegistry.Get(newBaseUri);
-		if (targetBase == null)
-			throw new JsonException($"Cannot resolve base schema from `{newUri}`");
-		var targetSchema = targetBase.FindSubschema(fragment, newBaseUri).Item1;
+		JsonSchema? targetSchema;
+		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
+		{
+			var targetBase = options.SchemaRegistry.Get(newBaseUri);
+			if (targetBase == null)
+				throw new JsonException($"Cannot resolve base schema from `{newUri}`");
+			targetSchema = targetBase.FindSubschema(pointerFragment!, newBaseUri).Item1;
+		}
+		else
+		{
+			var anchorFragment = newUri.Fragment.Substring(1);
+			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+				throw new JsonException($"Unrecognized fragment type `{newUri}`");
+			targetSchema = options.SchemaRegistry.Get(newBaseUri, anchorFragment);
+		}
+
 		if (targetSchema == null)
 			throw new JsonException($"Cannot resolve schema from fragment `{newUri}`");
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(_, cache, catalog) =>
 			{
 				var dynamicRequirements = targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options);
 				dynamicRequirements.Evaluate(cache, catalog);

@@ -45,7 +45,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// <param name="values">The collection of enum values.</param>
 	public EnumKeyword(params JsonNode?[] values)
 	{
-		_values = new HashSet<JsonNode?>(values ?? throw new ArgumentNullException(nameof(values)),
+		_values = new HashSet<JsonNode?>(values.Select(x => x ?? JsonNull.SignalNode) ?? throw new ArgumentNullException(nameof(values)),
 			JsonNodeEqualityComparer.Instance);
 
 		if (_values.Count != values.Length)
@@ -58,7 +58,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// <param name="values">The collection of enum values.</param>
 	public EnumKeyword(IEnumerable<JsonNode?> values)
 	{
-		_values = new HashSet<JsonNode?>(values ?? throw new ArgumentNullException(nameof(values)),
+		_values = new HashSet<JsonNode?>(values.Select(x => x ?? JsonNull.SignalNode) ?? throw new ArgumentNullException(nameof(values)),
 			JsonNodeEqualityComparer.Instance);
 
 		if (_values.Count != values.Count())
@@ -79,7 +79,17 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				var isValid = Values.Any(x => x.IsEquivalentTo(node ?? JsonNull.SignalNode));
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid ? null : ErrorMessages.Const.ReplaceTokens(("received", node), ("values", Values))
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

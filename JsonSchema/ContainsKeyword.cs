@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -111,7 +112,72 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		IEnumerable<Requirement> GetArrayRequirements(int itemCount)
+		{
+			for (var i = 0; i < itemCount; i++)
+			{
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				{
+					yield return requirement;
+				}
+			}
+		}
+
+		IEnumerable<Requirement> GetObjectRequirements(IEnumerable<string> targetProperties)
+		{
+			foreach (var property in targetProperties)
+			{
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(property), options))
+				{
+					yield return requirement;
+				}
+			}
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				var minContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MinContainsKeyword.Name)?.GetValue<int>();
+				if (minContainsAnnotation == 0) return null;
+
+				IEnumerable<Requirement> dynamicRequirements;
+				Func<KeywordResult, JsonNode?> selector;
+				if (node is JsonArray arr)
+				{
+					dynamicRequirements = GetArrayRequirements(arr.Count);
+					selector = x => int.Parse(x.InstanceLocation.Segments.Last().Value);
+				}
+				else if (node is JsonObject obj)
+				{
+					dynamicRequirements = GetObjectRequirements(obj.Select(x => x.Key));
+					selector = x => x.InstanceLocation.Segments.Last().Value;
+				}
+				else return null;
+
+				var minContains = minContainsAnnotation ?? 1;
+
+				var maxContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MaxContainsKeyword.Name)?.GetValue<int>();
+				var maxContains = maxContainsAnnotation ?? int.MaxValue;
+
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				var localResults = cache.GetLocalResults(subschemaPath, Name);
+				var validChildren = JsonSerializer.SerializeToNode(localResults.Where(x => x.ValidationResult != false).Select(selector))!.AsArray();
+
+				var isValid = minContains <= validChildren.Count && validChildren.Count <= maxContains;
+				string? error = null;
+				if (validChildren.Count < minContains)
+					error = ErrorMessages.ContainsTooFew.ReplaceTokens(("received", validChildren.Count), ("minimum", minContains));
+				else if (validChildren.Count > maxContains)
+					error = ErrorMessages.ContainsTooMany.ReplaceTokens(("received", validChildren.Count), ("maximum", maxContains));
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = error,
+					Annotation = JsonSerializer.SerializeToNode(validChildren)
+				};
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
