@@ -115,6 +115,13 @@ public static class JsonSchemaExtensions
 		schema.GeneratingRequirements.Remove(instanceLocation);
 	}
 
+	public static IEnumerable<Requirement> InOrder(this IEnumerable<Requirement> requirements)
+	{
+		return requirements
+			.OrderByDescending(x => x.SubschemaPath.Segments.Length)
+			.ThenBy(x => x.Priority);
+	}
+
 	public static void Evaluate(this IEnumerable<Requirement> requirements, List<KeywordResult> resultsCache, Dictionary<JsonPointer, JsonNode?> instanceCatalog)
 	{
 		var pertinentRequirements = requirements.Join(instanceCatalog,

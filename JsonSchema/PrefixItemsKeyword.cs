@@ -98,7 +98,33 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		for (int i = 0; i < ArraySchemas.Count; i++)
+		{
+			var schema = ArraySchemas[i];
+			foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options).InOrder())
+			{
+				yield return requirement;
+			}
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, _) =>
+			{
+				if (node is not JsonArray arr) return null;
+
+				var itemCount = Math.Min(arr.Count, ArraySchemas.Count);
+
+				var relevantEvaluationPaths = Enumerable.Range(0, itemCount).Select(k => subschemaPath.Combine(Name, k));
+				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath)).ToList();
+
+				var validCount = relevantResults.TakeWhile(x => x.ValidationResult != false).Count();
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = itemCount == validCount,
+					Annotation = arr.Count == validCount ? true : validCount-1
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

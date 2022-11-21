@@ -144,20 +144,15 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		IEnumerable<Requirement> GetDynamicRequirements(int startIndex, int itemCount)
+		IEnumerable<Requirement> GetDynamicRequirements(IEnumerable<int> indices)
 		{
-			for (var i = startIndex; i < itemCount; i++)
+			foreach (var i in indices)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options).InOrder())
 				{
 					yield return requirement;
 				}
 			}
-		}
-
-		IEnumerable<int> ToIntArray(IEnumerable<JsonNode?> nodes)
-		{
-			return nodes.SelectMany(x => x.ToIntArray());
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
@@ -171,14 +166,20 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 				var subschemasThatRetainedAnnotations = groupedByLocalSubschema.Where(x => !subschemasThatDroppedAnnotations.Any(p => x.Key.StartsWith(p)) || x.Key == subschemaPath);
 				var annotations = subschemasThatRetainedAnnotations.SelectMany(x => x)
 					.Where(x => x.Keyword is PrefixItemsKeyword.Name or ItemsKeyword.Name or AdditionalItemsKeyword.Name or ContainsKeyword.Name or Name)
-					.Select(x => x.Annotation)
+					.Select(x => (x.Keyword, x.Annotation))
 					.ToArray();
-				if (annotations.Any(x => x.IsEquivalentTo(true))) return null;
+				if (annotations.Any(x => x.Annotation.IsEquivalentTo(true))) return null;
 
-				var evaluatedIndices = ToIntArray(annotations);
-				int lastIndex = evaluatedIndices.Max();
+				var evaluatedIndices = annotations.SelectMany(x =>
+				{
+					if (x.Keyword is PrefixItemsKeyword.Name or ItemsKeyword.Name)
+						return Enumerable.Range(0, x.Annotation!.GetValue<int>() + 1);
+					if (x.Keyword == ContainsKeyword.Name)
+						return x.Annotation.ToIntArray();
+					throw new ArgumentException("Unexpected annotation value");
+				});
 
-				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
+				var dynamicRequirements = GetDynamicRequirements(Enumerable.Range(0, arr.Count).Except(evaluatedIndices));
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
@@ -186,7 +187,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
 					Annotation = true
 				};
-			}, 10);
+			}, 30);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

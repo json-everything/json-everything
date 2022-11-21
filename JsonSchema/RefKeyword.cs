@@ -163,7 +163,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(_, cache, catalog) =>
 			{
-				var dynamicRequirements = targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options);
+				var dynamicRequirements = targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options).InOrder();
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)

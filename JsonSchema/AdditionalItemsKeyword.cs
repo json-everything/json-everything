@@ -98,7 +98,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		{
 			for (var i = startIndex; i < itemCount; i++)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options).InOrder())
 				{
 					yield return requirement;
 				}
@@ -112,13 +112,13 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 
 				var itemsResults = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == ItemsKeyword.Name);
 				var itemsAnnotation = itemsResults?.Annotation!.AsValue();
-				int lastIndex = 0;
+				int lastIndex = -1;
 				// don't need to check the boolean as it's only going to be true
-				if (itemsAnnotation != null && itemsAnnotation.TryGetValue<bool>(out _)) return null;
+				if (itemsAnnotation == null || itemsAnnotation.TryGetValue<bool>(out _)) return null;
 
-				itemsAnnotation?.TryGetValue(out lastIndex);
+				lastIndex = itemsAnnotation.GetValue<int>();
 				
-				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
+				var dynamicRequirements = GetDynamicRequirements(lastIndex +1, arr.Count);
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)

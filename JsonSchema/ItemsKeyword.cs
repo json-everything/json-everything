@@ -174,35 +174,69 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		{
 			for (var i = startIndex; i < itemCount; i++)
 			{
-				foreach (var requirement in SingleSchema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in SingleSchema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options).InOrder())
 				{
 					yield return requirement;
 				}
 			}
 		}
 
-		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
-			{
-				if (node is not JsonArray arr) return null;
-
-				var itemsResults = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == ItemsKeyword.Name);
-				var itemsAnnotation = itemsResults?.Annotation!.AsValue();
-				int lastIndex = 0;
-				// don't need to check the boolean as it's only going to be true
-				if (itemsAnnotation != null && itemsAnnotation.TryGetValue<bool>(out _)) return null;
-
-				itemsAnnotation?.TryGetValue(out lastIndex);
-
-				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
-				dynamicRequirements.Evaluate(cache, catalog);
-
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+		if (SingleSchema != null)
+		{
+			yield return new Requirement(subschemaPath, instanceLocation,
+				(node, cache, catalog) =>
 				{
-					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
-					Annotation = true
-				};
-			}, 10);
+					if (node is not JsonArray arr) return null;
+
+					var prefixItemsAnnotation = cache.GetLocalAnnotation(subschemaPath, PrefixItemsKeyword.Name)?.AsValue();
+					// don't need to check the boolean as it's only going to be true if it exists
+					int lastIndex = -1;
+					if (prefixItemsAnnotation != null)
+					{
+						if (prefixItemsAnnotation.TryGetValue<bool>(out _)) return null;
+						lastIndex = prefixItemsAnnotation.GetValue<int>();
+					}
+
+					var dynamicRequirements = GetDynamicRequirements(lastIndex + 1, arr.Count);
+					dynamicRequirements.Evaluate(cache, catalog);
+
+					return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+					{
+						ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
+						Annotation = true
+					};
+				}, 20);
+		}
+		else
+		{
+			for (int i = 0; i < ArraySchemas!.Count; i++)
+			{
+				var schema = ArraySchemas[i];
+				foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options).InOrder())
+				{
+					yield return requirement;
+				}
+			}
+
+			yield return new Requirement(subschemaPath, instanceLocation,
+				(node, cache, _) =>
+				{
+					if (node is not JsonArray arr) return null;
+
+					var itemCount = Math.Min(arr.Count, ArraySchemas.Count);
+
+					var relevantEvaluationPaths = Enumerable.Range(0, itemCount).Select(k => subschemaPath.Combine(Name, k));
+					var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath)).ToList();
+
+					var validCount = relevantResults.TakeWhile(x => x.ValidationResult != false).Count();
+
+					return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+					{
+						ValidationResult = itemCount == validCount,
+						Annotation = arr.Count == validCount ? true : validCount - 1
+					};
+				});
+		}
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

@@ -130,8 +130,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		_options = options;
 		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry, true);
 		_requirements = this.GenerateRequirements(BaseUri!, JsonPointer.Empty, JsonPointer.Empty, options)
-			.OrderByDescending(x => x.SubschemaPath, JsonPointerComparer.Instance)
-			.ThenBy(x => x.Priority)
+			.InOrder()
 			.ToList();
 	}
 
@@ -169,7 +168,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	{
 		switch (keyword)
 		{
-			case ISchemaContainer container:
+			case ISchemaContainer { Schema: { } } container:
 				yield return container.Schema;
 				break;
 			case ISchemaCollector collector:

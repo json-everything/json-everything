@@ -63,7 +63,7 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 	{
 		var relevantEvaluationPath = subschemaPath.Combine(Name);
 
-		foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options))
+		foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options).InOrder())
 		{
 			yield return requirement;
 		}
