@@ -69,13 +69,13 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 			{
 				if (node.GetSchemaValueType() != SchemaValueType.String) return null;
 
-				var value = node!.GetValue<string>();
-				var isValid = value.Length >= Value;
+				var value = new StringInfo(node!.GetValue<string>()).LengthInTextElements;
+				var isValid = value >= Value;
 
 				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
 				{
 					ValidationResult = isValid,
-					Error = isValid ? null : ErrorMessages.MinLength.ReplaceTokens(("received", value.Length), ("limit", Value))
+					Error = isValid ? null : ErrorMessages.MinLength.ReplaceTokens(("received", value), ("limit", Value))
 				};
 			});
 	}

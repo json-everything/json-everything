@@ -170,7 +170,39 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		IEnumerable<Requirement> GetDynamicRequirements(int startIndex, int itemCount)
+		{
+			for (var i = startIndex; i < itemCount; i++)
+			{
+				foreach (var requirement in SingleSchema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				{
+					yield return requirement;
+				}
+			}
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonArray arr) return null;
+
+				var itemsResults = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == ItemsKeyword.Name);
+				var itemsAnnotation = itemsResults?.Annotation!.AsValue();
+				int lastIndex = 0;
+				// don't need to check the boolean as it's only going to be true
+				if (itemsAnnotation != null && itemsAnnotation.TryGetValue<bool>(out _)) return null;
+
+				itemsAnnotation?.TryGetValue(out lastIndex);
+
+				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
+					Annotation = true
+				};
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

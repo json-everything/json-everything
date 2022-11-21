@@ -145,13 +145,13 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, cache, catalog) =>
 			{
-				if (node is not JsonObject obj) return null!;
+				if (node is not JsonObject obj) return null;
 
-				var propertiesNames = cache.GetLocalAnnotation(subschemaPath, PropertiesKeyword.Name)?.AsArray().Select(x => x!.GetValue<string>());
-				var patternPropertiesNames = cache.GetLocalAnnotation(subschemaPath, PatternPropertiesKeyword.Name)?.AsArray().Select(x => x!.GetValue<string>());
+				var propertiesNames = cache.GetLocalAnnotation(subschemaPath, PropertiesKeyword.Name).ToStringArray();
+				var patternPropertiesNames = cache.GetLocalAnnotation(subschemaPath, PatternPropertiesKeyword.Name).ToStringArray();
 
-				var evaluatedProperties = (propertiesNames ?? Enumerable.Empty<string>())
-					.Union(patternPropertiesNames ?? Enumerable.Empty<string>());
+				var evaluatedProperties = propertiesNames
+					.Union(patternPropertiesNames);
 
 				var targetPropertyNames = obj.Where(x => !evaluatedProperties.Contains(x.Key)).Select(x => x.Key).ToArray();
 				var annotation = JsonSerializer.SerializeToNode(targetPropertyNames);

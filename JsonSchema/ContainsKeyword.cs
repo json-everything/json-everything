@@ -137,9 +137,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, cache, catalog) =>
 			{
-				var minContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MinContainsKeyword.Name)?.GetValue<int>();
-				if (minContainsAnnotation == 0) return null;
-
 				IEnumerable<Requirement> dynamicRequirements;
 				Func<KeywordResult, JsonNode?> selector;
 				if (node is JsonArray arr)
@@ -154,10 +151,11 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 				}
 				else return null;
 
+				var minContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MinContainsKeyword.Name)?.GetValue<uint>();
 				var minContains = minContainsAnnotation ?? 1;
 
-				var maxContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MaxContainsKeyword.Name)?.GetValue<int>();
-				var maxContains = maxContainsAnnotation ?? int.MaxValue;
+				var maxContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MaxContainsKeyword.Name)?.GetValue<uint>();
+				var maxContains = maxContainsAnnotation ?? uint.MaxValue;
 
 				dynamicRequirements.Evaluate(cache, catalog);
 

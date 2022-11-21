@@ -68,7 +68,7 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 			{
 				if (node.GetSchemaValueType() != SchemaValueType.String) return null;
 
-				var value = node!.AsValue().GetValue<string>().Length;
+				var value = new StringInfo(node!.AsValue().GetValue<string>()).LengthInTextElements;
 				var isValid = value <= Value;
 
 				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)

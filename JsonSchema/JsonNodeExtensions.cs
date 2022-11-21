@@ -104,4 +104,14 @@ public static class JsonNodeExtensions
 				break;
 		}
 	}
+
+	public static IEnumerable<string> ToStringArray(this JsonNode? node)
+	{
+		return node?.AsArray().Select(x => x!.GetValue<string>()) ?? Enumerable.Empty<string>();
+	}
+
+	public static IEnumerable<int> ToIntArray(this JsonNode? node)
+	{
+		return node?.AsArray().Select(x => x!.GetValue<int>()) ?? Enumerable.Empty<int>();
+	}
 }

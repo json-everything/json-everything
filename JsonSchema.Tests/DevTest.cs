@@ -15,10 +15,27 @@ public class DevTest
 		EvaluationOptions.Default.Log = null!;
 
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Defs(("foo", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-			.Ref("#/$defs/foo");
+			.Type(SchemaValueType.Object)
+			.AdditionalProperties(new JsonSchemaBuilder()
+				.OneOf(
+					new JsonSchemaBuilder().Ref("#"),
+					new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+				)
+			);
 
-		JsonNode instance = true;
+		JsonNode instance = new JsonObject
+		{
+			["foo"] = new JsonObject
+			{
+				["foo"] = new JsonObject
+				{
+					["foo"] = new JsonObject
+					{
+						["foo"] = "string"
+					}
+				}
+			}
+		};
 
 		schema.Compile();
 
@@ -29,13 +46,15 @@ public class DevTest
 		Console.WriteLine(JsonSerializer.Serialize(compiledResults, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 		Console.WriteLine($"elapsed: {sw.ElapsedTicks}");
 
-		sw.Reset();
+		Assert.IsFalse(compiledResults.IsValid);
 
-		sw.Start();
-		var legacyResults = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.Basic});
-		sw.Stop();
-		Console.WriteLine(JsonSerializer.Serialize(legacyResults, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
-		Console.WriteLine($"elapsed: {sw.ElapsedTicks}");
+		//sw.Reset();
+
+		//sw.Start();
+		//var legacyResults = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.Basic});
+		//sw.Stop();
+		//Console.WriteLine(JsonSerializer.Serialize(legacyResults, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
+		//Console.WriteLine($"elapsed: {sw.ElapsedTicks}");
 	}
 
 	[Test]

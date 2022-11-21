@@ -144,7 +144,49 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		IEnumerable<Requirement> GetDynamicRequirements(int startIndex, int itemCount)
+		{
+			for (var i = startIndex; i < itemCount; i++)
+			{
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				{
+					yield return requirement;
+				}
+			}
+		}
+
+		IEnumerable<int> ToIntArray(IEnumerable<JsonNode?> nodes)
+		{
+			return nodes.SelectMany(x => x.ToIntArray());
+		}
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonArray arr) return null;
+
+				var localAndSubschemaKeywordResults = cache.Where(x => x.SubschemaPath.StartsWith(subschemaPath));
+				var groupedByLocalSubschema = localAndSubschemaKeywordResults.GroupBy(x => x.SubschemaPath).ToArray();
+				var subschemasThatDroppedAnnotations = groupedByLocalSubschema.Where(x => x.Any(k => k.ValidationResult == false)).Select(x => x.Key);
+				var subschemasThatRetainedAnnotations = groupedByLocalSubschema.Where(x => !subschemasThatDroppedAnnotations.Any(p => x.Key.StartsWith(p)) || x.Key == subschemaPath);
+				var annotations = subschemasThatRetainedAnnotations.SelectMany(x => x)
+					.Where(x => x.Keyword is PrefixItemsKeyword.Name or ItemsKeyword.Name or AdditionalItemsKeyword.Name or ContainsKeyword.Name or Name)
+					.Select(x => x.Annotation)
+					.ToArray();
+				if (annotations.Any(x => x.IsEquivalentTo(true))) return null;
+
+				var evaluatedIndices = ToIntArray(annotations);
+				int lastIndex = evaluatedIndices.Max();
+
+				var dynamicRequirements = GetDynamicRequirements(lastIndex, arr.Count);
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
+					Annotation = true
+				};
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

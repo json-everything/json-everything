@@ -27,4 +27,10 @@ public static class JsonPointerExtensions
 			? new Uri(baseUri, pointerFragment)
 			: baseUri;
 	}
+
+	public static bool StartsWith(this JsonPointer pointer, JsonPointer compare)
+	{
+		return pointer.Segments.Length >= compare.Segments.Length &&
+		       compare.Segments.Zip(pointer.Segments, (x, y) => x.Value == y.Value).All(x => x);
+	}
 }

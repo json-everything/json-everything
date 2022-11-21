@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -74,7 +75,22 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(_, cache, catalog) =>
+			{
+				var ifAnnotation = cache.GetLocalAnnotation(subschemaPath, IfKeyword.Name);
+				if (!ifAnnotation?.GetValue<bool>() ?? true) return null;
+
+				var dynamicRequirements = Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options);
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				var localResults = cache.GetLocalResults(subschemaPath, Name);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = localResults.All(x => x.ValidationResult != false)
+				};
+			}, 10);
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

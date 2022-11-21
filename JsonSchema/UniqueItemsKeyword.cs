@@ -83,7 +83,36 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		if (!Value) yield break;
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				if (node is not JsonArray array) return null;
+
+				var duplicates = new List<(int, int)>();
+				for (int i = 0; i < array.Count - 1; i++)
+				for (int j = i + 1; j < array.Count; j++)
+				{
+					if (array[i].IsEquivalentTo(array[j]))
+						duplicates.Add((i, j));
+				}
+
+				if (duplicates.Any())
+				{
+					var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
+					return new KeywordResult(subschemaPath, baseUri, instanceLocation)
+					{
+						ValidationResult = false,
+						Error = ErrorMessages.UniqueItems.ReplaceTokens(("duplicates", pairs))
+					};
+				}
+
+				return new KeywordResult(subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = true
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

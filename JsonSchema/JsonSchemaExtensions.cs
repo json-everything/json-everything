@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
@@ -100,17 +102,17 @@ public static class JsonSchemaExtensions
 			yield break;
 		}
 
-		if (schema.RequirementsGenerationActive) yield break;
+		if (schema.GeneratingRequirements.Contains(instanceLocation)) yield break;
 
-		schema.RequirementsGenerationActive = true;
+		schema.GeneratingRequirements.Add(instanceLocation);
 
-		// TODO: maybe get base uri from parent schema
-		foreach (var requirement in schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, baseUri, instanceLocation, options)))
+		var requirements = schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri, instanceLocation, options));
+		foreach (var requirement in requirements)
 		{
 			yield return requirement;
 		}
 
-		schema.RequirementsGenerationActive = false;
+		schema.GeneratingRequirements.Remove(instanceLocation);
 	}
 
 	public static void Evaluate(this IEnumerable<Requirement> requirements, List<KeywordResult> resultsCache, Dictionary<JsonPointer, JsonNode?> instanceCatalog)
@@ -138,5 +140,15 @@ public static class JsonSchemaExtensions
 	{
 		var result = cache.SingleOrDefault(x => x.SubschemaPath == subschemaPath && x.Keyword == keywordName);
 		return result?.Annotation;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static IEnumerable<T> Debug<T>(this IEnumerable<T> items)
+	{
+#if DEBUG
+		return items.ToList();
+#else
+		return items;
+#endif
 	}
 }

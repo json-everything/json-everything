@@ -112,7 +112,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 	}
 
-	internal bool RequirementsGenerationActive { get; set; }
+	internal HashSet<JsonPointer> GeneratingRequirements { get; } = new();
 
 	public void Compile(EvaluationOptions? options = null)
 	{
