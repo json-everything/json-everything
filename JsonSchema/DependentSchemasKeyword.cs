@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -92,7 +93,27 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonObject obj) return null;
+
+				var additionalSchemas = Schemas.Where(x => obj.ContainsKey(x.Key)).ToList();
+				var dynamicRequirements = additionalSchemas.SelectMany(x => x.Value.GenerateRequirements(baseUri, subschemaPath.Combine(Name, x.Key), instanceLocation, options));
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				var relevantEvaluationPaths = additionalSchemas.Select(x => subschemaPath.Combine(Name, x.Key));
+				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
+				var isValid = relevantResults.All(x => x.ValidationResult != false);
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid
+						? null
+						: ErrorMessages.DependentRequired.ReplaceTokens(("failed", JsonSerializer.SerializeToNode(additionalSchemas.Select(x => x.Key))))
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

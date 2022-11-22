@@ -115,7 +115,42 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonObject obj) return null;
+
+				var schemaDependencies = Requirements.Where(x => x.Value.Schema != null);
+
+				var additionalSchemas = schemaDependencies.Where(x => obj.ContainsKey(x.Key)).ToList();
+				var dynamicRequirements = additionalSchemas.SelectMany(x => x.Value.Schema!.GenerateRequirements(baseUri, subschemaPath.Combine(Name, x.Key), instanceLocation, options));
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				var relevantEvaluationPaths = additionalSchemas.Select(x => subschemaPath.Combine(Name, x.Key));
+				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
+				var isSchemaDependencyValid = relevantResults.All(x => x.ValidationResult != false);
+
+				// ----
+
+				var propertyDependencies = Requirements.Where(x => x.Value.Schema == null);
+
+				var requiredProperties = propertyDependencies.Where(x => obj.ContainsKey(x.Key))
+					.SelectMany(x => x.Value.Requirements);
+				var notFound = requiredProperties.Where(property => !obj.ContainsKey(property)).ToList();
+				var isPropertyDependencyValid = notFound.Count == 0;
+
+				// ----
+
+				var isValid = isSchemaDependencyValid && isPropertyDependencyValid;
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = isValid,
+					Error = isValid
+						? null
+						: ErrorMessages.DependentRequired.ReplaceTokens(("failed", JsonSerializer.SerializeToNode(additionalSchemas.Select(x => x.Key).Union(notFound))))
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)

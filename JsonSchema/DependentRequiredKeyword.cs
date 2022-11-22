@@ -102,7 +102,23 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, _, _) =>
+			{
+				if (node is not JsonObject obj) return null;
+
+				var requiredProperties = Requirements.Where(x => obj.ContainsKey(x.Key))
+					.SelectMany(x => x.Value);
+				var notFound = requiredProperties.Where(property => !obj.ContainsKey(property)).ToList();
+
+				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = notFound.Count == 0,
+					Error = notFound.Count == 0
+						? null
+						: ErrorMessages.DependentRequired.ReplaceTokens(("missing", notFound))
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
