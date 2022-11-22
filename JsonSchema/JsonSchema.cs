@@ -183,6 +183,12 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 					yield return schema;
 				}
 				break;
+			case ICustomSchemaCollector collector:
+				foreach (var schema in collector.Schemas)
+				{
+					yield return schema;
+				}
+				break;
 		}
 	}
 
@@ -333,6 +339,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			var segment = pointer.Segments[i];
 			object? newResolvable = null;
 
+			JsonSchema? subschema;
 			int index;
 			switch (resolvable)
 			{
@@ -358,8 +365,13 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 						newResolvable = collector.Schemas[index];
 					break;
 				case IKeyedSchemaCollector keyedCollector:
-					if (keyedCollector.Schemas.TryGetValue(segment.Value, out var subschema))
+					if (keyedCollector.Schemas.TryGetValue(segment.Value, out subschema))
 						newResolvable = subschema;
+					break;
+				case ICustomSchemaCollector customCollector:
+					(subschema, var segmentsRead) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToArray());
+					newResolvable = subschema;
+					i += segmentsRead - 1;
 					break;
 				case JsonSchema { Keywords: { } } schema:
 					if (!ReferenceEquals(schema, this))

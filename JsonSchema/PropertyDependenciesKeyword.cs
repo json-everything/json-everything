@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -16,7 +17,7 @@ namespace Json.Schema;
 [SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
-public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<PropertyDependenciesKeyword>
+public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector, IRefResolvable, IEquatable<PropertyDependenciesKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -27,6 +28,8 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 	/// Gets the collection of dependencies.
 	/// </summary>
 	public IReadOnlyDictionary<string, PropertyDependency> Dependencies { get; }
+
+	IEnumerable<JsonSchema> ICustomSchemaCollector.Schemas => Dependencies.SelectMany(x => x.Value.Schemas.Select(y => y.Value));
 
 	/// <summary>
 	/// Creates a new instance of the <see cref="PropertyDependenciesKeyword"/>.
@@ -97,7 +100,32 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(node, cache, catalog) =>
+			{
+				if (node is not JsonObject obj) return null;
+
+				var applicableSchemas = Dependencies.Select(x =>
+				{
+					if (obj.TryGetValue(x.Key, out var value, out _) &&
+					    value is JsonValue jv &&
+					    jv.TryGetValue(out string? s) &&
+					    x.Value.Schemas.TryGetValue(s, out var schema))
+						return (Key: x.Key, Value: s, Schema: schema);
+					return default;
+				}).Where(x => x != default);
+
+				var dynamicRequirements = applicableSchemas.SelectMany(x => x.Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, x.Key, x.Value), instanceLocation, options));
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				var relevantEvaluationPath = subschemaPath.Combine(Name);
+				var relevantResults = cache.Where(x => x.SubschemaPath.StartsWith(relevantEvaluationPath));
+
+				return new KeywordResult(subschemaPath, baseUri, instanceLocation)
+				{
+					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
+				};
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
@@ -106,6 +134,15 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		{
 			schema.RegisterSubschemas(registry, currentUri);
 		}
+	}
+
+	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)
+	{
+		if (segments.Count < 2) return (null, 0);
+		if (!Dependencies.TryGetValue(segments[0].Value, out var property)) return (null, 0);
+		if (!property.Schemas.TryGetValue(segments[1].Value, out var schema)) return (null, 0);
+
+		return (schema, 2);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
