@@ -81,7 +81,7 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 				var ifAnnotation = cache.GetLocalAnnotation(subschemaPath, IfKeyword.Name);
 				if (!ifAnnotation?.GetValue<bool>() ?? true) return null;
 
-				var dynamicRequirements = Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options).InOrder();
+				var dynamicRequirements = Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options);
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				var localResults = cache.GetLocalResults(subschemaPath, Name);

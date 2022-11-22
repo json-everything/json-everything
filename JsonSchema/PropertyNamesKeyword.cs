@@ -85,7 +85,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		{
 			foreach (var property in properties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options).InOrder())
+				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options))
 				{
 					yield return (property, requirement);
 				}

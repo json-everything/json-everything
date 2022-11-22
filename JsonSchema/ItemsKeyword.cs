@@ -174,7 +174,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		{
 			for (var i = startIndex; i < itemCount; i++)
 			{
-				foreach (var requirement in SingleSchema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options).InOrder())
+				foreach (var requirement in SingleSchema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
 				{
 					yield return requirement;
 				}
@@ -212,7 +212,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			for (int i = 0; i < ArraySchemas!.Count; i++)
 			{
 				var schema = ArraySchemas[i];
-				foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options).InOrder())
+				foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
 				{
 					yield return requirement;
 				}

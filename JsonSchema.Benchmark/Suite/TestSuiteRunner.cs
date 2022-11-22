@@ -17,17 +17,50 @@ public class TestSuiteRunner
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
 	private const bool _runDraftNext = true;
+	private const bool _runIsolatedTests = false;
+	private const bool _runSingleTest = true;
+	private const int _individualTestRunCount = 100;
+	private const string _isolatedTestFile = "properties";
+	private const string _isolatedDraft = "draft-next";
 
-	public static IEnumerable<TestCollection> GetAllTests()
+	private static readonly JsonSchema _schema = new JsonSchemaBuilder()
+		.Schema(MetaSchemas.DraftNextId)
+		.Type(SchemaValueType.Object)
+		.Properties(
+			("foo", new JsonSchemaBuilder()
+				.Type(SchemaValueType.Integer)
+				.Minimum(10)
+				.Maximum(100)
+			),
+			("bar", new JsonSchemaBuilder()
+				.Type(SchemaValueType.Array)
+				.PrefixItems(
+					new JsonSchemaBuilder().Type(SchemaValueType.String),
+					new JsonSchemaBuilder().Type(SchemaValueType.Boolean)
+				)
+				.Items(false)
+			)
+		)
+		.Required("foo", "bar")
+		.AdditionalProperties(false);
+
+	private List<TestCollection> _testCollections;
+
+	private static IEnumerable<TestCollection> GetAllTests()
 	{
-		return GetTests("draft6")
-			.Concat(GetTests("draft7"))
-			.Concat(GetTests("draft2019-09"))
-			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("draft-next") : Enumerable.Empty<TestCollection>());
+		return LoadTests("draft6")
+			.Concat(LoadTests("draft7"))
+			.Concat(LoadTests("draft2019-09"))
+			.Concat(LoadTests("draft2020-12"))
+			.Concat(_runDraftNext ? LoadTests("draft-next") : Enumerable.Empty<TestCollection>());
 	}
 
-	private static IEnumerable<TestCollection> GetTests(string draftFolder)
+	private static IEnumerable<TestCollection> GetIsolatedTests()
+	{
+		return LoadTests(_isolatedDraft).Where(t => t.Filename == _isolatedTestFile);
+	}
+
+	private static IEnumerable<TestCollection> LoadTests(string draftFolder)
 	{
 		// ReSharper disable once HeuristicUnreachableCode
 
@@ -80,12 +113,142 @@ public class TestSuiteRunner
 
 			foreach (var collection in collections!)
 			{
+				collection.Filename = Path.GetFileNameWithoutExtension(fileName);
 				collection.IsOptional = fileName.Contains("optional");
 				collection.Options = EvaluationOptions.From(options);
 
 				yield return collection;
 			}
 		}
+	}
+
+	public static IEnumerable<TestCollection> GetSingleTest()
+	{
+		yield return new TestCollection
+		{
+			Filename = "local",
+			Schema = _schema,
+			Tests = new List<TestCase>
+			{
+				new()
+				{
+					Description = "valid data",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { "string", false }
+					},
+					Valid = true
+				},
+				new()
+				{
+					Description = "missing bar[1] is okay",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { "string" }
+					},
+					Valid = true
+				},
+				new()
+				{
+					Description = "valid data",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { "string", false }
+					},
+					Valid = true
+				},
+				new()
+				{
+					Description = "foo too high",
+					Data = new JsonObject
+					{
+						["foo"] = 150,
+						["bar"] = new JsonArray { "string", false }
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "foo too low",
+					Data = new JsonObject
+					{
+						["foo"] = 5,
+						["bar"] = new JsonArray { "string", false }
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "bar[0] not a string",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { 2, false }
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "bar[1] not a boolean",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { "string", 2 }
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "bar has too many items",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { "string", false, "disallowed" }
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "too many properties",
+					Data = new JsonObject
+					{
+						["foo"] = 15,
+						["bar"] = new JsonArray { "string", false },
+						["baz"] = true
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "missing foo",
+					Data = new JsonObject
+					{
+						["bar"] = new JsonArray { "string", false }
+					},
+					Valid = false
+				},
+				new()
+				{
+					Description = "missing bar",
+					Data = new JsonObject
+					{
+						["foo"] = 15
+					},
+					Valid = false
+				}
+			}
+		};
+	}
+
+	private static IEnumerable<TestCollection> GetTests()
+	{
+		if (_runSingleTest) return GetSingleTest();
+		if (_runIsolatedTests) return GetIsolatedTests();
+
+		return GetAllTests();
 	}
 
 	public static void LoadRemoteSchemas()
@@ -105,17 +268,22 @@ public class TestSuiteRunner
 		}
 	}
 
+	[GlobalSetup]
+	public void Setup()
+	{
+		_testCollections = GetTests().ToList();
+	}
+
 	[Benchmark]
-	public int RunLegacySuite()
+	public int RunLegacySuiteOnce()
 	{
 		int i = 0;
-		var collections = GetAllTests();
 
-		foreach (var collection in collections)
+		foreach (var collection in _testCollections)
 		{
 			foreach (var test in collection.Tests)
 			{
-				BenchmarkLegacy(collection, test);
+				BenchmarkLegacy(collection, test, 1);
 				i++;
 			}
 		}
@@ -123,27 +291,43 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private static void BenchmarkLegacy(TestCollection collection, TestCase test)
+	[Benchmark]
+	public int RunLegacySuiteManyTimes()
+	{
+		int i = 0;
+
+		foreach (var collection in _testCollections)
+		{
+			foreach (var test in collection.Tests)
+			{
+				BenchmarkLegacy(collection, test, _individualTestRunCount);
+				i++;
+			}
+		}
+
+		return i;
+	}
+
+	private static void BenchmarkLegacy(TestCollection collection, TestCase test, int count)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < count; i++)
 		{
 			var _ = collection.Schema.Evaluate(test.Data, collection.Options);
 		}
 	}
 
 	[Benchmark]
-	public int RunFunctionalSuite()
+	public int RunFunctionalSuiteOnce()
 	{
 		int i = 0;
-		var collections = GetAllTests();
 
-		foreach (var collection in collections)
+		foreach (var collection in _testCollections)
 		{
 			foreach (var test in collection.Tests)
 			{
-				BenchmarkFunctional(collection, test);
+				BenchmarkFunctional(collection, test, 1);
 				i++;
 			}
 		}
@@ -151,13 +335,30 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private static void BenchmarkFunctional(TestCollection collection, TestCase test)
+	[Benchmark]
+	public int RunFunctionalSuiteManyTimes()
+	{
+		int i = 0;
+
+		foreach (var collection in _testCollections)
+		{
+			foreach (var test in collection.Tests)
+			{
+				BenchmarkFunctional(collection, test, _individualTestRunCount);
+				i++;
+			}
+		}
+
+		return i;
+	}
+
+	private static void BenchmarkFunctional(TestCollection collection, TestCase test, int count)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
 		try
 		{
-			for (int i = 0; i < 20; i++)
+			for (int i = 0; i < count; i++)
 			{
 				var _ = collection.Schema.EvaluateCompiled(test.Data, collection.Options);
 			}

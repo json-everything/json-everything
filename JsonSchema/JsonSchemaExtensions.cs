@@ -81,6 +81,13 @@ public static class JsonSchemaExtensions
 
 	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
 	{
+		return GenerateRequirementsUnordered(schema, baseUri, evaluationPath, instanceLocation, options)
+			.OrderByDescending(x => x.SubschemaPath.Segments.Length)
+			.ThenBy(x => x.Priority);
+	}
+
+	private static IEnumerable<Requirement> GenerateRequirementsUnordered(JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
+	{
 		if (schema.BoolValue == true || (!schema.BoolValue.HasValue && !schema.Keywords!.Any()))
 		{
 			yield return new Requirement(evaluationPath, instanceLocation,
@@ -113,13 +120,6 @@ public static class JsonSchemaExtensions
 		}
 
 		schema.GeneratingRequirements.Remove(instanceLocation);
-	}
-
-	public static IEnumerable<Requirement> InOrder(this IEnumerable<Requirement> requirements)
-	{
-		return requirements
-			.OrderByDescending(x => x.SubschemaPath.Segments.Length)
-			.ThenBy(x => x.Priority);
 	}
 
 	public static void Evaluate(this IEnumerable<Requirement> requirements, List<KeywordResult> resultsCache, Dictionary<JsonPointer, JsonNode?> instanceCatalog)

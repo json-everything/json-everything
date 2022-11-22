@@ -129,9 +129,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 		_options = options;
 		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry, true);
-		_requirements = this.GenerateRequirements(BaseUri!, JsonPointer.Empty, JsonPointer.Empty, options)
-			.InOrder()
-			.ToList();
+		_requirements = this.GenerateRequirements(BaseUri!, JsonPointer.Empty, JsonPointer.Empty, options).ToList();
 	}
 
 	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, SchemaRegistry registry, bool selfRegister = false)

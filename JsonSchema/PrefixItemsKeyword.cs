@@ -101,7 +101,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		for (int i = 0; i < ArraySchemas.Count; i++)
 		{
 			var schema = ArraySchemas[i];
-			foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options).InOrder())
+			foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
 			{
 				yield return requirement;
 			}

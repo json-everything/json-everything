@@ -85,7 +85,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		for (var i = 0; i < Schemas.Count; i++)
 		{
 			var subschema = Schemas[i];
-			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation, options).InOrder())
+			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation, options))
 			{
 				yield return requirement;
 			}

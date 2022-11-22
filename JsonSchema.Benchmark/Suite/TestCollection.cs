@@ -6,7 +6,7 @@ namespace Json.Schema.Benchmark.Suite;
 
 public class TestCollection
 {
-	public string Description { get; set; }
+	public string Filename { get; set; }
 	public JsonSchema Schema { get; set; }
 	// ReSharper disable once CollectionNeverUpdated.Global
 	public List<TestCase> Tests { get; set; }

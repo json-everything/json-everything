@@ -142,8 +142,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 					.SelectMany(x => x.Pattern.Value.GenerateRequirements(baseUri,
 							subschemaPath.Combine(Name, x.Pattern.Key.ToString()),
 							instanceLocation.Combine(x.Value.Key),
-							options)
-						.InOrder());
+							options));
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
