@@ -106,7 +106,7 @@ public class TestSuiteRunner
 	}
 
 	[Benchmark]
-	public int RunSuite()
+	public int RunLegacySuite()
 	{
 		int i = 0;
 		var collections = GetAllTests();
@@ -115,7 +115,7 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				Benchmark(collection, test);
+				BenchmarkLegacy(collection, test);
 				i++;
 			}
 		}
@@ -123,11 +123,49 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private static void Benchmark(TestCollection collection, TestCase test)
+	private static void BenchmarkLegacy(TestCollection collection, TestCase test)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		var result = collection.Schema.Evaluate(test.Data, collection.Options);
+		for (int i = 0; i < 20; i++)
+		{
+			var _ = collection.Schema.Evaluate(test.Data, collection.Options);
+		}
+	}
+
+	[Benchmark]
+	public int RunFunctionalSuite()
+	{
+		int i = 0;
+		var collections = GetAllTests();
+
+		foreach (var collection in collections)
+		{
+			foreach (var test in collection.Tests)
+			{
+				BenchmarkFunctional(collection, test);
+				i++;
+			}
+		}
+
+		return i;
+	}
+
+	private static void BenchmarkFunctional(TestCollection collection, TestCase test)
+	{
+		if (!InstanceIsDeserializable(test.Data)) return;
+
+		try
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				var _ = collection.Schema.EvaluateCompiled(test.Data, collection.Options);
+			}
+		}
+		catch
+		{
+			// ignored
+		}
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)
