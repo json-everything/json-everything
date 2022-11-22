@@ -51,12 +51,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 			return;
 		}
 
-		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Evaluate();
-		context.Pop();
-		var result = context.LocalResult.IsValid;
-		if (!result)
-			context.LocalResult.Fail();
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(Schema));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
