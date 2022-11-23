@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Humanizer;
 using Json.More;
 using NUnit.Framework;
 
@@ -16,7 +15,7 @@ public class Suite
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
-	private const bool _useExternal = true;
+	private const bool _useExternal = false;
 	private const bool _runDraftNext = true;
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../JSON-Schema-Test-Suite/remotes";
