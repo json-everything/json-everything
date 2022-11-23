@@ -55,7 +55,7 @@ public class EvaluationResults
 	/// Because <see cref="NestedResults"/> is lazily loaded, this property allows the check without
 	/// the side effect of allocating a list object.
 	/// </remarks>
-	public bool HasNestedResults => _nestedResults is not (null or{ Count: 0 });
+	public bool HasNestedResults => _nestedResults is not (null or { Count: 0 });
 
 	/// <summary>
 	/// The collection of annotations from this node.
@@ -141,6 +141,11 @@ public class EvaluationResults
 			_nestedResults = new List<EvaluationResults>();
 		else
 			_nestedResults.Clear();
+		foreach (var child in children)
+		{
+			child._nestedResults?.Clear();
+			child.Format = OutputFormat.Basic;
+		}
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 		Format = OutputFormat.Basic;
 	}
@@ -414,18 +419,54 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		writer.WritePropertyName("instanceLocation");
 		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
 
+		bool skipCloseObject = false;
 		if (!value.IsValid)
 		{
 			if (value.HasErrors && value.Errors!.TryGetValue(string.Empty, out var localError))
 				writer.WriteString("error", localError);
 
-			if ((value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty)) || value.NestedResults.Any())
+			if (value.Format == OutputFormat.Hierarchical)
 			{
-				writer.WritePropertyName("errors");
-				JsonSerializer.Serialize(writer, value.NestedResults, options);
-
-				if (value.HasErrors)
+				if ((value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty)) || value.NestedResults.Any())
 				{
+					writer.WritePropertyName("errors");
+
+					writer.WriteStartArray();
+
+					foreach (var result in value.NestedResults)
+					{
+						JsonSerializer.Serialize(writer, result, options);
+					}
+
+					if (value.HasErrors)
+					{
+						foreach (var error in value.Errors!)
+						{
+							WriteError(writer, value, error.Key, error.Value, options);
+						}
+					}
+
+					writer.WriteEndArray();
+				}
+			}
+			else
+			{
+				if (value.HasNestedResults)
+				{
+					writer.WritePropertyName("errors");
+					writer.WriteStartArray();
+
+					foreach (var result in value.NestedResults)
+					{
+						JsonSerializer.Serialize(writer, result, options);
+					}
+					writer.WriteEndArray();
+				}
+
+				if (value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty))
+				{
+					skipCloseObject = true;
+					writer.WriteEndObject();
 					foreach (var error in value.Errors!)
 					{
 						WriteError(writer, value, error.Key, error.Value, options);
@@ -433,35 +474,73 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 				}
 			}
 		}
-		else if ((value.HasAnnotations && value.Annotations!.Any()) || value.NestedResults.Any())
+		else
 		{
-			writer.WritePropertyName("annotations");
-			writer.WriteStartArray();
-
-			var annotations = value.Annotations.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
-
-			foreach (var result in value.NestedResults)
+			if (value.Format == OutputFormat.Hierarchical)
 			{
-				var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
-				if (annotation != null)
+				if ((value.HasAnnotations && value.Annotations!.Any()) || value.NestedResults.Any())
 				{
-					WriteAnnotation(writer, value, annotation, options);
-				}
-				else
-				{
-					JsonSerializer.Serialize(writer, result, options);
+					writer.WritePropertyName("annotations");
+					writer.WriteStartArray();
+
+					var annotations = value.Annotations.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
+
+					// this too
+
+					foreach (var result in value.NestedResults)
+					{
+						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
+						if (annotation != null)
+						{
+							WriteAnnotation(writer, value, annotation, options);
+						}
+						else
+						{
+							JsonSerializer.Serialize(writer, result, options);
+						}
+					}
+
+					foreach (var annotation in annotations)
+					{
+						WriteAnnotation(writer, value, annotation, options);
+					}
+
+					writer.WriteEndArray();
 				}
 			}
-
-			foreach (var annotation in annotations)
+			else
 			{
-				WriteAnnotation(writer, value, annotation, options);
-			}
+				var annotations = value.Annotations?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? Array.Empty<Annotation>();
 
-			writer.WriteEndArray();
+				if (value.HasNestedResults)
+				{
+					writer.WritePropertyName("annotations");
+					writer.WriteStartArray();
+
+					foreach (var result in value.NestedResults)
+					{
+						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
+						if (annotation != null) continue;
+
+						JsonSerializer.Serialize(writer, result, options);
+					}
+					writer.WriteEndArray();
+				}
+
+				if (value.HasAnnotations)
+				{
+					skipCloseObject = true;
+					writer.WriteEndObject();
+					foreach (var annotation in annotations)
+					{
+						WriteAnnotation(writer, value, annotation, options);
+					}
+				}
+			}
 		}
 
-		writer.WriteEndObject();
+		if (!skipCloseObject)
+			writer.WriteEndObject();
 	}
 
 	private static void WriteError(Utf8JsonWriter writer, EvaluationResults value, string keyword, string error, JsonSerializerOptions options)
