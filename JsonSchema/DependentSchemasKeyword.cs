@@ -91,7 +91,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, cache, catalog) =>
@@ -99,14 +99,14 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IRefResolvable, IKeye
 				if (node is not JsonObject obj) return null;
 
 				var additionalSchemas = Schemas.Where(x => obj.ContainsKey(x.Key)).ToList();
-				var dynamicRequirements = additionalSchemas.SelectMany(x => x.Value.GenerateRequirements(baseUri, subschemaPath.Combine(Name, x.Key), instanceLocation, options));
+				var dynamicRequirements = additionalSchemas.SelectMany(x => x.Value.GenerateRequirements(scope, subschemaPath.Combine(Name, x.Key), instanceLocation, options));
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				var relevantEvaluationPaths = additionalSchemas.Select(x => subschemaPath.Combine(Name, x.Key));
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 				var isValid = relevantResults.All(x => x.ValidationResult != false);
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = isValid,
 					Error = isValid

@@ -129,13 +129,13 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		IEnumerable<Requirement> GetDynamicRequirements(IEnumerable<string> targetProperties)
 		{
 			foreach (var property in targetProperties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(property), options))
+				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(property), options))
 				{
 					yield return requirement;
 				}
@@ -159,7 +159,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 				var dynamicRequirements = GetDynamicRequirements(targetPropertyNames);
 				dynamicRequirements.Evaluate(cache, catalog);
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
 					Annotation = annotation

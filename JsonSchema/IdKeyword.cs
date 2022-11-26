@@ -66,7 +66,7 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		return Enumerable.Empty<Requirement>();
 	}

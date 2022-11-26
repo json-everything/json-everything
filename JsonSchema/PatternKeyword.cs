@@ -83,7 +83,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, _, _) =>
@@ -93,7 +93,7 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 				var value = node!.AsValue().GetValue<string>();
 				var isValid = Value.IsMatch(value);
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = isValid,
 					Error = isValid ? null : ErrorMessages.Pattern.ReplaceTokens(("received", value), ("pattern", Value.ToString()))

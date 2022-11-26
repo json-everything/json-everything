@@ -73,7 +73,7 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(_, cache, catalog) =>
@@ -81,12 +81,12 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 				var ifAnnotation = cache.GetLocalAnnotation(subschemaPath, IfKeyword.Name);
 				if (!ifAnnotation?.GetValue<bool>() ?? true) return null;
 
-				var dynamicRequirements = Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation, options);
+				var dynamicRequirements = Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation, options);
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				var localResults = cache.GetLocalResults(subschemaPath, Name);
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = localResults.All(x => x.ValidationResult != false)
 				};

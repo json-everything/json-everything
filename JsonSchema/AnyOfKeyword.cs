@@ -78,14 +78,14 @@ public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		var relevantEvaluationPaths = Enumerable.Range(0, Schemas.Count).Select(i => subschemaPath.Combine(Name, i));
 
 		for (var i = 0; i < Schemas.Count; i++)
 		{
 			var subschema = Schemas[i];
-			foreach (var requirement in subschema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation, options))
+			foreach (var requirement in subschema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation, options))
 			{
 				yield return requirement;
 			}
@@ -96,7 +96,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			{
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 				var groupedBySubschema = relevantResults.GroupBy(x => x.SubschemaPath);
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = groupedBySubschema.Any(x => x.All(y => y.ValidationResult != false))
 				};

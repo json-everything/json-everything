@@ -81,7 +81,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		if (!Value) yield break;
 
@@ -101,14 +101,14 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 				if (duplicates.Any())
 				{
 					var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-					return new KeywordResult(subschemaPath, baseUri, instanceLocation)
+					return new KeywordResult(subschemaPath, scope.LocalScope, instanceLocation)
 					{
 						ValidationResult = false,
 						Error = ErrorMessages.UniqueItems.ReplaceTokens(("duplicates", pairs))
 					};
 				}
 
-				return new KeywordResult(subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = true
 				};

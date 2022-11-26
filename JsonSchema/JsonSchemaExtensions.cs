@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -80,19 +81,19 @@ public static class JsonSchemaExtensions
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 
-	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
+	public static IEnumerable<Requirement> GenerateRequirements(this JsonSchema schema, DynamicScope scope, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		return GenerateRequirementsUnordered(schema, baseUri, evaluationPath, instanceLocation, options)
+		return GenerateRequirementsUnordered(schema, scope, evaluationPath, instanceLocation, options)
 			.OrderByDescending(x => x.SubschemaPath.Segments.Length)
 			.ThenBy(x => x.Priority);
 	}
 
-	private static IEnumerable<Requirement> GenerateRequirementsUnordered(JsonSchema schema, Uri baseUri, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
+	private static IEnumerable<Requirement> GenerateRequirementsUnordered(JsonSchema schema, DynamicScope scope, JsonPointer evaluationPath, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		if (schema.BoolValue == true || (!schema.BoolValue.HasValue && !schema.Keywords!.Any()))
 		{
 			yield return new Requirement(evaluationPath, instanceLocation,
-				(_, _, _) => new KeywordResult(evaluationPath, baseUri, instanceLocation)
+				(_, _, _) => new KeywordResult(evaluationPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = true
 				});
@@ -102,7 +103,7 @@ public static class JsonSchemaExtensions
 		if (schema.BoolValue == false)
 		{
 			yield return new Requirement(evaluationPath, instanceLocation,
-				(_, _, _) => new KeywordResult(evaluationPath, baseUri, instanceLocation)
+				(_, _, _) => new KeywordResult(evaluationPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = false,
 					Error = "All values fail the false schema"
@@ -114,8 +115,11 @@ public static class JsonSchemaExtensions
 
 		schema.GeneratingRequirements.Add(instanceLocation);
 
+		if (schema.BaseUri != scope.LocalScope)
+			scope = scope.Append(schema.BaseUri!);
+
 		var keywords = options.FilterKeywords(schema.Keywords!);
-		var requirements = keywords.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri!, instanceLocation, options));
+		var requirements = keywords.SelectMany(k => k.GetRequirements(evaluationPath, scope, instanceLocation, options));
 		foreach (var requirement in requirements)
 		{
 			yield return requirement;
@@ -159,5 +163,32 @@ public static class JsonSchemaExtensions
 #else
 		return items;
 #endif
+	}
+}
+
+public class DynamicScope : IEnumerable<Uri>
+{
+	private readonly Uri[] _scope;
+
+	public Uri LocalScope => _scope[_scope.Length - 1];
+
+	internal DynamicScope(IEnumerable<Uri> scope)
+	{
+		_scope = scope.ToArray();
+	}
+
+	public DynamicScope Append(Uri localScope)
+	{
+		return new DynamicScope(_scope.Append(localScope));
+	}
+
+	public IEnumerator<Uri> GetEnumerator()
+	{
+		return ((IEnumerable<Uri>)_scope).GetEnumerator();
+	}
+
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
 	}
 }

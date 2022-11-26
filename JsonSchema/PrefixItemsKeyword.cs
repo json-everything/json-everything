@@ -96,12 +96,12 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		for (int i = 0; i < ArraySchemas.Count; i++)
 		{
 			var schema = ArraySchemas[i];
-			foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
+			foreach (var requirement in schema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
 			{
 				yield return requirement;
 			}
@@ -119,7 +119,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 
 				var validCount = relevantResults.TakeWhile(x => x.ValidationResult != false).Count();
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = itemCount == validCount,
 					Annotation = arr.Count == validCount ? true : validCount-1

@@ -97,12 +97,12 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		if (Value is UnknownFormat && options.OnlyKnownFormats)
 		{
 			yield return new Requirement(subschemaPath, instanceLocation,
-				(_, _, _) => new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				(_, _, _) => new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					Error = ErrorMessages.UnknownFormat.ReplaceTokens(("format", Value.Key))
 				});
@@ -120,7 +120,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 			{
 				var isValid = Value.Validate(node, out var error);
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = isValid,
 					Error = isValid ? null : error

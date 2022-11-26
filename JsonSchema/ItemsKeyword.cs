@@ -168,13 +168,13 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		IEnumerable<Requirement> GetDynamicRequirements(int startIndex, int itemCount)
 		{
 			for (var i = startIndex; i < itemCount; i++)
 			{
-				foreach (var requirement in SingleSchema.GenerateRequirements(baseUri, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in SingleSchema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
 				{
 					yield return requirement;
 				}
@@ -200,7 +200,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 					var dynamicRequirements = GetDynamicRequirements(lastIndex + 1, arr.Count);
 					dynamicRequirements.Evaluate(cache, catalog);
 
-					return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+					return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 					{
 						ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false),
 						Annotation = true
@@ -212,7 +212,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			for (int i = 0; i < ArraySchemas!.Count; i++)
 			{
 				var schema = ArraySchemas[i];
-				foreach (var requirement in schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
+				foreach (var requirement in schema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
 				{
 					yield return requirement;
 				}
@@ -230,7 +230,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 
 					var validCount = relevantResults.TakeWhile(x => x.ValidationResult != false).Count();
 
-					return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+					return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 					{
 						ValidationResult = itemCount == validCount,
 						Annotation = arr.Count == validCount ? true : validCount - 1

@@ -43,6 +43,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	public bool? BoolValue { get; }
 
 	internal Uri? BaseUri { get; set; }
+	internal bool IsResource { get; set; }
+	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
 
 	private JsonSchema(bool value)
 	{
@@ -132,12 +134,14 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		{
 			var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
 			_options.DetermineDraft(metaSchemaUri);
-			PopulateBaseUris(this, _options.DefaultBaseUri, _options.EvaluatingAs, true);
+			PopulateBaseUris(this, this, _options.DefaultBaseUri, _options.SchemaRegistry, _options.EvaluatingAs, true);
 		}
-		_requirements = this.GenerateRequirements(BaseUri!, JsonPointer.Empty, JsonPointer.Empty, options).ToList();
+
+		var scope = new DynamicScope(new[] { BaseUri! });
+		_requirements = this.GenerateRequirements(scope, JsonPointer.Empty, JsonPointer.Empty, options).ToList();
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, Draft evaluatingAs, bool selfRegister = false)
+	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, Draft evaluatingAs, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
 		if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
@@ -149,7 +153,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		
 		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
 
-		var registry = schema._options!.SchemaRegistry;
 		if (idKeyword == null)
 		{
 			schema.BaseUri = currentBaseUri;
@@ -158,6 +161,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 		else
 		{
+			resourceRoot = schema;
 			if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
 				idKeyword.Id.OriginalString[0] == '#' &&
 				AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
@@ -173,20 +177,18 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 
 		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
-		if (anchorKeyword != null) 
-			registry.RegisterAnchor(schema.BaseUri, anchorKeyword.Anchor, schema);
+		if (anchorKeyword != null)
+			resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
 
 		var dynamicAnchorKeyword = schema.Keywords!.OfType<DynamicAnchorKeyword>().FirstOrDefault();
 		if (dynamicAnchorKeyword != null)
-		{
-			// TODO: need to do something here
-		}
+			resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
 
 		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
 
 		foreach (var subschema in subschemas)
 		{
-			PopulateBaseUris(subschema, schema.BaseUri, evaluatingAs);
+			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
 		}
 	}
 

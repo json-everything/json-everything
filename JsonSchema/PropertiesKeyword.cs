@@ -96,14 +96,14 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		var annotation = JsonSerializer.SerializeToNode(Properties.Keys);
 		var relevantEvaluationPaths = Properties.Keys.Select(k => subschemaPath.Combine(Name, k));
 
 		foreach (var property in Properties)
 		{
-			foreach (var subschema in property.Value.GenerateRequirements(baseUri, subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key), options))
+			foreach (var subschema in property.Value.GenerateRequirements(scope, subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key), options))
 			{
 				yield return subschema;
 			}
@@ -116,7 +116,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 				
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
 					Annotation = annotation

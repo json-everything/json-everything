@@ -98,7 +98,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, cache, catalog) =>
@@ -115,13 +115,13 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 					return default;
 				}).Where(x => x != default);
 
-				var dynamicRequirements = applicableSchemas.SelectMany(x => x.Schema.GenerateRequirements(baseUri, subschemaPath.Combine(Name, x.Key, x.Value), instanceLocation, options));
+				var dynamicRequirements = applicableSchemas.SelectMany(x => x.Schema.GenerateRequirements(scope, subschemaPath.Combine(Name, x.Key, x.Value), instanceLocation, options));
 				dynamicRequirements.Evaluate(cache, catalog);
 
 				var relevantEvaluationPath = subschemaPath.Combine(Name);
 				var relevantResults = cache.Where(x => x.SubschemaPath.StartsWith(relevantEvaluationPath));
 
-				return new KeywordResult(subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = relevantResults.All(x => x.ValidationResult != false)
 				};

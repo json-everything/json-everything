@@ -136,12 +136,12 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		var newUri = new Uri(baseUri, Reference);
+		var newUri = new Uri(scope.LocalScope, Reference);
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
-		JsonSchema? targetSchema;
+		JsonSchema? targetSchema = null;
 		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
 		{
 			var targetBase = options.SchemaRegistry.Get(newBaseUri);
@@ -154,19 +154,21 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			var anchorFragment = newUri.Fragment.Substring(1);
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonException($"Unrecognized fragment type `{newUri}`");
-			targetSchema = options.SchemaRegistry.Get(newBaseUri, anchorFragment);
+			if (options.SchemaRegistry.Get(newBaseUri)?.Anchors.TryGetValue(anchorFragment, out var anchorDefinition) ?? false) 
+				targetSchema = anchorDefinition.Schema;
 		}
 
 		if (targetSchema == null)
-			throw new JsonException($"Cannot resolve schema from fragment `{newUri}`");
+			throw new JsonException($"Cannot resolve schema `{newUri}`");
 
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(_, cache, catalog) =>
 			{
-				var dynamicRequirements = targetSchema.GenerateRequirements(newUri, subschemaPath.Combine(Name), instanceLocation, options);
+				var newScope = scope.Append(newUri);
+				var dynamicRequirements = targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation, options);
 				dynamicRequirements.Evaluate(cache, catalog);
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)
 				};

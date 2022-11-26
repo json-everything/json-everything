@@ -117,7 +117,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
 			(node, cache, catalog) =>
@@ -139,7 +139,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 				var relevantEvaluationPaths = allPatternChecks.Select(x => x.Pattern.Key.ToString()).Distinct().Select(x => subschemaPath.Combine(Name, x));
 
 				var dynamicRequirements = allPatternChecks
-					.SelectMany(x => x.Pattern.Value.GenerateRequirements(baseUri,
+					.SelectMany(x => x.Pattern.Value.GenerateRequirements(scope,
 							subschemaPath.Combine(Name, x.Pattern.Key.ToString()),
 							instanceLocation.Combine(x.Value.Key),
 							options));
@@ -147,7 +147,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 
-				return new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = relevantResults.All(x => x.ValidationResult != false),
 					Annotation = JsonSerializer.SerializeToNode(annotation)

@@ -53,10 +53,10 @@ public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, _, _) => new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+			(_, _, _) => new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 			{
 				Annotation = Value
 			});

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -136,9 +137,56 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		var newUri = new Uri(scope.LocalScope, Reference);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+
+		JsonSchema? targetSchema = null;
+		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
+		{
+			var targetBase = options.SchemaRegistry.Get(newBaseUri);
+			if (targetBase == null)
+				throw new JsonException($"Cannot resolve base schema from `{newUri}`");
+			targetSchema = targetBase.FindSubschema(pointerFragment!, newBaseUri).Item1;
+		}
+		else
+		{
+			var anchorFragment = newUri.Fragment.Substring(1);
+			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+				throw new JsonException($"Unrecognized fragment type `{newUri}`");
+			foreach (var id in scope)
+			{
+				var targetBase = options.SchemaRegistry.Get(id);
+				if (targetBase == null)
+					throw new JsonException($"Cannot resolve base schema `{id}`");
+				if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchor) && anchor.IsDynamic)
+				{
+					targetSchema = anchor.Schema;
+					break;
+				}
+			}
+			// if we don't find a dynamic anchor, use the $ref behavior
+			if (targetSchema == null &&
+			    (options.SchemaRegistry.Get(newBaseUri)?.Anchors.TryGetValue(anchorFragment, out var anchorDefinition) ?? false))
+				targetSchema = anchorDefinition.Schema;
+		}
+
+		if (targetSchema == null)
+			throw new JsonException($"Cannot resolve schema `{newUri}`");
+
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(_, cache, catalog) =>
+			{
+				var newScope = scope.Append(newUri);
+				var dynamicRequirements = targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation, options);
+				dynamicRequirements.Evaluate(cache, catalog);
+
+				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
+				{
+					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)
+				};
+			});
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
