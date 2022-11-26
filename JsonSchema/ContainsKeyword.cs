@@ -146,6 +146,8 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 				}
 				else if (node is JsonObject obj)
 				{
+					if (options.EvaluatingAs != Draft.Unspecified && !options.EvaluatingAs.HasFlag(Draft.DraftNext)) return null;
+
 					dynamicRequirements = GetObjectRequirements(obj.Select(x => x.Key));
 					selector = x => x.InstanceLocation.Segments.Last().Value;
 				}

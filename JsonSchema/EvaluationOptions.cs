@@ -139,6 +139,50 @@ public class EvaluationOptions
 		return options;
 	}
 
+	internal void DetermineDraft(Uri? metaSchemaId)
+	{
+		var currentlyEvaluatingAs = EvaluateAs;
+		EvaluatingAs = Draft.Unspecified;
+		while (metaSchemaId != null && EvaluatingAs == Draft.Unspecified)
+		{
+			EvaluatingAs = metaSchemaId.OriginalString switch
+			{
+				MetaSchemas.Draft6IdValue => Draft.Draft6,
+				MetaSchemas.Draft7IdValue => Draft.Draft7,
+				MetaSchemas.Draft201909IdValue => Draft.Draft201909,
+				MetaSchemas.Draft202012IdValue => Draft.Draft202012,
+				MetaSchemas.DraftNextIdValue => Draft.DraftNext,
+				_ => Draft.Unspecified
+			};
+			if (EvaluatingAs != Draft.Unspecified) return;
+
+			var metaSchema = SchemaRegistry.Get(metaSchemaId);
+			if (metaSchema == null) break;
+
+			var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+			if (newMetaSchemaId == metaSchemaId)
+				throw new InvalidOperationException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
+
+			metaSchemaId = newMetaSchemaId;
+		}
+
+		if (EvaluatingAs == Draft.Unspecified)
+			EvaluatingAs = currentlyEvaluatingAs;
+	}
+
+	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords)
+	{
+		return EvaluatingAs switch
+		{
+			Draft.Draft6 or
+				Draft.Draft7 => DisallowSiblingRef(keywords, EvaluatingAs),
+			Draft.Draft201909 or
+				Draft.Draft202012 or
+				Draft.DraftNext => AllowSiblingRef(keywords, EvaluatingAs),
+			_ => ByOption(keywords)
+		};
+	}
+
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri? metaSchemaId, SchemaRegistry registry)
 	{
 		var currentlyEvaluatingAs = EvaluateAs;

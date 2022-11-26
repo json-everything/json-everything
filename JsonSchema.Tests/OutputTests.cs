@@ -56,7 +56,7 @@ public class OutputTests
 		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Basic);
 		var expected = @"{
   ""valid"": true,
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": true,
       ""evaluationPath"": """",
@@ -78,7 +78,7 @@ public class OutputTests
 		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Basic);
 		var expected = @"{
   ""valid"": false,
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/fails"",
@@ -108,7 +108,7 @@ public class OutputTests
       ""passes""
     ]
   },
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": true,
       ""evaluationPath"": ""/properties/passes"",
@@ -130,7 +130,7 @@ public class OutputTests
   ""evaluationPath"": """",
   ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/fails"",
@@ -164,7 +164,7 @@ public class OutputTests
       ""fails""
     ]
   },
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/fails"",
@@ -193,13 +193,13 @@ public class OutputTests
       ""multi""
     ]
   },
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": true,
       ""evaluationPath"": ""/properties/multi"",
       ""schemaLocation"": ""https://test.com/schema#/properties/multi"",
       ""instanceLocation"": ""/multi"",
-      ""nested"": [
+      ""details"": [
         {
           ""valid"": true,
           ""evaluationPath"": ""/properties/multi/allOf/0"",
@@ -219,7 +219,7 @@ public class OutputTests
           ""evaluationPath"": ""/properties/multi/allOf/1"",
           ""schemaLocation"": ""https://test.com/schema#/$defs/integer/properties/multi/allOf/1"",
           ""instanceLocation"": ""/multi"",
-          ""nested"": [
+          ""details"": [
             {
               ""valid"": true,
               ""evaluationPath"": ""/properties/multi/allOf/1/$ref"",
@@ -245,19 +245,19 @@ public class OutputTests
   ""evaluationPath"": """",
   ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/multi"",
       ""schemaLocation"": ""https://test.com/schema#/properties/multi"",
       ""instanceLocation"": ""/multi"",
-      ""nested"": [
+      ""details"": [
         {
           ""valid"": false,
           ""evaluationPath"": ""/properties/multi/allOf/0"",
           ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/0"",
           ""instanceLocation"": ""/multi"",
-          ""nested"": [
+          ""details"": [
             {
               ""valid"": false,
               ""evaluationPath"": ""/properties/multi/allOf/0/$ref"",
@@ -274,7 +274,7 @@ public class OutputTests
           ""evaluationPath"": ""/properties/multi/allOf/1"",
           ""schemaLocation"": ""https://test.com/schema#/$defs/integer/properties/multi/allOf/1"",
           ""instanceLocation"": ""/multi"",
-          ""nested"": [
+          ""details"": [
             {
               ""valid"": false,
               ""evaluationPath"": ""/properties/multi/allOf/1/$ref"",
@@ -303,7 +303,7 @@ public class OutputTests
   ""evaluationPath"": """",
   ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/fails"",
@@ -328,7 +328,7 @@ public class OutputTests
   ""evaluationPath"": """",
   ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/fails"",
@@ -353,13 +353,13 @@ public class OutputTests
   ""evaluationPath"": """",
   ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/refs"",
       ""schemaLocation"": ""https://test.com/schema#/properties/refs"",
       ""instanceLocation"": ""/refs"",
-      ""nested"": [
+      ""details"": [
         {
           ""valid"": false,
           ""evaluationPath"": ""/properties/refs/$ref"",
@@ -494,7 +494,7 @@ public class OutputTests
 
 		var expected = @"{
   ""valid"": false,
-  ""nested"": [
+  ""details"": [
     {
       ""valid"": false,
       ""evaluationPath"": """",

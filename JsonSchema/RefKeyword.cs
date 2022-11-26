@@ -139,7 +139,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		var newUri = new Uri(baseUri, Reference);
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Path));
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 		JsonSchema? targetSchema;
 		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))

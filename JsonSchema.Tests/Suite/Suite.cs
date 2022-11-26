@@ -170,7 +170,7 @@ public class Suite
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
-		var result = collection.Schema.EvaluateCompiled(test.Data);
+		var result = collection.Schema.EvaluateCompiled(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -25,6 +26,8 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	/// </summary>
 	public const string Name = "contentSchema";
 
+	private readonly JsonNode _schemaAsNode;
+
 	/// <summary>
 	/// The schema against which to evaluate the content.
 	/// </summary>
@@ -37,6 +40,13 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	public ContentSchemaKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
+		_schemaAsNode = JsonSerializer.SerializeToNode(value)!;
+	}
+
+	internal ContentSchemaKeyword(JsonSchema value, JsonNode asNode)
+	{
+		Schema = value ?? throw new ArgumentNullException(nameof(value));
+		_schemaAsNode = asNode;
 	}
 
 	/// <summary>
@@ -64,7 +74,11 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 
 	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, Uri baseUri, JsonPointer instanceLocation, EvaluationOptions options)
 	{
-		throw new NotImplementedException();
+		yield return new Requirement(subschemaPath, instanceLocation,
+			(_, _, _) => new KeywordResult(Name, subschemaPath, baseUri, instanceLocation)
+			{
+				Annotation = _schemaAsNode
+			});
 	}
 
 	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
@@ -102,9 +116,10 @@ internal class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSchemaKe
 {
 	public override ContentSchemaKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
+		var asNode = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var schema = asNode.Deserialize<JsonSchema>(options);
 
-		return new ContentSchemaKeyword(schema);
+		return new ContentSchemaKeyword(schema!, asNode!);
 	}
 	public override void Write(Utf8JsonWriter writer, ContentSchemaKeyword value, JsonSerializerOptions options)
 	{

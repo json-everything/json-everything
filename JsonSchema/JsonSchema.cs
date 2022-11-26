@@ -128,16 +128,28 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		if (_options != null && _options.GetHashValue() == options.GetHashValue()) return;
 
 		_options = options;
-		PopulateBaseUris(this, _options.DefaultBaseUri, _options.SchemaRegistry, true);
+		if (!BoolValue.HasValue)
+		{
+			var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+			_options.DetermineDraft(metaSchemaUri);
+			PopulateBaseUris(this, _options.DefaultBaseUri, _options.EvaluatingAs, true);
+		}
 		_requirements = this.GenerateRequirements(BaseUri!, JsonPointer.Empty, JsonPointer.Empty, options).ToList();
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, SchemaRegistry registry, bool selfRegister = false)
+	private static void PopulateBaseUris(JsonSchema schema, Uri currentBaseUri, Draft evaluatingAs, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
-
+		if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
+		    schema.Keywords!.Any(x => x is RefKeyword))
+		{
+			schema.BaseUri = currentBaseUri;
+			return;
+		}
+		
 		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
 
+		var registry = schema._options!.SchemaRegistry;
 		if (idKeyword == null)
 		{
 			schema.BaseUri = currentBaseUri;
@@ -146,19 +158,35 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 		else
 		{
-			schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
-			registry.RegisterSchema(schema.BaseUri, schema);
+			if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
+				idKeyword.Id.OriginalString[0] == '#' &&
+				AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
+			{
+				schema.BaseUri = currentBaseUri;
+				registry.RegisterAnchor(schema.BaseUri, idKeyword.Id.OriginalString.Substring(1), schema);
+			}
+			else
+			{
+				schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
+				registry.RegisterSchema(schema.BaseUri, schema);
+			}
 		}
 
 		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
 		if (anchorKeyword != null) 
 			registry.RegisterAnchor(schema.BaseUri, anchorKeyword.Anchor, schema);
 
+		var dynamicAnchorKeyword = schema.Keywords!.OfType<DynamicAnchorKeyword>().FirstOrDefault();
+		if (dynamicAnchorKeyword != null)
+		{
+			// TODO: need to do something here
+		}
+
 		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
 
 		foreach (var subschema in subschemas)
 		{
-			PopulateBaseUris(subschema, schema.BaseUri, registry);
+			PopulateBaseUris(subschema, schema.BaseUri, evaluatingAs);
 		}
 	}
 

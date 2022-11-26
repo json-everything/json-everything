@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 using Json.More;
 using Json.Pointer;
 
@@ -113,7 +114,8 @@ public static class JsonSchemaExtensions
 
 		schema.GeneratingRequirements.Add(instanceLocation);
 
-		var requirements = schema.Keywords!.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri, instanceLocation, options));
+		var keywords = options.FilterKeywords(schema.Keywords!);
+		var requirements = keywords.SelectMany(k => k.GetRequirements(evaluationPath, schema.BaseUri!, instanceLocation, options));
 		foreach (var requirement in requirements)
 		{
 			yield return requirement;
