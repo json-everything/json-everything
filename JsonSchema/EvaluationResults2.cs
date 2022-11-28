@@ -51,7 +51,7 @@ public class EvaluationResults2
 	/// Because <see cref="NestedResults"/> is lazily loaded, this property allows the check without
 	/// the side effect of allocating a list object.
 	/// </remarks>
-	public bool HasNestedResults => _nestedResults is not (null or{ Count: 0 });
+	public bool HasNestedResults => _nestedResults is not (null or { Count: 0 });
 
 	/// <summary>
 	/// The collection of annotations from this node.
@@ -75,7 +75,7 @@ public class EvaluationResults2
 
 	internal bool IncludeDroppedAnnotations { get; private set; }
 
-	internal EvaluationResults2(){}
+	internal EvaluationResults2() { }
 }
 
 internal class EvaluationResults2JsonConverter : JsonConverter<EvaluationResults2>

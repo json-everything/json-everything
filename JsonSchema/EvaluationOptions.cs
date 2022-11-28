@@ -31,18 +31,6 @@ public class EvaluationOptions
 	/// Specifies the output format.
 	/// </summary>
 	public OutputFormat OutputFormat { get; set; }
-
-	/// <summary>
-	/// The local schema registry.  If a schema is not found here, it will
-	/// automatically check the global registry as well.
-	/// </summary>
-	public SchemaRegistry SchemaRegistry { get; }
-
-	/// <summary>
-	/// The local vocabulary registry.  If a schema is not found here, it will
-	/// automatically check the global registry as well.
-	/// </summary>
-	public VocabularyRegistry VocabularyRegistry { get; } = new();
 	/// <summary>
 	/// Specifies a default URI to be used when a schema is missing a
 	/// </summary>
@@ -51,6 +39,18 @@ public class EvaluationOptions
 		get => _defaultBaseUri ??= new Uri("https://json-everything/base");
 		set => _defaultBaseUri = value;
 	}
+
+	/// <summary>
+	/// The local schema registry.  If a schema is not found here, it will
+	/// automatically check the global registry as well.
+	/// </summary>
+	public SchemaRegistry SchemaRegistry { get; private set; }
+
+	/// <summary>
+	/// The local vocabulary registry.  If a schema is not found here, it will
+	/// automatically check the global registry as well.
+	/// </summary>
+	public VocabularyRegistry VocabularyRegistry { get; } = new();
 
 	/// <summary>
 	/// Gets or sets the indent level for the log.
@@ -103,7 +103,7 @@ public class EvaluationOptions
 
 	static EvaluationOptions()
 	{
-		Default.SchemaRegistry.InitializeMetaSchemas();
+		Default.SchemaRegistry = SchemaRegistry.Global;
 	}
 
 	/// <summary>
@@ -111,7 +111,7 @@ public class EvaluationOptions
 	/// </summary>
 	public EvaluationOptions()
 	{
-		SchemaRegistry = new SchemaRegistry(this);
+		SchemaRegistry = new SchemaRegistry();
 	}
 
 	/// <summary>
@@ -125,7 +125,6 @@ public class EvaluationOptions
 		{
 			EvaluateAs = other.EvaluateAs,
 			OutputFormat = other.OutputFormat,
-			DefaultBaseUri = other.DefaultBaseUri,
 			ValidateAgainstMetaSchema = other.ValidateAgainstMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
 			ProcessCustomKeywords = other.ProcessCustomKeywords,
@@ -137,37 +136,6 @@ public class EvaluationOptions
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 		options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
 		return options;
-	}
-
-	internal void DetermineDraft(Uri? metaSchemaId)
-	{
-		var currentlyEvaluatingAs = EvaluateAs;
-		EvaluatingAs = Draft.Unspecified;
-		while (metaSchemaId != null && EvaluatingAs == Draft.Unspecified)
-		{
-			EvaluatingAs = metaSchemaId.OriginalString switch
-			{
-				MetaSchemas.Draft6IdValue => Draft.Draft6,
-				MetaSchemas.Draft7IdValue => Draft.Draft7,
-				MetaSchemas.Draft201909IdValue => Draft.Draft201909,
-				MetaSchemas.Draft202012IdValue => Draft.Draft202012,
-				MetaSchemas.DraftNextIdValue => Draft.DraftNext,
-				_ => Draft.Unspecified
-			};
-			if (EvaluatingAs != Draft.Unspecified) return;
-
-			var metaSchema = SchemaRegistry.Get(metaSchemaId);
-			if (metaSchema == null) break;
-
-			var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-			if (newMetaSchemaId == metaSchemaId)
-				throw new InvalidOperationException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
-
-			metaSchemaId = newMetaSchemaId;
-		}
-
-		if (EvaluatingAs == Draft.Unspecified)
-			EvaluatingAs = currentlyEvaluatingAs;
 	}
 
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords)

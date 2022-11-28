@@ -32,12 +32,11 @@ public class SchemaRegistry
 	private Dictionary<Uri, Registration>? _registered;
 	private Func<Uri, JsonSchema?>? _fetch;
 	private Stack<Uri>? _scopes;
-	private readonly EvaluationOptions _options;
 
 	/// <summary>
 	/// The global registry.
 	/// </summary>
-	public static SchemaRegistry Global => EvaluationOptions.Default.SchemaRegistry;
+	public static SchemaRegistry Global { get; } = new();
 
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
@@ -48,46 +47,48 @@ public class SchemaRegistry
 		set => _fetch = value;
 	}
 
-	internal Draft EvaluatingAs => _options.EvaluatingAs;
-
-	internal SchemaRegistry(EvaluationOptions options)
+	static SchemaRegistry()
 	{
-		_options = options;
+		Global.InitializeMetaSchemas();
+	}
+
+	internal SchemaRegistry()
+	{
 	}
 
 	internal void InitializeMetaSchemas()
 	{
-		MetaSchemas.Draft6.RegisterSubschemas(this, MetaSchemas.Draft6Id);
+		Register(MetaSchemas.Draft6Id, MetaSchemas.Draft6);
 
-		MetaSchemas.Draft7.RegisterSubschemas(this, MetaSchemas.Draft7Id);
+		Register(MetaSchemas.Draft7Id, MetaSchemas.Draft7);
 
-		MetaSchemas.Draft201909.RegisterSubschemas(this, MetaSchemas.Draft201909Id);
-		MetaSchemas.Core201909.RegisterSubschemas(this, MetaSchemas.Core201909Id);
-		MetaSchemas.Applicator201909.RegisterSubschemas(this, MetaSchemas.Applicator201909Id);
-		MetaSchemas.Validation201909.RegisterSubschemas(this, MetaSchemas.Validation201909Id);
-		MetaSchemas.Metadata201909.RegisterSubschemas(this, MetaSchemas.Metadata201909Id);
-		MetaSchemas.Format201909.RegisterSubschemas(this, MetaSchemas.Format201909Id);
-		MetaSchemas.Content201909.RegisterSubschemas(this, MetaSchemas.Content201909Id);
+		Register(MetaSchemas.Draft201909Id, MetaSchemas.Draft201909);
+		Register(MetaSchemas.Core201909Id, MetaSchemas.Core201909);
+		Register(MetaSchemas.Applicator201909Id, MetaSchemas.Applicator201909);
+		Register(MetaSchemas.Validation201909Id, MetaSchemas.Validation201909);
+		Register(MetaSchemas.Metadata201909Id, MetaSchemas.Metadata201909);
+		Register(MetaSchemas.Format201909Id, MetaSchemas.Format201909);
+		Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
 
-		MetaSchemas.Draft202012.RegisterSubschemas(this, MetaSchemas.Draft202012Id);
-		MetaSchemas.Core202012.RegisterSubschemas(this, MetaSchemas.Core202012Id);
-		MetaSchemas.Applicator202012.RegisterSubschemas(this, MetaSchemas.Applicator202012Id);
-		MetaSchemas.Validation202012.RegisterSubschemas(this, MetaSchemas.Validation202012Id);
-		MetaSchemas.Metadata202012.RegisterSubschemas(this, MetaSchemas.Metadata202012Id);
-		MetaSchemas.Unevaluated202012.RegisterSubschemas(this, MetaSchemas.Unevaluated202012Id);
-		MetaSchemas.FormatAnnotation202012.RegisterSubschemas(this, MetaSchemas.FormatAnnotation202012Id);
-		MetaSchemas.FormatAssertion202012.RegisterSubschemas(this, MetaSchemas.FormatAssertion202012Id);
-		MetaSchemas.Content202012.RegisterSubschemas(this, MetaSchemas.Content202012Id);
+		Register(MetaSchemas.Draft202012Id, MetaSchemas.Draft202012);
+		Register(MetaSchemas.Core202012Id, MetaSchemas.Core202012);
+		Register(MetaSchemas.Applicator202012Id, MetaSchemas.Applicator202012);
+		Register(MetaSchemas.Validation202012Id, MetaSchemas.Validation202012);
+		Register(MetaSchemas.Metadata202012Id, MetaSchemas.Metadata202012);
+		Register(MetaSchemas.Unevaluated202012Id, MetaSchemas.Unevaluated202012);
+		Register(MetaSchemas.FormatAnnotation202012Id, MetaSchemas.FormatAnnotation202012);
+		Register(MetaSchemas.FormatAssertion202012Id, MetaSchemas.FormatAssertion202012);
+		Register(MetaSchemas.Content202012Id, MetaSchemas.Content202012);
 
-		MetaSchemas.DraftNext.RegisterSubschemas(this, MetaSchemas.DraftNextId);
-		MetaSchemas.CoreNext.RegisterSubschemas(this, MetaSchemas.CoreNextId);
-		MetaSchemas.ApplicatorNext.RegisterSubschemas(this, MetaSchemas.ApplicatorNextId);
-		MetaSchemas.ValidationNext.RegisterSubschemas(this, MetaSchemas.ValidationNextId);
-		MetaSchemas.MetadataNext.RegisterSubschemas(this, MetaSchemas.MetadataNextId);
-		MetaSchemas.UnevaluatedNext.RegisterSubschemas(this, MetaSchemas.UnevaluatedNextId);
-		MetaSchemas.FormatAnnotationNext.RegisterSubschemas(this, MetaSchemas.FormatAnnotationNextId);
-		MetaSchemas.FormatAssertionNext.RegisterSubschemas(this, MetaSchemas.FormatAssertionNextId);
-		MetaSchemas.ContentNext.RegisterSubschemas(this, MetaSchemas.ContentNextId);
+		Register(MetaSchemas.DraftNextId, MetaSchemas.DraftNext);
+		Register(MetaSchemas.CoreNextId, MetaSchemas.CoreNext);
+		Register(MetaSchemas.ApplicatorNextId, MetaSchemas.ApplicatorNext);
+		Register(MetaSchemas.ValidationNextId, MetaSchemas.ValidationNext);
+		Register(MetaSchemas.MetadataNextId, MetaSchemas.MetadataNext);
+		Register(MetaSchemas.UnevaluatedNextId, MetaSchemas.UnevaluatedNext);
+		Register(MetaSchemas.FormatAnnotationNextId, MetaSchemas.FormatAnnotationNext);
+		Register(MetaSchemas.FormatAssertionNextId, MetaSchemas.FormatAssertionNext);
+		Register(MetaSchemas.ContentNextId, MetaSchemas.ContentNext);
 	}
 
 	/// <summary>
@@ -98,8 +99,6 @@ public class SchemaRegistry
 	public void Register(Uri? uri, JsonSchema schema)
 	{
 		RegisterSchema(uri, schema);
-		if (uri != null)
-			schema.RegisterSubschemas(this, uri);
 	}
 
 	internal void RegisterSchema(Uri? uri, JsonSchema schema)
@@ -174,6 +173,11 @@ public class SchemaRegistry
 		return registration.Anchors.TryGetValue(anchor!, out var registeredAnchor) ? registeredAnchor.Schema : null;
 	}
 
+	internal void Clear()
+	{
+		_registered?.Clear();
+	}
+
 	internal JsonSchema? GetDynamic(Uri? uri, string? anchor)
 	{
 		var firstAnchor = _registered?.SelectMany(x => x.Value.Anchors)
@@ -227,7 +231,6 @@ public class SchemaRegistry
 			if (schema == null) return null;
 
 			Register(uri, schema);
-			//schema.RegisterSubschemas(this, uri);
 			registration = CheckRegistry(_registered!, uri);
 		}
 

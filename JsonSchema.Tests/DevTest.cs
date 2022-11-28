@@ -37,8 +37,6 @@ public class DevTest
 			}
 		};
 
-		schema.Compile();
-
 		var sw = new Stopwatch();
 		sw.Start();
 		var compiledResults = schema.EvaluateCompiled(instance);

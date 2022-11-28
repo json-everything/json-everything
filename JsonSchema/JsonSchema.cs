@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -19,6 +18,27 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 {
+
+	private class JsonPointerComparer : IComparer<JsonPointer>
+	{
+		public static JsonPointerComparer Instance { get; } = new();
+
+		public int Compare(JsonPointer x, JsonPointer y)
+		{
+			var segmentPairs = x.Segments.Zip(y.Segments, (a, b) => (a, b));
+			foreach (var pair in segmentPairs)
+			{
+				var segmentResult = string.Compare(pair.a.Value, pair.b.Value, StringComparison.InvariantCulture);
+				if (segmentResult != 0) return segmentResult;
+			}
+
+			return x.Segments.Length.CompareTo(y.Segments.Length);
+		}
+	}
+
+	private List<Requirement>? _requirements;
+	private IJsonSchemaKeyword[] _keywordsToEvaluate;
+
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
@@ -42,9 +62,12 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	internal Uri? BaseUri { get; set; }
-	internal bool IsResource { get; set; }
+	public Uri BaseUri { get; private set; }
+
+	public Draft DeclaredDraft { get; private set; }
+
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
+	internal HashSet<JsonPointer> GeneratingRequirements { get; } = new();
 
 	private JsonSchema(bool value)
 	{
@@ -53,6 +76,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
 		Keywords = keywords.ToArray();
+		CompileIfNeeded(Draft.Unspecified);
 	}
 
 	/// <summary>
@@ -94,101 +118,126 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
-	private List<Requirement>? _requirements;
-	private EvaluationOptions? _options;
+	//public void Compile()
+	//{
+	//	_requirements = null;
+	//	CompileIfNeeded();
+	//}
 
-	private class JsonPointerComparer : IComparer<JsonPointer>
+	/// <summary>
+	/// Attempts to recompile as the specified draft.  If the draft can be determined
+	/// by a `$schema` keyword (see <see cref="DeclaredDraft"/>), this method will have no effect.
+	/// </summary>
+	/// <param name="draft"></param>
+	public void RecompileAs(Draft draft)
 	{
-		public static JsonPointerComparer Instance { get; } = new();
+		if (DeclaredDraft != Draft.Unspecified) return;
 
-		public int Compare(JsonPointer x, JsonPointer y)
-		{
-			var segmentPairs = x.Segments.Zip(y.Segments, (a, b) => (a, b));
-			foreach (var pair in segmentPairs)
-			{
-				var segmentResult = string.Compare(pair.a.Value, pair.b.Value, StringComparison.InvariantCulture);
-				if (segmentResult != 0) return segmentResult;
-			}
-
-			return x.Segments.Length.CompareTo(y.Segments.Length);
-		}
-	}
-
-	internal HashSet<JsonPointer> GeneratingRequirements { get; } = new();
-
-	public void Compile(EvaluationOptions? options = null)
-	{
-		_options = null;
 		_requirements = null;
-		CompileIfNeeded(options);
+		CompileIfNeeded(draft);
 	}
 
-	private void CompileIfNeeded(EvaluationOptions? options)
+	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid():N}");
+
+	private void CompileIfNeeded(Draft desiredDraft)
 	{
-		if (_options != null && options == null) return;
-		options ??= EvaluationOptions.Default;
-		if (_options != null && _options.GetHashValue() == options.GetHashValue()) return;
+		if (_requirements != null) return;
 
-		_options = options;
-		if (!BoolValue.HasValue)
-		{
-			var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-			_options.DetermineDraft(metaSchemaUri);
-			PopulateBaseUris(this, this, _options.DefaultBaseUri, _options.SchemaRegistry, _options.EvaluatingAs, true);
-		}
+		if (!BoolValue.HasValue) 
+			Analyze(this, this, GenerateBaseUri(), desiredDraft, true);
 
-		var scope = new DynamicScope(new[] { BaseUri! });
+		var scope = new DynamicScope(BaseUri);
 		_requirements = this.GenerateRequirements(scope, JsonPointer.Empty, JsonPointer.Empty, options).ToList();
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, Draft evaluatingAs, bool selfRegister = false)
+	private static (Draft Draft, bool Declared) DetermineDraft(JsonSchema schema, Draft desiredDraft)
+	{
+		var schemaKeyword = (SchemaKeyword?) schema.Keywords!.FirstOrDefault(x => x is SchemaKeyword);
+		if (schemaKeyword != null)
+		{
+			var metaSchemaId = schemaKeyword.Schema;
+			while (metaSchemaId != null)
+			{
+				var draft = metaSchemaId.OriginalString switch
+				{
+					MetaSchemas.Draft6IdValue => Draft.Draft6,
+					MetaSchemas.Draft7IdValue => Draft.Draft7,
+					MetaSchemas.Draft201909IdValue => Draft.Draft201909,
+					MetaSchemas.Draft202012IdValue => Draft.Draft202012,
+					MetaSchemas.DraftNextIdValue => Draft.DraftNext,
+					_ => Draft.Unspecified
+				};
+				if (draft != Draft.Unspecified) return (draft, true);
+
+				var metaSchema = SchemaRegistry.Global.Get(metaSchemaId);
+				if (metaSchema == null)
+					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
+
+				var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+				if (newMetaSchemaId == metaSchemaId)
+					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
+
+				metaSchemaId = newMetaSchemaId;
+			}
+		}
+
+		if (desiredDraft != Draft.Unspecified) return (desiredDraft, false);
+
+		var allDraftsArray = Enum.GetValues(typeof(Draft)).Cast<Draft>().ToArray();
+		var allDrafts = allDraftsArray.Aggregate(Draft.Unspecified, (a, x) => a | x);
+		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.DraftsSupported());
+		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
+
+		return (candidates.Any() ? candidates.Max() : Draft.DraftNext, false);
+	}
+
+	private static void Analyze(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, Draft desiredDraft, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
-		if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
-		    schema.Keywords!.Any(x => x is RefKeyword))
-		{
-			schema.BaseUri = currentBaseUri;
-			return;
-		}
-		
-		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
+
+		var draftDetermination = DetermineDraft(schema, desiredDraft);
+		schema.DeclaredDraft = draftDetermination.Declared ? draftDetermination.Draft : Draft.Unspecified;
+		schema._keywordsToEvaluate = FilterKeywords(schema.Keywords!, draftDetermination.Draft).ToArray();
+
+		var idKeyword = schema._keywordsToEvaluate.OfType<IdKeyword>().FirstOrDefault();
 
 		if (idKeyword == null)
 		{
 			schema.BaseUri = currentBaseUri;
 			if (selfRegister)
-				registry.RegisterSchema(schema.BaseUri, schema);
+				SchemaRegistry.Global.RegisterSchema(schema.BaseUri, schema);
 		}
 		else
 		{
-			resourceRoot = schema;
-			if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
-				idKeyword.Id.OriginalString[0] == '#' &&
-				AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
+			if (schema.DeclaredDraft is Draft.Draft6 or Draft.Draft7 &&
+			    idKeyword.Id.OriginalString[0] == '#' &&
+			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
 			{
 				schema.BaseUri = currentBaseUri;
-				registry.RegisterAnchor(schema.BaseUri, idKeyword.Id.OriginalString.Substring(1), schema);
+				var anchor = idKeyword.Id.OriginalString.Substring(1);
+				resourceRoot.Anchors[anchor] = (schema, false);
 			}
 			else
 			{
+				resourceRoot = schema;
 				schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
-				registry.RegisterSchema(schema.BaseUri, schema);
+				SchemaRegistry.Global.RegisterSchema(schema.BaseUri, schema);
 			}
 		}
 
-		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
+		var anchorKeyword = schema._keywordsToEvaluate.OfType<AnchorKeyword>().FirstOrDefault();
 		if (anchorKeyword != null)
 			resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
 
-		var dynamicAnchorKeyword = schema.Keywords!.OfType<DynamicAnchorKeyword>().FirstOrDefault();
+		var dynamicAnchorKeyword = schema._keywordsToEvaluate.OfType<DynamicAnchorKeyword>().FirstOrDefault();
 		if (dynamicAnchorKeyword != null)
 			resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
 
-		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
+		var subschemas = schema._keywordsToEvaluate.SelectMany(GetSubschemas);
 
 		foreach (var subschema in subschemas)
 		{
-			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
+			Analyze(subschema, resourceRoot, schema.BaseUri, desiredDraft);
 		}
 	}
 
@@ -220,9 +269,36 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		}
 	}
 
+
+	private static IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	{
+		if (draft is Draft.Draft6 or Draft.Draft7)
+			return DisallowSiblingRef(keywords, draft);
+		return AllowSiblingRef(keywords, draft);
+	}
+
+	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	{
+		var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
+
+		return refKeyword != null ? new[] { refKeyword } : FilterByDraft(keywords, draft);
+	}
+
+	private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	{
+		return FilterByDraft(keywords, draft);
+	}
+
+	private static IEnumerable<IJsonSchemaKeyword> FilterByDraft(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	{
+		if (draft == Draft.Unspecified) return keywords;
+
+		return keywords.Where(k => k.SupportsDraft(draft));
+	}
+
 	public EvaluationResults2 EvaluateCompiled(JsonNode? instance, EvaluationOptions? options = null)
 	{
-		CompileIfNeeded(options);
+		//CompileIfNeeded();
 
 		var instanceCatalog = instance.GenerateCatalog();
 
@@ -277,7 +353,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
 		options.Log.Write(() => "Registering subschemas.");
-		var baseUri = RegisterSubschemasAndGetBaseUri(options.SchemaRegistry, BaseUri ?? options.DefaultBaseUri);
+		//var baseUri = RegisterSubschemasAndGetBaseUri(options.SchemaRegistry, BaseUri ?? options.DefaultBaseUri);
+		var baseUri = BaseUri;
 		if (baseUri != null! && baseUri.IsAbsoluteUri)
 			BaseUri = baseUri;
 
@@ -319,45 +396,45 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <param name="currentUri">The current URI.</param>
 	public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
 	{
-		RegisterSubschemasAndGetBaseUri(registry, currentUri);
+		//RegisterSubschemasAndGetBaseUri(registry, currentUri);
 	}
 
-	private Uri? RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
-	{
-		if (Keywords == null) return null; // boolean cases
+//	private Uri? RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
+//	{
+//		if (Keywords == null) return null; // boolean cases
 
-		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
-		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
-		var refMatters = refKeyword != null &&
-						 registry.EvaluatingAs is Draft.Draft6 or Draft.Draft7;
-		UpdateBaseUri(currentUri);
-		if (idKeyword != null && !refMatters)
-		{
-			currentUri = idKeyword.UpdateUri(currentUri);
-			var parts = idKeyword.Id.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-			var fragment = parts.Length > 1 ? parts[1] : null;
-#pragma warning disable 8602
-			if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
-#pragma warning restore 8602
-				registry.RegisterSchema(currentUri, this);
-			else
-				registry.RegisterAnchor(currentUri, fragment, this);
-		}
+//		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
+//		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
+//		var refMatters = refKeyword != null &&
+//						 registry.EvaluatingAs is Draft.Draft6 or Draft.Draft7;
+//		UpdateBaseUri(currentUri);
+//		if (idKeyword != null && !refMatters)
+//		{
+//			currentUri = idKeyword.UpdateUri(currentUri);
+//			var parts = idKeyword.Id.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
+//			var fragment = parts.Length > 1 ? parts[1] : null;
+//#pragma warning disable 8602
+//			if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
+//#pragma warning restore 8602
+//				registry.RegisterSchema(currentUri, this);
+//			else
+//				registry.RegisterAnchor(currentUri, fragment, this);
+//		}
 
-		var anchors = Keywords.OfType<IAnchorProvider>();
-		foreach (var anchor in anchors)
-		{
-			anchor.RegisterAnchor(registry, currentUri, this);
-		}
+//		var anchors = Keywords.OfType<IAnchorProvider>();
+//		foreach (var anchor in anchors)
+//		{
+//			anchor.RegisterAnchor(registry, currentUri, this);
+//		}
 
-		var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
-		foreach (var keyword in keywords)
-		{
-			keyword.RegisterSubschemas(registry, currentUri);
-		}
+//		var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
+//		foreach (var keyword in keywords)
+//		{
+//			keyword.RegisterSubschemas(registry, currentUri);
+//		}
 
-		return currentUri;
-	}
+//		return currentUri;
+//	}
 
 	internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)
 	{

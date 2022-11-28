@@ -172,7 +172,12 @@ public class DynamicScope : IEnumerable<Uri>
 
 	public Uri LocalScope => _scope[_scope.Length - 1];
 
-	internal DynamicScope(IEnumerable<Uri> scope)
+	internal DynamicScope(Uri initialScope)
+	{
+		_scope = new[] { initialScope };
+	}
+
+	private DynamicScope(IEnumerable<Uri> scope)
 	{
 		_scope = scope.ToArray();
 	}

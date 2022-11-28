@@ -145,21 +145,21 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		JsonSchema? targetSchema = null;
 		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
 		{
-			var targetBase = options.SchemaRegistry.Get(newBaseUri);
+			var targetBase = SchemaRegistry.Global.Get(newBaseUri);
 			if (targetBase == null)
-				throw new JsonException($"Cannot resolve base schema from `{newUri}`");
+				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 			targetSchema = targetBase.FindSubschema(pointerFragment!, newBaseUri).Item1;
 		}
 		else
 		{
 			var anchorFragment = newUri.Fragment.Substring(1);
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
-				throw new JsonException($"Unrecognized fragment type `{newUri}`");
+				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 			foreach (var id in scope)
 			{
-				var targetBase = options.SchemaRegistry.Get(id);
+				var targetBase = SchemaRegistry.Global.Get(id);
 				if (targetBase == null)
-					throw new JsonException($"Cannot resolve base schema `{id}`");
+					throw new JsonSchemaException($"Cannot resolve base schema `{id}`");
 				if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchor) && anchor.IsDynamic)
 				{
 					targetSchema = anchor.Schema;
@@ -168,20 +168,22 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 			}
 			// if we don't find a dynamic anchor, use the $ref behavior
 			if (targetSchema == null &&
-			    (options.SchemaRegistry.Get(newBaseUri)?.Anchors.TryGetValue(anchorFragment, out var anchorDefinition) ?? false))
+			    (SchemaRegistry.Global.Get(newBaseUri)?.Anchors.TryGetValue(anchorFragment, out var anchorDefinition) ?? false))
 				targetSchema = anchorDefinition.Schema;
 		}
 
 		if (targetSchema == null)
-			throw new JsonException($"Cannot resolve schema `{newUri}`");
+			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
+
+		var newScope = scope.Append(newUri);
+		foreach (var requirement in targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation, options))
+		{
+			yield return requirement;
+		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache, catalog) =>
+			(_, cache, _) =>
 			{
-				var newScope = scope.Append(newUri);
-				var dynamicRequirements = targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation, options);
-				dynamicRequirements.Evaluate(cache, catalog);
-
 				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{
 					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)

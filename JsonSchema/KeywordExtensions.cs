@@ -108,6 +108,24 @@ public static class KeywordExtensions
 		return supportedDrafts.HasFlag(draft);
 	}
 
+	public static Draft DraftsSupported(this IJsonSchemaKeyword keyword)
+	{
+		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
+
+		var keywordType = keyword.GetType();
+		if (!_draftDeclarations.TryGetValue(keywordType, out var supportedDrafts))
+		{
+			supportedDrafts = keywordType.GetCustomAttributes<SchemaDraftAttribute>()
+				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft);
+			if (supportedDrafts == Draft.Unspecified)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaDraftAttribute)}");
+
+			_draftDeclarations[keywordType] = supportedDrafts;
+		}
+
+		return supportedDrafts;
+	}
+
 	/// <summary>
 	/// Gets whether the keyword is an applicator (carries the <see cref="ApplicatorAttribute"/> attribute).
 	/// </summary>

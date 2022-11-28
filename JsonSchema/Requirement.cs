@@ -6,7 +6,7 @@ namespace Json.Schema;
 
 public class Requirement
 {
-	public delegate KeywordResult? EvaluationFunction(JsonNode? node, List<KeywordResult> resultCache, Dictionary<JsonPointer, JsonNode?> instanceCatalog);
+	public delegate KeywordResult? EvaluationFunction(JsonNode? node, List<KeywordResult> resultCache, Dictionary<JsonPointer, JsonNode?> instanceCatalog, EvaluationOptions options);
 
 	public int Priority { get; }
 	public JsonPointer SubschemaPath { get; }
