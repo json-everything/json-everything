@@ -59,17 +59,17 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		var relevantEvaluationPath = subschemaPath.Combine(Name);
 
-		foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation, options))
+		foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation))
 		{
 			yield return requirement;
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache, _) =>
+			(_, cache, _, _) =>
 			{
 				var relevantResults = cache.Where(x => relevantEvaluationPath == x.SubschemaPath);
 				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)

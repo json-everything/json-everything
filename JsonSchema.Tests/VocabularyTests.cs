@@ -38,7 +38,7 @@ public class VocabularyTests
 					("value", Date));
 		}
 
-		public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+		public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 		{
 			throw new NotImplementedException();
 		}
@@ -105,7 +105,7 @@ public class VocabularyTests
 					("value", Date));
 		}
 
-		public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+		public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 		{
 			throw new NotImplementedException();
 		}
@@ -173,7 +173,7 @@ public class VocabularyTests
 					("value", Date));
 		}
 
-		public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+		public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 		{
 			throw new NotImplementedException();
 		}

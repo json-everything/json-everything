@@ -49,7 +49,7 @@ public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 		context.Log(() => "$comment is to be ignored");
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		return Enumerable.Empty<Requirement>();
 	}

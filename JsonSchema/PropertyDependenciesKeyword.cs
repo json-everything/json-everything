@@ -98,10 +98,10 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				if (node is not JsonObject obj) return null;
 
@@ -115,8 +115,8 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 					return default;
 				}).Where(x => x != default);
 
-				var dynamicRequirements = applicableSchemas.SelectMany(x => x.Schema.GenerateRequirements(scope, subschemaPath.Combine(Name, x.Key, x.Value), instanceLocation, options));
-				dynamicRequirements.Evaluate(cache, catalog);
+				var dynamicRequirements = applicableSchemas.SelectMany(x => x.Schema.GenerateRequirements(scope, subschemaPath.Combine(Name, x.Key, x.Value), instanceLocation));
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				var relevantEvaluationPath = subschemaPath.Combine(Name);
 				var relevantResults = cache.Where(x => x.SubschemaPath.StartsWith(relevantEvaluationPath));

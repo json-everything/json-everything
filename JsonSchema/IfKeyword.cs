@@ -56,15 +56,15 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, I
 		context.ExitKeyword(Name, true);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
-		foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation, options))
+		foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation))
 		{
 			yield return requirement;
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache, _) =>
+			(_, cache, _, _) =>
 			{
 				var localResults = cache.GetLocalResults(subschemaPath, Name);
 

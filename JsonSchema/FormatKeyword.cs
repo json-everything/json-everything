@@ -97,27 +97,25 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
-		if (Value is UnknownFormat && options.OnlyKnownFormats)
-		{
-			yield return new Requirement(subschemaPath, instanceLocation,
-				(_, _, _) => new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
-				{
-					Error = ErrorMessages.UnknownFormat.ReplaceTokens(("format", Value.Key))
-				});
-			yield break;
-		}
-
-		var requireValidation = options.RequireFormatValidation;
-		if (!requireValidation)
-		{
-			// TODO: this needs to be finished once meta-schemas are being processed
-		}
-
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _, _) =>
+			(node, _, _, options) =>
 			{
+				if (Value is UnknownFormat && options.OnlyKnownFormats)
+				{
+					return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
+					{
+						Error = ErrorMessages.UnknownFormat.ReplaceTokens(("format", Value.Key))
+					};
+				}
+
+				var requireValidation = options.RequireFormatValidation;
+				if (!requireValidation)
+				{
+					// TODO: this needs to be finished once meta-schemas are being processed
+				}
+
 				var isValid = Value.Validate(node, out var error);
 
 				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)

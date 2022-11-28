@@ -73,7 +73,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		throw new NotImplementedException();
 	}

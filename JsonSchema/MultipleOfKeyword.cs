@@ -61,10 +61,10 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _, _) =>
+			(node, _, _, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
 				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return null;

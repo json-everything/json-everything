@@ -113,18 +113,18 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				if (node is not JsonObject obj) return null;
 
 				var schemaDependencies = Requirements.Where(x => x.Value.Schema != null);
 
 				var additionalSchemas = schemaDependencies.Where(x => obj.ContainsKey(x.Key)).ToList();
-				var dynamicRequirements = additionalSchemas.SelectMany(x => x.Value.Schema!.GenerateRequirements(scope, subschemaPath.Combine(Name, x.Key), instanceLocation, options));
-				dynamicRequirements.Evaluate(cache, catalog);
+				var dynamicRequirements = additionalSchemas.SelectMany(x => x.Value.Schema!.GenerateRequirements(scope, subschemaPath.Combine(Name, x.Key), instanceLocation));
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				var relevantEvaluationPaths = additionalSchemas.Select(x => subschemaPath.Combine(Name, x.Key));
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));

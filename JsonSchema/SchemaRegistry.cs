@@ -59,8 +59,10 @@ public class SchemaRegistry
 	internal void InitializeMetaSchemas()
 	{
 		Register(MetaSchemas.Draft6Id, MetaSchemas.Draft6);
+		MetaSchemas.Draft6.RecompileAs(Draft.Draft6);
 
 		Register(MetaSchemas.Draft7Id, MetaSchemas.Draft7);
+		MetaSchemas.Draft7.RecompileAs(Draft.Draft7);
 
 		Register(MetaSchemas.Draft201909Id, MetaSchemas.Draft201909);
 		Register(MetaSchemas.Core201909Id, MetaSchemas.Core201909);
@@ -69,6 +71,7 @@ public class SchemaRegistry
 		Register(MetaSchemas.Metadata201909Id, MetaSchemas.Metadata201909);
 		Register(MetaSchemas.Format201909Id, MetaSchemas.Format201909);
 		Register(MetaSchemas.Content201909Id, MetaSchemas.Content201909);
+		MetaSchemas.Draft201909.RecompileAs(Draft.Draft201909);
 
 		Register(MetaSchemas.Draft202012Id, MetaSchemas.Draft202012);
 		Register(MetaSchemas.Core202012Id, MetaSchemas.Core202012);
@@ -79,6 +82,7 @@ public class SchemaRegistry
 		Register(MetaSchemas.FormatAnnotation202012Id, MetaSchemas.FormatAnnotation202012);
 		Register(MetaSchemas.FormatAssertion202012Id, MetaSchemas.FormatAssertion202012);
 		Register(MetaSchemas.Content202012Id, MetaSchemas.Content202012);
+		MetaSchemas.Draft202012.RecompileAs(Draft.Draft202012);
 
 		Register(MetaSchemas.DraftNextId, MetaSchemas.DraftNext);
 		Register(MetaSchemas.CoreNextId, MetaSchemas.CoreNext);
@@ -89,6 +93,7 @@ public class SchemaRegistry
 		Register(MetaSchemas.FormatAnnotationNextId, MetaSchemas.FormatAnnotationNext);
 		Register(MetaSchemas.FormatAssertionNextId, MetaSchemas.FormatAssertionNext);
 		Register(MetaSchemas.ContentNextId, MetaSchemas.ContentNext);
+		MetaSchemas.DraftNext.RecompileAs(Draft.DraftNext);
 	}
 
 	/// <summary>

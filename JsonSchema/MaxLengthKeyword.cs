@@ -61,10 +61,10 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _, _) =>
+			(node, _, _, _) =>
 			{
 				if (node.GetSchemaValueType() != SchemaValueType.String) return null;
 

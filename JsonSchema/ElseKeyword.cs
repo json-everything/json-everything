@@ -73,16 +73,16 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache, catalog) =>
+			(_, cache, catalog, options) =>
 			{
 				var ifAnnotation = cache.GetLocalAnnotation(subschemaPath, IfKeyword.Name);
 				if (ifAnnotation?.GetValue<bool>() ?? true) return null;
 
-				var dynamicRequirements = Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation, options);
-				dynamicRequirements.Evaluate(cache, catalog);
+				var dynamicRequirements = Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation);
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				var localResults = cache.GetLocalResults(subschemaPath, Name);
 

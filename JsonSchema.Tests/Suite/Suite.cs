@@ -82,6 +82,7 @@ public class Suite
 			foreach (var collection in collections!)
 			{
 				collection.IsOptional = fileName.Contains("optional");
+				collection.Schema.RecompileAs(options.EvaluateAs);
 				foreach (var test in collection.Tests)
 				{
 					var optional = collection.IsOptional ? "(optional) / " : null;
@@ -173,21 +174,6 @@ public class Suite
 		var result = collection.Schema.EvaluateCompiled(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
-
-		if (collection.IsOptional && result.IsValid != test.Valid)
-			Assert.Inconclusive("Test optional");
-		Assert.AreEqual(test.Valid, result.IsValid);
-	}
-
-	//[TestCaseSource(nameof(TestCases))]
-	// This is for local runs only.
-	public void Benchmark(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
-	{
-		if (!InstanceIsDeserializable(test.Data))
-			Assert.Inconclusive("Instance not deserializable");
-
-		options.OutputFormat = OutputFormat.Flag;
-		var result = collection.Schema.Evaluate(test.Data, options);
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");

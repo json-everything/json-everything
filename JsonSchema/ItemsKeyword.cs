@@ -168,13 +168,13 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		IEnumerable<Requirement> GetDynamicRequirements(int startIndex, int itemCount)
 		{
 			for (var i = startIndex; i < itemCount; i++)
 			{
-				foreach (var requirement in SingleSchema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in SingleSchema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i)))
 				{
 					yield return requirement;
 				}
@@ -184,7 +184,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		if (SingleSchema != null)
 		{
 			yield return new Requirement(subschemaPath, instanceLocation,
-				(node, cache, catalog) =>
+				(node, cache, catalog, options) =>
 				{
 					if (node is not JsonArray arr) return null;
 
@@ -198,7 +198,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 					}
 
 					var dynamicRequirements = GetDynamicRequirements(lastIndex + 1, arr.Count);
-					dynamicRequirements.Evaluate(cache, catalog);
+					dynamicRequirements.Evaluate(cache, catalog, options);
 
 					return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 					{
@@ -212,14 +212,14 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			for (int i = 0; i < ArraySchemas!.Count; i++)
 			{
 				var schema = ArraySchemas[i];
-				foreach (var requirement in schema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
+				foreach (var requirement in schema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation.Combine(i)))
 				{
 					yield return requirement;
 				}
 			}
 
 			yield return new Requirement(subschemaPath, instanceLocation,
-				(node, cache, _) =>
+				(node, cache, _, _) =>
 				{
 					if (node is not JsonArray arr) return null;
 

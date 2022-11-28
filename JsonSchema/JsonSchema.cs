@@ -37,7 +37,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	}
 
 	private List<Requirement>? _requirements;
-	private IJsonSchemaKeyword[] _keywordsToEvaluate;
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -65,9 +64,11 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	public Uri BaseUri { get; private set; }
 
 	public Draft DeclaredDraft { get; private set; }
+	public Draft CompiledDraft { get; private set; }
 
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
 	internal HashSet<JsonPointer> GeneratingRequirements { get; } = new();
+	internal IJsonSchemaKeyword[] KeywordsToEvaluate { get; private set; }
 
 	private JsonSchema(bool value)
 	{
@@ -76,7 +77,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
 		Keywords = keywords.ToArray();
-		CompileIfNeeded(Draft.Unspecified);
+		//CompileIfNeeded(Draft.Unspecified);
 	}
 
 	/// <summary>
@@ -118,12 +119,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
-	//public void Compile()
-	//{
-	//	_requirements = null;
-	//	CompileIfNeeded();
-	//}
-
 	/// <summary>
 	/// Attempts to recompile as the specified draft.  If the draft can be determined
 	/// by a `$schema` keyword (see <see cref="DeclaredDraft"/>), this method will have no effect.
@@ -147,7 +142,7 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			Analyze(this, this, GenerateBaseUri(), desiredDraft, true);
 
 		var scope = new DynamicScope(BaseUri);
-		_requirements = this.GenerateRequirements(scope, JsonPointer.Empty, JsonPointer.Empty, options).ToList();
+		_requirements = this.GenerateRequirements(scope, JsonPointer.Empty, JsonPointer.Empty).ToList();
 	}
 
 	private static (Draft Draft, bool Declared) DetermineDraft(JsonSchema schema, Draft desiredDraft)
@@ -195,11 +190,12 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	{
 		if (schema.BoolValue.HasValue) return;
 
-		var draftDetermination = DetermineDraft(schema, desiredDraft);
-		schema.DeclaredDraft = draftDetermination.Declared ? draftDetermination.Draft : Draft.Unspecified;
-		schema._keywordsToEvaluate = FilterKeywords(schema.Keywords!, draftDetermination.Draft).ToArray();
+		var (draft, declared) = DetermineDraft(schema, desiredDraft);
+		schema.DeclaredDraft = declared ? draft : Draft.Unspecified;
+		schema.CompiledDraft = draft;
+		schema.KeywordsToEvaluate = FilterKeywords(schema.Keywords!, draft).ToArray();
 
-		var idKeyword = schema._keywordsToEvaluate.OfType<IdKeyword>().FirstOrDefault();
+		var idKeyword = schema.KeywordsToEvaluate.OfType<IdKeyword>().FirstOrDefault();
 
 		if (idKeyword == null)
 		{
@@ -225,15 +221,15 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			}
 		}
 
-		var anchorKeyword = schema._keywordsToEvaluate.OfType<AnchorKeyword>().FirstOrDefault();
+		var anchorKeyword = schema.KeywordsToEvaluate.OfType<AnchorKeyword>().FirstOrDefault();
 		if (anchorKeyword != null)
 			resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
 
-		var dynamicAnchorKeyword = schema._keywordsToEvaluate.OfType<DynamicAnchorKeyword>().FirstOrDefault();
+		var dynamicAnchorKeyword = schema.KeywordsToEvaluate.OfType<DynamicAnchorKeyword>().FirstOrDefault();
 		if (dynamicAnchorKeyword != null)
 			resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
 
-		var subschemas = schema._keywordsToEvaluate.SelectMany(GetSubschemas);
+		var subschemas = schema.KeywordsToEvaluate.SelectMany(GetSubschemas);
 
 		foreach (var subschema in subschemas)
 		{
@@ -298,12 +294,12 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 
 	public EvaluationResults2 EvaluateCompiled(JsonNode? instance, EvaluationOptions? options = null)
 	{
-		//CompileIfNeeded();
+		CompileIfNeeded(Draft.Unspecified);
 
 		var instanceCatalog = instance.GenerateCatalog();
 
 		var cache = new List<KeywordResult>();
-		_requirements!.Evaluate(cache, instanceCatalog);
+		_requirements!.Evaluate(cache, instanceCatalog, options ?? EvaluationOptions.Default);
 
 		var localResults = cache.Where(x => x.SubschemaPath.Segments.Length == 0);
 

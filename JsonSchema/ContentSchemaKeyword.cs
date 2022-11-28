@@ -72,10 +72,10 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, _, _) => new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
+			(_, _, _, _) => new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 			{
 				Annotation = _schemaAsNode
 			});

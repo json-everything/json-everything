@@ -96,19 +96,19 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		for (int i = 0; i < ArraySchemas.Count; i++)
 		{
 			var schema = ArraySchemas[i];
-			foreach (var requirement in schema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation.Combine(i), options))
+			foreach (var requirement in schema.GenerateRequirements(scope, subschemaPath.Combine(Name, i), instanceLocation.Combine(i)))
 			{
 				yield return requirement;
 			}
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, _) =>
+			(node, cache, _, _) =>
 			{
 				if (node is not JsonArray arr) return null;
 

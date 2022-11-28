@@ -136,7 +136,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		var newUri = new Uri(scope.LocalScope, Reference);
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
@@ -162,19 +162,37 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
 		var newScope = scope.Append(newUri);
-		foreach (var requirement in targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation, options))
-		{
-			yield return requirement;
-		}
 
-		yield return new Requirement(subschemaPath, instanceLocation,
-			(_, cache, _) =>
-			{
-				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
+		if (scope.Contains(newBaseUri))
+		{
+			yield return new Requirement(subschemaPath, instanceLocation,
+				(_, cache, catalog, options) =>
 				{
-					ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)
-				};
-			});
+					var dynamicRequirements = targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation);
+					dynamicRequirements.Evaluate(cache, catalog, options);
+
+					return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
+					{
+						ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)
+					};
+				});
+		}
+		else
+		{
+			foreach (var requirement in targetSchema.GenerateRequirements(newScope, subschemaPath.Combine(Name), instanceLocation))
+			{
+				yield return requirement;
+			}
+
+			yield return new Requirement(subschemaPath, instanceLocation,
+				(_, cache, _, _) =>
+				{
+					return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
+					{
+						ValidationResult = cache.GetLocalResults(subschemaPath, Name).All(x => x.ValidationResult != false)
+					};
+				});
+		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

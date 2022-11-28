@@ -15,5 +15,5 @@ public interface IJsonSchemaKeyword
 	/// <param name="context">Contextual details for the evaluation process.</param>
 	void Evaluate(EvaluationContext context);
 
-	IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options);
+	IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation);
 }

@@ -96,21 +96,21 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchem
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		var annotation = JsonSerializer.SerializeToNode(Properties.Keys);
 		var relevantEvaluationPaths = Properties.Keys.Select(k => subschemaPath.Combine(Name, k));
 
 		foreach (var property in Properties)
 		{
-			foreach (var subschema in property.Value.GenerateRequirements(scope, subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key), options))
+			foreach (var subschema in property.Value.GenerateRequirements(scope, subschemaPath.Combine(Name, property.Key), instanceLocation.Combine(property.Key)))
 			{
 				yield return subschema;
 			}
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, _) =>
+			(node, cache, _, _) =>
 			{
 				if (node is not JsonObject) return null;
 

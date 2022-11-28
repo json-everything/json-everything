@@ -129,13 +129,13 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		IEnumerable<Requirement> GetDynamicRequirements(IEnumerable<string> targetProperties)
 		{
 			foreach (var property in targetProperties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(property), options))
+				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(property)))
 				{
 					yield return requirement;
 				}
@@ -143,7 +143,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				if (node is not JsonObject obj) return null;
 
@@ -157,7 +157,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 				var annotation = JsonSerializer.SerializeToNode(targetPropertyNames);
 
 				var dynamicRequirements = GetDynamicRequirements(targetPropertyNames);
-				dynamicRequirements.Evaluate(cache, catalog);
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{

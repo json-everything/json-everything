@@ -117,10 +117,10 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				if (node is not JsonObject obj) return null;
 
@@ -141,9 +141,8 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 				var dynamicRequirements = allPatternChecks
 					.SelectMany(x => x.Pattern.Value.GenerateRequirements(scope,
 							subschemaPath.Combine(Name, x.Pattern.Key.ToString()),
-							instanceLocation.Combine(x.Value.Key),
-							options));
-				dynamicRequirements.Evaluate(cache, catalog);
+							instanceLocation.Combine(x.Value.Key)));
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				var relevantResults = cache.Where(x => relevantEvaluationPaths.Contains(x.SubschemaPath));
 

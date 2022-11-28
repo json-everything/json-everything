@@ -110,13 +110,13 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		IEnumerable<Requirement> GetArrayRequirements(int itemCount)
 		{
 			for (var i = 0; i < itemCount; i++)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i)))
 				{
 					yield return requirement;
 				}
@@ -127,7 +127,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		{
 			foreach (var property in targetProperties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(property), options))
+				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(property)))
 				{
 					yield return requirement;
 				}
@@ -135,7 +135,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				IEnumerable<Requirement> dynamicRequirements;
 				Func<KeywordResult, JsonNode?> selector;
@@ -159,7 +159,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 				var maxContainsAnnotation = cache.GetLocalAnnotation(subschemaPath, MaxContainsKeyword.Name)?.GetValue<uint>();
 				var maxContains = maxContainsAnnotation ?? uint.MaxValue;
 
-				dynamicRequirements.Evaluate(cache, catalog);
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				var localResults = cache.GetLocalResults(subschemaPath, Name);
 				var validChildren = JsonSerializer.SerializeToNode(localResults.Where(x => x.ValidationResult != false).Select(selector))!.AsArray();

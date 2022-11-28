@@ -114,7 +114,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		bool IsInteger(JsonNode? node)
 		{
@@ -132,7 +132,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		var expected = Type.ToString().ToLower();
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _, _) =>
+			(node, _, _, _) =>
 			{
 				var schemaValueType = node.GetSchemaValueType();
 				var isValid = schemaValueType switch

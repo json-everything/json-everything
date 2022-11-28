@@ -79,13 +79,13 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		IEnumerable<(string Key, Requirement Requirement)> GetDynamicRequirements(IEnumerable<string> properties)
 		{
 			foreach (var property in properties)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation, options))
+				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation))
 				{
 					yield return (property, requirement);
 				}
@@ -93,7 +93,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				if (node is not JsonObject obj) return null!;
 
@@ -103,7 +103,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 				var relevantResults = new List<KeywordResult>();
 				foreach (var check in dynamicRequirements)
 				{
-					var localResult = check.Requirement.Evaluate(check.Key, cache, catalog);
+					var localResult = check.Requirement.Evaluate(check.Key, cache, catalog, options);
 					if (localResult == null) continue;
 
 					cache.Add(localResult);

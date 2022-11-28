@@ -142,13 +142,13 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		IEnumerable<Requirement> GetDynamicRequirements(IEnumerable<int> indices)
 		{
 			foreach (var i in indices)
 			{
-				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i), options))
+				foreach (var requirement in Schema.GenerateRequirements(scope, subschemaPath.Combine(Name), instanceLocation.Combine(i)))
 				{
 					yield return requirement;
 				}
@@ -156,7 +156,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		}
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, cache, catalog) =>
+			(node, cache, catalog, options) =>
 			{
 				if (node is not JsonArray arr) return null;
 
@@ -180,7 +180,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 				});
 
 				var dynamicRequirements = GetDynamicRequirements(Enumerable.Range(0, arr.Count).Except(evaluatedIndices));
-				dynamicRequirements.Evaluate(cache, catalog);
+				dynamicRequirements.Evaluate(cache, catalog, options);
 
 				return new KeywordResult(Name, subschemaPath, scope.LocalScope, instanceLocation)
 				{

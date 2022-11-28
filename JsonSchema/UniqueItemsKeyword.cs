@@ -81,12 +81,12 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation, EvaluationOptions options)
+	public IEnumerable<Requirement> GetRequirements(JsonPointer subschemaPath, DynamicScope scope, JsonPointer instanceLocation)
 	{
 		if (!Value) yield break;
 
 		yield return new Requirement(subschemaPath, instanceLocation,
-			(node, _, _) =>
+			(node, _, _, _) =>
 			{
 				if (node is not JsonArray array) return null;
 
