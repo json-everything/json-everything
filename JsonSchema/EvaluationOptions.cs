@@ -131,12 +131,14 @@ public class EvaluationOptions
 		return options;
 	}
 
-	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords)
+	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)
 	{
-		if (EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
-			return DisallowSiblingRef(keywords, EvaluatingAs);
+		var evaluatingAs = declaredVersion == SpecVersion.Unspecified ? EvaluatingAs : declaredVersion;
 
-		return AllowSiblingRef(keywords, EvaluatingAs);
+		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
+			return DisallowSiblingRef(keywords, evaluatingAs);
+
+		return AllowSiblingRef(keywords, evaluatingAs);
 	}
 
 	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)

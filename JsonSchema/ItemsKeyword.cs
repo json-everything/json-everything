@@ -130,12 +130,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 		{
 			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
 			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
-			{
-				context.LocalResult.Fail(Name, ErrorMessages.InvalidItemsForm);
-				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
-				context.ExitKeyword(Name, false);
-				return;
-			}
+				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
+
 			context.Options.LogIndentLevel++;
 			var maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
 			for (int i = 0; i < maxEvaluations; i++)

@@ -171,9 +171,6 @@
   <data name="Error_MaxProperties" xml:space="preserve">
     <value>Value has more than [[limit]] properties</value>
   </data>
-  <data name="Error_MetaSchemaResolution" xml:space="preserve">
-    <value>Could not resolve schema [[uri]] for meta-schema validation</value>
-  </data>
   <data name="Error_MetaSchemaValidation" xml:space="preserve">
     <value>Cannot validate current schema against meta-schema [[uri]]</value>
   </data>

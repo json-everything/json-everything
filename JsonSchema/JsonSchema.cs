@@ -41,8 +41,12 @@ public class JsonSchema : IEquatable<JsonSchema>
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	internal Uri BaseUri { get; private set; } = GenerateBaseUri();
-	internal bool IsResourceRoot { get; private set; }
+	public Uri BaseUri { get; private set; } = GenerateBaseUri();
+
+	public bool IsResourceRoot { get; private set; }
+
+	public SpecVersion DeclaredVersion { get; private set; }
+
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
@@ -108,7 +112,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
-		options.EvaluatingAs = DetermineDraft(this, options.SchemaRegistry, options.EvaluateAs);
+		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
 		var context = new EvaluationContext(options, BaseUri, root, this);
@@ -138,10 +142,10 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineDraft(schema, registry, SpecVersion.Unspecified), true);
+		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineSpecVersion(schema, registry, SpecVersion.Unspecified), true);
 	}
 
-	private static SpecVersion DetermineDraft(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
+	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 
@@ -160,7 +164,11 @@ public class JsonSchema : IEquatable<JsonSchema>
 					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
 					_ => SpecVersion.Unspecified
 				};
-				if (version != SpecVersion.Unspecified) return version;
+				if (version != SpecVersion.Unspecified)
+				{
+					schema.DeclaredVersion = version;
+					return version;
+				}
 
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null)
@@ -214,6 +222,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 			else
 			{
 				schema.IsResourceRoot = true;
+				schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
 				resourceRoot = schema;
 				schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
 				registry.RegisterSchema(schema.BaseUri, schema);

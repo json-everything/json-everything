@@ -49,13 +49,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		context.EnterKeyword(Name);
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 		if (metaSchema == null)
-		{
-			var message = ErrorMessages.MetaSchemaResolution.ReplaceTokens(("uri", Schema.OriginalString));
-			context.LocalResult.Fail(Name, message);
-			context.Log(() => message);
-			context.ExitKeyword(Name, false);
-			return;
-		}
+			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
 		var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
 		if (vocabularyKeyword != null)
@@ -127,21 +121,6 @@ internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _metaSchemaResolution;
-
-	/// <summary>
-	/// Gets or sets the error message for when the meta-schema cannot be resolved.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[uri]] - the URI of the meta-schema
-	/// </remarks>
-	public static string MetaSchemaResolution
-	{
-		get => _metaSchemaResolution ?? Get();
-		set => _metaSchemaResolution = value;
-	}
-
 	private static string? _metaSchemaValidation;
 
 	/// <summary>

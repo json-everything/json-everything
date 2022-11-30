@@ -69,7 +69,6 @@ public class EvaluationContext
 	/// </summary>
 	public bool ApplyOptimizations => Options.OutputFormat == OutputFormat.Flag && !_requireAnnotations.Peek();
 
-#pragma warning disable 8618
 	internal EvaluationContext(EvaluationOptions options,
 		Uri currentUri,
 		JsonNode? instanceRoot,
@@ -87,7 +86,6 @@ public class EvaluationContext
 		_metaSchemaVocabs.Push(null);
 		_requireAnnotations.Push(RequiresAnnotationCollection(schemaRoot));
 	}
-#pragma warning restore 8618
 
 	/// <summary>
 	/// Pushes the state onto the stack and sets up for a nested layer of evaluation.
@@ -119,7 +117,6 @@ public class EvaluationContext
 	/// </summary>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
-	/// <param name="newUri">The URI of the subschema.</param>
 	public void Push(in JsonPointer evaluationPath,
 		in JsonSchema subschema)
 	{
@@ -149,7 +146,7 @@ public class EvaluationContext
 			return;
 		}
 
-		var keywords = Options.FilterKeywords(LocalSchema.Keywords!);
+		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, LocalSchema.DeclaredVersion);
 
 		HashSet<Type>? keywordTypesToProcess = null;
 		foreach (var keyword in keywords.OrderBy(k => k.Priority()))

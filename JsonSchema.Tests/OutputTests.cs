@@ -470,6 +470,7 @@ public class OutputTests
 	public void UnevaluatedItemsDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft201909Id)
 			.Items(new JsonSchema[] { true, false })
 			.UnevaluatedItems(false);
 

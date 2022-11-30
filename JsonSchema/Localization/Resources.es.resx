@@ -171,9 +171,6 @@
   <data name="Error_MaxProperties" xml:space="preserve">
     <value>El valor tiene más de [[limit]] propiedades</value>
   </data>
-  <data name="Error_MetaSchemaResolution" xml:space="preserve">
-    <value>No se pudo resolver el esquema [[uri]] para la validación del metaesquema</value>
-  </data>
   <data name="Error_MetaSchemaValidation" xml:space="preserve">
     <value>No se puede validar el esquema actual con el metaesquema [[uri]]</value>
   </data>
