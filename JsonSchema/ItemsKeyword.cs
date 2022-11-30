@@ -14,11 +14,11 @@ namespace Json.Schema;
 [Applicator]
 [SchemaPriority(5)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
@@ -128,8 +128,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 		}
 		else // array
 		{
-			if (context.Options.EvaluatingAs.HasFlag(Draft.Draft202012) ||
-			    context.Options.EvaluatingAs.HasFlag(Draft.DraftNext))
+			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
+			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
 			{
 				context.LocalResult.Fail(Name, ErrorMessages.InvalidItemsForm);
 				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");

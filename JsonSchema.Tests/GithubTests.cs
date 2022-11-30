@@ -172,17 +172,17 @@ public class GithubTests
 		}));
 	}
 
-	[TestCase(Draft.Draft7, @"{}", true)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1}", false)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1, ""d7"": 7}", true)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1, ""d9"": 9}", false)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
-	[TestCase(Draft.Draft201909, @"{}", true)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1}", false)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d7"": 7}", false)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d9"": 9}", true)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
-	public void Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(Draft draft, string instance, bool isValid)
+	[TestCase(SpecVersion.Draft7, @"{}", true)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1}", false)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1, ""d7"": 7}", true)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1, ""d9"": 9}", false)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
+	[TestCase(SpecVersion.Draft201909, @"{}", true)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1}", false)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d7"": 7}", false)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d9"": 9}", true)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
+	public void Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(SpecVersion version, string instance, bool isValid)
 	{
 		var schema = JsonSerializer.Deserialize<JsonSchema>(@"
 {
@@ -195,7 +195,7 @@ public class GithubTests
 }")!;
 		var opts = new EvaluationOptions
 		{
-			EvaluateAs = draft,
+			EvaluateAs = version,
 			OutputFormat = OutputFormat.Hierarchical
 		};
 		var element = JsonNode.Parse(instance);
@@ -496,7 +496,7 @@ public class GithubTests
 	}
 
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 	{
 		// ReSharper disable once InconsistentNaming
@@ -634,7 +634,6 @@ public class GithubTests
 		var res = schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
-			//ValidateAs = Draft.Draft7,
 			ValidateAgainstMetaSchema = true
 		});
 		res.AssertValid();

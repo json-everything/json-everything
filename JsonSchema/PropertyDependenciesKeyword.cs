@@ -13,7 +13,7 @@ namespace Json.Schema;
 /// </summary>
 [Applicator]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
 public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector, IEquatable<PropertyDependenciesKeyword>

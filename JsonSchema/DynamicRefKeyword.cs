@@ -11,8 +11,8 @@ namespace Json.Schema;
 /// Handles `$dynamicRef`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
@@ -61,7 +61,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 
 			if (!scopeRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
 
-			if (context.Options.EvaluatingAs == Draft.Draft202012 &&
+			if (context.Options.EvaluatingAs == SpecVersion.Draft202012 &&
 			    (!targetBase.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
 
 			targetSchema = anchor.Schema;

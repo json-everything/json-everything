@@ -46,16 +46,16 @@ public class Suite
 		switch (draftFolder)
 		{
 			case "draft6":
-				options.EvaluateAs = Draft.Draft6;
+				options.EvaluateAs = SpecVersion.Draft6;
 				break;
 			case "draft7":
-				options.EvaluateAs = Draft.Draft7;
+				options.EvaluateAs = SpecVersion.Draft7;
 				break;
 			case "draft2019-09":
-				options.EvaluateAs = Draft.Draft201909;
+				options.EvaluateAs = SpecVersion.Draft201909;
 				break;
 			case "draft2020-12":
-				options.EvaluateAs = Draft.Draft202012;
+				options.EvaluateAs = SpecVersion.Draft202012;
 				break;
 			case "draft-next":
 				// options.ValidateAs = Draft.DraftNext;

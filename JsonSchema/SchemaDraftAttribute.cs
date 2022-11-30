@@ -3,22 +3,22 @@
 namespace Json.Schema;
 
 /// <summary>
-/// Indicates which JSON Schema draft versions are supported by a keyword.
+/// Indicates which JSON Schema specification versions are supported by a keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
-public class SchemaDraftAttribute : Attribute
+public class SchemaSpecVersionAttribute : Attribute
 {
 	/// <summary>
-	/// The supported draft.
+	/// The supported version.
 	/// </summary>
-	public Draft Draft { get; }
+	public SpecVersion Version { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="SchemaDraftAttribute"/>.
+	/// Creates a new <see cref="SchemaSpecVersionAttribute"/>.
 	/// </summary>
-	/// <param name="draft">The supported draft.</param>
-	public SchemaDraftAttribute(Draft draft)
+	/// <param name="version">The supported version.</param>
+	public SchemaSpecVersionAttribute(SpecVersion version)
 	{
-		Draft = draft;
+		Version = version;
 	}
 }

@@ -13,8 +13,8 @@ namespace Json.Schema;
 /// </summary>
 [Applicator]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PrefixItemsKeywordJsonConverter))]

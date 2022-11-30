@@ -9,11 +9,11 @@ namespace Json.Schema;
 /// <summary>
 /// Handles unrecognized keywords.
 /// </summary>
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [JsonConverter(typeof(UnrecognizedKeywordJsonConverter))]
 public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKeyword>
 {

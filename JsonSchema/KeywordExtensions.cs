@@ -73,56 +73,56 @@ public static class KeywordExtensions
 		return priority;
 	}
 
-	private static readonly Dictionary<Type, Draft> _draftDeclarations =
+	private static readonly Dictionary<Type, SpecVersion> _versionDeclarations =
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
 						!t.IsAbstract &&
 						!t.IsInterface)
-			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaDraftAttribute>()
-				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft));
+			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaSpecVersionAttribute>()
+				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version));
 
 	/// <summary>
-	/// Determines if a keyword is declared by a given draft of the JSON Schema specification.
+	/// Determines if a keyword is declared by a given version of the JSON Schema specification.
 	/// </summary>
 	/// <param name="keyword">The keyword.</param>
-	/// <param name="draft">The queried draft.</param>
-	/// <returns>true if the keyword is supported by the draft; false otherwise</returns>
+	/// <param name="version">The queried version.</param>
+	/// <returns>true if the keyword is supported by the version; false otherwise</returns>
 	/// <exception cref="ArgumentNullException">Thrown if <paramref name="keyword"/> is null.</exception>
-	/// <exception cref="InvalidOperationException">Thrown if the keyword has no <see cref="SchemaDraftAttribute"/> declarations.</exception>
-	public static bool SupportsDraft(this IJsonSchemaKeyword keyword, Draft draft)
+	/// <exception cref="InvalidOperationException">Thrown if the keyword has no <see cref="SchemaSpecVersionAttribute"/> declarations.</exception>
+	public static bool SupportsVersion(this IJsonSchemaKeyword keyword, SpecVersion version)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
 		var keywordType = keyword.GetType();
-		if (!_draftDeclarations.TryGetValue(keywordType, out var supportedDrafts))
+		if (!_versionDeclarations.TryGetValue(keywordType, out var supportedVersions))
 		{
-			supportedDrafts = keywordType.GetCustomAttributes<SchemaDraftAttribute>()
-				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft);
-			if (supportedDrafts == Draft.Unspecified)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaDraftAttribute)}");
+			supportedVersions = keywordType.GetCustomAttributes<SchemaSpecVersionAttribute>()
+				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version);
+			if (supportedVersions == SpecVersion.Unspecified)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaSpecVersionAttribute)}");
 
-			_draftDeclarations[keywordType] = supportedDrafts;
+			_versionDeclarations[keywordType] = supportedVersions;
 		}
 
-		return supportedDrafts.HasFlag(draft);
+		return supportedVersions.HasFlag(version);
 	}
 
-	public static Draft DraftsSupported(this IJsonSchemaKeyword keyword)
+	public static SpecVersion VersionsSupported(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
 		var keywordType = keyword.GetType();
-		if (!_draftDeclarations.TryGetValue(keywordType, out var supportedDrafts))
+		if (!_versionDeclarations.TryGetValue(keywordType, out var supportedVersions))
 		{
-			supportedDrafts = keywordType.GetCustomAttributes<SchemaDraftAttribute>()
-				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft);
-			if (supportedDrafts == Draft.Unspecified)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaDraftAttribute)}");
+			supportedVersions = keywordType.GetCustomAttributes<SchemaSpecVersionAttribute>()
+				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version);
+			if (supportedVersions == SpecVersion.Unspecified)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaSpecVersionAttribute)}");
 
-			_draftDeclarations[keywordType] = supportedDrafts;
+			_versionDeclarations[keywordType] = supportedVersions;
 		}
 
-		return supportedDrafts;
+		return supportedVersions;
 	}
 }

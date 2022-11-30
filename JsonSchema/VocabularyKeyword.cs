@@ -12,9 +12,9 @@ namespace Json.Schema;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(long.MinValue)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
@@ -52,14 +52,14 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
 		switch (context.Options.EvaluatingAs)
 		{
-			case Draft.Unspecified:
-			case Draft.Draft201909:
+			case SpecVersion.Unspecified:
+			case SpecVersion.Draft201909:
 				vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
 				break;
-			case Draft.Draft202012:
+			case SpecVersion.Draft202012:
 				vocabularies[new Uri(Vocabularies.Core202012Id)] = true;
 				break;
-			case Draft.DraftNext:
+			case SpecVersion.DraftNext:
 				vocabularies[new Uri(Vocabularies.CoreNextId)] = true;
 				break;
 		}

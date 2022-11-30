@@ -115,12 +115,12 @@
 						<div class="vstack gap-3">
 							<EditForm Model="_options" class="vstack">
 								<label class="my-2">
-									Draft (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
-									<InputSelect @bind-Value="_options.Draft" DisplayName="Draft" class="form-control">
-										@foreach (Draft draft in Enum.GetValues(typeof(Draft)))
+									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
+									<InputSelect @bind-Value="_options.Version" DisplayName="Version" class="form-control">
+										@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
 										{
-											if (draft == Draft.Unspecified) continue;
-											<option value="@draft">@GetDescription(draft)</option>
+											if (version == SpecVersion.Unspecified) continue;
+											<option value="@version">@GetDescription(version)</option>
 										}
 									</InputSelect>
 								</label>
@@ -136,8 +136,8 @@
 								<label class="my-2">
 									Output structure<br/>
 									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Draft" class="form-control">
-										<option value="@Draft.Draft202012">Draft 2020-12</option>
-										<option value="@Draft.DraftNext">Draft-Next (preview)</option>
+										<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
+										<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
 									</InputSelect>
 								</label>
 								<label class="my-2">
@@ -223,8 +223,8 @@
 	private class SchemaOptionsModel
 	{
 		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
-		public Draft Draft { get; set; } = Draft.Draft202012;
-		public Draft OutputStructure { get; set; } = Draft.Draft202012;
+		public SpecVersion Version { get; set; } = SpecVersion.Draft202012;
+		public SpecVersion OutputStructure { get; set; } = SpecVersion.Draft202012;
 		public string? DefaultBaseUri { get; set; }
 		public bool ValidateFormat { get; set; }
 		public bool IncludeDroppedAnnotations { get; set; }
@@ -232,7 +232,7 @@
 		public EvaluationOptions ToValidationOptions() => new()
 		{
 			OutputFormat = OutputFormat,
-			EvaluateAs = Draft,
+			EvaluateAs = Version,
 			RequireFormatValidation = ValidateFormat,
 			PreserveDroppedAnnotations = IncludeDroppedAnnotations
 		};
@@ -265,14 +265,14 @@
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
 
-	private static string GetDescription(Draft draft) => draft switch
+	private static string GetDescription(SpecVersion draft) => draft switch
 	{
-		Draft.Unspecified => "Draft 2020-12",
-		Draft.Draft6 => "Draft 6",
-		Draft.Draft7 => "Draft 7",
-		Draft.Draft201909 => "Draft 2019-09",
-		Draft.Draft202012 => "Draft 2020-12",
-		Draft.DraftNext => "Draft-Next (preview)",
+		SpecVersion.Unspecified => "Draft 2020-12",
+		SpecVersion.Draft6 => "Draft 6",
+		SpecVersion.Draft7 => "Draft 7",
+		SpecVersion.Draft201909 => "Draft 2019-09",
+		SpecVersion.Draft202012 => "Draft 2020-12",
+		SpecVersion.DraftNext => "Draft-Next (preview)",
 		_ => "Draft 2020-12"
 	};
 
@@ -310,7 +310,7 @@
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
-		if (_options.OutputStructure == Draft.Draft202012)
+		if (_options.OutputStructure == SpecVersion.Draft202012)
 			serializerOptions.Converters.Add(new Pre202012EvaluationResultsJsonConverter());
 		var resultText = JsonSerializer.Serialize(results, serializerOptions);
 

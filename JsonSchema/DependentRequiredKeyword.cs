@@ -13,9 +13,9 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]

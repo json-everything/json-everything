@@ -13,9 +13,9 @@ namespace Json.Schema;
 [Applicator]
 [SchemaPriority(30)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
@@ -104,9 +104,9 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 		context.Log(() => $"No annotations from {Name}.");
 		var array = (JsonArray)context.LocalInstance!;
 		var indicesToEvaluate = Enumerable.Range(startIndex, array.Count - startIndex);
-		if (context.Options.EvaluatingAs.HasFlag(Draft.Draft202012) ||
-		    context.Options.EvaluatingAs.HasFlag(Draft.DraftNext) ||
-		    context.Options.EvaluatingAs == Draft.Unspecified)
+		if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
+		    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext) ||
+		    context.Options.EvaluatingAs == SpecVersion.Unspecified)
 		{
 			var evaluatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
 				.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<int>()))

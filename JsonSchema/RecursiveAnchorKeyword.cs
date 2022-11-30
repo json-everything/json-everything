@@ -9,7 +9,7 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [JsonConverter(typeof(RecursiveAnchorKeywordJsonConverter))]
 public class RecursiveAnchorKeyword : IJsonSchemaKeyword, IEquatable<RecursiveAnchorKeyword>

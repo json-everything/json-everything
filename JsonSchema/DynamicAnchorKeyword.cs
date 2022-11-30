@@ -9,8 +9,8 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]

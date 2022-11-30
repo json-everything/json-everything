@@ -11,8 +11,8 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(long.MinValue + 1)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
 [JsonConverter(typeof(DefinitionsKeywordJsonConverter))]
 public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DefinitionsKeyword>
 {

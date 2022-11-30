@@ -8,9 +8,9 @@ namespace Json.Schema;
 /// Handles `writeOnly`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Metadata201909Id)]
 [Vocabulary(Vocabularies.Metadata202012Id)]
 [Vocabulary(Vocabularies.MetadataNextId)]

@@ -11,7 +11,7 @@ namespace Json.Schema.OpenApi;
 /// Handles `example`.
 /// </summary>
 [SchemaKeyword(_Name)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
 [Vocabulary(Vocabularies.OpenApiId)]
 [JsonConverter(typeof(XmlKeywordJsonConverter))]
 public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>

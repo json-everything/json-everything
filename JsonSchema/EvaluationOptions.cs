@@ -17,10 +17,10 @@ public class EvaluationOptions
 	public static EvaluationOptions Default { get; } = new();
 
 	/// <summary>
-	/// Indicates which schema draft to process as.  This will filter the keywords
+	/// Indicates which specification version to process as.  This will filter the keywords
 	/// of a schema based on their support.
 	/// </summary>
-	public Draft EvaluateAs { get; set; }
+	public SpecVersion EvaluateAs { get; set; }
 	/// <summary>
 	/// Indicates whether the schema should be validated against its `$schema` value.
 	/// this is not typically necessary.
@@ -90,7 +90,7 @@ public class EvaluationOptions
 	/// </summary>
 	public bool PreserveDroppedAnnotations { get; set; }
 
-	internal Draft EvaluatingAs { get; set; }
+	internal SpecVersion EvaluatingAs { get; set; }
 
 	static EvaluationOptions()
 	{
@@ -133,28 +133,28 @@ public class EvaluationOptions
 
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
-		if (EvaluatingAs is Draft.Draft6 or Draft.Draft7)
+		if (EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 			return DisallowSiblingRef(keywords, EvaluatingAs);
 
 		return AllowSiblingRef(keywords, EvaluatingAs);
 	}
 
-	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
 	{
 		var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
 
-		return refKeyword != null ? new[] { refKeyword } : FilterByDraft(keywords, draft);
+		return refKeyword != null ? new[] { refKeyword } : FilterBySpecVersion(keywords, version);
 	}
 
-	private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
 	{
-		return FilterByDraft(keywords, draft);
+		return FilterBySpecVersion(keywords, version);
 	}
 
-	private static IEnumerable<IJsonSchemaKeyword> FilterByDraft(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)
+	private static IEnumerable<IJsonSchemaKeyword> FilterBySpecVersion(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
 	{
-		if (draft == Draft.Unspecified) return keywords;
+		if (version == SpecVersion.Unspecified) return keywords;
 
-		return keywords.Where(k => k.SupportsDraft(draft));
+		return keywords.Where(k => k.SupportsVersion(version));
 	}
 }

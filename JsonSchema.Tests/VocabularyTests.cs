@@ -11,7 +11,7 @@ namespace Json.Schema.Tests;
 public class VocabularyTests
 {
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MinDateJsonConverter))]
 	[Vocabulary("http://mydates.com/vocabulary")]
 	public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
@@ -74,7 +74,7 @@ public class VocabularyTests
 	}
 
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft7 | Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft7 | SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(NonVocabMinDateJsonConverter))]
 	public class NonVocabMinDateKeyword : IJsonSchemaKeyword, IEquatable<NonVocabMinDateKeyword>
 	{
@@ -136,7 +136,7 @@ public class VocabularyTests
 	}
 
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MaxDateJsonConverter))]
 	[Vocabulary("http://mydates.com/vocabulary")]
 	public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>

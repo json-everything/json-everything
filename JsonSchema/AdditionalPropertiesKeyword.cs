@@ -14,11 +14,11 @@ namespace Json.Schema;
 [Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
-[SchemaDraft(Draft.DraftNext)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
@@ -64,7 +64,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		var obj = (JsonObject)context.LocalInstance!;
 		if (!obj.VerifyJsonObject(context)) return;
 
-		if (context.Options.EvaluatingAs is Draft.Draft6 or Draft.Draft7)
+		if (context.Options.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 		{
 			evaluatedProperties = new List<string>();
 			var propertiesKeyword = context.LocalSchema.Keywords!.OfType<PropertiesKeyword>().FirstOrDefault();

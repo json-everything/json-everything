@@ -138,12 +138,12 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineDraft(schema, registry, Draft.Unspecified), true);
+		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineDraft(schema, registry, SpecVersion.Unspecified), true);
 	}
 
-	private static Draft DetermineDraft(JsonSchema schema, SchemaRegistry registry, Draft desiredDraft)
+	private static SpecVersion DetermineDraft(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
 	{
-		if (schema.BoolValue.HasValue) return Draft.DraftNext;
+		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 
 		var schemaKeyword = (SchemaKeyword?)schema.Keywords!.FirstOrDefault(x => x is SchemaKeyword);
 		if (schemaKeyword != null)
@@ -151,16 +151,16 @@ public class JsonSchema : IEquatable<JsonSchema>
 			var metaSchemaId = schemaKeyword.Schema;
 			while (metaSchemaId != null)
 			{
-				var draft = metaSchemaId.OriginalString switch
+				var version = metaSchemaId.OriginalString switch
 				{
-					MetaSchemas.Draft6IdValue => Draft.Draft6,
-					MetaSchemas.Draft7IdValue => Draft.Draft7,
-					MetaSchemas.Draft201909IdValue => Draft.Draft201909,
-					MetaSchemas.Draft202012IdValue => Draft.Draft202012,
-					MetaSchemas.DraftNextIdValue => Draft.DraftNext,
-					_ => Draft.Unspecified
+					MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
+					MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
+					MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
+					MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
+					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
+					_ => SpecVersion.Unspecified
 				};
-				if (draft != Draft.Unspecified) return draft;
+				if (version != SpecVersion.Unspecified) return version;
 
 				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null)
@@ -168,26 +168,26 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 				var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
 				if (newMetaSchemaId == metaSchemaId)
-					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
+					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
 
 				metaSchemaId = newMetaSchemaId;
 			}
 		}
 
-		if (desiredDraft != Draft.Unspecified) return desiredDraft;
+		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
 
-		var allDraftsArray = Enum.GetValues(typeof(Draft)).Cast<Draft>().ToArray();
-		var allDrafts = allDraftsArray.Aggregate(Draft.Unspecified, (a, x) => a | x);
-		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.DraftsSupported());
+		var allDraftsArray = Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
+		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
+		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
 		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
 
-		return candidates.Any() ? candidates.Max() : Draft.DraftNext;
+		return candidates.Any() ? candidates.Max() : SpecVersion.DraftNext;
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, Draft evaluatingAs, bool selfRegister = false)
+	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
-		if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
+		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
 		    schema.Keywords!.Any(x => x is RefKeyword))
 		{
 			schema.BaseUri = currentBaseUri;
@@ -204,7 +204,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 		}
 		else
 		{
-			if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
+			if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
 			    idKeyword.Id.OriginalString[0] == '#' &&
 			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
 			{

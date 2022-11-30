@@ -13,8 +13,8 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
 public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DependenciesKeyword>
 {

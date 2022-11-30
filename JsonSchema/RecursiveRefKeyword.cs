@@ -10,7 +10,7 @@ namespace Json.Schema;
 /// Handles `$recursiveRef`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [JsonConverter(typeof(RecursiveRefKeywordJsonConverter))]
 public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKeyword>

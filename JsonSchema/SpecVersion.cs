@@ -3,13 +3,13 @@
 namespace Json.Schema;
 
 /// <summary>
-/// Enumerates the supported JSON Schema drafts.
+/// Enumerates the supported JSON Schema specification versions.
 /// </summary>
 [Flags]
-public enum Draft
+public enum SpecVersion
 {
 	/// <summary>
-	/// The draft to use should be determined by the collection of keywords.
+	/// The specification version to use should be determined by the collection of keywords.
 	/// </summary>
 	Unspecified,
 	/// <summary>
