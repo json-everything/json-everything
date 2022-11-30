@@ -402,7 +402,7 @@ public class OutputTests
 			)
 			.AdditionalProperties(false);
 
-			var instance = JsonNode.Parse("{\"foo\": null}");
+		var instance = JsonNode.Parse("{\"foo\": null}");
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -421,7 +421,7 @@ public class OutputTests
 			)
 			.UnevaluatedProperties(false);
 
-			var instance = JsonNode.Parse("{\"foo\": null}");
+		var instance = JsonNode.Parse("{\"foo\": null}");
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -445,7 +445,7 @@ public class OutputTests
 			.Ref("#/$defs/reffed")
 			.UnevaluatedProperties(false);
 
-			var instance = JsonNode.Parse("{\"foo\": null}");
+		var instance = JsonNode.Parse("{\"foo\": null}");
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -462,7 +462,7 @@ public class OutputTests
 			.Items(new JsonSchema[] { true, false })
 			.AdditionalItems(false);
 
-			var instance = JsonNode.Parse("[1,2]");
+		var instance = JsonNode.Parse("[1,2]");
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -480,7 +480,7 @@ public class OutputTests
 			.Items(new JsonSchema[] { true, false })
 			.UnevaluatedItems(false);
 
-			var instance = JsonNode.Parse("[1,2]");
+		var instance = JsonNode.Parse("[1,2]");
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
 
@@ -683,7 +683,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema#"",
+  ""schemaLocation"": ""https://test.com/schema"",
   ""instanceLocation"": """",
   ""annotations"": {
     ""default"": ""default value""
@@ -710,7 +710,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema#"",
+  ""schemaLocation"": ""https://test.com/schema"",
   ""instanceLocation"": """",
   ""annotations"": {
     ""title"": ""a title"",
