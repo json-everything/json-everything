@@ -15,7 +15,7 @@ namespace Json.Schema;
 public class EvaluationResults
 {
 	private readonly Uri _currentUri;
-	private readonly JsonPointer? _reference;
+	private JsonPointer? _reference;
 	private Uri? _schemaLocation;
 	private List<EvaluationResults>? _nestedResults;
 	private Dictionary<string, JsonNode?>? _annotations;
@@ -91,7 +91,6 @@ public class EvaluationResults
 	{
 		EvaluationPath = context.EvaluationPath;
 		_currentUri = context.Scope.LocalScope;
-		_reference = context.Reference;
 		InstanceLocation = context.InstanceLocation;
 		IncludeDroppedAnnotations = context.Options.PreserveDroppedAnnotations;
 	}
@@ -106,6 +105,11 @@ public class EvaluationResults
 		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
 		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
 		IncludeDroppedAnnotations = IncludeDroppedAnnotations;
+	}
+
+	internal void SetSchemaReference(JsonPointer pointer)
+	{
+		_reference = pointer;
 	}
 
 	private Uri BuildSchemaLocation()

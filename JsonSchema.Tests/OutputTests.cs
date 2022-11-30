@@ -217,7 +217,7 @@ public class OutputTests
         {
           ""valid"": true,
           ""evaluationPath"": ""/properties/multi/allOf/1"",
-          ""schemaLocation"": ""https://test.com/schema#/$defs/integer/properties/multi/allOf/1"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/1"",
           ""instanceLocation"": ""/multi"",
           ""nested"": [
             {
@@ -272,7 +272,7 @@ public class OutputTests
         {
           ""valid"": false,
           ""evaluationPath"": ""/properties/multi/allOf/1"",
-          ""schemaLocation"": ""https://test.com/schema#/$defs/integer/properties/multi/allOf/1"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/1"",
           ""instanceLocation"": ""/multi"",
           ""nested"": [
             {

@@ -60,8 +60,6 @@ public class EvaluationContext
 	/// </summary>
 	public EvaluationResults LocalResult => _localResults.Peek();
 
-	internal JsonPointer? Reference { get; set; }
-
 	internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs => _metaSchemaVocabs.Peek();
 
 	internal List<(string, JsonPointer)> NavigatedReferences { get; } = new();

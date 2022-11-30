@@ -52,11 +52,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			if (!wasResolved)
-			{
-				context.LocalResult.Fail(DataKeyword.Name, ErrorMessages.BaseUriResolution, ("uri", baseUri));
-				value = null;
-				return false;
-			}
+				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
 		}
 		else
 			data = JsonSerializer.SerializeToNode(context.SchemaRoot);
@@ -65,18 +61,10 @@ public class UriIdentifier : IDataResourceIdentifier
 		{
 			fragment = $"#{fragment}";
 			if (!JsonPointer.TryParse(fragment, out var pointer))
-			{
-				context.LocalResult.Fail(DataKeyword.Name, ErrorMessages.PointerParse, ("fragment", fragment));
-				value = null;
-				return false;
-			}
+				throw new JsonSchemaException($"Unrecognized fragment type `{Target}`");
 
 			if (!pointer!.TryEvaluate(data, out var resolved))
-			{
-				context.LocalResult.Fail(DataKeyword.Name, ErrorMessages.RefResolution, ("uri", fragment));
-				value = null;
-				return false;
-			}
+				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
 			data = resolved;
 		}
 

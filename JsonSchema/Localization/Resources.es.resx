@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Error_BaseUriResolution" xml:space="preserve">
-    <value>No se pudo resolver el URI base [[uri]]</value>
-  </data>
   <data name="Error_Const" xml:space="preserve">
     <value>Esperado [[value]]</value>
   </data>
@@ -200,15 +197,6 @@
   </data>
   <data name="Error_Pattern" xml:space="preserve">
     <value>El valor de la cadena no coincidía con la expresión regular indicada</value>
-  </data>
-  <data name="Error_PointerParse" xml:space="preserve">
-    <value>No se pudo analizar JSON Pointer [[fragment]]</value>
-  </data>
-  <data name="Error_RecursiveRef" xml:space="preserve">
-    <value>Referencia recursiva encontrada</value>
-  </data>
-  <data name="Error_RefResolution" xml:space="preserve">
-    <value>No se pudo resolver la referencia [[uri]]</value>
   </data>
   <data name="Error_Required" xml:space="preserve">
     <value>Las propiedades requeridas [[missing]] no estaban presentes</value>

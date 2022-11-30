@@ -80,6 +80,8 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 
 		context.NavigatedReferences.Add(navigation);
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
+		if (pointerFragment != null)
+			context.LocalResult.SetSchemaReference(pointerFragment);
 		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
@@ -129,65 +131,5 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	{
 		writer.WritePropertyName(RefKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Reference, options);
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _recursiveRef;
-
-	/// <summary>
-	/// Gets or sets the error message for when a recursive reference is encountered.
-	/// </summary>
-	/// <remarks>No tokens are supported.</remarks>
-	public static string RecursiveRef
-	{
-		get => _recursiveRef ?? Get();
-		set => _recursiveRef = value;
-	}
-
-	private static string? _baseUriResolution;
-
-	/// <summary>
-	/// Gets or sets the error message for when a base URI cannot be resolved.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[uri]] - the base URI to resolve
-	/// </remarks>
-	public static string BaseUriResolution
-	{
-		get => _baseUriResolution ?? Get();
-		set => _baseUriResolution = value;
-	}
-
-	private static string? _pointerParse;
-
-	/// <summary>
-	/// Gets or sets the error message for when a URI fragment cannot be parsed into a JSON Pointer.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[fragment]] - the pointer fragment
-	/// </remarks>
-	public static string PointerParse
-	{
-		get => _pointerParse ?? Get();
-		set => _pointerParse = value;
-	}
-
-	private static string? _refResolution;
-
-	/// <summary>
-	/// Gets or sets the error message for when a reference fails to resolve.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[uri]] - the reference to resolve
-	/// </remarks>
-	public static string RefResolution
-	{
-		get => _refResolution ?? Get();
-		set => _refResolution = value;
 	}
 }
