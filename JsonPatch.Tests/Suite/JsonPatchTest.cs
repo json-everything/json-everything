@@ -100,28 +100,36 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 	{
 		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
 
-		var results = JsonPatchTest.TestSchema.Evaluate(node, new EvaluationOptions
+		try
 		{
-			OutputFormat = OutputFormat.Hierarchical,
-			RequireFormatValidation = true
-		});
-		if (results.IsValid)
-		{
-			var model = node.Deserialize<Model>(options)!;
-			return new JsonPatchTest
+			var results = JsonPatchTest.TestSchema.Evaluate(node, new EvaluationOptions
 			{
-				Doc = model.Doc,
-				ExpectedValue = model.Expected.AsNode(),
-				HasExpectedValue = model.Expected.ValueKind != JsonValueKind.Undefined,
-				Error = model.Error,
-				Comment = model.Comment,
-				Patch = model.Patch,
-				Disabled = model.Disabled
-			};
-		}
+				OutputFormat = OutputFormat.Hierarchical,
+				RequireFormatValidation = true
+			});
+			if (results.IsValid)
+			{
+				var model = node.Deserialize<Model>(options)!;
+				return new JsonPatchTest
+				{
+					Doc = model.Doc,
+					ExpectedValue = model.Expected.AsNode(),
+					HasExpectedValue = model.Expected.ValueKind != JsonValueKind.Undefined,
+					Error = model.Error,
+					Comment = model.Comment,
+					Patch = model.Patch,
+					Disabled = model.Disabled
+				};
+			}
 
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
-		return null;
+			Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+			return null;
+		}
+		catch (JsonException e)
+		{
+			Console.WriteLine(e);
+			return null;
+		}
 	}
 
 	public override void Write(Utf8JsonWriter writer, JsonPatchTest? value, JsonSerializerOptions options)

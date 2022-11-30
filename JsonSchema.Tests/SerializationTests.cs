@@ -105,7 +105,7 @@ public class SerializationTests
 	}
 
 	[Test]
-	public void DuplicateKeysAreHandled()
+	public void DuplicateKeysThrow()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -117,8 +117,6 @@ public class SerializationTests
 
 		var json = JsonNode.Parse("{\"foo\":1, \"bar\":2, \"foo\":false}");
 
-		var results = schema.Evaluate(json);
-
-		Assert.IsFalse(results.IsValid);
+		Assert.Throws<JsonException>(() => schema.Evaluate(json));
 	}
 }
