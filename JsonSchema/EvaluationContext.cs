@@ -11,19 +11,13 @@ namespace Json.Schema;
 /// </summary>
 public class EvaluationContext
 {
-	private JsonSchema? _currentAnchorBackup;
-
-	private readonly Stack<Uri> _currentUris = new();
 	private readonly Stack<JsonNode?> _localInstances = new();
 	private readonly Stack<JsonPointer> _instanceLocations = new();
 	private readonly Stack<JsonSchema> _localSchemas = new();
 	private readonly Stack<JsonPointer> _evaluationPaths = new();
 	private readonly Stack<EvaluationResults> _localResults = new();
-	private readonly Stack<bool> _dynamicScopeFlags = new();
 	private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new();
-	private readonly Stack<bool> _directRefNavigation = new();
 	private readonly Stack<bool> _requireAnnotations = new();
-	private JsonSchema? _currentAnchor;
 
 	/// <summary>
 	/// The option set for the evaluation.
@@ -59,45 +53,16 @@ public class EvaluationContext
 	/// </summary>
 	public JsonNode? LocalInstance => _localInstances.Peek();
 
-	/// <summary>
-	/// The current URI, based on `$id` and `$anchor` keywords present in the schema.
-	/// </summary>
-	public Uri CurrentUri => _currentUris.Peek();
-
-	/// <summary>
-	/// The current URI anchor.
-	/// </summary>
-	public JsonSchema? CurrentAnchor
-	{
-		get => _currentAnchor;
-		internal set
-		{
-			_currentAnchorBackup = _currentAnchor ?? value;
-			_currentAnchor = value;
-		}
-	}
+	public DynamicScope Scope { get; }
 
 	/// <summary>
 	/// The result object for the current evaluation.
 	/// </summary>
 	public EvaluationResults LocalResult => _localResults.Peek();
 
-	internal bool UriChanged { get; set; }
 	internal JsonPointer? Reference { get; set; }
 
 	internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs => _metaSchemaVocabs.Peek();
-
-	internal bool IsNewDynamicScope => _dynamicScopeFlags.Peek();
-	internal HashSet<(string, JsonPointer)> NavigatedReferences { get; } = new();
-	internal bool NavigatedByDirectRef
-	{
-		get => _directRefNavigation.Peek();
-		set
-		{
-			_directRefNavigation.Pop();
-			_directRefNavigation.Push(value);
-		}
-	}
 
 	/// <summary>
 	/// Whether processing optimizations can be applied (output format = flag).
@@ -106,22 +71,20 @@ public class EvaluationContext
 
 #pragma warning disable 8618
 	internal EvaluationContext(EvaluationOptions options,
-		Uri? currentUri,
+		Uri currentUri,
 		JsonNode? instanceRoot,
 		JsonSchema schemaRoot)
 	{
 		Options = options;
-		_currentUris.Push(currentUri ?? options.DefaultBaseUri);
 		InstanceRoot = instanceRoot;
 		SchemaRoot = schemaRoot;
+		Scope = new DynamicScope(currentUri);
 		_localInstances.Push(instanceRoot);
 		_instanceLocations.Push(JsonPointer.Empty);
 		_localSchemas.Push(schemaRoot);
 		_evaluationPaths.Push(JsonPointer.Empty);
 		_localResults.Push(new EvaluationResults(this));
-		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(null);
-		_directRefNavigation.Push(false);
 		_requireAnnotations.Push(RequiresAnnotationCollection(schemaRoot));
 	}
 #pragma warning restore 8618
@@ -133,14 +96,11 @@ public class EvaluationContext
 	/// <param name="instance">The data instance.</param>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
-	/// <param name="newUri">The URI of the subschema.</param>
 	public void Push(in JsonPointer instanceLocation,
 		in JsonNode? instance,
 		in JsonPointer evaluationPath,
-		in JsonSchema subschema,
-		Uri? newUri = null)
+		in JsonSchema subschema)
 	{
-		_currentUris.Push(newUri ?? CurrentUri);
 		_instanceLocations.Push(instanceLocation);
 		_localInstances.Push(instance);
 		_evaluationPaths.Push(evaluationPath);
@@ -149,9 +109,9 @@ public class EvaluationContext
 		var newResult = new EvaluationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
-		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
-		_directRefNavigation.Push(false);
+		if (Scope.LocalScope != subschema.BaseUri)
+			Scope.Push(subschema.BaseUri);
 	}
 
 	/// <summary>
@@ -161,10 +121,8 @@ public class EvaluationContext
 	/// <param name="subschema">The subschema.</param>
 	/// <param name="newUri">The URI of the subschema.</param>
 	public void Push(in JsonPointer evaluationPath,
-		in JsonSchema subschema,
-		Uri? newUri = null)
+		in JsonSchema subschema)
 	{
-		_currentUris.Push(newUri ?? CurrentUri);
 		_instanceLocations.Push(InstanceLocation);
 		_localInstances.Push(LocalInstance);
 		_evaluationPaths.Push(evaluationPath);
@@ -173,9 +131,9 @@ public class EvaluationContext
 		var newResult = new EvaluationResults(this);
 		LocalResult.AddNestedResult(newResult);
 		_localResults.Push(newResult);
-		_dynamicScopeFlags.Push(false);
 		_metaSchemaVocabs.Push(_metaSchemaVocabs.Peek());
-		_directRefNavigation.Push(false);
+		if (Scope.LocalScope != subschema.BaseUri)
+			Scope.Push(subschema.BaseUri);
 	}
 
 	/// <summary>
@@ -207,9 +165,6 @@ public class EvaluationContext
 
 			if (!LocalResult.IsValid && ApplyOptimizations) break;
 		}
-
-		if (IsNewDynamicScope)
-			Options.SchemaRegistry.ExitingUriScope();
 	}
 
 	private bool RequiresAnnotationCollection(JsonSchema schema)
@@ -223,21 +178,14 @@ public class EvaluationContext
 	/// </summary>
 	public void Pop()
 	{
-		_currentUris.Pop();
 		_instanceLocations.Pop();
 		_localInstances.Pop();
 		_evaluationPaths.Pop();
-		_localSchemas.Pop();
+		var oldLocalSchema = _localSchemas.Pop();
 		_localResults.Pop();
-		_dynamicScopeFlags.Pop();
 		_metaSchemaVocabs.Pop();
-		_directRefNavigation.Pop();
-	}
-
-	internal void UpdateCurrentUri(Uri newUri)
-	{
-		UpdateCurrentValue(_currentUris, newUri);
-		UpdateCurrentValue(_dynamicScopeFlags, true);
+		if (oldLocalSchema.BaseUri != _localSchemas.Peek().BaseUri)
+			Scope.Pop();
 	}
 
 	internal void UpdateMetaSchemaVocabs(IReadOnlyDictionary<Uri, bool> newVocabSet)
@@ -249,11 +197,6 @@ public class EvaluationContext
 	{
 		stack.Pop();
 		stack.Push(newValue);
-	}
-
-	internal void ValidateAnchor()
-	{
-		CurrentAnchor = _currentAnchorBackup;
 	}
 
 	private HashSet<Type>? GetKeywordsToProcess()

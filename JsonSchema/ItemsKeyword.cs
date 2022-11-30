@@ -23,7 +23,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
-public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
+public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -165,19 +165,6 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		if (SingleSchema != null)
-			SingleSchema.RegisterSubschemas(registry, currentUri);
-		else
-		{
-			foreach (var schema in ArraySchemas!)
-			{
-				schema.RegisterSubschemas(registry, currentUri);
-			}
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

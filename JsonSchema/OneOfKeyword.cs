@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(OneOfKeywordJsonConverter))]
-public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<OneOfKeyword>
+public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<OneOfKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -75,14 +75,6 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		if (validCount != 1)
 			context.LocalResult.Fail(Name, ErrorMessages.OneOf, ("count", validCount));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in Schemas)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -16,7 +16,7 @@ namespace Json.Schema;
 /// </summary>
 [JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
+public class JsonSchema : IEquatable<JsonSchema>
 {
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -41,7 +41,10 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	internal Uri? BaseUri { get; private set; }
+	internal Uri BaseUri { get; private set; } = GenerateBaseUri();
+	internal bool IsResourceRoot { get; private set; }
+	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
+	internal JsonSchema? RecursiveAnchor { get; set; }
 
 	private JsonSchema(bool value)
 	{
@@ -91,6 +94,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
+	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid():N}");
+
 	/// <summary>
 	/// Evaluates an instance against this schema.
 	/// </summary>
@@ -102,17 +107,11 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
 		options.Log.Write(() => "Registering subschemas.");
-		var baseUri = RegisterSubschemasAndGetBaseUri(options.SchemaRegistry, BaseUri ?? options.DefaultBaseUri);
-		if (baseUri != null! && baseUri.IsAbsoluteUri)
-			BaseUri = baseUri;
+		// BaseUri may change if $id is present
+		options.EvaluatingAs = DetermineDraft(this, options.EvaluateAs);
+		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
-		var currentUri = baseUri == options.DefaultBaseUri
-			? BaseUri ?? baseUri
-			: baseUri;
-
-		var context = new EvaluationContext(options, currentUri, root, this);
-
-		context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
+		var context = new EvaluationContext(options, BaseUri, root, this);
 
 		options.Log.Write(() => "Beginning evaluation.");
 		context.Evaluate();
@@ -137,54 +136,139 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return results;
 	}
 
-	/// <summary>
-	/// Registers a subschema.  To be called from <see cref="IRefResolvable"/> keywords.
-	/// </summary>
-	/// <param name="registry">The registry into which the subschema should be registered.</param>
-	/// <param name="currentUri">The current URI.</param>
-	public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		RegisterSubschemasAndGetBaseUri(registry, currentUri);
+		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineDraft(schema, Draft.Unspecified), true);
 	}
 
-	private Uri? RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
+	private static Draft DetermineDraft(JsonSchema schema, Draft desiredDraft)
 	{
-		if (Keywords == null) return null; // boolean cases
+		if (schema.BoolValue.HasValue) return Draft.DraftNext;
 
-		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
-		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
-		var refMatters = refKeyword != null &&
-						 (registry.EvaluatingAs == Draft.Draft6 || registry.EvaluatingAs == Draft.Draft7);
-		UpdateBaseUri(currentUri);
-		if (idKeyword != null && !refMatters)
+		var schemaKeyword = (SchemaKeyword?)schema.Keywords!.FirstOrDefault(x => x is SchemaKeyword);
+		if (schemaKeyword != null)
 		{
-			currentUri = idKeyword.UpdateUri(currentUri);
-			var parts = idKeyword.Id.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-			var fragment = parts.Length > 1 ? parts[1] : null;
-#pragma warning disable 8602
-			if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
-#pragma warning restore 8602
-				registry.RegisterSchema(currentUri, this);
+			var metaSchemaId = schemaKeyword.Schema;
+			while (metaSchemaId != null)
+			{
+				var draft = metaSchemaId.OriginalString switch
+				{
+					MetaSchemas.Draft6IdValue => Draft.Draft6,
+					MetaSchemas.Draft7IdValue => Draft.Draft7,
+					MetaSchemas.Draft201909IdValue => Draft.Draft201909,
+					MetaSchemas.Draft202012IdValue => Draft.Draft202012,
+					MetaSchemas.DraftNextIdValue => Draft.DraftNext,
+					_ => Draft.Unspecified
+				};
+				if (draft != Draft.Unspecified) return draft;
+
+				var metaSchema = SchemaRegistry.Global.Get(metaSchemaId);
+				if (metaSchema == null)
+					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
+
+				var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+				if (newMetaSchemaId == metaSchemaId)
+					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
+
+				metaSchemaId = newMetaSchemaId;
+			}
+		}
+
+		if (desiredDraft != Draft.Unspecified) return desiredDraft;
+
+		var allDraftsArray = Enum.GetValues(typeof(Draft)).Cast<Draft>().ToArray();
+		var allDrafts = allDraftsArray.Aggregate(Draft.Unspecified, (a, x) => a | x);
+		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.DraftsSupported());
+		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
+
+		return candidates.Any() ? candidates.Max() : Draft.DraftNext;
+	}
+
+	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, Draft evaluatingAs, bool selfRegister = false)
+	{
+		if (schema.BoolValue.HasValue) return;
+		if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
+		    schema.Keywords!.Any(x => x is RefKeyword))
+		{
+			schema.BaseUri = currentBaseUri;
+			return;
+		}
+
+		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
+
+		if (idKeyword == null)
+		{
+			schema.BaseUri = currentBaseUri;
+			if (selfRegister)
+				registry.RegisterSchema(schema.BaseUri, schema);
+		}
+		else
+		{
+			if (evaluatingAs is Draft.Draft6 or Draft.Draft7 &&
+			    idKeyword.Id.OriginalString[0] == '#' &&
+			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
+			{
+				schema.BaseUri = currentBaseUri;
+				resourceRoot.Anchors[idKeyword.Id.OriginalString.Substring(1)] = (schema, false);
+			}
 			else
-				registry.RegisterAnchor(currentUri, fragment, this);
+			{
+				schema.IsResourceRoot = true;
+				resourceRoot = schema;
+				schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
+				registry.RegisterSchema(schema.BaseUri, schema);
+			}
 		}
 
-		var anchors = Keywords.OfType<IAnchorProvider>();
-		foreach (var anchor in anchors)
+		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
+		if (anchorKeyword != null)
+			resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
+
+		var dynamicAnchorKeyword = schema.Keywords!.OfType<DynamicAnchorKeyword>().FirstOrDefault();
+		if (dynamicAnchorKeyword != null)
+			resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
+
+		var recursiveAnchorKeyword = schema.Keywords!.OfType<RecursiveAnchorKeyword>().FirstOrDefault();
+		if (recursiveAnchorKeyword is { Value: true })
+			resourceRoot.RecursiveAnchor = schema;
+
+		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
+
+		foreach (var subschema in subschemas)
 		{
-			anchor.RegisterAnchor(registry, currentUri, this);
+			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
 		}
-
-		var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
-		foreach (var keyword in keywords)
-		{
-			keyword.RegisterSubschemas(registry, currentUri);
-		}
-
-		return currentUri;
 	}
 
-	internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)
+	private static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	{
+		switch (keyword)
+		{
+			case ISchemaContainer { Schema: { } } container:
+				yield return container.Schema;
+				break;
+			case ISchemaCollector collector:
+				foreach (var schema in collector.Schemas)
+				{
+					yield return schema;
+				}
+				break;
+			case IKeyedSchemaCollector collector:
+				foreach (var schema in collector.Schemas.Values)
+				{
+					yield return schema;
+				}
+				break;
+			case ICustomSchemaCollector collector:
+				foreach (var schema in collector.Schemas)
+				{
+					yield return schema;
+				}
+				break;
+		}
+	}
+
+	internal JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object resolvable = this;
 		for (var i = 0; i < pointer.Segments.Length; i++)
@@ -221,14 +305,6 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 						newResolvable = subschema;
 					break;
 				case JsonSchema { Keywords: { } } schema:
-					if (!ReferenceEquals(schema, this))
-					{
-						// the assumption here is that if the schema is this schema, the $ref
-						// navigated directly to this schema, and we don't need to update the uri
-						var idKeyword = schema.Keywords.OfType<IdKeyword>().SingleOrDefault();
-						if (idKeyword != null && i != pointer.Segments.Length - 1)
-							currentUri = idKeyword.UpdateUri(currentUri);
-					}
 					newResolvable = schema.Keywords?.FirstOrDefault(k => k.Keyword() == segment.Value);
 					break;
 			}
@@ -238,13 +314,16 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
 				newPointer.TryEvaluate(unrecognized.Value, out var value);
 				var asSchema = FromText(value?.ToString() ?? "null");
-				return (asSchema, currentUri);
+				var hostSchema = (JsonSchema)resolvable;
+				asSchema.BaseUri = hostSchema.BaseUri;
+				PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry, options.EvaluatingAs);
+				return asSchema;
 			}
 
 			resolvable = newResolvable!;
 		}
 
-		return (resolvable as JsonSchema, currentUri);
+		return resolvable as JsonSchema;
 	}
 
 	internal void UpdateBaseUri(Uri newUri)

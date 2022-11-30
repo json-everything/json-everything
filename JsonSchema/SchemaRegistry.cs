@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Json.Schema;
 
@@ -9,29 +8,15 @@ namespace Json.Schema;
 /// </summary>
 public class SchemaRegistry
 {
-	private class Anchor
-	{
-#pragma warning disable 8618
-		public JsonSchema Schema { get; set; }
-#pragma warning restore 8618
-		public bool HasDynamic { get; set; }
-		public int DynamicSequence { get; set; } = int.MaxValue;
-	}
-
 	private class Registration
 	{
-		private Dictionary<string, Anchor>? _anchors;
-
 		public JsonSchema Root { get; set; } = null!;
-
-		public Dictionary<string, Anchor> Anchors => _anchors ??= new Dictionary<string, Anchor>();
 	}
 
 	private static readonly Uri _empty = new("http://everything.json/");
 
 	private Dictionary<Uri, Registration>? _registered;
 	private Func<Uri, JsonSchema?>? _fetch;
-	private Stack<Uri>? _scopes;
 	private readonly EvaluationOptions _options;
 
 	/// <summary>
@@ -57,37 +42,37 @@ public class SchemaRegistry
 
 	internal void InitializeMetaSchemas()
 	{
-		MetaSchemas.Draft6.RegisterSubschemas(this, MetaSchemas.Draft6Id);
+		JsonSchema.Initialize(MetaSchemas.Draft6, this);
 
-		MetaSchemas.Draft7.RegisterSubschemas(this, MetaSchemas.Draft7Id);
+		JsonSchema.Initialize(MetaSchemas.Draft7, this);
 
-		MetaSchemas.Draft201909.RegisterSubschemas(this, MetaSchemas.Draft201909Id);
-		MetaSchemas.Core201909.RegisterSubschemas(this, MetaSchemas.Core201909Id);
-		MetaSchemas.Applicator201909.RegisterSubschemas(this, MetaSchemas.Applicator201909Id);
-		MetaSchemas.Validation201909.RegisterSubschemas(this, MetaSchemas.Validation201909Id);
-		MetaSchemas.Metadata201909.RegisterSubschemas(this, MetaSchemas.Metadata201909Id);
-		MetaSchemas.Format201909.RegisterSubschemas(this, MetaSchemas.Format201909Id);
-		MetaSchemas.Content201909.RegisterSubschemas(this, MetaSchemas.Content201909Id);
+		JsonSchema.Initialize(MetaSchemas.Draft201909, this);
+		JsonSchema.Initialize(MetaSchemas.Core201909, this);
+		JsonSchema.Initialize(MetaSchemas.Applicator201909, this);
+		JsonSchema.Initialize(MetaSchemas.Validation201909, this);
+		JsonSchema.Initialize(MetaSchemas.Metadata201909, this);
+		JsonSchema.Initialize(MetaSchemas.Format201909, this);
+		JsonSchema.Initialize(MetaSchemas.Content201909, this);
 
-		MetaSchemas.Draft202012.RegisterSubschemas(this, MetaSchemas.Draft202012Id);
-		MetaSchemas.Core202012.RegisterSubschemas(this, MetaSchemas.Core202012Id);
-		MetaSchemas.Applicator202012.RegisterSubschemas(this, MetaSchemas.Applicator202012Id);
-		MetaSchemas.Validation202012.RegisterSubschemas(this, MetaSchemas.Validation202012Id);
-		MetaSchemas.Metadata202012.RegisterSubschemas(this, MetaSchemas.Metadata202012Id);
-		MetaSchemas.Unevaluated202012.RegisterSubschemas(this, MetaSchemas.Unevaluated202012Id);
-		MetaSchemas.FormatAnnotation202012.RegisterSubschemas(this, MetaSchemas.FormatAnnotation202012Id);
-		MetaSchemas.FormatAssertion202012.RegisterSubschemas(this, MetaSchemas.FormatAssertion202012Id);
-		MetaSchemas.Content202012.RegisterSubschemas(this, MetaSchemas.Content202012Id);
+		JsonSchema.Initialize(MetaSchemas.Draft202012, this);
+		JsonSchema.Initialize(MetaSchemas.Core202012, this);
+		JsonSchema.Initialize(MetaSchemas.Applicator202012, this);
+		JsonSchema.Initialize(MetaSchemas.Validation202012, this);
+		JsonSchema.Initialize(MetaSchemas.Metadata202012, this);
+		JsonSchema.Initialize(MetaSchemas.Unevaluated202012, this);
+		JsonSchema.Initialize(MetaSchemas.FormatAnnotation202012, this);
+		JsonSchema.Initialize(MetaSchemas.FormatAssertion202012, this);
+		JsonSchema.Initialize(MetaSchemas.Content202012, this);
 
-		MetaSchemas.DraftNext.RegisterSubschemas(this, MetaSchemas.DraftNextId);
-		MetaSchemas.CoreNext.RegisterSubschemas(this, MetaSchemas.CoreNextId);
-		MetaSchemas.ApplicatorNext.RegisterSubschemas(this, MetaSchemas.ApplicatorNextId);
-		MetaSchemas.ValidationNext.RegisterSubschemas(this, MetaSchemas.ValidationNextId);
-		MetaSchemas.MetadataNext.RegisterSubschemas(this, MetaSchemas.MetadataNextId);
-		MetaSchemas.UnevaluatedNext.RegisterSubschemas(this, MetaSchemas.UnevaluatedNextId);
-		MetaSchemas.FormatAnnotationNext.RegisterSubschemas(this, MetaSchemas.FormatAnnotationNextId);
-		MetaSchemas.FormatAssertionNext.RegisterSubschemas(this, MetaSchemas.FormatAssertionNextId);
-		MetaSchemas.ContentNext.RegisterSubschemas(this, MetaSchemas.ContentNextId);
+		JsonSchema.Initialize(MetaSchemas.DraftNext, this);
+		JsonSchema.Initialize(MetaSchemas.CoreNext, this);
+		JsonSchema.Initialize(MetaSchemas.ApplicatorNext, this);
+		JsonSchema.Initialize(MetaSchemas.ValidationNext, this);
+		JsonSchema.Initialize(MetaSchemas.MetadataNext, this);
+		JsonSchema.Initialize(MetaSchemas.UnevaluatedNext, this);
+		JsonSchema.Initialize(MetaSchemas.FormatAnnotationNext, this);
+		JsonSchema.Initialize(MetaSchemas.FormatAssertionNext, this);
+		JsonSchema.Initialize(MetaSchemas.ContentNext, this);
 	}
 
 	/// <summary>
@@ -98,8 +83,7 @@ public class SchemaRegistry
 	public void Register(Uri? uri, JsonSchema schema)
 	{
 		RegisterSchema(uri, schema);
-		if (uri != null)
-			schema.RegisterSubschemas(this, uri);
+		JsonSchema.Initialize(schema, this, uri);
 	}
 
 	internal void RegisterSchema(Uri? uri, JsonSchema schema)
@@ -113,101 +97,20 @@ public class SchemaRegistry
 	}
 
 	/// <summary>
-	/// Registers a schema by a named anchor.
-	/// </summary>
-	/// <param name="uri">The URI ID of the schema.</param>
-	/// <param name="anchor">The anchor name.</param>
-	/// <param name="schema">The schema.</param>
-	public void RegisterAnchor(Uri? uri, string anchor, JsonSchema schema)
-	{
-		_registered ??= new Dictionary<Uri, Registration>();
-		uri = MakeAbsolute(uri);
-		var registration = CheckRegistry(_registered, uri);
-		if (registration == null)
-			_registered[uri] = registration = new Registration();
-		if (!registration.Anchors.ContainsKey(anchor))
-			registration.Anchors[anchor] = new Anchor { Schema = schema };
-	}
-
-	internal void RegisterDynamicAnchor(Uri uri, string anchor, JsonSchema schema)
-	{
-		_registered ??= new Dictionary<Uri, Registration>();
-		var registration = CheckRegistry(_registered, uri);
-		if (registration == null)
-			_registered[uri] = registration = new Registration();
-		if (registration.Anchors.TryGetValue(anchor, out var existing))
-			existing.HasDynamic = true;
-		else
-			registration.Anchors[anchor] = new Anchor { Schema = schema, HasDynamic = true };
-	}
-
-	internal bool DynamicScopeDefinesAnchor(Uri uri, string anchor)
-	{
-		_registered ??= new Dictionary<Uri, Registration>();
-		var registration = CheckRegistry(_registered, uri);
-		if (registration == null && !ReferenceEquals(Global, this))
-			registration = CheckRegistry(Global._registered!, uri);
-		if (registration == null) return false;
-		if (!registration.Anchors.TryGetValue(anchor, out var existing)) return false;
-
-		return existing.HasDynamic;
-	}
-
-	/// <summary>
 	/// Gets a schema by URI ID and/or anchor.
 	/// </summary>
 	/// <param name="uri">The URI ID.</param>
-	/// <param name="anchor">(optional) The anchor name.</param>
 	/// <returns>
 	/// The schema, if registered in either this or the global registry;4
 	/// otherwise null.
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public JsonSchema? Get(Uri? uri, string? anchor = null)
+	public JsonSchema? Get(Uri? uri)
 	{
 		var registration = GetRegistration(uri);
 
-		if (registration == null) return null;
-
-		if (string.IsNullOrEmpty(anchor)) return registration.Root;
-		return registration.Anchors.TryGetValue(anchor!, out var registeredAnchor) ? registeredAnchor.Schema : null;
-	}
-
-	internal JsonSchema? GetDynamic(Uri? uri, string? anchor)
-	{
-		var firstAnchor = _registered?.SelectMany(x => x.Value.Anchors)
-			.Where(x => x.Key == anchor && x.Value.HasDynamic)
-			.Select(x => x.Value)
-			.OrderBy(x => x.DynamicSequence)
-			.FirstOrDefault();
-		if (firstAnchor != null) return firstAnchor.Schema;
-
-		Registration? registration = null;
-		uri = MakeAbsolute(uri);
-
-		// check local
-		if (_registered != null)
-			registration = CheckRegistry(_registered, uri);
-		// if not found, check global
-		if (registration == null && !ReferenceEquals(Global, this))
-			registration = CheckRegistry(Global._registered!, uri);
-
-		if (_scopes != null && registration != null && !string.IsNullOrEmpty(anchor) &&
-			registration.Anchors.TryGetValue(anchor!, out var anchorRegistration) &&
-			anchorRegistration.HasDynamic)
-		{
-			// Stacks iterate their values in Pop order.  Since we want the one at the root, we reverse.
-			foreach (var scope in _scopes.Reverse())
-			{
-				registration = GetRegistration(scope);
-				registration!.Anchors.TryGetValue(anchor!, out var registeredAnchor);
-				if (registeredAnchor?.HasDynamic == true)
-					return registeredAnchor.Schema;
-			}
-		}
-
-		return Get(uri, anchor);
+		return registration?.Root;
 	}
 
 	private Registration? GetRegistration(Uri? uri)
@@ -227,61 +130,10 @@ public class SchemaRegistry
 			if (schema == null) return null;
 
 			Register(uri, schema);
-			//schema.RegisterSubschemas(this, uri);
 			registration = CheckRegistry(_registered!, uri);
 		}
 
 		return registration;
-	}
-
-	internal void EnteringUriScope(Uri uri)
-	{
-		Registration? registration = null;
-		uri = MakeAbsolute(uri);
-		// check local
-		if (_registered != null)
-			registration = CheckRegistry(_registered, uri);
-		// if not found, check global
-		if (registration == null && !ReferenceEquals(Global, this))
-			registration = CheckRegistry(Global._registered!, uri);
-
-		if (registration != null)
-		{
-			_scopes ??= new Stack<Uri>();
-			_scopes.Push(MakeAbsolute(uri));
-
-			foreach (var anchor in registration.Anchors)
-			{
-				if (anchor.Value.HasDynamic)
-					anchor.Value.DynamicSequence = _registered!.SelectMany(x =>
-						x.Value.Anchors.Where(y => y.Key == anchor.Key &&
-												   y.Value.HasDynamic &&
-												   y.Value.DynamicSequence != int.MaxValue)).Count();
-			}
-		}
-	}
-
-	internal void ExitingUriScope()
-	{
-		var uri = _scopes?.Pop();
-
-		Registration? registration = null;
-		uri = MakeAbsolute(uri);
-		// check local
-		if (_registered != null)
-			registration = CheckRegistry(_registered, uri);
-		// if not found, check global
-		if (registration == null && !ReferenceEquals(Global, this))
-			registration = CheckRegistry(Global._registered!, uri);
-
-		if (registration != null)
-		{
-			foreach (var anchor in registration.Anchors)
-			{
-				if (anchor.Value.HasDynamic)
-					anchor.Value.DynamicSequence = int.MaxValue;
-			}
-		}
 	}
 
 	private static Registration? CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)

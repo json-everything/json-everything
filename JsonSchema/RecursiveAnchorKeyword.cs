@@ -40,13 +40,7 @@ public class RecursiveAnchorKeyword : IJsonSchemaKeyword, IEquatable<RecursiveAn
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (!context.UriChanged || Value)
-			context.ValidateAnchor();
-
-		context.LocalResult.SetAnnotation(Name, Value);
-		if (Value)
-			context.CurrentAnchor ??= context.LocalSchema;
-
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
 	}
 

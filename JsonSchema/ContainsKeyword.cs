@@ -22,7 +22,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
-public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContainsKeyword>
+public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ContainsKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -106,11 +106,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 		else
 			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

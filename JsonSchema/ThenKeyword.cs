@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
-public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ThenKeyword>
+public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ThenKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -68,11 +68,6 @@ public class ThenKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 		if (!valid)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

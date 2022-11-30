@@ -233,9 +233,6 @@
 		{
 			OutputFormat = OutputFormat,
 			EvaluateAs = Draft,
-			DefaultBaseUri = Uri.TryCreate(DefaultBaseUri, UriKind.Absolute, out var uri)
-				? uri
-				: null!,
 			RequireFormatValidation = ValidateFormat,
 			PreserveDroppedAnnotations = IncludeDroppedAnnotations
 		};

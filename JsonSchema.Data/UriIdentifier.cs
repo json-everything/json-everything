@@ -44,9 +44,9 @@ public class UriIdentifier : IDataResourceIdentifier
 				wasResolved = Download(newUri, out data);
 			else
 			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
+				var uriFolder = context.Scope.LocalScope.OriginalString.EndsWith("/")
+					? context.Scope.LocalScope
+					: context.Scope.LocalScope.GetParentUri();
 				var newBaseUri = new Uri(uriFolder, baseUri);
 				wasResolved = Download(newBaseUri, out data);
 			}

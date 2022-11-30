@@ -13,6 +13,7 @@ public class SlackTests
 	{
 		var json =
 			@"{
+					""$id"": ""http://localhost/"",
 					""$defs"": {
 						""M"": {
 							""$id"": ""http://localhost/M"",
@@ -39,8 +40,7 @@ public class SlackTests
 		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
 			Log = new TestLog(),
-			OutputFormat = OutputFormat.Hierarchical,
-			DefaultBaseUri = new Uri("http://localhost/")
+			OutputFormat = OutputFormat.Hierarchical
 		});
 
 		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -42,96 +44,61 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var parts = Reference.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-		var baseUri = parts[0];
-		var fragment = parts.Length > 1 ? parts[1] : null;
 
+		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+		var anchorName = Reference.OriginalString.Split('#').Last();
 
-		JsonSchema? GetSchema(Uri? uri, string? anchor)
+		JsonSchema? targetSchema = null;
+		JsonSchema? targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
+		foreach (var uri in context.Scope.Reverse())
 		{
-			var uriScope = uri ?? context.CurrentUri;
-			var currentScopeDefinesDynamicAnchor =
-				!string.IsNullOrEmpty(fragment) &&
-				context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(uriScope, fragment!);
-
-			return currentScopeDefinesDynamicAnchor
-				? context.Options.SchemaRegistry.GetDynamic(uri, anchor)
-				: context.Options.SchemaRegistry.Get(uri, anchor);
-		}
-
-		Uri? newUri;
-		JsonSchema? baseSchema = null;
-		if (!string.IsNullOrEmpty(baseUri))
-		{
-			if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-				baseSchema = GetSchema(newUri, fragment);
-			else
+			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
+			if (scopeRoot == null)
+				throw new Exception("This shouldn't happen");
+			if (scopeRoot.Anchors.TryGetValue(anchorName, out var anchor) && anchor.IsDynamic)
 			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
-				newUri = new Uri(uriFolder, baseUri);
-				baseSchema = GetSchema(newUri, fragment);
-			}
-		}
-		else
-		{
-			newUri = context.CurrentUri;
-			baseSchema ??= GetSchema(newUri, fragment) ?? context.SchemaRoot;
-			newUri = baseSchema.BaseUri;
-		}
-
-		var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
-		var navigation = (absoluteReference, context.InstanceLocation);
-		if (context.NavigatedReferences.Contains(navigation))
-		{
-			context.LocalResult.Fail(Name, ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
-			context.ExitKeyword(Name, false);
-			return;
-		}
-
-		JsonSchema? schema;
-		if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-			schema = GetSchema(newUri, fragment);
-		else
-		{
-			if (baseSchema == null)
-			{
-				context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment!));
-				context.ExitKeyword(Name, false);
-				return;
-			}
-
-			if (!string.IsNullOrEmpty(fragment))
-			{
-				fragment = $"#{fragment}";
-				if (!JsonPointer.TryParse(fragment, out var pointer))
+				if (context.Options.EvaluatingAs == Draft.Draft202012)
 				{
-					context.LocalResult.Fail(Name, ErrorMessages.PointerParse, ("fragment", fragment));
-					context.ExitKeyword(Name, false);
-					return;
+					targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
+					if (targetBase == null)
+						throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+					if (!targetBase.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic) break;
 				}
 
-				(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
+				targetSchema = anchor.Schema;
+				break;
+			}
+		}
+
+		if (targetSchema == null)
+		{
+			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
+			{
+				if (targetBase == null)
+					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 			}
 			else
-				schema = baseSchema;
+			{
+				anchorName = newUri.Fragment.Substring(1);
+				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorName))
+					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
+				if (targetBase?.Anchors.TryGetValue(anchorName, out var anchorDefinition) ?? false)
+					targetSchema = anchorDefinition.Schema;
+			}
+
+			if (targetSchema == null)
+				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		if (schema == null)
-		{
-			context.LocalResult.Fail(Name, ErrorMessages.RefResolution, ("uri", Reference));
-			context.ExitKeyword(Name, false);
-			return;
-		}
-
-		context.NavigatedReferences.Add(navigation);
-		context.Push(context.EvaluationPath.Combine(Name), schema, schema.BaseUri ?? newUri);
+		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)
 			context.LocalResult.Fail();
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

@@ -47,33 +47,8 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
-			(context.Options.EvaluatingAs == Draft.Draft6 || context.Options.EvaluatingAs == Draft.Draft7))
-		{
-			context.NotApplicable(() => "$ref present; ignoring");
-			return;
-		}
-
-		var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
-		context.UriChanged |= context.CurrentUri != newUri;
-		if (context.UriChanged)
-			context.CurrentAnchor = null;
-		context.Options.SchemaRegistry.EnteringUriScope(newUri);
-		context.UpdateCurrentUri(newUri);
-		context.LocalSchema.UpdateBaseUri(newUri);
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
-	}
-
-	internal Uri UpdateUri(Uri? currentUri)
-	{
-		if (currentUri == null || Id.IsAbsoluteUri) return Id;
-
-		var idHasBase = Id.OriginalString.IndexOf('#') != 0;
-		var baseUri = currentUri;
-		if (idHasBase && currentUri.Segments.Length > 1 && currentUri.IsFile)
-			baseUri = baseUri.GetParentUri();
-
-		return new Uri(baseUri, Id);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

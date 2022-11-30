@@ -14,7 +14,7 @@ namespace Json.Schema;
 [SchemaDraft(Draft.Draft6)]
 [SchemaDraft(Draft.Draft7)]
 [JsonConverter(typeof(DefinitionsKeywordJsonConverter))]
-public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DefinitionsKeyword>
+public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DefinitionsKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -48,14 +48,6 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSche
 		context.LocalResult.Ignore();
 		context.Pop();
 		context.ExitKeyword(Name, true);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in Definitions.Values)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

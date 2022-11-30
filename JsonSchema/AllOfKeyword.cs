@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(AllOfKeywordJsonConverter))]
-public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<AllOfKeyword>
+public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<AllOfKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -75,14 +75,6 @@ public class AllOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in Schemas)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

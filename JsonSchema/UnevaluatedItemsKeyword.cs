@@ -20,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
-public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
+public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -138,11 +138,6 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

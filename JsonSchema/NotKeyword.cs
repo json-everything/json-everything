@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(NotKeywordJsonConverter))]
-public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<NotKeyword>
+public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -54,11 +54,6 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 		if (result)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

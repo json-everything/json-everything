@@ -43,7 +43,9 @@ public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 	/// <param name="context">Contextual details for the evaluation process.</param>
 	public void Evaluate(EvaluationContext context)
 	{
+		context.EnterKeyword(Name);
 		context.Log(() => "$comment is to be ignored");
+		context.ExitKeyword(Name, true);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

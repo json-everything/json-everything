@@ -108,32 +108,21 @@ public static class KeywordExtensions
 		return supportedDrafts.HasFlag(draft);
 	}
 
-	/// <summary>
-	/// Gets whether the keyword is an applicator (carries the <see cref="ApplicatorAttribute"/> attribute).
-	/// </summary>
-	/// <param name="keyword">The keyword.</param>
-	/// <returns>`true` if the keyword is an applicator; `false` otherwise.</returns>
-	public static bool IsApplicator(this IJsonSchemaKeyword keyword)
+	public static Draft DraftsSupported(this IJsonSchemaKeyword keyword)
 	{
-		return keyword.GetType().GetCustomAttribute<ApplicatorAttribute>() != null;
-	}
+		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
-	/// <summary>
-	/// Gets all immediate subschemas for a keyword.
-	/// </summary>
-	/// <param name="keyword">The keyword.</param>
-	/// <returns>An `IEnumerable&lt;JsonSchema&gt;`.</returns>
-	public static IEnumerable<JsonSchema> GetSubschemas(this IJsonSchemaKeyword keyword)
-	{
-		return keyword switch
+		var keywordType = keyword.GetType();
+		if (!_draftDeclarations.TryGetValue(keywordType, out var supportedDrafts))
 		{
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			ISchemaContainer container => container.Schema == null ? Enumerable.Empty<JsonSchema>() : new[] { container.Schema },
-			// ReSharper disable ConstantNullCoalescingCondition
-			ISchemaCollector collector => collector.Schemas ?? Enumerable.Empty<JsonSchema>(),
-			IKeyedSchemaCollector collector => collector.Schemas.Values ?? Enumerable.Empty<JsonSchema>(),
-			// ReSharper restore ConstantNullCoalescingCondition
-			_ => Enumerable.Empty<JsonSchema>()
-		};
+			supportedDrafts = keywordType.GetCustomAttributes<SchemaDraftAttribute>()
+				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft);
+			if (supportedDrafts == Draft.Unspecified)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaDraftAttribute)}");
+
+			_draftDeclarations[keywordType] = supportedDrafts;
+		}
+
+		return supportedDrafts;
 	}
 }

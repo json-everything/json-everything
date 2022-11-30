@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -15,7 +16,7 @@ namespace Json.Schema;
 [SchemaDraft(Draft.DraftNext)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
-public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IEquatable<PropertyDependenciesKeyword>
+public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector, IEquatable<PropertyDependenciesKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -27,6 +28,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 	/// </summary>
 	public IReadOnlyDictionary<string, PropertyDependency> Dependencies { get; }
 
+	IEnumerable<JsonSchema> ICustomSchemaCollector.Schemas => Dependencies.SelectMany(x => x.Value.Schemas.Select(y => y.Value));
 	/// <summary>
 	/// Creates a new instance of the <see cref="PropertyDependenciesKeyword"/>.
 	/// </summary>
@@ -94,12 +96,13 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)
 	{
-		foreach (var schema in Dependencies.Values.SelectMany(x => x.Schemas.Values))
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
+		if (segments.Count < 2) return (null, 0);
+		if (!Dependencies.TryGetValue(segments[0].Value, out var property)) return (null, 0);
+		if (!property.Schemas.TryGetValue(segments[1].Value, out var schema)) return (null, 0);
+
+		return (schema, 2);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

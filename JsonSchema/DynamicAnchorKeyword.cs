@@ -14,7 +14,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]
-public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<DynamicAnchorKeyword>
+public class DynamicAnchorKeyword : IJsonSchemaKeyword, IEquatable<DynamicAnchorKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -42,13 +42,8 @@ public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquata
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
-	}
-
-	void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)
-	{
-		registry.RegisterAnchor(currentUri, Value, schema);
-		registry.RegisterDynamicAnchor(currentUri, Value, schema);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

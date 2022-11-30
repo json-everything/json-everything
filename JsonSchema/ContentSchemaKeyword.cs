@@ -16,7 +16,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Content202012Id)]
 [Vocabulary(Vocabularies.ContentNextId)]
 [JsonConverter(typeof(ContentSchemaKeywordJsonConverter))]
-public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContentSchemaKeyword>
+public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ContentSchemaKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -53,11 +53,6 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 
 		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(Schema));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

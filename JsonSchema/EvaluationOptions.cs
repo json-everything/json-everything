@@ -9,7 +9,6 @@ namespace Json.Schema;
 /// </summary>
 public class EvaluationOptions
 {
-	private Uri? _defaultBaseUri;
 	private ILog? _log;
 
 	/// <summary>
@@ -43,14 +42,6 @@ public class EvaluationOptions
 	/// automatically check the global registry as well.
 	/// </summary>
 	public VocabularyRegistry VocabularyRegistry { get; } = new();
-	/// <summary>
-	/// Specifies a default URI to be used when a schema is missing a
-	/// </summary>
-	public Uri DefaultBaseUri
-	{
-		get => _defaultBaseUri ??= new Uri("https://json-everything/base");
-		set => _defaultBaseUri = value;
-	}
 
 	/// <summary>
 	/// Gets or sets the indent level for the log.
@@ -99,7 +90,7 @@ public class EvaluationOptions
 	/// </summary>
 	public bool PreserveDroppedAnnotations { get; set; }
 
-	internal Draft EvaluatingAs { get; private set; }
+	internal Draft EvaluatingAs { get; set; }
 
 	static EvaluationOptions()
 	{
@@ -125,7 +116,6 @@ public class EvaluationOptions
 		{
 			EvaluateAs = other.EvaluateAs,
 			OutputFormat = other.OutputFormat,
-			DefaultBaseUri = other.DefaultBaseUri,
 			ValidateAgainstMetaSchema = other.ValidateAgainstMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
 			ProcessCustomKeywords = other.ProcessCustomKeywords,

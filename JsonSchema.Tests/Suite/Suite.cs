@@ -145,21 +145,6 @@ public class Suite
 		Assert.AreEqual(test.Valid, result.IsValid);
 	}
 
-	//[TestCaseSource(nameof(TestCases))]
-	// This is for local runs only.
-	public void Benchmark(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
-	{
-		if (!InstanceIsDeserializable(test.Data))
-			Assert.Inconclusive("Instance not deserializable");
-
-		options.OutputFormat = OutputFormat.Flag;
-		var result = collection.Schema.Evaluate(test.Data, options);
-
-		if (collection.IsOptional && result.IsValid != test.Valid)
-			Assert.Inconclusive("Test optional");
-		Assert.AreEqual(test.Valid, result.IsValid);
-	}
-
 	private static bool InstanceIsDeserializable(in JsonNode? testData)
 	{
 		try

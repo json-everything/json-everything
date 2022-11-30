@@ -17,7 +17,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(AnchorKeywordJsonConverter))]
-public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<AnchorKeyword>
+public class AnchorKeyword : IJsonSchemaKeyword, IEquatable<AnchorKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -48,11 +48,6 @@ public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<Anc
 		context.EnterKeyword(Name);
 		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
-	}
-
-	void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)
-	{
-		registry.RegisterAnchor(currentUri, Anchor, schema);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

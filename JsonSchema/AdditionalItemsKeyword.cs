@@ -17,7 +17,7 @@ namespace Json.Schema;
 [SchemaDraft(Draft.Draft201909)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
-public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<AdditionalItemsKeyword>
+public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalItemsKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -87,11 +87,6 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

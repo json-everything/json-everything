@@ -16,7 +16,7 @@ namespace Json.Schema;
 [SchemaDraft(Draft.Draft6)]
 [SchemaDraft(Draft.Draft7)]
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
-public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DependenciesKeyword>
+public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DependenciesKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -111,14 +111,6 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSch
 		if (!overallResult)
 			context.LocalResult.Fail(Name, ErrorMessages.Dependencies, ("properties", JsonSerializer.Serialize(evaluatedProperties)));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var requirement in Requirements.Values)
-		{
-			requirement.Schema?.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

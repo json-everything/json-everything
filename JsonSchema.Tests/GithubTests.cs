@@ -404,9 +404,8 @@ public class GithubTests
 		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str)!;
 		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str)!;
 		var json = JsonNode.Parse(jsonStr);
-		var uri1 = new Uri("http://first.com/schema1.json");
-		var uri2 = new Uri("http://first.com/schema2.json");
-		var firstBaseUri = new Uri("http://first.com");
+		var uri1 = new Uri("https://json-everything.net/schema1.json");
+		var uri2 = new Uri("https://json-everything.net/schema2.json");
 		var map = new Dictionary<Uri, JsonSchema>
 		{
 			{ uri1, schema1 },
@@ -415,7 +414,6 @@ public class GithubTests
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
-			DefaultBaseUri = firstBaseUri,
 			SchemaRegistry =
 			{
 				Fetch = uri =>
@@ -427,7 +425,7 @@ public class GithubTests
 		};
 		var result = schema2.Evaluate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.NestedResults[0].NestedResults[0].SchemaLocation, "http://first.com/schema1.json#");
+		Assert.AreEqual(result.NestedResults[0].NestedResults[0].SchemaLocation, "https://json-everything.net/schema1.json#");
 	}
 
 	[Test]

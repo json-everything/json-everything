@@ -86,12 +86,12 @@ public class EvaluationResults
 
 	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
 
-	internal bool IncludeDroppedAnnotations { get; private set; }
+	internal bool IncludeDroppedAnnotations { get; }
 
 	internal EvaluationResults(EvaluationContext context)
 	{
 		EvaluationPath = context.EvaluationPath;
-		_currentUri = context.CurrentUri;
+		_currentUri = context.Scope.LocalScope;
 		_reference = context.Reference;
 		InstanceLocation = context.InstanceLocation;
 		IncludeDroppedAnnotations = context.Options.PreserveDroppedAnnotations;
