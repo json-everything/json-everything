@@ -42,34 +42,32 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 	{
 		context.EnterKeyword(Name);
 
+		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+
 		JsonSchema? targetSchema = null;
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
 		foreach (var uri in context.Scope.Reverse())
 		{
 			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
 			if (scopeRoot == null)
 				throw new Exception("This shouldn't happen");
-			if (scopeRoot.RecursiveAnchor != null)
-			{
-				var localResource = context.LocalSchema.IsResourceRoot
-					? context.LocalSchema
-					: context.Options.SchemaRegistry.Get(context.LocalSchema.BaseUri);
-				if (localResource!.RecursiveAnchor == null) break;
 
-				targetSchema = scopeRoot.RecursiveAnchor;
-				break;
-			}
+			if (scopeRoot.RecursiveAnchor == null) continue;
+
+			if (targetBase.RecursiveAnchor == null) break;
+
+			targetSchema = scopeRoot.RecursiveAnchor;
+			break;
 		}
 
 		if (targetSchema == null)
 		{
-			var newUri = new Uri(context.Scope.LocalScope, Reference);
-			var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
 			{
-				var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
-				if (targetBase == null)
-					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 			}
 			else
@@ -77,7 +75,8 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 				var anchorFragment = newUri.Fragment.Substring(1);
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-				if (context.Options.SchemaRegistry.Get(newBaseUri)?.Anchors.TryGetValue(anchorFragment, out var anchorDefinition) ?? false)
+
+				if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 					targetSchema = anchorDefinition.Schema;
 			}
 

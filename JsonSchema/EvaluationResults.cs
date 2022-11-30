@@ -38,8 +38,7 @@ public class EvaluationResults
 	/// The absolute schema location.
 	/// </summary>
 	/// <remarks>
-	/// If the schema did not have an absolute `$id`, the value from
-	/// <see cref="EvaluationOptions.DefaultBaseUri"/> will be used.
+	/// If the schema did not have an absolute `$id`, a generated base URI will be used.
 	/// </remarks>
 	public Uri SchemaLocation => _schemaLocation ??= BuildSchemaLocation();
 
@@ -63,14 +62,14 @@ public class EvaluationResults
 	public IReadOnlyDictionary<string, JsonNode?>? Annotations => _annotations;
 
 	/// <summary>
-	/// The collection of error from this node.
-	/// </summary>
-	public IReadOnlyDictionary<string, string>? Errors => _errors;
-
-	/// <summary>
 	/// Gets whether this node has annotations.
 	/// </summary>
 	public bool HasAnnotations => Annotations is not (null or { Count: 0 });
+
+	/// <summary>
+	/// The collection of error from this node.
+	/// </summary>
+	public IReadOnlyDictionary<string, string>? Errors => _errors;
 
 	/// <summary>
 	/// Gets whether this node has errors.
@@ -122,7 +121,7 @@ public class EvaluationResults
 		var fragment = _reference ?? JsonPointer.UrlEmpty;
 		fragment = fragment.Combine(EvaluationPath.Segments.Skip(localEvaluationPathStart).ToArray());
 
-		return new Uri(_currentUri, fragment.ToString());
+		return fragment == JsonPointer.UrlEmpty ? _currentUri : new Uri(_currentUri, fragment.ToString());
 	}
 
 	/// <summary>

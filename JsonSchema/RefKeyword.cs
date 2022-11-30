@@ -48,14 +48,21 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.EnterKeyword(Name);
 
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var navigation = (newUri.OriginalString, context.InstanceLocation);
+		if (context.NavigatedReferences.Contains(navigation))
+			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
+
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 		JsonSchema? targetSchema = null;
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
 		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
 		{
-			var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+			
 			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 		}
 		else
@@ -63,17 +70,20 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			var anchorFragment = newUri.Fragment.Substring(1);
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-			if (context.Options.SchemaRegistry.Get(newBaseUri)?.Anchors.TryGetValue(anchorFragment, out var anchorDefinition) ?? false)
+
+			if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 				targetSchema = anchorDefinition.Schema;
 		}
 
 		if (targetSchema == null)
 			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
+		context.NavigatedReferences.Add(navigation);
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
+		context.NavigatedReferences.Remove(navigation);
 		if (!result)
 			context.LocalResult.Fail();
 

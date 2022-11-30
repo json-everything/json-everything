@@ -157,9 +157,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
-
-		result.AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance));
 	}
 
 	[Test]
@@ -168,13 +166,10 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical,
-			ValidateAgainstMetaSchema = true
-		});
-
-		result.AssertInvalid();
+			OutputFormat = OutputFormat.Hierarchical
+		}));
 	}
 
 	[TestCase(Draft.Draft7, @"{}", true)]
@@ -482,7 +477,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json));
 	}
 
 	[Test]
@@ -497,7 +492,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json));
 	}
 
 	[SchemaKeyword(Name)]
@@ -537,16 +532,11 @@ public class GithubTests
 
 		var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-		var schema = JsonSchema.FromText(GetResource(191, "Schema"));
-
 		SchemaKeywordRegistry.Register<MinDateKeyword>();
 
 		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
-		SchemaRegistry.Global.Register(metaSchemaId, metaSchema);
 
-		var result = JsonSerializer.Deserialize<JsonElement>(GetResource(191, "Data"));
-
-		Assert.Throws<InvalidOperationException>(() => schema.Evaluate(result));
+		Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
 	}
 
 	[Test]
@@ -602,14 +592,10 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		var res = schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical,
-			//ValidateAs = Draft.Draft7,
 			ValidateAgainstMetaSchema = true
-		});
-
-		res.AssertInvalid();
+		}));
 	}
 
 	[Test]

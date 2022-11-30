@@ -79,9 +79,7 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Evaluate(json.RootElement, options);
-
-		results.AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
 	}
 
 	[Test]
@@ -103,9 +101,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			var results = schema.Evaluate(json.RootElement, options);
-
-			results.AssertInvalid();
+			Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
 		}
 		finally
 		{

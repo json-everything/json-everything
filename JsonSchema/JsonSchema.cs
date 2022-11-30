@@ -25,11 +25,11 @@ public class JsonSchema : IEquatable<JsonSchema>
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
 	/// </summary>
-	public static readonly JsonSchema True = new(true);
+	public static readonly JsonSchema True = new(true) { BaseUri = new("https://json-schema.org/true") };
 	/// <summary>
 	/// The `false` schema.  Fails all instances.
 	/// </summary>
-	public static readonly JsonSchema False = new(false);
+	public static readonly JsonSchema False = new(false) { BaseUri = new("https://json-schema.org/false") };
 
 	/// <summary>
 	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
@@ -108,7 +108,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
-		options.EvaluatingAs = DetermineDraft(this, options.EvaluateAs);
+		options.EvaluatingAs = DetermineDraft(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
 		var context = new EvaluationContext(options, BaseUri, root, this);
@@ -138,10 +138,10 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineDraft(schema, Draft.Unspecified), true);
+		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineDraft(schema, registry, Draft.Unspecified), true);
 	}
 
-	private static Draft DetermineDraft(JsonSchema schema, Draft desiredDraft)
+	private static Draft DetermineDraft(JsonSchema schema, SchemaRegistry registry, Draft desiredDraft)
 	{
 		if (schema.BoolValue.HasValue) return Draft.DraftNext;
 
@@ -162,7 +162,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 				};
 				if (draft != Draft.Unspecified) return draft;
 
-				var metaSchema = SchemaRegistry.Global.Get(metaSchemaId);
+				var metaSchema = registry.Get(metaSchemaId);
 				if (metaSchema == null)
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
 

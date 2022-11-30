@@ -50,41 +50,35 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		var anchorName = Reference.OriginalString.Split('#').Last();
 
 		JsonSchema? targetSchema = null;
-		JsonSchema? targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
 		foreach (var uri in context.Scope.Reverse())
 		{
 			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
 			if (scopeRoot == null)
 				throw new Exception("This shouldn't happen");
-			if (scopeRoot.Anchors.TryGetValue(anchorName, out var anchor) && anchor.IsDynamic)
-			{
-				if (context.Options.EvaluatingAs == Draft.Draft202012)
-				{
-					targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
-					if (targetBase == null)
-						throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-					if (!targetBase.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic) break;
-				}
 
-				targetSchema = anchor.Schema;
-				break;
-			}
+			if (!scopeRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
+
+			if (context.Options.EvaluatingAs == Draft.Draft202012 &&
+			    (!targetBase.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
+
+			targetSchema = anchor.Schema;
+			break;
 		}
 
 		if (targetSchema == null)
 		{
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
-			{
-				if (targetBase == null)
-					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
-			}
 			else
 			{
 				anchorName = newUri.Fragment.Substring(1);
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorName))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-				if (targetBase?.Anchors.TryGetValue(anchorName, out var anchorDefinition) ?? false)
+			
+				if (targetBase.Anchors.TryGetValue(anchorName, out var anchorDefinition))
 					targetSchema = anchorDefinition.Schema;
 			}
 

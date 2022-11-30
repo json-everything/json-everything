@@ -64,6 +64,8 @@ public class EvaluationContext
 
 	internal IReadOnlyDictionary<Uri, bool>? MetaSchemaVocabs => _metaSchemaVocabs.Peek();
 
+	internal List<(string, JsonPointer)> NavigatedReferences { get; } = new();
+
 	/// <summary>
 	/// Whether processing optimizations can be applied (output format = flag).
 	/// </summary>
