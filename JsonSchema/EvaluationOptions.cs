@@ -94,6 +94,8 @@ public class EvaluationOptions
 
 	static EvaluationOptions()
 	{
+		// It's necessary to call this from here because
+		// SchemaRegistry.Global is defined to look at the default options.
 		Default.SchemaRegistry.InitializeMetaSchemas();
 	}
 
@@ -102,7 +104,7 @@ public class EvaluationOptions
 	/// </summary>
 	public EvaluationOptions()
 	{
-		SchemaRegistry = new SchemaRegistry(this);
+		SchemaRegistry = new SchemaRegistry();
 	}
 
 	/// <summary>
@@ -129,55 +131,12 @@ public class EvaluationOptions
 		return options;
 	}
 
-	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, Uri? metaSchemaId, SchemaRegistry registry)
+	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
-		var currentlyEvaluatingAs = EvaluateAs;
-		EvaluatingAs = Draft.Unspecified;
-		while (metaSchemaId != null && EvaluatingAs == Draft.Unspecified)
-		{
-			EvaluatingAs = metaSchemaId.OriginalString switch
-			{
-				MetaSchemas.Draft6IdValue => Draft.Draft6,
-				MetaSchemas.Draft7IdValue => Draft.Draft7,
-				MetaSchemas.Draft201909IdValue => Draft.Draft201909,
-				MetaSchemas.Draft202012IdValue => Draft.Draft202012,
-				MetaSchemas.DraftNextIdValue => Draft.DraftNext,
-				_ => currentlyEvaluatingAs
-			};
-			if (metaSchemaId == MetaSchemas.Draft6Id || metaSchemaId == MetaSchemas.Draft7Id)
-				return DisallowSiblingRef(keywords, EvaluatingAs);
-			if (metaSchemaId == MetaSchemas.Draft201909Id ||
-			    metaSchemaId == MetaSchemas.Draft202012Id ||
-			    metaSchemaId == MetaSchemas.DraftNextId)
-				return AllowSiblingRef(keywords, EvaluatingAs);
-			var metaSchema = registry.Get(metaSchemaId);
-			if (metaSchema == null) return ByOption(keywords);
-			var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-			if (newMetaSchemaId == metaSchemaId)
-				throw new InvalidOperationException("Custom meta-schema `$schema` keywords must eventually resolve to a known draft meta-schema.");
-			metaSchemaId = newMetaSchemaId;
-		}
+		if (EvaluatingAs is Draft.Draft6 or Draft.Draft7)
+			return DisallowSiblingRef(keywords, EvaluatingAs);
 
-		if (EvaluatingAs == Draft.Unspecified)
-			EvaluatingAs = currentlyEvaluatingAs;
-
-		return ByOption(keywords);
-	}
-
-	private IEnumerable<IJsonSchemaKeyword> ByOption(IEnumerable<IJsonSchemaKeyword> keywords)
-	{
-		switch (EvaluateAs)
-		{
-			case Draft.Draft6:
-			case Draft.Draft7:
-				return DisallowSiblingRef(keywords, EvaluateAs);
-			case Draft.Unspecified:
-			case Draft.Draft201909:
-			case Draft.Draft202012:
-			case Draft.DraftNext:
-			default:
-				return AllowSiblingRef(keywords, EvaluateAs);
-		}
+		return AllowSiblingRef(keywords, EvaluatingAs);
 	}
 
 	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, Draft draft)

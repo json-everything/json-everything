@@ -17,7 +17,6 @@ public class SchemaRegistry
 
 	private Dictionary<Uri, Registration>? _registered;
 	private Func<Uri, JsonSchema?>? _fetch;
-	private readonly EvaluationOptions _options;
 
 	/// <summary>
 	/// The global registry.
@@ -31,13 +30,6 @@ public class SchemaRegistry
 	{
 		get => _fetch ??= _ => null;
 		set => _fetch = value;
-	}
-
-	internal Draft EvaluatingAs => _options.EvaluatingAs;
-
-	internal SchemaRegistry(EvaluationOptions options)
-	{
-		_options = options;
 	}
 
 	internal void InitializeMetaSchemas()

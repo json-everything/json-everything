@@ -149,8 +149,7 @@ public class EvaluationContext
 			return;
 		}
 
-		var metaSchemaUri = LocalSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, metaSchemaUri, Options.SchemaRegistry);
+		var keywords = Options.FilterKeywords(LocalSchema.Keywords!);
 
 		HashSet<Type>? keywordTypesToProcess = null;
 		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
@@ -167,7 +166,7 @@ public class EvaluationContext
 		}
 	}
 
-	private bool RequiresAnnotationCollection(JsonSchema schema)
+	private static bool RequiresAnnotationCollection(JsonSchema schema)
 	{
 		return schema.Keywords?.Any(x => x.GetType() == typeof(UnevaluatedPropertiesKeyword) ||
 										 x.GetType() == typeof(UnevaluatedItemsKeyword)) ?? false;
