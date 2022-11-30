@@ -56,7 +56,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();

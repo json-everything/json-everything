@@ -103,7 +103,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
 		var unevaluatedProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
 		evaluatedProperties.Clear();

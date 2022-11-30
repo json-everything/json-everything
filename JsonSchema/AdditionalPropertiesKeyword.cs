@@ -62,7 +62,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		var overallResult = true;
 		List<string> evaluatedProperties;
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
 		if (context.Options.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 		{

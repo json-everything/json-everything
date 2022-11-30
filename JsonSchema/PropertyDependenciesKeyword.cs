@@ -53,7 +53,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;

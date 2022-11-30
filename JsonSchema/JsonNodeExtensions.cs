@@ -56,17 +56,13 @@ public static class JsonNodeExtensions
 	/// therefore be processed.
 	/// </summary>
 	/// <param name="obj">The object.</param>
-	/// <param name="context">The evaluation context to log errors.</param>
 	/// <returns>true if the the object can be processed; false otherwise.</returns>
 	/// <remarks>See https://github.com/dotnet/runtime/issues/70604 for more information.</remarks>
-	public static bool VerifyJsonObject(this JsonObject obj, EvaluationContext context)
+	public static bool VerifyJsonObject(this JsonObject obj)
 	{
+		// Basically try to get any value and see if it throws an exception.
 		if (!obj.TryGetValue("_", out _, out var e) && e != null)
-		{
-			context.Log(() => "This object has a duplicate key and cannot be processed.");
-			context.LocalResult.Fail("__instance_error", "This object has a duplicate key and cannot be processed.");
-			return false;
-		}
+			throw new JsonException("This object has a duplicate key and cannot be processed.", e);
 
 		return true;
 	}
