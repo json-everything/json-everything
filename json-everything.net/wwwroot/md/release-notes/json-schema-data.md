@@ -1,3 +1,7 @@
+# [3.1.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
+
+Updated to use JsonSchema.Net v4.
+
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/316)
 
 Fixed bug where URI-encoded JSON Pointers where being handled as instance locations instead of schema locations.  (Thanks new [test suite](https://github.com/gregsdennis/json-schema-vocab-test-suites)!)

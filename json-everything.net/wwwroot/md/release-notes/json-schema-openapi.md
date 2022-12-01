@@ -1,6 +1,6 @@
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/326) (coming soon)
+# [1.1.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
 
-Updated in accordance with JsonSchema.Net v4.0.0.
+Updated to use JsonSchema.Net v4.
 
 # [1.0.0]()
 

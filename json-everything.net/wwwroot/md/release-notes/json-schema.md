@@ -1,4 +1,4 @@
-# [4.0.0](https://github.com/gregsdennis/json-everything/pull/326) (coming soon)
+# [4.0.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
 
 This update adds support for the latest version of JSON Schema while also making a few architectural changes to ease the burden for implementing custom keywords.
 

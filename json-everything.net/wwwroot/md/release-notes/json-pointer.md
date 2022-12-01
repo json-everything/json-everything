@@ -3,10 +3,11 @@
 Updated model to more correctly represent a basic JSON Pointer.
 
 - URL encoding is merely a formatting concern
+- Removed `UrlEmpty`
 - `Parse()` and `TryParse()` are still tolerant of URL encoded pointers and will decode automatically
+- Removed `Source` property as `ToString()` is the default method for getting a string
 - Renamed `JsonPointerKind` to `JsonPointerStyle` to reflect the formatting nature of its purpose
 - Added `ToString(JsonPointerKind)` to support outputting in URL encoded format
-- Removed `Source` property as `ToString()` is the default method for getting a string
 
 Added implicit cast from `int` to `PointerSegment`.  Previously, only a cast from `uint` existed, but typing `int`s is easier.
 
