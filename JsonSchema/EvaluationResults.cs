@@ -19,7 +19,7 @@ public class EvaluationResults
 	private readonly HashSet<string>? _ignoredAnnotations;
 	private JsonPointer? _reference;
 	private Uri? _schemaLocation;
-	private List<EvaluationResults>? _nestedResults;
+	private List<EvaluationResults>? _details;
 	private Dictionary<string, JsonNode?>? _annotations;
 	private Dictionary<string, string>? _errors;
 
@@ -47,16 +47,16 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public IReadOnlyList<EvaluationResults> NestedResults => _nestedResults ??= new List<EvaluationResults>();
+	public IReadOnlyList<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
 
 	/// <summary>
 	/// Gets whether there are nested results.
 	/// </summary>
 	/// <remarks>
-	/// Because <see cref="NestedResults"/> is lazily loaded, this property allows the check without
+	/// Because <see cref="Details"/> is lazily loaded, this property allows the check without
 	/// the side effect of allocating a list object.
 	/// </remarks>
-	public bool HasNestedResults => _nestedResults is not (null or { Count: 0 });
+	public bool HasDetails => _details is not (null or { Count: 0 });
 
 	/// <summary>
 	/// The collection of annotations from this node.
@@ -156,16 +156,16 @@ public class EvaluationResults
 		children.Insert(0, new EvaluationResults(this) { Parent = this });
 		_annotations?.Clear();
 		_errors?.Clear();
-		if (_nestedResults == null)
-			_nestedResults = new List<EvaluationResults>();
+		if (_details == null)
+			_details = new List<EvaluationResults>();
 		else
-			_nestedResults.Clear();
+			_details.Clear();
 		foreach (var child in children)
 		{
-			child._nestedResults?.Clear();
+			child._details?.Clear();
 			child.Format = OutputFormat.List;
 		}
-		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
+		_details.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
 		Format = OutputFormat.List;
 	}
 
@@ -179,13 +179,13 @@ public class EvaluationResults
 		{
 			var current = toProcess.Dequeue();
 			all.Add(current);
-			if (!current.HasNestedResults) continue;
+			if (!current.HasDetails) continue;
 
-			foreach (var nestedResult in current.NestedResults.Where(x => x.IsValid == current.IsValid))
+			foreach (var nestedResult in current.Details.Where(x => x.IsValid == current.IsValid))
 			{
 				toProcess.Enqueue(nestedResult);
 			}
-			current._nestedResults?.Clear();
+			current._details?.Clear();
 		}
 
 		// we still include the root because it may have annotations
@@ -198,7 +198,7 @@ public class EvaluationResults
 	/// </summary>
 	public void ToFlag()
 	{
-		_nestedResults?.Clear();
+		_details?.Clear();
 		_annotations?.Clear();
 		_errors?.Clear();
 		Format = OutputFormat.Flag;
@@ -241,9 +241,9 @@ public class EvaluationResults
 		if (HasAnnotations && _annotations!.TryGetValue(keyword, out var annotation))
 			yield return annotation;
 
-		if (!HasNestedResults) yield break;
+		if (!HasDetails) yield break;
 
-		var validResults = NestedResults.Where(x => x.IsValid && x.InstanceLocation == InstanceLocation);
+		var validResults = Details.Where(x => x.IsValid && x.InstanceLocation == InstanceLocation);
 		var allAnnotations = validResults.SelectMany(x => x.GetAllAnnotations(keyword));
 		foreach (var nestedAnnotation in allAnnotations)
 		{
@@ -294,8 +294,8 @@ public class EvaluationResults
 
 	internal void AddNestedResult(EvaluationResults results)
 	{
-		_nestedResults ??= new List<EvaluationResults>();
-		_nestedResults.Add(results);
+		_details ??= new List<EvaluationResults>();
+		_details.Add(results);
 		results.Parent = this;
 	}
 
@@ -359,10 +359,10 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 			}
 		}
 
-		if (value.HasNestedResults)
+		if (value.HasDetails)
 		{
-			writer.WritePropertyName("nested");
-			JsonSerializer.Serialize(writer, value.NestedResults, options);
+			writer.WritePropertyName("details");
+			JsonSerializer.Serialize(writer, value.Details, options);
 		}
 
 		writer.WriteEndObject();
@@ -448,13 +448,13 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 
 			if (value.Format == OutputFormat.Hierarchical)
 			{
-				if ((value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty)) || value.NestedResults.Any())
+				if ((value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty)) || value.Details.Any())
 				{
 					writer.WritePropertyName("errors");
 
 					writer.WriteStartArray();
 
-					foreach (var result in value.NestedResults)
+					foreach (var result in value.Details)
 					{
 						JsonSerializer.Serialize(writer, result, options);
 					}
@@ -472,12 +472,12 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 			}
 			else
 			{
-				if (value.HasNestedResults)
+				if (value.HasDetails)
 				{
 					writer.WritePropertyName("errors");
 					writer.WriteStartArray();
 
-					foreach (var result in value.NestedResults)
+					foreach (var result in value.Details)
 					{
 						JsonSerializer.Serialize(writer, result, options);
 					}
@@ -499,7 +499,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		{
 			if (value.Format == OutputFormat.Hierarchical)
 			{
-				if ((value.HasAnnotations && value.Annotations!.Any()) || value.NestedResults.Any())
+				if ((value.HasAnnotations && value.Annotations!.Any()) || value.Details.Any())
 				{
 					writer.WritePropertyName("annotations");
 					writer.WriteStartArray();
@@ -508,7 +508,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 
 					// this too
 
-					foreach (var result in value.NestedResults)
+					foreach (var result in value.Details)
 					{
 						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
 						if (annotation != null)
@@ -533,12 +533,12 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 			{
 				var annotations = value.Annotations?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? Array.Empty<Annotation>();
 
-				if (value.HasNestedResults)
+				if (value.HasDetails)
 				{
 					writer.WritePropertyName("annotations");
 					writer.WriteStartArray();
 
-					foreach (var result in value.NestedResults)
+					foreach (var result in value.Details)
 					{
 						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
 						if (annotation != null) continue;

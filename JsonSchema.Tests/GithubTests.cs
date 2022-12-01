@@ -420,7 +420,7 @@ public class GithubTests
 		};
 		var result = schema2.Evaluate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.NestedResults[0].NestedResults[0].SchemaLocation, "https://json-everything.net/schema1.json#");
+		Assert.AreEqual(result.Details[0].Details[0].SchemaLocation, "https://json-everything.net/schema1.json#");
 	}
 
 	[Test]
@@ -662,7 +662,7 @@ public class GithubTests
 			var node = nodes.First();
 			nodes.Remove(node);
 			Assert.AreNotEqual("#/additionalProperties", node.EvaluationPath.ToString());
-			nodes.AddRange(node.NestedResults);
+			nodes.AddRange(node.Details);
 		}
 	}
 
