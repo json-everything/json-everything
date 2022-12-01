@@ -12,7 +12,7 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema validation schema json</PackageTags>
-		<Version>4.0.0-beta1</Version>
+		<Version>4.0.0-beta1a</Version>
 		<FileVersion>4.0.0.0</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
