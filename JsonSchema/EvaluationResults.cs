@@ -15,6 +15,8 @@ namespace Json.Schema;
 public class EvaluationResults
 {
 	private readonly Uri _currentUri;
+	private readonly HashSet<string>? _backgroundAnnotations;
+	private readonly HashSet<string>? _ignoredAnnotations;
 	private JsonPointer? _reference;
 	private Uri? _schemaLocation;
 	private List<EvaluationResults>? _nestedResults;
@@ -87,12 +89,22 @@ public class EvaluationResults
 
 	internal bool IncludeDroppedAnnotations { get; }
 
+	internal IReadOnlyDictionary<string, JsonNode?>? AnnotationsToSerialize =>
+		HasAnnotations
+			? _annotations!.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
+			: null;
+
 	internal EvaluationResults(EvaluationContext context)
 	{
 		EvaluationPath = context.EvaluationPath;
 		_currentUri = context.Scope.LocalScope;
 		InstanceLocation = context.InstanceLocation;
 		IncludeDroppedAnnotations = context.Options.PreserveDroppedAnnotations;
+		if (context.Options.IgnoredAnnotations != null)
+		{
+			_ignoredAnnotations = new HashSet<string>(context.Options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+			_backgroundAnnotations = new HashSet<string>(context.Options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+		}
 	}
 
 	private EvaluationResults(EvaluationResults other)
@@ -105,6 +117,8 @@ public class EvaluationResults
 		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
 		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
 		IncludeDroppedAnnotations = IncludeDroppedAnnotations;
+		_ignoredAnnotations = other._ignoredAnnotations;
+		_backgroundAnnotations = other._backgroundAnnotations;
 	}
 
 	internal void SetSchemaReference(JsonPointer pointer)
@@ -195,6 +209,8 @@ public class EvaluationResults
 	/// <param name="value">The annotation value.</param>
 	public void SetAnnotation(string keyword, JsonNode? value)
 	{
+		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
+
 		_annotations ??= new();
 
 		_annotations[keyword] = value;
@@ -324,7 +340,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 			if (value.HasAnnotations)
 			{
 				writer.WritePropertyName("annotations");
-				JsonSerializer.Serialize(writer, value.Annotations, options);
+				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
 			}
 		}
 		else
@@ -337,7 +353,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 			if (value.IncludeDroppedAnnotations && value.HasAnnotations)
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				JsonSerializer.Serialize(writer, value.Annotations, options);
+				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
 			}
 		}
 

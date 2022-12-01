@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `properties`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]

@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `items`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]

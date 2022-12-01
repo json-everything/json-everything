@@ -10,6 +10,7 @@ namespace Json.Schema;
 public class EvaluationOptions
 {
 	private ILog? _log;
+	private HashSet<Type>? _ignoredAnnotationTypes;
 
 	/// <summary>
 	/// The default settings.
@@ -90,6 +91,11 @@ public class EvaluationOptions
 	/// </summary>
 	public bool PreserveDroppedAnnotations { get; set; }
 
+	/// <summary>
+	/// Gets the set of keyword types from which annotations will be ignored.
+	/// </summary>
+	public IEnumerable<Type>? IgnoredAnnotations => _ignoredAnnotationTypes;
+
 	internal SpecVersion EvaluatingAs { get; set; }
 
 	static EvaluationOptions()
@@ -124,11 +130,50 @@ public class EvaluationOptions
 			LogIndentLevel = other.LogIndentLevel,
 			Log = other._log ?? Default.Log,
 			OnlyKnownFormats = other.OnlyKnownFormats,
-			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations
+			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations,
+			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null
+				? null
+				: new HashSet<Type>(other._ignoredAnnotationTypes)
 		};
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 		options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
 		return options;
+	}
+
+	/// <summary>
+	/// Ignores annotations from the specified keyword.
+	/// </summary>
+	/// <typeparam name="T">The keyword type which should not have annotations.</typeparam>
+	public void IgnoreAnnotationsFrom<T>()
+		where T : IJsonSchemaKeyword
+	{
+		_ignoredAnnotationTypes ??= new HashSet<Type>();
+
+		_ignoredAnnotationTypes.Add(typeof(T));
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public void IgnoreAllAnnotations()
+	{
+		_ignoredAnnotationTypes = new HashSet<Type>(SchemaKeywordRegistry.KeywordTypes);
+	}
+
+	/// <summary>
+	/// Clears ignored annotations.
+	/// </summary>
+	public void ClearIgnoredAnnotations()
+	{
+		_ignoredAnnotationTypes = null;
+	}
+
+	/// <summary>
+	/// Restores annotation collection for the specified keyword.
+	/// </summary>
+	public void CollectAnnotationsFrom<T>()
+	{
+		_ignoredAnnotationTypes?.Remove(typeof(T));
 	}
 
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)

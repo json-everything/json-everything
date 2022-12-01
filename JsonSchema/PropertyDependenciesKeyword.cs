@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles the `propertyDependencies` keyword.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]

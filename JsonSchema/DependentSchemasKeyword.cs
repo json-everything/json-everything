@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `dependentSchemas`.
 /// </summary>
-[Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]

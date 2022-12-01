@@ -7,7 +7,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `not`.
 /// </summary>
-[Applicator]
 [SchemaPriority(20)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]

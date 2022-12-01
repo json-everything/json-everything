@@ -13,7 +13,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `patternProperties`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
