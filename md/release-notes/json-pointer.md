@@ -1,3 +1,16 @@
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/326)
+
+Updated model to more correctly represent a basic JSON Pointer.
+
+- URL encoding is merely a formatting concern
+- Removed `UrlEmpty`
+- `Parse()` and `TryParse()` are still tolerant of URL encoded pointers and will decode automatically
+- Removed `Source` property as `ToString()` is the default method for getting a string
+- Renamed `JsonPointerKind` to `JsonPointerStyle` to reflect the formatting nature of its purpose
+- Added `ToString(JsonPointerKind)` to support outputting in URL encoded format
+
+Added implicit cast from `int` to `PointerSegment`.  Previously, only a cast from `uint` existed, but typing `int`s is easier.
+
 # 2.2.1 (no PR)
 
 [#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to allow dependent packages to pick up the latest Json.More.Net by default, which is transitively pull via this package.

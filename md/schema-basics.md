@@ -1,3 +1,5 @@
+***NOTE** This documentation is based on the the latest non-beta version.  Updated documentation is in progress and will be available soon.*
+
 # Overview
 
 The occasion may arise when you wish to validate that a JSON object is in the correct form (has the appropriate keys and the right types of values).  Enter JSON Schema.  Much like XML Schema with XML, JSON Schema defines a pattern for JSON data.  A JSON Schema validator can verify that a given JSON object meets the requirements as defined by the JSON Schema.  This validation can come in handy as a precursor step before deserializing.

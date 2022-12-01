@@ -48,48 +48,26 @@
             The empty pointer.
             </summary>
         </member>
-        <member name="F:Json.Pointer.JsonPointer.UrlEmpty">
-            <summary>
-            The empty pointer in URL-style.
-            </summary>
-        </member>
-        <member name="P:Json.Pointer.JsonPointer.Source">
-            <summary>
-            Gets the source string for the pointer.
-            </summary>
-        </member>
         <member name="P:Json.Pointer.JsonPointer.Segments">
             <summary>
             Gets the collection of pointer segments.
             </summary>
         </member>
-        <member name="P:Json.Pointer.JsonPointer.IsUriEncoded">
-            <summary>
-            Gets whether the pointer is URL-encoded.
-            </summary>
-        </member>
-        <member name="P:Json.Pointer.JsonPointer.Kind">
-            <summary>
-            Gets the kind of pointer.
-            </summary>
-        </member>
-        <member name="M:Json.Pointer.JsonPointer.Parse(System.String,Json.Pointer.JsonPointerKind)">
+        <member name="M:Json.Pointer.JsonPointer.Parse(System.String)">
             <summary>
             Parses a JSON Pointer from a string.
             </summary>
             <param name="source">The source string.</param>
-            <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="F:Json.Pointer.JsonPointerKind.Unspecified"/> (default) allows both.</param>
             <returns>A JSON Pointer.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
             <exception cref="T:Json.Pointer.PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
         </member>
-        <member name="M:Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@,Json.Pointer.JsonPointerKind)">
+        <member name="M:Json.Pointer.JsonPointer.TryParse(System.String,Json.Pointer.JsonPointer@)">
             <summary>
             Parses a JSON Pointer from a string.
             </summary>
             <param name="source">The source string.</param>
             <param name="pointer">The resulting pointer.</param>
-            <param name="pointerKind">(optional) Restricts the kind of pointer.  <see cref="F:Json.Pointer.JsonPointerKind.Unspecified"/> (default) allows both.</param>
             <returns>`true` if the parse was successful; `false` otherwise.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
         </member>
@@ -101,12 +79,11 @@
             <returns>The JSON Pointer.</returns>
             <remarks>This method creates un-encoded pointers only.</remarks>
         </member>
-        <member name="M:Json.Pointer.JsonPointer.Create(System.Collections.Generic.IEnumerable{Json.Pointer.PointerSegment},System.Boolean)">
+        <member name="M:Json.Pointer.JsonPointer.Create(System.Collections.Generic.IEnumerable{Json.Pointer.PointerSegment})">
             <summary>
             Creates a new JSON Pointer from a collection of segments.
             </summary>
             <param name="segments">A collection of segments.</param>
-            <param name="isUriEncoded">Whether the pointer should be URL-encoded.</param>
             <returns>The JSON Pointer.</returns>
         </member>
         <member name="M:Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
@@ -150,9 +127,14 @@
             <param name="result">The result, if return value is true; null otherwise</param>
             <returns>true if a value exists at the indicate path; false otherwise.</returns>
         </member>
+        <member name="M:Json.Pointer.JsonPointer.ToString(Json.Pointer.JsonPointerStyle)">
+            <summary>Returns the string representation of this instance.</summary>
+            <param name="pointerStyle">Indicates whether to URL-encode the pointer.</param>
+            <returns>The string representation.</returns>
+        </member>
         <member name="M:Json.Pointer.JsonPointer.ToString">
-            <summary>Returns the fully qualified type name of this instance.</summary>
-            <returns>The fully qualified type name.</returns>
+            <summary>Returns the string representation of this instance.</summary>
+            <returns>The string representation.</returns>
         </member>
         <member name="M:Json.Pointer.JsonPointer.Equals(Json.Pointer.JsonPointer)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -184,22 +166,22 @@
             <param name="right">A JSON Pointer.</param>
             <returns>`false` if the pointers are equal; `true` otherwise.</returns>
         </member>
-        <member name="T:Json.Pointer.JsonPointerKind">
+        <member name="T:Json.Pointer.JsonPointerStyle">
             <summary>
             Enumerates the different styles of JSON pointers.
             </summary>
         </member>
-        <member name="F:Json.Pointer.JsonPointerKind.Unspecified">
+        <member name="F:Json.Pointer.JsonPointerStyle.Unspecified">
             <summary>
             No format specified.
             </summary>
         </member>
-        <member name="F:Json.Pointer.JsonPointerKind.Plain">
+        <member name="F:Json.Pointer.JsonPointerStyle.Plain">
             <summary>
             Indicates only plain JSON pointers.
             </summary>
         </member>
-        <member name="F:Json.Pointer.JsonPointerKind.UriEncoded">
+        <member name="F:Json.Pointer.JsonPointerStyle.UriEncoded">
             <summary>
             Indicates only URI-encoded JSON pointers.
             </summary>
@@ -229,45 +211,39 @@
             Represents a single segment of a JSON Pointer.
             </summary>
         </member>
-        <member name="P:Json.Pointer.PointerSegment.Source">
-            <summary>
-            Gets the source string.
-            </summary>
-        </member>
         <member name="P:Json.Pointer.PointerSegment.Value">
             <summary>
             Gets the segment value.
             </summary>
-            <remarks>
-            This may differ from <see cref="P:Json.Pointer.PointerSegment.Source"/> in that the segment may be URL-encoded.  This contains the decoded value.
-            </remarks>
         </member>
-        <member name="M:Json.Pointer.PointerSegment.Parse(System.String,System.Boolean)">
+        <member name="M:Json.Pointer.PointerSegment.Parse(System.String)">
             <summary>
             Parses a JSON Pointer segment from a string.
             </summary>
             <param name="source">The source string.</param>
-            <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
             <returns>A JSON Pointer segment.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
             <exception cref="T:Json.Pointer.PointerParseException"><paramref name="source"/> contains an invalid escape sequence or an invalid URI-encoded sequence or ends with `~`.</exception>
         </member>
-        <member name="M:Json.Pointer.PointerSegment.TryParse(System.String,System.Boolean,Json.Pointer.PointerSegment@)">
+        <member name="M:Json.Pointer.PointerSegment.TryParse(System.String,Json.Pointer.PointerSegment@)">
             <summary>
             Parses a JSON Pointer segment from a string.
             </summary>
             <param name="source">The source string.</param>
-            <param name="uriFormatted">Indicates whether the segment should be URL-decoded.</param>
             <param name="segment">The resulting segments.</param>
             <returns>`true` if the parse was successful; `false` otherwise.</returns>
         </member>
-        <member name="M:Json.Pointer.PointerSegment.Create(System.String,System.Boolean)">
+        <member name="M:Json.Pointer.PointerSegment.Create(System.String)">
             <summary>
             Creates a new <see cref="T:Json.Pointer.PointerSegment"/>.
             </summary>
             <param name="value">The value.</param>
-            <param name="uriFormatted">Whether the segment should be URL-encoded.</param>
             <returns></returns>
+        </member>
+        <member name="M:Json.Pointer.PointerSegment.ToString(Json.Pointer.JsonPointerStyle)">
+            <summary>Returns the string representation of this instance.</summary>
+            <param name="pointerStyle">Indicates whether to URL-encode the pointer.</param>
+            <returns>The string representation.</returns>
         </member>
         <member name="M:Json.Pointer.PointerSegment.Equals(Json.Pointer.PointerSegment)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
