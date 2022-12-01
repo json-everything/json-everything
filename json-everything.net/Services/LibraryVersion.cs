@@ -14,7 +14,7 @@ public class LibraryVersion
 	public static LibraryVersion GetFor<T>()
 	{
 		var attribute = typeof(T).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-		var version = Regex.Match(attribute!.InformationalVersion, @"\d+\.\d+\.\d+").Value;
+		var version = Regex.Match(attribute!.InformationalVersion, @"\d+\.\d+\.\d+(-[^+]+)?").Value;
 		var name = typeof(T).Assembly.GetName().Name!;
 		return new LibraryVersion
 		{

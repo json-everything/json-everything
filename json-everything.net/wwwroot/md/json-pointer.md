@@ -1,3 +1,5 @@
+***NOTE** This documentation is based on the the latest non-beta version.  Updated documentation is in progress and will be available soon.*
+
 [JSON Pointer](https://tools.ietf.org/html/rfc6901) is a syntax that allows you to isolate a single element within a JSON document by navigating down a series of object properties and array indices.
 
 ## The syntax

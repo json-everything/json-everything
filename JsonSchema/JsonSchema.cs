@@ -98,7 +98,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
-	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid():N}");
+	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
 
 	/// <summary>
 	/// Evaluates an instance against this schema.

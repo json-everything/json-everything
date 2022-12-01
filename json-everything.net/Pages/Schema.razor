@@ -116,7 +116,7 @@
 							<EditForm Model="_options" class="vstack">
 								<label class="my-2">
 									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
-									<InputSelect @bind-Value="_options.Version" DisplayName="Version" class="form-control">
+									<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
 										@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
 										{
 											if (version == SpecVersion.Unspecified) continue;
@@ -135,18 +135,14 @@
 								</label>
 								<label class="my-2">
 									Output structure<br/>
-									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Draft" class="form-control">
+									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
 										<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
-										<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
+										<option value="@SpecVersion.DraftNext">Draft-Next (beta)</option>
 									</InputSelect>
 								</label>
 								<label class="my-2">
 									<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
 									Preserve dropped annotations
-								</label>
-								<label class="my-2">
-									Default base URI<br/>
-									<InputText @bind-Value="_options.DefaultBaseUri" DisplayName="Default base URI" class="form-control"/>
 								</label>
 								<label class="my-2">
 									<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
@@ -224,8 +220,7 @@
 	{
 		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
 		public SpecVersion Version { get; set; } = SpecVersion.Draft202012;
-		public SpecVersion OutputStructure { get; set; } = SpecVersion.Draft202012;
-		public string? DefaultBaseUri { get; set; }
+		public SpecVersion OutputStructure { get; set; } = SpecVersion.DraftNext;
 		public bool ValidateFormat { get; set; }
 		public bool IncludeDroppedAnnotations { get; set; }
 
