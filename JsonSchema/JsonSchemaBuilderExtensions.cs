@@ -796,6 +796,30 @@ public static class JsonSchemaBuilderExtensions
 	}
 
 	/// <summary>
+	/// Adds a `propertyDependencies` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="dependencies">The property dependency schemas.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder PropertyDependencies(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, PropertyDependency> dependencies)
+	{
+		builder.Add(new PropertyDependenciesKeyword(dependencies.ToDictionary(x => x.Key, x => x.Value)));
+		return builder;
+	}
+
+	/// <summary>
+	/// Adds a `propertyDependencies` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="dependencies">The property dependency schemas.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder PropertyDependencies(this JsonSchemaBuilder builder, params (string property, PropertyDependency dependency)[] dependencies)
+	{
+		builder.Add(new PropertyDependenciesKeyword(dependencies.ToDictionary(x => x.property, x => x.dependency)));
+		return builder;
+	}
+
+	/// <summary>
 	/// Add a `propertyNames` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>

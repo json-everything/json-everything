@@ -141,6 +141,13 @@ public static class KeywordExtensions
 		return supportedVersions.HasFlag(version);
 	}
 
+	/// <summary>
+	/// Gets the specification versions supported by a keyword.
+	/// </summary>
+	/// <param name="keyword">The keyword.</param>
+	/// <returns>The specification versions as a single flags value.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if <paramref name="keyword"/> is null.</exception>
+	/// <exception cref="InvalidOperationException">Thrown if the keyword has no <see cref="SchemaSpecVersionAttribute"/> declarations.</exception>
 	public static SpecVersion VersionsSupported(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));

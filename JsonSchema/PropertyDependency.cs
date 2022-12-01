@@ -26,6 +26,15 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 		Schemas = schemas;
 	}
 
+	/// <summary>
+	/// Creates a new instance of <see cref="PropertyDependency"/>.
+	/// </summary>
+	/// <param name="schemas">The collection of value-dependent schemas for this property</param>
+	public PropertyDependency(params (string property, JsonSchema schema)[] schemas)
+	{
+		Schemas = schemas.ToDictionary(x => x.property, x => x.schema);
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
@@ -57,6 +66,33 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 	public override int GetHashCode()
 	{
 		return Schemas.GetStringDictionaryHashCode();
+	}
+
+	/// <summary>
+	/// Implicitly converts a keyed collection of <see cref="JsonSchema"/> to a property dependency.
+	/// </summary>
+	/// <param name="dependency"></param>
+	public static implicit operator PropertyDependency(Dictionary<string, JsonSchema> dependency)
+	{
+		return new PropertyDependency(dependency);
+	}
+
+	/// <summary>
+	/// Implicitly converts a keyed collection of <see cref="JsonSchema"/> to a property dependency.
+	/// </summary>
+	/// <param name="dependency"></param>
+	public static implicit operator PropertyDependency((string property, JsonSchema schema)[] dependency)
+	{
+		return new PropertyDependency(dependency);
+	}
+
+	/// <summary>
+	/// Implicitly converts a keyed collection of <see cref="JsonSchema"/> to a property dependency.
+	/// </summary>
+	/// <param name="dependency"></param>
+	public static implicit operator PropertyDependency((string property, JsonSchemaBuilder schema)[] dependency)
+	{
+		return new PropertyDependency(dependency.ToDictionary(x => x.property, x => x.schema.Build()));
 	}
 }
 

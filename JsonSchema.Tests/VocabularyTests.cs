@@ -293,7 +293,7 @@ public class VocabularyTests
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Validate(instance);
+		var results = schema.Evaluate(instance);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -311,7 +311,7 @@ public class VocabularyTests
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Validate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
+		var results = schema.Evaluate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -329,7 +329,7 @@ public class VocabularyTests
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Validate(instance);
+		var results = schema.Evaluate(instance);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();

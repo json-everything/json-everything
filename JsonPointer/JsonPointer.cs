@@ -28,7 +28,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <summary>
 	/// Gets the collection of pointer segments.
 	/// </summary>
-	public PointerSegment[] Segments { get; private set; }
+	public PointerSegment[] Segments { get; private set; } = null!;
 
 	private JsonPointer() { }
 

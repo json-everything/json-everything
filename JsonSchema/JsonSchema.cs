@@ -41,10 +41,26 @@ public class JsonSchema : IEquatable<JsonSchema>
 	/// </summary>
 	public bool? BoolValue { get; }
 
+	/// <summary>
+	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
+	/// </summary>
+	/// <remarks>
+	/// This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
+	/// where `random` is 10 hex characters.
+	///
+	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
+	/// or is a child of another schema.
+	/// </remarks>
 	public Uri BaseUri { get; private set; } = GenerateBaseUri();
 
+	/// <summary>
+	/// Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
+	/// </summary>
 	public bool IsResourceRoot { get; private set; }
 
+	/// <summary>
+	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
+	/// </summary>
 	public SpecVersion DeclaredVersion { get; private set; }
 
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
@@ -313,6 +329,10 @@ public class JsonSchema : IEquatable<JsonSchema>
 					if (keyedCollector.Schemas.TryGetValue(segment.Value, out var subschema))
 						newResolvable = subschema;
 					break;
+				case ICustomSchemaCollector customCollector:
+					(newResolvable, var segmentsConsumed) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToReadOnlyList());
+					i += segmentsConsumed;
+					break;
 				case JsonSchema { Keywords: { } } schema:
 					newResolvable = schema.Keywords?.FirstOrDefault(k => k.Keyword() == segment.Value);
 					break;
@@ -348,7 +368,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 	{
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 		var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
-		return idKeyword?.Id.OriginalString ?? BaseUri?.OriginalString ?? "subschema";
+		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -406,7 +406,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		}
 	}
 
-	/// <summary>Reads and converts the JSON to type <typeparamref name="T" />.</summary>
+	/// <summary>Reads and converts the JSON to type <see cref="EvaluationResults"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
@@ -431,11 +431,8 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		writer.WritePropertyName("keywordLocation");
 		JsonSerializer.Serialize(writer, value.EvaluationPath, options);
 
-		if (value.SchemaLocation != null)
-		{
-			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
-		}
+		writer.WritePropertyName("absoluteKeywordLocation");
+		JsonSerializer.Serialize(writer, value.SchemaLocation, options);
 
 		writer.WritePropertyName("instanceLocation");
 		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
@@ -504,13 +501,13 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 					writer.WritePropertyName("annotations");
 					writer.WriteStartArray();
 
-					var annotations = value.Annotations.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
+					var annotations = value.Annotations?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
 
 					// this too
 
 					foreach (var result in value.Details)
 					{
-						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
+						var annotation = annotations?.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
 						if (annotation != null)
 						{
 							WriteAnnotation(writer, value, annotation, options);
@@ -521,9 +518,12 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 						}
 					}
 
-					foreach (var annotation in annotations)
+					if (annotations != null)
 					{
-						WriteAnnotation(writer, value, annotation, options);
+						foreach (var annotation in annotations)
+						{
+							WriteAnnotation(writer, value, annotation, options);
+						}
 					}
 
 					writer.WriteEndArray();
@@ -573,11 +573,8 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		writer.WritePropertyName("keywordLocation");
 		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
 
-		if (value.SchemaLocation != null)
-		{
-			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
-		}
+		writer.WritePropertyName("absoluteKeywordLocation");
+		JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
 
 		writer.WritePropertyName("instanceLocation");
 		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
@@ -597,11 +594,8 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		writer.WritePropertyName("keywordLocation");
 		JsonSerializer.Serialize(writer, annotation.Source, options);
 
-		if (value.SchemaLocation != null)
-		{
-			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
-		}
+		writer.WritePropertyName("absoluteKeywordLocation");
+		JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
 
 		writer.WritePropertyName("instanceLocation");
 		JsonSerializer.Serialize(writer, value.InstanceLocation, options);

@@ -53,6 +53,9 @@ public class EvaluationContext
 	/// </summary>
 	public JsonNode? LocalInstance => _localInstances.Peek();
 
+	/// <summary>
+	/// Gets the scope of the current evaluation.
+	/// </summary>
 	public DynamicScope Scope { get; }
 
 	/// <summary>
