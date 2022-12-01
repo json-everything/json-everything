@@ -1320,6 +1320,23 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Schema.DynamicScope">
+            <summary>
+            Tracks the dynamic scope during schema evaluation.
+            </summary>
+            <remarks>
+            Dynamic scope is the collection of URIs (defined by `$id`) represented by the evaluation path.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.DynamicScope.LocalScope">
+            <summary>
+            Gets the local scope, or the most recent schema URI encountered.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.DynamicScope.GetEnumerator">
+            <summary>Returns an enumerator that iterates through the collection.</summary>
+            <returns>An enumerator that can be used to iterate through the collection.</returns>
+        </member>
         <member name="T:Json.Schema.ElseKeyword">
             <summary>
             Handles `else`.
@@ -1506,6 +1523,11 @@
         <member name="P:Json.Schema.EvaluationContext.LocalInstance">
             <summary>
             The current instance.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.EvaluationContext.Scope">
+            <summary>
+            Gets the scope of the current evaluation.
             </summary>
         </member>
         <member name="P:Json.Schema.EvaluationContext.LocalResult">
@@ -1823,7 +1845,7 @@
             <param name="source">The pointer to the keyword that created the annotation.</param>
         </member>
         <member name="M:Json.Schema.Pre202012EvaluationResultsJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
-            <summary>Reads and converts the JSON to type <typeparamref name="T" />.</summary>
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.EvaluationResults"/>.</summary>
             <param name="reader">The reader.</param>
             <param name="typeToConvert">The type to convert.</param>
             <param name="options">An object that specifies serialization options to use.</param>
@@ -2153,6 +2175,25 @@
             <param name="name">The format key.</param>
             <returns>A <see cref="T:Json.Schema.Format"/> instance.</returns>
         </member>
+        <member name="T:Json.Schema.ICustomSchemaCollector">
+            <summary>
+            Indicates that the keyword contains subschemas in such a way that does not
+            fit with <see cref="T:Json.Schema.ISchemaContainer"/>, <see cref="T:Json.Schema.ISchemaCollector"/>, or
+            <see cref="T:Json.Schema.IKeyedSchemaCollector"/>.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.ICustomSchemaCollector.Schemas">
+            <summary>
+            The subschemas.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.ICustomSchemaCollector.FindSubschema(System.Collections.Generic.IReadOnlyList{Json.Pointer.PointerSegment})">
+            <summary>
+            Gets the indicated subschema.
+            </summary>
+            <param name="segments">The JSON Pointer segments to follow.</param>
+            <returns>If found, the schema and the number of segments followed to find the subschema; `(null, 0)` otherwise.</returns>
+        </member>
         <member name="T:Json.Schema.IdKeyword">
             <summary>
             Handles `$id`.
@@ -2400,6 +2441,28 @@
         <member name="P:Json.Schema.JsonSchema.BoolValue">
             <summary>
             For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.JsonSchema.BaseUri">
+             <summary>
+             Gets the base URI that applies to this schema.  This may be defined by a parent schema.
+             </summary>
+             <remarks>
+             This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
+             where `random` is 10 hex characters.
+            
+             It may change after the initial evaluation based on whether the schema contains an `$id` keyword
+             or is a child of another schema.
+             </remarks>
+        </member>
+        <member name="P:Json.Schema.JsonSchema.IsResourceRoot">
+            <summary>
+            Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.JsonSchema.DeclaredVersion">
+            <summary>
+            Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
             </summary>
         </member>
         <member name="M:Json.Schema.JsonSchema.FromFile(System.String,System.Text.Json.JsonSerializerOptions)">
@@ -3027,6 +3090,22 @@
             <param name="props">The property schemas.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PropertyDependencies(Json.Schema.JsonSchemaBuilder,System.Collections.Generic.IReadOnlyDictionary{System.String,Json.Schema.PropertyDependency})">
+            <summary>
+            Adds a `propertyDependencies` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="dependencies">The property dependency schemas.</param>
+            <returns>The builder.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PropertyDependencies(Json.Schema.JsonSchemaBuilder,System.ValueTuple{System.String,Json.Schema.PropertyDependency}[])">
+            <summary>
+            Adds a `propertyDependencies` keyword.
+            </summary>
+            <param name="builder">The builder.</param>
+            <param name="dependencies">The property dependency schemas.</param>
+            <returns>The builder.</returns>
+        </member>
         <member name="M:Json.Schema.JsonSchemaBuilderExtensions.PropertyNames(Json.Schema.JsonSchemaBuilder,Json.Schema.JsonSchema)">
             <summary>
             Add a `propertyNames` keyword.
@@ -3249,6 +3328,17 @@
             <param name="options">The options to use for this evaluation.</param>
             <returns>A <see cref="T:Json.Schema.EvaluationResults"/> that provides the outcome of the evaluation.</returns>
         </member>
+        <member name="T:Json.Schema.JsonSchemaException">
+            <summary>
+            Thrown when a schema is invalid or cannot be processed with the current configuration.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Schema.JsonSchemaException"/> type.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
         <member name="T:Json.Schema.JsonSchemaExtensions">
             <summary>
             Some extensions for <see cref="T:Json.Schema.JsonSchema"/>
@@ -3336,6 +3426,15 @@
             <param name="keyword">The keyword.</param>
             <param name="version">The queried version.</param>
             <returns>true if the keyword is supported by the version; false otherwise</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="keyword"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown if the keyword has no <see cref="T:Json.Schema.SchemaSpecVersionAttribute"/> declarations.</exception>
+        </member>
+        <member name="M:Json.Schema.KeywordExtensions.VersionsSupported(Json.Schema.IJsonSchemaKeyword)">
+            <summary>
+            Gets the specification versions supported by a keyword.
+            </summary>
+            <param name="keyword">The keyword.</param>
+            <returns>The specification versions as a single flags value.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="keyword"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">Thrown if the keyword has no <see cref="T:Json.Schema.SchemaSpecVersionAttribute"/> declarations.</exception>
         </member>
@@ -4510,6 +4609,12 @@
             </summary>
             <param name="schemas">The collection of value-dependent schemas for this property</param>
         </member>
+        <member name="M:Json.Schema.PropertyDependency.#ctor(System.ValueTuple{System.String,Json.Schema.JsonSchema}[])">
+            <summary>
+            Creates a new instance of <see cref="T:Json.Schema.PropertyDependency"/>.
+            </summary>
+            <param name="schemas">The collection of value-dependent schemas for this property</param>
+        </member>
         <member name="M:Json.Schema.PropertyDependency.Equals(Json.Schema.PropertyDependency)">
             <summary>Indicates whether the current object is equal to another object of the same type.</summary>
             <param name="other">An object to compare with this object.</param>
@@ -4523,6 +4628,24 @@
         <member name="M:Json.Schema.PropertyDependency.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.op_Implicit(System.Collections.Generic.Dictionary{System.String,Json.Schema.JsonSchema})~Json.Schema.PropertyDependency">
+            <summary>
+            Implicitly converts a keyed collection of <see cref="T:Json.Schema.JsonSchema"/> to a property dependency.
+            </summary>
+            <param name="dependency"></param>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.op_Implicit(System.ValueTuple{System.String,Json.Schema.JsonSchema}[])~Json.Schema.PropertyDependency">
+            <summary>
+            Implicitly converts a keyed collection of <see cref="T:Json.Schema.JsonSchema"/> to a property dependency.
+            </summary>
+            <param name="dependency"></param>
+        </member>
+        <member name="M:Json.Schema.PropertyDependency.op_Implicit(System.ValueTuple{System.String,Json.Schema.JsonSchemaBuilder}[])~Json.Schema.PropertyDependency">
+            <summary>
+            Implicitly converts a keyed collection of <see cref="T:Json.Schema.JsonSchema"/> to a property dependency.
+            </summary>
+            <param name="dependency"></param>
         </member>
         <member name="T:Json.Schema.PropertyNamesKeyword">
             <summary>
