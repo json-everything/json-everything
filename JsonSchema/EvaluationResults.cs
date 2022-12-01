@@ -136,10 +136,12 @@ public class EvaluationResults
 				localEvaluationPathStart = i + 1;
 		}
 
-		var fragment = _reference ?? JsonPointer.UrlEmpty;
+		var fragment = _reference ?? JsonPointer.Empty;
 		fragment = fragment.Combine(EvaluationPath.Segments.Skip(localEvaluationPathStart).ToArray());
 
-		return fragment == JsonPointer.UrlEmpty ? _currentUri : new Uri(_currentUri, fragment.ToString());
+		return fragment == JsonPointer.Empty
+			? _currentUri
+			: new Uri(_currentUri, "#" + fragment);
 	}
 
 	/// <summary>

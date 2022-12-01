@@ -3,7 +3,7 @@
 /// <summary>
 /// Enumerates the different styles of JSON pointers.
 /// </summary>
-public enum JsonPointerKind
+public enum JsonPointerStyle
 {
 	/// <summary>
 	/// No format specified.

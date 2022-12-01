@@ -1,6 +1,14 @@
-# [2.3.0](https://github.com/gregsdennis/json-everything/pull/326) (coming soon)
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/326)
 
-Added implicit cast from `int`.  Previously, only a cast from `uint` existed, but typing `int`s is easier.
+Updated model to more correctly represent a basic JSON Pointer.
+
+- URL encoding is merely a formatting concern
+- `Parse()` and `TryParse()` are still tolerant of URL encoded pointers and will decode automatically
+- Renamed `JsonPointerKind` to `JsonPointerStyle` to reflect the formatting nature of its purpose
+- Added `ToString(JsonPointerKind)` to support outputting in URL encoded format
+- Removed `Source` property as `ToString()` is the default method for getting a string
+
+Added implicit cast from `int` to `PointerSegment`.  Previously, only a cast from `uint` existed, but typing `int`s is easier.
 
 # 2.2.1 (no PR)
 

@@ -320,7 +320,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
-				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
+				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1));
 				newPointer.TryEvaluate(unrecognized.Value, out var value);
 				var asSchema = FromText(value?.ToString() ?? "null");
 				var hostSchema = (JsonSchema)resolvable;

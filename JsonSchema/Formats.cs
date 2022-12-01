@@ -188,7 +188,8 @@ public static class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Pointer.JsonPointer.TryParse(node!.GetValue<string>(), out var p) && !p!.IsUriEncoded;
+		var str = node!.GetValue<string>();
+		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer.TryParse(str, out _));
 	}
 
 	private static bool CheckRelativeJsonPointer(JsonNode? node)

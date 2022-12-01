@@ -70,7 +70,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 
 		if (targetSchema == null)
 		{
-			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment, JsonPointerKind.UriEncoded))
+			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 			else
 			{

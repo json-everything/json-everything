@@ -22,6 +22,6 @@ internal class JsonPointerJsonConverter : JsonConverter<JsonPointer?>
 		if (value == null)
 			writer.WriteNullValue();
 		else
-			writer.WriteStringValue(value.Source);
+			writer.WriteStringValue(value.ToString());
 	}
 }
