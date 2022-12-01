@@ -11,7 +11,7 @@ namespace Json.Schema.OpenApi;
 /// Handles `example`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
 [Vocabulary(Vocabularies.OpenApiId)]
 [JsonConverter(typeof(ExternalDocsKeywordJsonConverter))]
 public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKeyword>
@@ -60,16 +60,15 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 
 		// todo ??? 
 
-		context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

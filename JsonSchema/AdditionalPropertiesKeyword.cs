@@ -5,36 +5,37 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `additionalProperties`.
 /// </summary>
-[Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
+public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
 {
-	internal const string Name = "additionalProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "additionalProperties";
 
 	/// <summary>
-	/// The schema by which to validation additional properties.
+	/// The schema by which to evaluate additional properties.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static AdditionalPropertiesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="AdditionalPropertiesKeyword"/>.
 	/// </summary>
@@ -45,28 +46,26 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		var annotation = (context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name) as List<string>)?.ToList();
 		List<string> evaluatedProperties;
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
-		if (context.Options.ValidatingAs is Draft.Draft6 or Draft.Draft7)
+		if (context.Options.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 		{
 			evaluatedProperties = new List<string>();
 			var propertiesKeyword = context.LocalSchema.Keywords!.OfType<PropertiesKeyword>().FirstOrDefault();
@@ -76,31 +75,30 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 			if (patternPropertiesKeyword != null)
 				evaluatedProperties.AddRange(obj
 					.Select(x => x.Key)
-					.Where(x => patternPropertiesKeyword.Patterns.All(p => !p.Key.IsMatch(x))));
+					.Where(x => patternPropertiesKeyword.Patterns.Any(p => p.Key.IsMatch(x))));
 		}
 		else
 		{
-			if (annotation == null)
+			if (!context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name, out var annotation))
 			{
 				context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
 				evaluatedProperties = new List<string>();
 			}
 			else
 			{
-				var annotation1 = annotation;
-				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: [{string.Join(",", annotation1.Select(x => $"'{x}'"))}]");
-				evaluatedProperties = annotation;
+				// ReSharper disable once AccessToModifiedClosure
+				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: {annotation.AsJsonString()}");
+				evaluatedProperties = annotation!.AsArray().Select(x => x!.GetValue<string>()).ToList();
 			}
-			annotation = (context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name) as List<string>)?.ToList();
-			if (annotation == null)
+			if (!context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name, out annotation))
 				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
 			else
 			{
-				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: [{string.Join(",", annotation.Select(x => $"'{x}'"))}]");
-				evaluatedProperties.AddRange(annotation);
+				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: {annotation.AsJsonString()}");
+				evaluatedProperties.AddRange(annotation!.AsArray().Select(x => x!.GetValue<string>()));
 			}
 		}
-		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToList();
+		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
 		evaluatedProperties.Clear();
 		foreach (var property in additionalProperties)
 		{
@@ -110,9 +108,10 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 				continue;
 			}
 
-			context.Log(() => $"Validating property '{property.Key}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
+			context.Log(() => $"Evaluating property '{property.Key}'.");
+			context.Push(context.InstanceLocation.Combine(property.Key), item ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name), Schema);
+			context.Evaluate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
@@ -123,35 +122,11 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, I
 		}
 		context.Options.LogIndentLevel--;
 
-		if (context.LocalResult.TryGetAnnotation(Name) is List<string> list)
-			list.AddRange(evaluatedProperties);
-		else
-			context.LocalResult.SetAnnotation(Name, evaluatedProperties);
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allProperties);
-		else if (allProperties.Any())
-			localResults.SetAnnotation(Name, allProperties);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

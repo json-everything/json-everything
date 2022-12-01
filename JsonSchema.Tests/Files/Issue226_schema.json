@@ -1,6 +1,8 @@
 ﻿{
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "$ref": "#/definitions/TestSequence",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [ 
+	  {"$ref": "#/definitions/TestSequence"}
+  ],
   "definitions": {
     "TestSequence": {
       "type": "object",

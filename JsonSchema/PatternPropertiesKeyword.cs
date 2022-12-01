@@ -13,18 +13,22 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `patternProperties`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
-public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<PatternPropertiesKeyword>
+public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<PatternPropertiesKeyword>
 {
-	internal const string Name = "patternProperties";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "patternProperties";
 
 	/// <summary>
 	/// The pattern-keyed schemas.
@@ -39,11 +43,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 	public IReadOnlyList<string>? InvalidPatterns { get; }
 
 	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
-
-	static PatternPropertiesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 
 	/// <summary>
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
@@ -60,17 +59,16 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -86,10 +84,11 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 			foreach (var instanceProperty in obj.Where(p => pattern.IsMatch(p.Key)))
 			{
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
-				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{instanceProperty.Key}")),
+				context.Push(context.InstanceLocation.Combine(instanceProperty.Key),
 					instanceProperty.Value ?? JsonNull.SignalNode,
-					context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-				schema.ValidateSubschema(context);
+					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{pattern}")),
+					schema);
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
@@ -101,8 +100,8 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		{
 			foreach (var pattern in InvalidPatterns)
 			{
-				context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{pattern}")));
-				context.LocalResult.Fail(ErrorMessages.InvalidPattern, ("pattern", pattern));
+				context.Push(context.EvaluationPath.Combine(pattern), false);
+				context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
 				overallResult = false;
 				context.Log(() => $"Discovered invalid pattern '{pattern}'.");
 				context.Pop();
@@ -111,37 +110,10 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 		}
 		context.Options.LogIndentLevel--;
 
-		if (context.LocalResult.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(evaluatedProperties);
-		else
-			context.LocalResult.SetAnnotation(Name, evaluatedProperties);
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in Patterns.Values)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allProperties = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allProperties);
-		else if (allProperties.Any())
-			localResults.SetAnnotation(Name, allProperties);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -156,8 +128,8 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IRefResolvable, IKey
 				td => td.Key.ToString(),
 				od => od.Key.ToString(),
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Patterns.Count) return false;
+			.ToArray();
+		if (byKey.Length != Patterns.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

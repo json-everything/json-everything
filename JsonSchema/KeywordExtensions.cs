@@ -10,7 +10,7 @@ namespace Json.Schema;
 /// </summary>
 public static class KeywordExtensions
 {
-	private static readonly Dictionary<Type, string> _attributes =
+	private static readonly Dictionary<Type, string> _keywordNames =
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
@@ -18,6 +18,16 @@ public static class KeywordExtensions
 						!t.IsInterface &&
 						t != typeof(UnrecognizedKeyword))
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
+	private static readonly Type[] _keywordDependencies =
+		typeof(IJsonSchemaKeyword).Assembly
+			.GetTypes()
+			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
+						!t.IsAbstract &&
+						!t.IsInterface &&
+						t != typeof(UnrecognizedKeyword))
+			.SelectMany(t => t.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType))
+			.Distinct()
+			.ToArray();
 
 	/// <summary>
 	/// Gets the keyword string.
@@ -33,13 +43,36 @@ public static class KeywordExtensions
 		if (keyword is UnrecognizedKeyword unrecognized) return unrecognized.Name;
 
 		var keywordType = keyword.GetType();
-		if (!_attributes.TryGetValue(keywordType, out var name))
+		if (!_keywordNames.TryGetValue(keywordType, out var name))
 		{
 			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
 			if (name == null)
 				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 
-			_attributes[keywordType] = name;
+			_keywordNames[keywordType] = name;
+		}
+
+		return name;
+	}
+
+	/// <summary>
+	/// Gets the keyword string.
+	/// </summary>
+	/// <param name="keywordType">The keyword type.</param>
+	/// <returns>The keyword string.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="keywordType"/> is null.</exception>
+	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
+	public static string Keyword(this Type keywordType)
+	{
+		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
+
+		if (!_keywordNames.TryGetValue(keywordType, out var name))
+		{
+			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
+			if (name == null)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
+
+			_keywordNames[keywordType] = name;
 		}
 
 		return name;
@@ -73,67 +106,63 @@ public static class KeywordExtensions
 		return priority;
 	}
 
-	private static readonly Dictionary<Type, Draft> _draftDeclarations =
+	private static readonly Dictionary<Type, SpecVersion> _versionDeclarations =
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
 						!t.IsAbstract &&
 						!t.IsInterface)
-			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaDraftAttribute>()
-				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft));
+			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaSpecVersionAttribute>()
+				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version));
 
 	/// <summary>
-	/// Determines if a keyword is declared by a given draft of the JSON Schema specification.
+	/// Determines if a keyword is declared by a given version of the JSON Schema specification.
 	/// </summary>
 	/// <param name="keyword">The keyword.</param>
-	/// <param name="draft">The queried draft.</param>
-	/// <returns>true if the keyword is supported by the draft; false otherwise</returns>
+	/// <param name="version">The queried version.</param>
+	/// <returns>true if the keyword is supported by the version; false otherwise</returns>
 	/// <exception cref="ArgumentNullException">Thrown if <paramref name="keyword"/> is null.</exception>
-	/// <exception cref="InvalidOperationException">Thrown if the keyword has no <see cref="SchemaDraftAttribute"/> declarations.</exception>
-	public static bool SupportsDraft(this IJsonSchemaKeyword keyword, Draft draft)
+	/// <exception cref="InvalidOperationException">Thrown if the keyword has no <see cref="SchemaSpecVersionAttribute"/> declarations.</exception>
+	public static bool SupportsVersion(this IJsonSchemaKeyword keyword, SpecVersion version)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
 		var keywordType = keyword.GetType();
-		if (!_draftDeclarations.TryGetValue(keywordType, out var supportedDrafts))
+		if (!_versionDeclarations.TryGetValue(keywordType, out var supportedVersions))
 		{
-			supportedDrafts = keywordType.GetCustomAttributes<SchemaDraftAttribute>()
-				.Aggregate(Draft.Unspecified, (c, x) => c | x.Draft);
-			if (supportedDrafts == Draft.Unspecified)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaDraftAttribute)}");
+			supportedVersions = keywordType.GetCustomAttributes<SchemaSpecVersionAttribute>()
+				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version);
+			if (supportedVersions == SpecVersion.Unspecified)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaSpecVersionAttribute)}");
 
-			_draftDeclarations[keywordType] = supportedDrafts;
+			_versionDeclarations[keywordType] = supportedVersions;
 		}
 
-		return supportedDrafts.HasFlag(draft);
+		return supportedVersions.HasFlag(version);
 	}
 
-	/// <summary>
-	/// Gets whether the keyword is an applicator (carries the <see cref="ApplicatorAttribute"/> attribute).
-	/// </summary>
-	/// <param name="keyword">The keyword.</param>
-	/// <returns>`true` if the keyword is an applicator; `false` otherwise.</returns>
-	public static bool IsApplicator(this IJsonSchemaKeyword keyword)
+	public static SpecVersion VersionsSupported(this IJsonSchemaKeyword keyword)
 	{
-		return keyword.GetType().GetCustomAttribute<ApplicatorAttribute>() != null;
-	}
+		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
-	/// <summary>
-	/// Gets all immediate subschemas for a keyword.
-	/// </summary>
-	/// <param name="keyword">The keyword.</param>
-	/// <returns>An `IEnumerable&lt;JsonSchema&gt;`.</returns>
-	public static IEnumerable<JsonSchema> GetSubschemas(this IJsonSchemaKeyword keyword)
-	{
-		return keyword switch
+		var keywordType = keyword.GetType();
+		if (!_versionDeclarations.TryGetValue(keywordType, out var supportedVersions))
 		{
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			ISchemaContainer container => container.Schema == null ? Enumerable.Empty<JsonSchema>() : new[] { container.Schema },
-			// ReSharper disable ConstantNullCoalescingCondition
-			ISchemaCollector collector => collector.Schemas ?? Enumerable.Empty<JsonSchema>(),
-			IKeyedSchemaCollector collector => collector.Schemas.Values ?? Enumerable.Empty<JsonSchema>(),
-			// ReSharper restore ConstantNullCoalescingCondition
-			_ => Enumerable.Empty<JsonSchema>()
-		};
+			supportedVersions = keywordType.GetCustomAttributes<SchemaSpecVersionAttribute>()
+				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version);
+			if (supportedVersions == SpecVersion.Unspecified)
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaSpecVersionAttribute)}");
+
+			_versionDeclarations[keywordType] = supportedVersions;
+		}
+
+		return supportedVersions;
+	}
+
+	internal static bool ProducesDependentAnnotations(this Type keywordType)
+	{
+		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
+
+		return _keywordDependencies.Contains(keywordType);
 	}
 }

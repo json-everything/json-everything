@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `contains`.
 /// </summary>
-[Applicator]
+[SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAnnotationsFrom(typeof(MinContainsKeyword))]
+[DependsOnAnnotationsFrom(typeof(MaxContainsKeyword))]
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
-public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContainsKeyword>
+public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ContainsKeyword>
 {
-	internal const string Name = "contains";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "contains";
 
 	/// <summary>
 	/// The schema to match.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static ContainsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="ContainsKeyword"/>.
 	/// </summary>
@@ -44,67 +45,68 @@ public class ContainsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContai
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
+		// verify this logic
+		if (schemaValueType != SchemaValueType.Array &&
+		    schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		var array = (JsonArray)context.LocalInstance!;
-		var validIndices = new List<int>();
-		for (int i = 0; i < array.Count; i++)
+		var validIndices = new List<JsonNode>();
+		if (schemaValueType == SchemaValueType.Array)
 		{
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), array[i] ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
-			if (context.LocalResult.IsValid)
-				validIndices.Add(i);
-			context.Pop();
-		}
-
-		var minContainsKeyword = context.LocalSchema.Keywords!.OfType<MinContainsKeyword>().FirstOrDefault();
-		if (minContainsKeyword is { Value: 0 })
-		{
-			context.LocalResult.SetAnnotation(Name, validIndices);
-			context.LocalResult.Pass();
-			context.NotApplicable(() => $"{MinContainsKeyword.Name} is 0.");
-			return;
-		}
-
-		if (validIndices.Any())
-		{
-			context.LocalResult.SetAnnotation(Name, validIndices);
-			context.LocalResult.Pass();
+			var array = (JsonArray)context.LocalInstance!;
+			for (int i = 0; i < array.Count; i++)
+			{
+				context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(Name), Schema);
+				context.Evaluate();
+				if (context.LocalResult.IsValid)
+					validIndices.Add(i);
+				context.Pop();
+			}
 		}
 		else
-			context.LocalResult.Fail(ErrorMessages.Contains);
+		{
+			if (context.Options.EvaluatingAs != SpecVersion.Unspecified &&
+			    context.Options.EvaluatingAs < SpecVersion.DraftNext)
+			{
+				context.WrongValueKind(schemaValueType);
+				return;
+			}
+			var obj = (JsonObject)context.LocalInstance!;
+			foreach (var kvp in obj)
+			{
+				context.Push(context.InstanceLocation.Combine(kvp.Key), kvp.Value ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(Name), Schema);
+				context.Evaluate();
+				if (context.LocalResult.IsValid)
+					validIndices.Add(kvp.Key!);
+				context.Pop();
+			}
+		}
+
+		context.LocalResult.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation);
+		context.LocalResult.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation);
+		var min = minContainsAnnotation?.GetValue<uint>() ?? 1;
+		var max = maxContainsAnnotation?.GetValue<uint>() ?? uint.MaxValue;
+		var validCount = validIndices.Count;
+
+		if (validCount < min)
+			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooFew, ("received", validCount), ("minimum", min));
+		else if (validCount > max)
+			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooMany, ("received", validCount), ("maximum", max));
+		else
+			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allIndices = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<int>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<int> annotation)
-			annotation.AddRange(allIndices);
-		else if (allIndices.Any())
-			localResults.SetAnnotation(Name, allIndices);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -150,15 +152,34 @@ internal class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _contains;
+	private static string? _containsTooFew;
+	private static string? _containsTooMany;
 
 	/// <summary>
-	/// Gets or sets the error message for <see cref="ContainsKeyword"/>.
+	/// Gets or sets the error message for <see cref="ContainsKeyword"/> when there are too few matching items.
 	/// </summary>
-	/// <remarks>No tokens are supported.</remarks>
-	public static string Contains
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of matching items provided in the JSON instance
+	///   - [[minimum]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string ContainsTooFew
 	{
-		get => _contains ?? Get();
-		set => _contains = value;
+		get => _containsTooFew ?? Get();
+		set => _containsTooFew = value;
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ContainsKeyword"/> when there are too many matching items.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of matching items provided in the JSON instance
+	///   - [[maximum]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string ContainsTooMany
+	{
+		get => _containsTooMany ?? Get();
+		set => _containsTooMany = value;
 	}
 }

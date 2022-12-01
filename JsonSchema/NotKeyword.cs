@@ -7,19 +7,23 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `not`.
 /// </summary>
-[Applicator]
 [SchemaPriority(20)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(NotKeywordJsonConverter))]
-public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<NotKeyword>
+public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKeyword>
 {
-	internal const string Name = "not";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "not";
 
 	/// <summary>
 	/// The schema to not match.
@@ -36,27 +40,19 @@ public class NotKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, 
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		Schema.ValidateSubschema(context);
+		context.Push(evaluationPath: context.EvaluationPath.Combine(Name), Schema);
+		context.Evaluate();
 		var result = context.LocalResult.IsValid;
-		context.Options.LogIndentLevel++;
-		context.Log(() => $"Subschema {context.LocalResult.IsValid.GetValidityString()}.");
-		context.Options.LogIndentLevel--;
+		context.Pop();
 		if (result)
 			context.LocalResult.Fail();
-		else
-			context.LocalResult.Pass();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -10,16 +10,21 @@ namespace Json.Schema;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(long.MinValue)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(SchemaKeywordJsonConverter))]
 public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 {
-	internal const string Name = "$schema";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$schema";
 
 	/// <summary>
 	/// The meta-schema ID.
@@ -36,28 +41,22 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
 		if (metaSchema == null)
-		{
-			context.LocalResult.Fail(ErrorMessages.MetaSchemaResolution, ("uri", Schema.OriginalString));
-			context.Log(() => context.LocalResult.Message!);
-			context.ExitKeyword(Name, false);
-			return;
-		}
+			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
 		var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
 		if (vocabularyKeyword != null)
 			context.UpdateMetaSchemaVocabs(vocabularyKeyword.Vocabulary);
 
-		if (!context.Options.ValidateMetaSchema)
+		if (!context.Options.ValidateAgainstMetaSchema)
 		{
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -65,14 +64,12 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		context.Log(() => "Validating against meta-schema.");
 		using var document = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema));
 		var schemaAsJson = document.RootElement;
-		var newOptions = ValidationOptions.From(context.Options);
-		newOptions.ValidateMetaSchema = false;
-		var results = metaSchema.Validate(schemaAsJson, newOptions);
+		var newOptions = EvaluationOptions.From(context.Options);
+		newOptions.ValidateAgainstMetaSchema = false;
+		var results = metaSchema.Evaluate(schemaAsJson, newOptions);
 
-		if (results.IsValid)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
+		if (!results.IsValid)
+			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -124,21 +121,6 @@ internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _metaSchemaResolution;
-
-	/// <summary>
-	/// Gets or sets the error message for when the meta-schema cannot be resolved.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[uri]] - the URI of the meta-schema
-	/// </remarks>
-	public static string MetaSchemaResolution
-	{
-		get => _metaSchemaResolution ?? Get();
-		set => _metaSchemaResolution = value;
-	}
-
 	private static string? _metaSchemaValidation;
 
 	/// <summary>

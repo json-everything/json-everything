@@ -11,13 +11,13 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-		<PackageTags>json-schema validation schema json data schema-data</PackageTags>
+		<PackageTags>json-schema evaluation validation schema json data schema-data</PackageTags>
 		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-data.html</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>3.0.1</Version>
-		<FileVersion>3.0.1.0</FileVersion>
+		<Version>3.1.0-beta1</Version>
+		<FileVersion>3.1.0.0</FileVersion>
 		<AssemblyVersion>3.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

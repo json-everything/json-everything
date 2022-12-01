@@ -16,8 +16,10 @@ There are a number of settings available in the upper portion of the middle area
 
 |Setting|Description|
 |:-|:-|
-|Output format|Allows selection of the output format.  This format is described in the JSON Schema specification.  JsonSchema.Net uses the format specified in version 2020-12.  See the output format section of the docs (to the left) for more information.|
 |Draft|Allows selection of which JSON Schema version to use.  This option serves as a fallback for when the schema itself does not include a `$schema` keyword.|
+|Output format|Allows selection of the output format.  This format is described in the JSON Schema specification.  JsonSchema.Net uses the format specified in version 2020-12, however this playground uses the proposal for the next draft, which no longer contains a "condensed" hierarchy format.  See the output format section of the docs (to the left) for more information on what the library offers.|
+|Output structure|The next version of JSON Schema is changing the output structure from being keyword-based to being subschema-based.  The key difference is a more compact representation that consolidates annotations and errors in a more consumable format.  Try both to see which you prefer.|
+|Preserve dropped annotations|Subschemas which fail validation must drop their annotations.  This option will retain them in the "draft-next" output under `droppedAnnotations`.  This can be useful for debugging.
 |Default base URI|Allows you to specify a default base URI for the schema.  This serves as a fallback for when the `$id` keyword is not an absolute URI.  This is typically used in the output but also comes into play during `$ref` resolution.  The default is `https://json-everything.net/`|
 |Validate `format`|Allows you to specify whether the `format` keyword should be asserted.  Typically this is an annotation-only keyword, meaning that it will appear in the output, but it will not be verified.|
 

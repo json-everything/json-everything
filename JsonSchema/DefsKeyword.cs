@@ -11,14 +11,19 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(long.MinValue + 1)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DefsKeywordJsonConverter))]
-public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaCollector, IEquatable<DefsKeyword>
+public class DefsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DefsKeyword>
 {
-	internal const string Name = "$defs";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$defs";
 
 	/// <summary>
 	/// The collection of schema definitions.
@@ -37,22 +42,16 @@ public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaColle
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
+		context.Push(context.EvaluationPath.Combine(Name), true);
 		context.LocalResult.Ignore();
+		context.Pop();
 		context.ExitKeyword(Name, true);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in Definitions.Values)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -67,8 +66,8 @@ public class DefsKeyword : IJsonSchemaKeyword, IRefResolvable, IKeyedSchemaColle
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Definitions.Count) return false;
+			.ToArray();
+		if (byKey.Length != Definitions.Count) return false;
 
 		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
 	}

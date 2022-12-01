@@ -1,0 +1,51 @@
+{
+    "$schema": "https://json-schema.org/draft/next/schema",
+    "$id": "https://json-schema.org/draft/next/meta/core",
+    "$vocabulary": {
+        "https://json-schema.org/draft/next/vocab/core": true
+    },
+    "$dynamicAnchor": "meta",
+
+    "title": "Core vocabulary meta-schema",
+    "type": ["object", "boolean"],
+    "properties": {
+        "$id": {
+            "$ref": "#/$defs/iriReferenceString",
+            "$comment": "Non-empty fragments not allowed.",
+            "pattern": "^[^#]*#?$"
+        },
+        "$schema": { "$ref": "#/$defs/iriString" },
+        "$ref": { "$ref": "#/$defs/iriReferenceString" },
+        "$anchor": { "$ref": "#/$defs/anchorString" },
+        "$dynamicRef": { "$ref": "#/$defs/iriReferenceString" },
+        "$dynamicAnchor": { "$ref": "#/$defs/anchorString" },
+        "$vocabulary": {
+            "type": "object",
+            "propertyNames": { "$ref": "#/$defs/iriString" },
+            "additionalProperties": {
+                "type": "boolean"
+            }
+        },
+        "$comment": {
+            "type": "string"
+        },
+        "$defs": {
+            "type": "object",
+            "additionalProperties": { "$dynamicRef": "#meta" }
+        }
+    },
+    "$defs": {
+        "anchorString": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$"
+        },
+        "iriString": {
+            "type": "string",
+            "format": "iri"
+        },
+        "iriReferenceString": {
+            "type": "string",
+            "format": "iri-reference"
+        }
+    }
+}

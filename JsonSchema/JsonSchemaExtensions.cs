@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -10,26 +11,65 @@ namespace Json.Schema;
 public static class JsonSchemaExtensions
 {
 	/// <summary>
-	/// Extends <see cref="JsonSchema.Validate(JsonNode?,ValidationOptions)"/> to take <see cref="JsonDocument"/>.
+	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
 	/// </summary>
 	/// <param name="jsonSchema">The schema.</param>
-	/// <param name="jsonDocument">Document to be validated.</param>
-	/// <param name="options">The options to use for this validation.</param>
-	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public static ValidationResults Validate(this JsonSchema jsonSchema, JsonDocument jsonDocument, ValidationOptions? options = null)
+	/// <param name="jsonDocument">Instance to be evaluated.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	public static EvaluationResults Evaluate(this JsonSchema jsonSchema, JsonDocument jsonDocument, EvaluationOptions? options = null)
 	{
-		return jsonSchema.Validate(jsonDocument.RootElement, options);
+		return jsonSchema.Evaluate(jsonDocument.RootElement, options);
 	}
 
 	/// <summary>
-	/// Extends <see cref="JsonSchema.Validate(JsonNode?,ValidationOptions)"/> to take <see cref="JsonElement"/>.
+	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonElement"/>.
 	/// </summary>
 	/// <param name="jsonSchema">The schema.</param>
-	/// <param name="jsonElement">Element to be validated.</param>
-	/// <param name="options">The options to use for this validation.</param>
-	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public static ValidationResults Validate(this JsonSchema jsonSchema, JsonElement jsonElement, ValidationOptions? options = null)
+	/// <param name="jsonElement">Instance to be evaluated.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	public static EvaluationResults Evaluate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
 	{
-		return jsonSchema.Validate(jsonElement.AsNode(), options);
+		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
+	}
+
+	/// <summary>
+	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
+	/// </summary>
+	/// <param name="jsonSchema">The schema.</param>
+	/// <param name="jsonNode">Instance to be evaluated.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	[Obsolete("Use Evaluate() instead.")]
+	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonNode jsonNode, EvaluationOptions? options = null)
+	{
+		return jsonSchema.Evaluate(jsonNode, options);
+	}
+
+	/// <summary>
+	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
+	/// </summary>
+	/// <param name="jsonSchema">The schema.</param>
+	/// <param name="jsonDocument">Instance to be evaluated.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	[Obsolete("Use Evaluate() instead.")]
+	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonDocument jsonDocument, EvaluationOptions? options = null)
+	{
+		return jsonSchema.Evaluate(jsonDocument.RootElement, options);
+	}
+
+	/// <summary>
+	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonElement"/>.
+	/// </summary>
+	/// <param name="jsonSchema">The schema.</param>
+	/// <param name="jsonElement">Instance to be evaluated.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	[Obsolete("Use Evaluate() instead.")]
+	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
+	{
+		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 }

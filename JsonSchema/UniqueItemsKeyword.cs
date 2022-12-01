@@ -12,16 +12,21 @@ namespace Json.Schema;
 /// Handles `uniqueItems`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(UniqueItemsKeywordJsonConverter))]
 public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyword>
 {
-	internal const string Name = "uniqueItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "uniqueItems";
 
 	/// <summary>
 	/// Whether items should be unique.
@@ -38,23 +43,21 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var scheamValueType = context.LocalInstance.GetSchemaValueType();
 		if (scheamValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(scheamValueType);
 			return;
 		}
 
 		if (!Value)
 		{
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, true);
 			return;
 		}
@@ -68,13 +71,12 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 					duplicates.Add((i, j));
 			}
 
-		if (!duplicates.Any())
-			context.LocalResult.Pass();
-		else
+		if (duplicates.Any())
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("duplicates", pairs));
+			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

@@ -9,12 +9,15 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [JsonConverter(typeof(RecursiveAnchorKeywordJsonConverter))]
 public class RecursiveAnchorKeyword : IJsonSchemaKeyword, IEquatable<RecursiveAnchorKeyword>
 {
-	internal const string Name = "$recursiveAnchor";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$recursiveAnchor";
 
 	/// <summary>
 	/// Gets the value.
@@ -31,20 +34,13 @@ public class RecursiveAnchorKeyword : IJsonSchemaKeyword, IEquatable<RecursiveAn
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (!context.UriChanged || Value)
-			context.ValidateAnchor();
-
-		context.LocalResult.SetAnnotation(Name, Value);
-		if (Value)
-			context.CurrentAnchor ??= context.LocalSchema;
-
-		context.LocalResult.Pass();
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
 	}
 

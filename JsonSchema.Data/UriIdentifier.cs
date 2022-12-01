@@ -30,7 +30,7 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// <param name="context">The schema evaluation context.</param>
 	/// <param name="value">If return is true, the value at the indicated location.</param>
 	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(ValidationContext context, out JsonNode? value)
+	public bool TryResolve(EvaluationContext context, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 		var baseUri = parts[0];
@@ -44,19 +44,15 @@ public class UriIdentifier : IDataResourceIdentifier
 				wasResolved = Download(newUri, out data);
 			else
 			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
+				var uriFolder = context.Scope.LocalScope.OriginalString.EndsWith("/")
+					? context.Scope.LocalScope
+					: context.Scope.LocalScope.GetParentUri();
 				var newBaseUri = new Uri(uriFolder, baseUri);
 				wasResolved = Download(newBaseUri, out data);
 			}
 
 			if (!wasResolved)
-			{
-				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", baseUri));
-				value = null;
-				return false;
-			}
+				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
 		}
 		else
 			data = JsonSerializer.SerializeToNode(context.SchemaRoot);
@@ -65,18 +61,10 @@ public class UriIdentifier : IDataResourceIdentifier
 		{
 			fragment = $"#{fragment}";
 			if (!JsonPointer.TryParse(fragment, out var pointer))
-			{
-				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
-				value = null;
-				return false;
-			}
+				throw new JsonSchemaException($"Unrecognized fragment type `{Target}`");
 
 			if (!pointer!.TryEvaluate(data, out var resolved))
-			{
-				context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", fragment));
-				value = null;
-				return false;
-			}
+				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
 			data = resolved;
 		}
 

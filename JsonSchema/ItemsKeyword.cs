@@ -5,26 +5,30 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `items`.
 /// </summary>
-[Applicator]
 [SchemaPriority(5)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
-public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
+public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
 {
-	internal const string Name = "items";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "items";
 
 	/// <summary>
 	/// The schema for the "single schema" form.
@@ -40,10 +44,6 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 
 	IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas!;
 
-	static ItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="ItemsKeyword"/>.
 	/// </summary>
@@ -63,7 +63,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 	/// </remarks>
 	public ItemsKeyword(params JsonSchema[] values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
@@ -72,40 +72,36 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 	/// <param name="values">The collection of schemas for the "schema array" form.</param>
 	public ItemsKeyword(IEnumerable<JsonSchema> values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var array = (JsonArray)context.LocalInstance!;
-		bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 		var overallResult = true;
 		if (SingleSchema != null)
 		{
 			context.Options.LogIndentLevel++;
 			int startIndex;
-			var annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
-			if (annotation == null)
+			if (!context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name, out var annotation))
 				startIndex = 0;
 			else
 			{
-				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}");
-				if (annotation is bool)
+				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation.AsJsonString()}");
+				if (annotation!.AsValue().TryGetValue(out bool _))
 				{
-					context.LocalResult.Pass();
 					context.ExitKeyword(Name, true);
 					return;
 				}
@@ -116,10 +112,11 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			for (int i = startIndex; i < array.Count; i++)
 			{
 				var i1 = i;
-				context.Log(() => $"Validating item at index {i1}.");
+				context.Log(() => $"Evaluating item at index {i1}.");
 				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item ?? JsonNull.SignalNode);
-				SingleSchema.ValidateSubschema(context);
+				context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(Name), SingleSchema);
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
@@ -127,33 +124,27 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			}
 			context.Options.LogIndentLevel--;
 
-			if (overwriteAnnotation)
-			{
-				// TODO: add message
-				context.LocalResult.SetAnnotation(Name, true);
-			}
+			context.LocalResult.SetAnnotation(Name, true);
 		}
 		else // array
 		{
-			if (context.Options.ValidatingAs == Draft.Draft202012)
-			{
-				context.LocalResult.Fail(ErrorMessages.InvalidItemsForm);
-				context.Log(() => $"Array form of {Name} is invalid for draft 2020-12 and later");
-				context.ExitKeyword(Name, false);
-				return;
-			}
+			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
+			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
+				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
+
 			context.Options.LogIndentLevel++;
 			var maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
 			for (int i = 0; i < maxEvaluations; i++)
 			{
 				var i1 = i;
-				context.Log(() => $"Validating item at index {i1}.");
+				context.Log(() => $"Evaluating item at index {i1}.");
 				var schema = ArraySchemas[i];
 				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+				context.Push(context.InstanceLocation.Combine(i),
 					item ?? JsonNull.SignalNode,
-					context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-				schema.ValidateSubschema(context);
+					context.EvaluationPath.Combine(i),
+					schema);
+				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
@@ -161,48 +152,15 @@ public class ItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer
 			}
 			context.Options.LogIndentLevel--;
 
-			if (overwriteAnnotation)
-			{
-				// TODO: add message
-				if (maxEvaluations == array.Count)
-					context.LocalResult.SetAnnotation(Name, true);
-				else
-					context.LocalResult.SetAnnotation(Name, maxEvaluations);
-			}
+			if (maxEvaluations == array.Count)
+				context.LocalResult.SetAnnotation(Name, true);
+			else
+				context.LocalResult.SetAnnotation(Name, maxEvaluations);
 		}
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		object value;
-		var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.ToList();
-		if (allAnnotations.OfType<bool>().Any())
-			value = true;
-		else
-			value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
-		if (!Equals(value, -1))
-			localResults.SetAnnotation(Name, value);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		if (SingleSchema != null)
-			SingleSchema.RegisterSubschemas(registry, currentUri);
-		else
-		{
-			foreach (var schema in ArraySchemas!)
-			{
-				schema.RegisterSubschemas(registry, currentUri);
-			}
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -12,14 +12,19 @@ namespace Json.Schema;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(long.MinValue)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(VocabularyKeywordJsonConverter))]
 public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeyword>
 {
-	internal const string Name = "$vocabulary";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$vocabulary";
 
 	/// <summary>
 	/// The collection of vocabulary requirements.
@@ -36,21 +41,26 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var overallResult = true;
 		var violations = new List<Uri>();
 		var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
-		switch (context.Options.ValidatingAs)
+		switch (context.Options.EvaluatingAs)
 		{
-			case Draft.Unspecified:
-			case Draft.Draft201909:
-			case Draft.Draft202012:
+			case SpecVersion.Unspecified:
+			case SpecVersion.Draft201909:
 				vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
+				break;
+			case SpecVersion.Draft202012:
+				vocabularies[new Uri(Vocabularies.Core202012Id)] = true;
+				break;
+			case SpecVersion.DraftNext:
+				vocabularies[new Uri(Vocabularies.CoreNextId)] = true;
 				break;
 		}
 		foreach (var kvp in vocabularies)
@@ -62,10 +72,9 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 			overallResult &= isValid;
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
+
+		if (!overallResult)
+			context.LocalResult.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
@@ -81,8 +90,8 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 				tv => tv.Key.OriginalString,
 				ov => ov.Key.OriginalString,
 				(tv, ov) => new { ThisVocab = tv.Value, OtherVocab = ov.Value })
-			.ToList();
-		if (Vocabulary.Count != byUri.Count) return false;
+			.ToArray();
+		if (Vocabulary.Count != byUri.Length) return false;
 		return byUri.All(x => x.ThisVocab == x.OtherVocab);
 	}
 

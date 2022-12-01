@@ -12,9 +12,9 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema validation schema json</PackageTags>
-		<Version>3.3.2</Version>
-		<FileVersion>3.3.2.0</FileVersion>
-		<AssemblyVersion>3.0.0.0</AssemblyVersion>
+		<Version>4.0.0-beta1</Version>
+		<FileVersion>4.0.0.0</FileVersion>
+		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<AssemblyName>JsonSchema.Net</AssemblyName>
 		<PackageIcon>json-logo-256.png</PackageIcon>

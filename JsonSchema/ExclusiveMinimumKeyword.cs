@@ -9,16 +9,21 @@ namespace Json.Schema;
 /// Handles `exclusiveMinimum`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(ExclusiveMinimumKeywordJsonConverter))]
 public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveMinimumKeyword>
 {
-	internal const string Name = "exclusiveMinimum";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "exclusiveMinimum";
 
 	/// <summary>
 	/// The minimum value.
@@ -35,25 +40,22 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var number = context.LocalInstance!.AsValue().GetNumber();
-		if (Value < number)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
+		if (Value >= number)
+			context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

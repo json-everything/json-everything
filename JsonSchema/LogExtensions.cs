@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 
 namespace Json.Schema;
 
@@ -11,9 +10,9 @@ public static class LogExtensions
 	/// <summary>
 	/// Logs a message.
 	/// </summary>
-	/// <param name="context">The validation context.</param>
+	/// <param name="context">The evaluation context.</param>
 	/// <param name="message">The message.</param>
-	public static void Log(this ValidationContext context, Func<string> message)
+	public static void Log(this EvaluationContext context, Func<string> message)
 	{
 		context.Options.Log.Write(message, context.Options.LogIndentLevel);
 	}
@@ -21,9 +20,9 @@ public static class LogExtensions
 	/// <summary>
 	/// Adds a message to indicate a keyword has begun processing.  Increments indention.
 	/// </summary>
-	/// <param name="context">The validation context.</param>
+	/// <param name="context">The evaluation context.</param>
 	/// <param name="keyword">The keyword name</param>
-	public static void EnterKeyword(this ValidationContext context, string keyword)
+	public static void EnterKeyword(this EvaluationContext context, string keyword)
 	{
 		context.Options.LogIndentLevel++;
 		context.Log(() => $"Processing {keyword}...");
@@ -32,9 +31,9 @@ public static class LogExtensions
 	/// <summary>
 	/// Adds a message to indicate a keyword has finished processing.  Decrements indention.
 	/// </summary>
-	/// <param name="context">The validation context.</param>
+	/// <param name="context">The evaluation context.</param>
 	/// <param name="keyword">The keyword name</param>
-	public static void ExitKeyword(this ValidationContext context, string keyword)
+	public static void ExitKeyword(this EvaluationContext context, string keyword)
 	{
 		context.Log(() => $"{keyword} complete: {(context.LocalResult.IsValid ? "valid" : "invalid")}");
 		context.Options.LogIndentLevel--;
@@ -43,10 +42,10 @@ public static class LogExtensions
 	/// <summary>
 	/// Adds a message to indicate a keyword has finished processing.  Decrements indention.
 	/// </summary>
-	/// <param name="context">The validation context.</param>
+	/// <param name="context">The evaluation context.</param>
 	/// <param name="keyword">The keyword name</param>
 	/// <param name="valid">Whether the validation was successful</param>
-	public static void ExitKeyword(this ValidationContext context, string keyword, bool valid)
+	public static void ExitKeyword(this EvaluationContext context, string keyword, bool valid)
 	{
 		context.Log(() => $"{keyword} complete: {(valid ? "valid" : "invalid")}");
 		context.Options.LogIndentLevel--;
@@ -55,9 +54,9 @@ public static class LogExtensions
 	/// <summary>
 	/// Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
 	/// </summary>
-	/// <param name="context">The validation context.</param>
+	/// <param name="context">The evaluation context.</param>
 	/// <param name="kind">The value kind</param>
-	public static void WrongValueKind(this ValidationContext context, SchemaValueType kind)
+	public static void WrongValueKind(this EvaluationContext context, SchemaValueType kind)
 	{
 		context.Log(() => $"Value type is {kind}. Not applicable.");
 		context.Options.LogIndentLevel--;
@@ -66,9 +65,9 @@ public static class LogExtensions
 	/// <summary>
 	/// Adds a message to indicate that a keyword doesn't apply and why.  Decrements indention.
 	/// </summary>
-	/// <param name="context">The validation context.</param>
+	/// <param name="context">The evaluation context.</param>
 	/// <param name="reason">The reason</param>
-	public static void NotApplicable(this ValidationContext context, Func<string> reason)
+	public static void NotApplicable(this EvaluationContext context, Func<string> reason)
 	{
 		context.Log(() => $"{reason()} Not applicable.");
 		context.Options.LogIndentLevel--;

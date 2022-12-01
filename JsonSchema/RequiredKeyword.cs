@@ -11,16 +11,21 @@ namespace Json.Schema;
 /// Handles `requires`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(RequiredKeywordJsonConverter))]
 public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 {
-	internal const string Name = "required";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "required";
 
 	/// <summary>
 	/// The required properties.
@@ -33,7 +38,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	/// <param name="values">The required properties.</param>
 	public RequiredKeyword(params string[] values)
 	{
-		Properties = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Properties = values ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -42,26 +47,25 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	/// <param name="values">The required properties.</param>
 	public RequiredKeyword(IEnumerable<string> values)
 	{
-		Properties = values as List<string> ?? values.ToList();
+		Properties = values.ToReadOnlyList();
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
 		context.Options.LogIndentLevel++;
 		var notFound = new List<string>();
@@ -77,10 +81,8 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 			context.Log(() => $"Missing properties: [{string.Join(",", notFound.Select(x => $"'{x}'"))}]");
 		context.Options.LogIndentLevel--;
 
-		if (notFound.Count == 0)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.Required, ("missing", notFound));
+		if (notFound.Count != 0)
+			context.LocalResult.Fail(Name, ErrorMessages.Required, ("missing", notFound));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

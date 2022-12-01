@@ -11,16 +11,21 @@ namespace Json.Schema;
 /// Handles `type`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(TypeKeywordJsonConverter))]
 public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 {
-	internal const string Name = "type";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "type";
 
 	/// <summary>
 	/// The expected type.
@@ -59,10 +64,10 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		bool isValid;
@@ -102,10 +107,8 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 				throw new ArgumentOutOfRangeException();
 		}
 		var expected = Type.ToString().ToLower();
-		if (isValid)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
+		if (!isValid)
+			context.LocalResult.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

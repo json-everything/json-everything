@@ -13,24 +13,25 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(DependentRequiredKeywordJsonConverter))]
 public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<DependentRequiredKeyword>
 {
-	internal const string Name = "dependentRequired";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "dependentRequired";
 
 	/// <summary>
 	/// The collection of "required"-type dependencies.
 	/// </summary>
 	public IReadOnlyDictionary<string, IReadOnlyList<string>> Requirements { get; }
 
-	static DependentRequiredKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="DependentRequiredKeyword"/>.
 	/// </summary>
@@ -41,29 +42,28 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject(context)) return;
+		if (!obj.VerifyJsonObject()) return;
 
 		var overallResult = true;
 		var missingDependencies = new Dictionary<string, List<string>>();
 		foreach (var property in Requirements)
 		{
 			context.Options.LogIndentLevel++;
-			context.Log(() => $"Validating property '{property.Key}'.");
+			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var dependencies = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out _))
@@ -91,28 +91,13 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 		{
 			var missing = JsonSerializer.Serialize(missingDependencies);
-			context.LocalResult.Fail(ErrorMessages.DependentRequired, ("missing", missing));
+			context.LocalResult.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
 		}
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
 
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allDependentRequired = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allDependentRequired);
-		else if (allDependentRequired.Any())
-			localResults.SetAnnotation(Name, allDependentRequired);
+		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -127,8 +112,8 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 				td => td.Key,
 				od => od.Key,
 				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != Requirements.Count) return false;
+			.ToArray();
+		if (byKey.Length != Requirements.Count) return false;
 
 		return byKey.All(g => g.ThisDef.ContentsEqual(g.OtherDef));
 	}

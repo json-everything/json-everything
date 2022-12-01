@@ -58,11 +58,6 @@ public class JsonPointerParseTests
 			yield return new TestCaseData("#uses/anchor/name");
 			yield return new TestCaseData("#/invalid/escap~e/sequence");
 			yield return new TestCaseData("#/ends/with~");
-			yield return new TestCaseData("#/invalid/hex/%2h");
-			yield return new TestCaseData("#/short/%2/hex");
-			yield return new TestCaseData("#/end/short/hex/%5");
-			yield return new TestCaseData("#/missing/value/%/hex");
-			yield return new TestCaseData("#/end/missing/value/hex/%");
 		}
 	}
 
@@ -94,35 +89,5 @@ public class JsonPointerParseTests
 	public void TryParseFailure(string pointerString)
 	{
 		Assert.False(JsonPointer.TryParse(pointerString, out _));
-	}
-
-	[Test]
-	public void ParseExpectPlainGetUriEncoded()
-	{
-		Assert.Throws<PointerParseException>(() =>
-		{
-			JsonPointer.Parse("#/one/2/three", JsonPointerKind.Plain);
-		});
-	}
-
-	[Test]
-	public void ParseExpectUriEncodedGetPlain()
-	{
-		Assert.Throws<PointerParseException>(() =>
-		{
-			JsonPointer.Parse("/one/2/three", JsonPointerKind.UriEncoded);
-		});
-	}
-
-	[Test]
-	public void TryParseExpectPlainGetUriEncoded()
-	{
-		Assert.IsFalse(JsonPointer.TryParse("#/one/2/three", out _, JsonPointerKind.Plain));
-	}
-
-	[Test]
-	public void TryParseExpectUriEncodedGetPlain()
-	{
-		Assert.IsFalse(JsonPointer.TryParse("/one/2/three", out _, JsonPointerKind.UriEncoded));
 	}
 }

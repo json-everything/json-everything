@@ -1,314 +1,740 @@
 ﻿using System;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using NUnit.Framework;
 
-namespace Json.Schema.Tests
+namespace Json.Schema.Tests;
+
+public class OutputTests
 {
-	public class OutputTests
+	private static readonly JsonSchema _schema =
+		new JsonSchemaBuilder()
+			.Id("https://test.com/schema")
+			.Defs(
+				("integer", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("minimum", new JsonSchemaBuilder().Minimum(5))
+			)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("passes", true),
+				("fails", false),
+				("refs", new JsonSchemaBuilder().Ref("#/$defs/integer")),
+				("multi", new JsonSchemaBuilder()
+					.AllOf(
+						new JsonSchemaBuilder().Ref("#/$defs/integer"),
+						new JsonSchemaBuilder().Ref("#/$defs/minimum")
+					)
+				)
+			);
+	JsonSerializerOptions _serializerOptions = new()
 	{
-		private static readonly JsonSchema _schema =
-			new JsonSchemaBuilder()
-				.Id("https://test.com/schema")
-				.Defs(
-					("integer", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-					("minimum", new JsonSchemaBuilder().Minimum(5))
-				)
-				.Type(SchemaValueType.Object)
-				.Properties(
-					("passes", true),
-					("fails", false),
-					("refs", new JsonSchemaBuilder().Ref("#/$defs/integer")),
-					("multi", new JsonSchemaBuilder()
-						.AllOf(
-							new JsonSchemaBuilder().Ref("#/$defs/integer"),
-							new JsonSchemaBuilder().Ref("#/$defs/minimum")
-						)
-					)
-				);
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
 
-		[Test]
-		public void Flag_Success()
-		{
-			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Flag);
 
-			result.AssertValid();
-			Assert.IsEmpty(result.NestedResults);
-			Assert.IsEmpty(result.Annotations);
-		}
+	[Test]
+	public void Flag_Success()
+	{
+		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Flag);
+		var expected = @"{
+  ""valid"": true
+}";
 
-		[Test]
-		public void Flag_Failure()
-		{
-			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Flag);
+		result.AssertValid(expected);
+	}
 
-			result.AssertInvalid();
-			Assert.IsEmpty(result.NestedResults);
-			Assert.IsEmpty(result.Annotations);
-		}
+	[Test]
+	public void Flag_Failure()
+	{
+		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Flag);
+		var expected = @"{
+  ""valid"": false
+}";
 
-		[Test]
-		public void Basic_Success()
-		{
-			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Basic);
-			var expected = @"{
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void Basic_Success()
+	{
+		var result = Validate("{\"passes\":\"value\"}", OutputFormat.List);
+		var expected = @"{
   ""valid"": true,
-  ""keywordLocation"": ""#"",
-  ""instanceLocation"": ""#"",
-  ""annotations"": [
+  ""details"": [
     {
       ""valid"": true,
-      ""keywordLocation"": ""#/properties"",
-      ""instanceLocation"": ""#"",
-      ""annotation"": [
-        ""passes""
-      ]
+      ""evaluationPath"": """",
+      ""schemaLocation"": ""https://test.com/schema"",
+      ""instanceLocation"": """",
+      ""annotations"": {
+        ""properties"": [ ""passes"" ]
+      }
     }
   ]
 }";
 
-			result.AssertValid(expected);
-		}
+		result.AssertValid(expected);
+	}
 
-		[Test]
-		public void Basic_Failure()
-		{
-			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Basic);
-			var expected = @"{
+	[Test]
+	public void Basic_Failure()
+	{
+		var result = Validate("{\"fails\":\"value\"}", OutputFormat.List);
+		var expected = @"{
   ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
-}";
-
-			result.AssertInvalid(expected);
-		}
-
-		[Test]
-		public void Detailed_Success()
-		{
-			var result = Validate("{\"passes\":\"value\"}", OutputFormat.Detailed);
-
-			result.AssertValid();
-			Assert.IsEmpty(result.NestedResults);
-			Assert.IsNotEmpty(result.Annotations);
-		}
-
-		[Test]
-		public void Detailed_Failure()
-		{
-			var result = Validate("{\"fails\":\"value\"}", OutputFormat.Detailed);
-			var expected = @"{
-  ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
-}";
-			result.AssertInvalid(expected);
-		}
-
-		[Test]
-		public void Detailed_Multi_Success()
-		{
-			var result = Validate("{\"multi\":8}", OutputFormat.Detailed);
-			var expected = @"
-{
-  ""valid"": true,
-  ""keywordLocation"": ""#"",
-  ""instanceLocation"": ""#"",
-  ""annotations"": [
-    {
-      ""valid"": true,
-      ""keywordLocation"": ""#/properties"",
-      ""instanceLocation"": ""#"",
-      ""annotation"": [
-        ""multi""
-      ]
-    }
-  ]
-}";
-
-			result.AssertValid(expected);
-		}
-
-		[Test]
-		public void Detailed_Multi_Failure_Both()
-		{
-			var result = Validate("{\"multi\":3.5}", OutputFormat.Detailed);
-			var expected = @"{
-  ""valid"": false,
-  ""keywordLocation"": ""#/properties/multi/allOf"",
-  ""instanceLocation"": ""#/multi"",
-  ""errors"": [
+  ""details"": [
     {
       ""valid"": false,
-      ""keywordLocation"": ""#/properties/multi/allOf/0/$ref/type"",
-      ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
-      ""instanceLocation"": ""#/multi"",
-      ""error"": ""Value is \""number\"" but should be \""integer\""""
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Success()
+	{
+		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""annotations"": {
+    ""properties"": [
+      ""passes""
+    ]
+  },
+  ""details"": [
+    {
+      ""valid"": true,
+      ""evaluationPath"": ""/properties/passes"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/passes"",
+      ""instanceLocation"": ""/passes""
+    }
+  ]
+}";
+
+		result.AssertValid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Failure()
+	{
+		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Failure_WithDroppedAnnotations()
+	{
+		var instance = JsonNode.Parse("{\"fails\":\"value\"}");
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = OutputFormat.Hierarchical;
+		options.PreserveDroppedAnnotations = true;
+
+		var result = _schema.Evaluate(instance, options);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""droppedAnnotations"": {
+    ""properties"": [
+      ""fails""
+    ]
+  },
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Multi_Success()
+	{
+		var result = Validate("{\"multi\":8}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""annotations"": {
+    ""properties"": [
+      ""multi""
+    ]
+  },
+  ""details"": [
+    {
+      ""valid"": true,
+      ""evaluationPath"": ""/properties/multi"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/multi"",
+      ""instanceLocation"": ""/multi"",
+      ""details"": [
+        {
+          ""valid"": true,
+          ""evaluationPath"": ""/properties/multi/allOf/0"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/0"",
+          ""instanceLocation"": ""/multi"",
+          ""details"": [
+            {
+              ""valid"": true,
+              ""evaluationPath"": ""/properties/multi/allOf/0/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/integer"",
+              ""instanceLocation"": ""/multi""
+            }
+          ]
+        },
+        {
+          ""valid"": true,
+          ""evaluationPath"": ""/properties/multi/allOf/1"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/1"",
+          ""instanceLocation"": ""/multi"",
+          ""details"": [
+            {
+              ""valid"": true,
+              ""evaluationPath"": ""/properties/multi/allOf/1/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/minimum"",
+              ""instanceLocation"": ""/multi""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}";
+
+		result.AssertValid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Multi_Failure_Both()
+	{
+		var result = Validate("{\"multi\":3.5}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/multi"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/multi"",
+      ""instanceLocation"": ""/multi"",
+      ""details"": [
+        {
+          ""valid"": false,
+          ""evaluationPath"": ""/properties/multi/allOf/0"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/0"",
+          ""instanceLocation"": ""/multi"",
+          ""details"": [
+            {
+              ""valid"": false,
+              ""evaluationPath"": ""/properties/multi/allOf/0/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/integer"",
+              ""instanceLocation"": ""/multi"",
+              ""errors"": {
+                ""type"": ""Value is \""number\"" but should be \""integer\""""
+              }
+            }
+          ]
+        },
+        {
+          ""valid"": false,
+          ""evaluationPath"": ""/properties/multi/allOf/1"",
+          ""schemaLocation"": ""https://test.com/schema#/properties/multi/allOf/1"",
+          ""instanceLocation"": ""/multi"",
+          ""details"": [
+            {
+              ""valid"": false,
+              ""evaluationPath"": ""/properties/multi/allOf/1/$ref"",
+              ""schemaLocation"": ""https://test.com/schema#/$defs/minimum"",
+              ""instanceLocation"": ""/multi"",
+              ""errors"": {
+                ""minimum"": ""3.5 is less than or equal to 5""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Multi_Failure_Integer()
+	{
+		var result = Validate("{\"fails\":8.5}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void Hierarchical_Multi_Failure_Minimum()
+	{
+		var result = Validate("{\"fails\":3}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/fails"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/fails"",
+      ""instanceLocation"": ""/fails"",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void RelativeAndAbsoluteLocations()
+	{
+		var result = Validate("{\"refs\":8.8}", OutputFormat.Hierarchical);
+		var expected = @"{
+  ""valid"": false,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": ""/properties/refs"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/refs"",
+      ""instanceLocation"": ""/refs"",
+      ""details"": [
+        {
+          ""valid"": false,
+          ""evaluationPath"": ""/properties/refs/$ref"",
+          ""schemaLocation"": ""https://test.com/schema#/$defs/integer"",
+          ""instanceLocation"": ""/refs"",
+          ""errors"": {
+            ""type"": ""Value is \""number\"" but should be \""integer\""""
+          }
+        }
+      ]
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
+	}
+
+	private static EvaluationResults Validate(string json, OutputFormat format)
+	{
+		var instance = JsonNode.Parse(json);
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = format;
+
+		var result = _schema.Evaluate(instance, options);
+		return result;
+	}
+
+	[Test]
+	public void AdditionalPropertiesDoesNotGiveExtraErrors()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Properties(
+				("foo", false)
+			)
+			.AdditionalProperties(false);
+
+		var instance = JsonNode.Parse("{\"foo\": null}");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
+		Console.WriteLine(serialized);
+
+		Assert.False(serialized.Contains("additionalProperties"));
+	}
+
+	[Test]
+	public void UnevaluatedPropertiesDoesNotGiveExtraErrors()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Properties(
+				("foo", false)
+			)
+			.UnevaluatedProperties(false);
+
+		var instance = JsonNode.Parse("{\"foo\": null}");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
+		Console.WriteLine(serialized);
+
+		Assert.False(serialized.Contains("unevaluatedProperties"));
+	}
+
+	[Test]
+	public void UnevaluatedPropertiesStillGivesExtraErrorsForReffedSchemas()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Defs(
+				("reffed", new JsonSchemaBuilder()
+					.Properties(
+						("foo", false)
+					)
+				)
+			)
+			.Ref("#/$defs/reffed")
+			.UnevaluatedProperties(false);
+
+		var instance = JsonNode.Parse("{\"foo\": null}");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
+		Console.WriteLine(serialized);
+
+		Assert.True(serialized.Contains("unevaluatedProperties"));
+	}
+
+	[Test]
+	public void AdditionalItemsDoesNotGiveExtraErrors()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Items(new JsonSchema[] { true, false })
+			.AdditionalItems(false);
+
+		var instance = JsonNode.Parse("[1,2]");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
+		Console.WriteLine(serialized);
+
+		Assert.False(serialized.Contains("additionalItems"));
+	}
+
+	[Test]
+	public void UnevaluatedItemsDoesNotGiveExtraErrors()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft201909Id)
+			.Items(new JsonSchema[] { true, false })
+			.UnevaluatedItems(false);
+
+		var instance = JsonNode.Parse("[1,2]");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
+		Console.WriteLine(serialized);
+
+		Assert.False(serialized.Contains("unevaluatedItems"));
+	}
+
+	[Test]
+	public void FalseSchemaFailsEverything()
+	{
+		JsonSchema schema = false;
+
+		var instance = JsonDocument.Parse("[1,2]").RootElement;
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var expected = @"{
+  ""valid"": false,
+  ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": """",
+      ""schemaLocation"": ""https://json-schema.org/false"",
+      ""instanceLocation"": """",
+      ""errors"": {
+        """": ""All values fail against the false schema""
+      }
+    }
+  ]
+}";
+
+		result.AssertInvalid(expected);
+	}
+
+	[Test]
+	public void NewOutputFormat()
+	{
+		var schema = JsonSchema.FromText(@"{
+  ""$id"": ""https://json-schema.org/schemas/example"",
+  ""type"": ""object"",
+  ""title"": ""root"",
+  ""properties"": {
+    ""foo"": {
+      ""allOf"": [
+        { ""required"": [ ""unspecified-prop"" ] },
+        {
+          ""type"": ""object"",
+          ""title"": ""foo-title"",
+          ""properties"": {
+            ""foo-prop"": {
+              ""const"": 1,
+              ""title"": ""foo-prop-title""
+            }
+          },
+          ""additionalProperties"": { ""type"": ""boolean"" }
+        }
+      ]
     },
+    ""bar"": {
+      ""$ref"": ""#/$defs/bar""
+    }
+  },
+  ""$defs"": {
+    ""bar"": {
+      ""type"": ""object"",
+      ""title"": ""bar-title"",
+      ""properties"": {
+        ""bar-prop"": {
+          ""type"": ""integer"",
+          ""minimum"": 10,
+          ""title"": ""bar-prop-title""
+        }
+      }
+    }
+  }
+}");
+		var failing = JsonNode.Parse(@"{
+  ""foo"": {""foo-prop"": ""not 1"", ""other-prop"": false},
+  ""bar"": {""bar-prop"": 2}
+}");
+		var passing = JsonNode.Parse(@"{
+  ""foo"": {
+    ""foo-prop"": 1,
+    ""unspecified-prop"": true
+  },
+  ""bar"": {""bar-prop"": 20}
+}");
+
+		var validationOptions = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
+		var result = schema.Evaluate(failing, validationOptions);
+
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
+		Console.WriteLine();
+
+		result.ToList();
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
+		Console.WriteLine();
+
+		result = schema.Evaluate(passing, validationOptions);
+
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
+		Console.WriteLine();
+
+		result.ToList();
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
+	}
+
+	[Test]
+	public void EtherCondensedOption()
+	{
+		var instance = JsonNode.Parse(@"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""id"": {
+      ""type"": ""string""
+    },
+    ""product"": {
+      ""type"": ""string""
+    },
+    ""field"": {
+      ""type"": ""string""
+    },
+    ""value"": {
+      ""type"": ""string""
+    },
+    ""created"": {
+      ""type"": ""string""
+    },
+    ""updated"": {
+      ""type"": ""string""
+    },
+    ""deleted"": {
+      ""type"": ""string""
+    },
+    ""allOf"": [
+      {
+        ""if"": {
+          ""required"": [
+            ""value""
+          ],
+          ""properties"": {
+            ""value"": {
+              ""type"": ""string""
+            }
+          }
+        },
+        ""then"": {
+          ""properties"": {
+            ""value_blob"": {
+              ""type"": ""null""
+            }
+          }
+        }
+      },
+      {
+        ""if"": {
+          ""required"": [
+            ""value_blob""
+          ],
+          ""properties"": {
+            ""value_blob"": {
+              ""type"": ""string""
+            }
+          }
+        },
+        ""then"": {
+          ""properties"": {
+            ""value"": {
+              ""type"": ""null""
+            }
+          }
+        }
+      }
+    ]
+  }
+}");
+
+		EvaluationOptions.Default.Log = null!;
+		var result = MetaSchemas.Draft202012.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+
+		//result.ToBasic();
+
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
+	}
+
+	[Test]
+	public void IgnoreTitleAnnotations()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Id("https://test.com/schema")
+			.Title("a title")
+			.Default("default value")
+			.Type(SchemaValueType.String);
+		JsonNode? instance = "a string";
+		var expected = @"{
+  ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""annotations"": {
+    ""default"": ""default value""
+  }
+}";
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = OutputFormat.Hierarchical;
+		options.IgnoreAnnotationsFrom<TitleKeyword>();
+		var result = schema.Evaluate(instance, options);
+
+		result.AssertValid(expected);
+	}
+
+	[Test]
+	public void CollectButDoNotReportPropertiesAnnotations()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Id("https://test.com/schema")
+			.Title("a title")
+			.Type(SchemaValueType.Object)
+			.Properties(("foo", true))
+			.AdditionalProperties(false);
+		var instance = new JsonObject { ["foo"] = 1 };
+		var expected = @"{
+  ""valid"": true,
+  ""evaluationPath"": """",
+  ""schemaLocation"": ""https://test.com/schema"",
+  ""instanceLocation"": """",
+  ""annotations"": {
+    ""title"": ""a title"",
+    ""additionalProperties"": []
+  },
+  ""details"": [
     {
-      ""valid"": false,
-      ""keywordLocation"": ""#/properties/multi/allOf/1/$ref/minimum"",
-      ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/minimum/minimum"",
-      ""instanceLocation"": ""#/multi"",
-      ""error"": ""3.5 is less than or equal to 5""
+      ""valid"": true,
+      ""evaluationPath"": ""/properties/foo"",
+      ""schemaLocation"": ""https://test.com/schema#/properties/foo"",
+      ""instanceLocation"": ""/foo""
     }
   ]
 }";
+		var options = EvaluationOptions.From(EvaluationOptions.Default);
+		options.OutputFormat = OutputFormat.Hierarchical;
+		options.IgnoreAnnotationsFrom<PropertiesKeyword>();
+		var result = schema.Evaluate(instance, options);
 
-			result.AssertInvalid(expected);
-		}
+		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		Console.WriteLine();
+		Console.WriteLine(JsonSerializer.Serialize(instance, _serializerOptions));
+		Console.WriteLine();
 
-		[Test]
-		public void Detailed_Multi_Failure_Integer()
-		{
-			var result = Validate("{\"fails\":8.5}", OutputFormat.Detailed);
-			var expected = @"{
-  ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
-}";
-
-			result.AssertInvalid(expected);
-		}
-
-		[Test]
-		public void Detailed_Multi_Failure_Minimum()
-		{
-			var result = Validate("{\"fails\":3}", OutputFormat.Detailed);
-			var expected = @"{
-  ""valid"": false,
-  ""keywordLocation"": ""#/properties/fails"",
-  ""instanceLocation"": ""#/fails"",
-  ""error"": ""All values fail against the false schema""
-}";
-
-			result.AssertInvalid(expected);
-		}
-
-		[Test]
-		public void RelativeAndAbsoluteLocations()
-		{
-			var result = Validate("{\"refs\":8.8}", OutputFormat.Detailed);
-			var expected = @"{
-  ""valid"": false,
-  ""keywordLocation"": ""#/properties/refs/$ref/type"",
-  ""absoluteKeywordLocation"": ""https://test.com/schema#/$defs/integer/type"",
-  ""instanceLocation"": ""#/refs"",
-  ""error"": ""Value is \""number\"" but should be \""integer\""""
-}";
-
-			result.AssertInvalid(expected);
-			Assert.AreEqual("#/properties/refs/$ref/type", result.SchemaLocation.ToString());
-			Assert.AreEqual("https://test.com/schema#/$defs/integer/type", result.AbsoluteSchemaLocation?.ToString());
-		}
-
-		private static ValidationResults Validate(string json, OutputFormat format)
-		{
-			var instance = JsonNode.Parse(json);
-			var options = ValidationOptions.From(ValidationOptions.Default);
-			options.OutputFormat = format;
-
-			var result = _schema.Validate(instance, options);
-			return result;
-		}
-
-		[Test]
-		public void AdditionalPropertiesDoesNotGiveExtraErrors()
-		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Properties(
-					("foo", false)
-				)
-				.AdditionalProperties(false);
-
-			var instance = JsonNode.Parse("{\"foo\": null}");
-
-			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
-
-			var serialized = JsonSerializer.Serialize(result);
-			Console.WriteLine(serialized);
-
-			Assert.False(serialized.Contains("additionalProperties"));
-		}
-
-		[Test]
-		public void UnevaluatedPropertiesDoesNotGiveExtraErrors()
-		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Properties(
-					("foo", false)
-				)
-				.UnevaluatedProperties(false);
-
-			var instance = JsonNode.Parse("{\"foo\": null}");
-
-			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
-
-			var serialized = JsonSerializer.Serialize(result);
-			Console.WriteLine(serialized);
-
-			Assert.False(serialized.Contains("unevaluatedProperties"));
-		}
-
-		[Test]
-		public void UnevaluatedPropertiesStillGivesExtraErrorsForReffedSchemas()
-		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Defs(
-					("reffed", new JsonSchemaBuilder()
-						.Properties(
-							("foo", false)
-						)
-					)
-				)
-				.Ref("#/$defs/reffed")
-				.UnevaluatedProperties(false);
-
-			var instance = JsonNode.Parse("{\"foo\": null}");
-
-			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
-
-			var serialized = JsonSerializer.Serialize(result);
-			Console.WriteLine(serialized);
-
-			Assert.True(serialized.Contains("unevaluatedProperties"));
-		}
-
-		[Test]
-		public void AdditionalItemsDoesNotGiveExtraErrors()
-		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Items(new JsonSchema[] { true, false })
-				.AdditionalItems(false);
-
-			var instance = JsonNode.Parse("[1,2]");
-
-			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
-
-			var serialized = JsonSerializer.Serialize(result);
-			Console.WriteLine(serialized);
-
-			Assert.False(serialized.Contains("additionalItems"));
-		}
-
-		[Test]
-		public void UnevaluatedItemsDoesNotGiveExtraErrors()
-		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Items(new JsonSchema[] { true, false })
-				.UnevaluatedItems(false);
-
-			var instance = JsonNode.Parse("[1,2]");
-
-			var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
-
-			var serialized = JsonSerializer.Serialize(result);
-			Console.WriteLine(serialized);
-
-			Assert.False(serialized.Contains("unevaluatedItems"));
-		}
+		result.AssertValid(expected);
 	}
 }

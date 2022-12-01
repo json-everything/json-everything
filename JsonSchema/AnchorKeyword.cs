@@ -10,14 +10,19 @@ namespace Json.Schema;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(long.MinValue + 2)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(AnchorKeywordJsonConverter))]
-public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<AnchorKeyword>
+public class AnchorKeyword : IJsonSchemaKeyword, IEquatable<AnchorKeyword>
 {
-	internal const string Name = "$anchor";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$anchor";
 	internal static readonly Regex AnchorPattern = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
 
 	/// <summary>
@@ -35,19 +40,14 @@ public class AnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<Anc
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.LocalResult.Pass();
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
-	}
-
-	void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)
-	{
-		registry.RegisterAnchor(currentUri, Anchor, schema);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -1,24 +1,30 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `else`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
 [SchemaPriority(10)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAnnotationsFrom(typeof(IfKeyword))]
 [JsonConverter(typeof(ElseKeywordJsonConverter))]
-public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ElseKeyword>
+public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ElseKeyword>
 {
-	internal const string Name = "else";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "else";
 
 	/// <summary>
 	/// The schema to match.
@@ -35,34 +41,33 @@ public class ElseKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer,
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var annotation = context.LocalResult.TryGetAnnotation(IfKeyword.Name);
-		if (annotation == null)
+		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
 			return;
 		}
 
-		if ((bool)annotation)
+		context.Log(() => $"Annotation for {IfKeyword.Name} is {annotation.AsJsonString()}.");
+		var ifResult = annotation!.GetValue<bool>();
+		if (ifResult)
 		{
-			context.LocalResult.Pass();
-			context.NotApplicable(() => $"Annotation for {IfKeyword.Name} is {annotation}.");
+			context.NotApplicable(() => $"{Name} does not apply.");
 			return;
 		}
 
-		Schema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		context.Evaluate();
+		var valid = context.LocalResult.IsValid;
+		context.Pop();
+		if (!valid) 
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

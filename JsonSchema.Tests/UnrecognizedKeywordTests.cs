@@ -26,11 +26,11 @@ public class UnrecognizedKeywordTests
 
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
 
-		var result = schema!.Validate("{}", new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema!.Evaluate("{}", new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(1, result.Annotations.Count());
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo((JsonNode?)result.Annotations.First().Value));
+		Assert.AreEqual(1, result.Annotations!.Count);
+		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations.First().Value));
 	}
 
 	[Test]

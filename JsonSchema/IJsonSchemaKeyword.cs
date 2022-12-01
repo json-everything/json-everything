@@ -6,8 +6,8 @@
 public interface IJsonSchemaKeyword
 {
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	void Validate(ValidationContext context);
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	void Evaluate(EvaluationContext context);
 }

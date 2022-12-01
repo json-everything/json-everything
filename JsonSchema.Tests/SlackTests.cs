@@ -13,6 +13,7 @@ public class SlackTests
 	{
 		var json =
 			@"{
+					""$id"": ""http://localhost/"",
 					""$defs"": {
 						""M"": {
 							""$id"": ""http://localhost/M"",
@@ -36,11 +37,10 @@ public class SlackTests
 		var schema = JsonSchema.FromText(json);
 		var instance = JsonNode.Parse(json);
 
-		var result = schema.Validate(instance, new ValidationOptions
+		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
 			Log = new TestLog(),
-			OutputFormat = OutputFormat.Detailed,
-			DefaultBaseUri = new Uri("http://localhost/")
+			OutputFormat = OutputFormat.Hierarchical
 		});
 
 		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
@@ -74,7 +74,7 @@ public class SlackTests
 			}
 		};
 
-		var results = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 	}

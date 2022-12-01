@@ -12,16 +12,21 @@ namespace Json.Schema;
 /// Handles `enum`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(EnumKeywordJsonConverter))]
 public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 {
-	internal const string Name = "enum";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "enum";
 
 	private readonly HashSet<JsonNode?> _values;
 
@@ -60,16 +65,14 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
+		if (!Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
+			context.LocalResult.Fail(Name, ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

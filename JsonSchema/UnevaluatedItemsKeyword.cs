@@ -1,58 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `unevaluatedItems`.
 /// </summary>
-[Applicator]
 [SchemaPriority(30)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
+[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(ItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(AdditionalItemsKeyword))]
+[DependsOnAnnotationsFrom(typeof(ContainsKeyword))]
+[DependsOnAnnotationsFrom(typeof(UnevaluatedItemsKeyword))]
 [JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
-public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
+public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<UnevaluatedItemsKeyword>
 {
-	internal const string Name = "unevaluatedItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "unevaluatedItems";
 
 	/// <summary>
-	/// The schema by which to validation unevaluated items.
+	/// The schema by which to evaluate unevaluated items.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static UnevaluatedItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="UnevaluatedItemsKeyword"/>.
 	/// </summary>
-	/// <param name="value">The schema by which to validation unevaluated items.</param>
+	/// <param name="value">The schema by which to evaluate unevaluated items.</param>
 	public UnevaluatedItemsKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -60,77 +62,75 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 		int startIndex = 0;
-		object? annotation;
-		if (context.Options.ValidatingAs == Draft.Unspecified || context.Options.ValidatingAs.HasFlag(Draft.Draft202012))
-		{
-			annotation = context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name);
-			if (annotation != null)
-			{
-				// ReSharper disable once AccessToModifiedClosure
-				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation}.");
-				if (annotation is bool) // is only ever true or a number
-				{
-					context.LocalResult.Pass();
-					context.ExitKeyword(Name, true);
-					return;
-				}
-				startIndex = (int)annotation;
-			}
-			else
-				context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
-		}
-		annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
-		if (annotation != null)
+		var annotations = context.LocalResult.GetAllAnnotations(PrefixItemsKeyword.Name).ToList();
+		if (annotations.Any())
 		{
 			// ReSharper disable once AccessToModifiedClosure
-			context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
-			if (annotation is bool) // is only ever true or a number
+			context.Log(() => $"Annotations from {PrefixItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
+			if (annotations.Any(x => x!.AsValue().TryGetValue(out bool _))) // is only ever true or a number
 			{
-				context.LocalResult.Pass();
 				context.ExitKeyword(Name, true);
 				return;
 			}
-			startIndex = (int)annotation;
+			startIndex = annotations.Max(x => x!.AsValue().TryGetValue(out int i) ? i : 0);
+		}
+		else
+			context.Log(() => $"No annotations from {PrefixItemsKeyword.Name}.");
+		annotations = context.LocalResult.GetAllAnnotations(ItemsKeyword.Name).ToList();
+		if (annotations.Any())
+		{
+			// ReSharper disable once AccessToModifiedClosure
+			context.Log(() => $"Annotations from {ItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
+			if (annotations.Any(x => x!.AsValue().TryGetValue(out bool _))) // is only ever true or a number
+			{
+				context.ExitKeyword(Name, true);
+				return;
+			}
+			startIndex = annotations.Max(x => x!.AsValue().TryGetValue(out int i) ? i : 0);
 		}
 		else
 			context.Log(() => $"No annotations from {ItemsKeyword.Name}.");
-		annotation = context.LocalResult.TryGetAnnotation(AdditionalItemsKeyword.Name);
-		if (annotation is bool) // is only ever true
+		annotations = context.LocalResult.GetAllAnnotations(AdditionalItemsKeyword.Name).ToList();
+		if (annotations.Any()) // is only ever true
 		{
-			context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotation}.");
-			context.LocalResult.Pass();
+			context.Log(() => $"Annotation from {AdditionalItemsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
 			context.ExitKeyword(Name, true);
 			return;
 		}
 		context.Log(() => $"No annotations from {AdditionalItemsKeyword.Name}.");
-		annotation = context.LocalResult.TryGetAnnotation(Name);
-		if (annotation is bool) // is only ever true
+		annotations = context.LocalResult.GetAllAnnotations(Name).ToList();
+		if (annotations.Any()) // is only ever true
 		{
-			context.Log(() => $"Annotation from {Name}: {annotation}.");
-			context.LocalResult.Pass();
+			context.Log(() => $"Annotation from {Name}: {annotations.ToJsonArray().AsJsonString()}.");
 			context.ExitKeyword(Name, true);
 			return;
 		}
 		context.Log(() => $"No annotations from {Name}.");
 		var array = (JsonArray)context.LocalInstance!;
-		var indicesToValidate = Enumerable.Range(startIndex, array.Count - startIndex);
-		if (context.Options.ValidatingAs.HasFlag(Draft.Draft202012) || context.Options.ValidatingAs == Draft.Unspecified)
+		var indicesToEvaluate = Enumerable.Range(startIndex, array.Count - startIndex);
+		if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
+		    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext) ||
+		    context.Options.EvaluatingAs == SpecVersion.Unspecified)
 		{
-			var validatedByContains = context.LocalResult.GetAllAnnotations<List<int>>(ContainsKeyword.Name).SelectMany(x => x).ToList();
-			if (validatedByContains.Any())
+			var evaluatedByContains = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name)
+				.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<int>()))
+				.Distinct()
+				.ToArray();
+			if (evaluatedByContains.Any())
 			{
-				context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-				indicesToValidate = indicesToValidate.Except(validatedByContains);
+				context.Log(() => $"Annotations from {ContainsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}.");
+				indicesToEvaluate = indicesToEvaluate.Except(evaluatedByContains);
 			}
 			else
 				context.Log(() => $"No annotations from {ContainsKeyword.Name}.");
 		}
-		foreach (var i in indicesToValidate)
+		foreach (var i in indicesToEvaluate)
 		{
-			context.Log(() => $"Validating item at index {i}.");
+			context.Log(() => $"Evaluating item at index {i}.");
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
+			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name), Schema);
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();
@@ -139,22 +139,9 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISche
 		context.Options.LogIndentLevel--;
 
 		context.LocalResult.SetAnnotation(Name, true);
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-			localResults.SetAnnotation(Name, true);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

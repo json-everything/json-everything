@@ -9,12 +9,17 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicAnchorKeywordJsonConverter))]
-public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquatable<DynamicAnchorKeyword>
+public class DynamicAnchorKeyword : IJsonSchemaKeyword, IEquatable<DynamicAnchorKeyword>
 {
-	internal const string Name = "$dynamicAnchor";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$dynamicAnchor";
 
 	/// <summary>
 	/// Gets the anchor value.
@@ -31,21 +36,14 @@ public class DynamicAnchorKeyword : IJsonSchemaKeyword, IAnchorProvider, IEquata
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
-	}
-
-	void IAnchorProvider.RegisterAnchor(SchemaRegistry registry, Uri currentUri, JsonSchema schema)
-	{
-		registry.RegisterAnchor(currentUri, Value, schema);
-		registry.RegisterDynamicAnchor(currentUri, Value, schema);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -10,16 +10,21 @@ namespace Json.Schema;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(long.MinValue + 1)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(IdKeywordJsonConverter))]
 public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 {
-	internal const string Name = "$id";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$id";
 
 	/// <summary>
 	/// The ID.
@@ -36,41 +41,14 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (context.LocalSchema.Keywords!.OfType<RefKeyword>().Any() &&
-			(context.Options.ValidatingAs == Draft.Draft6 || context.Options.ValidatingAs == Draft.Draft7))
-		{
-			context.LocalResult.Pass();
-			context.NotApplicable(() => "$ref present; ignoring");
-			return;
-		}
-
-		var newUri = context.NavigatedByDirectRef ? context.CurrentUri : UpdateUri(context.CurrentUri);
-		context.UriChanged |= context.CurrentUri != newUri;
-		if (context.UriChanged)
-			context.CurrentAnchor = null;
-		context.Options.SchemaRegistry.EnteringUriScope(newUri);
-		context.UpdateCurrentUri(newUri);
-		context.LocalSchema.UpdateBaseUri(newUri);
-		context.LocalResult.Pass();
+		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
-	}
-
-	internal Uri UpdateUri(Uri? currentUri)
-	{
-		if (currentUri == null || Id.IsAbsoluteUri) return Id;
-
-		var idHasBase = Id.OriginalString.IndexOf('#') != 0;
-		var baseUri = currentUri;
-		if (idHasBase && currentUri.Segments.Length > 1 && currentUri.IsFile)
-			baseUri = baseUri.GetParentUri();
-
-		return new Uri(baseUri, Id);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

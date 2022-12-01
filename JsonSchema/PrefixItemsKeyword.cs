@@ -5,21 +5,24 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `items`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PrefixItemsKeywordJsonConverter))]
-public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<PrefixItemsKeyword>
+public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<PrefixItemsKeyword>
 {
-	internal const string Name = "prefixItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "prefixItems";
 
 	/// <summary>
 	/// The collection of schemas for the "schema array" form.
@@ -27,11 +30,6 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	public IReadOnlyList<JsonSchema> ArraySchemas { get; }
 
 	IReadOnlyList<JsonSchema> ISchemaCollector.Schemas => ArraySchemas;
-
-	static PrefixItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 
 	/// <summary>
 	/// Creates a new <see cref="PrefixItemsKeyword"/>.
@@ -43,7 +41,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	/// </remarks>
 	public PrefixItemsKeyword(params JsonSchema[] values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
@@ -52,76 +50,48 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCol
 	/// <param name="values">The collection of schemas for the "schema array" form.</param>
 	public PrefixItemsKeyword(IEnumerable<JsonSchema> values)
 	{
-		ArraySchemas = values.ToList();
+		ArraySchemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var array = (JsonArray)context.LocalInstance!;
-		bool overwriteAnnotation = !(context.LocalResult.TryGetAnnotation(Name) is bool);
 		var overallResult = true;
 		var maxEvaluations = Math.Min(ArraySchemas.Count, array.Count);
 		for (int i = 0; i < maxEvaluations; i++)
 		{
 			var schema = ArraySchemas[i];
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")),
+			context.Push(context.InstanceLocation.Combine(i),
 				item ?? JsonNull.SignalNode,
-				context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-			schema.ValidateSubschema(context);
+				context.EvaluationPath.Combine(i),
+				schema);
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Pop();
 			if (!overallResult && context.ApplyOptimizations) break;
 		}
 
-		if (overwriteAnnotation)
-		{
-			if (maxEvaluations == array.Count)
-				context.LocalResult.SetAnnotation(Name, true);
-			else
-				context.LocalResult.SetAnnotation(Name, maxEvaluations);
-		}
-
-		if (overallResult)
-			context.LocalResult.Pass();
+		if (maxEvaluations == array.Count)
+			context.LocalResult.SetAnnotation(Name, true);
 		else
+			context.LocalResult.SetAnnotation(Name, maxEvaluations);
+
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		object value;
-		var allAnnotations = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.ToList();
-		if (allAnnotations.OfType<bool>().Any())
-			value = true;
-		else
-			value = allAnnotations.OfType<int>().DefaultIfEmpty(-1).Max();
-		if (!Equals(value, -1))
-			localResults.SetAnnotation(Name, value);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in ArraySchemas)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

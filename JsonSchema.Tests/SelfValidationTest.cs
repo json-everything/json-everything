@@ -43,7 +43,7 @@ public class SelfValidationTest
 	public void Hardcoded(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema);
-		var validation = schema.Validate(JsonNode.Parse(json), new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Evaluate(JsonNode.Parse(json), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -58,8 +58,8 @@ public class SelfValidationTest
 			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
 			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson);
 
-			var localValidation = schema.Validate(JsonNode.Parse(onlineSchemaJson));
-			var onlineValidation = onlineSchema!.Validate(JsonNode.Parse(localSchemaJson));
+			var localValidation = schema.Evaluate(JsonNode.Parse(onlineSchemaJson));
+			var onlineValidation = onlineSchema!.Evaluate(JsonNode.Parse(localSchemaJson));
 
 			try
 			{

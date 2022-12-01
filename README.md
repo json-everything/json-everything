@@ -1,3 +1,9 @@
+### ***ANNOUNCEMENT!!!** View JSON Schema Test Suite results on [Bowtie](https://bowtie-json-schema.github.io/bowtie) and compare JsonSchema.Net with other JSON Schema implementations across multiple platforms!*
+
+---
+
+<br>
+
 [![Build status](https://github.com/gregsdennis/json-everything/workflows/.NET%20Core/badge.svg)](https://github.com/gregsdennis/json-everything/actions?query=workflow%3A%22Build+%26+Test%22)
 [![Test results](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gregsdennis/28607f2d276032f4d9a7f2c807e44df7/raw/test-results-badge.json)](https://github.com/gregsdennis/json-everything/actions?query=workflow%3A%22Build+%26+Test%22)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Percentage of issues still open")
@@ -61,7 +67,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 - [JSON Pointer (RFC 6901)](https://tools.ietf.org/html/rfc6901)
 - [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - Json.More.Net
-  - Just some general-use extensions that probably should be included in System.Text.Json but aren't
+  - Just some general-use extensions that probably should be included in System.Text.Json(.Nodes) but aren't
 
 Please see [json-everything.net](https://json-everything.net) for both documentation and an online playground where you can experiment with these packages.
 

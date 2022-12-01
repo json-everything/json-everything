@@ -16,7 +16,8 @@
 
 <div class="row fill-remaining">
 	<RadzenPanelMenu class="col-2 mh-100 mw-content" Click="SetPagePath">
-		<RadzenPanelMenuItem Text="Playground" Icon="article" Value="@("playground/patch")"/>
+		<RadzenPanelMenuItem Text="Playground" Icon="article" Value="@("playground/patch")"
+		                     Path="@(_pageName)"/>
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-patch")"
 		                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("json-patch"))"/>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-patch")"/>
@@ -53,7 +54,7 @@
 							Patch / Source data
 							<div class="editor-input">
 								<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="SavePatch"/>
+								              CssClass="h-100"/>
 							</div>
 						</label>
 					</div>
@@ -69,7 +70,7 @@
 							Data / Target data
 							<div class="editor-input">
 								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100" OnKeyUp="SaveInstance"/>
+								              CssClass="h-100"/>
 							</div>
 						</label>
 					</div>
@@ -110,6 +111,9 @@
 
 	private async Task Apply()
 	{
+		await SavePatch();
+		await SaveInstance();
+
 		JsonPatch patch;
 		try
 		{
@@ -146,6 +150,9 @@
 
 	private async Task Generate()
 	{
+		await SavePatch();
+		await SaveInstance();
+
 		JsonElement source;
 		try
 		{

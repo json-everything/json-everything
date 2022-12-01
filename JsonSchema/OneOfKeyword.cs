@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `oneOf`.
 /// </summary>
-[Applicator]
 [SchemaPriority(20)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(OneOfKeywordJsonConverter))]
-public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector, IEquatable<OneOfKeyword>
+public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<OneOfKeyword>
 {
-	internal const string Name = "oneOf";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "oneOf";
 
 	/// <summary>
 	/// The keywords schema collection.
@@ -35,7 +38,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	/// <param name="values">The keywords schema collection.</param>
 	public OneOfKeyword(params JsonSchema[] values)
 	{
-		Schemas = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -44,14 +47,14 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 	/// <param name="values">The keywords schema collection.</param>
 	public OneOfKeyword(IEnumerable<JsonSchema> values)
 	{
-		Schemas = values.ToList();
+		Schemas = values.ToReadOnlyList();
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var validCount = 0;
@@ -60,28 +63,17 @@ public class OneOfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaCollector
 			var i1 = i;
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(PointerSegment.Create($"{i}")));
-			schema.ValidateSubschema(context);
+			context.Push(context.EvaluationPath.Combine(Name, i), schema);
+			context.Evaluate();
 			validCount += context.LocalResult.IsValid ? 1 : 0;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();
 			if (validCount > 1 && context.ApplyOptimizations) break;
 		}
 
-		context.LocalResult.ConsolidateAnnotations();
-		if (validCount == 1)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.OneOf, ("count", validCount));
+		if (validCount != 1)
+			context.LocalResult.Fail(Name, ErrorMessages.OneOf, ("count", validCount));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		foreach (var schema in Schemas)
-		{
-			schema.RegisterSubschemas(registry, currentUri);
-		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -8,6 +8,6 @@ public class TestEnvironment
 	[OneTimeSetUp]
 	public void Setup()
 	{
-		ValidationOptions.Default.Log = new TestLog();
+		EvaluationOptions.Default.Log = new TestLog();
 	}
 }

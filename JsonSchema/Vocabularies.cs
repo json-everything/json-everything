@@ -21,7 +21,7 @@ public static partial class Vocabularies
 				Type = t,
 				Vocabularies = t.GetCustomAttributes<VocabularyAttribute>()
 			})
-			.ToList();
+			.ToArray();
 
 		Core201909 = new Vocabulary(
 			Core201909Id,
@@ -79,6 +79,39 @@ public static partial class Vocabularies
 		Content202012 = new Vocabulary(
 			Content202012Id,
 			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == Content202012Id))
+				.Select(k => k.Type));
+
+		CoreNext = new Vocabulary(
+			CoreNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == CoreNextId))
+				.Select(k => k.Type));
+		UnevaluatedNext = new Vocabulary(
+			UnevaluatedNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == UnevaluatedNextId))
+				.Select(k => k.Type));
+		ApplicatorNext = new Vocabulary(
+			ApplicatorNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == ApplicatorNextId))
+				.Select(k => k.Type));
+		ValidationNext = new Vocabulary(
+			ValidationNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == ValidationNextId))
+				.Select(k => k.Type));
+		MetadataNext = new Vocabulary(
+			MetadataNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == MetadataNextId))
+				.Select(k => k.Type));
+		FormatAnnotationNext = new Vocabulary(
+			FormatAnnotationNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == FormatAnnotationNextId))
+				.Select(k => k.Type));
+		FormatAssertionNext = new Vocabulary(
+			FormatAssertionNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == FormatAssertionNextId))
+				.Select(k => k.Type));
+		ContentNext = new Vocabulary(
+			ContentNextId,
+			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == ContentNextId))
 				.Select(k => k.Type));
 	}
 }

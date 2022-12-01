@@ -8,17 +8,23 @@ namespace Json.Schema;
 /// Handles `format`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Format201909Id)]
 [Vocabulary(Vocabularies.FormatAnnotation202012Id)]
 [Vocabulary(Vocabularies.FormatAssertion202012Id)]
+[Vocabulary(Vocabularies.FormatAnnotationNextId)]
+[Vocabulary(Vocabularies.FormatAssertionNextId)]
 [JsonConverter(typeof(FormatKeywordJsonConverter))]
 public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 {
-	internal const string Name = "format";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "format";
 
 	private static readonly Uri[] _formatAssertionIds =
 	{
@@ -41,17 +47,17 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value.Key);
 
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
 		{
-			context.LocalResult.Fail(ErrorMessages.UnknownFormat, ("format", Value.Key));
+			context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
 			return;
 		}
 
@@ -76,14 +82,16 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 			}
 		}
 
-		if (!requireValidation || Value.Validate(context.LocalInstance, out var errorMessage))
-			context.LocalResult.Pass();
-		else if (Value is UnknownFormat)
-			context.LocalResult.Fail(errorMessage);
-		else if (errorMessage == null)
-			context.LocalResult.Fail(ErrorMessages.Format, ("format", Value.Key));
-		else
-			context.LocalResult.Fail(ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+		if (requireValidation && !Value.Validate(context.LocalInstance, out var errorMessage))
+		{
+			if (Value is UnknownFormat)
+				context.LocalResult.Fail(Name, errorMessage);
+			else if (errorMessage == null)
+				context.LocalResult.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
+			else
+				context.LocalResult.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+		}
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

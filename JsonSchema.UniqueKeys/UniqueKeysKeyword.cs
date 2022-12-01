@@ -14,8 +14,9 @@ namespace Json.Schema.UniqueKeys;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(int.MinValue)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.UniqueKeysId)]
 [JsonConverter(typeof(UniqueKeysKeywordJsonConverter))]
 public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeyword>
@@ -38,7 +39,10 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		}
 	}
 
-	internal const string Name = "uniqueKeys";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "uniqueKeys";
 
 	/// <summary>
 	/// The collection of keywords and references.
@@ -55,16 +59,15 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -89,7 +92,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 				{
 					if (context.Options.OutputFormat == OutputFormat.Flag)
 					{
-						context.LocalResult.Fail($"Found duplicate items at indices {i} and {j}");
+						context.LocalResult.Fail(Name, $"Found duplicate items at indices {i} and {j}");
 						context.ExitKeyword(Name);
 						return;
 					}
@@ -98,13 +101,12 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 			}
 		}
 
-		if (!matchedIndexPairs.Any())
-			context.LocalResult.Pass();
-		else
+		if (matchedIndexPairs.Any())
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(ErrorMessages.UniqueItems, ("pairs", pairs));
+			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("pairs", pairs));
 		}
+
 		context.ExitKeyword(Name);
 	}
 

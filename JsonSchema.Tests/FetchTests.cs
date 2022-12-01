@@ -1,6 +1,4 @@
-using System.Linq;
 using System.Text.Json;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -10,9 +8,9 @@ public class FetchTests
 	[Test]
 	public void LocalRegistryFindsRef()
 	{
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
 				Fetch = uri =>
@@ -27,41 +25,46 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Validate(json.RootElement, options);
+		var results = schema.Evaluate(json.RootElement, options);
 
 		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
 	}
 
 	[Test]
 	public void GlobalRegistryFindsRef()
 	{
-		var options = new ValidationOptions
+		try
 		{
-			OutputFormat = OutputFormat.Detailed
-		};
-		SchemaRegistry.Global.Fetch = uri =>
+			var options = new EvaluationOptions
+			{
+				OutputFormat = OutputFormat.Hierarchical
+			};
+			SchemaRegistry.Global.Fetch = uri =>
+			{
+				if (uri.AbsoluteUri == "http://my.schema/test1")
+					return JsonSchema.FromText("{\"type\": \"string\"}");
+				return null;
+			};
+			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+
+			using var json = JsonDocument.Parse("10");
+
+			var results = schema.Evaluate(json.RootElement, options);
+
+			results.AssertInvalid();
+		}
+		finally
 		{
-			if (uri.AbsoluteUri == "http://my.schema/test1")
-				return JsonSchema.FromText("{\"type\": \"string\"}");
-			return null;
-		};
-		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
-
-		using var json = JsonDocument.Parse("10");
-
-		var results = schema.Validate(json.RootElement, options);
-
-		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().NotBe("$ref");
+			SchemaRegistry.Global.Fetch = null!;
+		}
 	}
 
 	[Test]
 	public void LocalRegistryMissesRef()
 	{
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
+			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
 				Fetch = uri =>
@@ -76,10 +79,7 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Validate(json.RootElement, options);
-
-		results.AssertInvalid();
-		results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
 	}
 
 	[Test]
@@ -87,9 +87,9 @@ public class FetchTests
 	{
 		try
 		{
-			var options = new ValidationOptions
+			var options = new EvaluationOptions
 			{
-				OutputFormat = OutputFormat.Detailed
+				OutputFormat = OutputFormat.Hierarchical
 			};
 			SchemaRegistry.Global.Fetch = uri =>
 			{
@@ -101,10 +101,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			var results = schema.Validate(json.RootElement, options);
-
-			results.AssertInvalid();
-			results.SchemaLocation.Segments.Last().Value.Should().Be("$ref");
+			Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
 		}
 		finally
 		{
@@ -122,7 +119,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			Assert.Throws<JsonException>(() => schema.Validate(json.RootElement));
+			Assert.Throws<JsonException>(() => schema.Evaluate(json.RootElement));
 		}
 		finally
 		{

@@ -9,16 +9,21 @@ namespace Json.Schema;
 /// Handles `pattern`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(PatternKeywordJsonConverter))]
 public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 {
-	internal const string Name = "pattern";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "pattern";
 
 	/// <summary>
 	/// The regular expression.
@@ -50,15 +55,15 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 	internal static PatternKeyword InvalidRegex(string pattern) => new(pattern);
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		if (InvalidPattern != null)
 		{
-			context.LocalResult.Fail(ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
+			context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
 			context.ExitKeyword(Name, false);
 			return;
 		}
@@ -66,16 +71,13 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		var str = context.LocalInstance!.GetValue<string>();
-		if (Value.IsMatch(str))
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
+		if (!Value.IsMatch(str))
+			context.LocalResult.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

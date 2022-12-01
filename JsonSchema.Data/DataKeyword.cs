@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.Data;
 
@@ -16,13 +17,17 @@ namespace Json.Schema.Data;
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaPriority(int.MinValue)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.DataId)]
 [JsonConverter(typeof(DataKeywordJsonConverter))]
 public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 {
-	internal const string Name = "data";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "data";
 
 	/// <summary>
 	/// Gets or sets a method to download external references.
@@ -59,14 +64,14 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
+	/// <param name="context">Contextual details for the evaluation process.</param>
 	/// <exception cref="JsonException">
 	/// Thrown when the formed schema contains values that are invalid for the associated
 	/// keywords.
 	/// </exception>
-	public void Validate(ValidationContext context)
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var data = new Dictionary<string, JsonNode>();
@@ -80,14 +85,17 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		}
 
 		if (failedReferences.Any())
-		{
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
-		}
 
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
-		subschema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), subschema);
+		context.Evaluate();
+		var result = context.LocalResult.IsValid;
+		context.Pop();
+		if (!result)
+			context.LocalResult.Fail();
 		context.ExitKeyword(Name);
 	}
 

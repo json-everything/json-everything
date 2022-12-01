@@ -1,37 +1,34 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `additionalItems`.
 /// </summary>
-[Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
+[DependsOnAnnotationsFrom(typeof(ItemsKeyword))]
 [JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
-public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<AdditionalItemsKeyword>
+public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalItemsKeyword>
 {
-	internal const string Name = "additionalItems";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "additionalItems";
 
 	/// <summary>
-	/// The schema by which to validation additional items.
+	/// The schema by which to evaluate additional items.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
-	static AdditionalItemsKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 	/// <summary>
 	/// Creates a new <see cref="AdditionalItemsKeyword"/>.
 	/// </summary>
@@ -42,46 +39,43 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		var annotation = context.LocalResult.TryGetAnnotation(ItemsKeyword.Name);
-		if (annotation == null)
+		if (!context.LocalResult.TryGetAnnotation(ItemsKeyword.Name, out var annotation))
 		{
-			context.LocalResult.Pass();
 			context.NotApplicable(() => $"No annotations from {ItemsKeyword.Name}.");
 			return;
 		}
 		context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
-		if (annotation is bool)
+		if (annotation!.GetValue<object>() is bool)
 		{
-			context.LocalResult.Pass();
 			context.ExitKeyword(Name, context.LocalResult.IsValid);
 			return;
 		}
-		var startIndex = (int)annotation;
 
+		var startIndex = (int)annotation.AsValue().GetInteger()!;
 		var array = (JsonArray)context.LocalInstance!;
 		for (int i = startIndex; i < array.Count; i++)
 		{
 			var i1 = i;
-			context.Log(() => $"Validating item at index {i1}.");
+			context.Log(() => $"Evaluating item at index {i1}.");
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{i}")), item ?? JsonNull.SignalNode);
-			Schema.ValidateSubschema(context);
+			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+				context.EvaluationPath.Combine(Name), Schema);
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();
@@ -90,22 +84,9 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, IRefResolvable, ISchem
 		context.Options.LogIndentLevel--;
 		context.LocalResult.SetAnnotation(Name, true);
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		if (localResults.NestedResults.Select(c => c.TryGetAnnotation(Name)).OfType<bool>().Any())
-			localResults.SetAnnotation(Name, true);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

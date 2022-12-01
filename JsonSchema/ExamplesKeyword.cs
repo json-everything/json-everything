@@ -12,16 +12,21 @@ namespace Json.Schema;
 /// Handles `examples`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Metadata201909Id)]
 [Vocabulary(Vocabularies.Metadata202012Id)]
+[Vocabulary(Vocabularies.MetadataNextId)]
 [JsonConverter(typeof(ExamplesKeywordJsonConverter))]
 public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 {
-	internal const string Name = "examples";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "examples";
 
 	/// <summary>
 	/// The collection of example values.
@@ -34,7 +39,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	/// <param name="values">The collection of example values.</param>
 	public ExamplesKeyword(params JsonNode?[] values)
 	{
-		Values = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Values = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
@@ -43,18 +48,17 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 	/// <param name="values">The collection of example values.</param>
 	public ExamplesKeyword(IEnumerable<JsonNode?> values)
 	{
-		Values = values.ToList() ?? throw new ArgumentNullException(nameof(values));
+		Values = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Values);
-		context.LocalResult.Pass();
+		context.LocalResult.SetAnnotation(Name, Values.ToJsonArray());
 		context.ExitKeyword(Name, true);
 	}
 

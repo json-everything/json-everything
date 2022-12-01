@@ -34,6 +34,15 @@ public class VocabularyRegistry
 		Global.Register(Vocabularies.FormatAnnotation202012);
 		Global.Register(Vocabularies.FormatAssertion202012);
 		Global.Register(Vocabularies.Content202012);
+
+		Global.Register(Vocabularies.CoreNext);
+		Global.Register(Vocabularies.ApplicatorNext);
+		Global.Register(Vocabularies.ValidationNext);
+		Global.Register(Vocabularies.MetadataNext);
+		Global.Register(Vocabularies.UnevaluatedNext);
+		Global.Register(Vocabularies.FormatAnnotationNext);
+		Global.Register(Vocabularies.FormatAssertionNext);
+		Global.Register(Vocabularies.ContentNext);
 	}
 
 	/// <summary>

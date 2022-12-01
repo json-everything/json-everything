@@ -13,9 +13,7 @@ public class CreationTests
 	{
 		var schema = JsonSchema.FromText("{\"$id\":\"http://my.schema/test1\",\"minimum\":5}");
 
-		using var json = JsonDocument.Parse("10");
-
-		var results = schema.Validate(json.RootElement);
+		var results = schema.Evaluate(10);
 
 		Assert.True(results.IsValid);
 	}
@@ -31,7 +29,7 @@ public class CreationTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Validate(json.RootElement);
+		var results = schema.Evaluate(json.RootElement);
 
 		Assert.True(results.IsValid);
 	}
@@ -45,7 +43,7 @@ public class CreationTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Validate(json.RootElement);
+		var results = schema.Evaluate(json.RootElement);
 
 		Assert.True(results.IsValid);
 	}

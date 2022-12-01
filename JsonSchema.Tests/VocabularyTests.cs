@@ -11,7 +11,7 @@ namespace Json.Schema.Tests;
 public class VocabularyTests
 {
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MinDateJsonConverter))]
 	[Vocabulary("http://mydates.com/vocabulary")]
 	public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
@@ -25,15 +25,13 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
-			if (date >= Date)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail("[[provided:O]] must be on or after [[value:O]]",
+			if (date < Date)
+				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
 		}
@@ -76,7 +74,7 @@ public class VocabularyTests
 	}
 
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft7 | Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft7 | SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(NonVocabMinDateJsonConverter))]
 	public class NonVocabMinDateKeyword : IJsonSchemaKeyword, IEquatable<NonVocabMinDateKeyword>
 	{
@@ -89,15 +87,13 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
-			if (date >= Date)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail("[[provided:O]] must be on or after [[value:O]]",
+			if (date < Date)
+				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
 		}
@@ -140,7 +136,7 @@ public class VocabularyTests
 	}
 
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MaxDateJsonConverter))]
 	[Vocabulary("http://mydates.com/vocabulary")]
 	public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
@@ -154,15 +150,13 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
 
-			if (date <= Date)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail("[[provided:O]] must be on or before [[value:O]]",
+			if (date > Date)
+				context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
 					("provided", date),
 					("value", Date));
 		}
@@ -256,12 +250,12 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			ValidateMetaSchema = true
+			ValidateAgainstMetaSchema = true
 		};
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -279,9 +273,9 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var options = new ValidationOptions();
+		var options = new EvaluationOptions();
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -317,7 +311,7 @@ public class VocabularyTests
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Validate(instance, new ValidationOptions{ProcessCustomKeywords = true});
+		var results = schema.Validate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -353,13 +347,13 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			ValidateMetaSchema = true
+			ValidateAgainstMetaSchema = true
 		};
 		options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
 		options.VocabularyRegistry.Register(DatesVocabulary);
-		var results = schema.Validate(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -377,7 +371,7 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.AddDays(-1));
 
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
-		var results = DatesMetaSchema.Validate(schemaAsJson);
+		var results = DatesMetaSchema.Evaluate(schemaAsJson);
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
@@ -393,9 +387,9 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.AddDays(-1));
 
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
-		var options = new ValidationOptions();
+		var options = new EvaluationOptions();
 		options.VocabularyRegistry.Register(DatesVocabulary);
-		var results = DatesMetaSchema.Validate(schemaAsJson, options);
+		var results = DatesMetaSchema.Evaluate(schemaAsJson, options);
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();

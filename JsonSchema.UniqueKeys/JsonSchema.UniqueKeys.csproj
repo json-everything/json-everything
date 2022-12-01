@@ -11,13 +11,13 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-		<PackageTags>json-schema validation schema json</PackageTags>
+		<PackageTags>json-schema evaluation validation schema json</PackageTags>
 		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-unique-keys.html</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.UniqueKeys.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>2.0.1</Version>
-		<FileVersion>2.0.1.0</FileVersion>
+		<Version>2.1.0-beta1</Version>
+		<FileVersion>2.1.0.0</FileVersion>
 		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

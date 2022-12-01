@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -8,16 +7,20 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `maxContains`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MaxContainsKeywordJsonConverter))]
 public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyword>
 {
-	internal const string Name = "maxContains";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "maxContains";
 
 	/// <summary>
 	/// The maximum expected matching items.
@@ -34,35 +37,14 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			context.LocalResult.Pass();
-			return;
-		}
-
-		var annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
-		if (annotation is not List<int> validatedIndices)
-		{
-			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
-			context.LocalResult.Pass();
-			return;
-		}
-
-		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-		var containsCount = validatedIndices.Count;
-		if (Value >= containsCount)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.MaxContains, ("received", containsCount), ("limit", Value));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		context.LocalResult.SetAnnotation(Name, Value);
+		context.ExitKeyword(Name);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -109,24 +91,5 @@ internal class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsKeywor
 	public override void Write(Utf8JsonWriter writer, MaxContainsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MaxContainsKeyword.Name, value.Value);
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _maxContains;
-
-	/// <summary>
-	/// Gets or sets the error message for <see cref="MaxContainsKeyword"/>.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[received]] - the number of matching items provided in the JSON instance
-	///   - [[limit]] - the upper limit specified in the schema
-	/// </remarks>
-	public static string MaxContains
-	{
-		get => _maxContains ?? Get();
-		set => _maxContains = value;
 	}
 }

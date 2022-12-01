@@ -18,7 +18,7 @@ The ID for this vocabulary is `https://gregsdennis.github.io/json-everything/voc
 
 A draft 2020-12 meta-schema which includes this vocabulary has been defined for convenience.  The ID for the meta-schema is `https://gregsdennis.github.io/json-everything/meta/data`, and it can also be found at this address.
 
-***EDITOR'S COMMENT** Since this page has been moved to `json-everything.net`, these URLs may be updated soon to reflect the new domain.  I'm not sure how to go about versioning them yet.  While I figure that out, the meta-schema should still be available at this address.  The IDs remain the same.*
+***EDITOR'S COMMENT** Since this page has been moved to `json-everything.net`, these URIs may be updated soon to reflect the new domain.  I'm not sure how to go about versioning them yet.  While I figure that out, the meta-schema should still be available at this address.  The IDs remain the same.*
 
 ## 3. The `data` Keyword
 

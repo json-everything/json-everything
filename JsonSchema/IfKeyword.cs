@@ -7,17 +7,21 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `if`.
 /// </summary>
-[Applicator]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(IfKeywordJsonConverter))]
-public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<IfKeyword>
+public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyword>
 {
-	internal const string Name = "if";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "if";
 
 	/// <summary>
 	/// The schema to match.
@@ -34,21 +38,18 @@ public class IfKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, I
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		Schema.ValidateSubschema(context);
-		context.LocalResult.SetAnnotation(Name, context.LocalResult.IsValid);
-		context.LocalResult.Pass();
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		context.Evaluate();
+		var valid = context.LocalResult.IsValid;
+		context.Pop();
+		context.LocalResult.SetAnnotation(Name, valid);
 		context.ExitKeyword(Name, true);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

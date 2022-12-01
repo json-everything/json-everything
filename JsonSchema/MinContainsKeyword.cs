@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,16 +7,20 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `minContains`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Validation201909Id)]
 [Vocabulary(Vocabularies.Validation202012Id)]
+[Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MinContainsKeywordJsonConverter))]
 public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyword>
 {
-	internal const string Name = "minContains";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "minContains";
 
 	/// <summary>
 	/// The minimum expected matching items.
@@ -35,45 +37,14 @@ public class MinContainsKeyword : IJsonSchemaKeyword, IEquatable<MinContainsKeyw
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		if (Value == 0)
-		{
-			var containsResult = context.LocalResult.Parent?.NestedResults.FirstOrDefault(c => c.SchemaLocation.Segments.LastOrDefault()?.Value == ContainsKeyword.Name);
-			if (containsResult != null)
-				context.Log(() => $"Marking result from {ContainsKeyword.Name} as {true.GetValidityString()}.");
-			context.LocalResult.Pass();
-			context.ExitKeyword(Name, true);
-			return;
-		}
-
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.LocalResult.Pass();
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var annotation = context.LocalResult.TryGetAnnotation(ContainsKeyword.Name);
-		if (!(annotation is List<int> validatedIndices))
-		{
-			context.LocalResult.Pass();
-			context.NotApplicable(() => $"No annotations from {ContainsKeyword.Name}.");
-			return;
-		}
-
-		context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotation}.");
-		var containsCount = validatedIndices.Count;
-		if (Value <= containsCount)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail(ErrorMessages.MinContains, ("received", containsCount), ("limit", Value));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		context.LocalResult.SetAnnotation(Name, Value);
+		context.ExitKeyword(Name);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -120,24 +91,5 @@ internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeywor
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinContainsKeyword.Name, value.Value);
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _minContains;
-
-	/// <summary>
-	/// Gets or sets the error message for <see cref="MinContainsKeyword"/>.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[received]] - the number of matching items provided in the JSON instance
-	///   - [[limit]] - the lower limit specified in the schema
-	/// </remarks>
-	public static string MinContains
-	{
-		get => _minContains ?? Get();
-		set => _minContains = value;
 	}
 }

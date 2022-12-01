@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -9,12 +11,17 @@ namespace Json.Schema;
 /// Handles `$dynamicRef`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(DynamicRefKeywordJsonConverter))]
 public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeyword>
 {
-	internal const string Name = "$dynamicRef";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$dynamicRef";
 
 	/// <summary>
 	/// The URI reference.
@@ -31,105 +38,61 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var parts = Reference.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-		var baseUri = parts[0];
-		var fragment = parts.Length > 1 ? parts[1] : null;
 
+		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+		var anchorName = Reference.OriginalString.Split('#').Last();
 
-		JsonSchema? GetSchema(Uri? uri, string? anchor)
+		JsonSchema? targetSchema = null;
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
+		foreach (var uri in context.Scope.Reverse())
 		{
-			var uriScope = uri ?? context.CurrentUri;
-			var currentScopeDefinesDynamicAnchor =
-				!string.IsNullOrEmpty(fragment) &&
-				context.Options.SchemaRegistry.DynamicScopeDefinesAnchor(uriScope, fragment!);
+			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
+			if (scopeRoot == null)
+				throw new Exception("This shouldn't happen");
 
-			return currentScopeDefinesDynamicAnchor
-				? context.Options.SchemaRegistry.GetDynamic(uri, anchor)
-				: context.Options.SchemaRegistry.Get(uri, anchor);
+			if (!scopeRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
+
+			if (context.Options.EvaluatingAs == SpecVersion.Draft202012 &&
+			    (!targetBase.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
+
+			targetSchema = anchor.Schema;
+			break;
 		}
 
-		Uri? newUri;
-		JsonSchema? baseSchema = null;
-		if (!string.IsNullOrEmpty(baseUri))
+		if (targetSchema == null)
 		{
-			if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-				baseSchema = GetSchema(newUri, fragment);
+			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 			else
 			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
-				newUri = new Uri(uriFolder, baseUri);
-				baseSchema = GetSchema(newUri, fragment);
-			}
-		}
-		else
-		{
-			newUri = context.CurrentUri;
-			baseSchema ??= GetSchema(newUri, fragment) ?? context.SchemaRoot;
-			newUri = baseSchema.BaseUri;
-		}
-
-		var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
-		var navigation = (absoluteReference, context.InstanceLocation);
-		if (context.NavigatedReferences.Contains(navigation))
-		{
-			context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
-			context.ExitKeyword(Name, false);
-			return;
-		}
-
-		JsonSchema? schema;
-		if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-			schema = baseSchema ?? GetSchema(newUri, fragment);
-		else
-		{
-			if (baseSchema == null)
-			{
-				context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment!));
-				context.ExitKeyword(Name, false);
-				return;
+				anchorName = newUri.Fragment.Substring(1);
+				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorName))
+					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
+			
+				if (targetBase.Anchors.TryGetValue(anchorName, out var anchorDefinition))
+					targetSchema = anchorDefinition.Schema;
 			}
 
-			if (!string.IsNullOrEmpty(fragment))
-			{
-				fragment = $"#{fragment}";
-				if (!JsonPointer.TryParse(fragment, out var pointer))
-				{
-					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
-					context.ExitKeyword(Name, false);
-					return;
-				}
-
-				(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
-			}
-			else
-				schema = baseSchema;
+			if (targetSchema == null)
+				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		if (schema == null)
-		{
-			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference));
-			context.ExitKeyword(Name, false);
-			return;
-		}
-
-		context.NavigatedReferences.Add(navigation);
-		context.Push(newUri: schema.BaseUri ?? newUri);
-		schema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
+		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
-		context.LocalResult.ConsolidateAnnotations();
-		if (result)
-			context.LocalResult.Pass();
-		else
+		if (!result)
 			context.LocalResult.Fail();
+
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

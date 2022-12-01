@@ -33,7 +33,7 @@ public class SpecExampleTests
 	{
 		Vocabularies.Register();
 
-		ValidationOptions.Default.OutputFormat = OutputFormat.Detailed;
+		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 
 	[Test]
@@ -45,7 +45,7 @@ public class SpecExampleTests
 			  { ""foo"": 42 }
 			]").RootElement;
 
-		var results = _singleKeySchema.Validate(instance);
+		var results = _singleKeySchema.Evaluate(instance);
 
 		results.AssertValid();
 	}
@@ -59,7 +59,7 @@ public class SpecExampleTests
 			  { ""foo"": 8 }
 			]").RootElement;
 
-		var results = _singleKeySchema.Validate(instance);
+		var results = _singleKeySchema.Evaluate(instance);
 
 		results.AssertInvalid();
 	}
@@ -72,7 +72,7 @@ public class SpecExampleTests
 			  { ""bar"": 8 }
 			]").RootElement;
 
-		var results = _singleKeySchema.Validate(instance);
+		var results = _singleKeySchema.Evaluate(instance);
 
 		results.AssertValid();
 	}
@@ -86,7 +86,7 @@ public class SpecExampleTests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-		var results = _singleKeySchema.Validate(instance);
+		var results = _singleKeySchema.Evaluate(instance);
 
 		results.AssertInvalid();
 	}
@@ -100,7 +100,7 @@ public class SpecExampleTests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-		var results = _multiKeySchema.Validate(instance);
+		var results = _multiKeySchema.Evaluate(instance);
 
 		results.AssertValid();
 	}
@@ -114,7 +114,7 @@ public class SpecExampleTests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-		var results = _multiKeySchema.Validate(instance);
+		var results = _multiKeySchema.Evaluate(instance);
 
 		results.AssertInvalid();
 	}

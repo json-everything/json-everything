@@ -1,39 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `propertyNames`.
 /// </summary>
-[Applicator]
 [SchemaPriority(10)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
+[Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertyNamesKeywordJsonConverter))]
-public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<PropertyNamesKeyword>
+public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<PropertyNamesKeyword>
 {
-	internal const string Name = "propertyNames";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "propertyNames";
 
 	/// <summary>
 	/// The schema to match.
 	/// </summary>
 	public JsonSchema Schema { get; }
-
-	static PropertyNamesKeyword()
-	{
-		ValidationResults.RegisterConsolidationMethod(ConsolidateAnnotations);
-	}
 
 	/// <summary>
 	/// Creates a new <see cref="PropertyNamesKeyword"/>.
@@ -45,16 +42,15 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
@@ -64,9 +60,10 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		var overallResult = true;
 		foreach (var name in obj.Select(p => p.Key))
 		{
-			context.Log(() => $"Validating property name '{name}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create(name)), name);
-			Schema.ValidateSubschema(context);
+			context.Log(() => $"Evaluating property name '{name}'.");
+			context.Push(context.InstanceLocation.Combine(name), name,
+				context.EvaluationPath.Combine(name), Schema);
+			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();
@@ -74,31 +71,9 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaC
 		}
 		context.Options.LogIndentLevel--;
 
-		if (overallResult)
-			context.LocalResult.Pass();
-		else
+		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	private static void ConsolidateAnnotations(ValidationResults localResults)
-	{
-		var allPropertyNames = localResults.NestedResults.Select(c => c.TryGetAnnotation(Name))
-			.Where(a => a != null)
-			.Cast<List<string>>()
-			.SelectMany(a => a)
-			.Distinct()
-			.ToList();
-		// TODO: add message
-		if (localResults.TryGetAnnotation(Name) is List<string> annotation)
-			annotation.AddRange(allPropertyNames);
-		else if (allPropertyNames.Any())
-			localResults.SetAnnotation(Name, allPropertyNames);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Json.Schema;
 
@@ -26,7 +25,7 @@ public class Vocabulary
 	public Vocabulary(string id, params Type[] keywords)
 	{
 		Id = new Uri(id, UriKind.Absolute);
-		Keywords = keywords.ToList();
+		Keywords = keywords.ToReadOnlyList();
 	}
 
 	/// <summary>
@@ -37,6 +36,6 @@ public class Vocabulary
 	public Vocabulary(string id, IEnumerable<Type> keywords)
 	{
 		Id = new Uri(id, UriKind.Absolute);
-		Keywords = keywords.ToList();
+		Keywords = keywords.ToReadOnlyList();
 	}
 }

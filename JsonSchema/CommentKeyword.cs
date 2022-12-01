@@ -8,15 +8,20 @@ namespace Json.Schema;
 /// Handles `$comment`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(CommentKeywordJsonConverter))]
 public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 {
-	internal const string Name = "$comment";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$comment";
 
 	/// <summary>
 	/// The comment value.
@@ -33,14 +38,13 @@ public class CommentKeyword : IJsonSchemaKeyword, IEquatable<CommentKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value);
-		context.LocalResult.Pass();
+		context.Log(() => "$comment is to be ignored");
 		context.ExitKeyword(Name, true);
 	}
 

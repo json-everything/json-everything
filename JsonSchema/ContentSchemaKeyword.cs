@@ -9,56 +9,50 @@ namespace Json.Schema;
 /// </summary>
 [SchemaPriority(20)]
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Content201909Id)]
 [Vocabulary(Vocabularies.Content202012Id)]
+[Vocabulary(Vocabularies.ContentNextId)]
 [JsonConverter(typeof(ContentSchemaKeywordJsonConverter))]
-public class ContentSchemaKeyword : IJsonSchemaKeyword, IRefResolvable, ISchemaContainer, IEquatable<ContentSchemaKeyword>
+public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ContentSchemaKeyword>
 {
-	internal const string Name = "contentSchema";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "contentSchema";
 
 	/// <summary>
-	/// The schema against which to validate the content.
+	/// The schema against which to evaluate the content.
 	/// </summary>
 	public JsonSchema Schema { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="ContentSchemaKeyword"/>.
 	/// </summary>
-	/// <param name="value">The schema against which to validate the content.</param>
+	/// <param name="value">The schema against which to evaluate the content.</param>
 	public ContentSchemaKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
-			context.LocalResult.Pass();
 			context.WrongValueKind(schemaValueType);
 			return;
 		}
 
-		Schema.ValidateSubschema(context);
-		var result = context.LocalResult.IsValid;
-		if (result)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail();
+		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(Schema));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	void IRefResolvable.RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
-	{
-		Schema.RegisterSubschemas(registry, currentUri);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

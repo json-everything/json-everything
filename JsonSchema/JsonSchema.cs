@@ -16,7 +16,7 @@ namespace Json.Schema;
 /// </summary>
 [JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
+public class JsonSchema : IEquatable<JsonSchema>
 {
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -25,11 +25,11 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
 	/// </summary>
-	public static readonly JsonSchema True = new(true);
+	public static readonly JsonSchema True = new(true) { BaseUri = new("https://json-schema.org/true") };
 	/// <summary>
 	/// The `false` schema.  Fails all instances.
 	/// </summary>
-	public static readonly JsonSchema False = new(false);
+	public static readonly JsonSchema False = new(false) { BaseUri = new("https://json-schema.org/false") };
 
 	/// <summary>
 	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
@@ -41,7 +41,14 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	internal Uri? BaseUri { get; private set; }
+	public Uri BaseUri { get; private set; } = GenerateBaseUri();
+
+	public bool IsResourceRoot { get; private set; }
+
+	public SpecVersion DeclaredVersion { get; private set; }
+
+	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
+	internal JsonSchema? RecursiveAnchor { get; set; }
 
 	private JsonSchema(bool value)
 	{
@@ -91,31 +98,27 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
+	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
+
 	/// <summary>
-	/// Validates an instance against this schema.
+	/// Evaluates an instance against this schema.
 	/// </summary>
 	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this validation.</param>
-	/// <returns>A <see cref="ValidationResults"/> that provides the outcome of the validation.</returns>
-	public ValidationResults Validate(JsonNode? root, ValidationOptions? options = null)
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
-		options = ValidationOptions.From(options ?? ValidationOptions.Default);
+		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
 		options.Log.Write(() => "Registering subschemas.");
-		var baseUri = RegisterSubschemasAndGetBaseUri(options.SchemaRegistry, BaseUri ?? options.DefaultBaseUri);
-		if (baseUri != null! && baseUri.IsAbsoluteUri)
-			BaseUri = baseUri;
+		// BaseUri may change if $id is present
+		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
-		var currentUri = baseUri == options.DefaultBaseUri
-			? BaseUri ?? baseUri
-			: baseUri!;
+		var context = new EvaluationContext(options, BaseUri, root, this);
 
-		var context = new ValidationContext(options, currentUri, root, this);
-
-		context.Options.SchemaRegistry.RegisterSchema(context.CurrentUri, this);
-
-		options.Log.Write(() => "Beginning validation.");
-		ValidateSubschema(context);
+		options.Log.Write(() => "Beginning evaluation.");
+		context.Evaluate();
 
 		options.Log.Write(() => "Transforming output.");
 		var results = context.LocalResult;
@@ -124,145 +127,157 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 			case OutputFormat.Flag:
 				results.ToFlag();
 				break;
-			case OutputFormat.Basic:
-				results.ToBasic();
+			case OutputFormat.List:
+				results.ToList();
 				break;
-			case OutputFormat.Detailed:
-				results.ToDetailed();
-				break;
-			case OutputFormat.Verbose:
+			case OutputFormat.Hierarchical:
 				break;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
 
-		options.Log.Write(() => $"Validation complete: {results.IsValid.GetValidityString()}");
+		options.Log.Write(() => $"Evaluation complete: {results.IsValid.GetValidityString()}");
 		return results;
 	}
 
-	/// <summary>
-	/// Registers a subschema.  To be called from <see cref="IRefResolvable"/> keywords.
-	/// </summary>
-	/// <param name="registry">The registry into which the subschema should be registered.</param>
-	/// <param name="currentUri">The current URI.</param>
-	public void RegisterSubschemas(SchemaRegistry registry, Uri currentUri)
+	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		RegisterSubschemasAndGetBaseUri(registry, currentUri);
+		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineSpecVersion(schema, registry, SpecVersion.Unspecified), true);
 	}
 
-	private Uri? RegisterSubschemasAndGetBaseUri(SchemaRegistry registry, Uri currentUri)
+	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
 	{
-		if (Keywords == null) return null; // boolean cases
+		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 
-		var idKeyword = Keywords.OfType<IdKeyword>().SingleOrDefault();
-		var refKeyword = Keywords.OfType<RefKeyword>().SingleOrDefault();
-		var refMatters = refKeyword != null &&
-						 (registry.ValidatingAs == Draft.Draft6 || registry.ValidatingAs == Draft.Draft7);
-		UpdateBaseUri(currentUri);
-		if (idKeyword != null && !refMatters)
+		var schemaKeyword = (SchemaKeyword?)schema.Keywords!.FirstOrDefault(x => x is SchemaKeyword);
+		if (schemaKeyword != null)
 		{
-			currentUri = idKeyword.UpdateUri(currentUri);
-			var parts = idKeyword.Id.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-			var fragment = parts.Length > 1 ? parts[1] : null;
-#pragma warning disable 8602
-			if (string.IsNullOrEmpty(fragment) || fragment[0] == '/')
-#pragma warning restore 8602
-				registry.RegisterSchema(currentUri, this);
-			else
-				registry.RegisterAnchor(currentUri, fragment, this);
-		}
-
-		var anchors = Keywords.OfType<IAnchorProvider>();
-		foreach (var anchor in anchors)
-		{
-			anchor.RegisterAnchor(registry, currentUri, this);
-		}
-
-		var keywords = Keywords.OfType<IRefResolvable>().OrderBy(k => ((IJsonSchemaKeyword)k).Priority());
-		foreach (var keyword in keywords)
-		{
-			keyword.RegisterSubschemas(registry, currentUri);
-		}
-
-		return currentUri;
-	}
-
-	/// <summary>
-	/// Validates as a subschema.  To be called from within keywords.
-	/// </summary>
-	/// <param name="context">The validation context for this validation pass.</param>
-	public void ValidateSubschema(ValidationContext context)
-	{
-		if (BoolValue.HasValue)
-		{
-			context.Log(() => $"Found {(BoolValue.Value ? "true" : "false")} schema: {BoolValue.Value.GetValidityString()}");
-			if (BoolValue.Value)
-				context.LocalResult.Pass();
-			else
-				context.LocalResult.Fail(ErrorMessages.FalseSchema);
-			return;
-		}
-
-		var metaSchemaUri = Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-		var keywords = context.Options.FilterKeywords(Keywords!, metaSchemaUri, context.Options.SchemaRegistry).ToList();
-
-		if (context.MetaSchemaVocabs == null && !keywords.OfType<SchemaKeyword>().Any())
-		{
-			switch (context.Options.ValidateAs)
+			var metaSchemaId = schemaKeyword.Schema;
+			while (metaSchemaId != null)
 			{
-				case Draft.Draft6:
-					keywords.Add(new SchemaKeyword(MetaSchemas.Draft6Id));
-					break;
-				case Draft.Draft7:
-					keywords.Add(new SchemaKeyword(MetaSchemas.Draft7Id));
-					break;
-				case Draft.Draft201909:
-					keywords.Add(new SchemaKeyword(MetaSchemas.Draft201909Id));
-					break;
-				case Draft.Draft202012:
-					keywords.Add(new SchemaKeyword(MetaSchemas.Draft202012Id));
-					break;
+				var version = metaSchemaId.OriginalString switch
+				{
+					MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
+					MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
+					MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
+					MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
+					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
+					_ => SpecVersion.Unspecified
+				};
+				if (version != SpecVersion.Unspecified)
+				{
+					schema.DeclaredVersion = version;
+					return version;
+				}
+
+				var metaSchema = registry.Get(metaSchemaId);
+				if (metaSchema == null)
+					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
+
+				var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
+				if (newMetaSchemaId == metaSchemaId)
+					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
+
+				metaSchemaId = newMetaSchemaId;
 			}
 		}
 
-		var overallResult = true;
-		List<Type>? keywordTypesToProcess = null;
-		var previousAnnotationSet = new List<Annotation>();
-		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
-		{
-			// $schema is always processed first, and this should only be set
-			// after $schema has been evaluated.
-			if (keyword is not SchemaKeyword && !context.Options.ProcessCustomKeywords)
-				keywordTypesToProcess ??= context.GetKeywordsToProcess()?.ToList();
-			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
+		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
 
-			context.Push(subschemaLocation: context.SchemaLocation.Combine(keyword.Keyword()), subschema: this);
-			context.PullDirectRefNavigation();
-			context.LocalResult.ConsiderAnnotations(previousAnnotationSet);
-			keyword.Validate(context);
-			overallResult &= context.LocalResult.IsValid;
+		var allDraftsArray = Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
+		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
+		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
+		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
 
-			var localAnnotations = context.LocalResult.Annotations
-				.Where(x => x.Source.StartsWith(context.SchemaLocation))
-				.ToList();
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-			previousAnnotationSet.AddRange(localAnnotations);
-		}
-
-		if (context.IsNewDynamicScope)
-			context.Options.SchemaRegistry.ExitingUriScope();
-
-		if (overallResult)
-		{
-			context.LocalResult.Pass();
-			context.LocalResult.ImportAnnotations(previousAnnotationSet);
-		}
-		else
-			context.LocalResult.Fail();
+		return candidates.Any() ? candidates.Max() : SpecVersion.DraftNext;
 	}
 
-	internal (JsonSchema?, Uri?) FindSubschema(JsonPointer pointer, Uri? currentUri)
+	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs, bool selfRegister = false)
+	{
+		if (schema.BoolValue.HasValue) return;
+		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
+		    schema.Keywords!.Any(x => x is RefKeyword))
+		{
+			schema.BaseUri = currentBaseUri;
+			return;
+		}
+
+		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
+
+		if (idKeyword == null)
+		{
+			schema.BaseUri = currentBaseUri;
+			if (selfRegister)
+				registry.RegisterSchema(schema.BaseUri, schema);
+		}
+		else
+		{
+			if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
+			    idKeyword.Id.OriginalString[0] == '#' &&
+			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
+			{
+				schema.BaseUri = currentBaseUri;
+				resourceRoot.Anchors[idKeyword.Id.OriginalString.Substring(1)] = (schema, false);
+			}
+			else
+			{
+				schema.IsResourceRoot = true;
+				schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
+				resourceRoot = schema;
+				schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
+				registry.RegisterSchema(schema.BaseUri, schema);
+			}
+		}
+
+		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
+		if (anchorKeyword != null)
+			resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
+
+		var dynamicAnchorKeyword = schema.Keywords!.OfType<DynamicAnchorKeyword>().FirstOrDefault();
+		if (dynamicAnchorKeyword != null)
+			resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
+
+		var recursiveAnchorKeyword = schema.Keywords!.OfType<RecursiveAnchorKeyword>().FirstOrDefault();
+		if (recursiveAnchorKeyword is { Value: true })
+			resourceRoot.RecursiveAnchor = schema;
+
+		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
+
+		foreach (var subschema in subschemas)
+		{
+			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
+		}
+	}
+
+	private static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	{
+		switch (keyword)
+		{
+			case ISchemaContainer { Schema: { } } container:
+				yield return container.Schema;
+				break;
+			case ISchemaCollector collector:
+				foreach (var schema in collector.Schemas)
+				{
+					yield return schema;
+				}
+				break;
+			case IKeyedSchemaCollector collector:
+				foreach (var schema in collector.Schemas.Values)
+				{
+					yield return schema;
+				}
+				break;
+			case ICustomSchemaCollector collector:
+				foreach (var schema in collector.Schemas)
+				{
+					yield return schema;
+				}
+				break;
+		}
+	}
+
+	internal JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object resolvable = this;
 		for (var i = 0; i < pointer.Segments.Length; i++)
@@ -299,39 +314,29 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 						newResolvable = subschema;
 					break;
 				case JsonSchema { Keywords: { } } schema:
-					if (!ReferenceEquals(schema, this))
-					{
-						// the assumption here is that if the schema is this schema, the $ref
-						// navigated directly to this schema, and we don't need to update the uri
-						var idKeyword = schema.Keywords.OfType<IdKeyword>().SingleOrDefault();
-						if (idKeyword != null && i != pointer.Segments.Length - 1)
-							currentUri = idKeyword.UpdateUri(currentUri);
-					}
 					newResolvable = schema.Keywords?.FirstOrDefault(k => k.Keyword() == segment.Value);
 					break;
 			}
 
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
-				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1), true);
+				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1));
 				newPointer.TryEvaluate(unrecognized.Value, out var value);
 				var asSchema = FromText(value?.ToString() ?? "null");
-				return (asSchema, currentUri);
+				var hostSchema = (JsonSchema)resolvable;
+				asSchema.BaseUri = hostSchema.BaseUri;
+				PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry, options.EvaluatingAs);
+				return asSchema;
 			}
 
 			resolvable = newResolvable!;
 		}
 
-		return (resolvable as JsonSchema, currentUri);
-	}
-
-	internal void UpdateBaseUri(Uri newUri)
-	{
-		BaseUri = newUri;
+		return resolvable as JsonSchema;
 	}
 
 	/// <summary>
-	/// Implicitly converts a boolean value into one of the boolean schemas.
+	/// Implicitly converts a boolean value into one of the boolean schemas. 
 	/// </summary>
 	/// <param name="value">The boolean value.</param>
 	public static implicit operator JsonSchema(bool value)
@@ -364,8 +369,8 @@ public class JsonSchema : IRefResolvable, IEquatable<JsonSchema>
 					tk => tk.Keyword(),
 					ok => ok.Keyword(),
 					(tk, ok) => new { ThisKeyword = tk, OtherKeyword = ok })
-				.ToList();
-			if (byKeyword.Count != Keywords.Count) return false;
+				.ToArray();
+			if (byKeyword.Length != Keywords.Count) return false;
 			if (!byKeyword.All(k => k.ThisKeyword.Equals(k.OtherKeyword))) return false;
 		}
 

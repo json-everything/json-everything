@@ -59,7 +59,7 @@ public class JsonSchemaBuilder
 		var duplicates = _keywords.GroupBy(k => k.Value.GetType())
 			.Where(g => g.Count() > 1)
 			.Select(g => g.Key.GetCustomAttribute<SchemaKeywordAttribute>()?.Name)
-			.ToList();
+			.ToArray();
 		if (duplicates.Any())
 			throw new ArgumentException($"Found duplicate keywords: [{string.Join(", ", duplicates)}]");
 

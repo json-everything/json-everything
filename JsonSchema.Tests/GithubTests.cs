@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using NUnit.Framework;
@@ -145,7 +146,7 @@ public class GithubTests
 	""additionalProperties"": false
 }");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 	}
@@ -156,9 +157,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
-
-		result.AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance));
 	}
 
 	[Test]
@@ -167,26 +166,23 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		var result = schema.Validate(instance, new ValidationOptions
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
-			ValidateMetaSchema = true
-		});
-
-		result.AssertInvalid();
+			OutputFormat = OutputFormat.Hierarchical
+		}));
 	}
 
-	[TestCase(Draft.Draft7, @"{}", true)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1}", false)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1, ""d7"": 7}", true)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1, ""d9"": 9}", false)]
-	[TestCase(Draft.Draft7, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
-	[TestCase(Draft.Draft201909, @"{}", true)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1}", false)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d7"": 7}", false)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d9"": 9}", true)]
-	[TestCase(Draft.Draft201909, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
-	public void Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(Draft draft, string instance, bool isValid)
+	[TestCase(SpecVersion.Draft7, @"{}", true)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1}", false)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1, ""d7"": 7}", true)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1, ""d9"": 9}", false)]
+	[TestCase(SpecVersion.Draft7, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
+	[TestCase(SpecVersion.Draft201909, @"{}", true)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1}", false)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d7"": 7}", false)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d9"": 9}", true)]
+	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
+	public void Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(SpecVersion version, string instance, bool isValid)
 	{
 		var schema = JsonSerializer.Deserialize<JsonSchema>(@"
 {
@@ -197,14 +193,14 @@ public class GithubTests
         ""abc"": [ ""d9"" ]
     }
 }")!;
-		var opts = new ValidationOptions
+		var opts = new EvaluationOptions
 		{
-			ValidateAs = draft,
-			OutputFormat = OutputFormat.Detailed
+			EvaluateAs = version,
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		var element = JsonNode.Parse(instance);
 
-		var val = schema.Validate(element, opts);
+		var val = schema.Evaluate(element, opts);
 		Console.WriteLine("Elem `{0}` got validation `{1}`", instance, val.IsValid);
 		if (isValid) val.AssertValid();
 		else val.AssertInvalid();
@@ -225,7 +221,7 @@ public class GithubTests
 }";
 		var schema = JsonSchema.FromFile(schemaFile);
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -245,7 +241,7 @@ public class GithubTests
 }";
 		var schema = JsonSchema.FromFile(schemaFile);
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -270,7 +266,7 @@ public class GithubTests
 }";
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr)!;
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -403,18 +399,16 @@ public class GithubTests
 		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str)!;
 		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str)!;
 		var json = JsonNode.Parse(jsonStr);
-		var uri1 = new Uri("http://first.com/schema1.json");
-		var uri2 = new Uri("http://first.com/schema2.json");
-		var firstBaseUri = new Uri("http://first.com");
+		var uri1 = new Uri("https://json-everything.net/schema1.json");
+		var uri2 = new Uri("https://json-everything.net/schema2.json");
 		var map = new Dictionary<Uri, JsonSchema>
 		{
 			{ uri1, schema1 },
 			{ uri2, schema2 },
 		};
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Verbose,
-			DefaultBaseUri = firstBaseUri,
+			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
 				Fetch = uri =>
@@ -424,9 +418,9 @@ public class GithubTests
 				}
 			}
 		};
-		var result = schema2.Validate(json, options);
+		var result = schema2.Evaluate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.NestedResults[0].NestedResults[0].AbsoluteSchemaLocation, "http://first.com/schema1.json#");
+		Assert.AreEqual(result.Details[0].Details[0].SchemaLocation, "https://json-everything.net/schema1.json#");
 	}
 
 	[Test]
@@ -470,8 +464,8 @@ public class GithubTests
 		var passing = JsonNode.Parse(passingText);
 		var failing = JsonNode.Parse(failingText);
 
-		schema!.Validate(passing, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertValid();
-		schema.Validate(failing, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
+		schema!.Evaluate(passing, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertValid();
+		schema.Evaluate(failing, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
 	}
 
 	[Test]
@@ -483,7 +477,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json));
 	}
 
 	[Test]
@@ -498,11 +492,11 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		schema.Validate(json, new ValidationOptions { OutputFormat = OutputFormat.Detailed }).AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json));
 	}
 
 	[SchemaKeyword(Name)]
-	[SchemaDraft(Draft.Draft201909 | Draft.Draft202012)]
+	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
 	{
 		// ReSharper disable once InconsistentNaming
@@ -515,7 +509,7 @@ public class GithubTests
 			throw new NotImplementedException();
 		}
 
-		public void Validate(ValidationContext context)
+		public void Evaluate(EvaluationContext context)
 		{
 			throw new NotImplementedException();
 		}
@@ -538,16 +532,11 @@ public class GithubTests
 
 		var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-		var schema = JsonSchema.FromText(GetResource(191, "Schema"));
-
 		SchemaKeywordRegistry.Register<MinDateKeyword>();
 
 		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
-		SchemaRegistry.Global.Register(metaSchemaId, metaSchema);
 
-		var result = JsonSerializer.Deserialize<JsonElement>(GetResource(191, "Data"));
-
-		Assert.Throws<InvalidOperationException>(() => schema.Validate(result));
+		Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
 	}
 
 	[Test]
@@ -561,9 +550,9 @@ public class GithubTests
 				("first", new JsonSchemaBuilder().Type(SchemaValueType.String))
 			);
 
-		var options = new ValidationOptions
+		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Detailed
+			OutputFormat = OutputFormat.Hierarchical
 		};
 		options.SchemaRegistry.Register(new Uri("https://my-external-schema"), externalSchema);
 
@@ -588,7 +577,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"first\":{\"first\":\"first\"},\"second\":{\"second\":\"second\"}}");
 
-		mySchema.Validate(instance, options).AssertValid();
+		mySchema.Evaluate(instance, options).AssertValid();
 
 	}
 
@@ -603,14 +592,10 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		var res = schema.Validate(instance, new ValidationOptions
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
-			//ValidateAs = Draft.Draft7,
-			ValidateMetaSchema = true
-		});
-
-		res.AssertInvalid();
+			ValidateAgainstMetaSchema = true
+		}));
 	}
 
 	[Test]
@@ -646,11 +631,10 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		var res = schema.Validate(instance, new ValidationOptions
+		var res = schema.Evaluate(instance, new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Detailed,
-			//ValidateAs = Draft.Draft7,
-			ValidateMetaSchema = true
+			OutputFormat = OutputFormat.Hierarchical,
+			ValidateAgainstMetaSchema = true
 		});
 		res.AssertValid();
 	}
@@ -669,16 +653,16 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"foo\":1,\"bar\":false}");
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Detailed });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertInvalid();
-		var nodes = new List<ValidationResults> { result };
+		var nodes = new List<EvaluationResults> { result };
 		while (nodes.Any())
 		{
 			var node = nodes.First();
 			nodes.Remove(node);
-			Assert.AreNotEqual("#/additionalProperties", node.SchemaLocation.ToString());
-			nodes.AddRange(node.NestedResults);
+			Assert.AreNotEqual("#/additionalProperties", node.EvaluationPath.ToString());
+			nodes.AddRange(node.Details);
 		}
 	}
 
@@ -691,8 +675,8 @@ public class GithubTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse(instanceText);
 
-		var result = schema.Validate(instance, new ValidationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
-		Assert.AreEqual(0, result.NestedResults.Count);
+		result.AssertValid();
 	}
 }

@@ -9,16 +9,21 @@ namespace Json.Schema;
 /// Handles `$ref`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaDraft(Draft.Draft6)]
-[SchemaDraft(Draft.Draft7)]
-[SchemaDraft(Draft.Draft201909)]
-[SchemaDraft(Draft.Draft202012)]
+[SchemaSpecVersion(SpecVersion.Draft6)]
+[SchemaSpecVersion(SpecVersion.Draft7)]
+[SchemaSpecVersion(SpecVersion.Draft201909)]
+[SchemaSpecVersion(SpecVersion.Draft202012)]
+[SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [Vocabulary(Vocabularies.Core202012Id)]
+[Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(RefKeywordJsonConverter))]
 public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 {
-	internal const string Name = "$ref";
+	/// <summary>
+	/// The JSON name of the keyword.
+	/// </summary>
+	public const string Name = "$ref";
 
 	/// <summary>
 	/// The URI reference.
@@ -35,99 +40,54 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	}
 
 	/// <summary>
-	/// Provides validation for the keyword.
+	/// Performs evaluation for the keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the validation process.</param>
-	public void Validate(ValidationContext context)
+	/// <param name="context">Contextual details for the evaluation process.</param>
+	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var parts = Reference.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
-		var baseUri = parts[0];
-		var fragment = parts.Length > 1 ? parts[1] : null;
 
-		Uri? newUri;
-		JsonSchema? baseSchema;
-		if (!string.IsNullOrEmpty(baseUri))
-		{
-			if (Uri.TryCreate(baseUri, UriKind.Absolute, out newUri))
-				baseSchema = context.Options.SchemaRegistry.Get(newUri);
-			else
-			{
-				var uriFolder = context.CurrentUri.OriginalString.EndsWith("/")
-					? context.CurrentUri
-					: context.CurrentUri.GetParentUri();
-				newUri = new Uri(uriFolder, baseUri);
-				baseSchema = context.Options.SchemaRegistry.Get(newUri);
-			}
-		}
-		else
-		{
-			newUri = context.CurrentUri;
-			baseSchema = context.Options.SchemaRegistry.Get(newUri) ?? context.SchemaRoot;
-		}
-
-		var absoluteReference = SchemaRegistry.GetFullReference(newUri, fragment);
-		var navigation = (absoluteReference, context.InstanceLocation);
+		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var navigation = (newUri.OriginalString, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
-		{
-			context.LocalResult.Fail(ErrorMessages.RecursiveRef);
-			context.ExitKeyword(Name, false);
-			return;
-		}
+			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
 
-		JsonSchema? schema;
-		var navigatedByDirectRef = true;
-		if (!string.IsNullOrEmpty(fragment) && AnchorKeyword.AnchorPattern.IsMatch(fragment!))
-			schema = context.Options.SchemaRegistry.Get(newUri, fragment);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+
+		JsonSchema? targetSchema = null;
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
+		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+		{
+			if (targetBase == null)
+				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+			
+			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+		}
 		else
 		{
-			if (baseSchema == null)
-			{
-				context.LocalResult.Fail(ErrorMessages.BaseUriResolution, ("uri", newUri!.OriginalString));
-				context.ExitKeyword(Name, false);
-				return;
-			}
+			var anchorFragment = newUri.Fragment.Substring(1);
+			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			if (!string.IsNullOrEmpty(fragment))
-			{
-				fragment = $"#{fragment}";
-				if (!JsonPointer.TryParse(fragment, out var pointer))
-				{
-					context.LocalResult.Fail(ErrorMessages.PointerParse, ("fragment", fragment));
-					context.ExitKeyword(Name, false);
-					return;
-				}
-
-				(schema, newUri) = baseSchema.FindSubschema(pointer!, newUri);
-				navigatedByDirectRef = false;
-			}
-			else
-				schema = baseSchema;
+			if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+				targetSchema = anchorDefinition.Schema;
 		}
 
-		if (schema == null)
-		{
-			context.LocalResult.Fail(ErrorMessages.RefResolution, ("uri", Reference.OriginalString));
-			context.ExitKeyword(Name, false);
-			return;
-		}
+		if (targetSchema == null)
+			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
 		context.NavigatedReferences.Add(navigation);
-
-		context.Push(newUri: newUri);
-		context.NavigatedByDirectRef = navigatedByDirectRef;
-		if (!string.IsNullOrEmpty(fragment) && JsonPointer.TryParse(fragment!, out var reference))
-			context.Reference = reference;
-		schema.ValidateSubschema(context);
+		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
+		if (pointerFragment != null)
+			context.LocalResult.SetSchemaReference(pointerFragment);
+		context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
-		context.LocalResult.ConsolidateAnnotations();
-		if (result)
-			context.LocalResult.Pass();
-		else
-			context.LocalResult.Fail();
-
 		context.NavigatedReferences.Remove(navigation);
+		if (!result)
+			context.LocalResult.Fail();
 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
@@ -163,7 +123,7 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	public override RefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var uri = reader.GetString();
-		return new RefKeyword(new Uri(uri, UriKind.RelativeOrAbsolute));
+		return new RefKeyword(new Uri(uri!, UriKind.RelativeOrAbsolute));
 
 
 	}
@@ -171,65 +131,5 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	{
 		writer.WritePropertyName(RefKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Reference, options);
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _recursiveRef;
-
-	/// <summary>
-	/// Gets or sets the error message for when a recursive reference is encountered.
-	/// </summary>
-	/// <remarks>No tokens are supported.</remarks>
-	public static string RecursiveRef
-	{
-		get => _recursiveRef ?? Get();
-		set => _recursiveRef = value;
-	}
-
-	private static string? _baseUriResolution;
-
-	/// <summary>
-	/// Gets or sets the error message for when a base URI cannot be resolved.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[uri]] - the base URI to resolve
-	/// </remarks>
-	public static string BaseUriResolution
-	{
-		get => _baseUriResolution ?? Get();
-		set => _baseUriResolution = value;
-	}
-
-	private static string? _pointerParse;
-
-	/// <summary>
-	/// Gets or sets the error message for when a URI fragment cannot be parsed into a JSON Pointer.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[fragment]] - the pointer fragment
-	/// </remarks>
-	public static string PointerParse
-	{
-		get => _pointerParse ?? Get();
-		set => _pointerParse = value;
-	}
-
-	private static string? _refResolution;
-
-	/// <summary>
-	/// Gets or sets the error message for when a reference fails to resolve.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[uri]] - the reference to resolve
-	/// </remarks>
-	public static string RefResolution
-	{
-		get => _refResolution ?? Get();
-		set => _refResolution = value;
 	}
 }
