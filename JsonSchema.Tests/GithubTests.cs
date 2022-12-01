@@ -675,7 +675,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse(instanceText);
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		result.AssertValid();
 	}

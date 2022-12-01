@@ -54,7 +54,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		}
 
 		var number = context.LocalInstance!.AsValue().GetNumber();
-		if (!(Value < number))
+		if (Value >= number)
 			context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

@@ -127,8 +127,8 @@ public class JsonSchema : IEquatable<JsonSchema>
 			case OutputFormat.Flag:
 				results.ToFlag();
 				break;
-			case OutputFormat.Basic:
-				results.ToBasic();
+			case OutputFormat.List:
+				results.ToList();
 				break;
 			case OutputFormat.Hierarchical:
 				break;
@@ -335,13 +335,8 @@ public class JsonSchema : IEquatable<JsonSchema>
 		return resolvable as JsonSchema;
 	}
 
-	internal void UpdateBaseUri(Uri newUri)
-	{
-		BaseUri = newUri;
-	}
-
 	/// <summary>
-	/// Implicitly converts a boolean value into one of the boolean schemas.
+	/// Implicitly converts a boolean value into one of the boolean schemas. 
 	/// </summary>
 	/// <param name="value">The boolean value.</param>
 	public static implicit operator JsonSchema(bool value)

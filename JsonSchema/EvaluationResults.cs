@@ -145,7 +145,7 @@ public class EvaluationResults
 	/// <summary>
 	/// Transforms the results to the `basic` format.
 	/// </summary>
-	public void ToBasic()
+	public void ToList()
 	{
 		var children = GetAllChildren().ToList();
 		if (!children.Any()) return;
@@ -161,10 +161,10 @@ public class EvaluationResults
 		foreach (var child in children)
 		{
 			child._nestedResults?.Clear();
-			child.Format = OutputFormat.Basic;
+			child.Format = OutputFormat.List;
 		}
 		_nestedResults.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
-		Format = OutputFormat.Basic;
+		Format = OutputFormat.List;
 	}
 
 	private IEnumerable<EvaluationResults> GetAllChildren()

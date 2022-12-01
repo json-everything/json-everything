@@ -6,11 +6,14 @@ It also renames several methods from "Validate" to "Evaluate" to reflect the ide
 
 ## Breaking Changes
 
-- `JsonSchema.Validate()` renamed to `JsonSchema.Evaluate()`
+- `JsonSchema`
+  - `Validate()` renamed to `Evaluate()`
+  - `ValidateSubschema()` removed, replaced with `EvaluationContext.Evaluate()`
 - `ValidationOptions`
   - renamed to `EvaluationOptions`
   - `ValidateAs` renamed to `EvaluateAs`
   - `ValidateMetaSchema` renamed to `ValidateAgainstMetaSchema`
+  - `DefaultBaseUri` removed.  Schemas now generate a random base URI upon creation.  The pre-evaluation scan has been updated to set base URIs for all schemas and subschemas.
 - `ValidationResults`
   - renamed to `EvaluationResults`
   - `ConsolidateAnnotations()` removed
@@ -23,27 +26,58 @@ It also renames several methods from "Validate" to "Evaluate" to reflect the ide
   - `Push()` optional parameters removed and overloads created
     - `Push(JsonPointer instanceLocation, JsonNode? instance, JsonPointer evaluationPath, JsonSchema subschema, Uri? newUri = null)` used for new schema & instance locations (e.g. keywords like `properties`)
     - `Push(JsonPointer evaluationPath, JsonSchema subschema, Uri? newUri = null)` used for new schema locations evaluating the same instance location (e.g. keywords like `anyOf`)
-- `JsonSchema.ValidateSubschema()` removed, replaced with `EvaluationContext.Evaluate()`
 - `IJsonSchemaKeyword.Validate()` renamed to `IJsonSchemaKeyword.Evaluate()` (applies to all keyword types as well)
 - `ErrorMessages` & associated string resources
   - `Contains` replaced with `ContainsTooFew` and `ContainsTooMany`
   - `MaxContains` and `MinContains` removed
+  - reference-related errors removed
 - `JsonSchemaExtensions.Validate()` renamed to `JsonSchemaExtensions.Evaluate()`
+- `Draft` renamed to `SpecVersion` to align with the JSON Schema movement toward a stable specification
+  - `SchemaDraftAttribute` renamed to `SchemaSpecVersionAttribute`
+  - related methods and properties have also been updated
+- `ApplicatorAttribute` has been removed as it was unused
+  - `KeywordExtensions.IsApplicator()` also removed
+- `IAnchorProvider` has been removed as its function has been internalized
+- `IRefResolvable` has been removed as its function has been internalized
+- `SchemaRegistry`
+  - `RegisterAnchor()` remove as its function has been internalized
+  - `anchor` parameter removed from `Get()`
 
 ### Changes Driven by JSON Schema
 
-- Output formats are now `Flag`, `Basic`, and `Hierarchical`.
+- Output formats are now `Flag`, `List`, and `Hierarchical`
+  - `ToBasic()` has been renamed to `ToList()`
+  - `ToDetailed()` has been removed
+  - `Pre202012EvaluationResultsJsonConverter` has been added to serialize output as per draft 2020-12 and previous (with the exception of `Detailed`).
 - Output structure now modelled after JSON Schema `draft-next` output
   - `ValidationResults.SchemaLocation` renamed to `EvaluationResults.EvaluationPath`
   - `ValidationResults.AbsoluteSchemaLocation` renamed to `EvaluationResults.SchemaLocation` (note the same property name and different function)
+- A new exception `JsonSchemaException` will now be thrown for various scenarios where previously a failed validation would have been returned
+  - failure to resolve `$schema`, `$ref`, `$recursiveRef`, and `$dynamicRef`
+  - a keyword's value is in a form that the current specification version does not allow (e.g. array form of `items` in draft 2020-12)
 
 ## Additional Changes
 
-- Exposed static property `Name` on all keywords.
+- Exposed static property `Name` on all keywords
+- `JsonSchema`
+  - `BaseUri` is now available
+  - `IsResourceRoot` has been added
+  - `DeclaredVersion` has been added
 - Added `JsonSchemaExtensions.Validate()` extensions to help ease transition from "Validate" to "Evaluate"
 - Added `PropertyDependenciesKeyword`
+- Added `ICustomSchemaCollector` to handle keywords that contain subschemas but don't fit into one of the other "container" interfaces, e.g. `propertyDependencies`.
 - Added `MetaSchemas.DraftNext` and associated properties
 - Added `Vocabularies.DraftNext` and associated properties
+- Added `EvaluationOptions.IgnoredAnnotations` to ignore annotations from specified keywords.  These keywords are managed using:
+  - `IgnoreAnnotationsFrom<T>() where T : IJsonSchemaKeyword`
+  - `IgnoreAllAnnotations()`
+  - `ClearIgnoredAnnotations()`
+  - `CollectAnnotationsFrom<T>()`
+- Added `DependsOnAnnotationsFromAttribute` to support collecting annotations that have been configured to be excluded but are required for other keywords to function
+- Added `Vocabularies.DraftNext`, `MetaSchemas.DraftNext` and associated vocabs and meta-schemas
+  - these will be renamed to match the next release of the JSON Schema specification before v4.0 is fully released
+
+Also includes various performance enhancements, both increasing processing speed and reducing memory allocations.
 
 # [3.3.2](https://github.com/gregsdennis/json-everything/pull/347)
 

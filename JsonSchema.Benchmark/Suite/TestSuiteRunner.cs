@@ -42,7 +42,7 @@ public class TestSuiteRunner
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Basic
+			OutputFormat = OutputFormat.List
 		};
 		switch (draftFolder)
 		{

@@ -12,7 +12,7 @@ public enum OutputFormat
 	/// <summary>
 	/// Indicates that all nodes will be listed as children of the top node.
 	/// </summary>
-	Basic,
+	List,
 	/// <summary>
 	/// Indicates that nodes will match the structure of the schema.
 	/// </summary>

@@ -54,7 +54,7 @@ public class MaximumKeyword : IJsonSchemaKeyword, IEquatable<MaximumKeyword>
 		}
 
 		var number = context.LocalInstance!.AsValue().GetNumber();
-		if (!(Value >= number))
+		if (Value < number)
 			context.LocalResult.Fail(Name, ErrorMessages.Maximum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}

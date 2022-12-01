@@ -59,7 +59,7 @@ public class OutputTests
 	[Test]
 	public void Basic_Success()
 	{
-		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Basic);
+		var result = Validate("{\"passes\":\"value\"}", OutputFormat.List);
 		var expected = @"{
   ""valid"": true,
   ""nested"": [
@@ -81,7 +81,7 @@ public class OutputTests
 	[Test]
 	public void Basic_Failure()
 	{
-		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Basic);
+		var result = Validate("{\"fails\":\"value\"}", OutputFormat.List);
 		var expected = @"{
   ""valid"": false,
   ""nested"": [
@@ -404,7 +404,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -423,7 +423,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -447,7 +447,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -464,7 +464,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("[1,2]");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -482,7 +482,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("[1,2]");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -497,7 +497,7 @@ public class OutputTests
 
 		var instance = JsonDocument.Parse("[1,2]").RootElement;
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Basic });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var expected = @"{
   ""valid"": false,
@@ -580,7 +580,7 @@ public class OutputTests
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
-		result.ToBasic();
+		result.ToList();
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
@@ -589,7 +589,7 @@ public class OutputTests
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
-		result.ToBasic();
+		result.ToList();
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 	}
 
