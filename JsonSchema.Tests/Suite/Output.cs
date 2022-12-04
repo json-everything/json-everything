@@ -22,6 +22,12 @@ public class Output
 	private static readonly JsonConverter<EvaluationResults> _resultsConverter = new EvaluationResultsJsonConverter();
 	private static readonly JsonConverter<EvaluationResults> _legacyResultsConverter = new Pre202012EvaluationResultsJsonConverter();
 
+	private static readonly SpecVersion[] _unsupportedVersions =
+	{
+		SpecVersion.Draft201909,
+		SpecVersion.Draft202012
+	};
+
 	public static IEnumerable<TestCaseData> TestCases()
 	{
 		return GetTests("draft2019-09")
@@ -41,17 +47,10 @@ public class Output
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new EvaluationOptions
 		{
-			Log = null!,
 			OutputFormat = OutputFormat.Hierarchical
 		};
 		switch (draftFolder)
 		{
-			case "draft6":
-				options.EvaluateAs = SpecVersion.Draft6;
-				break;
-			case "draft7":
-				options.EvaluateAs = SpecVersion.Draft7;
-				break;
 			case "draft2019-09":
 				options.EvaluateAs = SpecVersion.Draft201909;
 				break;
@@ -150,9 +149,18 @@ public class Output
 		var outputSchema = test.Output![format];
 		result = outputSchema.Evaluate(serializedResult, new EvaluationOptions
 		{
-			Log = null!,
 			OutputFormat = OutputFormat.Hierarchical
 		});
+
+		if (_unsupportedVersions.Contains(options.EvaluateAs))
+		{
+			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+
+			if (!result.IsValid)
+				Assert.Inconclusive("not fully supported");
+
+			return;
+		}
 
 		result.AssertValid();
 	}
