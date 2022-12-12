@@ -458,7 +458,7 @@ namespace JsonEverythingTemp
 		if (page == null) return;
 
 		await _docs.SetPage(page);
-		await SetPlaygroundVisibility();
+		SetPlaygroundVisibility();
 	}
 
 	protected override async Task OnInitializedAsync()
@@ -473,15 +473,14 @@ namespace JsonEverythingTemp
 		await LoadSavedSchema();
 		await LoadSavedInstance();
 		LoadSavedSettings();
-		await LoadAssemblyReferences();
+		SetPlaygroundVisibility();
 
-		await SetPlaygroundVisibility();
+		await LoadAssemblyReferences();
 	}
 
-	private async Task SetPlaygroundVisibility()
+	private void SetPlaygroundVisibility()
 	{
 		Console.WriteLine($"docs page: {_docs.Page}");
-		await Task.Delay(500);
 		_playgroundStyle = string.IsNullOrWhiteSpace(_docs.Page) || _docs.Page == "playground/schema" ? "" : "d-none";
 	}
 
