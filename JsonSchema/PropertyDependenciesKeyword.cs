@@ -149,6 +149,7 @@ internal class PropertyDependenciesKeywordJsonConverter : JsonConverter<Property
 
 	public override void Write(Utf8JsonWriter writer, PropertyDependenciesKeyword value, JsonSerializerOptions options)
 	{
+		writer.WritePropertyName(PropertyDependenciesKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Dependencies, options);
 	}
 }

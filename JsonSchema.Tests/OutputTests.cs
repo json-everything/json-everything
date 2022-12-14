@@ -71,6 +71,12 @@ public class OutputTests
       ""annotations"": {
         ""properties"": [ ""passes"" ]
       }
+    },
+    {
+      ""valid"": true,
+      ""evaluationPath"": ""/properties/passes"",
+	  ""schemaLocation"": ""https://test.com/schema#/properties/passes"",
+	  ""instanceLocation"": ""/passes""
     }
   ]
 }";
@@ -85,6 +91,12 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""details"": [
+    {
+      ""valid"": false,
+      ""evaluationPath"": """",
+	  ""schemaLocation"": ""https://test.com/schema"",
+	  ""instanceLocation"": """"
+	},
     {
       ""valid"": false,
       ""evaluationPath"": ""/properties/fails"",

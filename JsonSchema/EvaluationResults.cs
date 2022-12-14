@@ -165,7 +165,8 @@ public class EvaluationResults
 			child._details?.Clear();
 			child.Format = OutputFormat.List;
 		}
-		_details.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
+		//_details.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
+		_details.AddRange(children);
 		Format = OutputFormat.List;
 	}
 
@@ -181,7 +182,7 @@ public class EvaluationResults
 			all.Add(current);
 			if (!current.HasDetails) continue;
 
-			foreach (var nestedResult in current.Details.Where(x => x.IsValid == current.IsValid))
+			foreach (var nestedResult in current.Details)
 			{
 				toProcess.Enqueue(nestedResult);
 			}
@@ -339,7 +340,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 
 		if (value.IsValid)
 		{
-			if (value.HasAnnotations)
+			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
 				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
@@ -352,7 +353,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 				writer.WritePropertyName("errors");
 				JsonSerializer.Serialize(writer, value.Errors, options);
 			}
-			if (value.IncludeDroppedAnnotations && value.HasAnnotations)
+			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("droppedAnnotations");
 				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
@@ -428,14 +429,17 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 
 		writer.WriteBoolean("valid", value.IsValid);
 
-		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
+		{
+			writer.WritePropertyName("keywordLocation");
+			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
 
-		writer.WritePropertyName("absoluteKeywordLocation");
-		JsonSerializer.Serialize(writer, value.SchemaLocation, options);
+			writer.WritePropertyName("absoluteKeywordLocation");
+			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
 
-		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			writer.WritePropertyName("instanceLocation");
+			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		}
 
 		bool skipCloseObject = false;
 		if (!value.IsValid)
@@ -496,12 +500,12 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		{
 			if (value.Format == OutputFormat.Hierarchical)
 			{
-				if ((value.HasAnnotations && value.Annotations!.Any()) || value.Details.Any())
+				if (value.AnnotationsToSerialize != null || value.Details.Any())
 				{
 					writer.WritePropertyName("annotations");
 					writer.WriteStartArray();
 
-					var annotations = value.Annotations?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
+					var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
 
 					// this too
 
@@ -531,7 +535,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 			}
 			else
 			{
-				var annotations = value.Annotations?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? Array.Empty<Annotation>();
+				var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? Array.Empty<Annotation>();
 
 				if (value.HasDetails)
 				{
@@ -574,7 +578,10 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
-		JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
+		if (value.SchemaLocation.OriginalString.Contains('#'))
+			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
+		else
+			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", options);
 
 		writer.WritePropertyName("instanceLocation");
 		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
@@ -595,7 +602,10 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		JsonSerializer.Serialize(writer, annotation.Source, options);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
-		JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
+		if (value.SchemaLocation.OriginalString.Contains('#'))
+			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
+		else
+			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", options);
 
 		writer.WritePropertyName("instanceLocation");
 		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
