@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -678,5 +680,73 @@ public class GithubTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue352_ConcurrentValidationsWithReferences()
+	{
+		var schema = JsonSchema.FromText(@"{
+            ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+            ""type"": ""object"",
+            ""properties"": {
+                ""id"": {
+                    ""type"": ""integer""
+                },        
+                ""interval1"": {
+                    ""$ref"": ""#/components/schemas/interval""
+                }
+            },
+            ""components"": {
+                ""schemas"": {
+                    ""interval"": {
+                        ""type"": ""object"",
+                        ""properties"": {
+                            ""from"": {
+                                ""type"": ""number""
+                            },
+                            ""to"": {
+                                ""type"": ""number""
+                            }
+                        }
+                    }
+                }
+            }
+            }");
+
+		var instance = new JsonObject
+		{
+			["id"] = 123,
+			["interval1"] = new JsonObject
+			{
+				["to"] = 3.0
+			}
+		};
+
+		var numberOfMessages = 100;
+		var jsonMessages = new List<JsonNode?>();
+		for (int j = 0; j < numberOfMessages; j++)
+		{
+			jsonMessages.Add(instance.Copy());
+		}
+
+		Parallel.ForEach(jsonMessages, json =>
+		{
+			EvaluationResults result;
+			try
+			{
+				result = schema.Evaluate(json, new EvaluationOptions
+				{
+					OutputFormat = OutputFormat.List,
+					RequireFormatValidation = true
+				});
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+
+			result.AssertValid();
+		});
 	}
 }
