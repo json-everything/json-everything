@@ -1,8 +1,8 @@
 # JSON Schema Version Selection
 
-JSON Schema version (or "draft") selection can be an important factor in ensuring validation works as expected.  Selecting the wrong draft may result in some keywords not being processed.  For example, `prefixItems` was only added with draft 2020-12.  Validating a schema with this keyword under a previous draft will ignore the keyword completely.
+JSON Schema version (or "draft") selection can be an important factor in ensuring evaluation works as expected.  Selecting the wrong draft may result in some keywords not being processed.  For example, `prefixItems` was only added with draft 2020-12.  Evaluating a schema with this keyword under a previous draft will ignore the keyword completely.
 
-JsonSchema.Net has a couple ways to specify which version a validation should use.
+JsonSchema.Net has a couple ways to specify which version a evaluation should use.
 
 ## `$schema`
 
@@ -12,11 +12,11 @@ If you're the author of your schemas, just include this keyword, and all will be
 
 JsonSchema.Net will always respect this keyword when present.
 
-## Validation Options
+## Evaluation Options
 
-If the schema you're working with is out of your control, meaning you can't add a `$schema` keyword, there is some logic to determine the best candidate automatically, however the `ValidationOptions.ValidateAs` property will be your friend.
+If the schema you're working with is out of your control, meaning you can't add a `$schema` keyword, there is some logic to determine the best candidate automatically, however the `EvaluationOptions.EvaluateAs` property will be your friend.
 
-This option allows you to specify which draft you want to use during validation.
+This option allows you to specify which draft you want to use during evaluation.
 
 By default, the latest supported version will be used.
 
@@ -42,38 +42,38 @@ JsonSchema schema = new JsonSchemaBuilder()
 var instance = new JsonArray { 1, true, "foo", "bar" };
 ```
 
-This builds a schema that validates JSON instances which are arrays with:
+This builds a schema that evaluates JSON instances which are arrays with:
 
 - the first item being an integer,
 - the second item being a boolean,
 - the remaining items being strings
 
-Note that it doesn't say what version the schema is, so you need to tell the validator which version you want to use.  You do that by passing a custom options into the validation:
+Note that it doesn't say what version the schema is, so you need to tell the evaluator which version you want to use.  You do that by passing a custom options into the evaluation:
 
 ```c#
-var options = new ValidationOptions{
-    ValidateAs = Draft.Draft202012
+var options = new EvaluationOptions{
+    EvaluateAs = Draft.Draft202012
 };
 
-var results = schema.Validate(instance, options); // results.IsValid == true
+var results = schema.Evaluate(instance, options); // results.IsValid == true
 ```
 
 If you were to specify draft 7 instead of draft 2020-12, `prefixItems` would be skipped.
 
 ```c#
-var options = new ValidationOptions{
-    ValidateAs = Draft.Draft7
+var options = new EvaluationOptions{
+    EvaluateAs = Draft.Draft7
 };
 
-var results = schema.Validate(instance, options); // results.IsValid == false
+var results = schema.Evaluate(instance, options); // results.IsValid == false
 ```
 
-In this case, the validation fails because draft 7 doesn't know about `prefixItems`.  To get the same behavior out of a draft 7 schema, you'd need to use
+In this case, the evaluation fails because draft 7 doesn't know about `prefixItems`.  To get the same behavior out of a draft 7 schema, you'd need to use
 
 - array-valued `items` instead of `prefixItems` above
 - `additionalItems` instead of `items` above
 
-Notice also that if we did use the draft 7 version of this schema, that validating as draft 2020-12 would also fail because
+Notice also that if we did use the draft 7 version of this schema, that evaluating as draft 2020-12 would also fail because
 
 - array-valued `items` is not supported in draft 2020-12
 - `additionalItems` was removed as a keyword from draft 2020-12
@@ -81,7 +81,7 @@ Notice also that if we did use the draft 7 version of this schema, that validati
 ***NOTE** There are a lot of reasons why we chose to make this change.  You can read the discussion mainly [here](https://github.com/json-schema-org/json-schema-spec/issues/864) but also in several other issues.*
 
 
-## Letting the Validator Decide
+## Letting the Evaluator Decide
 
 So suppose you _did_ have that draft 7 schema:
 
@@ -99,10 +99,10 @@ JsonSchema schema = new JsonSchemaBuilder()
     )
 ```
 
-As mentioned before, explicitly setting `ValidateAs = Draft.Draft2020212` would cause validation to fail.
+As mentioned before, explicitly setting `EvaluateAs = Draft.Draft2020212` would cause evaluation to fail.
 
 However, if you let the automated process work, as part of the initial keyword analysis (to determine which keywords to process), it would see `additionalItems` is present and narrow down the candidate versions to drafts 6, 7, and 2019-09.
 
-Once the analysis is complete, it takes the latest draft supported by all the keywords present and runs as that.  So in this case, it would validate as draft 2019-09, which would have the same result as draft 7.
+Once the analysis is complete, it takes the latest draft supported by all the keywords present and runs as that.  So in this case, it would evaluate as draft 2019-09, which would have the same result as draft 7.
 
 It's less desirable to rely on the automated draft selection, however.  Specifying it will yield more consistent results.
