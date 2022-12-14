@@ -15,7 +15,7 @@ public class Output
 {
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/output-tests";
 
-	private const bool _useExternal = true;
+	private const bool _useExternal = false;
 	private const bool _runDraftNext = true;
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/output-tests";
 
