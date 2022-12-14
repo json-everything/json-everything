@@ -1,16 +1,14 @@
-***NOTE** This documentation is based on the the latest non-beta version.  Updated documentation is in progress and will be available soon.*
-
 # Overview
 
-The occasion may arise when you wish to validate that a JSON object is in the correct form (has the appropriate keys and the right types of values).  Enter JSON Schema.  Much like XML Schema with XML, JSON Schema defines a pattern for JSON data.  A JSON Schema validator can verify that a given JSON object meets the requirements as defined by the JSON Schema.  This validation can come in handy as a precursor step before deserializing.
+The occasion may arise when you wish to validate that a JSON object is in the correct form (has the appropriate keys and the right types of values), or perhaps you wish to annotate that data.  Enter JSON Schema.  Much like XML Schema with XML, JSON Schema defines a pattern for JSON data.  A JSON Schema validator can verify that a given JSON object meets the requirements as defined by the JSON Schema as well as provide additional information to the application about the data.  This evaluation can come in handy as a precursor step before deserializing.
 
 More information about JSON Schema can be found at [json-schema.org](http://json-schema.org).
 
 To support JSON Schema, JsonSchema.Net exposes the `JsonSchema` type.  This type is implemented as a list of keywords, each of which correspond to one of the keywords defined in the JSON Schema specifications.
 
-## Drafts
+## Specification versions
 
-There are currently six active drafts of the JSON Schema specification:
+There are currently six drafts of the JSON Schema specification that have known use:
 
 - Draft 3
 - Draft 4
@@ -21,17 +19,19 @@ There are currently six active drafts of the JSON Schema specification:
 
 JsonSchema.Net supports draft 6 and later.
 
+The next version, which will be supported by v4.0.0 and later of this library, is currently in development and will start a new era for the project which includes various backward- and forward-compatibility guarantees.  Have a read of the various discussions happening in the [JSON Schema GitHub org](https://github.com/json-schema-org) for more information.
+
 ### Meta-schemas
 
-Each draft defines a meta-schema.  This is a special JSON Schema that describes all of the keywords available for that draft.  They are intended to be used to validate other schemas.  Usually, a schema will declare the draft it should adhere to using the `$schema` keyword.
+Each version defines a meta-schema.  This is a special JSON Schema that describes all of the keywords available for that version.  They are intended to be used to validate other schemas.  Usually, a schema will declare the version it should adhere to using the `$schema` keyword.
 
-JsonSchema.Net declares the meta-schemas for the supported drafts as members of the `MetaSchemas` static class.
+JsonSchema.Net declares the meta-schemas for the supported versions as members of the `MetaSchemas` static class.
 
-Draft 2019-09 introduced vocabularies.  As part of this new feature, the meta-schemas for this draft and those which follow it have been split into vocabulary-specific meta-schemas.  Additionally, the specification recognizes that the meta-schemas aren't perfect and may need to be updated occasionally.  To this end, the meta-schemas are versioned with the year and month they are published.  The schemas within this library are named accordingly.
+Draft 2019-09 introduced vocabularies.  As part of this new feature, the meta-schemas for this version and those which follow it have been split into vocabulary-specific meta-schemas.  Additionally, the specification recognizes that the meta-schemas aren't perfect and may need to be updated occasionally.  As such, the meta-schemas defined by this library will be updated to match, in most cases only triggering a patch release.
 
 ## Keywords
 
-JSON Schema is expressed as a collection of keywords, each of which provides a specific constraint on a JSON instance.  For example, the `type` keyword specifies what type of data an instance may be, whereas the `minimum` keyword specifies a minimum numeric value *for numeric data*.  These keywords can be combined to express the expected shape of any JSON instance.  Once defined, the schema validates the instance, providing feedback on errors that occurred, including what and where the error occurred.
+JSON Schema is expressed as a collection of keywords, each of which provides a specific constraint on a JSON instance.  For example, the `type` keyword specifies what JSON type an instance may be, whereas the `minimum` keyword specifies a minimum numeric value *for only numeric data* (it will not apply any assertion to non-numeric values).  These keywords can be combined to express the expected shape of any JSON instance.  Once defined, the schema evaluates the instance, providing feedback on what errors occurred, including where in the instance and in the schema produced them.
 
 # Building a schema
 
@@ -70,7 +70,7 @@ var schema = builder.Build();
 
 Let's take a look at some of the builder extension methods.
 
-### Easy Mode
+### Easy mode
 
 Some of the more straightforward builder methods are for like the `title` and `$comment` keywords, which just take a string:
 
@@ -81,7 +81,7 @@ builder.Comment("a comment")
 
 Notice that these methods implement a fluent interface so that you can chain them together.
 
-### A Little Spice
+### A little spice
 
 Other extension methods can take multiple values.  These have been overloaded to accept both `IEnumerable<T>` and `params` arrays just to keep things flexible.
 
@@ -96,9 +96,9 @@ or just
 builder.Required("prop1", "prop2");
 ```
 
-### Now You're Cooking With Gas
+### Now you're cooking with gas
 
-Lastly, we have the extension methods which take advantage of C# 7 tuples.  These include keywords like `$defs` and `properties` which take objects in their JSON form.
+Lastly, we have the extension methods which take advantage of C# 7 tuples.  These include keywords like `$defs` and `properties` which take objects to mimic their JSON form.
 
 ```c#
 builder.Properties(
@@ -156,11 +156,13 @@ builder.Properties(
     .AdditionalProperties(false);
 ```
 
-# Validation & annotations
+# Evaluation & annotations
 
-## Validating instances
+***NOTE** In recognizing the multitude of uses for JSON Schema, the team has started to use the word "evaluate" instead of "validate" for the general processing of a schema.  What was "validate" in v3.x of this library is now "evaluate" in order to align with this viewpoint.*
 
-`JsonSchema` exposes a `Validate()` method which is used to validate JSON instances.  Let's begin with the following schema and a few JSON objects:
+## Evaluating instances
+
+`JsonSchema` exposes an `Evaluate()` method which is used to evaluate JSON instances.  Let's begin with the following schema and a few JSON objects:
 
 ```json 
 {
@@ -180,7 +182,7 @@ builder.Properties(
 "nonObject"
 ```
 
-To validate these, all we have to do is pass these into our schema's `Validate(JsonElement)` method.
+To evaluate these, all we have to do is pass these into our schema's `Evaluate(JsonElement)` method.
 
 ```csharp
 JsonSchema schema = new JsonSchemaBuilder()
@@ -200,15 +202,15 @@ var shortJson = new JsonObject { ["myProperty"] = "short" };
 var numberJson = new JsonObject { ["otherProperty"] = 35.4 };
 var nonObject = JsonNode.Parse("\"not an object\"");
 
-var emptyResults = schema.Validate(emptyJson);
-var booleanResults = schema.Validate(booleanJson);
-var stringResults = schema.Validate(stringJson);
-var shortResults = schema.Validate(shortJson);
-var numberResults = schema.Validate(numberJson);
-var nonObjectResults = schema.Validate(nonObject);
+var emptyResults = schema.Evaluate(emptyJson);
+var booleanResults = schema.Evaluate(booleanJson);
+var stringResults = schema.Evaluate(stringJson);
+var shortResults = schema.Evaluate(shortJson);
+var numberResults = schema.Evaluate(numberJson);
+var nonObjectResults = schema.Evaluate(nonObject);
 ```
 
-The various results objects are of type `ValidationResults`.  More information about the results object can be found in the next section.
+The various results objects are of type `EvaluationResults`.  More information about the results object can be found in the next section.
 
 In the above example, the following would result:
 
@@ -220,151 +222,154 @@ In the above example, the following would result:
 
 No errors would actually be reported here because the output format defaults to a "flag" format, which is a basic pass/fail.  To get specific errors, the output format will need to be configured.
 
-## Validation results
+## Evaluation results
 
-JSON Schema draft 2019-09 standardized the format for validation output in order to support cross-platform and cross-implementation compatibility.  The format is described in the [JSON Schema spec, section 10](https://json-schema.org/draft/2019-09/json-schema-core.html#rfc.section.10).  This includes support for both errors and annotation collection.
+JSON Schema draft 2019-09 began the process to standardize the format for evaluation output in order to support cross-platform and cross-implementation compatibility.  The format has been updated for the upcoming release to be more concise and clear.  This includes support for both errors and annotation collection.
 
-In summary, there are four levels of verbosity for output: Flag, Basic, Detailed, and Verbose.
+In summary, there are three levels of verbosity for output: Flag, List, and Hierarchy.
 
 The flag format will simply return a boolean value indicating a pass/fail result.  All other formats include JSON Pointers and URIs to indicate the source of the errors or annotations that were produced.
 
-A basic format reduces all of the errors to a flat list.
+A list format reduces all of the errors to a flat list, housed in a top-level object that summarizes the validation result.
 
-The detailed and verbose output formats follows the hierarchical structure of the schema.  The verbose one copies this structure exactly, whereas the standard hierarchy will condense the results where possible.
+The hierarchical output format follows the structure of the schema.
 
-The default output format is Flag, but this can be configured via the `ValidationOptions.OutputFormat` static property.
+The default output format is Flag, but this can be configured via the `EvaluationOptions.OutputFormat` property.
 
 ***NOTE** It's only possible to translate from a more detailed to a less detailed format.*
 
 ### Examples of output
 
 <details>
-  <summary>Verbose Hierarchy</summary>
+  <summary>Hierarchical</summary>
 
 ```json
 {
-  "valid" : false,
-  "keywordLocation" : "#",
-  "instanceLocation" : "#",
-  "errors" : [
-      {
-        "valid" : false,
-        "keywordLocation" : "#/allOf",
-        "instanceLocation" : "#",
-        "keyword" : "allOf",
-        "errors" : [
+  "valid": false,
+  "evaluationPath": "",
+  "schemaLocation": "https://json-schema.org/schemas/example#",
+  "instanceLocation": "",
+  "details": [
+    {
+      "valid": false,
+      "evaluationPath": "/properties/foo",
+      "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo",
+      "instanceLocation": "/foo",
+      "details": [
+        {
+          "valid": false,
+          "evaluationPath": "/properties/foo/allOf/0",
+          "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo/allOf/0",
+          "instanceLocation": "/foo",
+          "errors": {
+            "required": "Required properties [\"unspecified-prop\"] were not present"
+          }
+        },
+        {
+          "valid": false,
+          "evaluationPath": "/properties/foo/allOf/1",
+          "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo/allOf/1",
+          "instanceLocation": "/foo",
+          "droppedAnnotations": {
+            "properties": [ "foo-prop" ],
+            "title": "foo-title"
+          },
+          "details": [
             {
-              "valid" : false,
-              "keywordLocation" : "#/allOf/0",
-              "instanceLocation" : "#",
-              "errors" : [
-                  {
-                    "valid" : false,
-                    "keywordLocation" : "#/allOf/0/type",
-                    "instanceLocation" : "#",
-                    "keyword" : "type",
-                    "additionalInfo" : {
-                        "expected" : "array",
-                        "actual" : "object"
-                      }
-                  }
-                ]
+              "valid": false,
+              "evaluationPath": "/properties/foo/allOf/1/properties/foo-prop",
+              "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo/allOf/1/properties/foo-prop",
+              "instanceLocation": "/foo/foo-prop",
+              "errors": {
+                "const": "Expected \"1\""
+              },
+              "droppedAnnotations": {
+                "title": "foo-prop-title"
+              }
             },
             {
-              "valid" : false,
-              "keywordLocation" : "#/allOf/1",
-              "instanceLocation" : "#",
-              "errors" : [
-                  {
-                    "valid" : false,
-                    "keywordLocation" : "#/allOf/1/type",
-                    "instanceLocation" : "#",
-                    "keyword" : "type",
-                    "additionalInfo" : {
-                        "expected" : "number",
-                        "actual" : "object"
-                      }
-                  }
-                ]
+              "valid": true,
+              "evaluationPath": "/properties/foo/allOf/1/additionalProperties",
+              "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo/allOf/1/additionalProperties",
+              "instanceLocation": "/foo/other-prop"
             }
           ]
-      }
-    ]
+        }
+      ]
+    },
+    {
+      "valid": false,
+      "evaluationPath": "/properties/bar",
+      "schemaLocation": "https://json-schema.org/schemas/example#/properties/bar",
+      "instanceLocation": "/bar",
+      "details": [
+        {
+          "valid": false,
+          "evaluationPath": "/properties/bar/$ref",
+          "schemaLocation": "https://json-schema.org/schemas/example#/$defs/bar",
+          "instanceLocation": "/bar",
+          "droppedAnnotations": {
+            "properties": [ "bar-prop" ],
+            "title": "bar-title"
+          },
+          "details": [
+            {
+              "valid": false,
+              "evaluationPath": "/properties/bar/$ref/properties/bar-prop",
+              "schemaLocation": "https://json-schema.org/schemas/example#/$defs/bar/properties/bar-prop",
+              "instanceLocation": "/bar/bar-prop",
+              "errors": {
+                "minimum": "2 is less than or equal to 10"
+              },
+              "droppedAnnotations": {
+                "title": "bar-prop-title"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 ```
 
 </details><br>
 
 <details>
-  <summary>Condensed Hierarchy</summary>
+  <summary>List</summary>
 
 ```json
 {
-  "valid" : false,
-  "keywordLocation" : "#/allOf",
-  "instanceLocation" : "#",
-  "keyword" : "allOf",
-  "errors" : [
-      {
-        "valid" : false,
-        "keywordLocation" : "#/allOf/0/type",
-        "instanceLocation" : "#",
-        "keyword" : "type",
-        "additionalInfo" : {
-            "expected" : "array",
-            "actual" : "object"
-          }
-      },
-      {
-        "valid" : false,
-        "keywordLocation" : "#/allOf/1/type",
-        "instanceLocation" : "#",
-        "keyword" : "type",
-        "additionalInfo" : {
-            "expected" : "number",
-            "actual" : "object"
-          }
+  "valid": false,
+  "details": [
+    {
+      "valid": false,
+      "evaluationPath": "/properties/foo/allOf/0",
+      "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo/allOf/0",
+      "instanceLocation": "/foo",
+      "errors": {
+        "required": "Required properties [\"unspecified-prop\"] were not present"
       }
-    ]
-}
-```
-
-</details><br>
-
-<details>
-  <summary>Flat List</summary>
-
-```json
-{
-  "valid" : false,
-  "errors" : [
-      {
-        "valid" : false,
-        "keywordLocation" : "#/allOf",
-        "instanceLocation" : "#",
-        "keyword" : "allOf"
-      },
-      {
-        "valid" : false,
-        "keywordLocation" : "#/allOf/0/type",
-        "instanceLocation" : "#",
-        "keyword" : "type",
-        "additionalInfo" : {
-            "expected" : "array",
-            "actual" : "object"
-          }
-      },
-      {
-        "valid" : false,
-        "keywordLocation" : "#/allOf/1/type",
-        "instanceLocation" : "#",
-        "keyword" : "type",
-        "additionalInfo" : {
-            "expected" : "number",
-            "actual" : "object"
-          }
+    },
+    {
+      "valid": false,
+      "evaluationPath": "/properties/foo/allOf/1/properties/foo-prop",
+      "schemaLocation": "https://json-schema.org/schemas/example#/properties/foo/allOf/1/properties/foo-prop",
+      "instanceLocation": "/foo/foo-prop",
+      "errors": {
+        "const": "Expected \"1\""
       }
-    ]
+    },
+    {
+      "valid": false,
+      "evaluationPath": "/properties/bar/$ref/properties/bar-prop",
+      "schemaLocation": "https://json-schema.org/schemas/example#/$defs/bar/properties/bar-prop",
+      "instanceLocation": "/bar/bar-prop",
+      "errors": {
+        "minimum": "2 is less than or equal to 10"
+      }
+    }
+  ]
 }
 ```
 
@@ -372,7 +377,7 @@ The default output format is Flag, but this can be configured via the `Validatio
 
 ## Value format validation
 
-The `format` keyword has been around a while.  It's available in all of the drafts supported by JsonSchema.Net.  Although this keyword is technically classified as an annotation, the specification does allow (the word used is "SHOULD") that implementation provide some level of validation on it so long as that validation may be configured on and off.
+The `format` keyword has been around a while.  It's available in all of the versions supported by JsonSchema.Net.  Although this keyword is technically classified as an annotation, the specification does allow (the word used is "SHOULD") that implementation provide some level of validation on it so long as that validation may be configured on and off.
 
 JsonSchema.Net makes a valiant attempt at validating a few of them.  These are hardcoded as static fields on the `Formats` class.  Out of the box, these are available:
 
@@ -400,31 +405,31 @@ New formats must be registered via the `Formats.Register()` static method.  This
 
 ## Options
 
-The `ValidationOptions` class gives you a few configuration points for customizing how the validation process behaves.  It is an instance class and can be passed into the `JsonSchema.Validate()` method.  If no options are explicitly passed, a copy of `JsonSchemaOptions.Default` will be used.
+The `EvaluationOptions` class gives you a few configuration points for customizing how the evaluation process behaves.  It is an instance class and can be passed into the `JsonSchema.Evaluate()` method.  If no options are explicitly passed, a copy of `JsonSchemaOptions.Default` will be used.
 
-- `ValidateAs` - Indicates which schema draft to process as.  This will filter the keywords of a schema based on their support.  This means that if any keyword is not supported by this draft, it will be ignored.
-- `ValidateMetaSchema` - Indicates whether the schema should be validated against its `$schema` value (its meta-schema).  This is not typically necessary.  Note that the evaluation process will still attempt to resolve the meta-schema. \*
-- `OutputFormat` - You already read about output formats above.  This is the property that controls it all.  By default, a single "flag" node is returned.  This also yields the fastest validation times as it enables certain optimizations.
+- `EvaluateAs` - Indicates which schema version to process as.  This will filter the keywords of a schema based on their support.  This means that if any keyword is not supported by this version, it will be ignored.
+- `EvaluateMetaSchema` - Indicates whether the schema should be evaluated against its `$schema` value (its meta-schema).  This is not typically necessary.  Note that the evaluation process will still attempt to resolve the meta-schema. \*
+- `OutputFormat` - You already read about output formats above.  This is the property that controls it all.  By default, a single "flag" node is returned.  This also yields the fastest evaluation times as it enables certain optimizations.
 - `ProcessCustomKeywords` - For schema versions which support the vocabulary system (i.g. 2019-09 and after), allows custom keywords to be processed which haven't been included in a vocabulary.  This still requires the keyword type to be registered with `SchemaRegistry`.
 
-_\* If you're using a custom meta-schema, you'll need to load it per the [Schema Registration](json-schema#schema-registration) section below.  Custom meta-schemas form a chain of meta-schemas (e.g. your custom meta-schema may reference another which references the draft 7 meta-schema).  Ultimately, the chain MUST end at a JSON-Schema-defined meta-schema as this defines the processing rules for the schema.  An error will be produced if the meta-schema chain ends at a meta-schema that is unrecognized._
+_\* If you're using a custom meta-schema, you'll need to load it per the [Schema Registration](json-schema#schema-registration) section below.  Custom meta-schemas form a chain of meta-schemas (e.g. your custom meta-schema may reference another which references the draft 2020-12 meta-schema).  Ultimately, the chain MUST end at a JSON-Schema-defined meta-schema as this defines the processing rules for the schema.  An error will be produced if the meta-schema chain ends at a meta-schema that is unrecognized._
 
 # Managing references (`$ref`)
 
-JsonSchema.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier drafts, keywords as siblings to `$ref` will be ignored.
+JsonSchema.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier versions, keywords as siblings to `$ref` will be ignored.
 
 ## Schema registration
 
-In order to resolve references more quickly, JsonSchema.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the validation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
+In order to resolve references more quickly, JsonSchema.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the evaluation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
 
-A `JsonSchema` instance will automatically register itself upon calling `Validate()`.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to validation.
+A `JsonSchema` instance will automatically register itself upon calling `Evaluate()`.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to evaluation.
 
 For example, given these two schemas
 
 ```json
 {
   "$id": "http://localhost/my-schema",
-  "$type": "object",
+  "type": "object",
   "properties": {
     "refProp": { "$ref": "http://localhost/random-string" }
   }
@@ -446,7 +451,7 @@ var schema = new JsonSchemaBuilder()
     .Build();
 ```
 
-You must register `random-string` before you attempt to validate with `my-schema`.
+You must register `random-string` before you attempt to evaluate with `my-schema`.
 
 ```c#
 var randomString = JsonSchema.FromFile("random-string.json");
@@ -461,9 +466,9 @@ In order to support scenarios where schemas cannot be registered ahead of time, 
 
 The URI that is passed may need to be transformed, based on the schemas you're dealing with.  For instance if you're loading schemas from a local filesystem, and the schema `$ref`s use relative paths, you may need to prepend the working folder to the URI in order to locate it.
 
-# Error reporting
+# Customizing error messages
 
-Beginning with v2.3.0, the library exposes the `ErrorMessages` static type which includes read/write properties for all of the error messages.  Customization of error messages can be achieved by setting these properties.
+The library exposes the `ErrorMessages` static type which includes read/write properties for all of the error messages.  Customization of error messages can be achieved by setting these properties.
 
 ## Templates
 
