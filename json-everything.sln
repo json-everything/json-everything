@@ -124,6 +124,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaml2JsonNode", "Yaml2JsonNode\Yaml2JsonNode.csproj", "{16891EEF-985F-4BDC-9C97-0D40707BF9F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaml2JsonNode.Tests", "Yaml2JsonNode.Tests\Yaml2JsonNode.Tests.csproj", "{9F30736E-69EC-4B7A-B78B-7C116C33F010}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +283,12 @@ Global
 		{16891EEF-985F-4BDC-9C97-0D40707BF9F6}.Localization|Any CPU.Build.0 = Debug|Any CPU
 		{16891EEF-985F-4BDC-9C97-0D40707BF9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16891EEF-985F-4BDC-9C97-0D40707BF9F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010}.Localization|Any CPU.Build.0 = Debug|Any CPU
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -317,6 +325,7 @@ Global
 		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 		{763E70E4-7B8E-4E05-AA64-1DD1EB6ED8EC} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
 		{16891EEF-985F-4BDC-9C97-0D40707BF9F6} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
+		{9F30736E-69EC-4B7A-B78B-7C116C33F010} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
