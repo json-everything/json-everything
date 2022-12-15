@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 Json*.xml
+Yaml*.xml
 /JsonSchema/nuspec/*/*.dll
 
 
