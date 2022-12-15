@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths:
       - 'Json*/**/*'
+      - 'Yaml2JsonNode*/**/*'
       - 'ref-repos/**/*'
   pull_request:
     paths:
       - 'Json*/**/*'
+      - 'Yaml2JsonNode*/**/*'
       - 'ref-repos/**/*'
   workflow_dispatch:
 
