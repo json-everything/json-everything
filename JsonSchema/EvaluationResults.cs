@@ -293,17 +293,24 @@ public class EvaluationResults
 		_errors[keyword] = message.ReplaceTokens(parameters);
 	}
 
+	/// <summary>
+	/// Marks the result of this keyword to be excluded from output.
+	/// </summary>
+	/// <remarks>
+	/// This is used for keywords like `$defs` which don't actually have any
+	/// annotation or assertion behavior and exist solely to house data.
+	/// </remarks>
+	public void Ignore()
+	{
+		IsValid = true;
+		Exclude = true;
+	}
+
 	internal void AddNestedResult(EvaluationResults results)
 	{
 		_details ??= new List<EvaluationResults>();
 		_details.Add(results);
 		results.Parent = this;
-	}
-
-	internal void Ignore()
-	{
-		IsValid = true;
-		Exclude = true;
 	}
 }
 
