@@ -23,4 +23,17 @@ public class LibraryVersion
 			NugetLink = $"https://nuget.org/packages/{name}"
 		};
 	}
+
+	public static LibraryVersion GetFor(Type type)
+	{
+		var attribute = type.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+		var version = Regex.Match(attribute!.InformationalVersion, @"\d+\.\d+\.\d+(-[^+]+)?").Value;
+		var name = type.Assembly.GetName().Name!;
+		return new LibraryVersion
+		{
+			Name = name,
+			Version = version,
+			NugetLink = $"https://nuget.org/packages/{name}"
+		};
+	}
 }

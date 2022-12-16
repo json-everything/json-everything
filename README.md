@@ -23,6 +23,7 @@
 |JsonPatch.Net|<a href="https://www.nuget.org/packages/JsonPatch.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonPatch.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img></a>|
 |JsonLogic|<a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/JsonLogic.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a>|
 |Json.More.Net|<a href="https://www.nuget.org/packages/Json.More.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/Json.More.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a>|
+|Yaml2JsonNode|<a href="https://www.nuget.org/packages/Yaml2JsonNode/"><img alt="NuGet version" src="https://img.shields.io/nuget/v/Yaml2JsonNode.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/Yaml2JsonNode.svg?svg=true"></img></a>|
 
 <details>
 <summary>
@@ -68,6 +69,8 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 - [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
 - Json.More.Net
   - Just some general-use extensions that probably should be included in System.Text.Json(.Nodes) but aren't
+- Yaml2JsonNode
+  - When you use YamlDotNet to parse YAML text, this library will convert it to `JsonNode` for you!  Then you can use that data wherever you already have support for `JsonNode` (like all of those ☝️)
 
 Please see [json-everything.net](https://json-everything.net) for both documentation and an online playground where you can experiment with these packages.
 
