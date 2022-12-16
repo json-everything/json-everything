@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Yaml2JsonNode</name>
+    </assembly>
+    <members>
+        <member name="T:Yaml2JsonNode.YamlConverter">
+            <summary>
+            Provides extensions to convert YAML models to JSON models.
+            </summary>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlConverter.ToJsonNode(YamlDotNet.RepresentationModel.YamlStream)">
+            <summary>
+            Converts all of the documents in a YAML stream to <see cref="T:System.Text.Json.Nodes.JsonNode"/>s.
+            </summary>
+            <param name="yaml">The YAML stream.</param>
+            <returns>A collection of nodes representing the YAML documents in the stream.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlConverter.ToJsonNode(YamlDotNet.RepresentationModel.YamlDocument)">
+            <summary>
+            Converts a single YAML document to a <see cref="T:System.Text.Json.Nodes.JsonNode"/>.
+            </summary>
+            <param name="yaml">The YAML document.</param>
+            <returns>A `JsonNode` representative of the YAML document.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlConverter.ToJsonNode(YamlDotNet.RepresentationModel.YamlNode)">
+            <summary>
+            Converts a single YAML node to a <see cref="T:System.Text.Json.Nodes.JsonNode"/>.
+            </summary>
+            <param name="yaml">The YAML node.</param>
+            <returns>A `JsonNode` representative of the YAML node.</returns>
+            <exception cref="T:System.NotSupportedException">Thrown for YAML that is not compatible with JSON.</exception>
+        </member>
+    </members>
+</doc>

@@ -31,6 +31,9 @@
 "pkg:patch":
   - JsonPatch/**/*
 
+"pkg:yaml":
+  - Yaml2JsonNode/**/*
+
 "documentation":
   - json-everything.net/wwwroot/md/**/*
 

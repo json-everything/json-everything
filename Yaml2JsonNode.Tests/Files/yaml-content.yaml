@@ -1,0 +1,69 @@
+﻿from: Story
+execute: Reactivate
+---
+AssetType: Story
+Scope: Scope:0
+Name: My Story
+Children:
+- AssetType: Test
+  Name: My Test
+- AssetType: Task
+  Name: My Task
+---
+from: Story
+set:
+ Status: Done
+---
+openapi: 3.1.0
+info:
+  title: Non-oAuth Scopes example
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      security:
+        - bearerAuth:
+            - 'read:users'
+            - 'public'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: jwt
+      description: 'note: non-oauth scopes are not defined at the securityScheme level'
+---
+openapi: 3.1.0
+info:
+  title: Webhook Example
+  version: 1.0.0
+# Since OAS 3.1.0 the paths element isn't necessary. Now a valid OpenAPI Document can describe only paths, webhooks, or even only reusable components
+webhooks:
+  # Each webhook needs a name
+  newPet:
+    # This is a Path Item Object, the only difference is that the request is initiated by the API provider
+    post:
+      requestBody:
+        description: Information about a new pet in the system
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "200":
+          description: Return a 200 status to indicate that the data was received successfully
+
+components:
+  schemas:
+    Pet:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string

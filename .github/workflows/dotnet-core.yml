@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths:
       - 'Json*/**/*'
+      - 'Yaml2JsonNode*/**/*'
       - 'ref-repos/**/*'
   pull_request:
     paths:
       - 'Json*/**/*'
+      - 'Yaml2JsonNode*/**/*'
       - 'ref-repos/**/*'
   workflow_dispatch:
 
@@ -788,3 +790,63 @@ jobs:
         with:
           msg: |
             ${{ steps.analyze-logic.outputs.REPORT }}
+
+  analyze-yaml:
+    if: github.event_name == 'pull_request'
+    needs: build
+    name: Analyze Yaml2JsonNode
+    runs-on: ubuntu-latest
+    steps:
+      - uses: marceloprado/has-changed-path@v1
+        id: changed-yaml
+        with:
+          paths: Yaml2JsonNode/**
+      - if: steps.changed-yaml.outputs.changed == 'true'
+        uses: actions/checkout@v3
+      - if: steps.changed-yaml.outputs.changed == 'true'
+        name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 3.1.301
+
+      - if: steps.changed-yaml.outputs.changed == 'true'
+        name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+        # Set up
+      - if: steps.changed-yaml.outputs.changed == 'true'
+        name: Create local manifest file
+        run: dotnet new tool-manifest
+      - if: steps.changed-yaml.outputs.changed == 'true'
+        name: Install analyzer
+        run: dotnet tool install SemVerAnalyzer
+
+      - if: steps.changed-yaml.outputs.changed == 'true'
+        name: Analyze yaml
+        id: analyze-yaml
+        # multiline comment support details: https://github.community/t/set-output-truncates-multiline-strings/16852/3
+        run: |
+          dotnet analyze-semver -a artifacts/DLLs/Yaml2JsonNode/bin/Release/netstandard2.1/Yaml2JsonNode.dll -o semver-report-yaml.md -c .github/semver_config.json
+          unset HAS_REPORT
+          unset REPORT
+          if [ -s semver-report-yaml.md ]
+          then
+            HAS_REPORT='true'
+            REPORT=$(<semver-report-yaml.md)
+            REPORT="${REPORT//'%'/'%25'}"
+            REPORT="${REPORT//$'\n'/'%0A'}"
+            REPORT="${REPORT//$'\r'/'%0D'}"
+            echo "::set-output name=REPORT::${REPORT}"
+          fi
+          echo ::set-output name=HAS_REPORT::${HAS_REPORT}
+
+        # Report
+      - if: steps.analyze-yaml.outputs.HAS_REPORT
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: |
+            ${{ steps.analyze-yaml.outputs.REPORT }}

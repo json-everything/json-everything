@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/publish-nuget
-name: Publish JsonLogic
+name: Publish Yaml2JsonNode
 on:
   push:
     branches:
       - master # Default release branch
     paths:
-      - JsonLogic/**
+      - Yaml2JsonNode/**
   workflow_dispatch:
 
 jobs:
@@ -19,14 +19,14 @@ jobs:
         with:
           dotnet-version: 6.0.x
       # Publish
-      - name: publish logic
-        id: publish_logic
+      - name: publish yaml
+        id: publish_yaml
         uses: alirezanet/publish-nuget@v3.0.0
         with:
-          PROJECT_FILE_PATH: JsonLogic/JsonLogic.csproj
+          PROJECT_FILE_PATH: Yaml2JsonNode/Yaml2JsonNode.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-          TAG_FORMAT: logic-v*
+          TAG_FORMAT: yaml-v*
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
