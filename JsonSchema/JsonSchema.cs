@@ -120,6 +120,40 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
 
+	public T? GetKeyword<T>()
+		where T : IJsonSchemaKeyword
+	{
+		var keyword = typeof(T).Keyword();
+		return (T?)this[keyword];
+	}
+
+	public bool TryGetKeyword<T>(out T? keyword)
+		where T : IJsonSchemaKeyword
+	{
+		var name = typeof(T).Keyword();
+		return TryGetKeyword(name, out keyword);
+
+	}
+
+	public bool TryGetKeyword<T>(string keywordName, out T? keyword)
+		where T : IJsonSchemaKeyword
+	{
+		if (BoolValue.HasValue)
+		{
+			keyword = default;
+			return false;
+		}
+
+		if (_keywords!.TryGetValue(keywordName, out var k))
+		{
+			keyword = (T)k!;
+			return true;
+		}
+
+		keyword = default;
+		return false;
+	}
+
 	/// <summary>
 	/// Evaluates an instance against this schema.
 	/// </summary>

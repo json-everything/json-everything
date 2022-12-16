@@ -9,7 +9,7 @@ namespace Json.Schema;
 /// <summary>
 /// Some extensions for <see cref="JsonSchema"/>
 /// </summary>
-public static class JsonSchemaExtensions
+public static partial class JsonSchemaExtensions
 {
 	/// <summary>
 	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
@@ -72,13 +72,5 @@ public static class JsonSchemaExtensions
 	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
 	{
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
-	}
-
-	public static T? Get<T>(this JsonSchema schema)
-		where T : IJsonSchemaKeyword
-	{
-		// for some reason this works faster than .OfType<T>().FirstOrDefault()
-		var keyword = typeof(T).Keyword();
-		return (T?)schema[keyword];
 	}
 }
