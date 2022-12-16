@@ -18,6 +18,8 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema : IEquatable<JsonSchema>
 {
+	private Dictionary<string, IJsonSchemaKeyword>? _keywords;
+
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
@@ -34,7 +36,9 @@ public class JsonSchema : IEquatable<JsonSchema>
 	/// <summary>
 	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
 	/// </summary>
-	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
+	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords => _keywords?.Values;
+
+	public IJsonSchemaKeyword? this[string keyword] => _keywords?[keyword];
 
 	/// <summary>
 	/// For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
@@ -72,7 +76,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 	}
 	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
-		Keywords = keywords.ToArray();
+		_keywords = keywords.ToDictionary(x => x.Keyword());
 	}
 
 	/// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -71,5 +72,13 @@ public static class JsonSchemaExtensions
 	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
 	{
 		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
+	}
+
+	public static T? Get<T>(this JsonSchema schema)
+		where T : IJsonSchemaKeyword
+	{
+		// for some reason this works faster than .OfType<T>().FirstOrDefault()
+		var keyword = typeof(T).Keyword();
+		return (T?)schema[keyword];
 	}
 }
