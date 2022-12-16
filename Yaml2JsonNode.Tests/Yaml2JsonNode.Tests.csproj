@@ -14,6 +14,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
   </ItemGroup>
 
   <ItemGroup>
