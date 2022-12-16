@@ -168,8 +168,8 @@ public class EvaluationContext
 
 	private static bool RequiresAnnotationCollection(JsonSchema schema)
 	{
-		return schema.Keywords?.Any(x => x.GetType() == typeof(UnevaluatedPropertiesKeyword) ||
-										 x.GetType() == typeof(UnevaluatedItemsKeyword)) ?? false;
+		return schema.TryGetKeyword<UnevaluatedPropertiesKeyword>(UnevaluatedPropertiesKeyword.Name, out _) ||
+		       schema.TryGetKeyword<UnevaluatedItemsKeyword>(UnevaluatedItemsKeyword.Name, out _);
 	}
 
 	/// <summary>
