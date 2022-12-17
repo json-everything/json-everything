@@ -10,13 +10,13 @@ public class SchemaRegistry
 {
 	private class Registration
 	{
-		public JsonSchema Root { get; set; } = null!;
+		public IBaseDocument Root { get; set; } = null!;
 	}
 
 	private static readonly Uri _empty = new("http://everything.json/");
 
 	private Dictionary<Uri, Registration>? _registered;
-	private Func<Uri, JsonSchema?>? _fetch;
+	private Func<Uri, IBaseDocument?>? _fetch;
 
 	/// <summary>
 	/// The global registry.
@@ -26,7 +26,7 @@ public class SchemaRegistry
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
 	/// </summary>
-	public Func<Uri, JsonSchema?> Fetch
+	public Func<Uri, IBaseDocument?> Fetch
 	{
 		get => _fetch ??= _ => null;
 		set => _fetch = value;
@@ -71,21 +71,22 @@ public class SchemaRegistry
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="uri">The URI ID of the schema..</param>
-	/// <param name="schema">The schema.</param>
-	public void Register(Uri? uri, JsonSchema schema)
+	/// <param name="document">The schema.</param>
+	public void Register(Uri? uri, IBaseDocument document)
 	{
-		RegisterSchema(uri, schema);
-		JsonSchema.Initialize(schema, this, uri);
+		RegisterSchema(uri, document);
+
+		if (document is JsonSchema schema)
+			JsonSchema.Initialize(schema, this, uri);
 	}
 
-	internal void RegisterSchema(Uri? uri, JsonSchema schema)
+	internal void RegisterSchema(Uri? uri, IBaseDocument document)
 	{
 		_registered ??= new Dictionary<Uri, Registration>();
 		uri = MakeAbsolute(uri);
 		var registration = CheckRegistry(_registered, uri);
 		if (registration == null)
-			_registered[uri] = registration = new Registration();
-		registration.Root = schema;
+			_registered[uri] = new Registration{Root = document};
 	}
 
 	/// <summary>
@@ -98,7 +99,7 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public JsonSchema? Get(Uri? uri)
+	public IBaseDocument? Get(Uri? uri)
 	{
 		var registration = GetRegistration(uri);
 

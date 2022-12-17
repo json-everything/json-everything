@@ -47,7 +47,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
+		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
 		if (metaSchema == null)
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
