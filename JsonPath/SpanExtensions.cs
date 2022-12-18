@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.Json;
-using Json.Path.QueryExpressions;
 
 namespace Json.Path;
 
@@ -38,97 +34,6 @@ internal static class SpanExtensions
 
 		if (negative) value = -value;
 		return foundNumber;
-	}
-
-	// expects the full expression, including the ()
-	public static bool TryParseExpression(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode? expression)
-	{
-		if (span[i] != '(')
-		{
-			expression = null;
-			return false;
-		}
-
-		i++;
-		span.ConsumeWhitespace(ref i);
-		if (!QueryExpressionNode.TryParseSingleValue(span, ref i, out var left))
-		{
-			expression = null;
-			return false;
-		}
-
-		var followingNodes = new List<(IQueryExpressionOperator, QueryExpressionNode)>();
-		while (i < span.Length && span[i] != ')')
-		{
-			span.ConsumeWhitespace(ref i);
-			if (!Operators.TryParse(span, ref i, out var op))
-			{
-				expression = null;
-				return false;
-			}
-
-			QueryExpressionNode? right;
-			span.ConsumeWhitespace(ref i);
-			if (span[i] == '(')
-			{
-				span.ConsumeWhitespace(ref i);
-				if (!span.TryParseExpression(ref i, out right))
-				{
-					expression = null;
-					return false;
-				}
-			}
-			else
-			{
-				span.ConsumeWhitespace(ref i);
-				if (!QueryExpressionNode.TryParseSingleValue(span, ref i, out right))
-				{
-					expression = null;
-					return false;
-				}
-			}
-
-			followingNodes.Add((op, right));
-		}
-
-		i++; // consume ')'
-
-		if (!followingNodes.Any())
-		{
-			expression = left.Operator is NotOperator
-				? left
-				: new QueryExpressionNode(left, Operators.Exists, null!);
-			return true;
-		}
-
-		var current = new Stack<QueryExpressionNode>();
-		QueryExpressionNode? root = null;
-		foreach (var (op, node) in followingNodes)
-		{
-			if (root == null)
-			{
-				root = new QueryExpressionNode(left, op, node);
-				current.Push(root);
-				continue;
-			}
-
-			while (current.Any() && current.Peek().Operator?.OrderOfOperation < op.OrderOfOperation)
-			{
-				current.Pop();
-			}
-
-			if (current.Any())
-			{
-				current.Peek().InsertRight(op, node);
-				continue;
-			}
-
-			root = new QueryExpressionNode(root, op, node);
-			current.Push(root);
-		}
-
-		expression = root;
-		return expression != null;
 	}
 
 	public static bool TryParseJsonElement(this ReadOnlySpan<char> span, ref int i, out JsonElement element)

@@ -4,12 +4,19 @@ using NUnit.Framework;
 
 namespace Json.Path.Tests;
 
-public class OtherParsingTests
+public class ParsingTests
 {
 	public static IEnumerable<TestCaseData> SuccessCases =>
 		new[]
 		{
-			new TestCaseData("$.baz"),
+			new TestCaseData("$.foo"),
+			new TestCaseData("$['foo']"),
+			new TestCaseData("$[1]"),
+			new TestCaseData("$[42]"),
+			new TestCaseData("$[-1]"),
+			new TestCaseData("$[-42]"),
+			new TestCaseData("$[*]"),
+			new TestCaseData("$[?@.foo]"),
 			new TestCaseData("$[?(@.foo)]"),
 			new TestCaseData("$[?(@.foo && @.bar)]"),
 			new TestCaseData("$[?(!@.foo)]"),

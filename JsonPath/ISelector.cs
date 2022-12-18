@@ -1,6 +1,6 @@
 ﻿namespace Json.Path;
 
-internal interface ISelector
+public interface ISelector
 {
-	void Evaluate(EvaluationContext context);
+
 }

@@ -18,7 +18,7 @@ public class ExperimentalFeatures
 	/// Enables dereferencing of reference objects such as
 	/// ```{ "$ref": "http://example.com/data#/pointer/to/value" }```.
 	/// The resulting value will then replace the reference object in the
-	/// evaluation results.  This will be run after each selector in the path.
+	/// evaluation results.  This will be run after each pathSegment in the path.
 	/// </summary>
 	public bool ProcessDataReferences { get; set; }
 
@@ -26,9 +26,9 @@ public class ExperimentalFeatures
 	/// Gets or sets the document download mechanism for resolving URIs.  This
 	/// default is a simple, uncached download.
 	/// </summary>
-	public Func<Uri, Task<JsonDocument?>> DataReferenceDownload
-	{
-		get => _download ??= ReferenceHandler.DefaultDownload;
-		set => _download = value;
-	}
+	//public Func<Uri, Task<JsonDocument?>> DataReferenceDownload
+	//{
+	//	get => _download ??= ReferenceHandler.DefaultDownload;
+	//	set => _download = value;
+	//}
 }

@@ -21,7 +21,7 @@ public class CburgmerFeatureValidationTests
 {
 	private const string _regressionResultsFile = @"../../../../ref-repos/json-path-comparison/regression_suite/regression_suite.yaml";
 	private static readonly Regex _idPattern = new Regex(@"  - id: (?<value>.*)");
-	private static readonly Regex _selectorPattern = new Regex(@"    selector: (?<value>.*)");
+	private static readonly Regex _selectorPattern = new Regex(@"    pathSegment: (?<value>.*)");
 	private static readonly Regex _documentPattern = new Regex(@"    document: (?<value>.*)");
 	private static readonly Regex _consensusPattern = new Regex(@"    consensus: (?<value>.*)");
 	private static readonly string[] _notSupported =
@@ -37,7 +37,7 @@ public class CburgmerFeatureValidationTests
 	};
 
 	//  - id: array_index
-	//    selector: $[2]
+	//    pathSegment: $[2]
 	//    document: ["first", "second", "third", "forth", "fifth"]
 	//    consensus: ["third"]
 	//    scalar-consensus: "third"
@@ -128,10 +128,13 @@ public class CburgmerFeatureValidationTests
 	{
 		var o = JsonDocument.Parse(jsonString).RootElement;
 		var selector = pathString;
-		if (!JsonPath.TryParse(selector, out var path))
-			return null;
-		var results = path.Evaluate(o);
 
-		return results;
+		throw new NotImplementedException();
+
+		//if (!JsonPath.TryParse(selector, out var path))
+		//	return null;
+		//var results = path.Evaluate(o);
+
+		//return results;
 	}
 }
