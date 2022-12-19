@@ -8,25 +8,31 @@ namespace Json.Path;
 
 internal class IndexSelector : ISelector
 {
-	public int Index { get; set; }
+	public int Index { get; }
+
+	public IndexSelector(int index)
+	{
+		Index = index;
+	}
 
 	public override string ToString()
 	{
 		return Index.ToString();
 	}
 
-	public IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	public IEnumerable<PathMatch> Evaluate(PathMatch match)
 	{
+		var node = match.Value;
 		if (node is not JsonArray arr) yield break;
 		if (Index >= arr.Count) yield break;
 
 		if (Index < 0)
 		{
-			var adjusted = arr.Count - Index;
+			var adjusted = arr.Count + Index;
 			if (adjusted < 0) yield break;
-			yield return new PathMatch(arr[adjusted], null);
+			yield return new PathMatch(arr[adjusted], match.Location.Append(adjusted));
 		}
-		else yield return new PathMatch(arr[Index], null);
+		else yield return new PathMatch(arr[Index], match.Location.Append(Index));
 	}
 
 	public void BuildString(StringBuilder builder)
@@ -45,7 +51,7 @@ internal class IndexSelectorParser : ISelectorParser
 			return false;
 		}
 
-		selector = new IndexSelector { Index = value };
+		selector = new IndexSelector(value);
 		return true;
 	}
 }

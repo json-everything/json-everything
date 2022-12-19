@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -13,7 +12,7 @@ namespace Json.Path;
 [JsonConverter(typeof(JsonPathConverter))]
 public class JsonPath
 {
-	private readonly IEnumerable<PathSegment> _segments;
+	private readonly PathSegment[] _segments;
 
 	public static JsonPath Root { get; } = new(PathScope.Global, Enumerable.Empty<PathSegment>());
 
@@ -22,7 +21,7 @@ public class JsonPath
 	internal JsonPath(PathScope scope, IEnumerable<PathSegment> segments)
 	{
 		Scope = scope;
-		_segments = segments;
+		_segments = segments.ToArray();
 	}
 
 	/// <summary>
@@ -31,7 +30,7 @@ public class JsonPath
 	/// <param name="source">The source string.</param>
 	/// <returns>The parsed path.</returns>
 	/// <exception cref="PathParseException">Thrown if a syntax error occurred.</exception>
-	public static JsonPath Parse(string source) => PathParser.Parse(source);
+	public static JsonPath Parse(string source) => PathParser.Parse(source.Trim());
 
 	/// <summary>
 	/// Evaluates the path against a JSON instance.
@@ -45,10 +44,20 @@ public class JsonPath
 
 		foreach (var segment in _segments)
 		{
-			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x.Value));
+			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x));
 		}
 
 		return new PathResult(currentMatches.ToList());
+	}
+
+	internal JsonPath Append(string name)
+	{
+		return new JsonPath(Scope, _segments.Append(new PathSegment(new NameSelector(name).Yield())));
+	}
+
+	internal JsonPath Append(int index)
+	{
+		return new JsonPath(Scope, _segments.Append(new PathSegment(new IndexSelector(index).Yield())));
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>

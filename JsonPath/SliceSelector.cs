@@ -8,9 +8,16 @@ namespace Json.Path;
 
 internal class SliceSelector : ISelector
 {
-	public int? Start { get; set; }
-	public int? End { get; set; }
-	public int? Step { get; set; }
+	public int? Start { get; }
+	public int? End { get; }
+	public int? Step { get; }
+
+	public SliceSelector(int? start, int? end, int? step)
+	{
+		Start = start;
+		End = end;
+		Step = step;
+	}
 
 	public override string ToString()
 	{
@@ -19,8 +26,9 @@ internal class SliceSelector : ISelector
 			: $"{Start}:{End}";
 	}
 
-	public IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	public IEnumerable<PathMatch> Evaluate(PathMatch match)
 	{
+		var node = match.Value;
 		if (node is not JsonArray arr) yield break;
 		if (Step == 0) yield break;
 
@@ -32,7 +40,7 @@ internal class SliceSelector : ISelector
 			var i = lower;
 			while (i < upper)
 			{
-				yield return new PathMatch(arr[i], null);
+				yield return new PathMatch(arr[i], match.Location.Append(i));
 				i += step;
 			}
 		}
@@ -41,7 +49,7 @@ internal class SliceSelector : ISelector
 			var i = upper;
 			while (lower < i)
 			{
-				yield return new PathMatch(arr[i], null);
+				yield return new PathMatch(arr[i], match.Location.Append(i));
 				i += step;
 			}
 		}
@@ -80,7 +88,7 @@ internal class SliceSelectorParser : ISelectorParser
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
 	{
 		var i = index;
-		int? start = null, exclusiveEnd = null, step = null;
+		int? start = null, end = null, step = null;
 
 		if (source.TryGetInt(ref i, out var value)) 
 			start = value;
@@ -98,7 +106,7 @@ internal class SliceSelectorParser : ISelectorParser
 		source.ConsumeWhitespace(ref i);
 
 		if (source.TryGetInt(ref i, out value)) 
-			exclusiveEnd = value;
+			end = value;
 
 		source.ConsumeWhitespace(ref i);
 		
@@ -113,12 +121,7 @@ internal class SliceSelectorParser : ISelectorParser
 		}
 
 		index = i;
-		selector = new SliceSelector
-		{
-			Start = start,
-			End = exclusiveEnd,
-			Step = step
-		};
+		selector = new SliceSelector(start, end, step);
 		return true;
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Json.Path;
@@ -13,6 +12,8 @@ internal static class SpanExtensions
 		{
 			i++;
 		}
+		if (i == span.Length)
+			throw new PathParseException(i, "Unexpected end of input");
 	}
 
 	public static bool TryGetInt(this ReadOnlySpan<char> span, ref int i, out int value)

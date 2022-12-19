@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -9,7 +8,12 @@ namespace Json.Path;
 
 internal class NameSelector : ISelector, IHaveShorthand
 {
-	public string Name { get; set; }
+	public string Name { get; }
+
+	public NameSelector(string name)
+	{
+		Name = name;
+	}
 
 	public string ToShorthandString()
 	{
@@ -27,11 +31,12 @@ internal class NameSelector : ISelector, IHaveShorthand
 		return $"'{Name}'"; // TODO escape this
 	}
 
-	public IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	public IEnumerable<PathMatch> Evaluate(PathMatch match)
 	{
+		var node = match.Value;
 		if (node is not JsonObject obj) yield break;
 
-		if (obj.TryGetPropertyValue(Name, out var value)) yield return new PathMatch(value, null);
+		if (obj.TryGetPropertyValue(Name, out var value)) yield return new PathMatch(value, match.Location.Append(Name));
 	}
 
 	public void BuildString(StringBuilder builder)
@@ -102,10 +107,7 @@ internal class NameSelectorParser : ISelectorParser
 		}
 
 		index = i;
-		selector = new NameSelector
-		{
-			Name = sb.ToString()
-		};
+		selector = new NameSelector(sb.ToString());
 		return true;
 	}
 

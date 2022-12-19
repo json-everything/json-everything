@@ -1,18 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
 public class PathSegment
 {
-	public ISelector[] Selectors { get; set; }
-	public bool IsShorthand { get; set; }
+	public ISelector[] Selectors { get; }
+	public bool IsShorthand { get; }
 
-	internal IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	internal PathSegment(IEnumerable<ISelector> selectors, bool isShorthand = false)
 	{
-		return Selectors.SelectMany(x => x.Evaluate(node));
+		Selectors = selectors.ToArray();
+		IsShorthand = isShorthand;
+	}
+
+	internal IEnumerable<PathMatch> Evaluate(PathMatch match)
+	{
+		return Selectors.SelectMany(x => x.Evaluate(match));
 	}
 
 	public override string ToString()

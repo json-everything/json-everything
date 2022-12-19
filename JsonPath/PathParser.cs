@@ -15,6 +15,9 @@ internal static class PathParser
 
 	public static JsonPath Parse(ReadOnlySpan<char> source, bool requireGlobal = false)
 	{
+		if (source.Length == 0)
+			throw new PathParseException(0, "Input string is empty");
+
 		var index = 0;
 		var segments = new List<PathSegment>();
 		PathScope scope;
@@ -87,15 +90,10 @@ internal static class PathParser
 
 			if (!done)
 				throw new PathParseException(index, "Unexpected end of input");
-
-			index++; // consume ]
 		}
 		else if (source[index] == '.')
 		{
 			index++; // consume .
-
-			if (index == source.Length)
-				throw new PathParseException(index, "Unexpected end of input");
 
 			if (source[index] == '.')
 			{
@@ -110,6 +108,9 @@ internal static class PathParser
 			else
 			{
 				var i = index;
+
+				source.ConsumeWhitespace(ref i);
+
 				while (i < source.Length && IsValidForPropertyName(source[i]))
 				{
 					i++;
@@ -119,7 +120,7 @@ internal static class PathParser
 					throw new PathParseException(index, "Expected shorthand name selector but got no name");
 
 				var name = source[index..i].ToString();
-				selectors.Add(new NameSelector { Name = name });
+				selectors.Add(new NameSelector(name));
 				isShorthand = true;
 				index = i;
 			}
@@ -131,11 +132,7 @@ internal static class PathParser
 		if (selectors.Count > 1 && isShorthand)
 			throw new PathParseException(index, "Cannot have shorthand syntax with multiple selectors (something went very wrong).");
 
-		return new PathSegment
-		{
-			Selectors = selectors.ToArray(),
-			IsShorthand = isShorthand
-		};
+		return new PathSegment(selectors, isShorthand);
 	}
 
 	private static bool IsValidForPropertyName(char ch)
