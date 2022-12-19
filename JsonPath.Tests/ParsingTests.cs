@@ -26,7 +26,6 @@ public class ParsingTests
 			new TestCaseData("$[1:2]"),
 			new TestCaseData("$[1:2:]"),
 			new TestCaseData("$[1::3]"),
-			new TestCaseData("$[1::3]"),
 			new TestCaseData("$[1:2:3]"),
 			new TestCaseData("$[-1:2:3]"),
 			new TestCaseData("$[1:-2:3]"),
@@ -39,6 +38,7 @@ public class ParsingTests
 			new TestCaseData("$[1:2:3 ]"),
 
 			new TestCaseData("$.foo"),
+			new TestCaseData("$.*"),
 
 			new TestCaseData("$[?@.foo]"),
 			new TestCaseData("$[?(@.foo)]"),
@@ -52,6 +52,8 @@ public class ParsingTests
 			new TestCaseData("$[?(@.foo==2+(4+5))]"),
 			new TestCaseData("$[?(@.foo==2-(4+5))]"),
 			new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
+
+			new TestCaseData("$[1,'foo',1:2:3,*]"),
 		};
 
 	[TestCaseSource(nameof(SuccessCases))]

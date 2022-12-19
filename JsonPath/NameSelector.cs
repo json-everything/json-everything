@@ -4,9 +4,32 @@ using System.Text;
 
 namespace Json.Path;
 
-internal class NameSelector : ISelector
+internal class NameSelector : ISelector, IHaveShorthand
 {
 	public string Name { get; set; }
+
+	public string ToShorthandString()
+	{
+		return $".{Name}";
+	}
+
+	public void AppendShorthandString(StringBuilder builder)
+	{
+		builder.Append('.');
+		builder.Append(Name);
+	}
+
+	public override string ToString()
+	{
+		return $"'{Name}'"; // TODO escape this
+	}
+
+	public void BuildString(StringBuilder builder)
+	{
+		builder.Append('\'');
+		builder.Append(Name); // TODO escape this
+		builder.Append('\'');
+	}
 }
 
 internal class NameSelectorParser : ISelectorParser

@@ -1,13 +1,33 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
+using System.Text;
 
 namespace Json.Path;
 
 internal class SliceSelector : ISelector
 {
-	public int Start { get; set; }
-	public int End { get; set; }
-	public int Iterator { get; set; }
+	public int? Start { get; set; }
+	public int? End { get; set; }
+	public int? Iterator { get; set; }
+
+	public override string ToString()
+	{
+		return Iterator.HasValue
+			? $"{Start}:{End}:{Iterator}"
+			: $"{Start}:{End}";
+	}
+
+	public void BuildString(StringBuilder builder)
+	{
+		builder.Append(Start);
+		builder.Append(':');
+		builder.Append(End);
+		if (Iterator.HasValue)
+		{
+			builder.Append(':');
+			builder.Append(Iterator);
+		}
+	}
 }
 
 internal class SliceSelectorParser : ISelectorParser
@@ -15,9 +35,7 @@ internal class SliceSelectorParser : ISelectorParser
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
 	{
 		var i = index;
-		int start = 0,
-			exclusiveEnd = int.MaxValue,
-			iterator = 1;
+		int? start = null, exclusiveEnd = null, iterator = null;
 
 		if (source.TryGetInt(ref i, out var value)) 
 			start = value;

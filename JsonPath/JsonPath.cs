@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -30,15 +31,6 @@ public class JsonPath
 	/// <exception cref="PathParseException">Thrown if a syntax error occurred.</exception>
 	public static JsonPath Parse(string source) => PathParser.Parse(source);
 
-	private static bool IsValidForPropertyName(char ch)
-	{
-		return ch.In('a'..('z' + 1)) ||
-			   ch.In('A'..('Z' + 1)) ||
-			   ch.In('0'..('9' + 1)) ||
-			   ch.In('_') ||
-			   ch.In(0x80..0x10FFFF);
-	}
-
 	/// <summary>
 	/// Evaluates the path against a JSON instance.
 	/// </summary>
@@ -67,7 +59,21 @@ public class JsonPath
 	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
-		return string.Concat(_nodes.Select(n => n.ToString()));
+		var builder = new StringBuilder();
+
+		BuildString(builder);
+
+		return builder.ToString();
+	}
+
+	public void BuildString(StringBuilder builder)
+	{
+		builder.Append(Scope == PathScope.Global ? '$' : '@');
+
+		foreach (var node in _nodes)
+		{
+			node.BuildString(builder);
+		}
 	}
 }
 

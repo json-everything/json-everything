@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Json.Path;
 
 internal class IndexSelector : ISelector
 {
 	public int Index { get; set; }
+
+	public override string ToString()
+	{
+		return Index.ToString();
+	}
+
+	public void BuildString(StringBuilder builder)
+	{
+		builder.Append(Index);
+	}
 }
 
 internal class IndexSelectorParser : ISelectorParser

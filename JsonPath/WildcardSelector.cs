@@ -1,11 +1,30 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Json.Path;
 
-internal class WildcardSelector : ISelector
+internal class WildcardSelector : ISelector, IHaveShorthand
 {
+	public string ToShorthandString()
+	{
+		return ".*";
+	}
 
+	public void AppendShorthandString(StringBuilder builder)
+	{
+		builder.Append(".*");
+	}
+
+	public override string ToString()
+	{
+		return "*";
+	}
+
+	public void BuildString(StringBuilder builder)
+	{
+		builder.Append('*');
+	}
 }
 
 internal class WildcardSelectorParser : ISelectorParser

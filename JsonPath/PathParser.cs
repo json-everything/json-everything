@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -43,6 +41,7 @@ internal static class PathParser
 	private static PathSegment ParseSegment(ReadOnlySpan<char> source, ref int index)
 	{
 		var selectors = new List<ISelector>();
+		var isShorthand = false;
 
 		source.ConsumeWhitespace(ref index);
 
@@ -87,38 +86,64 @@ internal static class PathParser
 			}
 
 			if (!done)
-				throw new PathParseException(index, "Reached end of input");
+				throw new PathParseException(index, "Unexpected end of input");
 
 			index++; // consume ]
 		}
+		else if (source[index] == '.')
+		{
+			index++; // consume .
 
-		// TODO: handle dot-notation
+			if (index == source.Length)
+				throw new PathParseException(index, "Unexpected end of input");
+
+			if (source[index] == '.')
+			{
+				// recursive (may be followed by a name or [...]
+			}
+			else if (source[index] == '*')
+			{
+				selectors.Add(new WildcardSelector());
+				isShorthand = true;
+				index++;
+			}
+			else
+			{
+				var i = index;
+				while (i < source.Length && IsValidForPropertyName(source[i]))
+				{
+					i++;
+				}
+
+				if (index == i)
+					throw new PathParseException(index, "Expected shorthand name selector but got no name");
+
+				var name = source[index..i].ToString();
+				selectors.Add(new NameSelector { Name = name });
+				isShorthand = true;
+				index = i;
+			}
+		}
 
 		if (selectors.Count == 0)
 			throw new PathParseException(index, "Could not find any valid selectors.");
 
-		return new PathSegment { Selectors = selectors.ToArray() };
+		if (selectors.Count > 1 && isShorthand)
+			throw new PathParseException(index, "Cannot have shorthand syntax with multiple selectors (something went very wrong).");
+
+		return new PathSegment
+		{
+			Selectors = selectors.ToArray(),
+			IsShorthand = isShorthand
+		};
 	}
-}
 
-public static class NodeExtensions
-{
-	public static bool TryGetValue<T>(this JsonNode? node, [NotNullWhen(true)] out T? value)
+	private static bool IsValidForPropertyName(char ch)
 	{
-		if (node == null)
-		{
-			value = default;
-			return false;
-		}
-
-		var obj = node.GetValue<object>();
-		if (obj is T objAsT)
-		{
-			value = objAsT;
-			return true;
-		}
-
-		value = default;
-		return false;
+		return ch.In('a'..('z' + 1)) ||
+		       ch.In('A'..('Z' + 1)) ||
+		       ch.In('0'..('9' + 1)) ||
+		       ch.In('_') ||
+		       ch.In(0x80..0x10FFFF);
 	}
 }
