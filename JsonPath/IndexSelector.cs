@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -11,6 +13,20 @@ internal class IndexSelector : ISelector
 	public override string ToString()
 	{
 		return Index.ToString();
+	}
+
+	public IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	{
+		if (node is not JsonArray arr) yield break;
+		if (Index >= arr.Count) yield break;
+
+		if (Index < 0)
+		{
+			var adjusted = arr.Count - Index;
+			if (adjusted < 0) yield break;
+			yield return new PathMatch(arr[adjusted], null);
+		}
+		else yield return new PathMatch(arr[Index], null);
 	}
 
 	public void BuildString(StringBuilder builder)

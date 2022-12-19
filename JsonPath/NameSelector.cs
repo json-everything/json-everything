@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -22,6 +25,13 @@ internal class NameSelector : ISelector, IHaveShorthand
 	public override string ToString()
 	{
 		return $"'{Name}'"; // TODO escape this
+	}
+
+	public IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	{
+		if (node is not JsonObject obj) yield break;
+
+		if (obj.TryGetPropertyValue(Name, out var value)) yield return new PathMatch(value, null);
 	}
 
 	public void BuildString(StringBuilder builder)

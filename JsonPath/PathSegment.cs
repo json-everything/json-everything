@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -7,6 +9,11 @@ public class PathSegment
 {
 	public ISelector[] Selectors { get; set; }
 	public bool IsShorthand { get; set; }
+
+	internal IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	{
+		return Selectors.SelectMany(x => x.Evaluate(node));
+	}
 
 	public override string ToString()
 	{

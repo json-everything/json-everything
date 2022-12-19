@@ -13,14 +13,16 @@ namespace Json.Path;
 [JsonConverter(typeof(JsonPathConverter))]
 public class JsonPath
 {
-	private readonly IEnumerable<PathSegment> _nodes;
+	private readonly IEnumerable<PathSegment> _segments;
+
+	public static JsonPath Root { get; } = new(PathScope.Global, Enumerable.Empty<PathSegment>());
 
 	public PathScope Scope { get; }
 
-	internal JsonPath(PathScope scope, IEnumerable<PathSegment> nodes)
+	internal JsonPath(PathScope scope, IEnumerable<PathSegment> segments)
 	{
 		Scope = scope;
-		_nodes = nodes;
+		_segments = segments;
 	}
 
 	/// <summary>
@@ -39,20 +41,14 @@ public class JsonPath
 	/// <returns>The results of the evaluation.</returns>
 	public PathResult Evaluate(JsonNode? root, PathEvaluationOptions? options = null)
 	{
-		options ??= new PathEvaluationOptions();
+		IEnumerable<PathMatch> currentMatches = new[] { new PathMatch(root, Root) };
 
-		throw new NotImplementedException();
+		foreach (var segment in _segments)
+		{
+			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x.Value));
+		}
 
-		//var context = new EvaluationContext(root, options);
-
-		//foreach (var node in _nodes)
-		//{
-		//	node.Evaluate(context);
-
-		//	ReferenceHandler.Handle(context);
-		//}
-
-		//return context.BuildResult();
+		return new PathResult(currentMatches.ToList());
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>
@@ -70,9 +66,9 @@ public class JsonPath
 	{
 		builder.Append(Scope == PathScope.Global ? '$' : '@');
 
-		foreach (var node in _nodes)
+		foreach (var segment in _segments)
 		{
-			node.BuildString(builder);
+			segment.BuildString(builder);
 		}
 	}
 }

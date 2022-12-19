@@ -50,19 +50,18 @@ public class ComplianceTestSuiteTests
 		Console.WriteLine(testCase);
 		Console.WriteLine();
 
-		JsonPath path = null;
-		PathResult actual = null;
+		JsonPath? path = null;
+		PathResult? actual = null;
 
 		var time = Debugger.IsAttached ? int.MaxValue : 100;
-		//using var cts = new CancellationTokenSource(time);
-		//Task.Run(() =>
-		//{
-		//	if (!JsonPath.TryParse(testCase.Selector, out path)) return;
-
-		//	if (testCase.Document.ValueKind == JsonValueKind.Undefined) return;
-
-		//	actual = path.Evaluate(testCase.Document);
-		//}, cts.Token).Wait(cts.Token);
+		using var cts = new CancellationTokenSource(time);
+		Task.Run(() =>
+		{
+			if (testCase.Document == null) return;
+			path = JsonPath.Parse(testCase.Selector);
+			
+			actual = path.Evaluate(testCase.Document);
+		}, cts.Token).Wait(cts.Token);
 
 		if (path != null && testCase.InvalidSelector)
 			Assert.Inconclusive($"{testCase.Selector} is not a valid path but was parsed without error.");
@@ -73,7 +72,7 @@ public class ComplianceTestSuiteTests
 			Assert.Fail($"Could not parse path: {testCase.Selector}");
 		}
 
-		var actualValues = actual.Matches.Select(m => m.Value).ToJsonArray();
+		var actualValues = actual!.Matches!.Select(m => m.Value).ToJsonArray();
 		Console.WriteLine($"Actual (values): {actualValues}");
 		Console.WriteLine();
 		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");

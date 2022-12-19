@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -19,6 +21,24 @@ internal class WildcardSelector : ISelector, IHaveShorthand
 	public override string ToString()
 	{
 		return "*";
+	}
+
+	public IEnumerable<PathMatch> Evaluate(JsonNode? node)
+	{
+		if (node is JsonObject obj)
+		{
+			foreach (var member in obj)
+			{
+				yield return new PathMatch(member.Value, null);
+			}
+		}
+		else if (node is JsonArray arr)
+		{
+			foreach (var member in arr)
+			{
+				yield return new PathMatch(member, null);
+			}
+		}
 	}
 
 	public void BuildString(StringBuilder builder)
