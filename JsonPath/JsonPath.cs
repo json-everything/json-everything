@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Path;
@@ -10,13 +12,13 @@ namespace Json.Path;
 [JsonConverter(typeof(JsonPathConverter))]
 public class JsonPath
 {
-	private readonly PathScope _scope;
 	private readonly IEnumerable<PathSegment> _nodes;
 
+	public PathScope Scope { get; }
 
 	internal JsonPath(PathScope scope, IEnumerable<PathSegment> nodes)
 	{
-		_scope = scope;
+		Scope = scope;
 		_nodes = nodes;
 	}
 
@@ -37,27 +39,29 @@ public class JsonPath
 			   ch.In(0x80..0x10FFFF);
 	}
 
-	///// <summary>
-	///// Evaluates the path against a JSON instance.
-	///// </summary>
-	///// <param name="root">The root of the JSON instance.</param>
-	///// <param name="options">Evaluation options.</param>
-	///// <returns>The results of the evaluation.</returns>
-	//public PathResult Evaluate(JsonElement root, PathEvaluationOptions? options = null)
-	//{
-	//	options ??= new PathEvaluationOptions();
+	/// <summary>
+	/// Evaluates the path against a JSON instance.
+	/// </summary>
+	/// <param name="root">The root of the JSON instance.</param>
+	/// <param name="options">Evaluation options.</param>
+	/// <returns>The results of the evaluation.</returns>
+	public PathResult Evaluate(JsonNode? root, PathEvaluationOptions? options = null)
+	{
+		options ??= new PathEvaluationOptions();
 
-	//	var context = new EvaluationContext(root, options);
+		throw new NotImplementedException();
 
-	//	foreach (var node in _nodes)
-	//	{
-	//		node.Evaluate(context);
+		//var context = new EvaluationContext(root, options);
 
-	//		ReferenceHandler.Handle(context);
-	//	}
+		//foreach (var node in _nodes)
+		//{
+		//	node.Evaluate(context);
 
-	//	return context.BuildResult();
-	//}
+		//	ReferenceHandler.Handle(context);
+		//}
+
+		//return context.BuildResult();
+	}
 
 	/// <summary>Returns a string that represents the current object.</summary>
 	/// <returns>A string that represents the current object.</returns>
@@ -65,4 +69,9 @@ public class JsonPath
 	{
 		return string.Concat(_nodes.Select(n => n.ToString()));
 	}
+}
+
+public class PathEvaluationOptions
+{
+	
 }

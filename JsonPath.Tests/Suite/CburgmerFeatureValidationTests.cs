@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -119,8 +120,8 @@ public class CburgmerFeatureValidationTests
 		else
 		{
 			if (testCase.Consensus == "NOT_SUPPORTED") return;
-			var expected = JsonDocument.Parse(testCase.Consensus).RootElement;
-			Assert.IsTrue(expected.EnumerateArray().All(v => actual.Matches.Any(m => JsonElementEqualityComparer.Instance.Equals(v, m.Value))));
+			var expected = JsonNode.Parse(testCase.Consensus);
+			Assert.IsTrue(expected.AsArray().All(v => actual.Matches.Any(m => JsonNodeEqualityComparer.Instance.Equals(v, m.Value))));
 		}
 	}
 

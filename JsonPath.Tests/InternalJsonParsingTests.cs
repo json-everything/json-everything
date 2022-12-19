@@ -10,10 +10,10 @@ public class InternalJsonParsingTests
 	public static void Parse(string json)
 	{
 		int i = 0;
-		if (!json.AsSpan().TryParseJsonElement(ref i, out var element))
+		if (!json.AsSpan().TryParseJson(ref i, out var node))
 			Assert.Fail();
 
-		Console.WriteLine(element);
+		Console.WriteLine(node);
 	}
 
 	private static IEnumerable<string> GetJson()

@@ -3,22 +3,23 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Json.Path;
 
-internal class IndexSelector : ISelector
+internal class WildcardSelector : ISelector
 {
-	public int Index { get; set; }
+
 }
 
-internal class IndexSelectorParser : ISelectorParser
+internal class WildcardSelectorParser : ISelectorParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
 	{
-		if (!source.TryGetInt(ref index, out var value))
+		if (source[index] != '*')
 		{
 			selector = null;
 			return false;
 		}
 
-		selector = new IndexSelector { Index = value };
+		selector = new WildcardSelector();
+		index++;
 		return true;
 	}
 }

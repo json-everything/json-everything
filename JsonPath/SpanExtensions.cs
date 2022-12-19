@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -36,7 +38,7 @@ internal static class SpanExtensions
 		return foundNumber;
 	}
 
-	public static bool TryParseJsonElement(this ReadOnlySpan<char> span, ref int i, out JsonElement element)
+	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out JsonNode? node)
 	{
 		try
 		{
@@ -115,21 +117,20 @@ internal static class SpanExtensions
 					end++;
 					break;
 				default:
-					element = default;
+					node = default;
 					return false;
 			}
 
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			using var doc = JsonDocument.Parse(block.ToString());
-			element = doc.RootElement.Clone();
+			node = JsonNode.Parse(block.ToString())!;
 			i = end;
 			return true;
 		}
 		catch
 		{
-			element = default;
+			node = default;
 			return false;
 		}
 	}

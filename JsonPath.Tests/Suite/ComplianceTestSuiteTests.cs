@@ -73,14 +73,14 @@ public class ComplianceTestSuiteTests
 			Assert.Fail($"Could not parse path: {testCase.Selector}");
 		}
 
-		var actualValues = actual.Matches.Select(m => m.Value).AsJsonElement();
+		var actualValues = actual.Matches.Select(m => m.Value).ToJsonArray();
 		Console.WriteLine($"Actual (values): {actualValues}");
 		Console.WriteLine();
 		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
-		var expected = testCase.Result.AsJsonElement();
+		var expected = testCase.Result.ToJsonArray();
 		Assert.IsTrue(expected.IsEquivalentTo(actualValues));
 	}
 }

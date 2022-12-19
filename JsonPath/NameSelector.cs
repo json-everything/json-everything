@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Json.Path;
@@ -10,7 +11,7 @@ internal class NameSelector : ISelector
 
 internal class NameSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
 	{
 		char quoteChar;
 		var i = index;
@@ -77,6 +78,7 @@ internal class NameSelectorParser : ISelectorParser
 
 	private static bool ReadEscaped(ReadOnlySpan<char> source, char quoteChar, StringBuilder sb, ref int i)
 	{
+		// TODO handle multi-char escapes
 		switch (source[i])
 		{
 			case 'b':
