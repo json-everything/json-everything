@@ -44,7 +44,7 @@ public class JsonPath
 
 		foreach (var segment in _segments)
 		{
-			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x));
+			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x, root));
 		}
 
 		return new PathResult(currentMatches.ToList());

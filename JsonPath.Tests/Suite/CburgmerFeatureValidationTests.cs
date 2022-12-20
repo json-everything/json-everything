@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -32,9 +34,36 @@ public class CburgmerFeatureValidationTests
 		"$.-1",
 		"$.length",
 
+		// invalid per spec
+		"$...key",
+		"$.['key']",
+		"$.[\"key\"]",
+		"$.'key'",
+		"$.\"key\"",
+		"$..\"key\"",
+		"$..'key'",
+		"$..'key'",
+		"$..",
+		"$.key..",
+		"$.$",
+		"$.'some.key'",
+		".key",
+		"key",
+		"",
+
 		// big numbers not supported
 		"$[2:-113667776004:-1]",
 		"$[113667776004:2:-1]"
+	};
+
+	private static readonly JsonSerializerOptions _serializerOptions = new()
+	{
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+	private static readonly JsonSerializerOptions _linearSerializerOptions = new()
+	{
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
 	//  - id: array_index
@@ -46,7 +75,7 @@ public class CburgmerFeatureValidationTests
 	{
 		get
 		{
-			static bool TryMatch(string line, Regex pattern, out string value)
+			static bool TryMatch(string line, Regex pattern, [NotNullWhen(true)] out string? value)
 			{
 				var match = pattern.Match(line);
 				if (!match.Success)
@@ -61,7 +90,7 @@ public class CburgmerFeatureValidationTests
 
 			// what I wouldn't give for a YAML parser...
 			var fileLines = File.ReadAllLines(_regressionResultsFile);
-			CburgmerTestCase currentTestCase = null;
+			CburgmerTestCase? currentTestCase = null;
 			foreach (var line in fileLines)
 			{
 				if (TryMatch(line, _idPattern, out var value))
@@ -72,15 +101,15 @@ public class CburgmerFeatureValidationTests
 				}
 				else if (TryMatch(line, _selectorPattern, out value))
 				{
-					currentTestCase.PathString = JsonDocument.Parse(value).RootElement.GetString();
+					currentTestCase!.PathString = JsonNode.Parse(value)!.GetValue<string>();
 				}
 				else if (TryMatch(line, _documentPattern, out value))
 				{
-					currentTestCase.JsonString = value;
+					currentTestCase!.JsonString = value;
 				}
 				else if (TryMatch(line, _consensusPattern, out value))
 				{
-					currentTestCase.Consensus = value;
+					currentTestCase!.Consensus = value;
 				}
 			}
 		}
@@ -97,24 +126,39 @@ public class CburgmerFeatureValidationTests
 		Console.WriteLine(testCase);
 		Console.WriteLine();
 
-		PathResult actual = null;
+		PathResult? actual = null;
 
+		Exception? exception = null;
 		var time = Debugger.IsAttached ? int.MaxValue : 100;
 		using var cts = new CancellationTokenSource(time);
-		Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token).Wait(cts.Token);
+		Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token)
+			.ContinueWith(taskResult =>
+			{
+				if (taskResult.IsFaulted)
+					exception = taskResult.Exception!.InnerException;
+			}, cts.Token)
+			.Wait(cts.Token);
 
 		if (actual == null)
 		{
-			if (testCase.Consensus == "NOT_SUPPORTED") return;
+			if (testCase.Consensus == "NOT_SUPPORTED")
+			{
+				if (exception != null) 
+					Console.WriteLine(exception);
+				return;
+			}
+
+			if (exception != null)
+				throw new Exception("An exception was thrown", exception);
 			if (testCase.Consensus == null)
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 
 			Assert.Fail($"Could not parse path: {testCase.PathString}");
 		}
 
-		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual.Matches.Select(x => x.Value))}");
+		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual.Matches.Select(x => x.Value), _linearSerializerOptions)}");
 		Console.WriteLine();
-		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
+		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, _serializerOptions)}");
 		if (testCase.Consensus == null)
 			Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 		else

@@ -7,6 +7,7 @@ internal static class PathParser
 {
 	private static readonly ISelectorParser[] _parsers =
 	{
+		new FilterSelectorParser(),
 		new SliceSelectorParser(),
 		new IndexSelectorParser(),
 		new NameSelectorParser(),
@@ -44,52 +45,14 @@ internal static class PathParser
 	private static PathSegment ParseSegment(ReadOnlySpan<char> source, ref int index)
 	{
 		var selectors = new List<ISelector>();
+		var isRecursive = false;
 		var isShorthand = false;
 
 		source.ConsumeWhitespace(ref index);
 
 		if (source[index] == '[')
 		{
-			var done = false;
-			index++; // consume [
-
-			while (index < source.Length && !done)
-			{
-				source.ConsumeWhitespace(ref index);
-				ISelector? selector = null;
-
-				foreach (var parser in _parsers)
-				{
-					if (parser.TryParse(source, ref index, out selector)) break;
-				}
-
-				if (selector == null)
-				{
-					var sample = source[index..Math.Min(source.Length, index + 10)];
-					var includeEllipsis = index < source.Length - 10;
-					throw new PathParseException(index, $"Pattern '{sample.ToString()}{(includeEllipsis ? "..." : string.Empty)}' not recognized.");
-				}
-
-				selectors.Add(selector);
-
-				source.ConsumeWhitespace(ref index);
-
-				switch (source[index])
-				{
-					case ']':
-						done = true;
-						index++;
-						break;
-					case ',':
-						index++;
-						break;
-					default:
-						throw new PathParseException(index, "Expected ']' or ','.");
-				}
-			}
-
-			if (!done)
-				throw new PathParseException(index, "Unexpected end of input");
+			ParseBracketed(source, ref index, selectors);
 		}
 		else if (source[index] == '.')
 		{
@@ -97,7 +60,24 @@ internal static class PathParser
 
 			if (source[index] == '.')
 			{
-				// recursive (may be followed by a name or [...]
+				isRecursive = true;
+				index++; // consume second .
+
+				if (source[index] == '[') 
+					ParseBracketed(source, ref index, selectors);
+				else if (source[index] == '*')
+				{
+					selectors.Add(new WildcardSelector());
+					isRecursive = true;
+					isShorthand = true;
+					index++;
+				}
+				else
+				{
+					isRecursive = true;
+					isShorthand = true;
+					ParseName(source, ref index, selectors);
+				}
 			}
 			else if (source[index] == '*')
 			{
@@ -107,22 +87,8 @@ internal static class PathParser
 			}
 			else
 			{
-				var i = index;
-
-				source.ConsumeWhitespace(ref i);
-
-				while (i < source.Length && IsValidForPropertyName(source[i]))
-				{
-					i++;
-				}
-
-				if (index == i)
-					throw new PathParseException(index, "Expected shorthand name selector but got no name");
-
-				var name = source[index..i].ToString();
-				selectors.Add(new NameSelector(name));
 				isShorthand = true;
-				index = i;
+				ParseName(source, ref index, selectors);
 			}
 		}
 
@@ -132,7 +98,70 @@ internal static class PathParser
 		if (selectors.Count > 1 && isShorthand)
 			throw new PathParseException(index, "Cannot have shorthand syntax with multiple selectors (something went very wrong).");
 
-		return new PathSegment(selectors, isShorthand);
+		return new PathSegment(selectors, isRecursive, isShorthand);
+	}
+
+	private static void ParseName(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	{
+		var i = index;
+
+		source.ConsumeWhitespace(ref i);
+
+		while (i < source.Length && IsValidForPropertyName(source[i]))
+		{
+			i++;
+		}
+
+		if (index == i)
+			throw new PathParseException(index, "Expected shorthand name selector but got no name");
+
+		var name = source[index..i].ToString();
+		selectors.Add(new NameSelector(name));
+		index = i;
+	}
+
+	private static void ParseBracketed(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	{
+		var done = false;
+		index++; // consume [
+
+		while (index < source.Length && !done)
+		{
+			source.ConsumeWhitespace(ref index);
+			ISelector? selector = null;
+
+			foreach (var parser in _parsers)
+			{
+				if (parser.TryParse(source, ref index, out selector)) break;
+			}
+
+			if (selector == null)
+			{
+				var sample = source[index..Math.Min(source.Length, index + 10)];
+				var includeEllipsis = index < source.Length - 10;
+				throw new PathParseException(index, $"Pattern '{sample.ToString()}{(includeEllipsis ? "..." : string.Empty)}' not recognized.");
+			}
+
+			selectors.Add(selector);
+
+			source.ConsumeWhitespace(ref index);
+
+			switch (source[index])
+			{
+				case ']':
+					done = true;
+					index++;
+					break;
+				case ',':
+					index++;
+					break;
+				default:
+					throw new PathParseException(index, "Expected ']' or ','.");
+			}
+		}
+
+		if (!done)
+			throw new PathParseException(index, "Unexpected end of input");
 	}
 
 	private static bool IsValidForPropertyName(char ch)

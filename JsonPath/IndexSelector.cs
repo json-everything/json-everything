@@ -20,7 +20,7 @@ internal class IndexSelector : ISelector
 		return Index.ToString();
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match)
+	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is not JsonArray arr) yield break;

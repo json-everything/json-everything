@@ -6,6 +6,7 @@ namespace Json.Path;
 
 public interface ISelector
 {
-	IEnumerable<PathMatch> Evaluate(PathMatch match);
+	IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode);
+
 	void BuildString(StringBuilder builder);
 }

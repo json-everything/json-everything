@@ -31,7 +31,7 @@ internal class NameSelector : ISelector, IHaveShorthand
 		return $"'{Name}'"; // TODO escape this
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match)
+	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is not JsonObject obj) yield break;

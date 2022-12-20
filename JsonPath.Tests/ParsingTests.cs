@@ -41,6 +41,11 @@ public class ParsingTests
 			new TestCaseData("$.foo"),
 			new TestCaseData("$.*"),
 
+			new TestCaseData("$..foo"),
+			new TestCaseData("$..*"),
+			new TestCaseData("$..[1]"),
+			new TestCaseData("$..[1,2]"),
+
 			new TestCaseData("$[?@.foo]"),
 			new TestCaseData("$[?(@.foo)]"),
 			new TestCaseData("$[?(@.foo && @.bar)]"),
