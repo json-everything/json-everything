@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -28,8 +27,7 @@ public class PathSegment
 
 	private static IEnumerable<PathMatch> RecursivelyEvaluate(ISelector selector, PathMatch match, JsonNode? rootNode)
 	{
-		var allDescendants = GetAllDescendants(match);
-		return allDescendants.SelectMany(child => selector.Evaluate(child, rootNode));
+		return GetAllDescendants(match).SelectMany(child => selector.Evaluate(child, rootNode));
 	}
 
 	private static IEnumerable<PathMatch> GetAllDescendants(PathMatch match)

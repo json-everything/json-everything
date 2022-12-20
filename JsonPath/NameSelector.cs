@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -140,6 +141,23 @@ internal class NameSelectorParser : ISelectorParser
 				sb.Append('\\');
 				i++;
 				break;
+			case '/':
+				sb.Append('/');
+				i++;
+				break;
+			case 'u':
+			case 'U':
+				var hexStart = i;
+				while (ReadHexCode(source, ref i) && source[i] == '\\')
+				{
+					i++; // consume \
+				}
+
+				if (hexStart == i) return false;
+
+				var hexEncodedChars = JsonNode.Parse($"\"{source[(hexStart-1)..i].ToString()}\"")!;
+				sb.Append(hexEncodedChars.GetValue<string>());
+				break;
 			default:
 				if (source[i] == quoteChar)
 				{
@@ -152,5 +170,20 @@ internal class NameSelectorParser : ISelectorParser
 		}
 
 		return true;
+	}
+
+	private static bool ReadHexCode(ReadOnlySpan<char> source, ref int i)
+	{
+		// reads uXXXX
+		if (source[i] is not 'u' or 'U') return false;
+
+		i++; // consume u
+		if (source[i..(i + 4)].ToArray().All(x => char.ToUpper(x) is (>= 'A' and <= 'F') or (>= '0' and <= '9')))
+		{
+			i += 4;
+			return true;
+		}
+
+		return false;
 	}
 }

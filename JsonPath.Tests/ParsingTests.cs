@@ -12,15 +12,18 @@ public class ParsingTests
 			new TestCaseData("$['foo']"),
 			new TestCaseData("$[ 'foo']"),
 			new TestCaseData("$['foo' ]"),
+
 			new TestCaseData("$[1]"),
 			new TestCaseData("$[ 1]"),
 			new TestCaseData("$[1 ]"),
 			new TestCaseData("$[42]"),
 			new TestCaseData("$[-1]"),
 			new TestCaseData("$[-42]"),
+
 			new TestCaseData("$[*]"),
 			new TestCaseData("$[ *]"),
 			new TestCaseData("$[* ]"),
+
 			new TestCaseData("$[:]"),
 			new TestCaseData("$[1:]"),
 			new TestCaseData("$[1::]"),
@@ -39,6 +42,7 @@ public class ParsingTests
 			new TestCaseData("$[1:2:3 ]"),
 
 			new TestCaseData("$.foo"),
+
 			new TestCaseData("$.*"),
 
 			new TestCaseData("$..foo"),
