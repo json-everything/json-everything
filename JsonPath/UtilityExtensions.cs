@@ -36,15 +36,27 @@ internal static class UtilityExtensions
 		       ch.In(0x80..0x10FFFF);
 	}
 
+	public static bool IsValidForPropertyNameStart(this char ch)
+	{
+		return ch.In('a'..('z' + 1)) ||
+		       ch.In('A'..('Z' + 1)) ||
+		       ch.In('_') ||
+		       ch.In(0x80..0x10FFFF);
+	}
+
 	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)]out string? name)
 	{
 		var i = index;
 
 		source.ConsumeWhitespace(ref i);
 
-		while (i < source.Length && source[i].IsValidForPropertyName())
+		if (i < source.Length && source[i].IsValidForPropertyNameStart())
 		{
 			i++;
+			while (i < source.Length && source[i].IsValidForPropertyName())
+			{
+				i++;
+			}
 		}
 
 		if (index == i)

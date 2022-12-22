@@ -27,15 +27,21 @@ internal static class BinaryValueExpressionParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, ValueExpressionNode left, [NotNullWhen(true)] out ValueExpressionNode? expression)
 	{
+		int i = index;
+
+		source.ConsumeWhitespace(ref i);
+
 		// parse operator
-		if (!ValueOperatorParser.TryParse(source, ref index, out var op))
+		if (!ValueOperatorParser.TryParse(source, ref i, out var op))
 		{
 			expression = null;
 			return false;
 		}
 
+		source.ConsumeWhitespace(ref i);
+
 		// parse value
-		if (!ValueExpressionParser.TryParse(source, ref index, out var right))
+		if (!ValueExpressionParser.TryParse(source, ref i, out var right))
 		{
 			expression = null;
 			return false;
@@ -43,6 +49,7 @@ internal static class BinaryValueExpressionParser
 
 		// put it all together
 		expression = new BinaryValueExpressionNode(op, left, right);
+		index = i;
 		return true;
 	}
 }

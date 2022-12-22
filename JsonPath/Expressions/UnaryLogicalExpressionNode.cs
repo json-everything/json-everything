@@ -31,6 +31,24 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		// parse operator
 		// parse comparison/logic
 
-		throw new NotImplementedException();
+		var i = index;
+
+		// parse operator
+		if (!UnaryLogicalOperatorParser.TryParse(source, ref i, out var op))
+		{
+			expression = null;
+			return false;
+		}
+
+		// parse comparison
+		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+		{
+			expression = null;
+			return false;
+		}
+
+		expression = new UnaryLogicalExpressionNode(op, right);
+		index = i;
+		return true;
 	}
 }

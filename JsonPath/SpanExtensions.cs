@@ -43,6 +43,8 @@ internal static class SpanExtensions
 
 	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out JsonNode? node)
 	{
+		span.ConsumeWhitespace(ref i);
+
 		try
 		{
 			int end = i;

@@ -27,10 +27,31 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
 	{
-		// parse comparison
-		// parse operator
-		// parse comparison
+		var i = index;
 
-		throw new NotImplementedException();
+		// parse comparison
+		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var left))
+		{
+			expression = null;
+			return false;
+		}
+
+		// parse operator
+		if (!BinaryLogicalOperatorParser.TryParse(source, ref i, out var op))
+		{
+			expression = null;
+			return false;
+		}
+
+		// parse comparison
+		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+		{
+			expression = null;
+			return false;
+		}
+
+		expression = new BinaryLogicalExpressionNode(op, left, right);
+		index = i;
+		return true;
 	}
 }

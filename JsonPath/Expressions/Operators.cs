@@ -26,15 +26,128 @@ internal static class ValueOperatorParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryValueOperator? op)
 	{
-		op = source[index] switch
+		source.ConsumeWhitespace(ref index);
+
+		switch (source[index])
 		{
-			'+' => Operators.Add,
-			'-' => Operators.Subtract,
-			'*' => Operators.Multiply,
-			'/' => Operators.Divide,
-			_ => null
-		};
+			case '+':
+				op = Operators.Add;
+				index++;
+				break;
+			case '-':
+				op = Operators.Subtract;
+				index++;
+				break;
+			case '*':
+				op = Operators.Multiply;
+				index++;
+				break;
+			case '/':
+				op = Operators.Divide;
+				index++;
+				break;
+			default:
+				op = null;
+				break;
+		}
 
 		return op != null;
+	}
+}
+
+internal static class BinaryComparativeOperatorParser
+{
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryComparativeOperator? op)
+	{
+		source.ConsumeWhitespace(ref index);
+
+		var portion = source[index..(index + 1)];
+
+		if (portion == "==")
+		{
+			op = Operators.EqualTo;
+			index += 2;
+		}
+		else if (portion == "!=")
+		{
+			op = Operators.NotEqualTo;
+			index += 2;
+		}
+		else if (portion == "<=")
+		{
+			op = Operators.LessThanOrEqualTo;
+			index += 2;
+		}
+		else if (portion == ">=")
+		{
+			op = Operators.GreaterThanOrEqualTo;
+			index += 2;
+		}
+		else if (source[index] == '<')
+		{
+			op = Operators.LessThan;
+			index++;
+		}
+		else if (source[index] == '>')
+		{
+			op = Operators.GreaterThan;
+			index++;
+		}
+		else
+		{
+			op = null;
+			return false;
+		}
+
+		return true;
+	}
+}
+
+internal static class BinaryLogicalOperatorParser
+{
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryLogicalOperator? op)
+	{
+		source.ConsumeWhitespace(ref index);
+
+		var portion = source[index..(index + 1)];
+
+		if (portion == "&&")
+		{
+			op = Operators.And;
+			index += 2;
+		}
+		else if (portion == "||")
+		{
+			op = Operators.Or;
+			index += 2;
+		}
+		else
+		{
+			op = null;
+			return false;
+		}
+
+		return true;
+	}
+}
+
+internal static class UnaryLogicalOperatorParser
+{
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IUnaryLogicalOperator? op)
+	{
+		source.ConsumeWhitespace(ref index);
+
+		if (source[index] == '!')
+		{
+			op = Operators.Not;
+			index++;
+		}
+		else
+		{
+			op = null;
+			return false;
+		}
+
+		return true;
 	}
 }

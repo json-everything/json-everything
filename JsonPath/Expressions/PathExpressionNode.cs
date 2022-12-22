@@ -36,7 +36,7 @@ internal class PathExpressionParser : IValueExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression)
 	{
-		if (!PathParser.TryParse(source, out var path))
+		if (!PathParser.TryParse(source, ref index, out var path))
 		{
 			expression = null;
 			return false;

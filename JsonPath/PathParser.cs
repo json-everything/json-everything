@@ -15,12 +15,11 @@ internal static class PathParser
 		new WildcardSelectorParser()
 	};
 
-	public static JsonPath Parse(ReadOnlySpan<char> source, bool requireGlobal = false)
+	public static JsonPath Parse(ReadOnlySpan<char> source, ref int index, bool requireGlobal = false)
 	{
 		if (source.Length == 0)
 			throw new PathParseException(0, "Input string is empty");
 
-		var index = 0;
 		var segments = new List<PathSegment>();
 		PathScope scope;
 
@@ -43,15 +42,16 @@ internal static class PathParser
 		return new JsonPath(scope, segments);
 	}
 
-	public static bool TryParse(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPath? path, bool requireGlobal = false)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out JsonPath? path, bool requireGlobal = false)
 	{
-		if (source.Length == 0)
+		if (index >= source.Length)
 		{
 			path = null;
 			return false;
 		}
 
-		var index = 0;
+		source.ConsumeWhitespace(ref index);
+
 		var segments = new List<PathSegment>();
 		PathScope scope;
 

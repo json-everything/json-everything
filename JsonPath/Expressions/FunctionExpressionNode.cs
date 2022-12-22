@@ -28,6 +28,8 @@ internal class FunctionExpressionParser : IValueExpressionParser
 	{
 		int i = index;
 
+		source.ConsumeWhitespace(ref i);
+
 		// parse function name
 		if (!source.TryParseName(ref i, out var name))
 		{

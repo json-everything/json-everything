@@ -74,6 +74,7 @@ internal class ValueExpressionParser
 	{
 		ValueExpressionNode? value = null;
 		// first get an operand
+
 		foreach (var parser in _operandParsers)
 		{
 			if (parser.TryParse(source, ref index, out value)) break;
@@ -84,8 +85,6 @@ internal class ValueExpressionParser
 			expression = null;
 			return false;
 		}
-
-		source.ConsumeWhitespace(ref index);
 
 		// then use that to try to get a binary value expression
 		if (!BinaryValueExpressionParser.TryParse(source, ref index, value, out expression)) 

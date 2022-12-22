@@ -27,10 +27,31 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression)
 	{
-		// parse value
-		// parse operator
-		// parse value
+		var i = index;
 
-		throw new NotImplementedException();
+		// parse value
+		if (!ValueExpressionParser.TryParse(source, ref i, out var left))
+		{
+			expression = null;
+			return false;
+		}
+
+		// parse operator
+		if (!BinaryComparativeOperatorParser.TryParse(source, ref i, out var op))
+		{
+			expression = null;
+			return false;
+		}
+
+		// parse value
+		if (!ValueExpressionParser.TryParse(source, ref i, out var right))
+		{
+			expression = null;
+			return false;
+		}
+
+		expression = new BinaryComparativeExpressionNode(op, left, right);
+		index = i;
+		return true;
 	}
 }
