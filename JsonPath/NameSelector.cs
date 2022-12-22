@@ -155,6 +155,7 @@ internal class NameSelectorParser : ISelectorParser
 
 				if (hexStart == i) return false;
 
+				// this is simpler than trying to parse and calc surrogates myself.
 				var hexEncodedChars = JsonNode.Parse($"\"{source[(hexStart-1)..i].ToString()}\"")!;
 				sb.Append(hexEncodedChars.GetValue<string>());
 				break;

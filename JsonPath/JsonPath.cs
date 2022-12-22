@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -30,7 +31,9 @@ public class JsonPath
 	/// <param name="source">The source string.</param>
 	/// <returns>The parsed path.</returns>
 	/// <exception cref="PathParseException">Thrown if a syntax error occurred.</exception>
-	public static JsonPath Parse(string source) => PathParser.Parse(source.Trim());
+	public static JsonPath Parse(string source) => PathParser.Parse(source.Trim(), true);
+
+	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPath? path) => PathParser.TryParse(source.Trim(), out path, true);
 
 	/// <summary>
 	/// Evaluates the path against a JSON instance.

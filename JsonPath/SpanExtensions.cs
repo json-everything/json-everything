@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path;
 
@@ -125,7 +127,7 @@ internal static class SpanExtensions
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			node = JsonNode.Parse(block.ToString())!;
+			node = JsonNode.Parse(block.ToString()) ?? JsonNull.SignalNode;
 			i = end;
 			return true;
 		}
@@ -134,5 +136,24 @@ internal static class SpanExtensions
 			node = default;
 			return false;
 		}
+	}
+
+	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	{
+		var i = index;
+
+		source.ConsumeWhitespace(ref i);
+
+		while (i < source.Length && source[i].IsValidForPropertyName())
+		{
+			i++;
+		}
+
+		if (index == i) return false;
+
+		var name = source[index..i].ToString();
+		selectors.Add(new NameSelector(name));
+		index = i;
+		return true;
 	}
 }

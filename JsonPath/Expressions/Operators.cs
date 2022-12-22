@@ -1,4 +1,7 @@
-﻿namespace Json.Path.Expressions;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Json.Path.Expressions;
 
 internal static class Operators
 {
@@ -17,4 +20,21 @@ internal static class Operators
 	public static readonly IBinaryLogicalOperator And = new AndOperator();
 	public static readonly IBinaryLogicalOperator Or = new OrOperator();
 	public static readonly IUnaryLogicalOperator Not = new NotOperator();
+}
+
+internal static class ValueOperatorParser
+{
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryValueOperator? op)
+	{
+		op = source[index] switch
+		{
+			'+' => Operators.Add,
+			'-' => Operators.Subtract,
+			'*' => Operators.Multiply,
+			'/' => Operators.Divide,
+			_ => null
+		};
+
+		return op != null;
+	}
 }

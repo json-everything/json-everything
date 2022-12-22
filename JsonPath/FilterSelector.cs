@@ -54,6 +54,14 @@ internal class FilterSelectorParser : ISelectorParser
 			return false;
 		}
 
-		throw new NotImplementedException();
+		index++;
+		if (!ExpressionParser.TryParse(source, ref index, out var expression))
+		{
+			selector = null;
+			return false;
+		}
+
+		selector = new FilterSelector(expression);
+		return true;
 	}
 }
