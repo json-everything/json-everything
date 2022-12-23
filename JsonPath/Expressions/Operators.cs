@@ -19,6 +19,8 @@ internal static class Operators
 	public static readonly IBinaryComparativeOperator GreaterThan = new GreaterThanOperator();
 	public static readonly IBinaryComparativeOperator GreaterThanOrEqualTo = new GreaterThanOrEqualToOperator();
 
+	public static readonly IUnaryComparativeOperator Exists = new ExistsOperator();
+
 	public static readonly IBinaryLogicalOperator And = new AndOperator();
 	public static readonly IBinaryLogicalOperator Or = new OrOperator();
 
@@ -99,24 +101,24 @@ internal static class BinaryComparativeOperatorParser
 	{
 		source.ConsumeWhitespace(ref index);
 
-		var portion = source[index..(index + 1)];
+		var portion = source[index..(index + 2)].ToString();
 
-		if (portion == "==")
+		if (MemoryExtensions.Equals(portion, "==", StringComparison.Ordinal))
 		{
 			op = Operators.EqualTo;
 			index += 2;
 		}
-		else if (portion == "!=")
+		else if (MemoryExtensions.Equals(portion, "!=", StringComparison.Ordinal))
 		{
 			op = Operators.NotEqualTo;
 			index += 2;
 		}
-		else if (portion == "<=")
+		else if (MemoryExtensions.Equals(portion, "<=", StringComparison.Ordinal))
 		{
 			op = Operators.LessThanOrEqualTo;
 			index += 2;
 		}
-		else if (portion == ">=")
+		else if (MemoryExtensions.Equals(portion, ">=", StringComparison.Ordinal))
 		{
 			op = Operators.GreaterThanOrEqualTo;
 			index += 2;

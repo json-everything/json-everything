@@ -23,14 +23,22 @@ internal class UnaryComparativeExpressionNode : ComparativeExpressionNode
 
 internal class UnaryComparativeExpressionParser : IComparativeExpressionParser
 {
+	private static readonly PathExpressionParser _pathParser = new();
+
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression)
 	{
 		// currently only the "exists" operator is defined
 		// it expects a path and has no operator
 
 		// parse path
-		// wrap in exists
+		if (!_pathParser.TryParse(source, ref index, out var path))
+		{
+			expression = null;
+			return false;
+		}
 
-		throw new NotImplementedException();
+		// wrap in exists
+		expression = new UnaryComparativeExpressionNode(Operators.Exists, path);
+		return true;
 	}
 }

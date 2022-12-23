@@ -10,7 +10,7 @@ internal class DevTest
 	public void Test()
 	{
 		var i = 0;
-		ValueExpressionParser.TryParse("4*(5+6)", ref i, out var expr);
+		ComparativeExpressionParser.TryParse("@.foo", ref i, out var expr);
 
 		Console.WriteLine(expr.Evaluate(null, null));
 	}
