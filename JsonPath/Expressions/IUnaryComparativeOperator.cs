@@ -2,7 +2,7 @@
 
 namespace Json.Path.Expressions;
 
-internal interface IUnaryComparativeOperator
+internal interface IUnaryComparativeOperator : IExpressionOperator
 {
 	bool Evaluate(JsonNode? value);
 }

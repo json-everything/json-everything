@@ -6,6 +6,8 @@ namespace Json.Path.Expressions;
 
 internal class GreaterThanOrEqualToOperator : IBinaryComparativeOperator
 {
+	public int Precedence => 10;
+
 	public bool Evaluate(JsonNode? left, JsonNode? right)
 	{
 		if (left.IsEquivalentTo(right)) return true;

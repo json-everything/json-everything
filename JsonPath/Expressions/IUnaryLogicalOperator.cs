@@ -1,6 +1,6 @@
 ﻿namespace Json.Path.Expressions;
 
-internal interface IUnaryLogicalOperator
+internal interface IUnaryLogicalOperator : IExpressionOperator
 {
 	bool Evaluate(bool value);
 }

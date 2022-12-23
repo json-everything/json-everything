@@ -5,6 +5,8 @@ namespace Json.Path.Expressions;
 
 internal static class Operators
 {
+	private static readonly NotOperator _not = new();
+
 	public static readonly IBinaryValueOperator Add = new AddOperator();
 	public static readonly IBinaryValueOperator Subtract = new SubtractOperator();
 	public static readonly IBinaryValueOperator Multiply = new MultiplyOperator();
@@ -19,7 +21,43 @@ internal static class Operators
 
 	public static readonly IBinaryLogicalOperator And = new AndOperator();
 	public static readonly IBinaryLogicalOperator Or = new OrOperator();
-	public static readonly IUnaryLogicalOperator Not = new NotOperator();
+
+	public static readonly IUnaryLogicalOperator Not = _not;
+}
+
+internal static class OperatorParser
+{
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IExpressionOperator? op)
+	{
+		if (ValueOperatorParser.TryParse(source, ref index, out var valueOp))
+		{
+			op = valueOp;
+			return true;
+		}
+
+		// unary value operator is part of value parsing, so we don't bother here.
+
+		if (BinaryComparativeOperatorParser.TryParse(source, ref index, out var compOp))
+		{
+			op = compOp;
+			return true;
+		}
+
+		if (BinaryLogicalOperatorParser.TryParse(source, ref index, out var binaryLogicalOp))
+		{
+			op = binaryLogicalOp;
+			return true;
+		}
+
+		if (UnaryLogicalOperatorParser.TryParse(source, ref index, out var unaryLogicalOp))
+		{
+			op = unaryLogicalOp;
+			return true;
+		}
+
+		op = null;
+		return false;
+	}
 }
 
 internal static class ValueOperatorParser

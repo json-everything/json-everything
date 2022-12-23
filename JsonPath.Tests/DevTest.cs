@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Nodes;
 using Json.Path.Expressions;
 using NUnit.Framework;
 
@@ -10,8 +9,9 @@ internal class DevTest
 	[Test]
 	public void Test()
 	{
-		var path = JsonPath.Parse("$[?4+5==9]");
+		var i = 0;
+		ValueExpressionParser.TryParse("4*(5+6)", ref i, out var expr);
 
-		Console.WriteLine(path.Evaluate(null));
+		Console.WriteLine(expr.Evaluate(null, null));
 	}
 }

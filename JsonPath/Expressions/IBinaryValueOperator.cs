@@ -2,7 +2,12 @@
 
 namespace Json.Path.Expressions;
 
-internal interface IBinaryValueOperator
+internal interface IBinaryValueOperator : IExpressionOperator
 {
 	JsonNode? Evaluate(JsonNode? left, JsonNode? right);
+}
+
+internal interface IExpressionOperator
+{
+	int Precedence { get; }
 }

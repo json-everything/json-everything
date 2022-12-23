@@ -5,28 +5,64 @@ namespace Json.Path.Expressions
 {
 	internal static class ExpressionParser
 	{
+		private enum State
+		{
+			Logic,
+			Comparison,
+			Value
+		}
+
+		// different things we might encounter
+		//   existence: @.foo
+		//     value (wrapped in an existsOp) (do we need a no-op logical unary?)
+		//   standard expression: @.foo == 5
+		//     value compOp value (yeah, may need that no-op logical unary)
+		//   logical expressions: @.foo == 5 && @.bar == 6
+		//     value compOp value logicOp value compOp value
+		//   non-existence: !@.foo
+		//     notLogicOp value (wrap value in existsOp)
+
 		public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
 		{
-			//if (source[index] == '(')
-			//{
-			//	var start = index;
-			//	var nestLevel = 1;
-			//	index++;
-			//	while (index < source.Length && nestLevel != 0)
-			//	{
-			//		if (source[index] == '(')
-			//			nestLevel++;
-			//		else if (source[index] == ')')
-			//			nestLevel--;
-			//	}
-			//	if (index == source.Length)
-			//		throw new PathParseException(index, "Unexpected end of input");
+			var i = index;
+			var nestLevel = 0;
 
-			//	var end = index - 1;
+			while (i < source.Length && nestLevel >= 0)
+			{
+				if (source[i] == '(')
+				{
+					nestLevel++;
+					i++;
+				}
+				else if (source[i] == ')')
+				{
+					nestLevel--;
+					i++;
+				}
+				else
+				{
+					// we might get a 'not' first, so we need to check for that
+					OperatorParser.TryParse(source, ref i, out var op);
+					if (!ValueExpressionParser.TryParse(source, ref i, out var value))
+					{
+						expression = null;
+						return false;
+					}
+				}
+				i++;
+			}
 
-			//}
+			if (i == source.Length || nestLevel < 0)
+			{
+				expression = null;
+				return false;
+			}
 
-			return LogicalExpressionParser.TryParse(source, ref index, out expression);
+			index = i;
+
+			// TODO actually return something
+			expression = null;
+			return false;
 		}
 
 		//public static bool TryParseExpression(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out BooleanResultExpressionNode? expression)

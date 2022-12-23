@@ -6,6 +6,8 @@ namespace Json.Path.Expressions;
 
 internal class GreaterThanOperator : IBinaryComparativeOperator
 {
+	public int Precedence => 10;
+
 	public bool Evaluate(JsonNode? left, JsonNode? right)
 	{
 		if (left is not JsonValue lValue ||

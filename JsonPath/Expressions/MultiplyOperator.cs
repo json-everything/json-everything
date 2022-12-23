@@ -5,6 +5,8 @@ namespace Json.Path.Expressions;
 
 internal class MultiplyOperator : IBinaryValueOperator
 {
+	public int Precedence => 2;
+
 	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
 		if (left is not JsonValue lValue ||
