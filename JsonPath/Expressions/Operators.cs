@@ -5,8 +5,6 @@ namespace Json.Path.Expressions;
 
 internal static class Operators
 {
-	private static readonly NotOperator _not = new();
-
 	public static readonly IBinaryValueOperator Add = new AddOperator();
 	public static readonly IBinaryValueOperator Subtract = new SubtractOperator();
 	public static readonly IBinaryValueOperator Multiply = new MultiplyOperator();
@@ -24,7 +22,8 @@ internal static class Operators
 	public static readonly IBinaryLogicalOperator And = new AndOperator();
 	public static readonly IBinaryLogicalOperator Or = new OrOperator();
 
-	public static readonly IUnaryLogicalOperator Not = _not;
+	public static readonly IUnaryLogicalOperator Not = new NotOperator();
+	public static readonly IUnaryLogicalOperator NoOp = new NoOpOperator();
 }
 
 internal static class OperatorParser
@@ -101,24 +100,24 @@ internal static class BinaryComparativeOperatorParser
 	{
 		source.ConsumeWhitespace(ref index);
 
-		var portion = source[index..(index + 2)].ToString();
+		var portion = source[index..(index + 2)];
 
-		if (MemoryExtensions.Equals(portion, "==", StringComparison.Ordinal))
+		if (portion.Equals("==", StringComparison.Ordinal))
 		{
 			op = Operators.EqualTo;
 			index += 2;
 		}
-		else if (MemoryExtensions.Equals(portion, "!=", StringComparison.Ordinal))
+		else if (portion.Equals("!=", StringComparison.Ordinal))
 		{
 			op = Operators.NotEqualTo;
 			index += 2;
 		}
-		else if (MemoryExtensions.Equals(portion, "<=", StringComparison.Ordinal))
+		else if (portion.Equals("<=", StringComparison.Ordinal))
 		{
 			op = Operators.LessThanOrEqualTo;
 			index += 2;
 		}
-		else if (MemoryExtensions.Equals(portion, ">=", StringComparison.Ordinal))
+		else if (portion.Equals(">=", StringComparison.Ordinal))
 		{
 			op = Operators.GreaterThanOrEqualTo;
 			index += 2;
@@ -149,14 +148,14 @@ internal static class BinaryLogicalOperatorParser
 	{
 		source.ConsumeWhitespace(ref index);
 
-		var portion = source[index..(index + 1)];
+		var portion = source[index..(index + 2)];
 
-		if (portion == "&&")
+		if (portion.Equals("&&", StringComparison.Ordinal))
 		{
 			op = Operators.And;
 			index += 2;
 		}
-		else if (portion == "||")
+		else if (portion.Equals("||", StringComparison.Ordinal))
 		{
 			op = Operators.Or;
 			index += 2;

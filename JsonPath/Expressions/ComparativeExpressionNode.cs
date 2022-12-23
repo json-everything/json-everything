@@ -17,6 +17,7 @@ internal class ComparativeExpressionParser
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression)
 	{
+		// TODO (efficiency opportunity) the first value is parsed twice
 		foreach (var parser in _parsers)
 		{
 			if (parser.TryParse(source, ref index, out expression)) return true;

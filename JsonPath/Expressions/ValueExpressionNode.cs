@@ -48,7 +48,17 @@ internal class ValueExpressionParser
 
 		while (i < source.Length)
 		{
+			// handle )
+			source.ConsumeWhitespace(ref i);
+			if (source[i] == ')')
+			{
+				nestLevel--;
+				i++;
+				continue;
+			}
+
 			var nextNest = nestLevel;
+			
 			// parse operator
 			if (!ValueOperatorParser.TryParse(source, ref i, out var op))
 			{
@@ -76,14 +86,6 @@ internal class ValueExpressionParser
 				// if we don't get a value, then the syntax is wrong
 				expression = null;
 				return false;
-			}
-
-			// handle )
-			source.ConsumeWhitespace(ref i);
-			if (source[i] == ')')
-			{
-				nextNest--;
-				i++;
 			}
 
 			if (left is BinaryValueExpressionNode bin)

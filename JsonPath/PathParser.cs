@@ -50,19 +50,21 @@ internal static class PathParser
 			return false;
 		}
 
-		source.ConsumeWhitespace(ref index);
+		var i = index;
+
+		source.ConsumeWhitespace(ref i);
 
 		var segments = new List<PathSegment>();
 		PathScope scope;
 
-		if (source[0] == '$')
+		if (source[i] == '$')
 			scope = PathScope.Global;
 		else if (requireGlobal)
 		{
 			path = null;
 			return false;
 		}
-		else if (source[0] == '@')
+		else if (source[i] == '@')
 			scope = PathScope.Local;
 		else
 		{
@@ -70,16 +72,17 @@ internal static class PathParser
 			return false;
 		}
 
-		index++; // consume $ or @
+		i++; // consume $ or @
 
-		while (index < source.Length)
+		while (i < source.Length)
 		{
-			if (!TryParseSegment(source, ref index, out var pathSegment)) break;
+			if (!TryParseSegment(source, ref i, out var pathSegment)) break;
 
 			segments.Add(pathSegment);
 		}
 
 		path = new JsonPath(scope, segments);
+		index = i;
 		return true;
 	}
 

@@ -10,7 +10,7 @@ internal class DevTest
 	public void Test()
 	{
 		var i = 0;
-		ComparativeExpressionParser.TryParse("@.foo", ref i, out var expr);
+		BooleanResultExpressionParser.TryParse(" 4 == @.foo && 5 == ( 5 ) ].foo", ref i, out var expr);
 
 		Console.WriteLine(expr.Evaluate(null, null));
 	}

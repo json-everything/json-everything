@@ -17,6 +17,7 @@ internal class LogicalExpressionParser
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
 	{
+		// TODO (efficiency opportunity) the first comparison is parsed twice
 		foreach (var parser in _parsers)
 		{
 			if (parser.TryParse(source, ref index, out expression)) return true;
