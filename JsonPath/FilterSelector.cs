@@ -40,7 +40,8 @@ internal class FilterSelector : ISelector
 
 	public void BuildString(StringBuilder builder)
 	{
-		throw new NotImplementedException();
+		builder.Append('?');
+		//Expression.BuildString(builder);
 	}
 }
 
@@ -54,7 +55,7 @@ internal class FilterSelectorParser : ISelectorParser
 			return false;
 		}
 
-		index++;
+		index++; // consume ?
 		if (!ExpressionParser.TryParse(source, ref index, out var expression))
 		{
 			selector = null;

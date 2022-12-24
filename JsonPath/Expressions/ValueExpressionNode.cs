@@ -61,10 +61,7 @@ internal class ValueExpressionParser
 			
 			// parse operator
 			if (!ValueOperatorParser.TryParse(source, ref i, out var op))
-			{
-				// if we don't get an op, then we're done
-				break;
-			}
+				break; // if we don't get an op, then we're done
 
 			// handle (
 			source.ConsumeWhitespace(ref i);
@@ -101,10 +98,14 @@ internal class ValueExpressionParser
 			nestLevel = nextNest;
 		}
 
-		if (nestLevel != 0)
+		switch (nestLevel)
 		{
-			expression = null;
-			return false;
+			case > 0:
+				expression = null;
+				return false;
+			case < 0:
+				i--; // it can really only be -1; don't consume ) from outer expressions
+				break;
 		}
 
 		index = i;

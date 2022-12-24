@@ -57,6 +57,15 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 
 		while (i < source.Length)
 		{
+			// handle )
+			source.ConsumeWhitespace(ref i);
+			if (source[i] == ')')
+			{
+				nestLevel--;
+				i++;
+				continue;
+			}
+
 			var nextNest = nestLevel;
 			// parse operator
 			if (!BinaryLogicalOperatorParser.TryParse(source, ref i, out var op))
@@ -83,14 +92,6 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 
 			BooleanResultExpressionNode right = comp;
 
-			// handle )
-			source.ConsumeWhitespace(ref i);
-			if (source[i] == ')')
-			{
-				nextNest--;
-				i++;
-			}
-
 			if (left is BinaryLogicalExpressionNode bin)
 			{
 				if (bin.Precedence < Precedence(op))
@@ -104,10 +105,14 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			nestLevel = nextNest;
 		}
 
-		if (nestLevel != 0)
+		switch (nestLevel)
 		{
-			expression = null;
-			return false;
+			case > 0:
+				expression = null;
+				return false;
+			case < 0:
+				i--; // it can really only be -1; don't consume ) from outer expressions
+				break;
 		}
 
 		index = i;

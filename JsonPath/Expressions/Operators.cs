@@ -100,6 +100,13 @@ internal static class BinaryComparativeOperatorParser
 	{
 		source.ConsumeWhitespace(ref index);
 
+		if (index > source.Length - 2)
+		{
+			// no need to check for < or > because there would be no room for an operand
+			op = null;
+			return false;
+		}
+
 		var portion = source[index..(index + 2)];
 
 		if (portion.Equals("==", StringComparison.Ordinal))
@@ -147,6 +154,12 @@ internal static class BinaryLogicalOperatorParser
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryLogicalOperator? op)
 	{
 		source.ConsumeWhitespace(ref index);
+
+		if (index > source.Length - 2)
+		{
+			op = null;
+			return false;
+		}
 
 		var portion = source[index..(index + 2)];
 

@@ -29,27 +29,51 @@ public class CburgmerFeatureValidationTests
 	private static readonly Regex _consensusPattern = new Regex(@"    consensus: (?<value>.*)");
 	private static readonly string[] _notSupported =
 	{
-		// expect these to be out of spec soon
-		"$.key-dash",
-		"$.-1",
-		"$.length",
-
 		// invalid per spec
 		"$...key",
 		"$.['key']",
 		"$.[\"key\"]",
+		"$..",
+		"$.key..",
+		".key",
+		"key",
+		"",
+		"$[?(@.key===42)]",
+
+		// relative paths were excluded
+		"@.a",
+
+		// dashes are not allowed
+		"$.key-dash",
+		"$[?(@.key-dash == 'value')]",
+
+		// property names must start with a letter
+		"$.2",
+		"$[?(@.2 == 'second')]",
+		"$[?(@.2 == 'third')]",
+		"$.-1",
+		"$.$",
 		"$.'key'",
 		"$.\"key\"",
 		"$..\"key\"",
 		"$..'key'",
 		"$..'key'",
-		"$..",
-		"$.key..",
-		"$.$",
 		"$.'some.key'",
-		".key",
-		"key",
-		"",
+
+		// json boolean literals are not valid expression results
+		"$[?(@.key>0 && false)]",
+		"$[?(@.key>0 && true)]",
+		"$[?(@.key>0 || false)]",
+		"$[?(@.key>0 || true)]",
+		"$[?(true)]",
+		"$[?(null)]",
+
+		// regex operator transitioned to functions
+		"$[?(@.name=~/hello.*/)]",
+		"$[?(@.name=~/@.pattern/)]",
+
+		// functions are only valid in expressions
+		"$.data.sum()",
 
 		// big numbers not supported
 		"$[2:-113667776004:-1]",
