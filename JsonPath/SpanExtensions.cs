@@ -71,7 +71,7 @@ internal static class SpanExtensions
 				case '8':
 				case '9':
 					end = i;
-					var allowDash = false;
+					var allowDash = true;
 					while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
 												 span[end].In('e', '.', '-')))
 					{

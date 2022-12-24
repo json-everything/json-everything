@@ -50,14 +50,13 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 		int Precedence(IBinaryLogicalOperator op) => nestLevel * 10 + op.Precedence;
 
 		source.ConsumeWhitespace(ref i);
-
-		// TODO handle !
-
-		if (source[i] == '(')
+		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
 			i++;
 		}
+		if (i == source.Length)
+			throw new PathParseException(i, "Unexpected end of input");
 
 		// first get a comparison
 		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp))
@@ -72,20 +71,22 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 		{
 			// handle )
 			source.ConsumeWhitespace(ref i);
-			if (source[i] == ')')
+			if (source[i] == ')' && nestLevel > 0)
 			{
-				nestLevel--;
-				i++;
-				continue;
+				while (i < source.Length && source[i] == ')' && nestLevel > 0)
+				{
+					nestLevel--;
+					i++;
+				}
+				if (i == source.Length)
+					throw new PathParseException(i, "Unexpected end of input");
+				if (nestLevel == 0) continue;
 			}
 
 			var nextNest = nestLevel;
 			// parse operator
 			if (!BinaryLogicalOperatorParser.TryParse(source, ref i, out var op))
-			{
-				// if we don't get an op, then we're done
-				break;
-			}
+				break; // if we don't get an op, then we're done
 
 			// handle (
 			source.ConsumeWhitespace(ref i);
@@ -96,14 +97,12 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			}
 
 			// parse right
-			if (!ComparativeExpressionParser.TryParse(source, ref i, out comp))
+			if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
 			{
 				// if we don't get a comparison, then the syntax is wrong
 				expression = null;
 				return false;
 			}
-
-			BooleanResultExpressionNode right = comp;
 
 			if (left is BinaryLogicalExpressionNode bin)
 			{
@@ -118,14 +117,10 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			nestLevel = nextNest;
 		}
 
-		switch (nestLevel)
+		if (nestLevel > 0)
 		{
-			case > 0:
-				expression = null;
-				return false;
-			case < 0:
-				i--; // it can really only be -1; don't consume ) from outer expressions
-				break;
+			expression = null;
+			return false;
 		}
 
 		index = i;

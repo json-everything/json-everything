@@ -20,6 +20,7 @@ public class InternalJsonParsingTests
 	{
 		return new[]
 		{
+			"-42",
 			"1+5",
 			"true",
 			"false",

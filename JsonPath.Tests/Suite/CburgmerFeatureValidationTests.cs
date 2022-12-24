@@ -29,25 +29,11 @@ public class CburgmerFeatureValidationTests
 	private static readonly Regex _consensusPattern = new Regex(@"    consensus: (?<value>.*)");
 	private static readonly string[] _notSupported =
 	{
-		// invalid per spec
-		"$...key",
-		"$.['key']",
-		"$.[\"key\"]",
-		"$..",
-		"$.key..",
-		".key",
-		"key",
-		"",
-		"$[?(@.key===42)]",
-
-		// relative paths were excluded
-		"@.a",
-
-		// dashes are not allowed
+		// dashes are not allowed in shorthand property names
 		"$.key-dash",
 		"$[?(@.key-dash == 'value')]",
 
-		// property names must start with a letter
+		// shorthand property names must start with a letter
 		"$.2",
 		"$[?(@.2 == 'second')]",
 		"$[?(@.2 == 'third')]",
@@ -60,12 +46,17 @@ public class CburgmerFeatureValidationTests
 		"$..'key'",
 		"$.'some.key'",
 
-		// json boolean literals are not valid expression results
+		// leading zeroes are not allowed for numeric literals
+		"$[?(@.key==010)]",
+
+		// JSON literals are not expression results
 		"$[?(@.key>0 && false)]",
 		"$[?(@.key>0 && true)]",
 		"$[?(@.key>0 || false)]",
 		"$[?(@.key>0 || true)]",
+		"$[?((@.key<44)==false)]",
 		"$[?(true)]",
+		"$[?(false)]",
 		"$[?(null)]",
 
 		// regex operator transitioned to functions
@@ -73,11 +64,34 @@ public class CburgmerFeatureValidationTests
 		"$[?(@.name=~/@.pattern/)]",
 
 		// functions are only valid in expressions
+		// and are not extensions on paths
 		"$.data.sum()",
+		"$[?(@.length() == 4)]",
+
+		// relative paths were excluded
+		"@.a",
+
+		// 'in' operator was excluded
+		"$[?(@.d in [2, 3])]",
+		"$[?(2 in @.d)]",
+
+		// only literals are supported in expressions
+		"$[?(@.d==['v1','v2'])]",
+
+		// other invalid syntaxes
+		"$...key",
+		"$.['key']",
+		"$.[\"key\"]",
+		"$..",
+		"$.key..",
+		".key",
+		"key",
+		"",
+		"$[?(@.key===42)]",
 
 		// big numbers not supported
 		"$[2:-113667776004:-1]",
-		"$[113667776004:2:-1]"
+		"$[113667776004:2:-1]",
 	};
 
 	private static readonly JsonSerializerOptions _serializerOptions = new()

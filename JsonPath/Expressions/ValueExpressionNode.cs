@@ -29,12 +29,13 @@ internal class ValueExpressionParser
 		int Precedence(IBinaryValueOperator op) => nestLevel * 10 + op.Precedence;
 
 		source.ConsumeWhitespace(ref i);
-
-		if (source[i] == '(')
+		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
 			i++;
 		}
+		if (i == source.Length)
+			throw new PathParseException(i, "Unexpected end of input");
 
 		// first get an operand
 		ValueExpressionNode? left = null;
@@ -53,15 +54,19 @@ internal class ValueExpressionParser
 		{
 			// handle )
 			source.ConsumeWhitespace(ref i);
-			if (source[i] == ')')
+			if (source[i] == ')' && nestLevel > 0)
 			{
-				nestLevel--;
-				i++;
-				continue;
+				while (i < source.Length && source[i] == ')' && nestLevel > 0)
+				{
+					nestLevel--;
+					i++;
+				}
+				if (i == source.Length)
+					throw new PathParseException(i, "Unexpected end of input");
+				if (nestLevel == 0) continue;
 			}
 
 			var nextNest = nestLevel;
-			
 			// parse operator
 			if (!ValueOperatorParser.TryParse(source, ref i, out var op))
 				break; // if we don't get an op, then we're done
@@ -101,14 +106,10 @@ internal class ValueExpressionParser
 			nestLevel = nextNest;
 		}
 
-		switch (nestLevel)
+		if (nestLevel > 0)
 		{
-			case > 0:
-				expression = null;
-				return false;
-			case < 0:
-				i--; // it can really only be -1; don't consume ) from outer expressions
-				break;
+			expression = null;
+			return false;
 		}
 
 		index = i;

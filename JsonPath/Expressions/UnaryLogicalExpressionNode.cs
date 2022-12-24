@@ -23,8 +23,14 @@ internal class UnaryLogicalExpressionNode : LogicalExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
+		var useGroup = Value is BinaryComparativeExpressionNode or BinaryLogicalExpressionNode;
+
 		builder.Append(Operator);
+		if (useGroup)
+			builder.Append('(');
 		Value.BuildString(builder);
+		if (useGroup)
+			builder.Append(')');
 	}
 
 	public override string ToString()
@@ -40,10 +46,17 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		// currently only the "not" operator is known
 		// it expects a ! then either a comparison or logical expression
 
-		// parse operator
-		// parse comparison/logic
-
 		var i = index;
+		var nestLevel = 0;
+
+		source.ConsumeWhitespace(ref i);
+		while (i < source.Length && source[i] == '(')
+		{
+			nestLevel++;
+			i++;
+		}
+		if (i == source.Length)
+			throw new PathParseException(i, "Unexpected end of input");
 
 		// parse operator
 		if (!UnaryLogicalOperatorParser.TryParse(source, ref i, out var op))
@@ -54,6 +67,20 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 
 		// parse comparison
 		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+		{
+			expression = null;
+			return false;
+		}
+
+		source.ConsumeWhitespace(ref i);
+		while (i < source.Length && source[i] == ')' && nestLevel > 0)
+		{
+			nestLevel--;
+			i++;
+		}
+		if (i == source.Length)
+			throw new PathParseException(i, "Unexpected end of input");
+		if (nestLevel != 0)
 		{
 			expression = null;
 			return false;

@@ -28,9 +28,24 @@ internal class BinaryValueExpressionNode : ValueExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
+		var useGroup = Left is BinaryValueExpressionNode lBin &&
+		               (lBin.Precedence - Precedence) % 10 > 1;
+
+		if (useGroup)
+			builder.Append('(');
 		Left.BuildString(builder);
+		if (useGroup)
+			builder.Append(')');
+	
 		builder.Append(Operator);
+
+		useGroup = Right is BinaryValueExpressionNode rBin &&
+		           (rBin.Precedence - Precedence) % 10 > 1;
+		if (useGroup)
+			builder.Append('(');
 		Right.BuildString(builder);
+		if (useGroup)
+			builder.Append(')');
 	}
 
 	public override string ToString()

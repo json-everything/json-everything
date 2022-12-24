@@ -41,6 +41,16 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression)
 	{
 		var i = index;
+		var nestLevel = 0;
+
+		source.ConsumeWhitespace(ref i);
+		while (i < source.Length && source[i] == '(')
+		{
+			nestLevel++;
+			i++;
+		}
+		if (i == source.Length)
+			throw new PathParseException(i, "Unexpected end of input");
 
 		// parse value
 		if (!ValueExpressionParser.TryParse(source, ref i, out var left))
@@ -58,6 +68,20 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 
 		// parse value
 		if (!ValueExpressionParser.TryParse(source, ref i, out var right))
+		{
+			expression = null;
+			return false;
+		}
+
+		source.ConsumeWhitespace(ref i);
+		while (i < source.Length && source[i] == ')' && nestLevel > 0)
+		{
+			nestLevel--;
+			i++;
+		}
+		if (i == source.Length)
+			throw new PathParseException(i, "Unexpected end of input");
+		if (nestLevel != 0)
 		{
 			expression = null;
 			return false;
