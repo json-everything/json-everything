@@ -8,4 +8,9 @@ internal class NoOpOperator : IUnaryLogicalOperator
 	{
 		return value;
 	}
+
+	public override string ToString()
+	{
+		return string.Empty;
+	}
 }

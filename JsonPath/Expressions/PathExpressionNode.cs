@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
@@ -26,9 +27,19 @@ internal class PathExpressionNode : ValueExpressionNode
 			: null;
 	}
 
+	public override void BuildString(StringBuilder builder)
+	{
+		Path.BuildString(builder);
+	}
+
 	public static implicit operator PathExpressionNode(JsonPath value)
 	{
 		return new PathExpressionNode(value);
+	}
+
+	public override string ToString()
+	{
+		return Path.ToString();
 	}
 }
 

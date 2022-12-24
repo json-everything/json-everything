@@ -8,4 +8,9 @@ internal class OrOperator : IBinaryLogicalOperator
 	{
 		return left || right;
 	}
+
+	public override string ToString()
+	{
+		return "||";
+	}
 }

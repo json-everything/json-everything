@@ -41,7 +41,12 @@ internal class FilterSelector : ISelector
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append('?');
-		//Expression.BuildString(builder);
+		Expression.BuildString(builder);
+	}
+
+	public override string ToString()
+	{
+		return $"?{Expression}";
 	}
 }
 

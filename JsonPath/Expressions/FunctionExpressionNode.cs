@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
@@ -8,17 +10,40 @@ namespace Json.Path.Expressions;
 internal class FunctionExpressionNode : ValueExpressionNode
 {
 	public string Name { get; }
-	public IEnumerable<ValueExpressionNode> Parameters { get; }
+	public ValueExpressionNode[] Parameters { get; }
 
 	public FunctionExpressionNode(string name, IEnumerable<ValueExpressionNode> parameters)
 	{
 		Name = name;
-		Parameters = parameters;
+		Parameters = parameters.ToArray();
 	}
 
 	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		throw new NotImplementedException();
+	}
+
+	public override void BuildString(StringBuilder builder)
+	{
+		builder.Append(Name);
+		builder.Append('(');
+
+		if (Parameters.Any())
+		{
+			Parameters[0].BuildString(builder);
+			for (int i = 1; i < Parameters.Length; i++)
+			{
+				builder.Append(',');
+				Parameters[i].BuildString(builder);
+			}
+		}
+
+		builder.Append(')');
+	}
+
+	public override string ToString()
+	{
+		return $"{Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)Parameters)})";
 	}
 }
 

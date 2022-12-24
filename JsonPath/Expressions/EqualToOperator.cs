@@ -11,4 +11,9 @@ internal class EqualToOperator : IBinaryComparativeOperator
 	{
 		return left.IsEquivalentTo(right);
 	}
+
+	public override string ToString()
+	{
+		return "==";
+	}
 }

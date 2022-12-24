@@ -8,4 +8,9 @@ internal class AndOperator : IBinaryLogicalOperator
 	{
 		return left && right;
 	}
+
+	public override string ToString()
+	{
+		return "&&";
+	}
 }

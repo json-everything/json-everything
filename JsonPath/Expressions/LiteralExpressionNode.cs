@@ -2,6 +2,7 @@
 using System;
 using System.Text.Json.Nodes;
 using Json.More;
+using System.Text;
 
 namespace Json.Path.Expressions;
 
@@ -19,9 +20,14 @@ internal class LiteralExpressionNode : ValueExpressionNode
 		return Value;
 	}
 
-	public static implicit operator LiteralExpressionNode(JsonNode? value)
+	public override void BuildString(StringBuilder builder)
 	{
-		return new LiteralExpressionNode(value);
+		builder.Append(Value.AsJsonString());
+	}
+
+	public override string ToString()
+	{
+		return Value.AsJsonString();
 	}
 }
 

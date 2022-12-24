@@ -10,4 +10,9 @@ internal class ExistsOperator : IUnaryComparativeOperator
 	{
 		return value is not null;
 	}
+
+	public override string ToString()
+	{
+		return string.Empty;
+	}
 }

@@ -15,4 +15,9 @@ internal class SubtractOperator : IBinaryValueOperator
 
 		return lValue.GetNumber() - rValue.GetNumber();
 	}
+
+	public override string ToString()
+	{
+		return "-";
+	}
 }

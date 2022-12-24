@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
@@ -24,6 +25,18 @@ internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 	public override bool Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		return Operator.Evaluate(Left.Evaluate(globalParameter, localParameter), Right.Evaluate(globalParameter, localParameter));
+	}
+
+	public override void BuildString(StringBuilder builder)
+	{
+		Left.BuildString(builder);
+		builder.Append(Operator);
+		Right.BuildString(builder);
+	}
+
+	public override string ToString()
+	{
+		return $"{Left}{Operator}{Right}";
 	}
 }
 

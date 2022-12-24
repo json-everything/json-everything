@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
@@ -7,6 +8,8 @@ namespace Json.Path.Expressions;
 internal abstract class ValueExpressionNode
 {
 	public abstract JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter);
+
+	public abstract void BuildString(StringBuilder builder);
 }
 
 internal class ValueExpressionParser

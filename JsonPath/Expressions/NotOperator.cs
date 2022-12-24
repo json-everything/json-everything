@@ -8,4 +8,9 @@ internal class NotOperator : IUnaryLogicalOperator
 	{
 		return !value;
 	}
+
+	public override string ToString()
+	{
+		return "!";
+	}
 }

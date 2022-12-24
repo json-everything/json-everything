@@ -11,4 +11,9 @@ internal class NotEqualToOperator : IBinaryComparativeOperator
 	{
 		return !left.IsEquivalentTo(right);
 	}
+
+	public override string ToString()
+	{
+		return "!=";
+	}
 }

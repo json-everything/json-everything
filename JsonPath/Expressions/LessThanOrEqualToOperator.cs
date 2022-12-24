@@ -22,4 +22,9 @@ internal class LessThanOrEqualToOperator : IBinaryComparativeOperator
 
 		return lValue.GetNumber() < rValue.GetNumber();
 	}
+
+	public override string ToString()
+	{
+		return "<=";
+	}
 }
