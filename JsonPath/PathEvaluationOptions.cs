@@ -1,15 +1,12 @@
 ﻿namespace Json.Path;
 
 /// <summary>
-/// Provides options for path evaluation.
+/// Provides a number of options to be used during evaluation.
 /// </summary>
+/// <remarks>
+/// Currently that number is zero.
+/// </remarks>
 public class PathEvaluationOptions
 {
-	/// <summary>
-	/// Provides options for experimental features.
-	/// </summary>
-	/// <remarks>
-	/// Changes to this object will not be reflected in the version number.
-	/// </remarks>
-	public ExperimentalFeatures ExperimentalFeatures { get; } = new();
+//	public bool Strict { get; set; } // TODO
 }

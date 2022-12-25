@@ -1,60 +1,57 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
-internal class IndexSelector : SelectorBase
+internal class IndexSelector : ISelector
 {
-	private readonly List<IIndexExpression>? _ranges;
+	public int Index { get; }
 
-	public IndexSelector(IEnumerable<IIndexExpression>? ranges)
+	public IndexSelector(int index)
 	{
-		_ranges = ranges?.ToList();
-	}
-
-	protected override IEnumerable<PathMatch> ProcessMatch(PathMatch match)
-	{
-		switch (match.Value.ValueKind)
-		{
-			case JsonValueKind.Array:
-				var array = match.Value.EnumerateArray().ToArray();
-				IEnumerable<int> indices;
-				indices = _ranges?.OfType<IArrayIndexExpression>()
-							  .SelectMany(r => r.GetIndices(match.Value))
-							  .Where(i => 0 <= i && i < array.Length)
-							  .Distinct() ??
-						  Enumerable.Range(0, array.Length);
-				foreach (var index in indices)
-				{
-					yield return new PathMatch(array[index], match.Location.AddSelector(new IndexSelector(new[] { (SimpleIndex)index })));
-				}
-				break;
-			case JsonValueKind.Object:
-				if (_ranges != null)
-				{
-					var props = _ranges.OfType<IObjectIndexExpression>()
-						.SelectMany(r => r.GetProperties(match.Value))
-						.Distinct();
-					foreach (var prop in props)
-					{
-						if (!match.Value.TryGetProperty(prop, out var value)) continue;
-						yield return new PathMatch(value, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)prop })));
-					}
-				}
-				else
-				{
-					foreach (var prop in match.Value.EnumerateObject())
-					{
-						yield return new PathMatch(prop.Value, match.Location.AddSelector(new IndexSelector(new[] { (PropertyNameIndex)prop.Name })));
-					}
-				}
-				break;
-		}
+		Index = index;
 	}
 
 	public override string ToString()
 	{
-		return _ranges == null ? "[*]" : $"[{string.Join(",", _ranges.Select(r => r.ToString()))}]";
+		return Index.ToString();
+	}
+
+	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
+	{
+		var node = match.Value;
+		if (node is not JsonArray arr) yield break;
+		if (Index >= arr.Count) yield break;
+
+		if (Index < 0)
+		{
+			var adjusted = arr.Count + Index;
+			if (adjusted < 0) yield break;
+			yield return new Node(arr[adjusted], match.Location.Append(adjusted));
+		}
+		else yield return new Node(arr[Index], match.Location.Append(Index));
+	}
+
+	public void BuildString(StringBuilder builder)
+	{
+		builder.Append(Index);
+	}
+}
+
+internal class IndexSelectorParser : ISelectorParser
+{
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	{
+		if (!source.TryGetInt(ref index, out var value))
+		{
+			selector = null;
+			return false;
+		}
+
+		selector = new IndexSelector(value);
+		return true;
 	}
 }

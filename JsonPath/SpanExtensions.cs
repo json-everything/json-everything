@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text.Json;
-using Json.Path.QueryExpressions;
+using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path;
 
@@ -15,6 +14,8 @@ internal static class SpanExtensions
 		{
 			i++;
 		}
+		if (i == span.Length)
+			throw new PathParseException(i, "Unexpected end of input");
 	}
 
 	public static bool TryGetInt(this ReadOnlySpan<char> span, ref int i, out int value)
@@ -40,99 +41,10 @@ internal static class SpanExtensions
 		return foundNumber;
 	}
 
-	// expects the full expression, including the ()
-	public static bool TryParseExpression(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out QueryExpressionNode? expression)
+	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out JsonNode? node)
 	{
-		if (span[i] != '(')
-		{
-			expression = null;
-			return false;
-		}
-
-		i++;
 		span.ConsumeWhitespace(ref i);
-		if (!QueryExpressionNode.TryParseSingleValue(span, ref i, out var left))
-		{
-			expression = null;
-			return false;
-		}
 
-		var followingNodes = new List<(IQueryExpressionOperator, QueryExpressionNode)>();
-		while (i < span.Length && span[i] != ')')
-		{
-			span.ConsumeWhitespace(ref i);
-			if (!Operators.TryParse(span, ref i, out var op))
-			{
-				expression = null;
-				return false;
-			}
-
-			QueryExpressionNode? right;
-			span.ConsumeWhitespace(ref i);
-			if (span[i] == '(')
-			{
-				span.ConsumeWhitespace(ref i);
-				if (!span.TryParseExpression(ref i, out right))
-				{
-					expression = null;
-					return false;
-				}
-			}
-			else
-			{
-				span.ConsumeWhitespace(ref i);
-				if (!QueryExpressionNode.TryParseSingleValue(span, ref i, out right))
-				{
-					expression = null;
-					return false;
-				}
-			}
-
-			followingNodes.Add((op, right));
-		}
-
-		i++; // consume ')'
-
-		if (!followingNodes.Any())
-		{
-			expression = left.Operator is NotOperator
-				? left
-				: new QueryExpressionNode(left, Operators.Exists, null!);
-			return true;
-		}
-
-		var current = new Stack<QueryExpressionNode>();
-		QueryExpressionNode? root = null;
-		foreach (var (op, node) in followingNodes)
-		{
-			if (root == null)
-			{
-				root = new QueryExpressionNode(left, op, node);
-				current.Push(root);
-				continue;
-			}
-
-			while (current.Any() && current.Peek().Operator?.OrderOfOperation < op.OrderOfOperation)
-			{
-				current.Pop();
-			}
-
-			if (current.Any())
-			{
-				current.Peek().InsertRight(op, node);
-				continue;
-			}
-
-			root = new QueryExpressionNode(root, op, node);
-			current.Push(root);
-		}
-
-		expression = root;
-		return expression != null;
-	}
-
-	public static bool TryParseJsonElement(this ReadOnlySpan<char> span, ref int i, out JsonElement element)
-	{
 		try
 		{
 			int end = i;
@@ -159,7 +71,7 @@ internal static class SpanExtensions
 				case '8':
 				case '9':
 					end = i;
-					var allowDash = false;
+					var allowDash = true;
 					while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
 												 span[end].In('e', '.', '-')))
 					{
@@ -210,22 +122,40 @@ internal static class SpanExtensions
 					end++;
 					break;
 				default:
-					element = default;
+					node = default;
 					return false;
 			}
 
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			using var doc = JsonDocument.Parse(block.ToString());
-			element = doc.RootElement.Clone();
+			node = JsonNode.Parse(block.ToString()) ?? JsonNull.SignalNode;
 			i = end;
 			return true;
 		}
 		catch
 		{
-			element = default;
+			node = default;
 			return false;
 		}
+	}
+
+	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	{
+		var i = index;
+
+		source.ConsumeWhitespace(ref i);
+
+		while (i < source.Length && source[i].IsValidForPropertyName())
+		{
+			i++;
+		}
+
+		if (index == i) return false;
+
+		var name = source[index..i].ToString();
+		selectors.Add(new NameSelector(name));
+		index = i;
+		return true;
 	}
 }

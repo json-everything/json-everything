@@ -144,17 +144,17 @@
 			return;
 		}
 
-		var results = path.Evaluate(instance);
+		//var results = path.Evaluate(instance);
 
-		var resultText = results.Error == null
-			? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			})
-			: string.Empty;
+		//var resultText = results.Error == null
+		//	? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
+		//	{
+		//		WriteIndented = true,
+		//		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		//	})
+		//	: string.Empty;
 
-		await _outputEditor.SetValue(resultText);
+		//await _outputEditor.SetValue(resultText);
 	}
 
 	private async Task SavePath(ChangeEventArgs args)

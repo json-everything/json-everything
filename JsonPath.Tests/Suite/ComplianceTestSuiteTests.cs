@@ -20,7 +20,7 @@ public class ComplianceTestSuiteTests
 	};
 
 	//  - id: array_index
-	//    selector: $[2]
+	//    pathSegment: $[2]
 	//    document: ["first", "second", "third", "forth", "fifth"]
 	//    consensus: ["third"]
 	//    scalar-consensus: "third"
@@ -50,17 +50,16 @@ public class ComplianceTestSuiteTests
 		Console.WriteLine(testCase);
 		Console.WriteLine();
 
-		JsonPath path = null;
-		PathResult actual = null;
+		JsonPath? path = null;
+		PathResult? actual = null;
 
 		var time = Debugger.IsAttached ? int.MaxValue : 100;
 		using var cts = new CancellationTokenSource(time);
 		Task.Run(() =>
 		{
-			if (!JsonPath.TryParse(testCase.Selector, out path)) return;
-
-			if (testCase.Document.ValueKind == JsonValueKind.Undefined) return;
-
+			if (testCase.Document == null) return;
+			path = JsonPath.Parse(testCase.Selector);
+			
 			actual = path.Evaluate(testCase.Document);
 		}, cts.Token).Wait(cts.Token);
 
@@ -73,14 +72,51 @@ public class ComplianceTestSuiteTests
 			Assert.Fail($"Could not parse path: {testCase.Selector}");
 		}
 
-		var actualValues = actual.Matches.Select(m => m.Value).AsJsonElement();
+		var actualValues = actual!.Matches!.Select(m => m.Value).ToJsonArray();
 		Console.WriteLine($"Actual (values): {actualValues}");
 		Console.WriteLine();
 		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
-		var expected = testCase.Result.AsJsonElement();
+		var expected = testCase.Result.ToJsonArray();
 		Assert.IsTrue(expected.IsEquivalentTo(actualValues));
+	}
+
+	[TestCaseSource(nameof(TestCases))]
+	public void Stringify(ComplianceTestCase testCase)
+	{
+		if (_notSupported.Contains(testCase.Selector))
+			Assert.Inconclusive("This case will not be supported.");
+
+		Console.WriteLine();
+		Console.WriteLine();
+		Console.WriteLine(testCase);
+		Console.WriteLine();
+
+		JsonPath? path = null;
+
+		var time = Debugger.IsAttached ? int.MaxValue : 100;
+		using var cts = new CancellationTokenSource(time);
+		Task.Run(() =>
+		{
+			if (testCase.Document == null) return;
+			path = JsonPath.Parse(testCase.Selector);
+		}, cts.Token).Wait(cts.Token);
+
+		if (path != null && testCase.InvalidSelector)
+			Assert.Inconclusive($"{testCase.Selector} is not a valid path but was parsed without error.");
+
+		if (path == null)
+		{
+			if (testCase.InvalidSelector) return;
+			Assert.Fail($"Could not parse path: {testCase.Selector}");
+		}
+
+		var backToString = path.ToString();
+		Console.WriteLine(backToString);
+
+		if (testCase.Selector != backToString)
+			Assert.Inconclusive();
 	}
 }

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 
 namespace Json.Path.Tests.Suite;
 
@@ -10,8 +9,8 @@ public class ComplianceTestCase
 {
 	public string Name { get; set; }
 	public string Selector { get; set; }
-	public JsonElement Document { get; set; }
-	public List<JsonElement> Result { get; set; }
+	public JsonNode? Document { get; set; }
+	public List<JsonNode?> Result { get; set; }
 	[JsonPropertyName("invalid_selector")]
 	public bool InvalidSelector { get; set; }
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,18 +29,83 @@ public class CburgmerFeatureValidationTests
 	private static readonly Regex _consensusPattern = new Regex(@"    consensus: (?<value>.*)");
 	private static readonly string[] _notSupported =
 	{
-		// expect these to be out of spec soon
+		// dashes are not allowed in shorthand property names
 		"$.key-dash",
+		"$[?(@.key-dash == 'value')]",
+
+		// shorthand property names must start with a letter
+		"$.2",
+		"$[?(@.2 == 'second')]",
+		"$[?(@.2 == 'third')]",
 		"$.-1",
-		"$.length",
+		"$.$",
+		"$.'key'",
+		"$.\"key\"",
+		"$..\"key\"",
+		"$..'key'",
+		"$..'key'",
+		"$.'some.key'",
+
+		// leading zeroes are not allowed for numeric literals
+		"$[?(@.key==010)]",
+
+		// JSON literals are not expression results
+		"$[?(@.key>0 && false)]",
+		"$[?(@.key>0 && true)]",
+		"$[?(@.key>0 || false)]",
+		"$[?(@.key>0 || true)]",
+		"$[?((@.key<44)==false)]",
+		"$[?(true)]",
+		"$[?(false)]",
+		"$[?(null)]",
+
+		// regex operator transitioned to functions
+		"$[?(@.name=~/hello.*/)]",
+		"$[?(@.name=~/@.pattern/)]",
+
+		// functions are only valid in expressions
+		// and are not extensions on paths
+		"$.data.sum()",
+		"$[?(@.length() == 4)]",
+
+		// relative paths were excluded
+		"@.a",
+
+		// 'in' operator was excluded
+		"$[?(@.d in [2, 3])]",
+		"$[?(2 in @.d)]",
+
+		// only literals are supported in expressions
+		"$[?(@.d==['v1','v2'])]",
+
+		// other invalid syntaxes
+		"$...key",
+		"$.['key']",
+		"$.[\"key\"]",
+		"$..",
+		"$.key..",
+		".key",
+		"key",
+		"",
+		"$[?(@.key===42)]",
 
 		// big numbers not supported
 		"$[2:-113667776004:-1]",
-		"$[113667776004:2:-1]"
+		"$[113667776004:2:-1]",
+	};
+
+	private static readonly JsonSerializerOptions _serializerOptions = new()
+	{
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+	private static readonly JsonSerializerOptions _linearSerializerOptions = new()
+	{
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
 	//  - id: array_index
-	//    selector: $[2]
+	//    pathSegment: $[2]
 	//    document: ["first", "second", "third", "forth", "fifth"]
 	//    consensus: ["third"]
 	//    scalar-consensus: "third"
@@ -45,7 +113,7 @@ public class CburgmerFeatureValidationTests
 	{
 		get
 		{
-			static bool TryMatch(string line, Regex pattern, out string value)
+			static bool TryMatch(string line, Regex pattern, [NotNullWhen(true)] out string? value)
 			{
 				var match = pattern.Match(line);
 				if (!match.Success)
@@ -60,7 +128,7 @@ public class CburgmerFeatureValidationTests
 
 			// what I wouldn't give for a YAML parser...
 			var fileLines = File.ReadAllLines(_regressionResultsFile);
-			CburgmerTestCase currentTestCase = null;
+			CburgmerTestCase? currentTestCase = null;
 			foreach (var line in fileLines)
 			{
 				if (TryMatch(line, _idPattern, out var value))
@@ -71,15 +139,15 @@ public class CburgmerFeatureValidationTests
 				}
 				else if (TryMatch(line, _selectorPattern, out value))
 				{
-					currentTestCase.PathString = JsonDocument.Parse(value).RootElement.GetString();
+					currentTestCase!.PathString = JsonNode.Parse(value)!.GetValue<string>();
 				}
 				else if (TryMatch(line, _documentPattern, out value))
 				{
-					currentTestCase.JsonString = value;
+					currentTestCase!.JsonString = value;
 				}
 				else if (TryMatch(line, _consensusPattern, out value))
 				{
-					currentTestCase.Consensus = value;
+					currentTestCase!.Consensus = value;
 				}
 			}
 		}
@@ -96,41 +164,55 @@ public class CburgmerFeatureValidationTests
 		Console.WriteLine(testCase);
 		Console.WriteLine();
 
-		PathResult actual = null;
+		PathResult? actual = null;
 
+		Exception? exception = null;
 		var time = Debugger.IsAttached ? int.MaxValue : 100;
 		using var cts = new CancellationTokenSource(time);
-		Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token).Wait(cts.Token);
+		Task.Run(() => actual = Evaluate(testCase.JsonString, testCase.PathString), cts.Token)
+			.ContinueWith(taskResult =>
+			{
+				if (taskResult.IsFaulted)
+					exception = taskResult.Exception!.InnerException;
+			}, cts.Token)
+			.Wait(cts.Token);
 
 		if (actual == null)
 		{
-			if (testCase.Consensus == "NOT_SUPPORTED") return;
+			if (testCase.Consensus == "NOT_SUPPORTED")
+			{
+				if (exception != null) 
+					Console.WriteLine(exception);
+				return;
+			}
+
+			if (exception != null)
+				throw new Exception("An exception was thrown", exception);
 			if (testCase.Consensus == null)
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 
 			Assert.Fail($"Could not parse path: {testCase.PathString}");
 		}
 
-		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual.Matches.Select(x => x.Value))}");
+		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual.Matches.Select(x => x.Value), _linearSerializerOptions)}");
 		Console.WriteLine();
-		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual)}");
+		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, _serializerOptions)}");
 		if (testCase.Consensus == null)
 			Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 		else
 		{
 			if (testCase.Consensus == "NOT_SUPPORTED") return;
-			var expected = JsonDocument.Parse(testCase.Consensus).RootElement;
-			Assert.IsTrue(expected.EnumerateArray().All(v => actual.Matches.Any(m => JsonElementEqualityComparer.Instance.Equals(v, m.Value))));
+			var expected = JsonNode.Parse(testCase.Consensus);
+			Assert.IsTrue(expected.AsArray().All(v => actual.Matches.Any(m => JsonNodeEqualityComparer.Instance.Equals(v, m.Value))));
 		}
 	}
 
-	private static PathResult Evaluate(string jsonString, string pathString)
+	private static PathResult? Evaluate(string jsonString, string pathString)
 	{
-		var o = JsonDocument.Parse(jsonString).RootElement;
-		var selector = pathString;
-		if (!JsonPath.TryParse(selector, out var path))
-			return null;
-		var results = path.Evaluate(o);
+		var o = JsonNode.Parse(jsonString);
+
+		var path = JsonPath.Parse(pathString);
+		var results = path?.Evaluate(o);
 
 		return results;
 	}
