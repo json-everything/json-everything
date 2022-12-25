@@ -26,7 +26,7 @@ internal class SliceSelector : ISelector
 			: $"{Start}:{End}";
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
+	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is not JsonArray arr) yield break;
@@ -42,7 +42,7 @@ internal class SliceSelector : ISelector
 			var i = lower;
 			while (i < upper)
 			{
-				yield return new PathMatch(arr[i], match.Location.Append(i));
+				yield return new Node(arr[i], match.Location.Append(i));
 				i += step;
 			}
 		}
@@ -51,7 +51,7 @@ internal class SliceSelector : ISelector
 			var i = upper;
 			while (lower < i)
 			{
-				yield return new PathMatch(arr[i], match.Location.Append(i));
+				yield return new Node(arr[i], match.Location.Append(i));
 				i += step;
 			}
 		}

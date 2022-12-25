@@ -10,6 +10,9 @@ internal class LessThanOrEqualToOperator : IBinaryComparativeOperator
 
 	public bool Evaluate(JsonNode? left, JsonNode? right)
 	{
+		left = left.TryGetSingleValue();
+		right = right.TryGetSingleValue();
+
 		if (left.IsEquivalentTo(right)) return true;
 
 		if (left is not JsonValue lValue ||

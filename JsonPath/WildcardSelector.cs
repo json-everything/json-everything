@@ -23,14 +23,14 @@ internal class WildcardSelector : ISelector, IHaveShorthand
 		return "*";
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
+	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is JsonObject obj)
 		{
 			foreach (var member in obj)
 			{
-				yield return new PathMatch(member.Value, match.Location.Append(member.Key));
+				yield return new Node(member.Value, match.Location.Append(member.Key));
 			}
 		}
 		else if (node is JsonArray arr)
@@ -38,7 +38,7 @@ internal class WildcardSelector : ISelector, IHaveShorthand
 			for (var i = 0; i < arr.Count; i++)
 			{
 				var member = arr[i];
-				yield return new PathMatch(member, match.Location.Append(i));
+				yield return new Node(member, match.Location.Append(i));
 			}
 		}
 	}

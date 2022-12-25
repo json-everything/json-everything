@@ -9,8 +9,8 @@ internal class AddOperator : IBinaryValueOperator
 
 	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
-		if (left is not JsonValue lValue ||
-		    right is not JsonValue rValue)
+		if (left.TryGetSingleValue() is not JsonValue lValue ||
+		    right.TryGetSingleValue() is not JsonValue rValue)
 			return null;
 
 		if (left.TryGetValue(out string? leftString) &&

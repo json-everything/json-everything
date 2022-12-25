@@ -7,7 +7,7 @@ namespace Json.Path;
 /// Represents a single match.
 /// </summary>
 [DebuggerDisplay("{Value} - {Location}")]
-public class PathMatch
+public class Node
 {
 	/// <summary>
 	/// The value at the matching location.
@@ -16,9 +16,9 @@ public class PathMatch
 	/// <summary>
 	/// The location where the value was found.
 	/// </summary>
-	public JsonPath Location { get; }
+	public JsonPath? Location { get; }
 
-	internal PathMatch(in JsonNode? value, in JsonPath location)
+	internal Node(in JsonNode? value, in JsonPath? location)
 	{
 		Value = value;
 		Location = location;

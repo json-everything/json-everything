@@ -9,23 +9,30 @@ namespace Json.Path.Expressions;
 
 internal class FunctionExpressionNode : ValueExpressionNode
 {
-	public string Name { get; }
+	public IPathFunctionDefinition Function { get; }
 	public ValueExpressionNode[] Parameters { get; }
 
-	public FunctionExpressionNode(string name, IEnumerable<ValueExpressionNode> parameters)
+	public FunctionExpressionNode(IPathFunctionDefinition function, IEnumerable<ValueExpressionNode> parameters)
 	{
-		Name = name;
+		Function = function;
 		Parameters = parameters.ToArray();
 	}
 
 	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
-		throw new NotImplementedException();
+		var parameterValues = Parameters.Select(x =>
+		{
+			var result = x.Evaluate(globalParameter, localParameter);
+			if (result != null) return (NodeList)result;
+			return NodeList.Empty;
+		});
+
+		return Function.Evaluate(parameterValues);
 	}
 
 	public override void BuildString(StringBuilder builder)
 	{
-		builder.Append(Name);
+		builder.Append(Function.Name);
 		builder.Append('(');
 
 		if (Parameters.Any())
@@ -43,7 +50,7 @@ internal class FunctionExpressionNode : ValueExpressionNode
 
 	public override string ToString()
 	{
-		return $"{Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)Parameters)})";
+		return $"{Function.Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)Parameters)})";
 	}
 }
 
@@ -93,7 +100,7 @@ internal class FunctionExpressionParser : IValueExpressionParser
 					i++;
 					break;
 				case ',':
-					index++;
+					i++;
 					break;
 				default:
 					expression = null;
@@ -101,7 +108,21 @@ internal class FunctionExpressionParser : IValueExpressionParser
 			}
 		}
 
-		expression = new FunctionExpressionNode(name, parameters);
+		if (!FunctionRepository.TryGet(name, out var function))
+		{
+			expression = null;
+			return false;
+		}
+
+		if (function.MinArgumentCount > parameters.Count ||
+		    parameters.Count > function.MaxArgumentCount)
+		{
+			expression = null;
+			return false;
+		}
+
+		expression = new FunctionExpressionNode(function, parameters);
+		index = i;
 		return true;
 	}
 }

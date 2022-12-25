@@ -32,12 +32,12 @@ internal class NameSelector : ISelector, IHaveShorthand
 		return $"'{Name}'"; // TODO escape this
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
+	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is not JsonObject obj) yield break;
 
-		if (obj.TryGetPropertyValue(Name, out var value)) yield return new PathMatch(value, match.Location.Append(Name));
+		if (obj.TryGetPropertyValue(Name, out var value)) yield return new Node(value, match.Location.Append(Name));
 	}
 
 	public void BuildString(StringBuilder builder)

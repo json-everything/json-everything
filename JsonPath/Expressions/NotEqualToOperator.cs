@@ -9,7 +9,7 @@ internal class NotEqualToOperator : IBinaryComparativeOperator
 
 	public bool Evaluate(JsonNode? left, JsonNode? right)
 	{
-		return !left.IsEquivalentTo(right);
+		return !left.TryGetSingleValue().IsEquivalentTo(right.TryGetSingleValue());
 	}
 
 	public override string ToString()

@@ -51,14 +51,14 @@ public class JsonPath
 	/// <returns>The results of the evaluation.</returns>
 	public PathResult Evaluate(JsonNode? root, PathEvaluationOptions? options = null)
 	{
-		IEnumerable<PathMatch> currentMatches = new[] { new PathMatch(root, Root) };
+		IEnumerable<Node> currentMatches = new[] { new Node(root, Root) };
 
 		foreach (var segment in _segments)
 		{
 			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x, root));
 		}
 
-		return new PathResult(currentMatches.ToList());
+		return new PathResult(new NodeList(currentMatches));
 	}
 
 	internal JsonPath Append(string name)
@@ -91,9 +91,4 @@ public class JsonPath
 			segment.BuildString(builder);
 		}
 	}
-}
-
-public class PathEvaluationOptions
-{
-	
 }

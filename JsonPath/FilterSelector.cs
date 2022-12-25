@@ -16,7 +16,7 @@ internal class FilterSelector : ISelector
 		Expression = expression;
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
+	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is JsonObject obj)
@@ -24,7 +24,7 @@ internal class FilterSelector : ISelector
 			foreach (var member in obj)
 			{
 				if (Expression.Evaluate(rootNode, member.Value))
-					yield return new PathMatch(member.Value, match.Location.Append(member.Key));
+					yield return new Node(member.Value, match.Location.Append(member.Key));
 			}
 		}
 		else if (node is JsonArray arr)
@@ -33,7 +33,7 @@ internal class FilterSelector : ISelector
 			{
 				var member = arr[(Index)i];
 				if (Expression.Evaluate(rootNode, member))
-					yield return new PathMatch(member, match.Location.Append(i));
+					yield return new Node(member, match.Location.Append(i));
 			}
 		}
 	}

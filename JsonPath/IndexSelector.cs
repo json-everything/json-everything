@@ -20,7 +20,7 @@ internal class IndexSelector : ISelector
 		return Index.ToString();
 	}
 
-	public IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
+	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
 		if (node is not JsonArray arr) yield break;
@@ -30,9 +30,9 @@ internal class IndexSelector : ISelector
 		{
 			var adjusted = arr.Count + Index;
 			if (adjusted < 0) yield break;
-			yield return new PathMatch(arr[adjusted], match.Location.Append(adjusted));
+			yield return new Node(arr[adjusted], match.Location.Append(adjusted));
 		}
-		else yield return new PathMatch(arr[Index], match.Location.Append(Index));
+		else yield return new Node(arr[Index], match.Location.Append(Index));
 	}
 
 	public void BuildString(StringBuilder builder)

@@ -18,26 +18,26 @@ public class PathSegment
 		IsShorthand = isShorthand;
 	}
 
-	internal IEnumerable<PathMatch> Evaluate(PathMatch match, JsonNode? rootNode)
+	internal IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		return IsRecursive
 			? Selectors.SelectMany(x => RecursivelyEvaluate(x, match, rootNode))
 			: Selectors.SelectMany(x => x.Evaluate(match, rootNode));
 	}
 
-	private static IEnumerable<PathMatch> RecursivelyEvaluate(ISelector selector, PathMatch match, JsonNode? rootNode)
+	private static IEnumerable<Node> RecursivelyEvaluate(ISelector selector, Node match, JsonNode? rootNode)
 	{
 		return GetAllDescendants(match).SelectMany(child => selector.Evaluate(child, rootNode));
 	}
 
-	private static IEnumerable<PathMatch> GetAllDescendants(PathMatch match)
+	private static IEnumerable<Node> GetAllDescendants(Node match)
 	{
 		yield return match;
 		if (match.Value is JsonObject obj)
 		{
 			foreach (var member in obj)
 			{
-				var localMatch = new PathMatch(member.Value, match.Location.Append(member.Key));
+				var localMatch = new Node(member.Value, match.Location.Append(member.Key));
 				foreach (var descendant in GetAllDescendants(localMatch))
 				{
 					yield return descendant;
@@ -49,7 +49,7 @@ public class PathSegment
 			for (var i = 0; i < arr.Count; i++)
 			{
 				var member = arr[i];
-				var localMatch = new PathMatch(member, match.Location.Append(i));
+				var localMatch = new Node(member, match.Location.Append(i));
 				foreach (var descendant in GetAllDescendants(localMatch))
 				{
 					yield return descendant;

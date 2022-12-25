@@ -10,8 +10,8 @@ internal class GreaterThanOperator : IBinaryComparativeOperator
 
 	public bool Evaluate(JsonNode? left, JsonNode? right)
 	{
-		if (left is not JsonValue lValue ||
-		    right is not JsonValue rValue)
+		if (left.TryGetSingleValue() is not JsonValue lValue ||
+		    right.TryGetSingleValue() is not JsonValue rValue)
 			return false;
 
 		if (left.TryGetValue(out string? leftString) &&
