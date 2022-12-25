@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace Json.Path;
 
 /// <summary>
-/// Implements the `length()` function to get:
-/// - the length of a string
-/// - the count of values in an array
-/// - the count of values in an object
+/// Implements the `match()` function which determines if a string exactly matches a regular
+/// expression (using implicit anchoring).
 /// </summary>
-public class LengthFunction : IPathFunctionDefinition
+public class MatchFunction : IPathFunctionDefinition
 {
 	/// <summary>
 	/// Gets the function name.
@@ -34,15 +34,10 @@ public class LengthFunction : IPathFunctionDefinition
 	/// <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
 	public NodeList Evaluate(IEnumerable<NodeList> arguments)
 	{
-		var node = arguments.Single().TryGetSingleValue();
+		var args = arguments.ToArray();
+		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var regex)) return NodeList.Empty;
+		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var text)) return NodeList.Empty;
 
-		return node switch
-		{
-			JsonObject obj => (JsonValue)obj.Count,
-			JsonArray arr => (JsonValue)arr.Count,
-			JsonValue val when val.TryGetValue(out string? s) => (JsonValue)s.Length,
-			JsonValue val when val.TryGetValue(out NodeList? l) => (JsonValue)l.Count,
-			_ => NodeList.Empty
-		};
+		return (JsonValue)Regex.IsMatch(text, $"^{regex}$", RegexOptions.ECMAScript);
 	}
 }

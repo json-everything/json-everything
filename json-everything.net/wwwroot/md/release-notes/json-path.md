@@ -7,6 +7,11 @@ Changes of note:
 
 - Expression functions are supported and custom functions can be created.
 - `.length` has been replaced by `length()` function.
+- Available functions:
+  - `length()` - Length of values (objects, arrays, & strings)
+  - `count()` - Length of nodelists
+  - `match()` - Precise regex matching (uses implicit anchoring)
+  - `search()` - General regex matching (does not use implicit anchoring, more like JSON Schema's `pattern` keyword)
 - Expression engine is more robust.
 - No context object needed for evaluation.
 - Removed experimental feature of `$ref` resolution since it's not in the spec.  (See the JSON Referencing proposals from the JSON Schema group at https://github.com/json-schema-org/referencing)
