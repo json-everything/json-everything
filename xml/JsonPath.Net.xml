@@ -4,31 +4,201 @@
         <name>JsonPath.Net</name>
     </assembly>
     <members>
-        <member name="T:Json.Path.ExperimentalFeatures">
+        <member name="T:Json.Path.CountFunction">
             <summary>
-            Provides options for experimental features.
-            </summary>
-            <remarks>
-            Changes to this object will not be reflected in the version number.
-            </remarks>
-        </member>
-        <member name="P:Json.Path.ExperimentalFeatures.ProcessDataReferences">
-            <summary>
-            Enables dereferencing of reference objects such as
-            ```{ "$ref": "http://example.com/data#/pointer/to/value" }```.
-            The resulting value will then replace the reference object in the
-            evaluation results.  This will be run after each selector in the path.
+            Implements the `count()` function which returns the number of nodes
+            in a nodelist.
             </summary>
         </member>
-        <member name="P:Json.Path.ExperimentalFeatures.DataReferenceDownload">
+        <member name="P:Json.Path.CountFunction.Name">
             <summary>
-            Gets or sets the document download mechanism for resolving URIs.  This
-            default is a simple, uncached download.
+            Gets the function name.
             </summary>
+        </member>
+        <member name="P:Json.Path.CountFunction.MinArgumentCount">
+            <summary>
+            The minimum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="P:Json.Path.CountFunction.MaxArgumentCount">
+            <summary>
+            The maximum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="M:Json.Path.CountFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+            <summary>
+            Evaluates the function.
+            </summary>
+            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
+            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+        </member>
+        <member name="T:Json.Path.FunctionRepository">
+            <summary>
+            Stores expression function definitions.
+            </summary>
+        </member>
+        <member name="M:Json.Path.FunctionRepository.Register(Json.Path.IPathFunctionDefinition)">
+            <summary>
+            Registers a new function implementation, allowing it to be parsed.
+            </summary>
+            <param name="function">The function.</param>
+        </member>
+        <member name="M:Json.Path.FunctionRepository.Unregister``1">
+            <summary>
+            Unregisters a function implementation.
+            </summary>
+            <typeparam name="T">The type of function.</typeparam>
+        </member>
+        <member name="M:Json.Path.FunctionRepository.Unregister(System.String)">
+            <summary>
+            Unregisters a function implementation.
+            </summary>
+            <typeparam name="T">The name of the function.</typeparam>
+        </member>
+        <member name="M:Json.Path.FunctionRepository.TryGet(System.String,Json.Path.IPathFunctionDefinition@)">
+            <summary>
+            Gets a function implementation by name.
+            </summary>
+            <param name="name">A function name.</param>
+            <param name="function">The function, if found; otherwise null.</param>
+            <returns>True if found; otherwise false.</returns>
+        </member>
+        <member name="T:Json.Path.IHaveShorthand">
+            <summary>
+            Implemented by selectors which have a shorthand syntax.
+            </summary>
+        </member>
+        <member name="M:Json.Path.IHaveShorthand.ToShorthandString">
+            <summary>
+            Gets the shorthand syntax string.
+            </summary>
+            <returns>The shorthand syntax string.</returns>
+        </member>
+        <member name="M:Json.Path.IHaveShorthand.AppendShorthandString(System.Text.StringBuilder)">
+            <summary>
+            Appends the shorthand syntax string to a string builder.
+            </summary>
+        </member>
+        <member name="T:Json.Path.IPathFunctionDefinition">
+            <summary>
+            Defines properties and methods required for an expression function.
+            </summary>
+            <remarks>Functions must be registered with <see cref="M:Json.Path.FunctionRepository.Register(Json.Path.IPathFunctionDefinition)"/></remarks>
+        </member>
+        <member name="P:Json.Path.IPathFunctionDefinition.Name">
+            <summary>
+            Gets the function name.
+            </summary>
+        </member>
+        <member name="P:Json.Path.IPathFunctionDefinition.MinArgumentCount">
+            <summary>
+            The minimum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="P:Json.Path.IPathFunctionDefinition.MaxArgumentCount">
+            <summary>
+            The maximum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="M:Json.Path.IPathFunctionDefinition.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+            <summary>
+            Evaluates the function.
+            </summary>
+            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
+            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+        </member>
+        <member name="T:Json.Path.ISelector">
+            <summary>
+            Defines a path segment selector.
+            </summary>
+        </member>
+        <member name="M:Json.Path.ISelector.Evaluate(Json.Path.Node,System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Evaluates the selector.
+             </summary>
+             <param name="node">The node to evaluate.</param>
+             <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+             <returns>
+             A collection of nodes.
+            
+             Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+             </returns>
+        </member>
+        <member name="M:Json.Path.ISelector.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string using a string builder.
+            </summary>
+            <param name="builder">The string builder.</param>
+        </member>
+        <member name="T:Json.Path.JsonNodeExtensions">
+            <summary>
+            Useful extensions for <see cref="T:System.Text.Json.Nodes.JsonNode"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Path.JsonNodeExtensions.TryGetValue``1(System.Text.Json.Nodes.JsonNode,``0@)">
+            <summary>
+            Extends <see cref="M:System.Text.Json.Nodes.JsonValue.TryGetValue``1(``0@)"/> to the <see cref="T:System.Text.Json.Nodes.JsonNode"/> base class.
+            </summary>
+            <typeparam name="T">The type of value desired.</typeparam>
+            <param name="node">The node that may contain the value.</param>
+            <param name="value">The value if successful; null otherwise.</param>
+            <returns>True if successful; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Path.JsonNodeExtensions.TryGetSingleValue(System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Ensures a <see cref="T:System.Text.Json.Nodes.JsonNode"/> only represents a single value.
+             </summary>
+             <param name="node"></param>
+             <returns>
+             Within the context of this library, a <see cref="T:Json.Path.NodeList"/>
+             may be stored inside a <see cref="T:System.Text.Json.Nodes.JsonNode"/>.  Some operations, such as
+             expression addition, require that a single value is provided.
+            
+             This method checks to see if the underlying value of a `JsonNode`
+             is a `NodeList`.  If not, it simply returns the JsonNode.  If the underlying
+             value is a `NodeList` _and_ the it only contains a single value, it
+             returns that value.  Otherwise, it returns null.
+             </returns>
+             <remarks>
+             Though a bit complex, this method can be very important for functions
+             that require single values as inputs rather than nodelists since function
+             composition is possible (e.g. `min(max(@,0),10)`) and functions return nodelists.
+             </remarks>
+        </member>
+        <member name="M:Json.Path.JsonNodeExtensions.TryGetSingleValue(Json.Path.NodeList)">
+             <summary>
+             Ensures a <see cref="T:Json.Path.NodeList"/> only represents a single value.
+             </summary>
+             <param name="nodeList"></param>
+             <returns>
+             Within the context of this library, a <see cref="T:Json.Path.NodeList"/>
+             may be stored inside a <see cref="T:System.Text.Json.Nodes.JsonNode"/>.  Some operations, such as
+             expression addition, require that a single value is provided.
+            
+             This method checks to see if the underlying value of a `JsonNode`
+             is a `NodeList`.  If not, it simply returns the JsonNode.  If the underlying
+             value is a `NodeList` _and_ the it only contains a single value, it
+             returns that value.  Otherwise, it returns null.
+             </returns>
+             <remarks>
+             Though a bit complex, this method can be very important for functions
+             that require single values as inputs rather than nodelists since function
+             composition is possible (e.g. `min(max(@,0),10)`) and functions return nodelists.
+             </remarks>
         </member>
         <member name="T:Json.Path.JsonPath">
             <summary>
             Represents a JSON Path.
+            </summary>
+        </member>
+        <member name="P:Json.Path.JsonPath.Root">
+            <summary>
+            Gets a JSON Path with only a global root and no selectors, namely `$`.
+            </summary>
+        </member>
+        <member name="P:Json.Path.JsonPath.Scope">
+            <summary>
+            Gets the scope of the path.
             </summary>
         </member>
         <member name="M:Json.Path.JsonPath.Parse(System.String)">
@@ -41,13 +211,13 @@
         </member>
         <member name="M:Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@)">
             <summary>
-            Attempts to parse a <see cref="T:Json.Path.JsonPath"/> from a string.
+            Parses a <see cref="T:Json.Path.JsonPath"/> from a string.
             </summary>
             <param name="source">The source string.</param>
-            <param name="path">The resulting path.</param>
-            <returns>`true` if successful; otherwise `false`.</returns>
+            <param name="path">The parsed path, if successful; otherwise null.</param>
+            <returns>True if successful; otherwise false.</returns>
         </member>
-        <member name="M:Json.Path.JsonPath.Evaluate(System.Text.Json.JsonElement,Json.Path.PathEvaluationOptions)">
+        <member name="M:Json.Path.JsonPath.Evaluate(System.Text.Json.Nodes.JsonNode,Json.Path.PathEvaluationOptions)">
             <summary>
             Evaluates the path against a JSON instance.
             </summary>
@@ -58,6 +228,12 @@
         <member name="M:Json.Path.JsonPath.ToString">
             <summary>Returns a string that represents the current object.</summary>
             <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Json.Path.JsonPath.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string representation of the path using a <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+            <param name="builder">The string builder.</param>
         </member>
         <member name="T:Json.Path.JsonPathConverter">
             <summary>
@@ -77,33 +253,131 @@
             <param name="value">The value to convert to JSON.</param>
             <param name="options">An object that specifies serialization options to use.</param>
         </member>
-        <member name="T:Json.Path.PathEvaluationOptions">
+        <member name="T:Json.Path.LengthFunction">
             <summary>
-            Provides options for path evaluation.
+            Implements the `length()` function to get:
+            - the length of a string
+            - the count of values in an array
+            - the count of values in an object
             </summary>
         </member>
-        <member name="P:Json.Path.PathEvaluationOptions.ExperimentalFeatures">
+        <member name="P:Json.Path.LengthFunction.Name">
             <summary>
-            Provides options for experimental features.
+            Gets the function name.
             </summary>
-            <remarks>
-            Changes to this object will not be reflected in the version number.
-            </remarks>
         </member>
-        <member name="T:Json.Path.PathMatch">
+        <member name="P:Json.Path.LengthFunction.MinArgumentCount">
+            <summary>
+            The minimum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="P:Json.Path.LengthFunction.MaxArgumentCount">
+            <summary>
+            The maximum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="M:Json.Path.LengthFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+            <summary>
+            Evaluates the function.
+            </summary>
+            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
+            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+        </member>
+        <member name="T:Json.Path.MatchFunction">
+            <summary>
+            Implements the `match()` function which determines if a string exactly matches a regular
+            expression (using implicit anchoring).
+            </summary>
+        </member>
+        <member name="P:Json.Path.MatchFunction.Name">
+            <summary>
+            Gets the function name.
+            </summary>
+        </member>
+        <member name="P:Json.Path.MatchFunction.MinArgumentCount">
+            <summary>
+            The minimum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="P:Json.Path.MatchFunction.MaxArgumentCount">
+            <summary>
+            The maximum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="M:Json.Path.MatchFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+            <summary>
+            Evaluates the function.
+            </summary>
+            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
+            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+        </member>
+        <member name="T:Json.Path.Node">
             <summary>
             Represents a single match.
             </summary>
         </member>
-        <member name="P:Json.Path.PathMatch.Value">
+        <member name="P:Json.Path.Node.Value">
             <summary>
             The value at the matching location.
             </summary>
         </member>
-        <member name="P:Json.Path.PathMatch.Location">
+        <member name="P:Json.Path.Node.Location">
             <summary>
             The location where the value was found.
             </summary>
+        </member>
+        <member name="T:Json.Path.NodeList">
+            <summary>
+            A collection of nodes, generally resulting from an operation or query.
+            </summary>
+        </member>
+        <member name="F:Json.Path.NodeList.Empty">
+            <summary>
+            An empty nodelist.
+            </summary>
+        </member>
+        <member name="P:Json.Path.NodeList.Count">
+            <summary>Gets the number of elements in the collection.</summary>
+            <returns>The number of elements in the collection.</returns>
+        </member>
+        <member name="P:Json.Path.NodeList.Item(System.Int32)">
+            <summary>Gets the element at the specified index in the read-only list.</summary>
+            <param name="index">The zero-based index of the element to get.</param>
+            <returns>The element at the specified index in the read-only list.</returns>
+        </member>
+        <member name="M:Json.Path.NodeList.#ctor(System.Collections.Generic.IEnumerable{Json.Path.Node})">
+            <summary>
+            Creates a new nodelist.
+            </summary>
+            <param name="nodes">The nodes.</param>
+        </member>
+        <member name="M:Json.Path.NodeList.GetEnumerator">
+            <summary>Returns an enumerator that iterates through the collection.</summary>
+            <returns>An enumerator that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Json.Path.NodeList.op_Implicit(System.Text.Json.Nodes.JsonNode)~Json.Path.NodeList">
+            <summary>
+            Implicitly converts from <see cref="T:System.Text.Json.Nodes.JsonNode"/> to <see cref="T:Json.Path.NodeList"/>.
+            </summary>
+            <param name="node">A `JsonNode`.</param>
+            <remarks>
+            If the `JsonNode`'s underlying value is a nodelist, that nodelist is returned
+            rather than a new nodelist being created.
+            </remarks>
+        </member>
+        <member name="M:Json.Path.NodeList.op_Implicit(Json.Path.NodeList)~System.Text.Json.Nodes.JsonNode">
+            <summary>
+            Implicitly converts from <see cref="T:Json.Path.NodeList"/> to <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+            </summary>
+            <param name="list">The nodelist.</param>
+        </member>
+        <member name="T:Json.Path.PathEvaluationOptions">
+            <summary>
+            Provides a number of options to be used during evaluation.
+            </summary>
+            <remarks>
+            Currently that number is zero.
+            </remarks>
         </member>
         <member name="T:Json.Path.PathParseException">
             <summary>
@@ -129,6 +403,79 @@
             <summary>
             An error, if any, that occurred during evaluation.
             </summary>
+        </member>
+        <member name="T:Json.Path.PathScope">
+            <summary>
+            Indicates the scope of a path.
+            </summary>
+        </member>
+        <member name="F:Json.Path.PathScope.Global">
+            <summary>
+            The scope is the entire JSON document.  These paths start with `$`.
+            </summary>
+        </member>
+        <member name="F:Json.Path.PathScope.Local">
+            <summary>
+            The scope is the local JSON value.  These paths start with `@`.
+            </summary>
+        </member>
+        <member name="T:Json.Path.PathSegment">
+            <summary>
+            Represents a single path segment, generally indicated in the path by square brackets `[]`.
+            </summary>
+        </member>
+        <member name="P:Json.Path.PathSegment.Selectors">
+            <summary>
+            Gets the collection of selectors present in the path.
+            </summary>
+        </member>
+        <member name="P:Json.Path.PathSegment.IsRecursive">
+            <summary>
+            Indicates whether the segment is evaluated as a recursive descent operation.
+            </summary>
+        </member>
+        <member name="P:Json.Path.PathSegment.IsShorthand">
+            <summary>
+            Indicates whether the segment is represented in its shorthand form (e.g. `.foo` instead of `['foo']`).
+            </summary>
+        </member>
+        <member name="M:Json.Path.PathSegment.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Json.Path.PathSegment.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string representation using a <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+            <param name="builder">A string builder.</param>
+        </member>
+        <member name="T:Json.Path.SearchFunction">
+            <summary>
+            Implements the `match()` function which determines if any substring within
+            a string matches a regular expression.
+            </summary>
+        </member>
+        <member name="P:Json.Path.SearchFunction.Name">
+            <summary>
+            Gets the function name.
+            </summary>
+        </member>
+        <member name="P:Json.Path.SearchFunction.MinArgumentCount">
+            <summary>
+            The minimum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="P:Json.Path.SearchFunction.MaxArgumentCount">
+            <summary>
+            The maximum argument count accepted by the function.
+            </summary>
+        </member>
+        <member name="M:Json.Path.SearchFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+            <summary>
+            Evaluates the function.
+            </summary>
+            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
+            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
         </member>
     </members>
 </doc>

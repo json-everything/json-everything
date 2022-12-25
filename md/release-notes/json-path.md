@@ -1,3 +1,21 @@
+# [0.3.0](https://github.com/gregsdennis/json-everything/pull/362)
+
+[#281](https://github.com/gregsdennis/json-everything/issues/281) - Complete rewrite to support `JsonNode` and align with specification.
+[#351](https://github.com/gregsdennis/json-everything/issues/351) - Fixes issues parsing `$.['foo']` (basically removes support since the `.[]` syntax is invalid).
+
+Changes of note:
+
+- Expression functions are supported and custom functions can be created.
+- `.length` has been replaced by `length()` function.
+- Available functions:
+  - `length()` - Length of values (objects, arrays, & strings)
+  - `count()` - Length of nodelists
+  - `match()` - Precise regex matching (uses implicit anchoring)
+  - `search()` - General regex matching (does not use implicit anchoring, more like JSON Schema's `pattern` keyword)
+- Expression engine is more robust.
+- No context object needed for evaluation.
+- Removed experimental feature of `$ref` resolution since it's not in the spec.  (See the JSON Referencing proposals from the JSON Schema group at https://github.com/json-schema-org/referencing)
+
 # [0.2.1](https://github.com/gregsdennis/json-everything/commit/1ba018b86c14dc94c55206062250735356491460)
 
 [#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
