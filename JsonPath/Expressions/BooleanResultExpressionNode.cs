@@ -12,7 +12,7 @@ internal abstract class BooleanResultExpressionNode
 	public abstract void BuildString(StringBuilder builder);
 }
 
-internal class BooleanResultExpressionParser
+internal static class BooleanResultExpressionParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out BooleanResultExpressionNode? expression)
 	{

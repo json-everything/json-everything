@@ -5,10 +5,22 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
+/// <summary>
+/// Represents a single path segment, generally indicated in the path by square brackets `[]`.
+/// </summary>
 public class PathSegment
 {
+	/// <summary>
+	/// Gets the collection of selectors present in the path.
+	/// </summary>
 	public ISelector[] Selectors { get; }
+	/// <summary>
+	/// Indicates whether the segment is evaluated as a recursive descent operation.
+	/// </summary>
 	public bool IsRecursive { get; }
+	/// <summary>
+	/// Indicates whether the segment is represented in its shorthand form (e.g. `.foo` instead of `['foo']`).
+	/// </summary>
 	public bool IsShorthand { get; }
 
 	internal PathSegment(IEnumerable<ISelector> selectors, bool isRecursive = false, bool isShorthand = false)
@@ -58,6 +70,8 @@ public class PathSegment
 		}
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		string GetNormalized() => $"[{string.Join(',', Selectors.Select(x => x.ToString()))}]";
@@ -77,6 +91,10 @@ public class PathSegment
 		return $"[{string.Join(',', Selectors.Select(x => x.ToString()))}]";
 	}
 
+	/// <summary>
+	/// Builds a string representation using a <see cref="StringBuilder"/>.
+	/// </summary>
+	/// <param name="builder">A string builder.</param>
 	public void BuildString(StringBuilder builder)
 	{
 		void AppendNormalized()
@@ -93,7 +111,7 @@ public class PathSegment
 
 			builder.Append(']');
 		}
-		void AppendShorthand(StringBuilder builder) => builder.Append(((IHaveShorthand)Selectors[0]).ToShorthandString());
+		void AppendShorthand(StringBuilder builder) => ((IHaveShorthand)Selectors[0]).AppendShorthandString(builder);
 
 		if (IsRecursive)
 		{

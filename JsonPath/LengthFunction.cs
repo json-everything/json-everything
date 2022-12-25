@@ -4,12 +4,34 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
+/// <summary>
+/// Implements the `length()` function to get:
+/// - the length of a string
+/// - the count of values in an array
+/// - the count of values in an object
+/// </summary>
 public class LengthFunction : IPathFunctionDefinition
 {
+	/// <summary>
+	/// Gets the function name.
+	/// </summary>
 	public string Name => "length";
+
+	/// <summary>
+	/// The minimum argument count accepted by the function.
+	/// </summary>
 	public int MinArgumentCount => 1;
+
+	/// <summary>
+	/// The maximum argument count accepted by the function.
+	/// </summary>
 	public int MaxArgumentCount => 1;
 
+	/// <summary>
+	/// Evaluates the function.
+	/// </summary>
+	/// <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
+	/// <returns>A single nodelist.</returns>
 	public NodeList Evaluate(IEnumerable<NodeList> arguments)
 	{
 		var node = arguments.Single().TryGetSingleValue();

@@ -26,41 +26,6 @@ internal static class Operators
 	public static readonly IUnaryLogicalOperator NoOp = new NoOpOperator();
 }
 
-internal static class OperatorParser
-{
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IExpressionOperator? op)
-	{
-		if (ValueOperatorParser.TryParse(source, ref index, out var valueOp))
-		{
-			op = valueOp;
-			return true;
-		}
-
-		// unary value operator is part of value parsing, so we don't bother here.
-
-		if (BinaryComparativeOperatorParser.TryParse(source, ref index, out var compOp))
-		{
-			op = compOp;
-			return true;
-		}
-
-		if (BinaryLogicalOperatorParser.TryParse(source, ref index, out var binaryLogicalOp))
-		{
-			op = binaryLogicalOp;
-			return true;
-		}
-
-		if (UnaryLogicalOperatorParser.TryParse(source, ref index, out var unaryLogicalOp))
-		{
-			op = unaryLogicalOp;
-			return true;
-		}
-
-		op = null;
-		return false;
-	}
-}
-
 internal static class ValueOperatorParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryValueOperator? op)

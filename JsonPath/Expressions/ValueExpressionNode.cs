@@ -12,7 +12,7 @@ internal abstract class ValueExpressionNode
 	public abstract void BuildString(StringBuilder builder);
 }
 
-internal class ValueExpressionParser
+internal static class ValueExpressionParser
 {
 	private static readonly IValueExpressionParser[] _operandParsers =
 	{

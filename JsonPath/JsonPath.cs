@@ -15,8 +15,14 @@ public class JsonPath
 {
 	private readonly PathSegment[] _segments;
 
+	/// <summary>
+	/// Gets a JSON Path with only a global root and no selectors, namely `$`.
+	/// </summary>
 	public static JsonPath Root { get; } = new(PathScope.Global, Enumerable.Empty<PathSegment>());
 
+	/// <summary>
+	/// Gets the scope of the path.
+	/// </summary>
 	public PathScope Scope { get; }
 
 	internal JsonPath(PathScope scope, IEnumerable<PathSegment> segments)
@@ -37,6 +43,12 @@ public class JsonPath
 		return PathParser.Parse(source.Trim(), ref index, true);
 	}
 
+	/// <summary>
+	/// Parses a <see cref="JsonPath"/> from a string.
+	/// </summary>
+	/// <param name="source">The source string.</param>
+	/// <param name="path">The parsed path, if successful; otherwise null.</param>
+	/// <returns>True if successful; otherwise false.</returns>
 	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPath? path)
 	{
 		int index = 0;
@@ -82,6 +94,10 @@ public class JsonPath
 		return builder.ToString();
 	}
 
+	/// <summary>
+	/// Builds a string representation of the path using a <see cref="StringBuilder"/>.
+	/// </summary>
+	/// <param name="builder">The string builder.</param>
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append(Scope == PathScope.Global ? '$' : '@');

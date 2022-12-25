@@ -7,7 +7,7 @@ internal abstract class ComparativeExpressionNode : BooleanResultExpressionNode
 {
 }
 
-internal class ComparativeExpressionParser
+internal static class ComparativeExpressionParser
 {
 	private static readonly IComparativeExpressionParser[] _parsers =
 	{

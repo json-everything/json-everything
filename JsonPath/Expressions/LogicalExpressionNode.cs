@@ -7,7 +7,7 @@ internal abstract class LogicalExpressionNode : BooleanResultExpressionNode
 {
 }
 
-internal class LogicalExpressionParser
+internal static class LogicalExpressionParser
 {
 	private static readonly ILogicalExpressionParser[] _parsers =
 	{
