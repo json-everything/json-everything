@@ -1,3 +1,7 @@
+# [0.3.1](https://github.com/gregsdennis/json-everything/commit/3248441c00dd97cf4a8c66fff6b2462682a3bb8e)
+
+Fixed an issue in `search` and `match` function evaluation.
+
 # [0.3.0](https://github.com/gregsdennis/json-everything/pull/362)
 
 [#281](https://github.com/gregsdennis/json-everything/issues/281) - Complete rewrite to support `JsonNode` and align with specification.
