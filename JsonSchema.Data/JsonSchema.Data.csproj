@@ -12,7 +12,7 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema evaluation validation schema json data schema-data</PackageTags>
-		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-data.html</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-schema-data.md) and https://json-everything.net/json-schema</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>

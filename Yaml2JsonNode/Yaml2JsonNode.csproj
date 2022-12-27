@@ -13,7 +13,7 @@
 	  <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 	  <PackageTags>json yaml system.text.json</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-yaml.html</PackageReleaseNotes>
+	  <PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/yaml.md) and https://json-everything.net/json-more</PackageReleaseNotes>
 	  <LangVersion>latest</LangVersion>
 	  <DocumentationFile>Yaml2JsonNode.xml</DocumentationFile>
 	  <PackageIcon>json-logo-256.png</PackageIcon>

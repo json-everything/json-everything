@@ -11,7 +11,7 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
-		<PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-schema-generation.html</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-schema-generation.md) and https://json-everything.net/json-schema</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
