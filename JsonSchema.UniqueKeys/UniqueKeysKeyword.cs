@@ -104,7 +104,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		if (matchedIndexPairs.Any())
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("pairs", pairs));
+			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
 
 		context.ExitKeyword(Name);
