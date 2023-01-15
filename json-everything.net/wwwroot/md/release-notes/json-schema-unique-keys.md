@@ -1,3 +1,7 @@
+# [2.1.0 (beta 2)](https://github.com/gregsdennis/json-everything/pull/366)
+
+[#288](https://github.com/gregsdennis/json-everything/issues/288) - `duplicates` token in error message was not being replaced with the appropriate value.  Thanks to [@szilajka](https://github.com/szilajka) for finding and reporting this.
+
 # [2.1.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
 
 Updated to use JsonSchema.Net v4.

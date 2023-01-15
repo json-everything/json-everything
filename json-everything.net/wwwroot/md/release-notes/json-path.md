@@ -1,3 +1,7 @@
+# [0.3.2](https://github.com/gregsdennis/json-everything/pull/366)
+
+[#364](https://github.com/gregsdennis/json-everything/issues/364) - `count()`, `match()`, and `search()` functions are not registered and so cannot be parsed.  Thanks to [@amis92](https://github.com/amis92) for finding and reporting this.
+
 # [0.3.1](https://github.com/gregsdennis/json-everything/commit/3248441c00dd97cf4a8c66fff6b2462682a3bb8e)
 
 Fixed an issue in `search` and `match` function evaluation.
