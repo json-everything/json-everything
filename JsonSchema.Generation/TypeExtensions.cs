@@ -67,4 +67,36 @@ public static class TypeExtensions
 			PropertyInfo propertyInfo => !propertyInfo.CanRead,
 			_ => throw new NotSupportedException($"Cannot get writability of {info.GetType()}")
 		};
+
+	internal static IEnumerable<Type> GetUsedTypes(this Type type)
+	{
+		var usedTypes = new HashSet<Type>{type};
+
+		GetUsedTypes(type, usedTypes);
+
+		return usedTypes;
+	}
+
+	private static void GetUsedTypes(this Type type, HashSet<Type> usedTypes)
+	{
+		var propertiesToGenerate = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		var fieldsToGenerate = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+		var hiddenPropertiesToGenerate = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
+		var hiddenFieldsToGenerate = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
+		var membersToGenerate = propertiesToGenerate.Cast<MemberInfo>()
+			.Concat(fieldsToGenerate)
+			.Concat(hiddenPropertiesToGenerate)
+			.Concat(hiddenFieldsToGenerate);
+
+		foreach (var memberInfo in membersToGenerate)
+		{
+			var memberType = GetMemberType(memberInfo);
+
+			if (usedTypes.Add(memberType))
+				GetUsedTypes(memberType, usedTypes);
+		}
+	}
+
 }

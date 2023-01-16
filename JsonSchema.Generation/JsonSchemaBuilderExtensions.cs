@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Json.Schema.Generation;
 
@@ -37,6 +38,16 @@ public static class JsonSchemaBuilderExtensions
 			SchemaGenerationContextOptimizer.Optimize();
 
 		context.Apply(builder);
+
+		return builder;
+	}
+
+	internal static JsonSchemaBuilder FromType2(this JsonSchemaBuilder builder, Type type, SchemaGeneratorConfiguration? configuration = null)
+	{
+		// explore submitted type to get all types present in the tree
+		var usedTypes = type.GetUsedTypes();
+
+		//builder.Defs(usedTypes.ToDictionary(x => x.Name, ))
 
 		return builder;
 	}
