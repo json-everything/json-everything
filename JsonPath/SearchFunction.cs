@@ -14,17 +14,17 @@ public class SearchFunction : IPathFunctionDefinition
 	/// <summary>
 	/// Gets the function name.
 	/// </summary>
-	public string Name => "length";
+	public string Name => "search";
 
 	/// <summary>
 	/// The minimum argument count accepted by the function.
 	/// </summary>
-	public int MinArgumentCount => 1;
+	public int MinArgumentCount => 2;
 
 	/// <summary>
 	/// The maximum argument count accepted by the function.
 	/// </summary>
-	public int MaxArgumentCount => 1;
+	public int MaxArgumentCount => 2;
 
 	/// <summary>
 	/// Evaluates the function.
