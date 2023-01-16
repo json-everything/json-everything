@@ -13,7 +13,7 @@ public class CountFunction : IPathFunctionDefinition
 	/// <summary>
 	/// Gets the function name.
 	/// </summary>
-	public string Name => "length";
+	public string Name => "count";
 
 	/// <summary>
 	/// The minimum argument count accepted by the function.

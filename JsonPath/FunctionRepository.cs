@@ -14,6 +14,9 @@ public static class FunctionRepository
 	static FunctionRepository()
 	{
 		Register(new LengthFunction());
+		Register(new CountFunction());
+		Register(new MatchFunction());
+		Register(new SearchFunction());
 	}
 
 	/// <summary>
@@ -53,7 +56,7 @@ public static class FunctionRepository
 	/// <param name="name">A function name.</param>
 	/// <param name="function">The function, if found; otherwise null.</param>
 	/// <returns>True if found; otherwise false.</returns>
-	public static bool TryGet(string name, [NotNullWhen(true)]out IPathFunctionDefinition? function)
+	public static bool TryGet(string name, [NotNullWhen(true)] out IPathFunctionDefinition? function)
 	{
 		return _functions.TryGetValue(name, out function);
 	}
