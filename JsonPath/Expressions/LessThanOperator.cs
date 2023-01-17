@@ -14,8 +14,8 @@ internal class LessThanOperator : IBinaryComparativeOperator
 		    right.TryGetSingleValue() is not JsonValue rValue)
 			return false;
 
-		if (left.TryGetValue(out string? leftString) &&
-		    left.TryGetValue(out string? rightString))
+		if (lValue.TryGetValue(out string? leftString) &&
+		    rValue.TryGetValue(out string? rightString))
 			return string.Compare(leftString, rightString, StringComparison.Ordinal) == -1;
 
 		return lValue.GetNumber() < rValue.GetNumber();
