@@ -974,9 +974,69 @@
             Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonExcludeAttribute"/>.
             </summary>
         </member>
+        <member name="T:Json.Schema.Generation.JsonIncludeAttribute">
+             <summary>
+             Indicates that the property or field should be included for serialization and deserialization.
+             </summary>
+             <remarks>
+             When applied to a public property, indicates that non-public getters and setters should be used for serialization and deserialization.
+            
+             Non-public properties and fields are not allowed when serializing and deserializing. If the attribute is used on a non-public property or field,
+             an <see cref="T:System.InvalidOperationException"/> is thrown during the first serialization or deserialization of the declaring type.
+             </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonIncludeAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonIncludeAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonNumberHandling">
+            <summary>
+            Determines how <see cref="T:System.Text.Json.JsonSerializer"/> handles numbers when serializing and deserializing.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.Strict">
+            <summary>
+            Numbers will only be read from <see cref="F:System.Text.Json.JsonTokenType.Number"/> tokens and will only be written as JSON numbers (without quotes).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.AllowReadingFromString">
+            <summary>
+            Numbers can be read from <see cref="F:System.Text.Json.JsonTokenType.String"/> tokens.
+            Does not prevent numbers from being read from <see cref="F:System.Text.Json.JsonTokenType.Number"/> token.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.WriteAsString">
+            <summary>
+            Numbers will be written as JSON strings (with quotes), not as JSON numbers.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.JsonNumberHandling.AllowNamedFloatingPointLiterals">
+            <summary>
+            The "NaN", "Infinity", and "-Infinity" <see cref="F:System.Text.Json.JsonTokenType.String"/> tokens can be read as
+            floating-point constants, and the <see cref="T:System.Single"/> and <see cref="T:System.Double"/> values for these
+            constants will be written as their corresponding JSON string representations.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttribute">
+            <summary>
+            When placed on a type, property, or field, indicates what <see cref="T:Json.Schema.Generation.JsonNumberHandling"/>
+            settings should be used when serializing or deserializing numbers.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.JsonNumberHandlingAttribute.Handling">
+            <summary>
+            Indicates what settings should be used when serializing or deserializing numbers.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor(Json.Schema.Generation.JsonNumberHandling)">
+            <summary>
+            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonNumberHandlingAttribute"/>.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
             <summary>
-            Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
+            Handler for the <see cref="T:Json.Schema.Generation.JsonNumberHandlingAttribute"/>.
             </summary>
         </member>
         <member name="M:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGenerationContextBase,System.Attribute)">
