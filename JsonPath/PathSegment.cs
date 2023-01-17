@@ -33,13 +33,13 @@ public class PathSegment
 	internal IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		return IsRecursive
-			? Selectors.SelectMany(x => RecursivelyEvaluate(x, match, rootNode))
+			? RecursivelyEvaluate(Selectors, match, rootNode)
 			: Selectors.SelectMany(x => x.Evaluate(match, rootNode));
 	}
 
-	private static IEnumerable<Node> RecursivelyEvaluate(ISelector selector, Node match, JsonNode? rootNode)
+	private static IEnumerable<Node> RecursivelyEvaluate(IEnumerable<ISelector> selectors, Node match, JsonNode? rootNode)
 	{
-		return GetAllDescendants(match).SelectMany(child => selector.Evaluate(child, rootNode));
+		return GetAllDescendants(match).SelectMany(child => selectors.SelectMany(s => s.Evaluate(child, rootNode)));
 	}
 
 	private static IEnumerable<Node> GetAllDescendants(Node match)

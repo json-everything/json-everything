@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path.Expressions;
 
@@ -23,7 +24,7 @@ internal class PathExpressionNode : ValueExpressionNode
 		var result = Path.Evaluate(parameter);
 
 		return result.Matches?.Count == 1
-			? result.Matches[0].Value
+			? result.Matches[0].Value ?? JsonNull.SignalNode
 			: null;
 	}
 

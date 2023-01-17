@@ -110,13 +110,11 @@ internal static class PathParser
 				else if (source[index] == '*')
 				{
 					selectors.Add(new WildcardSelector());
-					isRecursive = true;
 					isShorthand = true;
-					index++;
+					index++; // consume *
 				}
 				else
 				{
-					isRecursive = true;
 					isShorthand = true;
 					ParseName(source, ref index, selectors);
 				}
@@ -125,7 +123,7 @@ internal static class PathParser
 			{
 				selectors.Add(new WildcardSelector());
 				isShorthand = true;
-				index++;
+				index++; // consume *
 			}
 			else
 			{

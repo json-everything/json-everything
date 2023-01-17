@@ -13,8 +13,8 @@ internal class AddOperator : IBinaryValueOperator
 		    right.TryGetSingleValue() is not JsonValue rValue)
 			return null;
 
-		if (left.TryGetValue(out string? leftString) &&
-		    left.TryGetValue(out string? rightString))
+		if (lValue.TryGetValue(out string? leftString) &&
+		    rValue.TryGetValue(out string? rightString))
 			return leftString + rightString;
 
 		return lValue.GetNumber() + rValue.GetNumber();
