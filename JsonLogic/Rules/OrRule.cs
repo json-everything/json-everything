@@ -14,9 +14,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(OrRuleJsonConverter))]
 public class OrRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// The sequence of items to Or against.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal OrRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="OrRule"/> when 'or' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value.</param>
+	/// <param name="more">Sequence of values to Or against.</param>
+	protected internal OrRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);

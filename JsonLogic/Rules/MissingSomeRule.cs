@@ -15,10 +15,22 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MissingSomeRuleJsonConverter))]
 public class MissingSomeRule : Rule
 {
-	internal Rule RequiredCount { get; }
-	internal Rule Components { get; }
+	/// <summary>
+	/// The minimum number of keys that are required.
+	/// </summary>
+	protected internal Rule RequiredCount { get; }
+	
+	/// <summary>
+	/// The sequence of keys to search for.
+	/// </summary>
+	protected internal Rule Components { get; }
 
-	internal MissingSomeRule(Rule requiredCount, Rule components)
+	/// <summary>
+	/// Creates a new instance of <see cref="MissingSomeRule"/> when 'missing_some' operator is detected within json logic.
+	/// </summary>
+	/// <param name="requiredCount">The minimum number of data keys that are required.</param>
+	/// <param name="components">A sequence of keys to search for.</param>
+	protected internal MissingSomeRule(Rule requiredCount, Rule components)
 	{
 		RequiredCount = requiredCount;
 		Components = components;

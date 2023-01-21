@@ -13,16 +13,37 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(SubstrRuleJsonConverter))]
 public class SubstrRule : Rule
 {
-	internal Rule Input { get; }
-	internal Rule Start { get; }
-	internal Rule? Count { get; }
+	/// <summary>
+	/// The input string.
+	/// </summary>
+	protected internal Rule Input { get; }
+	/// <summary>
+	/// The positive start position within the input string.
+	/// </summary>
+	protected internal Rule Start { get; }
+	/// <summary>
+	/// How many characters to return.
+	/// </summary>
+	protected internal Rule? Count { get; }
 
-	internal SubstrRule(Rule input, Rule start)
+	/// <summary>
+	/// Creates a new instance of <see cref="SubstrRule"/> when 'substr' operator is detected within json logic.
+	/// </summary>
+	/// <param name="input">The input string.</param>
+	/// <param name="start">The positive start position within the input string.</param>
+	protected internal SubstrRule(Rule input, Rule start)
 	{
 		Input = input;
 		Start = start;
 	}
-	internal SubstrRule(Rule input, Rule start, Rule count)
+
+	/// <summary>
+	/// Creates a new instance of <see cref="SubstrRule"/> when 'substr' operator is detected within json logic.
+	/// </summary>
+	/// <param name="input">The input string.</param>
+	/// <param name="start">The positive start position within the input string.</param>
+	/// <param name="count">How many characters to return.</param>
+	protected internal SubstrRule(Rule input, Rule start, Rule count)
 	{
 		Input = input;
 		Start = start;

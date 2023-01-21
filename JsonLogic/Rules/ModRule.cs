@@ -12,10 +12,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(ModRuleJsonConverter))]
 public class ModRule : Rule
 {
-	internal Rule A { get; }
-	internal Rule B { get; }
+	/// <summary>
+	/// The value to divide.
+	/// </summary>
+	protected internal Rule A { get; }
+	/// <summary>
+	/// The divisor, ie; the value to divide by.
+	/// </summary>
+	protected internal Rule B { get; }
 
-	internal ModRule(Rule a, Rule b)
+	/// <summary>
+	/// Creates a new instance of <see cref="ModRule"/> when '%' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The value to divide.</param>
+	/// <param name="b">The divisor, ie; the value to divide by.</param>
+	protected internal ModRule(Rule a, Rule b)
 	{
 		A = a;
 		B = b;

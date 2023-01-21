@@ -12,9 +12,16 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(NotRuleJsonConverter))]
 public class NotRule : Rule
 {
-	internal Rule Value { get; }
+	/// <summary>
+	/// The value to test.
+	/// </summary>
+	protected internal Rule Value { get; }
 
-	internal NotRule(Rule value)
+	/// <summary>
+	/// Creates a new instance of <see cref="NotRule"/> when '!' operator is detected within json logic.
+	/// </summary>
+	/// <param name="value">The value to to test.</param>
+	protected internal NotRule(Rule value)
 	{
 		Value = value;
 	}

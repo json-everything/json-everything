@@ -15,9 +15,16 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MissingRuleJsonConverter))]
 public class MissingRule : Rule
 {
-	internal Rule[] Components { get; }
+	/// <summary>
+	/// A sequence of keys to search for.
+	/// </summary>
+	protected internal Rule[] Components { get; }
 
-	internal MissingRule(params Rule[] components)
+	/// <summary>
+	/// Creates a new instance of <see cref="MissingRule"/> when 'missing' operator is detected within json logic.
+	/// </summary>
+	/// <param name="components">A sequence of keys to search for.</param>
+	protected internal MissingRule(params Rule[] components)
 	{
 		Components = components;
 	}

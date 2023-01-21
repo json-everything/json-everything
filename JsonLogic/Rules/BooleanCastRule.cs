@@ -12,9 +12,16 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(BooleanCastRuleJsonConverter))]
 public class BooleanCastRule : Rule
 {
-	internal Rule Value { get; }
+	/// <summary>
+	/// The value to test.
+	/// </summary>
+	protected internal Rule Value { get; }
 
-	internal BooleanCastRule(Rule value)
+	/// <summary>
+	/// Creates a new instance of <see cref="BooleanCastRule"/> when '!!' operator is detected within json logic.
+	/// </summary>
+	/// <param name="value">The value to test.</param>
+	protected internal BooleanCastRule(Rule value)
 	{
 		Value = value;
 	}
@@ -30,8 +37,6 @@ public class BooleanCastRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var value = Value.Apply(data, contextData);
-
 		return Value.Apply(data, contextData).IsTruthy();
 	}
 }

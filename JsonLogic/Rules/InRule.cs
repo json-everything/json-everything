@@ -14,10 +14,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(InRuleJsonConverter))]
 public class InRule : Rule
 {
-	internal Rule Test { get; }
-	internal Rule Source { get; }
+	/// <summary>
+	/// A value to search for.
+	/// </summary>
+	protected internal Rule Test { get; }
+	/// <summary>
+	/// The string value to test against.
+	/// </summary>
+	protected internal Rule Source { get; }
 
-	internal InRule(Rule test, Rule source)
+	/// <summary>
+	/// Creates a new instance of <see cref="InRule"/> when 'in' operator is detected within json logic.
+	/// </summary>
+	/// <param name="test">A value to search for.</param>
+	/// <param name="source">The string value to test against.</param>
+	protected internal InRule(Rule test, Rule source)
 	{
 		Test = test;
 		Source = source;
