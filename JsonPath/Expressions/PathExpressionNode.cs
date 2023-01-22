@@ -23,9 +23,11 @@ internal class PathExpressionNode : ValueExpressionNode
 
 		var result = Path.Evaluate(parameter);
 
-		return result.Matches?.Count == 1
+		if (result.Matches == null) return null;
+
+		return result.Matches.Count == 1
 			? result.Matches[0].Value ?? JsonNull.SignalNode
-			: null;
+			: result.Matches;
 	}
 
 	public override void BuildString(StringBuilder builder)
