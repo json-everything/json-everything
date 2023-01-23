@@ -120,10 +120,8 @@ It's definitely recommended to go through the [code for the built-in ruleset](ht
 
 Once your rule is defined, it needs to be registered using the `RuleRegistry.Register<T>()` method.  This will allow the rule to be automatically deserialized.
 
-## Inheriting from existing operators:
-While this library allows you to inherit from, and therefore override, the default behaviour of a Rule, you need to be aware of the implications: 
+## Overriding existing operators
 
+While this library allows you to inherit from, and therefore override, the default behavior of a `Rule`, you need to be aware of the implications.
 
-The Rules in this library implement the Json Logic Specification.
-If you override this behaviour, then you are no longer implementing that specification, and you loose interoperability with other implementations.
-If you want custom behaviour AND have this custom behaviour common across implementations, you'll need to override the behaviour in EVERY implementation you use.
+The rules in this library implement the Json Logic Specification.  If you override this behavior, then you are no longer implementing that specification, and you lose interoperability with other implementations.  If you want custom behavior _and_ have this custom behavior common across implementations, you'll need to also override the behavior in _every_ implementation and application you use.
