@@ -12,10 +12,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MoreThanEqualRuleJsonConverter))]
 public class MoreThanEqualRule : Rule
 {
-	internal Rule A { get; }
-	internal Rule B { get; }
+	/// <summary>
+	/// The value to test.
+	/// </summary>
+	protected internal Rule A { get; }
+	/// <summary>
+	/// The boundary to test against.
+	/// </summary>
+	protected internal Rule B { get; }
 
-	internal MoreThanEqualRule(Rule a, Rule b)
+	/// <summary>
+	/// Creates a new instance of <see cref="MoreThanEqualRule"/> when '>=' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The value to test.</param>
+	/// <param name="b">The boundary to test against.</param>
+	protected internal MoreThanEqualRule(Rule a, Rule b)
 	{
 		A = a;
 		B = b;

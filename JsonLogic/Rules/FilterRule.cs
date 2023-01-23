@@ -14,10 +14,22 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(FilterRuleJsonConverter))]
 public class FilterRule : Rule
 {
-	internal Rule Input { get; }
-	internal Rule Rule { get; }
+	/// <summary>
+	/// A sequence of values to filter.
+	/// </summary>
+	protected internal Rule Input { get; }
+	
+	/// <summary>
+	/// A predicate to apply to each item in the sequence.
+	/// </summary>
+	protected internal Rule Rule { get; }
 
-	internal FilterRule(Rule input, Rule rule)
+	/// <summary>
+	/// Creates a new instance of <see cref="FilterRule"/> when 'filter' operator is detected within json logic.
+	/// </summary>
+	/// <param name="input">A sequence of values to filter.</param>
+	/// <param name="rule">A predicate to apply to each item in the sequence.</param>
+	protected internal FilterRule(Rule input, Rule rule)
 	{
 		Input = input;
 		Rule = rule;

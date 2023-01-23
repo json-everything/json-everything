@@ -14,9 +14,16 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(IfRuleJsonConverter))]
 public class IfRule : Rule
 {
-	internal List<Rule> Components { get; }
+	/// <summary>
+	/// A condition, what to do when the condition is true, and what to do when the condition is false. 
+	/// </summary>
+	protected internal List<Rule> Components { get; }
 
-	internal IfRule(params Rule[] components)
+	/// <summary>
+	/// Creates a new instance of <see cref="IfRule"/> when 'if' or '?:' operators are detected within json logic.
+	/// </summary>
+	/// <param name="components">A condition, what to do when the condition is true, and what to do when the condition is false.</param>
+	protected internal IfRule(params Rule[] components)
 	{
 		Components = new List<Rule>(components);
 	}

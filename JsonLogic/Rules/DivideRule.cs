@@ -12,10 +12,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(DivideRuleJsonConverter))]
 public class DivideRule : Rule
 {
-	internal Rule A { get; }
-	internal Rule B { get; }
+	/// <summary>
+	/// The value to divide.
+	/// </summary>
+	protected internal Rule A { get; }
+	/// <summary>
+	/// The divisor.
+	/// </summary>
+	protected internal Rule B { get; }
 
-	internal DivideRule(Rule a, Rule b)
+	/// <summary>
+	/// Creates a new instance of <see cref="DivideRule"/> when '/' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The value to divide.</param>
+	/// <param name="b">The divisor, ie; the value to divide by.</param>
+	protected internal DivideRule(Rule a, Rule b)
 	{
 		A = a;
 		B = b;

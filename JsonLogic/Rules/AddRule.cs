@@ -14,9 +14,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(AddRuleJsonConverter))]
 public class AddRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// The sequence of values to add together.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal AddRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="AddRule"/> when '+' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value, to which other values will be added to.</param>
+	/// <param name="more">Sequence of values to add to the first value.</param>
+	protected internal AddRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);

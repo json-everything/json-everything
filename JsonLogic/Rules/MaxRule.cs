@@ -16,9 +16,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MaxRuleJsonConverter))]
 public class MaxRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// The sequence of numbers to query for max.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal MaxRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="MaxRule"/> when 'max' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first numeric value in a sequence of numbers.</param>
+	/// <param name="more">A sequence of numbers.</param>
+	protected internal MaxRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);

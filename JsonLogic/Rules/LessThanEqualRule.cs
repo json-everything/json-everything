@@ -14,16 +14,36 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(LessThanEqualRuleJsonConverter))]
 public class LessThanEqualRule : Rule
 {
-	internal Rule A { get; }
-	internal Rule B { get; }
-	internal Rule? C { get; }
+	/// <summary>
+	/// The Lower bound.
+	/// </summary>
+	protected internal Rule A { get; }
+	/// <summary>
+	/// The middle argument.
+	/// </summary>
+	protected internal Rule B { get; }
+	/// <summary>
+	/// The Higher bound.
+	/// </summary>
+	protected internal Rule? C { get; }
 
-	internal LessThanEqualRule(Rule a, Rule b)
+	/// <summary>
+	/// Creates a new instance of <see cref="LessThanEqualRule"/> when '<=' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The value to test.</param>
+	/// <param name="b">The boundary to test against.</param>
+	protected internal LessThanEqualRule(Rule a, Rule b)
 	{
 		A = a;
 		B = b;
 	}
-	internal LessThanEqualRule(Rule a, Rule b, Rule c)
+	/// <summary>
+	/// Creates a new instance of <see cref="LessThanEqualRule"/> when '<=' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The lower bound.</param>
+	/// <param name="b">The middle argument.</param>
+	/// <param name="c">The upper bound.</param>
+	protected internal LessThanEqualRule(Rule a, Rule b, Rule c)
 	{
 		A = a;
 		B = b;

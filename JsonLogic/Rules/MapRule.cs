@@ -14,10 +14,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MapRuleJsonConverter))]
 public class MapRule : Rule
 {
-	internal Rule Input { get; }
-	internal Rule Rule { get; }
+	/// <summary>
+	/// A sequence of values to map over.
+	/// </summary>
+	protected internal Rule Input { get; }
+	/// <summary>
+	/// A rule to apply to each item in the sequence.
+	/// </summary>
+	protected internal Rule Rule { get; }
 
-	internal MapRule(Rule input, Rule rule)
+	/// <summary>
+	/// Creates a new instance of <see cref="MapRule"/> when 'map' operator is detected within json logic.
+	/// </summary>
+	/// <param name="input">A sequence of values to map over.</param>
+	/// <param name="rule">A rule to apply to each item in the sequence.</param>
+	protected internal MapRule(Rule input, Rule rule)
 	{
 		Input = input;
 		Rule = rule;

@@ -119,3 +119,11 @@ Several rules (`all`, `none`, and `some`) can pass data to their children.  `var
 It's definitely recommended to go through the [code for the built-in ruleset](https://github.com/gregsdennis/json-everything/tree/master/JsonLogic/Rules) for examples.
 
 Once your rule is defined, it needs to be registered using the `RuleRegistry.Register<T>()` method.  This will allow the rule to be automatically deserialized.
+
+## Inheriting from existing operators:
+While this library allows you to inherit from, and therefore override, the default behaviour of a Rule, you need to be aware of the implications: 
+
+
+The Rules in this library implement the Json Logic Specification.
+If you override this behaviour, then you are no longer implementing that specification, and you loose interoperability with other implementations.
+If you want custom behaviour AND have this custom behaviour common across implementations, you'll need to override the behaviour in EVERY implementation you use.
