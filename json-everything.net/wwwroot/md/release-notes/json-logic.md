@@ -1,3 +1,7 @@
+# [3.3.0](https://github.com/gregsdennis/json-everything/pull/370)
+
+[#368](https://github.com/gregsdennis/json-everything/issues/368)/[#369](https://github.com/gregsdennis/json-everything/issues/369) - Updated rule class accessibility to allow users to customize rule behavior.  Thanks to [@dcook-net](https://github.com/dcook-net) for suggesting and implementing this change.
+
 # [3.2.0](https://github.com/gregsdennis/json-everything/pull/329)
 
 [#328](https://github.com/gregsdennis/json-everything/issues/328) - Added serialization support.
