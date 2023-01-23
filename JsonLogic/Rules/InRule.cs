@@ -14,13 +14,24 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(InRuleJsonConverter))]
 public class InRule : Rule
 {
-	internal Rule Test { get; }
-	internal Rule Source { get; }
+	/// <summary>
+	/// A value to search for.
+	/// </summary>
+	protected internal Rule Test { get; }
+	/// <summary>
+	/// The string value to test against.
+	/// </summary>
+	protected internal Rule Value { get; }
 
-	internal InRule(Rule test, Rule source)
+	/// <summary>
+	/// Creates a new instance of <see cref="InRule"/> when 'in' operator is detected within json logic.
+	/// </summary>
+	/// <param name="test">A value to search for.</param>
+	/// <param name="value">The string value to test against.</param>
+	protected internal InRule(Rule test, Rule value)
 	{
 		Test = test;
-		Source = source;
+		Value = value;
 	}
 
 	/// <summary>
@@ -35,7 +46,7 @@ public class InRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var test = Test.Apply(data, contextData);
-		var source = Source.Apply(data, contextData);
+		var source = Value.Apply(data, contextData);
 
 		if (source is JsonValue value && value.TryGetValue(out string? stringSource))
 		{
@@ -72,7 +83,7 @@ internal class InRuleJsonConverter : JsonConverter<InRule>
 		writer.WritePropertyName("in");
 		writer.WriteStartArray();
 		writer.WriteRule(value.Test, options);
-		writer.WriteRule(value.Source, options);
+		writer.WriteRule(value.Value, options);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

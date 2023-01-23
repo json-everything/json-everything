@@ -14,9 +14,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(AndRuleJsonConverter))]
 public class AndRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// The sequence of values to And against.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal AndRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="AndRule"/> when 'and' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value.</param>
+	/// <param name="more">Sequence of values to And against.</param>
+	protected internal AndRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);

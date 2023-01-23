@@ -13,10 +13,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(NoneRuleJsonConverter))]
 public class NoneRule : Rule
 {
-	internal Rule Input { get; }
-	internal Rule Rule { get; }
+	/// <summary>
+	/// The sequence of elements to apply the rule to.
+	/// </summary>
+	protected internal Rule Input { get; }
+	/// <summary>
+	/// The rule to apply to items in the input sequence.
+	/// </summary>
+	protected internal Rule Rule { get; }
 
-	internal NoneRule(Rule input, Rule rule)
+	/// <summary>
+	/// Creates a new instance of <see cref="NoneRule"/> when 'none' operator is detected within json logic.
+	/// </summary>
+	/// <param name="input">A sequence of elements to apply the rule to.</param>
+	/// <param name="rule">A rule to apply to items in the input sequence.</param>
+	protected internal NoneRule(Rule input, Rule rule)
 	{
 		Input = input;
 		Rule = rule;

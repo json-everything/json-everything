@@ -12,10 +12,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MoreThanRuleJsonConverter))]
 public class MoreThanRule : Rule
 {
-	internal Rule A { get; }
-	internal Rule B { get; }
+	/// <summary>
+	/// The value to test.
+	/// </summary>
+	protected internal Rule A { get; }
+	/// <summary>
+	/// The boundary to test against.
+	/// </summary>
+	protected internal Rule B { get; }
 
-	internal MoreThanRule(Rule a, Rule b)
+	/// <summary>
+	/// Creates a new instance of <see cref="MoreThanRule"/> when '>' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The value to test.</param>
+	/// <param name="b">The boundary to test against.</param>
+	protected internal MoreThanRule(Rule a, Rule b)
 	{
 		A = a;
 		B = b;

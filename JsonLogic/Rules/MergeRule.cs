@@ -15,9 +15,16 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MergeRuleJsonConverter))]
 public class MergeRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// A sequence of arrays to merge into a single array.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal MergeRule(params Rule[] items)
+	/// <summary>
+	/// Creates a new instance of <see cref="MergeRule"/> when 'merge' operator is detected within json logic.
+	/// </summary>
+	/// <param name="items">A sequence of arrays to merge into a single array.</param>
+	protected internal MergeRule(params Rule[] items)
 	{
 		Items = items.ToList();
 	}

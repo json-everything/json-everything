@@ -14,9 +14,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(CatRuleJsonConverter))]
 public class CatRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// The sequence of values to concatenate together.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal CatRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="CatRule"/> when 'cat' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value, to which subsequent values will be concatenated to.</param>
+	/// <param name="more">A sequence of values to concatenate to the first value.</param>
+	protected internal CatRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);

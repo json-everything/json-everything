@@ -20,11 +20,26 @@ public class ReduceRule : Rule
 
 	private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-	internal Rule Input { get; }
-	internal Rule Rule { get; }
-	internal Rule Initial { get; }
+	/// <summary>
+	/// A sequence of values to reduce.
+	/// </summary>
+	protected internal Rule Input { get; }
+	/// <summary>
+	/// The reduction to perform.
+	/// </summary>
+	protected internal Rule Rule { get; }
+	/// <summary>
+	/// The initial value to start the reduction. ie; the seed.
+	/// </summary>
+	protected internal Rule Initial { get; }
 
-	internal ReduceRule(Rule input, Rule rule, Rule initial)
+	/// <summary>
+	/// Creates a new instance of <see cref="ReduceRule"/> when 'reduce' operator is detected within json logic.
+	/// </summary>
+	/// <param name="input">A sequence of values to reduce.</param>
+	/// <param name="rule">The reduction to perform.</param>
+	/// <param name="initial">The initial value to start the reduction. ie; the seed.</param>
+	protected internal ReduceRule(Rule input, Rule rule, Rule initial)
 	{
 		Input = input;
 		Rule = rule;

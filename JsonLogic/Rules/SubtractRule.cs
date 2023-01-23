@@ -14,9 +14,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(SubtractRuleJsonConverter))]
 public class SubtractRule : Rule
 {
-	internal List<Rule> Items;
+	/// <summary>
+	/// The sequence of values to subtract.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal SubtractRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="SubtractRule"/> when '-' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value, from which other values will be subtracted.</param>
+	/// <param name="more">Sequence of values to subtract from the first value.</param>
+	protected internal SubtractRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);

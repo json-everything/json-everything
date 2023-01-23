@@ -13,10 +13,21 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(StrictEqualsRuleJsonConverter))]
 public class StrictEqualsRule : Rule
 {
-	internal Rule A { get; }
-	internal Rule B { get; }
+	/// <summary>
+	/// First value to compare.
+	/// </summary>
+	protected internal Rule A { get; }
+	/// <summary>
+	/// Second value to compare.
+	/// </summary>
+	protected internal Rule B { get; }
 
-	internal StrictEqualsRule(Rule a, Rule b)
+	/// <summary>
+	/// Creates a new instance of <see cref="StrictEqualsRule"/> when '===' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">First value to compare.</param>
+	/// <param name="b">Second value to compare.</param>
+	protected internal StrictEqualsRule(Rule a, Rule b)
 	{
 		A = a;
 		B = b;

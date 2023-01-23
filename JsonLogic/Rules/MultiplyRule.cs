@@ -14,9 +14,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(MultiplyRuleJsonConverter))]
 public class MultiplyRule : Rule
 {
-	internal List<Rule> Items { get; }
+	/// <summary>
+	/// The sequence of numbers to multiple together.
+	/// </summary>
+	protected internal List<Rule> Items { get; }
 
-	internal MultiplyRule(Rule a, params Rule[] more)
+	/// <summary>
+	/// Creates a new instance of <see cref="MultiplyRule"/> when '*' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value in to which other values will be multiplied by.</param>
+	/// <param name="more">Sequence of values to multiply by.</param>
+	protected internal MultiplyRule(Rule a, params Rule[] more)
 	{
 		Items = new List<Rule> { a };
 		Items.AddRange(more);
