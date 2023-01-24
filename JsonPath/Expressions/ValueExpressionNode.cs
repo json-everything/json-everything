@@ -16,7 +16,7 @@ internal static class ValueExpressionParser
 {
 	private static readonly IValueExpressionParser[] _operandParsers =
 	{
-		new FunctionExpressionParser(),
+		new ValueFunctionExpressionParser(),
 		new LiteralExpressionParser(),
 		new PathExpressionParser(),
 	};

@@ -34,8 +34,8 @@ public class SearchFunction : IPathFunctionDefinition
 	public NodeList Evaluate(IEnumerable<NodeList> arguments)
 	{
 		var args = arguments.ToArray();
-		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var regex)) return NodeList.Empty;
-		if (!args[1].TryGetSingleValue().TryGetValue<string>(out var text)) return NodeList.Empty;
+		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var text)) return NodeList.Empty;
+		if (!args[1].TryGetSingleValue().TryGetValue<string>(out var regex)) return NodeList.Empty;
 
 		return (JsonValue)Regex.IsMatch(text, regex, RegexOptions.ECMAScript);
 	}

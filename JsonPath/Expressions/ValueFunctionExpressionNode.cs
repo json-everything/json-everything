@@ -7,12 +7,12 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class FunctionExpressionNode : ValueExpressionNode
+internal class ValueFunctionExpressionNode : ValueExpressionNode
 {
 	public IPathFunctionDefinition Function { get; }
 	public ValueExpressionNode[] Parameters { get; }
 
-	public FunctionExpressionNode(IPathFunctionDefinition function, IEnumerable<ValueExpressionNode> parameters)
+	public ValueFunctionExpressionNode(IPathFunctionDefinition function, IEnumerable<ValueExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
@@ -54,7 +54,7 @@ internal class FunctionExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class FunctionExpressionParser : IValueExpressionParser
+internal class ValueFunctionExpressionParser : IValueExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression)
 	{
@@ -121,7 +121,7 @@ internal class FunctionExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		expression = new FunctionExpressionNode(function, parameters);
+		expression = new ValueFunctionExpressionNode(function, parameters);
 		index = i;
 		return true;
 	}

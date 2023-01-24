@@ -23,15 +23,7 @@ public static class JsonNodeExtensions
 			return false;
 		}
 
-		var obj = val.GetValue<object>();
-		if (obj is T objAsT)
-		{
-			value = objAsT;
-			return true;
-		}
-
-		value = default;
-		return false;
+		return val.TryGetValue(out value);
 	}
 
 	/// <summary>
