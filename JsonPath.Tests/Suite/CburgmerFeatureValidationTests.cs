@@ -60,6 +60,9 @@ public class CburgmerFeatureValidationTests
 		"$[?(false)]",
 		"$[?(null)]",
 
+		// trailing whitespace is disallowed
+		"$. a ",
+
 		// regex operator transitioned to functions
 		"$[?(@.name=~/hello.*/)]",
 		"$[?(@.name=~/@.pattern/)]",

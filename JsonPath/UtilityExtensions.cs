@@ -47,7 +47,7 @@ internal static class UtilityExtensions
 	{
 		var i = index;
 
-		if (!source.ConsumeWhitespace(ref index))
+		if (!source.ConsumeWhitespace(ref i))
 		{
 			name = null;
 			return false;
