@@ -27,7 +27,7 @@ internal static class UtilityExtensions
 		yield return item;
 	}
 
-	public static bool IsValidForPropertyName(this char ch)
+	private static bool IsValidForPropertyName(this char ch)
 	{
 		return ch.In('a'..('z' + 1)) ||
 		       ch.In('A'..('Z' + 1)) ||
@@ -36,7 +36,7 @@ internal static class UtilityExtensions
 		       ch.In(0x80..0x10FFFF);
 	}
 
-	public static bool IsValidForPropertyNameStart(this char ch)
+	private static bool IsValidForPropertyNameStart(this char ch)
 	{
 		return ch.In('a'..('z' + 1)) ||
 		       ch.In('A'..('Z' + 1)) ||
@@ -47,7 +47,11 @@ internal static class UtilityExtensions
 	{
 		var i = index;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			name = null;
+			return false;
+		}
 
 		if (i < source.Length && source[i].IsValidForPropertyNameStart())
 		{

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -63,7 +64,11 @@ internal static class SpanExtensions
 
 	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out JsonNode? node)
 	{
-		span.ConsumeWhitespace(ref i);
+		if (!span.ConsumeWhitespace(ref i))
+		{
+			node = null;
+			return false;
+		}
 
 		try
 		{

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq.Expressions;
 
 namespace Json.Path;
 
@@ -52,7 +54,11 @@ internal static class PathParser
 
 		var i = index;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			path = null;
+			return false;
+		}
 
 		var segments = new List<PathSegment>();
 		PathScope scope;
@@ -92,7 +98,8 @@ internal static class PathParser
 		var isRecursive = false;
 		var isShorthand = false;
 
-		source.ConsumeWhitespace(ref index);
+		if (!source.ConsumeWhitespace(ref index))
+			throw new PathParseException(index, "Unexpected end of input");
 
 		if (source[index] == '[')
 			ParseBracketed(source, ref index, selectors);
@@ -150,7 +157,11 @@ internal static class PathParser
 		var isRecursive = false;
 		var isShorthand = false;
 
-		source.ConsumeWhitespace(ref index);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			segment = null;
+			return false;
+		}
 
 		if (source[index] == '[')
 		{
@@ -241,7 +252,7 @@ internal static class PathParser
 		selectors.Add(new NameSelector(name));
 	}
 
-	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	private static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
 	{
 		if (!source.TryParseName(ref index, out var name)) return false;
 
@@ -256,7 +267,8 @@ internal static class PathParser
 
 		while (index < source.Length && !done)
 		{
-			source.ConsumeWhitespace(ref index);
+			if (!source.ConsumeWhitespace(ref index))
+				throw new PathParseException(index, "Unexpected end of input");
 			ISelector? selector = null;
 
 			foreach (var parser in _parsers)
@@ -273,7 +285,8 @@ internal static class PathParser
 
 			selectors.Add(selector);
 
-			source.ConsumeWhitespace(ref index);
+			if (!source.ConsumeWhitespace(ref index))
+				throw new PathParseException(index, "Unexpected end of input");
 
 			switch (source[index])
 			{
@@ -300,7 +313,8 @@ internal static class PathParser
 
 		while (index < source.Length && !done)
 		{
-			source.ConsumeWhitespace(ref index);
+			if (!source.ConsumeWhitespace(ref index)) return false;
+
 			ISelector? selector = null;
 
 			foreach (var parser in _parsers)
@@ -312,7 +326,7 @@ internal static class PathParser
 
 			selectors.Add(selector);
 
-			source.ConsumeWhitespace(ref index);
+			if (!source.ConsumeWhitespace(ref index)) return false;
 
 			switch (source[index])
 			{

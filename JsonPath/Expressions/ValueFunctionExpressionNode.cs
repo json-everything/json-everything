@@ -64,6 +64,12 @@ internal class ValueFunctionExpressionParser : IValueExpressionParser
 			return false;
 		}
 
+		if (function.ReturnType != FunctionType.Value)
+		{
+			expression = null;
+			return false;
+		}
+
 		expression = new ValueFunctionExpressionNode(function, parameters);
 		return true;
 	}

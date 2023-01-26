@@ -39,6 +39,14 @@ public interface IPathFunctionDefinition
 	/// <remarks>
 	/// This is important for function composition: using a function
 	/// as a parameter of another function.
+	///
+	/// This library assumes that a function may return `Nothing` and
+	/// automatically handles that case.  This value should be set to
+	/// what kind of non-`Nothing` type the function returns.
+	///
+	/// Registration of the function will throw an
+	/// <see cref="InvalidOperationException"/> if the value is
+	/// <see cref="FunctionType.Unspecified"/>
 	/// </remarks>
 	FunctionType ReturnType { get; }
 
@@ -54,8 +62,7 @@ public enum FunctionType
 {
 	Unspecified,
 	Value,
-	Boolean,
-	NodeList
+	Boolean
 }
 
 [Flags]

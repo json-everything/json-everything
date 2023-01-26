@@ -43,7 +43,11 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 		var i = index;
 		var nestLevel = 0;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			expression = null;
+			return false;
+		}
 		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
@@ -73,7 +77,11 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 			return false;
 		}
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			expression = null;
+			return false;
+		}
 		while (i < source.Length && source[i] == ')' && nestLevel > 0)
 		{
 			nestLevel--;

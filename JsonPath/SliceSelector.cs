@@ -108,7 +108,11 @@ internal class SliceSelectorParser : ISelectorParser
 		if (source.TryGetInt(ref i, out var value)) 
 			start = value;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			selector = null;
+			return false;
+		}
 
 		if (source[i] != ':')
 		{
@@ -118,19 +122,31 @@ internal class SliceSelectorParser : ISelectorParser
 
 		i++; // consume :
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			selector = null;
+			return false;
+		}
 
 		if (source.TryGetInt(ref i, out value)) 
 			end = value;
 
-		source.ConsumeWhitespace(ref i);
-		
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			selector = null;
+			return false;
+		}
+
 		if (source[i] == ':')
 		{
 			i++; // consume :
 
-			source.ConsumeWhitespace(ref i);
-			
+			if (!source.ConsumeWhitespace(ref index))
+			{
+				selector = null;
+				return false;
+			}
+
 			if (source.TryGetInt(ref i, out value))
 				step = value;
 		}

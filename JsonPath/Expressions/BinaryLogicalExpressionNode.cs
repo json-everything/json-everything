@@ -49,14 +49,23 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 
 		int Precedence(IBinaryLogicalOperator op) => nestLevel * 10 + op.Precedence;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			expression = null;
+			return false;
+		}
+
 		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
 			i++;
 		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
+
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			expression = null;
+			return false;
+		}
 
 		// first get a comparison
 		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp))
@@ -70,7 +79,11 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 		while (i < source.Length)
 		{
 			// handle )
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				expression = null;
+				return false;
+			}
 			if (source[i] == ')' && nestLevel > 0)
 			{
 				while (i < source.Length && source[i] == ')' && nestLevel > 0)
@@ -89,7 +102,11 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 				break; // if we don't get an op, then we're done
 
 			// handle (
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				expression = null;
+				return false;
+			}
 			if (source[i] == '(')
 			{
 				nextNest++;

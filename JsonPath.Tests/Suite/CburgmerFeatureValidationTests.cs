@@ -48,6 +48,7 @@ public class CburgmerFeatureValidationTests
 
 		// leading zeroes are not allowed for numeric literals
 		"$[?(@.key==010)]",
+		"$[010:024:010]",
 
 		// JSON literals are not expression results
 		"$[?(@.key>0 && false)]",

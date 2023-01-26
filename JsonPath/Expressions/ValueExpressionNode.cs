@@ -28,7 +28,12 @@ internal static class ValueExpressionParser
 
 		int Precedence(IBinaryValueOperator op) => nestLevel * 10 + op.Precedence;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			expression = null;
+			return false;
+		}
+
 		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
@@ -53,7 +58,12 @@ internal static class ValueExpressionParser
 		while (i < source.Length)
 		{
 			// handle )
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref index))
+			{
+				expression = null;
+				return false;
+			}
+
 			if (source[i] == ')' && nestLevel > 0)
 			{
 				while (i < source.Length && source[i] == ')' && nestLevel > 0)
@@ -72,7 +82,12 @@ internal static class ValueExpressionParser
 				break; // if we don't get an op, then we're done
 
 			// handle (
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref index))
+			{
+				expression = null;
+				return false;
+			}
+
 			if (source[i] == '(')
 			{
 				nextNest++;

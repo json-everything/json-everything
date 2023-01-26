@@ -49,7 +49,12 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		var i = index;
 		var nestLevel = 0;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			expression = null;
+			return false;
+		}
+
 		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
@@ -72,7 +77,12 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			expression = null;
+			return false;
+		}
+
 		while (i < source.Length && source[i] == ')' && nestLevel > 0)
 		{
 			nestLevel--;

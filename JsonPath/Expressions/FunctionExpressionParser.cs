@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -31,7 +32,12 @@ internal static class FunctionExpressionParser
 	{
 		int i = index;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			parameters = null;
+			function = null;
+			return false;
+		}
 
 		// parse function name
 		if (!source.TryParseName(ref i, out var name))
@@ -41,7 +47,12 @@ internal static class FunctionExpressionParser
 			return false;
 		}
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			parameters = null;
+			function = null;
+			return false;
+		}
 
 		// consume (
 		if (source[i] != '(')
@@ -59,13 +70,23 @@ internal static class FunctionExpressionParser
 
 		while (i < source.Length && !done)
 		{
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				parameters = null;
+				function = null;
+				return false;
+			}
 
 			if (!ValueExpressionParser.TryParse(source, ref i, out var parameter)) break;
 
 			parameters.Add(parameter);
 
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				parameters = null;
+				function = null;
+				return false;
+			}
 
 			switch (source[i])
 			{
