@@ -59,7 +59,7 @@ public class JsonPath
 	public static JsonPath Parse(string source)
 	{
 		int index = 0;
-		return PathParser.Parse(source.Trim(), ref index, true);
+		return PathParser.Parse(source, ref index, true);
 	}
 
 	/// <summary>

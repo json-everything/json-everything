@@ -50,11 +50,14 @@ internal static class SpanExtensions
 			if (!overflowed)
 			{
 				parsedValue = parsedValue * 10 + span[i] - '0';
-				overflowed = parsedValue is < int.MinValue or > int.MaxValue;
+				overflowed = parsedValue is <= -2L << 53 or > 2L << 53;
 			}
 
 			i++;
 		}
+
+		if (overflowed) return false;
+
 		if (negative) parsedValue = -parsedValue;
 
 		index = i;

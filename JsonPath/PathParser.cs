@@ -25,11 +25,11 @@ internal static class PathParser
 		var segments = new List<PathSegment>();
 		PathScope scope;
 
-		if (source[0] == '$')
+		if (source[index] == '$')
 			scope = PathScope.Global;
 		else if (requireGlobal)
 			throw new PathParseException(index, "Path must start with '$'");
-		else if (source[0] == '@')
+		else if (source[index] == '@')
 			scope = PathScope.Local;
 		else
 			throw new PathParseException(index, "Path must start with '$' or '@'");
@@ -54,11 +54,11 @@ internal static class PathParser
 
 		var i = index;
 
-		if (!source.ConsumeWhitespace(ref index))
-		{
-			path = null;
-			return false;
-		}
+		//if (!source.ConsumeWhitespace(ref index))
+		//{
+		//	path = null;
+		//	return false;
+		//}
 
 		var segments = new List<PathSegment>();
 		PathScope scope;
