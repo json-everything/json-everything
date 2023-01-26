@@ -25,6 +25,25 @@ public class JsonPath
 	/// </summary>
 	public PathScope Scope { get; }
 
+	/// <summary>
+	/// Gets whether the path is a singular path.  That is, it can only return a nodelist
+	/// containing at most a single value.
+	/// </summary>
+	/// <remarks>
+	/// A singular path can only contain segments which must meet all of the following
+	/// conditions:
+	///
+	/// - is not a recursive descent (`..`)
+	/// - contains a single selector
+	/// - that selector is either an index selector or a name selector
+	///
+	/// For example, `$['foo'][1]` is a singular path.  Shorthand syntax (e.g. `$.foo[1]`)
+	/// is also allowed.
+	/// </remarks>
+	public bool IsSingular => _segments.All(x => !x.IsRecursive &&
+	                                             x.Selectors.Length == 1 &&
+	                                             x.Selectors.All(y => y is IndexSelector or NameSelector));
+
 	internal JsonPath(PathScope scope, IEnumerable<PathSegment> segments)
 	{
 		Scope = scope;

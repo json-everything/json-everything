@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Json.Path;
 
@@ -22,9 +23,50 @@ public interface IPathFunctionDefinition
 	int MaxArgumentCount { get; }
 
 	/// <summary>
+	/// Defines the sets of parameters that are valid for this function.
+	/// </summary>
+	/// <remarks>
+	/// The value of this property is a collection of collections where
+	/// each inner collection represents a single parameter set.  The
+	/// outer collection represents differing parameter sets and can
+	/// be thought of as "overloads."
+	/// </remarks>
+	IEnumerable<IEnumerable<ParameterType>> ParameterSets { get; }
+
+	/// <summary>
+	/// The type returned by the function.
+	/// </summary>
+	/// <remarks>
+	/// This is important for function composition: using a function
+	/// as a parameter of another function.
+	/// </remarks>
+	FunctionType ReturnType { get; }
+
+	/// <summary>
 	/// Evaluates the function.
 	/// </summary>
 	/// <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
 	/// <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
 	NodeList Evaluate(IEnumerable<NodeList> arguments);
+}
+
+public enum FunctionType
+{
+	Unspecified,
+	Value,
+	Boolean,
+	NodeList
+}
+
+[Flags]
+public enum ParameterType
+{
+	Unspecified,
+	Object,
+	Array,
+	String,
+	Number,
+	Boolean,
+	Null,
+	Nothing
 }

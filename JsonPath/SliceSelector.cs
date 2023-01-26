@@ -44,6 +44,7 @@ internal class SliceSelector : ISelector
 			{
 				yield return new Node(arr[i], match.Location.Append(i));
 				i += step;
+				if (i < 0) break; // overflow
 			}
 		}
 		else
@@ -53,6 +54,7 @@ internal class SliceSelector : ISelector
 			{
 				yield return new Node(arr[i], match.Location.Append(i));
 				i += step;
+				if (i < 0) break; // overflow
 			}
 		}
 	}

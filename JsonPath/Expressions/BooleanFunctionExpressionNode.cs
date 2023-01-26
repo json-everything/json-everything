@@ -61,71 +61,13 @@ internal class BooleanFunctionExpressionParser : ILogicalExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
 	{
-		int i = index;
-
-		source.ConsumeWhitespace(ref i);
-
-		// parse function name
-		if (!source.TryParseName(ref i, out var name))
-		{
-			expression = null;
-			return false;
-		}
-
-		source.ConsumeWhitespace(ref i);
-
-		// consume (
-		if (source[i] != '(')
-		{
-			expression = null;
-			return false;
-		}
-		i++;
-
-		// parse list of parameters - all value expressions
-		var parameters = new List<ValueExpressionNode>();
-		var done = false;
-
-		while (i < source.Length && !done)
-		{
-			source.ConsumeWhitespace(ref i);
-
-			if (!ValueExpressionParser.TryParse(source, ref i, out var parameter)) break;
-
-			parameters.Add(parameter);
-
-			source.ConsumeWhitespace(ref i);
-		
-			switch (source[i])
-			{
-				case ')':
-					done = true;
-					i++;
-					break;
-				case ',':
-					i++;
-					break;
-				default:
-					expression = null;
-					return false;
-			}
-		}
-
-		if (!FunctionRepository.TryGet(name, out var function))
-		{
-			expression = null;
-			return false;
-		}
-
-		if (function.MinArgumentCount > parameters.Count ||
-		    parameters.Count > function.MaxArgumentCount)
+		if (!FunctionExpressionParser.TryParseFunction(source, ref index, out var parameters, out var function))
 		{
 			expression = null;
 			return false;
 		}
 
 		expression = new BooleanFunctionExpressionNode(function, parameters);
-		index = i;
 		return true;
 	}
 }

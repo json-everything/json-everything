@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -8,19 +7,25 @@ namespace Json.Path;
 
 internal static class SpanExtensions
 {
-	public static void ConsumeWhitespace(this ReadOnlySpan<char> span, ref int i)
+	public static bool ConsumeWhitespace(this ReadOnlySpan<char> span, ref int i)
 	{
 		while (i < span.Length && char.IsWhiteSpace(span[i]))
 		{
 			i++;
 		}
-		if (i == span.Length)
-			throw new PathParseException(i, "Unexpected end of input");
+		return i != span.Length;
 	}
 
-	public static bool TryGetInt(this ReadOnlySpan<char> span, ref int i, out int value)
+	public static bool EnsureValidNameCharacter(this ReadOnlySpan<char> span, int i)
+	{
+		return span[i] >= 0x20;
+		//throw new PathParseException(i, "Characters in the range U+0000..U+001F are disallowed");
+	}
+
+	public static bool TryGetInt(this ReadOnlySpan<char> span, ref int index, out int value)
 	{
 		var negative = false;
+		var i = index;
 		if (span[i] == '-')
 		{
 			negative = true;
@@ -29,15 +34,30 @@ internal static class SpanExtensions
 
 		// Now move past digits
 		var foundNumber = false;
+		var zeroStart = false;
+		long parsedValue = 0;
+		var overflowed = false;
 		value = 0;
 		while (i < span.Length && char.IsDigit(span[i]))
 		{
+			if (zeroStart) return false;
+
+			if (!foundNumber && span[i] == '0')
+				zeroStart = true;
+			
 			foundNumber = true;
-			value = value * 10 + span[i] - '0';
+			if (!overflowed)
+			{
+				parsedValue = parsedValue * 10 + span[i] - '0';
+				overflowed = parsedValue is < int.MinValue or > int.MaxValue;
+			}
+
 			i++;
 		}
+		if (negative) parsedValue = -parsedValue;
 
-		if (negative) value = -value;
+		index = i;
+		value = (int)Math.Min(int.MaxValue, Math.Max(int.MinValue, parsedValue));
 		return foundNumber;
 	}
 
@@ -138,24 +158,5 @@ internal static class SpanExtensions
 			node = default;
 			return false;
 		}
-	}
-
-	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
-	{
-		var i = index;
-
-		source.ConsumeWhitespace(ref i);
-
-		while (i < source.Length && source[i].IsValidForPropertyName())
-		{
-			i++;
-		}
-
-		if (index == i) return false;
-
-		var name = source[index..i].ToString();
-		selectors.Add(new NameSelector(name));
-		index = i;
-		return true;
 	}
 }

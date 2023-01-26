@@ -25,6 +25,14 @@ public class CountFunction : IPathFunctionDefinition
 	/// </summary>
 	public int MaxArgumentCount => 1;
 
+	public IEnumerable<IEnumerable<ParameterType>> ParameterSets { get; } =
+		new[]
+		{
+			new[] { ParameterType.Array | ParameterType.String }
+		};
+
+	public FunctionType ReturnType => FunctionType.Value;
+
 	/// <summary>
 	/// Evaluates the function.
 	/// </summary>

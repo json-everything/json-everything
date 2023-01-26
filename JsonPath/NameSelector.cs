@@ -96,6 +96,11 @@ internal class NameSelectorParser : ISelectorParser
 			}
 			else
 			{
+				if (!source.EnsureValidNameCharacter(i))
+				{
+					selector = null;
+					return false;
+				}
 				sb.Append(source[i]);
 				i++;
 			}

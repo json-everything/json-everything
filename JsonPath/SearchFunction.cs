@@ -26,6 +26,14 @@ public class SearchFunction : IPathFunctionDefinition
 	/// </summary>
 	public int MaxArgumentCount => 2;
 
+	public IEnumerable<IEnumerable<ParameterType>> ParameterSets { get; } =
+		new[]
+		{
+			new[] { ParameterType.String, ParameterType.String }
+		};
+
+	public FunctionType ReturnType => FunctionType.Boolean;
+
 	/// <summary>
 	/// Evaluates the function.
 	/// </summary>

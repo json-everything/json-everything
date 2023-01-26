@@ -40,7 +40,6 @@ internal static class UtilityExtensions
 	{
 		return ch.In('a'..('z' + 1)) ||
 		       ch.In('A'..('Z' + 1)) ||
-		       ch.In('_') ||
 		       ch.In(0x80..0x10FFFF);
 	}
 

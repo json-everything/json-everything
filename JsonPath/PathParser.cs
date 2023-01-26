@@ -105,6 +105,9 @@ internal static class PathParser
 				isRecursive = true;
 				index++; // consume second .
 
+				if (!source.ConsumeWhitespace(ref index))
+					throw new PathParseException(index, "Unexpected end of input");
+
 				if (source[index] == '[') 
 					ParseBracketed(source, ref index, selectors);
 				else if (source[index] == '*')
@@ -165,6 +168,12 @@ internal static class PathParser
 			{
 				isRecursive = true;
 				index++; // consume second .
+
+				if (!source.ConsumeWhitespace(ref index))
+				{
+					segment = null;
+					return false;
+				}
 
 				if (source[index] == '[')
 				{
