@@ -1,3 +1,11 @@
+# [0.4.0](https://github.com/gregsdennis/json-everything/pull/372)
+
+- Updated function definition
+  - list parameter sets to support type checking and overloads rather than a minimum and maximum parameter count
+  - add return type to support type checking within expressions
+- fixes around `TryParse()` to ensure that it doesn't throw exceptions (at least not from this code)
+- more fixes based on [expanded tests](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/12) in the compliance test suite
+
 # [0.3.3](https://github.com/gregsdennis/json-everything/pull/367)
 
 I added a bunch of tests to the JSON Path test suite and found a few bugs in filter expressions. This release fixes those bugs.

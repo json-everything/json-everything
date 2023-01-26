@@ -13,14 +13,6 @@ public interface IPathFunctionDefinition
 	/// Gets the function name.
 	/// </summary>
 	string Name { get; }
-	/// <summary>
-	/// The minimum argument count accepted by the function.
-	/// </summary>
-	int MinArgumentCount { get; }
-	/// <summary>
-	/// The maximum argument count accepted by the function.
-	/// </summary>
-	int MaxArgumentCount { get; }
 
 	/// <summary>
 	/// Defines the sets of parameters that are valid for this function.
