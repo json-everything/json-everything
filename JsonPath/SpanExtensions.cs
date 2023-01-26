@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -45,12 +44,12 @@ internal static class SpanExtensions
 
 			if (!foundNumber && span[i] == '0')
 				zeroStart = true;
-			
+
 			foundNumber = true;
 			if (!overflowed)
 			{
 				parsedValue = parsedValue * 10 + span[i] - '0';
-				overflowed = parsedValue is <= -2L << 53 or > 2L << 53;
+				overflowed = parsedValue is <= -2L << 53 or >= 2L << 53;
 			}
 
 			i++;
