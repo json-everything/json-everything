@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -105,10 +105,10 @@ internal class SliceSelectorParser : ISelectorParser
 		var i = index;
 		int? start = null, end = null, step = null;
 
-		if (source.TryGetInt(ref i, out var value)) 
+		if (source.TryGetInt(ref i, out var value))
 			start = value;
 
-		if (!source.ConsumeWhitespace(ref index))
+		if (!source.ConsumeWhitespace(ref i))
 		{
 			selector = null;
 			return false;
@@ -122,16 +122,16 @@ internal class SliceSelectorParser : ISelectorParser
 
 		i++; // consume :
 
-		if (!source.ConsumeWhitespace(ref index))
+		if (!source.ConsumeWhitespace(ref i))
 		{
 			selector = null;
 			return false;
 		}
 
-		if (source.TryGetInt(ref i, out value)) 
+		if (source.TryGetInt(ref i, out value))
 			end = value;
 
-		if (!source.ConsumeWhitespace(ref index))
+		if (!source.ConsumeWhitespace(ref i))
 		{
 			selector = null;
 			return false;
@@ -141,7 +141,7 @@ internal class SliceSelectorParser : ISelectorParser
 		{
 			i++; // consume :
 
-			if (!source.ConsumeWhitespace(ref index))
+			if (!source.ConsumeWhitespace(ref i))
 			{
 				selector = null;
 				return false;
