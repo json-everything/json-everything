@@ -39,7 +39,7 @@ public class LessThanTests
 	}
 
 	[Test]
-	public void LessThanBooleanThrowsError()
+	public void LessThanBooleanReturnsTrue()
 	{
 		var rule = new LessThanRule(false, 2);
 
@@ -66,6 +66,30 @@ public class LessThanTests
 	public void LessThanNullCastsNullToZero()
 	{
 		var rule = new LessThanRule(LiteralRule.Null, 2);
+
+		JsonAssert.IsTrue(rule.Apply());
+	}
+	
+	[Test]
+	public void LessThanNumberAndStringNumberReturnsTrue()
+	{
+		var rule = new LessThanRule(1, "2");
+
+		JsonAssert.IsTrue(rule.Apply());
+	}
+	
+	[Test]
+	public void LessThanStringNumberAndNumberReturnsTrue()
+	{
+		var rule = new LessThanRule("1", 2);
+
+		JsonAssert.IsTrue(rule.Apply());
+	}
+	
+	[Test]
+	public void LessThanTwoStringNumbersReturnsTrue()
+	{
+		var rule = new LessThanRule("1", "2");
 
 		JsonAssert.IsTrue(rule.Apply());
 	}
@@ -111,26 +135,58 @@ public class LessThanTests
 	}
 
 	[Test]
-	public void BetweenLowEndNotNumberThrowsError()
+	public void BetweenLowEndNotNumberReturnsFalse()
 	{
 		var rule = new LessThanRule(false, 4, 3);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 
 	[Test]
-	public void BetweenValueNotNumberThrowsError()
+	public void BetweenValueNotNumberReturnsFalse()
 	{
 		var rule = new LessThanRule(1, false, 3);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
 	}
 
 	[Test]
-	public void BetweenHighEndNotNumberThrowsError()
+	public void BetweenHighEndNotNumberReturnsFalse()
 	{
 		var rule = new LessThanRule(1, 2, false);
 
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
+		JsonAssert.IsFalse(rule.Apply());
+	}
+	
+	[Test]
+	public void BetweenStringNumbersInRangeReturnsTrue()
+	{
+		var rule = new LessThanRule("1", "2", "3");
+
+		JsonAssert.IsTrue(rule.Apply());
+	}
+	
+	[Test]
+	public void BetweenLowEndStringNumberReturnsTrue()
+	{
+		var rule = new LessThanRule("1", 2, 3);
+
+		JsonAssert.IsTrue(rule.Apply());
+	}
+	
+	[Test]
+	public void BetweenValueStringNumberReturnsTrue()
+	{
+		var rule = new LessThanRule(1, "2", 3);
+
+		JsonAssert.IsTrue(rule.Apply());
+	}
+	
+	[Test]
+	public void BetweenHighEndStringNumberReturnsTrue()
+	{
+		var rule = new LessThanRule(1, 2, "3");
+
+		JsonAssert.IsTrue(rule.Apply());
 	}
 }
