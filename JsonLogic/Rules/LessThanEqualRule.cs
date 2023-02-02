@@ -75,17 +75,17 @@ public class LessThanEqualRule : Rule
 			return numberA <= numberB;
 		}
 
-		var low = (A.Apply(data, contextData) as JsonValue)?.GetNumber();
+		var low = A.Apply(data, contextData).Numberify();
 		if (low == null)
-			throw new JsonLogicException("Lower bound must be a number.");
+			throw new JsonLogicException("Lower bound must parse to a number.");
 
-		var value = (B.Apply(data, contextData) as JsonValue)?.GetNumber();
+		var value = B.Apply(data, contextData).Numberify();
 		if (value == null)
-			throw new JsonLogicException("Value must be a number.");
+			throw new JsonLogicException("Value must parse to a number.");
 
-		var high = (C.Apply(data, contextData) as JsonValue)?.GetNumber();
+		var high = C.Apply(data, contextData).Numberify();
 		if (high == null)
-			throw new JsonLogicException("Upper bound must be a number.");
+			throw new JsonLogicException("Upper bound must parse to a number.");
 
 		return low <= value && value <= high;
 	}
