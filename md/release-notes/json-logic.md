@@ -1,3 +1,7 @@
+# [3.3.1](https://github.com/gregsdennis/json-everything/pull/376)
+
+[#373](https://github.com/gregsdennis/json-everything/issues/373) - Updated `<` and `<=` rules for the three-input case ("between" rule) to properly coerce values.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding and fixing this bug.
+
 # [3.3.0](https://github.com/gregsdennis/json-everything/pull/370)
 
 [#368](https://github.com/gregsdennis/json-everything/issues/368)/[#369](https://github.com/gregsdennis/json-everything/issues/369) - Updated rule class accessibility to allow users to customize rule behavior.  Thanks to [@dcook-net](https://github.com/dcook-net) for suggesting and implementing this change.
