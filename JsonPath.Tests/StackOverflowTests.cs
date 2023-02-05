@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using NUnit.Framework;
 
-namespace Json.Path.Tests
+namespace Json.Path.Tests;
+
+public class StackOverflowTests
 {
-	public class StackOverflowTests
+	// https://stackoverflow.com/q/71692141/878701
+	[Test]
+	public void Question71692141()
 	{
-		// https://stackoverflow.com/q/71692141/878701
-		[Test]
-		public void Question71692141()
-		{
-			var data = JsonNode.Parse(@"{
+		var data = JsonNode.Parse(@"{
     ""type"": ""object"",
     ""properties"": {
         ""period"": {
@@ -44,11 +40,10 @@ namespace Json.Path.Tests
         ]
     }
 }");
-			var path = JsonPath.Parse("$..['x-updateIndicatorProperties']");
+		var path = JsonPath.Parse("$..['x-updateIndicatorProperties']");
 
-			var results = path.Evaluate(data);
+		var results = path.Evaluate(data);
 
-			Assert.AreEqual(2, results.Matches.Count);
-		}
+		Assert.AreEqual(2, results.Matches.Count);
 	}
 }

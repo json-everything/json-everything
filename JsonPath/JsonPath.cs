@@ -13,8 +13,6 @@ namespace Json.Path;
 [JsonConverter(typeof(JsonPathConverter))]
 public class JsonPath
 {
-	private readonly PathSegment[] _segments;
-
 	/// <summary>
 	/// Gets a JSON Path with only a global root and no selectors, namely `$`.
 	/// </summary>
@@ -40,14 +38,16 @@ public class JsonPath
 	/// For example, `$['foo'][1]` is a singular path.  Shorthand syntax (e.g. `$.foo[1]`)
 	/// is also allowed.
 	/// </remarks>
-	public bool IsSingular => _segments.All(x => !x.IsRecursive &&
+	public bool IsSingular => Segments.All(x => !x.IsRecursive &&
 	                                             x.Selectors.Length == 1 &&
-	                                             x.Selectors.All(y => y is IndexSelector or NameSelector));
+	                                             x.Selectors[0] is IndexSelector or NameSelector);
+
+	internal PathSegment[] Segments { get; }
 
 	internal JsonPath(PathScope scope, IEnumerable<PathSegment> segments)
 	{
 		Scope = scope;
-		_segments = segments.ToArray();
+		Segments = segments.ToArray();
 	}
 
 	/// <summary>
@@ -84,7 +84,7 @@ public class JsonPath
 	{
 		IEnumerable<Node> currentMatches = new[] { new Node(root, Root) };
 
-		foreach (var segment in _segments)
+		foreach (var segment in Segments)
 		{
 			currentMatches = currentMatches.SelectMany(x => segment.Evaluate(x, root));
 		}
@@ -94,12 +94,12 @@ public class JsonPath
 
 	internal JsonPath Append(string name)
 	{
-		return new JsonPath(Scope, _segments.Append(new PathSegment(new NameSelector(name).Yield())));
+		return new JsonPath(Scope, Segments.Append(new PathSegment(new NameSelector(name).Yield())));
 	}
 
 	internal JsonPath Append(int index)
 	{
-		return new JsonPath(Scope, _segments.Append(new PathSegment(new IndexSelector(index).Yield())));
+		return new JsonPath(Scope, Segments.Append(new PathSegment(new IndexSelector(index).Yield())));
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>
@@ -121,7 +121,7 @@ public class JsonPath
 	{
 		builder.Append(Scope == PathScope.Global ? '$' : '@');
 
-		foreach (var segment in _segments)
+		foreach (var segment in Segments)
 		{
 			segment.BuildString(builder);
 		}
