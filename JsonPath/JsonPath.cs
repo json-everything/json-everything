@@ -54,24 +54,30 @@ public class JsonPath
 	/// Parses a <see cref="JsonPath"/> from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
+	/// <param name="options">(optional) The parsing options.</param>
 	/// <returns>The parsed path.</returns>
 	/// <exception cref="PathParseException">Thrown if a syntax error occurred.</exception>
-	public static JsonPath Parse(string source)
+	public static JsonPath Parse(string source, PathParsingOptions? options = null)
 	{
+		options ??= new PathParsingOptions();
+
 		int index = 0;
-		return PathParser.Parse(source, ref index, true);
+		return PathParser.Parse(source, ref index, options, true);
 	}
 
 	/// <summary>
 	/// Parses a <see cref="JsonPath"/> from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
+	/// <param name="options">(optional) The parsing options.</param>
 	/// <param name="path">The parsed path, if successful; otherwise null.</param>
 	/// <returns>True if successful; otherwise false.</returns>
-	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPath? path)
+	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPath? path, PathParsingOptions? options = null)
 	{
+		options ??= new PathParsingOptions();
+	
 		int index = 0;
-		return PathParser.TryParse(source.Trim(), ref index, out path, true);
+		return PathParser.TryParse(source.Trim(), ref index, out path, options, true);
 	}
 
 	/// <summary>

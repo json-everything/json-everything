@@ -28,7 +28,7 @@ internal static class FunctionExpressionParser
 		}
 	}
 
-	public static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out List<ValueExpressionNode>? parameters, [NotNullWhen(true)] out IPathFunctionDefinition? function)
+	public static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out List<ValueExpressionNode>? parameters, [NotNullWhen(true)] out IPathFunctionDefinition? function, PathParsingOptions options)
 	{
 		int i = index;
 
@@ -77,7 +77,7 @@ internal static class FunctionExpressionParser
 				return false;
 			}
 
-			if (!ValueExpressionParser.TryParse(source, ref i, out var parameter)) break;
+			if (!ValueExpressionParser.TryParse(source, ref i, out var parameter, options)) break;
 
 			parameters.Add(parameter);
 
@@ -112,7 +112,16 @@ internal static class FunctionExpressionParser
 		}
 
 		var parameterTypes = parameters.Select(x => x.GetParameterType()).ToList();
-		if (!function.ParameterSets.Any(x => x.SequenceEqual(parameterTypes, EqualOrUnspecifiedEqualityComparer.Instance)))
+		if (options.StrictTypeChecking)
+		{
+			if (!function.ParameterSets.Any(x => x.SequenceEqual(parameterTypes, EqualOrUnspecifiedEqualityComparer.Instance)))
+			{
+				parameters = null;
+				function = null;
+				return false;
+			}
+		}
+		else if (function.ParameterSets.All(x => x.Count() != parameterTypes.Count))
 		{
 			parameters = null;
 			function = null;

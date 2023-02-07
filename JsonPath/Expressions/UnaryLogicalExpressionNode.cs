@@ -41,7 +41,7 @@ internal class UnaryLogicalExpressionNode : LogicalExpressionNode
 
 internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		// currently only the "not" operator is known
 		// it expects a ! then either a comparison or logical expression
@@ -71,7 +71,7 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		}
 
 		// parse comparison
-		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right, options))
 		{
 			expression = null;
 			return false;

@@ -56,9 +56,9 @@ internal class ValueFunctionExpressionNode : ValueExpressionNode
 
 internal class ValueFunctionExpressionParser : IValueExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
-		if (!FunctionExpressionParser.TryParseFunction(source, ref index, out var parameters, out var function))
+		if (!FunctionExpressionParser.TryParseFunction(source, ref index, out var parameters, out var function, options))
 		{
 			expression = null;
 			return false;

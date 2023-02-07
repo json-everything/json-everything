@@ -100,7 +100,7 @@ internal class SliceSelector : ISelector
 
 internal class SliceSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		var i = index;
 		int? start = null, end = null, step = null;

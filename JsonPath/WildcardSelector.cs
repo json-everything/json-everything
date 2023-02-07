@@ -51,7 +51,7 @@ internal class WildcardSelector : ISelector, IHaveShorthand
 
 internal class WildcardSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		if (source[index] != '*')
 		{

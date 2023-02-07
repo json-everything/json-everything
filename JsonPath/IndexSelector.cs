@@ -43,7 +43,7 @@ internal class IndexSelector : ISelector
 
 internal class IndexSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		if (!source.TryGetInt(ref index, out var value))
 		{

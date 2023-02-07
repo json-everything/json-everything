@@ -21,7 +21,7 @@ internal static class ValueExpressionParser
 		new PathExpressionParser(),
 	};
 
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
 		var nestLevel = 0;
@@ -46,7 +46,7 @@ internal static class ValueExpressionParser
 		ValueExpressionNode? left = null;
 		foreach (var parser in _operandParsers)
 		{
-			if (parser.TryParse(source, ref i, out left)) break;
+			if (parser.TryParse(source, ref i, out left, options)) break;
 		}
 
 		if (left == null)
@@ -98,7 +98,7 @@ internal static class ValueExpressionParser
 			ValueExpressionNode? right = null;
 			foreach (var parser in _operandParsers)
 			{
-				if (parser.TryParse(source, ref i, out right)) break;
+				if (parser.TryParse(source, ref i, out right, options)) break;
 			}
 
 			if (right == null)

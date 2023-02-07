@@ -42,7 +42,7 @@ internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 
 internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
 		var nestLevel = 0;
@@ -68,7 +68,7 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 		}
 
 		// first get a comparison
-		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp))
+		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp, options))
 		{
 			expression = null;
 			return false;
@@ -114,7 +114,7 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			}
 
 			// parse right
-			if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+			if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right, options))
 			{
 				// if we don't get a comparison, then the syntax is wrong
 				expression = null;

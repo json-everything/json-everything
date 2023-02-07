@@ -50,7 +50,7 @@ internal class NameSelector : ISelector, IHaveShorthand
 
 internal class NameSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		char quoteChar;
 		var i = index;

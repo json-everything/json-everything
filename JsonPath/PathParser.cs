@@ -15,7 +15,7 @@ internal static class PathParser
 		new WildcardSelectorParser()
 	};
 
-	public static JsonPath Parse(ReadOnlySpan<char> source, ref int index, bool requireGlobal = false)
+	public static JsonPath Parse(ReadOnlySpan<char> source, ref int index, PathParsingOptions options, bool requireGlobal = false)
 	{
 		if (source.Length == 0)
 			throw new PathParseException(0, "Input string is empty");
@@ -36,13 +36,13 @@ internal static class PathParser
 
 		while (index < source.Length)
 		{
-			segments.Add(ParseSegment(source, ref index));
+			segments.Add(ParseSegment(source, ref index, options));
 		}
 
 		return new JsonPath(scope, segments);
 	}
 
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out JsonPath? path, bool requireGlobal = false)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out JsonPath? path, PathParsingOptions options, bool requireGlobal = false)
 	{
 		if (index >= source.Length)
 		{
@@ -80,7 +80,7 @@ internal static class PathParser
 
 		while (i < source.Length)
 		{
-			if (!TryParseSegment(source, ref i, out var pathSegment)) break;
+			if (!TryParseSegment(source, ref i, out var pathSegment, options)) break;
 
 			segments.Add(pathSegment);
 		}
@@ -90,7 +90,7 @@ internal static class PathParser
 		return true;
 	}
 
-	private static PathSegment ParseSegment(ReadOnlySpan<char> source, ref int index)
+	private static PathSegment ParseSegment(ReadOnlySpan<char> source, ref int index, PathParsingOptions options)
 	{
 		var selectors = new List<ISelector>();
 		var isRecursive = false;
@@ -100,7 +100,7 @@ internal static class PathParser
 			throw new PathParseException(index, "Unexpected end of input");
 
 		if (source[index] == '[')
-			ParseBracketed(source, ref index, selectors);
+			ParseBracketed(source, ref index, selectors, options);
 		else if (source[index] == '.')
 		{
 			index++; // consume .
@@ -114,7 +114,7 @@ internal static class PathParser
 					throw new PathParseException(index, "Unexpected end of input");
 
 				if (source[index] == '[') 
-					ParseBracketed(source, ref index, selectors);
+					ParseBracketed(source, ref index, selectors, options);
 				else if (source[index] == '*')
 				{
 					selectors.Add(new WildcardSelector());
@@ -149,7 +149,7 @@ internal static class PathParser
 		return new PathSegment(selectors, isRecursive, isShorthand);
 	}
 
-	private static bool TryParseSegment(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out PathSegment? segment)
+	private static bool TryParseSegment(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out PathSegment? segment, PathParsingOptions options)
 	{
 		var selectors = new List<ISelector>();
 		var isRecursive = false;
@@ -163,7 +163,7 @@ internal static class PathParser
 
 		if (source[index] == '[')
 		{
-			if (!TryParseBracketed(source, ref index, selectors))
+			if (!TryParseBracketed(source, ref index, selectors, options))
 			{
 				segment = null;
 				return false;
@@ -186,7 +186,7 @@ internal static class PathParser
 
 				if (source[index] == '[')
 				{
-					if (!TryParseBracketed(source, ref index, selectors))
+					if (!TryParseBracketed(source, ref index, selectors, options))
 					{
 						segment = null;
 						return false;
@@ -258,7 +258,7 @@ internal static class PathParser
 		return true;
 	}
 
-	private static void ParseBracketed(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	private static void ParseBracketed(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors, PathParsingOptions options)
 	{
 		var done = false;
 		index++; // consume [
@@ -271,7 +271,7 @@ internal static class PathParser
 
 			foreach (var parser in _parsers)
 			{
-				if (parser.TryParse(source, ref index, out selector)) break;
+				if (parser.TryParse(source, ref index, out selector, options)) break;
 			}
 
 			if (selector == null)
@@ -304,7 +304,7 @@ internal static class PathParser
 			throw new PathParseException(index, "Unexpected end of input");
 	}
 
-	private static bool TryParseBracketed(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	private static bool TryParseBracketed(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors, PathParsingOptions options)
 	{
 		var done = false;
 		index++; // consume [
@@ -317,7 +317,7 @@ internal static class PathParser
 
 			foreach (var parser in _parsers)
 			{
-				if (parser.TryParse(source, ref index, out selector)) break;
+				if (parser.TryParse(source, ref index, out selector, options)) break;
 			}
 
 			if (selector == null) return false;
