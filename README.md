@@ -4,7 +4,7 @@
 
 <br>
 
-[![Build status](https://github.com/gregsdennis/json-everything/workflows/.NET%20Core/badge.svg)](https://github.com/gregsdennis/json-everything/actions?query=workflow%3A%22Build+%26+Test%22)
+[![Build & Test](https://github.com/gregsdennis/json-everything/actions/workflows/dotnet-core.yml/badge.svg?event=push)](https://github.com/gregsdennis/json-everything/actions/workflows/dotnet-core.yml)
 [![Test results](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gregsdennis/28607f2d276032f4d9a7f2c807e44df7/raw/test-results-badge.json)](https://github.com/gregsdennis/json-everything/actions?query=workflow%3A%22Build+%26+Test%22)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Average time to resolve an issue")
