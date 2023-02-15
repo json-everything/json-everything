@@ -90,7 +90,7 @@ internal class ObjectGenerator : IDataGenerator
 			var propertyNames = context.Properties.Keys.Except(definedPropertyNames).ToArray();
 			if (propertyNames.Length != 0)
 			{
-				propertyNames = JsonSchemaExtensions.Randomizer.ArrayElements(propertyNames, Math.Min(definedPropertyNames.Count, remainingPropertyCount));
+				propertyNames = JsonSchemaExtensions.Randomizer.ArrayElements(propertyNames, Math.Min(propertyNames.Length, remainingPropertyCount));
 				definedPropertyNames.AddRange(propertyNames);
 				remainingPropertyCount -= propertyNames.Length;
 			}
