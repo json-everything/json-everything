@@ -49,23 +49,3 @@ public interface IPathFunctionDefinition
 	/// <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
 	NodeList Evaluate(IEnumerable<NodeList> arguments);
 }
-
-public enum FunctionType
-{
-	Unspecified,
-	Value,
-	Boolean
-}
-
-[Flags]
-public enum ParameterType
-{
-	Unspecified,
-	Object,
-	Array,
-	String,
-	Number,
-	Boolean,
-	Null,
-	Nothing
-}

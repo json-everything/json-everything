@@ -67,7 +67,7 @@ internal class BooleanFunctionExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		if (function.ReturnType != FunctionType.Boolean)
+		if (function.ReturnType.HasFlag(FunctionType.Boolean))
 		{
 			expression = null;
 			return false;

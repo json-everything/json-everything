@@ -64,7 +64,7 @@ internal class ValueFunctionExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		if (function.ReturnType != FunctionType.Value)
+		if (function.ReturnType.HasFlag(FunctionType.Value))
 		{
 			expression = null;
 			return false;
