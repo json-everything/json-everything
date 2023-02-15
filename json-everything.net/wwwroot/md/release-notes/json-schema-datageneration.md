@@ -1,4 +1,4 @@
-# 1.0.2 (no PR)
+# [1.0.2](https://github.com/gregsdennis/json-everything/pull/380)
 
 [#374](https://github.com/gregsdennis/json-everything/issues/374) - Generated property counts were not bounded properly, causing an exception to be thrown from the randomizer.
 
