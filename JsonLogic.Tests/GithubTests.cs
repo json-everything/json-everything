@@ -184,6 +184,6 @@ public class GithubTests
 
 		var result = rule.Apply(data);
 
-		Assert.AreEqual((JsonNode)true, result.Root);
+		Assert.IsTrue(result.IsEquivalentTo(true));
 	}
 }

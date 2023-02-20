@@ -49,7 +49,7 @@ public class NoneRule : Rule
 		if (input is not JsonArray arr)
 			throw new JsonLogicException("Input must evaluate to an array.");
 
-		return !arr.Select(value => Rule.Apply(data, value))
+		return !arr.Select(value => Rule.Apply(contextData, value))
 			.Any(result => result.IsTruthy());
 	}
 }
