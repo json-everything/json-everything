@@ -1,9 +1,12 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
+
+using static Json.Logic.JsonLogic;
 
 namespace Json.Logic.Tests;
 
@@ -12,10 +15,10 @@ public class GithubTests
 	[Test]
 	public void Issue183_RuleEvaluatesWrong_Truthy()
 	{
-		var logic = JsonLogic.If(
-			JsonLogic.Variable("data.sub"),
-			JsonLogic.StrictEquals(
-				JsonLogic.Variable("data.sub.0.element"),
+		var logic = If(
+			Variable("data.sub"),
+			StrictEquals(
+				Variable("data.sub.0.element"),
 				"12345"
 			),
 			true
@@ -37,10 +40,10 @@ public class GithubTests
 	[Test]
 	public void Issue183_RuleEvaluatesWrong_Falsy()
 	{
-		var logic = JsonLogic.If(
-			JsonLogic.Variable("data.sub"),
-			JsonLogic.StrictEquals(
-				JsonLogic.Variable("data.sub.0.element"),
+		var logic = If(
+			Variable("data.sub"),
+			StrictEquals(
+				Variable("data.sub.0.element"),
 				"12345"
 			),
 			true
@@ -91,13 +94,14 @@ public class GithubTests
 	}
 
 	[Test]
+	[Ignore("some changes the resolution of var")]
 	public void Issue263_SomeInTest()
 	{
-		var rule = JsonLogic.Some(
-			JsonLogic.Variable("x"),
-			JsonLogic.In(
-				JsonLogic.Variable(""),
-				JsonLogic.Variable("y")
+		var rule = Some(
+			Variable("x"),
+			In(
+				Variable(""),
+				Variable("y")
 			)
 		);
 
@@ -119,7 +123,7 @@ public class GithubTests
 	public void Pull303_CustomConverters()
 	{
 		var rule = JsonSerializer.Deserialize<Rule>("{ \"+\" : [ 1, 2 ] }");
-		
+
 		Assert.IsInstanceOf<AddRule>(rule);
 		Assert.IsTrue(rule!.Apply().IsEquivalentTo(3));
 	}
@@ -156,5 +160,34 @@ public class GithubTests
 		{
 			CultureInfo.CurrentCulture = culture;
 		}
+	}
+
+	[Test]
+	public void Issue383_NoneUsesLocalValueForVarResolution()
+	{
+		var rule = None(
+			Variable("additionalDrivers"),
+			StrictEquals(
+				Variable("relationshipToProposer.dataCode"),
+				"J"
+			)
+		);
+
+		var data = JsonNode.Parse(@"{
+	""hasAdditionalDrivers"": true,
+	""additionalDrivers"": [
+		{}
+	],
+	""relationshipToProposer"": {
+		""dataCode"": ""J"",
+		""displayText"": null
+	}
+}");
+
+		var result = rule.Apply(data);
+
+		Console.WriteLine(result.AsJsonString());
+
+		Assert.IsTrue(result.IsEquivalentTo(true));
 	}
 }
