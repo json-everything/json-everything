@@ -1,3 +1,7 @@
+# [3.3.2](https://github.com/gregsdennis/json-everything/pull/385)
+
+[#383](https://github.com/gregsdennis/json-everything/issues/383) - `all` and `some` rules should use a local scope for `var` resolution.  Thanks to [@Sykander](https://github.com/Sykander) for finding and reasoning out this issue.
+
 # [3.3.1](https://github.com/gregsdennis/json-everything/pull/376)
 
 [#373](https://github.com/gregsdennis/json-everything/issues/373) - Updated `<` and `<=` rules for the three-input case ("between" rule) to properly coerce values.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding and fixing this bug.
