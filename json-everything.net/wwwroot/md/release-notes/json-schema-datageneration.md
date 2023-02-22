@@ -1,3 +1,7 @@
+# [1.0.3](https://github.com/gregsdennis/json-everything/pull/386)
+
+[#384](https://github.com/gregsdennis/json-everything/issues/384) - Schemas with embedded `enum`s were re-using nodes instead of copying them, causing an `InvalidOperationException`.  Thanks to [@leonardo-gooten](https://github.com/leonardo-gooten) for reporting this.
+
 # [1.0.2](https://github.com/gregsdennis/json-everything/pull/380)
 
 [#374](https://github.com/gregsdennis/json-everything/issues/374) - Generated property counts were not bounded properly, causing an exception to be thrown from the randomizer.
