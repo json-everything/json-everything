@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-yaml.md" Link="json-yaml.md" />
+		<None Include="..\json-everything.net\wwwroot\md\release-notes\yaml.md" Link="yaml.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
