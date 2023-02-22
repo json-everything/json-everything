@@ -49,6 +49,23 @@ public static class YamlConverter
 		};
 	}
 
+	/// <summary>
+	/// Converts a single JSON node to a <see cref="YamlNode"/>.
+	/// </summary>
+	/// <param name="json"></param>
+	/// <returns></returns>
+	/// <exception cref="NotSupportedException"></exception>
+	public static YamlNode ToYamlNode(this JsonNode json)
+	{
+		return json switch
+		{
+			JsonObject obj => obj.ToYamlMapping(),
+			JsonArray arr => arr.ToYamlSequence(),
+			JsonValue val => val.ToYamlScalar(),
+			_ => throw new NotSupportedException("This isn't a supported JsonNode")
+		};
+	}
+
 	private static JsonObject ToJsonObject(this YamlMappingNode yaml)
 	{
 		var node = new JsonObject();
@@ -61,6 +78,11 @@ public static class YamlConverter
 		return node;
 	}
 
+	private static YamlMappingNode ToYamlMapping(this JsonObject obj)
+	{
+		return new YamlMappingNode(obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key), x => x.Value.ToYamlNode()));
+	}
+
 	private static JsonArray ToJsonArray(this YamlSequenceNode yaml)
 	{
 		var node = new JsonArray();
@@ -70,6 +92,11 @@ public static class YamlConverter
 		}
 
 		return node;
+	}
+
+	private static YamlSequenceNode ToYamlSequence(this JsonArray arr)
+	{
+		return new YamlSequenceNode(arr.Select(x => x.ToYamlNode()));
 	}
 
 	private static JsonValue ToJsonValue(this YamlScalarNode yaml)
@@ -91,5 +118,10 @@ public static class YamlConverter
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
+	}
+
+	private static YamlScalarNode ToYamlScalar(this JsonValue val)
+	{
+		return new YamlScalarNode(val.ToJsonString());
 	}
 }
