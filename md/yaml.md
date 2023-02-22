@@ -1,4 +1,4 @@
-Yaml2JsonNode is pretty simple: it converts models of YAML text that has been parsed by YamlDotNet into `JsonNode`s.  That's it.
+Yaml2JsonNode is pretty simple: it converts models of YAML text that has been parsed by YamlDotNet into `JsonNode`s (and can also convert `JsonNode`s back into `YamlNode`s).  That's it.
 
 ## Why?
 
@@ -36,3 +36,7 @@ var specificJsonNode = specificYamlNode.ToJsonNode();
 ```
 
 There's really not much to this.  Just remember one method: `.ToJsonNode()`.  It'll take care of you.
+
+If you want to go back to YAML for some reason, `.ToYamlNode()` is your friend.
+
+***NOTE** This library will get JSON into the `YamlNode` model.  You'll need to understand how to get that back into a string using YamlDotNet.  Link to their docs above.*

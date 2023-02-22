@@ -31,5 +31,13 @@
             <returns>A `JsonNode` representative of the YAML node.</returns>
             <exception cref="T:System.NotSupportedException">Thrown for YAML that is not compatible with JSON.</exception>
         </member>
+        <member name="M:Yaml2JsonNode.YamlConverter.ToYamlNode(System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Converts a single JSON node to a <see cref="T:YamlDotNet.RepresentationModel.YamlNode"/>.
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
     </members>
 </doc>
