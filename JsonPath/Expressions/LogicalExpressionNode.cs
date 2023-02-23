@@ -12,15 +12,16 @@ internal static class LogicalExpressionParser
 	private static readonly ILogicalExpressionParser[] _parsers =
 	{
 		new BinaryLogicalExpressionParser(),
-		new UnaryLogicalExpressionParser()
+		new UnaryLogicalExpressionParser(),
+		new BooleanFunctionExpressionParser()
 	};
 
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		// TODO (efficiency opportunity) the first comparison is parsed twice
 		foreach (var parser in _parsers)
 		{
-			if (parser.TryParse(source, ref index, out expression)) return true;
+			if (parser.TryParse(source, ref index, out expression, options)) return true;
 		}
 
 		expression = null;

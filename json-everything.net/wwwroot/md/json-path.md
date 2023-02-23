@@ -59,7 +59,7 @@ _**NOTE** Arithmetic operations are not part of the specification (yet), and can
 
 #### Functions
 
-There is also support for functions, which works as an extension point to add your own custom logic.
+There is also support for functions within query expressions, which works as an extension point to add your own custom logic.
 
 A function is a name followed by a parentheses containing zero or more parameters separated by commas.  Parameters can be JSON literals, JSON Paths (global or local), or even other functions.  (That is, the return value of function calls can be parameters, e.g. `min(max(@,0),10)`; passing one function into another isn't supported.)
 

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 
@@ -50,29 +47,30 @@ public class ComplianceTestSuiteTests
 		Console.WriteLine(testCase);
 		Console.WriteLine();
 
-		JsonPath? path = null;
-		PathResult? actual = null;
-
-		var time = Debugger.IsAttached ? int.MaxValue : 100;
-		using var cts = new CancellationTokenSource(time);
-		Task.Run(() =>
+		if (testCase.InvalidSelector)
 		{
-			if (testCase.Document == null) return;
-			path = JsonPath.Parse(testCase.Selector);
-			
-			actual = path.Evaluate(testCase.Document);
-		}, cts.Token).Wait(cts.Token);
+			bool tryParseResult;
+			try
+			{
+				tryParseResult = JsonPath.TryParse(testCase.Selector, out _);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				Assert.Fail("TryParse() threw an exception");
+				throw; // this will never run, but the compiler doesn't know that Assert.Fail() will always throw.
+			}
+			Assert.IsTrue(tryParseResult);
 
-		if (path != null && testCase.InvalidSelector)
-			Assert.Inconclusive($"{testCase.Selector} is not a valid path but was parsed without error.");
-
-		if (actual == null)
-		{
-			if (testCase.InvalidSelector) return;
-			Assert.Fail($"Could not parse path: {testCase.Selector}");
+			var exception = Assert.Throws<PathParseException>(() => JsonPath.Parse(testCase.Selector));
+			Console.WriteLine($"Error: {exception!.Message}");
+			return;
 		}
 
-		var actualValues = actual!.Matches!.Select(m => m.Value).ToJsonArray();
+		var path = JsonPath.Parse(testCase.Selector);
+		var actual = path.Evaluate(testCase.Document);
+
+		var actualValues = actual.Matches!.Select(m => m.Value).ToJsonArray();
 		Console.WriteLine($"Actual (values): {actualValues}");
 		Console.WriteLine();
 		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");
@@ -81,42 +79,5 @@ public class ComplianceTestSuiteTests
 
 		var expected = testCase.Result.ToJsonArray();
 		Assert.IsTrue(expected.IsEquivalentTo(actualValues));
-	}
-
-	[TestCaseSource(nameof(TestCases))]
-	public void Stringify(ComplianceTestCase testCase)
-	{
-		if (_notSupported.Contains(testCase.Selector))
-			Assert.Inconclusive("This case will not be supported.");
-
-		Console.WriteLine();
-		Console.WriteLine();
-		Console.WriteLine(testCase);
-		Console.WriteLine();
-
-		JsonPath? path = null;
-
-		var time = Debugger.IsAttached ? int.MaxValue : 100;
-		using var cts = new CancellationTokenSource(time);
-		Task.Run(() =>
-		{
-			if (testCase.Document == null) return;
-			path = JsonPath.Parse(testCase.Selector);
-		}, cts.Token).Wait(cts.Token);
-
-		if (path != null && testCase.InvalidSelector)
-			Assert.Inconclusive($"{testCase.Selector} is not a valid path but was parsed without error.");
-
-		if (path == null)
-		{
-			if (testCase.InvalidSelector) return;
-			Assert.Fail($"Could not parse path: {testCase.Selector}");
-		}
-
-		var backToString = path.ToString();
-		Console.WriteLine(backToString);
-
-		if (testCase.Selector != backToString)
-			Assert.Inconclusive();
 	}
 }

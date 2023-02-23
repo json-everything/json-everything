@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -42,8 +42,9 @@ internal class SliceSelector : ISelector
 			var i = lower;
 			while (i < upper)
 			{
-				yield return new Node(arr[i], match.Location.Append(i));
+				yield return new Node(arr[i], match.Location!.Append(i));
 				i += step;
+				if (i < 0) break; // overflow
 			}
 		}
 		else
@@ -51,8 +52,9 @@ internal class SliceSelector : ISelector
 			var i = upper;
 			while (lower < i)
 			{
-				yield return new Node(arr[i], match.Location.Append(i));
+				yield return new Node(arr[i], match.Location!.Append(i));
 				i += step;
+				if (i < 0) break; // overflow
 			}
 		}
 	}
@@ -98,15 +100,19 @@ internal class SliceSelector : ISelector
 
 internal class SliceSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		var i = index;
 		int? start = null, end = null, step = null;
 
-		if (source.TryGetInt(ref i, out var value)) 
+		if (source.TryGetInt(ref i, out var value))
 			start = value;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			selector = null;
+			return false;
+		}
 
 		if (source[i] != ':')
 		{
@@ -116,19 +122,31 @@ internal class SliceSelectorParser : ISelectorParser
 
 		i++; // consume :
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			selector = null;
+			return false;
+		}
 
-		if (source.TryGetInt(ref i, out value)) 
+		if (source.TryGetInt(ref i, out value))
 			end = value;
 
-		source.ConsumeWhitespace(ref i);
-		
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			selector = null;
+			return false;
+		}
+
 		if (source[i] == ':')
 		{
 			i++; // consume :
 
-			source.ConsumeWhitespace(ref i);
-			
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				selector = null;
+				return false;
+			}
+
 			if (source.TryGetInt(ref i, out value))
 				step = value;
 		}

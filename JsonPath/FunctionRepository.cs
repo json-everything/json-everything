@@ -44,7 +44,6 @@ public static class FunctionRepository
 	/// <summary>
 	/// Unregisters a function implementation.
 	/// </summary>
-	/// <typeparam name="T">The name of the function.</typeparam>
 	public static void Unregister(string name)
 	{
 		_functions.Remove(name);

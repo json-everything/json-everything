@@ -14,15 +14,15 @@ internal abstract class BooleanResultExpressionNode
 
 internal static class BooleanResultExpressionParser
 {
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out BooleanResultExpressionNode? expression)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out BooleanResultExpressionNode? expression, PathParsingOptions options)
 	{
-		if (LogicalExpressionParser.TryParse(source, ref index, out var logic))
+		if (LogicalExpressionParser.TryParse(source, ref index, out var logic, options))
 		{
 			expression = logic;
 			return true;
 		}
 
-		if (ComparativeExpressionParser.TryParse(source, ref index, out var comparison))
+		if (ComparativeExpressionParser.TryParse(source, ref index, out var comparison, options))
 		{
 			expression = comparison;
 			return true;

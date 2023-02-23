@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Json.Path;
 
@@ -12,14 +13,34 @@ public interface IPathFunctionDefinition
 	/// Gets the function name.
 	/// </summary>
 	string Name { get; }
+
 	/// <summary>
-	/// The minimum argument count accepted by the function.
+	/// Defines the sets of parameters that are valid for this function.
 	/// </summary>
-	int MinArgumentCount { get; }
+	/// <remarks>
+	/// The value of this property is a collection of collections where
+	/// each inner collection represents a single parameter set.  The
+	/// outer collection represents differing parameter sets and can
+	/// be thought of as "overloads."
+	/// </remarks>
+	IEnumerable<IEnumerable<ParameterType>> ParameterSets { get; }
+
 	/// <summary>
-	/// The maximum argument count accepted by the function.
+	/// The type returned by the function.
 	/// </summary>
-	int MaxArgumentCount { get; }
+	/// <remarks>
+	/// This is important for function composition: using a function
+	/// as a parameter of another function.
+	///
+	/// This library assumes that a function may return `Nothing` and
+	/// automatically handles that case.  This value should be set to
+	/// what kind of non-`Nothing` type the function returns.
+	///
+	/// Registration of the function will throw an
+	/// <see cref="InvalidOperationException"/> if the value is
+	/// <see cref="FunctionType.Unspecified"/>
+	/// </remarks>
+	FunctionType ReturnType { get; }
 
 	/// <summary>
 	/// Evaluates the function.

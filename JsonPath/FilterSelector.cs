@@ -52,7 +52,7 @@ internal class FilterSelector : ISelector
 
 internal class FilterSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		if (source[index] != '?')
 		{
@@ -61,7 +61,7 @@ internal class FilterSelectorParser : ISelectorParser
 		}
 
 		index++; // consume ?
-		if (!ExpressionParser.TryParse(source, ref index, out var expression))
+		if (!ExpressionParser.TryParse(source, ref index, out var expression, options))
 		{
 			selector = null;
 			return false;

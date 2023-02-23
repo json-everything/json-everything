@@ -37,7 +37,7 @@ internal class NameSelector : ISelector, IHaveShorthand
 		var node = match.Value;
 		if (node is not JsonObject obj) yield break;
 
-		if (obj.TryGetPropertyValue(Name, out var value)) yield return new Node(value, match.Location.Append(Name));
+		if (obj.TryGetPropertyValue(Name, out var value)) yield return new Node(value, match.Location!.Append(Name));
 	}
 
 	public void BuildString(StringBuilder builder)
@@ -50,7 +50,7 @@ internal class NameSelector : ISelector, IHaveShorthand
 
 internal class NameSelectorParser : ISelectorParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ISelector? selector, PathParsingOptions options)
 	{
 		char quoteChar;
 		var i = index;
@@ -96,6 +96,11 @@ internal class NameSelectorParser : ISelectorParser
 			}
 			else
 			{
+				if (!source.EnsureValidNameCharacter(i))
+				{
+					selector = null;
+					return false;
+				}
 				sb.Append(source[i]);
 				i++;
 			}

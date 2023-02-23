@@ -48,6 +48,7 @@ public class CburgmerFeatureValidationTests
 
 		// leading zeroes are not allowed for numeric literals
 		"$[?(@.key==010)]",
+		"$[010:024:010]",
 
 		// JSON literals are not expression results
 		"$[?(@.key>0 && false)]",
@@ -58,6 +59,9 @@ public class CburgmerFeatureValidationTests
 		"$[?(true)]",
 		"$[?(false)]",
 		"$[?(null)]",
+
+		// trailing whitespace is disallowed
+		"$. a ",
 
 		// regex operator transitioned to functions
 		"$[?(@.name=~/hello.*/)]",

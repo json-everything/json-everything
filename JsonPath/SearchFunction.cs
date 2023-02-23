@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -17,14 +18,36 @@ public class SearchFunction : IPathFunctionDefinition
 	public string Name => "search";
 
 	/// <summary>
-	/// The minimum argument count accepted by the function.
+	/// Defines the sets of parameters that are valid for this function.
 	/// </summary>
-	public int MinArgumentCount => 2;
+	/// <remarks>
+	/// The value of this property is a collection of collections where
+	/// each inner collection represents a single parameter set.  The
+	/// outer collection represents differing parameter sets and can
+	/// be thought of as "overloads."
+	/// </remarks>
+	public IEnumerable<IEnumerable<ParameterType>> ParameterSets { get; } =
+		new[]
+		{
+			new[] { ParameterType.String, ParameterType.String }
+		};
 
 	/// <summary>
-	/// The maximum argument count accepted by the function.
+	/// The type returned by the function.
 	/// </summary>
-	public int MaxArgumentCount => 2;
+	/// <remarks>
+	/// This is important for function composition: using a function
+	/// as a parameter of another function.
+	///
+	/// This library assumes that a function may return `Nothing` and
+	/// automatically handles that case.  This value should be set to
+	/// what kind of non-`Nothing` type the function returns.
+	///
+	/// Registration of the function will throw an
+	/// <see cref="InvalidOperationException"/> if the value is
+	/// <see cref="FunctionType.Unspecified"/>
+	/// </remarks>
+	public FunctionType ReturnType => FunctionType.Boolean;
 
 	/// <summary>
 	/// Evaluates the function.
@@ -34,8 +57,8 @@ public class SearchFunction : IPathFunctionDefinition
 	public NodeList Evaluate(IEnumerable<NodeList> arguments)
 	{
 		var args = arguments.ToArray();
-		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var regex)) return NodeList.Empty;
-		if (!args[1].TryGetSingleValue().TryGetValue<string>(out var text)) return NodeList.Empty;
+		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var text)) return NodeList.Empty;
+		if (!args[1].TryGetSingleValue().TryGetValue<string>(out var regex)) return NodeList.Empty;
 
 		return (JsonValue)Regex.IsMatch(text, regex, RegexOptions.ECMAScript);
 	}

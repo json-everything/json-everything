@@ -27,28 +27,32 @@ internal static class UtilityExtensions
 		yield return item;
 	}
 
-	public static bool IsValidForPropertyName(this char ch)
+	private static bool IsValidForPropertyName(this char ch)
 	{
 		return ch.In('a'..('z' + 1)) ||
-		       ch.In('A'..('Z' + 1)) ||
-		       ch.In('0'..('9' + 1)) ||
-		       ch.In('_') ||
-		       ch.In(0x80..0x10FFFF);
+			   ch.In('A'..('Z' + 1)) ||
+			   ch.In('0'..('9' + 1)) ||
+			   ch.In('_') ||
+			   ch.In(0x80..0x10FFFF);
 	}
 
-	public static bool IsValidForPropertyNameStart(this char ch)
+	private static bool IsValidForPropertyNameStart(this char ch)
 	{
 		return ch.In('a'..('z' + 1)) ||
-		       ch.In('A'..('Z' + 1)) ||
-		       ch.In('_') ||
-		       ch.In(0x80..0x10FFFF);
+			   ch.In('A'..('Z' + 1)) ||
+			   ch.In('_') ||
+			   ch.In(0x80..0x10FFFF);
 	}
 
-	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)]out string? name)
+	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out string? name)
 	{
 		var i = index;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			name = null;
+			return false;
+		}
 
 		if (i < source.Length && source[i].IsValidForPropertyNameStart())
 		{
@@ -64,7 +68,7 @@ internal static class UtilityExtensions
 			name = null;
 			return false;
 		}
-		
+
 		name = source[index..i].ToString();
 		index = i;
 		return true;

@@ -42,24 +42,33 @@ internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 
 internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
 		var nestLevel = 0;
 
 		int Precedence(IBinaryLogicalOperator op) => nestLevel * 10 + op.Precedence;
 
-		source.ConsumeWhitespace(ref i);
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			expression = null;
+			return false;
+		}
+
 		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
 			i++;
 		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
+
+		if (!source.ConsumeWhitespace(ref i))
+		{
+			expression = null;
+			return false;
+		}
 
 		// first get a comparison
-		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp))
+		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp, options))
 		{
 			expression = null;
 			return false;
@@ -70,7 +79,11 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 		while (i < source.Length)
 		{
 			// handle )
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				expression = null;
+				return false;
+			}
 			if (source[i] == ')' && nestLevel > 0)
 			{
 				while (i < source.Length && source[i] == ')' && nestLevel > 0)
@@ -89,7 +102,11 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 				break; // if we don't get an op, then we're done
 
 			// handle (
-			source.ConsumeWhitespace(ref i);
+			if (!source.ConsumeWhitespace(ref i))
+			{
+				expression = null;
+				return false;
+			}
 			if (source[i] == '(')
 			{
 				nextNest++;
@@ -97,7 +114,7 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			}
 
 			// parse right
-			if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+			if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right, options))
 			{
 				// if we don't get a comparison, then the syntax is wrong
 				expression = null;

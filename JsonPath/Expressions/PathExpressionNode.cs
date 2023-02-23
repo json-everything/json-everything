@@ -25,7 +25,7 @@ internal class PathExpressionNode : ValueExpressionNode
 
 		return result.Matches?.Count == 1
 			? result.Matches[0].Value ?? JsonNull.SignalNode
-			: null;
+			: result.Matches ?? NodeList.Empty;
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -46,9 +46,9 @@ internal class PathExpressionNode : ValueExpressionNode
 
 internal class PathExpressionParser : IValueExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
-		if (!PathParser.TryParse(source, ref index, out var path))
+		if (!PathParser.TryParse(source, ref index, out var path, options))
 		{
 			expression = null;
 			return false;

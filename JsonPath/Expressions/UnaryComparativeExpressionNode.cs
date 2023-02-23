@@ -37,13 +37,13 @@ internal class UnaryComparativeExpressionParser : IComparativeExpressionParser
 {
 	private static readonly PathExpressionParser _pathParser = new();
 
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression, PathParsingOptions options)
 	{
 		// currently only the "exists" operator is defined
 		// it expects a path and has no operator
 
 		// parse path
-		if (!_pathParser.TryParse(source, ref index, out var path))
+		if (!_pathParser.TryParse(source, ref index, out var path, options))
 		{
 			expression = null;
 			return false;

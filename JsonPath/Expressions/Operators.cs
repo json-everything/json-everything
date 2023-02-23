@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 
 namespace Json.Path.Expressions;
 
@@ -30,7 +31,11 @@ internal static class ValueOperatorParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryValueOperator? op)
 	{
-		source.ConsumeWhitespace(ref index);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			op = null;
+			return false;
+		}
 
 		switch (source[index])
 		{
@@ -63,7 +68,11 @@ internal static class BinaryComparativeOperatorParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryComparativeOperator? op)
 	{
-		source.ConsumeWhitespace(ref index);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			op = null;
+			return false;
+		}
 
 		if (index > source.Length - 2)
 		{
@@ -118,7 +127,11 @@ internal static class BinaryLogicalOperatorParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryLogicalOperator? op)
 	{
-		source.ConsumeWhitespace(ref index);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			op = null;
+			return false;
+		}
 
 		if (index > source.Length - 2)
 		{
@@ -152,7 +165,11 @@ internal static class UnaryLogicalOperatorParser
 {
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IUnaryLogicalOperator? op)
 	{
-		source.ConsumeWhitespace(ref index);
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			op = null;
+			return false;
+		}
 
 		if (source[index] == '!')
 		{
