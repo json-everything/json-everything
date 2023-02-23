@@ -1,6 +1,8 @@
-# [3.1.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
+# [3.1.0 (beta 2)](https://github.com/gregsdennis/json-everything/pull/326)
 
 Updated to use JsonSchema.Net v4.
+
+Fixed deserialization bug.
 
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/316)
 

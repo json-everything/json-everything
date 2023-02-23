@@ -56,8 +56,11 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 	}
 
 	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
-		: this(propertyName, mapping, extensions)
 	{
+		PropertyName = propertyName;
+		Mapping = mapping;
+		Extensions = extensions;
+
 		_json = json;
 	}
 
@@ -184,5 +187,6 @@ internal class DiscriminatorKeywordJsonConverter : JsonConverter<DiscriminatorKe
 				JsonSerializer.Serialize(writer, extension.Value, options);
 			}
 		}
+		writer.WriteEndObject();
 	}
 }
