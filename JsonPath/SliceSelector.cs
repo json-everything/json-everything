@@ -42,7 +42,7 @@ internal class SliceSelector : ISelector
 			var i = lower;
 			while (i < upper)
 			{
-				yield return new Node(arr[i], match.Location.Append(i));
+				yield return new Node(arr[i], match.Location!.Append(i));
 				i += step;
 				if (i < 0) break; // overflow
 			}
@@ -52,7 +52,7 @@ internal class SliceSelector : ISelector
 			var i = upper;
 			while (lower < i)
 			{
-				yield return new Node(arr[i], match.Location.Append(i));
+				yield return new Node(arr[i], match.Location!.Append(i));
 				i += step;
 				if (i < 0) break; // overflow
 			}
