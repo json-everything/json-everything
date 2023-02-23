@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -112,29 +111,12 @@ internal static class FunctionExpressionParser
 		}
 
 		var parameterTypes = parameters.Select(x => x.GetParameterType()).ToList();
-		if (options.StrictTypeChecking)
-		{
 			if (!function.ParameterSets.Any(x => x.SequenceEqual(parameterTypes, EqualOrUnspecifiedEqualityComparer.Instance)))
 			{
 				parameters = null;
 				function = null;
 				return false;
 			}
-		}
-		else if (function.ParameterSets.All(x => x.Count() != parameterTypes.Count))
-		{
-			parameters = null;
-			function = null;
-			return false;
-		}
-
-		//if (function.MinArgumentCount > parameters.Count ||
-		//    parameters.Count > function.MaxArgumentCount)
-		//{
-		//	parameters = null;
-		//	function = null;
-		//	return false;
-		//}
 
 		index = i;
 		return true;

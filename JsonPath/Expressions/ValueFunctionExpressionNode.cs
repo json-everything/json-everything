@@ -58,18 +58,20 @@ internal class ValueFunctionExpressionParser : IValueExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
-		if (!FunctionExpressionParser.TryParseFunction(source, ref index, out var parameters, out var function, options))
+		int i = index;
+		if (!FunctionExpressionParser.TryParseFunction(source, ref i, out var parameters, out var function, options))
 		{
 			expression = null;
 			return false;
 		}
 
-		if (function.ReturnType.HasFlag(FunctionType.Value))
+		if (!function.ReturnType.HasFlag(FunctionType.Value))
 		{
 			expression = null;
 			return false;
 		}
 
+		index = i;
 		expression = new ValueFunctionExpressionNode(function, parameters);
 		return true;
 	}
