@@ -15,15 +15,33 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.CountFunction.MinArgumentCount">
+        <member name="P:Json.Path.CountFunction.ParameterSets">
             <summary>
-            The minimum argument count accepted by the function.
+            Defines the sets of parameters that are valid for this function.
             </summary>
+            <remarks>
+            The value of this property is a collection of collections where
+            each inner collection represents a single parameter set.  The
+            outer collection represents differing parameter sets and can
+            be thought of as "overloads."
+            </remarks>
         </member>
-        <member name="P:Json.Path.CountFunction.MaxArgumentCount">
-            <summary>
-            The maximum argument count accepted by the function.
-            </summary>
+        <member name="P:Json.Path.CountFunction.ReturnType">
+             <summary>
+             The type returned by the function.
+             </summary>
+             <remarks>
+             This is important for function composition: using a function
+             as a parameter of another function.
+            
+             This library assumes that a function may return `Nothing` and
+             automatically handles that case.  This value should be set to
+             what kind of non-`Nothing` type the function returns.
+            
+             Registration of the function will throw an
+             <see cref="T:System.InvalidOperationException"/> if the value is
+             <see cref="F:Json.Path.FunctionType.Unspecified"/>
+             </remarks>
         </member>
         <member name="M:Json.Path.CountFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
             <summary>
@@ -53,7 +71,6 @@
             <summary>
             Unregisters a function implementation.
             </summary>
-            <typeparam name="T">The name of the function.</typeparam>
         </member>
         <member name="M:Json.Path.FunctionRepository.TryGet(System.String,Json.Path.IPathFunctionDefinition@)">
             <summary>
@@ -62,6 +79,33 @@
             <param name="name">A function name.</param>
             <param name="function">The function, if found; otherwise null.</param>
             <returns>True if found; otherwise false.</returns>
+        </member>
+        <member name="T:Json.Path.FunctionType">
+            <summary>
+            Indicates the return type of a filter expression function.
+            </summary>
+        </member>
+        <member name="F:Json.Path.FunctionType.Unspecified">
+            <summary>
+            Holder for a default value.  Not an actual valid function type.
+            </summary>
+        </member>
+        <member name="F:Json.Path.FunctionType.Value">
+            <summary>
+            Indicates the function returns a JSON-like value that can be
+            compared with equality and inequality operators.
+            </summary>
+        </member>
+        <member name="F:Json.Path.FunctionType.Boolean">
+            <summary>
+            Indicates the function returns a non-JSON boolean value that can be
+            compared with logical operators.
+            </summary>
+        </member>
+        <member name="F:Json.Path.FunctionType.Nodelist">
+            <summary>
+            Indicates the function returns a nodelist.
+            </summary>
         </member>
         <member name="T:Json.Path.IHaveShorthand">
             <summary>
@@ -90,15 +134,33 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.IPathFunctionDefinition.MinArgumentCount">
+        <member name="P:Json.Path.IPathFunctionDefinition.ParameterSets">
             <summary>
-            The minimum argument count accepted by the function.
+            Defines the sets of parameters that are valid for this function.
             </summary>
+            <remarks>
+            The value of this property is a collection of collections where
+            each inner collection represents a single parameter set.  The
+            outer collection represents differing parameter sets and can
+            be thought of as "overloads."
+            </remarks>
         </member>
-        <member name="P:Json.Path.IPathFunctionDefinition.MaxArgumentCount">
-            <summary>
-            The maximum argument count accepted by the function.
-            </summary>
+        <member name="P:Json.Path.IPathFunctionDefinition.ReturnType">
+             <summary>
+             The type returned by the function.
+             </summary>
+             <remarks>
+             This is important for function composition: using a function
+             as a parameter of another function.
+            
+             This library assumes that a function may return `Nothing` and
+             automatically handles that case.  This value should be set to
+             what kind of non-`Nothing` type the function returns.
+            
+             Registration of the function will throw an
+             <see cref="T:System.InvalidOperationException"/> if the value is
+             <see cref="F:Json.Path.FunctionType.Unspecified"/>
+             </remarks>
         </member>
         <member name="M:Json.Path.IPathFunctionDefinition.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
             <summary>
@@ -201,19 +263,38 @@
             Gets the scope of the path.
             </summary>
         </member>
-        <member name="M:Json.Path.JsonPath.Parse(System.String)">
+        <member name="P:Json.Path.JsonPath.IsSingular">
+             <summary>
+             Gets whether the path is a singular path.  That is, it can only return a nodelist
+             containing at most a single value.
+             </summary>
+             <remarks>
+             A singular path can only contain segments which must meet all of the following
+             conditions:
+            
+             - is not a recursive descent (`..`)
+             - contains a single selector
+             - that selector is either an index selector or a name selector
+            
+             For example, `$['foo'][1]` is a singular path.  Shorthand syntax (e.g. `$.foo[1]`)
+             is also allowed.
+             </remarks>
+        </member>
+        <member name="M:Json.Path.JsonPath.Parse(System.String,Json.Path.PathParsingOptions)">
             <summary>
             Parses a <see cref="T:Json.Path.JsonPath"/> from a string.
             </summary>
             <param name="source">The source string.</param>
+            <param name="options">(optional) The parsing options.</param>
             <returns>The parsed path.</returns>
             <exception cref="T:Json.Path.PathParseException">Thrown if a syntax error occurred.</exception>
         </member>
-        <member name="M:Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@)">
+        <member name="M:Json.Path.JsonPath.TryParse(System.String,Json.Path.JsonPath@,Json.Path.PathParsingOptions)">
             <summary>
             Parses a <see cref="T:Json.Path.JsonPath"/> from a string.
             </summary>
             <param name="source">The source string.</param>
+            <param name="options">(optional) The parsing options.</param>
             <param name="path">The parsed path, if successful; otherwise null.</param>
             <returns>True if successful; otherwise false.</returns>
         </member>
@@ -253,6 +334,19 @@
             <param name="value">The value to convert to JSON.</param>
             <param name="options">An object that specifies serialization options to use.</param>
         </member>
+        <member name="T:Json.Path.JsonPathExtensions">
+            <summary>
+            Provides extended functionality for <see cref="T:Json.Path.JsonPath"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Path.JsonPathExtensions.AsJsonPointer(Json.Path.JsonPath)">
+            <summary>
+            Renders a Singular Path as a JSON Pointer.
+            </summary>
+            <param name="path">A JSON Path which is a Singular Path.</param>
+            <returns>A string containing a JSON Pointer.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown if the path is not singular.</exception>
+        </member>
         <member name="T:Json.Path.LengthFunction">
             <summary>
             Implements the `length()` function to get:
@@ -266,15 +360,33 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.LengthFunction.MinArgumentCount">
+        <member name="P:Json.Path.LengthFunction.ParameterSets">
             <summary>
-            The minimum argument count accepted by the function.
+            Defines the sets of parameters that are valid for this function.
             </summary>
+            <remarks>
+            The value of this property is a collection of collections where
+            each inner collection represents a single parameter set.  The
+            outer collection represents differing parameter sets and can
+            be thought of as "overloads."
+            </remarks>
         </member>
-        <member name="P:Json.Path.LengthFunction.MaxArgumentCount">
-            <summary>
-            The maximum argument count accepted by the function.
-            </summary>
+        <member name="P:Json.Path.LengthFunction.ReturnType">
+             <summary>
+             The type returned by the function.
+             </summary>
+             <remarks>
+             This is important for function composition: using a function
+             as a parameter of another function.
+            
+             This library assumes that a function may return `Nothing` and
+             automatically handles that case.  This value should be set to
+             what kind of non-`Nothing` type the function returns.
+            
+             Registration of the function will throw an
+             <see cref="T:System.InvalidOperationException"/> if the value is
+             <see cref="F:Json.Path.FunctionType.Unspecified"/>
+             </remarks>
         </member>
         <member name="M:Json.Path.LengthFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
             <summary>
@@ -294,15 +406,33 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.MatchFunction.MinArgumentCount">
+        <member name="P:Json.Path.MatchFunction.ParameterSets">
             <summary>
-            The minimum argument count accepted by the function.
+            Defines the sets of parameters that are valid for this function.
             </summary>
+            <remarks>
+            The value of this property is a collection of collections where
+            each inner collection represents a single parameter set.  The
+            outer collection represents differing parameter sets and can
+            be thought of as "overloads."
+            </remarks>
         </member>
-        <member name="P:Json.Path.MatchFunction.MaxArgumentCount">
-            <summary>
-            The maximum argument count accepted by the function.
-            </summary>
+        <member name="P:Json.Path.MatchFunction.ReturnType">
+             <summary>
+             The type returned by the function.
+             </summary>
+             <remarks>
+             This is important for function composition: using a function
+             as a parameter of another function.
+            
+             This library assumes that a function may return `Nothing` and
+             automatically handles that case.  This value should be set to
+             what kind of non-`Nothing` type the function returns.
+            
+             Registration of the function will throw an
+             <see cref="T:System.InvalidOperationException"/> if the value is
+             <see cref="F:Json.Path.FunctionType.Unspecified"/>
+             </remarks>
         </member>
         <member name="M:Json.Path.MatchFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
             <summary>
@@ -389,6 +519,11 @@
             The index at which the error occurred.
             </summary>
         </member>
+        <member name="T:Json.Path.PathParsingOptions">
+            <summary>
+            Defines a set of configuration options to control parsing behavior.
+            </summary>
+        </member>
         <member name="T:Json.Path.PathResult">
             <summary>
             The results of a JSON Path evaluation against a JSON instance.
@@ -460,15 +595,33 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.SearchFunction.MinArgumentCount">
+        <member name="P:Json.Path.SearchFunction.ParameterSets">
             <summary>
-            The minimum argument count accepted by the function.
+            Defines the sets of parameters that are valid for this function.
             </summary>
+            <remarks>
+            The value of this property is a collection of collections where
+            each inner collection represents a single parameter set.  The
+            outer collection represents differing parameter sets and can
+            be thought of as "overloads."
+            </remarks>
         </member>
-        <member name="P:Json.Path.SearchFunction.MaxArgumentCount">
-            <summary>
-            The maximum argument count accepted by the function.
-            </summary>
+        <member name="P:Json.Path.SearchFunction.ReturnType">
+             <summary>
+             The type returned by the function.
+             </summary>
+             <remarks>
+             This is important for function composition: using a function
+             as a parameter of another function.
+            
+             This library assumes that a function may return `Nothing` and
+             automatically handles that case.  This value should be set to
+             what kind of non-`Nothing` type the function returns.
+            
+             Registration of the function will throw an
+             <see cref="T:System.InvalidOperationException"/> if the value is
+             <see cref="F:Json.Path.FunctionType.Unspecified"/>
+             </remarks>
         </member>
         <member name="M:Json.Path.SearchFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
             <summary>
