@@ -7,6 +7,7 @@
 @using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
+@using System.Text.Json.Nodes
 
 @inject CookieManager CookieManager;
 
@@ -133,10 +134,10 @@
 			await _outputEditor.SetValue($"Path is invalid\n\n{e.Message}");
 			return;
 		}
-		JsonElement instance;
+		JsonNode? instance;
 		try
 		{
-			instance = JsonDocument.Parse(await _instanceEditor.GetValue()).RootElement;
+			instance = JsonNode.Parse(await _instanceEditor.GetValue());
 		}
 		catch (Exception e)
 		{
@@ -144,17 +145,17 @@
 			return;
 		}
 
-		//var results = path.Evaluate(instance);
+		var results = path.Evaluate(instance);
 
-		//var resultText = results.Error == null
-		//	? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
-		//	{
-		//		WriteIndented = true,
-		//		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		//	})
-		//	: string.Empty;
+		var resultText = results.Error == null
+			? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			})
+			: string.Empty;
 
-		//await _outputEditor.SetValue(resultText);
+		await _outputEditor.SetValue(resultText);
 	}
 
 	private async Task SavePath(ChangeEventArgs args)
