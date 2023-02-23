@@ -210,7 +210,7 @@ var numberResults = schema.Evaluate(numberJson);
 var nonObjectResults = schema.Evaluate(nonObject);
 ```
 
-***IMPORTANT** Don't pass your JSON to `Evaluate()` as a string.  You must parse it with `JsonNode.Parse()` first.  Otherwise, you're just validating a string.  This is because `JsonNode` defines an implicit cast from `string`.*
+***IMPORTANT** Don't pass your JSON to `Evaluate()` as a string.  You must parse it with `JsonNode.Parse()` first.  Otherwise, your string will be implicitly cast to `JsonNode` and you're just validating a string instance.*
 
 The various results objects are of type `EvaluationResults`.  More information about the results object can be found in the next section.
 
