@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -88,7 +87,7 @@ public class SpecExampleTests
 ";
 
 		var openApiDocNode = JsonNode.Parse(openApiDocText);
-		var openApiDoc = new OpenApiDoc(new Uri("http://localhost:1234/openapi"), openApiDocNode);
+		var openApiDoc = new OpenApiDoc(new Uri("http://localhost:1234/openapi"), openApiDocNode!);
 		var targetSchema = openApiDoc.FindSubschema(JsonPointer.Parse("/webhooks/newPet/post/requestBody/content/application~1json/schema"), EvaluationOptions.Default);
 
 		var payload = new JsonObject
@@ -98,7 +97,7 @@ public class SpecExampleTests
 			["tag"] = "a very good dog"
 		};
 
-		var result = targetSchema.Evaluate(payload);
+		var result = targetSchema!.Evaluate(payload);
 
 		result.AssertValid();
 	}

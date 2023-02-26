@@ -25,6 +25,6 @@ public static class Vocabularies
 
 		vocabRegistry.Register(Data);
 		SchemaKeywordRegistry.Register<DataKeyword>();
-		schemaRegistry.Register(MetaSchemas.DataId, MetaSchemas.Data);
+		schemaRegistry.Register(MetaSchemas.Data);
 	}
 }

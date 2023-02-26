@@ -456,6 +456,7 @@ public static class JsonSchemaBuilderExtensions
 	public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, Uri id)
 	{
 		builder.Add(new IdKeyword(id));
+		builder.TrySetBaseUri(id);
 		return builder;
 	}
 
@@ -467,7 +468,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, string id)
 	{
-		builder.Add(new IdKeyword(new Uri(id, UriKind.RelativeOrAbsolute)));
+		var uri = new Uri(id, UriKind.RelativeOrAbsolute);
+		builder.Add(new IdKeyword(uri));
+		builder.TrySetBaseUri(uri);
 		return builder;
 	}
 

@@ -11,23 +11,6 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
-public interface IBaseDocument
-{
-	/// <summary>
-	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
-	/// </summary>
-	/// <remarks>
-	/// This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
-	/// where `random` is 10 hex characters.
-	///
-	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
-	/// or is a child of another schema.
-	/// </remarks>
-	Uri BaseUri { get; }
-
-	JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options);
-}
-
 /// <summary>
 /// Represents a JSON Schema.
 /// </summary>
