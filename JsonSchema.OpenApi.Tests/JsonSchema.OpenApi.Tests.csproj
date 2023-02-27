@@ -8,6 +8,7 @@
 		<RootNamespace>Json.Schema.OpenApi.Tests</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -18,6 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\JsonPath\JsonPath.csproj" />
 		<ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
 		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
 	</ItemGroup>

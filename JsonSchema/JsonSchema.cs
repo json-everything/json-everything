@@ -16,7 +16,7 @@ namespace Json.Schema;
 /// </summary>
 [JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IEquatable<JsonSchema>
+public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 {
 	private Dictionary<string, IJsonSchemaKeyword>? _keywords;
 
@@ -55,7 +55,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
 	/// or is a child of another schema.
 	/// </remarks>
-	public Uri BaseUri { get; private set; } = GenerateBaseUri();
+	public Uri BaseUri { get; set; } = GenerateBaseUri();
 
 	/// <summary>
 	/// Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
@@ -223,7 +223,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 					return version;
 				}
 
-				var metaSchema = registry.Get(metaSchemaId);
+				var metaSchema = registry.Get(metaSchemaId) as JsonSchema;
 				if (metaSchema == null)
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
 
@@ -326,7 +326,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 		}
 	}
 
-	internal JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object resolvable = this;
 		for (var i = 0; i < pointer.Segments.Length; i++)

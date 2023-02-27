@@ -33,6 +33,6 @@ public static class Vocabularies
 		SchemaKeywordRegistry.Register<DiscriminatorKeyword>();
 		SchemaKeywordRegistry.Register<ExternalDocsKeyword>();
 		SchemaKeywordRegistry.Register<XmlKeyword>();
-		schemaRegistry.Register(MetaSchemas.OpenApiMetaId, MetaSchemas.OpenApiMeta);
+		schemaRegistry.Register(MetaSchemas.OpenApiMeta);
 	}
 }

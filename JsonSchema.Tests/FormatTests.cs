@@ -80,7 +80,6 @@ public class FormatTests
 			OutputFormat = OutputFormat.Hierarchical,
 			OnlyKnownFormats = true
 		};
-		options.SchemaRegistry.Register(_formatAssertionMetaSchemaId, _formatAssertionMetaSchema);
 
 		var schemaText = $@"{{
 	""$schema"": ""{_formatAssertionMetaSchemaId}"",
@@ -88,6 +87,7 @@ public class FormatTests
 	""format"": ""something-dumb""
 }}";
 		var schema = JsonSchema.FromText(schemaText);
+		options.SchemaRegistry.Register(_formatAssertionMetaSchema);
 		var instance = JsonNode.Parse("\"a value\"");
 
 		var results = schema.Evaluate(instance, options);

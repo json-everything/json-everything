@@ -55,11 +55,15 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 			if (scopeRoot == null)
 				throw new Exception("This shouldn't happen");
 
-			if (scopeRoot.RecursiveAnchor == null) continue;
+			if (scopeRoot is not JsonSchema schemaRoot)
+				throw new Exception("Does OpenAPI use anchors?");
 
-			if (targetBase.RecursiveAnchor == null) break;
+			if (schemaRoot.RecursiveAnchor == null) continue;
 
-			targetSchema = scopeRoot.RecursiveAnchor;
+			if (targetBase is JsonSchema targetBaseSchema &&
+			    targetBaseSchema.RecursiveAnchor == null) break;
+
+			targetSchema = schemaRoot.RecursiveAnchor;
 			break;
 		}
 
@@ -76,7 +80,8 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-				if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+				if (targetBase is JsonSchema targetBaseSchema &&
+				    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 					targetSchema = anchorDefinition.Schema;
 			}
 

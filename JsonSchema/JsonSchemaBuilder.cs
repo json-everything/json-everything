@@ -11,6 +11,13 @@ namespace Json.Schema;
 public class JsonSchemaBuilder
 {
 	private readonly Dictionary<string, IJsonSchemaKeyword> _keywords = new();
+	private Uri? _baseUri;
+
+	internal void TrySetBaseUri(Uri uri)
+	{
+		if (uri.IsAbsoluteUri)
+			_baseUri = uri;
+	}
 
 	/// <summary>
 	/// Adds a new keyword.
@@ -63,7 +70,10 @@ public class JsonSchemaBuilder
 		if (duplicates.Any())
 			throw new ArgumentException($"Found duplicate keywords: [{string.Join(", ", duplicates)}]");
 
-		return new JsonSchema(_keywords.Values);
+		var build = new JsonSchema(_keywords.Values);
+		if (_baseUri != null)
+			build.BaseUri = _baseUri;
+		return build;
 	}
 
 	/// <summary>

@@ -59,10 +59,14 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 			if (scopeRoot == null)
 				throw new Exception("This shouldn't happen");
 
-			if (!scopeRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
+			if (scopeRoot is not JsonSchema schemaRoot)
+				throw new Exception("Does OpenAPI use anchors?");
 
-			if (context.Options.EvaluatingAs == SpecVersion.Draft202012 &&
-			    (!targetBase.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
+			if (!schemaRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
+
+			if (targetBase is JsonSchema targetBaseSchema &&
+			    context.Options.EvaluatingAs == SpecVersion.Draft202012 &&
+			    (!targetBaseSchema.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
 
 			targetSchema = anchor.Schema;
 			break;
@@ -78,7 +82,8 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorName))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 			
-				if (targetBase.Anchors.TryGetValue(anchorName, out var anchorDefinition))
+				if (targetBase is JsonSchema targetBaseSchema &&
+				    targetBaseSchema.Anchors.TryGetValue(anchorName, out var anchorDefinition))
 					targetSchema = anchorDefinition.Schema;
 			}
 

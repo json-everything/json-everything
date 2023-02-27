@@ -25,6 +25,6 @@ public static class Vocabularies
 
 		vocabRegistry.Register(UniqueKeys);
 		SchemaKeywordRegistry.Register<UniqueKeysKeyword>();
-		schemaRegistry.Register(MetaSchemas.UniqueKeysId, MetaSchemas.UniqueKeys);
+		schemaRegistry.Register(MetaSchemas.UniqueKeys);
 	}
 }
