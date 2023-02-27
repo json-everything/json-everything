@@ -18,6 +18,8 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema : IEquatable<JsonSchema>
 {
+	private Dictionary<string, IJsonSchemaKeyword>? _keywords;
+
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
@@ -34,7 +36,9 @@ public class JsonSchema : IEquatable<JsonSchema>
 	/// <summary>
 	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
 	/// </summary>
-	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords { get; }
+	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords => _keywords?.Values;
+
+	public IJsonSchemaKeyword? this[string keyword] => _keywords?[keyword];
 
 	/// <summary>
 	/// For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
@@ -72,7 +76,7 @@ public class JsonSchema : IEquatable<JsonSchema>
 	}
 	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
-		Keywords = keywords.ToArray();
+		_keywords = keywords.ToDictionary(x => x.Keyword());
 	}
 
 	/// <summary>
@@ -115,6 +119,40 @@ public class JsonSchema : IEquatable<JsonSchema>
 	}
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
+
+	public T? GetKeyword<T>()
+		where T : IJsonSchemaKeyword
+	{
+		var keyword = typeof(T).Keyword();
+		return (T?)this[keyword];
+	}
+
+	public bool TryGetKeyword<T>(out T? keyword)
+		where T : IJsonSchemaKeyword
+	{
+		var name = typeof(T).Keyword();
+		return TryGetKeyword(name, out keyword);
+
+	}
+
+	public bool TryGetKeyword<T>(string keywordName, out T? keyword)
+		where T : IJsonSchemaKeyword
+	{
+		if (BoolValue.HasValue)
+		{
+			keyword = default;
+			return false;
+		}
+
+		if (_keywords!.TryGetValue(keywordName, out var k))
+		{
+			keyword = (T)k!;
+			return true;
+		}
+
+		keyword = default;
+		return false;
+	}
 
 	/// <summary>
 	/// Evaluates an instance against this schema.
@@ -165,10 +203,9 @@ public class JsonSchema : IEquatable<JsonSchema>
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 
-		var schemaKeyword = (SchemaKeyword?)schema.Keywords!.FirstOrDefault(x => x is SchemaKeyword);
-		if (schemaKeyword != null)
+		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{
-			var metaSchemaId = schemaKeyword.Schema;
+			var metaSchemaId = schemaKeyword?.Schema;
 			while (metaSchemaId != null)
 			{
 				var version = metaSchemaId.OriginalString switch
@@ -190,11 +227,11 @@ public class JsonSchema : IEquatable<JsonSchema>
 				if (metaSchema == null)
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
 
-				var newMetaSchemaId = metaSchema.Keywords!.OfType<SchemaKeyword>().FirstOrDefault()?.Schema;
-				if (newMetaSchemaId == metaSchemaId)
+				if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
+				    newMetaSchemaKeyword!.Schema == metaSchemaId)
 					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
 
-				metaSchemaId = newMetaSchemaId;
+				metaSchemaId = newMetaSchemaKeyword!.Schema;
 			}
 		}
 
@@ -212,24 +249,16 @@ public class JsonSchema : IEquatable<JsonSchema>
 	{
 		if (schema.BoolValue.HasValue) return;
 		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
-		    schema.Keywords!.Any(x => x is RefKeyword))
+		    schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
 		{
 			schema.BaseUri = currentBaseUri;
 			return;
 		}
 
-		var idKeyword = schema.Keywords!.OfType<IdKeyword>().FirstOrDefault();
-
-		if (idKeyword == null)
-		{
-			schema.BaseUri = currentBaseUri;
-			if (selfRegister)
-				registry.RegisterSchema(schema.BaseUri, schema);
-		}
-		else
+		if (schema.TryGetKeyword<IdKeyword>(IdKeyword.Name, out var idKeyword))
 		{
 			if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
-			    idKeyword.Id.OriginalString[0] == '#' &&
+			    idKeyword!.Id.OriginalString[0] == '#' &&
 			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
 			{
 				schema.BaseUri = currentBaseUri;
@@ -240,20 +269,24 @@ public class JsonSchema : IEquatable<JsonSchema>
 				schema.IsResourceRoot = true;
 				schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
 				resourceRoot = schema;
-				schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
+				schema.BaseUri = new Uri(currentBaseUri, idKeyword!.Id);
 				registry.RegisterSchema(schema.BaseUri, schema);
 			}
 		}
+		else
+		{
+			schema.BaseUri = currentBaseUri;
+			if (selfRegister)
+				registry.RegisterSchema(schema.BaseUri, schema);
+		}
 
-		var anchorKeyword = schema.Keywords!.OfType<AnchorKeyword>().FirstOrDefault();
-		if (anchorKeyword != null)
-			resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
+		if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword))
+			resourceRoot.Anchors[anchorKeyword!.Anchor] = (schema, false);
 
-		var dynamicAnchorKeyword = schema.Keywords!.OfType<DynamicAnchorKeyword>().FirstOrDefault();
-		if (dynamicAnchorKeyword != null)
-			resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
+		if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword))
+			resourceRoot.Anchors[dynamicAnchorKeyword!.Value] = (schema, true);
 
-		var recursiveAnchorKeyword = schema.Keywords!.OfType<RecursiveAnchorKeyword>().FirstOrDefault();
+		schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
 		if (recursiveAnchorKeyword is { Value: true })
 			resourceRoot.RecursiveAnchor = schema;
 
@@ -333,8 +366,9 @@ public class JsonSchema : IEquatable<JsonSchema>
 					(newResolvable, var segmentsConsumed) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToReadOnlyList());
 					i += segmentsConsumed;
 					break;
-				case JsonSchema { Keywords: { } } schema:
-					newResolvable = schema.Keywords?.FirstOrDefault(k => k.Keyword() == segment.Value);
+				case JsonSchema { _keywords: { } } schema:
+					schema._keywords.TryGetValue(segment.Value, out var k);
+					newResolvable = k;
 					break;
 			}
 
@@ -381,17 +415,17 @@ public class JsonSchema : IEquatable<JsonSchema>
 
 		if (BoolValue.HasValue) return BoolValue == other.BoolValue;
 		if (other.BoolValue.HasValue) return false;
-		if (Keywords!.Count != other.Keywords!.Count) return false;
+		if (_keywords!.Count != other._keywords!.Count) return false;
 
-		if (Keywords != null)
+		if (_keywords != null)
 		{
-			var byKeyword = Keywords.Join(other.Keywords,
-					tk => tk.Keyword(),
-					ok => ok.Keyword(),
+			var byKeyword = _keywords.Join(other._keywords!,
+					tk => tk.Key,
+					ok => ok.Key,
 					(tk, ok) => new { ThisKeyword = tk, OtherKeyword = ok })
 				.ToArray();
-			if (byKeyword.Length != Keywords.Count) return false;
-			if (!byKeyword.All(k => k.ThisKeyword.Equals(k.OtherKeyword))) return false;
+			if (byKeyword.Length != _keywords.Count) return false;
+			if (!byKeyword.All(k => k.ThisKeyword.Value.Equals(k.OtherKeyword.Value))) return false;
 		}
 
 		return true;

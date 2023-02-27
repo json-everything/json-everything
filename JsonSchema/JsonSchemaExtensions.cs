@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -8,7 +9,7 @@ namespace Json.Schema;
 /// <summary>
 /// Some extensions for <see cref="JsonSchema"/>
 /// </summary>
-public static class JsonSchemaExtensions
+public static partial class JsonSchemaExtensions
 {
 	/// <summary>
 	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
