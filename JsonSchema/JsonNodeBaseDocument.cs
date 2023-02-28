@@ -31,16 +31,12 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// </summary>
 	/// <param name="node">The JsonNode.</param>
 	/// <param name="baseUri">The identifying base URI.</param>
-	/// <param name="registry">(optional) A schema registry to track the document.  Omitting will use <see cref="SchemaRegistry.Global"/>.</param>
-	public JsonNodeBaseDocument(JsonNode node, Uri baseUri, SchemaRegistry? registry = null)
+	public JsonNodeBaseDocument(JsonNode node, Uri baseUri)
 	{
 		_node = node;
 		_foundSubschemas = new Dictionary<JsonPointer, JsonSchema?>();
 
 		BaseUri = baseUri;
-
-		registry ??= SchemaRegistry.Global;
-		registry.Register(this);
 	}
 
 	/// <summary>
