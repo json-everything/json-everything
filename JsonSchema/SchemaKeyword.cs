@@ -47,13 +47,12 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var metaSchema = context.Options.SchemaRegistry.Get(Schema);
+		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
 		if (metaSchema == null)
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
-		var vocabularyKeyword = metaSchema.Keywords!.OfType<VocabularyKeyword>().FirstOrDefault();
-		if (vocabularyKeyword != null)
-			context.UpdateMetaSchemaVocabs(vocabularyKeyword.Vocabulary);
+		if (metaSchema.TryGetKeyword<VocabularyKeyword>(VocabularyKeyword.Name, out var vocabularyKeyword))
+			context.UpdateMetaSchemaVocabs(vocabularyKeyword!.Vocabulary);
 
 		if (!context.Options.ValidateAgainstMetaSchema)
 		{

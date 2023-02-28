@@ -16,7 +16,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.OpenApi.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>1.1.0-beta2</Version>
+		<Version>1.1.0-beta3</Version>
 		<FileVersion>1.1.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -37,7 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-schema-data.md" Link="json-schema-openapi.md" />
+		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-schema-openapi.md" Link="json-schema-openapi.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

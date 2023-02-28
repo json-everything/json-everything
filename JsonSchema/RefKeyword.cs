@@ -71,7 +71,8 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			if (targetBase.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+			if (targetBase is JsonSchema targetBaseSchema &&
+			    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 				targetSchema = anchorDefinition.Schema;
 		}
 

@@ -68,14 +68,12 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		if (context.Options.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 		{
 			evaluatedProperties = new List<string>();
-			var propertiesKeyword = context.LocalSchema.Keywords!.OfType<PropertiesKeyword>().FirstOrDefault();
-			if (propertiesKeyword != null)
-				evaluatedProperties.AddRange(propertiesKeyword.Properties.Keys);
-			var patternPropertiesKeyword = context.LocalSchema.Keywords!.OfType<PatternPropertiesKeyword>().FirstOrDefault();
-			if (patternPropertiesKeyword != null)
+			if (context.LocalSchema.TryGetKeyword<PropertiesKeyword>(PropertiesKeyword.Name, out var propertiesKeyword))
+				evaluatedProperties.AddRange(propertiesKeyword!.Properties.Keys);
+			if (context.LocalSchema.TryGetKeyword<PatternPropertiesKeyword>(PatternPropertiesKeyword.Name, out var patternPropertiesKeyword))
 				evaluatedProperties.AddRange(obj
 					.Select(x => x.Key)
-					.Where(x => patternPropertiesKeyword.Patterns.Any(p => p.Key.IsMatch(x))));
+					.Where(x => patternPropertiesKeyword!.Patterns.Any(p => p.Key.IsMatch(x))));
 		}
 		else
 		{

@@ -40,5 +40,5 @@
 "build pipeline":
   - .github/workflows/**/*
 
-"try-me-site":
-  - any: ['json-everything.net/**/*', '!json-everything.net/wwwroot/md/*']
+"json-everything.net":
+  - any: ['json-everything.net/**/*', '!json-everything.net/wwwroot/md/**/*']
