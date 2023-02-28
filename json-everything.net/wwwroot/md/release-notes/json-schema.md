@@ -1,4 +1,4 @@
-# [4.0.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
+# [4.0.0 (beta 3)](https://github.com/gregsdennis/json-everything/pull/326)
 
 This update adds support for the latest version of JSON Schema while also making a few architectural changes to ease the burden for implementing custom keywords.
 
@@ -59,13 +59,19 @@ It also renames several methods from "Validate" to "Evaluate" to reflect the ide
 ## Additional Changes
 
 - Exposed static property `Name` on all keywords
+- Added `IBaseDocument` to represent any identifiable JSON document that may house a JSON Schema
+- Added `JsonNodeBaseDocument` as a general-use base document for any `JsonNode`
 - `JsonSchema`
-  - `BaseUri` is now available
+  - Implements `IBaseDocument`
+    - `BaseUri` is now public
+    - `FindSubschema()` is now public
   - `IsResourceRoot` has been added
   - `DeclaredVersion` has been added
-- Added `JsonSchemaExtensions.Validate()` extensions to help ease transition from "Validate" to "Evaluate"
+- `JsonSchemaExtensions`
+  - Added extensions for each keyword to enable easier keyword value access, e.g. `schema.GetTitle()`
+  - Added `Validate()` extensions to help ease transition from "Validate()" to "Evaluate()"
 - Added `PropertyDependenciesKeyword`
-- Added `ICustomSchemaCollector` to handle keywords that contain subschemas but don't fit into one of the other "container" interfaces, e.g. `propertyDependencies`.
+- Added `ICustomSchemaCollector` to handle keywords that contain subschemas but don't fit into one of the other "container" interfaces, e.g. `propertyDependencies`
 - Added `MetaSchemas.DraftNext` and associated properties
 - Added `Vocabularies.DraftNext` and associated properties
 - Added `EvaluationOptions.IgnoredAnnotations` to ignore annotations from specified keywords.  These keywords are managed using:

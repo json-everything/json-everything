@@ -1,6 +1,8 @@
-# [1.1.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
+# 1.1.0 (beta 3) ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#389](https://github.com/gregsdennis/json-everything/pull/389))
 
 Updated to use JsonSchema.Net v4.
+
+Added extensions for each keyword to enable easier keyword value access, e.g. `schema.GetExample()`.
 
 # [1.0.0]()
 
