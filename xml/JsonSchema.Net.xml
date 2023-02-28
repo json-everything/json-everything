@@ -2184,6 +2184,31 @@
             <param name="name">The format key.</param>
             <returns>A <see cref="T:Json.Schema.Format"/> instance.</returns>
         </member>
+        <member name="T:Json.Schema.IBaseDocument">
+            <summary>
+            Represents an identifiable or locatable base document that may be or contain a JSON Schema.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.IBaseDocument.BaseUri">
+             <summary>
+             Gets the base URI that applies to this schema.  This may be defined by a parent schema.
+             </summary>
+             <remarks>
+             This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
+             where `random` is 10 hex characters.
+            
+             It may change after the initial evaluation based on whether the schema contains an `$id` keyword
+             or is a child of another schema.
+             </remarks>
+        </member>
+        <member name="M:Json.Schema.IBaseDocument.FindSubschema(Json.Pointer.JsonPointer,Json.Schema.EvaluationOptions)">
+            <summary>
+            Finds a schema within the document.
+            </summary>
+            <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
+            <param name="options">Evaluation options.  This is needed for internal processing.</param>
+            <returns>A JSON Schema, if found.</returns>
+        </member>
         <member name="T:Json.Schema.ICustomSchemaCollector">
             <summary>
             Indicates that the keyword contains subschemas in such a way that does not
@@ -2399,6 +2424,38 @@
         <member name="M:Json.Schema.ItemsKeyword.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.JsonNodeBaseDocument">
+            <summary>
+            Provides a general <see cref="T:Json.Schema.IBaseDocument"/> implementation for a <see cref="T:System.Text.Json.Nodes.JsonNode"/>.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.JsonNodeBaseDocument.BaseUri">
+             <summary>
+             Gets the base URI that applies to this schema.  This may be defined by a parent schema.
+             </summary>
+             <remarks>
+             This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
+             where `random` is 10 hex characters.
+            
+             It may change after the initial evaluation based on whether the schema contains an `$id` keyword
+             or is a child of another schema.
+             </remarks>
+        </member>
+        <member name="M:Json.Schema.JsonNodeBaseDocument.#ctor(System.Text.Json.Nodes.JsonNode,System.Uri)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.JsonNodeBaseDocument"/>.
+            </summary>
+            <param name="node">The JsonNode.</param>
+            <param name="baseUri">The identifying base URI.</param>
+        </member>
+        <member name="M:Json.Schema.JsonNodeBaseDocument.FindSubschema(Json.Pointer.JsonPointer,Json.Schema.EvaluationOptions)">
+            <summary>
+            Finds a schema within the document.
+            </summary>
+            <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
+            <param name="options">Evaluation options.  This is needed for internal processing.</param>
+            <returns>A JSON Schema, if found.</returns>
         </member>
         <member name="T:Json.Schema.JsonNodeExtensions">
             <summary>
@@ -3352,6 +3409,9 @@
             <summary>
             Some extensions for <see cref="T:Json.Schema.JsonSchema"/>
             </summary>
+            <summary>
+            Some extensions for <see cref="T:Json.Schema.JsonSchema"/>
+            </summary>
         </member>
         <member name="M:Json.Schema.JsonSchemaExtensions.Evaluate(Json.Schema.JsonSchema,System.Text.Json.JsonDocument,Json.Schema.EvaluationOptions)">
             <summary>
@@ -3397,6 +3457,326 @@
             <param name="jsonElement">Instance to be evaluated.</param>
             <param name="options">The options to use for this evaluation.</param>
             <returns>A <see cref="T:Json.Schema.EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetAdditionalItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `additionalItems` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetAdditionalProperties(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `additionalProperties` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetAllOf(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `allOf` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetAnchor(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$anchor` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetAnyOf(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `anyOf` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetComment(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$comment` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetConst(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `const` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetContains(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `contains` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetContentEncoding(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `contentEncoding` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetContentMediaType(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `contentMediaType` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetContentSchema(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `contentSchema` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDefault(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `default` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDefinitions(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `definitions` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDefs(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `$defs` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDependencies(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the requirements in `dependencies` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDependentRequired(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the requirements in `dependentRequired` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDependentSchemas(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `dependentSchemas` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDeprecated(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `deprecated` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDescription(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `description` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDynamicAnchor(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$dynamicAnchor` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetDynamicRef(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$dynamicRef` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetElse(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `else` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetEnum(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the values in `enum` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetExamples(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the values in `examples` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetExclusiveMaximum(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `exclusiveMaximum` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetExclusiveMinimum(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `exclusiveMinimum` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetFormat(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `format` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetId(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$id` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetIf(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `if` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `items` if the keyword exists and is a single schema.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetItemsArrayForm(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `items` if the keyword exists and is an array of schemas.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMaxContains(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `maxContains` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMaximum(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `maximum` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMaxItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `maxItems` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMaxLength(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `maxLength` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMaxProperties(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `maxProperties` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMinContains(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `minContains` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMinimum(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `minimum` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMinItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `minItems` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMinLength(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `minLength` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMinProperties(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `minProperties` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetMultipleOf(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `multipleOf` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetNot(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `not` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetOneOf(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `oneOf` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetPattern(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `pattern` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetPatternProperties(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `patternProperties` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetPrefixItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `prefixItems` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetProperties(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas in `properties` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetPropertyDependencies(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schemas for `propertyDependencies` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetPropertyNames(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `propertyNames` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetReadOnly(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `readOnly` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetRecursiveAnchor(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$recursiveAnchor` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetRecursiveRef(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$recursiveRef` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetRef(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$ref` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetRequired(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the values in `required` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetSchema(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `$schema` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetThen(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `then` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetTitle(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `title` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetType(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `type` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetUnevaluatedItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `unevaluatedItems` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetUnevaluatedProperties(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the schema for `unevaluatedProperties` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetUniqueItems(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `uniqueItems` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetVocabulary(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the values in `$vocabulary` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetWriteOnly(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `writeOnly` if the keyword exists.
+            </summary>
         </member>
         <member name="T:Json.Schema.KeywordExtensions">
             <summary>
@@ -5060,12 +5440,18 @@
             Gets or sets a method to enable automatic download of schemas by `$id` URI.
             </summary>
         </member>
-        <member name="M:Json.Schema.SchemaRegistry.Register(System.Uri,Json.Schema.JsonSchema)">
+        <member name="M:Json.Schema.SchemaRegistry.Register(Json.Schema.IBaseDocument)">
+            <summary>
+            Registers a schema by URI.
+            </summary>
+            <param name="document">The schema.</param>
+        </member>
+        <member name="M:Json.Schema.SchemaRegistry.Register(System.Uri,Json.Schema.IBaseDocument)">
             <summary>
             Registers a schema by URI.
             </summary>
             <param name="uri">The URI ID of the schema..</param>
-            <param name="schema">The schema.</param>
+            <param name="document">The schema.</param>
         </member>
         <member name="M:Json.Schema.SchemaRegistry.Get(System.Uri)">
             <summary>

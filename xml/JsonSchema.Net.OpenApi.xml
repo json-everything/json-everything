@@ -230,6 +230,31 @@
             </param>
             <returns>The builder.</returns>
         </member>
+        <member name="T:Json.Schema.OpenApi.JsonSchemaExtensions">
+            <summary>
+            Some extensions for <see cref="T:Json.Schema.JsonSchema"/>
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaExtensions.GetDiscriminator(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the `discriminator` keyword if it exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaExtensions.GetExample(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `example` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaExtensions.GetExternalDocs(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the value of `externalDocs` if the keyword exists.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.JsonSchemaExtensions.GetXml(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the `xml` keyword if it exists.
+            </summary>
+        </member>
         <member name="T:Json.Schema.OpenApi.MetaSchemas">
             <summary>
             Provides meta-schemas defined by OpenAPI.

@@ -41,6 +41,16 @@
             <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="T:Json.Schema.UniqueKeys.JsonSchemaExtensions">
+            <summary>
+            Some extensions for <see cref="T:Json.Schema.JsonSchema"/>
+            </summary>
+        </member>
+        <member name="M:Json.Schema.UniqueKeys.JsonSchemaExtensions.GetUniqueKeys(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the values in `uniqueKeys` if the keyword exists.
+            </summary>
+        </member>
         <member name="T:Json.Schema.UniqueKeys.MetaSchemas">
             <summary>
             Defines a meta-schema for the 

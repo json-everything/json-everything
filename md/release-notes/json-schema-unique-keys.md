@@ -1,10 +1,10 @@
-# [2.1.0 (beta 2)](https://github.com/gregsdennis/json-everything/pull/366)
+# 2.1.0 (beta 2) ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#366](https://github.com/gregsdennis/json-everything/pull/366) / [#389](https://github.com/gregsdennis/json-everything/pull/389))
+
+Updated to use JsonSchema.Net v4.
 
 [#288](https://github.com/gregsdennis/json-everything/issues/288) - `duplicates` token in error message was not being replaced with the appropriate value.  Thanks to [@szilajka](https://github.com/szilajka) for finding and reporting this.
 
-# [2.1.0 (beta 1)](https://github.com/gregsdennis/json-everything/pull/326)
-
-Updated to use JsonSchema.Net v4.
+Added `JsonSchemaExtensions.GetUniqueKeys()` to enable easy access to `uniqueKeys` keyword.
 
 # 2.0.1 (no PR)
 

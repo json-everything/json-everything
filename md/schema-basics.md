@@ -418,11 +418,11 @@ _\* If you're using a custom meta-schema, you'll need to load it per the [Schema
 
 # Managing references (`$ref`)
 
-JsonSchema.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier versions, keywords as siblings to `$ref` will be ignored.
+By default, JsonSchema.Net handles all references as defined in the draft 2020-12 version of the JSON Schema specification.  What this means for draft 2019-09 and later schemas is that `$ref` can now exist alongside other keywords; for earlier versions (i.e. Drafts 6 and 7), keywords as siblings to `$ref` will be ignored.
 
-## Schema registration
+## Schema resolution
 
-In order to resolve references more quickly, JsonSchema.Net maintains two schema registries for all schemas and subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the evaluation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
+In order to resolve references more quickly, JsonSchema.Net maintains two registries for all schemas and identifiable subschemas that it has encountered.  The first is a global registry, and the second is a local registry that is passed around on the evaluation context.  If a schema is not found in the local registry, it will automatically fall back to the global registry.
 
 A `JsonSchema` instance will automatically register itself upon calling `Evaluate()`.  However, there are some cases where this may be insufficient.  For example, in cases where schemas are separated across multiple files, it is necessary to register the schema instances prior to evaluation.
 
@@ -461,6 +461,30 @@ SchemaRegistry.Global.Register("http://localhost/random-string", randomString);
 ```
 
 Now JsonSchema.Net will be able to resolve the reference.
+
+## Resolving embedded schemas
+
+In addition to schemas, other identifiable documents can be registered.  For example, Open API documents _contain_ schemas but are not themselves schemas.  Additionally, references between schemas within these documents are relative to the document root.  Registering the Open API document will allow these references to be resolved.
+
+A type may be registered if it implements `IBaseDocument`.  For convenience, `JsonNodeBaseDocument` is included to support general JSON data.
+
+To create referenceable JSON data, simply create a `JsonNodeBaseDocument` wrapper for it and pass the data along with the URI that will be used to identify it.
+
+```c#
+var json = JsonNode.Parse(@"{
+  \"foo\": 42,
+  \"schema\": { \"type\": \"string\" }
+}");
+
+var referenceableJson = new JsonNodeBaseDocument(json, "http://localhost/jsondata");
+SchemaRegistry.Global.Register(referenceableJson);
+
+var schema = new JsonSchemaBuilder()
+    .Ref("http://localhost/jsondata#/schema)
+    .Build();
+```
+
+With the JSON document registered, the reference can resolve properly.
 
 ## Automatic resolution
 

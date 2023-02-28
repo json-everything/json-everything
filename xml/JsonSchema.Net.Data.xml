@@ -140,6 +140,16 @@
             <param name="data">The collection of keywords and references.</param>
             <returns>The builder.</returns>
         </member>
+        <member name="T:Json.Schema.Data.JsonSchemaExtensions">
+            <summary>
+            Some extensions for <see cref="T:Json.Schema.JsonSchema"/>
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Data.JsonSchemaExtensions.GetData(Json.Schema.JsonSchema)">
+            <summary>
+            Gets the references in `data` if the keyword exists.
+            </summary>
+        </member>
         <member name="T:Json.Schema.Data.MetaSchemas">
             <summary>
             Defines a meta-schema for the 
