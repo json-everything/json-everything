@@ -2504,6 +2504,13 @@
             Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
             </summary>
         </member>
+        <member name="P:Json.Schema.JsonSchema.Item(System.String)">
+            <summary>
+            Gets the keyword class by keyword name.
+            </summary>
+            <param name="keyword">The keyword name.</param>
+            <returns>The keyword implementation if it exists in the schema.</returns>
+        </member>
         <member name="P:Json.Schema.JsonSchema.BoolValue">
             <summary>
             For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
@@ -2557,6 +2564,30 @@
             <param name="source">A stream.</param>
             <param name="options">Serializer options.</param>
             <returns>A new <see cref="T:Json.Schema.JsonSchema"/>.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchema.GetKeyword``1">
+            <summary>
+            Gets a specified keyword if it exists.
+            </summary>
+            <typeparam name="T">The type of the keyword to get.</typeparam>
+            <returns>The keyword if it exists; otherwise null.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchema.TryGetKeyword``1(``0@)">
+            <summary>
+            Gets a specified keyword if it exists.
+            </summary>
+            <param name="keyword">The keyword if it exists; otherwise null.</param>
+            <typeparam name="T">The type of the keyword to get.</typeparam>
+            <returns>true if the keyword exists; otherwise false.</returns>
+        </member>
+        <member name="M:Json.Schema.JsonSchema.TryGetKeyword``1(System.String,``0@)">
+            <summary>
+            Gets a specified keyword if it exists.
+            </summary>
+            <typeparam name="T">The type of the keyword to get.</typeparam>
+            <param name="keywordName">The name of the keyword.</param>
+            <param name="keyword">The keyword if it exists; otherwise null.</param>
+            <returns>true if the keyword exists; otherwise false.</returns>
         </member>
         <member name="M:Json.Schema.JsonSchema.Evaluate(System.Text.Json.Nodes.JsonNode,Json.Schema.EvaluationOptions)">
             <summary>

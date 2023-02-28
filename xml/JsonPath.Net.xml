@@ -501,6 +501,46 @@
             </summary>
             <param name="list">The nodelist.</param>
         </member>
+        <member name="T:Json.Path.ParameterType">
+            <summary>
+            Denotes function parameter types.
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.Unspecified">
+            <summary>
+            Parameter type unknown
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.Object">
+            <summary>
+            Parameter must be an object
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.Array">
+            <summary>
+            Parameter must be an array
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.String">
+            <summary>
+            Parameter must be a string
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.Number">
+            <summary>
+            Parameter must be a number
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.Boolean">
+            <summary>
+            Parameter must be either `true` or `false`
+            </summary>
+        </member>
+        <member name="F:Json.Path.ParameterType.Null">
+            <summary>
+            Parameter must be `null`
+            </summary>
+        </member>
         <member name="T:Json.Path.PathEvaluationOptions">
             <summary>
             Provides a number of options to be used during evaluation.
