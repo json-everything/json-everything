@@ -38,6 +38,11 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	/// </summary>
 	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords => _keywords?.Values;
 
+	/// <summary>
+	/// Gets the keyword class by keyword name.
+	/// </summary>
+	/// <param name="keyword">The keyword name.</param>
+	/// <returns>The keyword implementation if it exists in the schema.</returns>
 	public IJsonSchemaKeyword? this[string keyword] => _keywords?[keyword];
 
 	/// <summary>
@@ -120,6 +125,11 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
 
+	/// <summary>
+	/// Gets a specified keyword if it exists.
+	/// </summary>
+	/// <typeparam name="T">The type of the keyword to get.</typeparam>
+	/// <returns>The keyword if it exists; otherwise null.</returns>
 	public T? GetKeyword<T>()
 		where T : IJsonSchemaKeyword
 	{
@@ -127,6 +137,12 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return (T?)this[keyword];
 	}
 
+	/// <summary>
+	/// Gets a specified keyword if it exists.
+	/// </summary>
+	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
+	/// <typeparam name="T">The type of the keyword to get.</typeparam>
+	/// <returns>true if the keyword exists; otherwise false.</returns>
 	public bool TryGetKeyword<T>(out T? keyword)
 		where T : IJsonSchemaKeyword
 	{
@@ -135,6 +151,13 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 	}
 
+	/// <summary>
+	/// Gets a specified keyword if it exists.
+	/// </summary>
+	/// <typeparam name="T">The type of the keyword to get.</typeparam>
+	/// <param name="keywordName">The name of the keyword.</param>
+	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
+	/// <returns>true if the keyword exists; otherwise false.</returns>
 	public bool TryGetKeyword<T>(string keywordName, out T? keyword)
 		where T : IJsonSchemaKeyword
 	{

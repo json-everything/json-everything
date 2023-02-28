@@ -28,7 +28,7 @@ public class ComplianceTestSuiteStringifyTests
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 				PropertyNameCaseInsensitive = true
 			});
-			return suite.Tests.Where(x => !x.InvalidSelector).Select(t => new TestCaseData(t) { TestName = t.Name });
+			return suite!.Tests.Where(x => !x.InvalidSelector).Select(t => new TestCaseData(t) { TestName = t.Name });
 		}
 	}
 

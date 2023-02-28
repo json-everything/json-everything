@@ -49,7 +49,7 @@ public class PathSegment
 		{
 			foreach (var member in obj)
 			{
-				var localMatch = new Node(member.Value, match.Location.Append(member.Key));
+				var localMatch = new Node(member.Value, match.Location!.Append(member.Key));
 				foreach (var descendant in GetAllDescendants(localMatch))
 				{
 					yield return descendant;
@@ -61,7 +61,7 @@ public class PathSegment
 			for (var i = 0; i < arr.Count; i++)
 			{
 				var member = arr[i];
-				var localMatch = new Node(member, match.Location.Append(i));
+				var localMatch = new Node(member, match.Location!.Append(i));
 				foreach (var descendant in GetAllDescendants(localMatch))
 				{
 					yield return descendant;
@@ -111,7 +111,7 @@ public class PathSegment
 
 			builder.Append(']');
 		}
-		void AppendShorthand(StringBuilder builder) => ((IHaveShorthand)Selectors[0]).AppendShorthandString(builder);
+		void AppendShorthand(StringBuilder b) => ((IHaveShorthand)Selectors[0]).AppendShorthandString(b);
 
 		if (IsRecursive)
 		{

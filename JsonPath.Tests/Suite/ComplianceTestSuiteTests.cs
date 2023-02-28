@@ -32,7 +32,7 @@ public class ComplianceTestSuiteTests
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 				PropertyNameCaseInsensitive = true
 			});
-			return suite.Tests.Select(t => new TestCaseData(t) { TestName = t.Name });
+			return suite!.Tests.Select(t => new TestCaseData(t) { TestName = t.Name });
 		}
 	}
 
@@ -77,7 +77,7 @@ public class ComplianceTestSuiteTests
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
-		var expected = testCase.Result.ToJsonArray();
+		var expected = testCase.Result!.ToJsonArray();
 		Assert.IsTrue(expected.IsEquivalentTo(actualValues));
 	}
 }

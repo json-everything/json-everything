@@ -18,6 +18,6 @@ public static class Extensions
 		var serializer = new SerializerBuilder()
 			.JsonCompatible()
 			.Build();
-		return serializer.Serialize(yamlObject).Trim();
+		return serializer.Serialize(yamlObject!).Trim();
 	}
 }

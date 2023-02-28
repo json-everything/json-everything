@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+#pragma warning disable CS8618
+
 namespace Json.Path.Tests;
 
 public class Repository

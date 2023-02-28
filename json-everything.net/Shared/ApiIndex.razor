@@ -13,7 +13,6 @@
 
 	private NamespaceNode _rootNamespace;
 	private string _assemblyName;
-	private string _tag;
 #pragma warning restore CS8618
 
 	protected override Task OnInitializedAsync()
@@ -35,7 +34,7 @@
 		var localTypes = namespaceGroups.SingleOrDefault(x => x.Key == rootNamespace)?.ToList() ??
 		                 new List<Type>();
 		var namespaces = namespaceGroups.Where(x => x.Key != rootNamespace)
-			.Select(x => BuildNamespaceNode(x, x.Key)).ToList();
+			.Select(x => BuildNamespaceNode(x, x.Key!)).ToList();
 
 		return new NamespaceNode
 		{

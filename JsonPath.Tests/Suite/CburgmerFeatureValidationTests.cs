@@ -198,7 +198,7 @@ public class CburgmerFeatureValidationTests
 			Assert.Fail($"Could not parse path: {testCase.PathString}");
 		}
 
-		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual.Matches.Select(x => x.Value), _linearSerializerOptions)}");
+		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual!.Matches!.Select(x => x.Value), _linearSerializerOptions)}");
 		Console.WriteLine();
 		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, _serializerOptions)}");
 		if (testCase.Consensus == null)
@@ -207,7 +207,7 @@ public class CburgmerFeatureValidationTests
 		{
 			if (testCase.Consensus == "NOT_SUPPORTED") return;
 			var expected = JsonNode.Parse(testCase.Consensus);
-			Assert.IsTrue(expected.AsArray().All(v => actual.Matches.Any(m => JsonNodeEqualityComparer.Instance.Equals(v, m.Value))));
+			Assert.IsTrue(expected!.AsArray().All(v => actual.Matches!.Any(m => JsonNodeEqualityComparer.Instance.Equals(v, m.Value))));
 		}
 	}
 
