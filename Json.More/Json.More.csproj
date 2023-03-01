@@ -28,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="6.0.2" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
@@ -45,8 +45,7 @@
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 
 </Project>
