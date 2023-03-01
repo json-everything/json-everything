@@ -9,7 +9,7 @@ We can model this in our code with
 ```c#
 enum MemberType
 {
-    Default, // we don't want to default to a valid value
+    Undefined,
     FreeTier,
     Pro,
     Enterprise
@@ -22,7 +22,7 @@ but as mentioned, this just renders as numbers in the JSON.  Let's add the conve
 [JsonConverter(typeof(EnumStringConverter<MemberType>))]
 enum MemberType
 {
-    Default, // we don't want to default to a valid value
+    Undefined,
     FreeTier,
     Pro,
     Enterprise
@@ -35,7 +35,7 @@ This will now render the values as they appear in the C# code, in _PascalCase_. 
 [JsonConverter(typeof(EnumStringConverter<MemberType>))]
 enum MemberType
 {
-    Default, // we don't want to default to a valid value
+    Undefined,
     [Description("free-tier")]
     FreeTier,
     [Description("pro")]
@@ -73,4 +73,4 @@ enum SnowConeColors
 }
 ```
 
-In this case, when we want to serialize the enum value `Orange | Green`, we'll get `"green,orange"` in the serialization.
+In this case, when we want to serialize the enum value `Orange | Green`, we'll get `"orange,green"` in the serialization.

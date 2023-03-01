@@ -2,7 +2,7 @@
 
 Sometimes, you may need to have custom logic that changes the generated schema in a way that can't be fulfilled with Generators, Intents, or Attributes.
 
-As an example, this library handles [nullability](../usage/schema-generation.md#nullability) outside of these mechanisms by making use of a _refiner_.
+As an example, this library handles nullability outside of these mechanisms by making use of a _refiner_.
 
 This example shows how this kind of custom logic can be accomplished.
 

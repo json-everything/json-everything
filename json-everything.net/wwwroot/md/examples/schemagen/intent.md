@@ -2,9 +2,9 @@
 
 This example shows how to extend schema generation to output a new keyword.
 
-Suppose we've implemented the [`maxDate` keyword](schema-vocabs.md#defining-a-keyword).  Now we need a way to generate schemas that contain it.
+Suppose we've implemented the `maxDate` keyword (see the "Custom Vocabularies" example).  Now we need a way to generate schemas that contain it.
 
-For this we need to create a _ keyword intent_.
+For this we need to create a _keyword intent_.
 
 ```c#
 public class MaxDateIntent : ISchemaKeywordIntent
@@ -43,4 +43,4 @@ public class MaxDateIntent : ISchemaKeywordIntent
 }
 ```
 
-In this case, our intent will be applied by an [attribute](schema-gen-attribute.md), but it could also be applied within a generator.
+In this case, our intent will be applied by an attribute, but it could also be applied within a generator.

@@ -40,13 +40,27 @@
 			<RadzenPanelMenuItem Text="Vocabulary: uniqueKeys" Value="@("vocabs-unique-keys")"
 			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("vocabs-unique-keys"))"/>
 		</RadzenPanelMenuItem>
-		<RadzenPanelMenuItem Text="Examples (work in progress)" Icon="format_list_numbered" Expanded="true">
-			<RadzenPanelMenuItem Text="Version Selection" Value="@("examples/schema/version-selection")"
-			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/version-selection"))"/>
-			<RadzenPanelMenuItem Text="Managing External Schemas" Value="@("examples/schema/external-schemas")"
-			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/external-schemas"))"/>
-			<RadzenPanelMenuItem Text="Managing Options" Value="@("examples/schema/managing-options")"
-			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/managing-options"))"/>
+		<RadzenPanelMenuItem Text="Examples" Icon="science" Expanded="true">
+			<RadzenPanelMenuItem Text="General Use" Expanded="false">
+				<RadzenPanelMenuItem Text="Version Selection" Value="@("examples/schema/version-selection")"
+				                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/version-selection"))"/>
+				<RadzenPanelMenuItem Text="Managing External Schemas" Value="@("examples/schema/external-schemas")"
+				                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/external-schemas"))"/>
+				<RadzenPanelMenuItem Text="Managing Options" Value="@("examples/schema/managing-options")"
+				                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/managing-options"))"/>
+				<RadzenPanelMenuItem Text="Custom Vocabularies" Value="@("examples/schema/custom-vocabs")"
+				                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schema/custom-vocabs"))"/>
+			</RadzenPanelMenuItem>
+			<RadzenPanelMenuItem Text="Schema Generation" Expanded="false">
+				<RadzenPanelMenuItem Text="Generators" Value="@("examples/schemagen/generator")"
+									 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemagen/generator"))"/>
+				<RadzenPanelMenuItem Text="Keyword Intents" Value="@("examples/schemagen/intent")"
+									 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemagen/intent"))" />
+				<RadzenPanelMenuItem Text="Attributes" Value="@("examples/schemagen/attribute")"
+				                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemagen/attribute"))"/>
+				<RadzenPanelMenuItem Text="Refiners" Value="@("examples/schemagen/refiner")"
+									 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemagen/refiner" ))"/>
+			</RadzenPanelMenuItem>
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Expanded="true">
 			<RadzenPanelMenuItem Text="JsonSchema.Net" Value="@("release-notes/json-schema")"

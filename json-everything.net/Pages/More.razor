@@ -16,11 +16,15 @@
 		<RadzenPanelMenuItem Text="Yaml2JsonNode" Value="@("yaml")"
 		                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("yaml"))"/>
 		</RadzenPanelMenuItem>
+		<RadzenPanelMenuItem Text="Examples" Icon="science" Expanded="true">
+			<RadzenPanelMenuItem Text="Serializing Enums" Value="@("examples/more/enums")"
+								 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/more/enums"))" />
+			</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Expanded="true">
-		<RadzenPanelMenuItem Text="Json.More.Net" Value="@("release-notes/json-more")"
-		                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-more"))" />
-		<RadzenPanelMenuItem Text="Yaml2JsonNode" Value="@("release-notes/yaml")"
-		                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/yaml"))" />
+			<RadzenPanelMenuItem Text="Json.More.Net" Value="@("release-notes/json-more")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/json-more"))" />
+			<RadzenPanelMenuItem Text="Yaml2JsonNode" Value="@("release-notes/yaml")"
+			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("release-notes/yaml"))" />
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="API Reference" Icon="format_list_numbered" Expanded="true">
 			<ApiIndex AssemblyContaining="@typeof(JsonElementEqualityComparer)"/>

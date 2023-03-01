@@ -4,7 +4,7 @@ These examples will show how to extend JSON Schema validation by creating a new 
 
 ***NOTE** These examples are actually defined in one of the library's unit tests.*
 
-For a more detailed explanation about the concepts behind vocabularies, please see the [Custom Keywords page](../usage/schema-keywords.md).
+For a more detailed explanation about the concepts behind vocabularies, please see the Vocabularies page.
 
 ## Defining a Keyword
 
@@ -16,6 +16,10 @@ We want to define a new `maxDate` keyword that allows a schema to enforce a maxi
 [SchemaKeyword(Name)]
 // Naturally, we want to be able to deserialize it.
 [JsonConverter(typeof(MaxDateJsonConverter))]
+// We need to declare which vocabulary this keyword belongs to.
+[Vocabulary("http://mydates.com/vocabulary")]
+// Specify which versions the keyword is compatible with.
+[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
 {
     // Define the keyword in one place.
@@ -30,20 +34,15 @@ class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
     }
 
     // Implements IJsonSchemaKeyword
-    public void Validate(ValidationContext context)
+    public void Evaluate(EvaluationContext context)
     {
-        // The value will come from the instance as a string,
-        var dateString = context.LocalInstance.GetString();
-        // but we want a date.
+        var dateString = context.LocalInstance!.GetValue<string>();
         var date = DateTime.Parse(dateString);
 
-        // Check if the date is less than or equal to what we expect.
-        if (date <= Date)
-            // if so, pass validation.
-            context.Pass();
-        else
-            // If not, fail validation and an error message.
-            context.Fail($"{date:O} must be on or before {Date:O}")
+        if (date > Date)
+            context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
+                ("provided", date),
+                ("value", Date));
     }
 
     // Equality stuff
@@ -107,6 +106,8 @@ SchemaKeywordRegistry.Register<MaxDateKeyword>();
 
 ***NOTE** If you're building a dynamic system where you don't always want the keyword supported, it can be removed using the `SchemaKeywordRegistry.Unregister<T>()` static method.*
 
+That's technically all you need to do to support a custom keyword.  However, going forward for JSON Schema, custom keywords should be defined in a custom vocabulary.
+
 ## Defining a Vocabulary
 
 Vocabularies are used within JSON Schema to ensure that the validator you're using supports your new keyword.  Because we have already created the keyword and registered it, we know it is supported.
@@ -116,7 +117,7 @@ However, we might not be implementing _our_ vocabulary.  This keyword is likely 
 In accordance with the specification, JsonSchema<nsp>.Net will refuse to process any schema whose meta-schema declares a vocabulary it doesn't know about.  Because of this, it won't process the third-party schema unless we define the vocabulary on our end.
 
 ```c#
-static class ThirdPartyVocabularies
+static class MyCustomVocabularies
 {
     // Define the vocabulary and list the keyword types it defines.
     public static readonly Vocabulary DatesVocabulary =
@@ -127,9 +128,9 @@ static class ThirdPartyVocabularies
     public static readonly JsonSchema DatesMetaSchema =
         new JsonSchemaBuilder()
             .Id("http://mydates.com/schema")
-            .Schema(MetaSchemas.Draft201909Id)
+            .Schema(MetaSchemas.Draft202012Id)
             .Vocabulary(
-                (Vocabularies.Core201909Id, true),
+                (Vocabularies.Core202012Id, true),
                 ("http://mydates.com/vocabulary", true)
             )
             .Properties(
@@ -147,3 +148,5 @@ Then they need to be registered.  This is done on the schema validation options.
 options.SchemaRegistry.Register(new Uri("http://mydates.com/schema"), DatesMetaSchema);
 options.VocabularyRegistry.Register(DatesVocabulary);
 ```
+
+And that's it.  The vocabulary and keyword are ready for use.
