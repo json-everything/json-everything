@@ -45,8 +45,10 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// This property stores full JSON documents retrievable by URI.  If the desired
 	/// value exists as a sub-value of a document, a JSON Pointer URI fragment identifier
 	/// should be used in the `data` keyword do identify the exact value location.
+	///
+	/// This registry will be checked before attempting to fetch the data.
 	/// </remarks>
-	public static ConcurrentDictionary<Uri, JsonValue?> ExternalDataRegistry { get; } = new();
+	public static ConcurrentDictionary<Uri, JsonNode> ExternalDataRegistry { get; } = new();
 
 
 	/// <summary>
