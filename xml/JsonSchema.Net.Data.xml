@@ -24,14 +24,16 @@
             </remarks>
         </member>
         <member name="P:Json.Schema.Data.DataKeyword.ExternalDataRegistry">
-            <summary>
-            Provides a registry for known external data sources.
-            </summary>
-            <remarks>
-            This property stores full JSON documents retrievable by URI.  If the desired
-            value exists as a sub-value of a document, a JSON Pointer URI fragment identifier
-            should be used in the `data` keyword do identify the exact value location.
-            </remarks>
+             <summary>
+             Provides a registry for known external data sources.
+             </summary>
+             <remarks>
+             This property stores full JSON documents retrievable by URI.  If the desired
+             value exists as a sub-value of a document, a JSON Pointer URI fragment identifier
+             should be used in the `data` keyword do identify the exact value location.
+            
+             This registry will be checked before attempting to fetch the data.
+             </remarks>
         </member>
         <member name="P:Json.Schema.Data.DataKeyword.References">
             <summary>
