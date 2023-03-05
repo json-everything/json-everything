@@ -14,6 +14,7 @@ namespace JsonEverythingNet.Services
 		{
 			await Task.WhenAll(
 				RegisterAnchors(client, "json-more"),
+				RegisterAnchors(client, "examples/more/enums"),
 
 				RegisterAnchors(client, "json-patch"),
 
@@ -23,16 +24,22 @@ namespace JsonEverythingNet.Services
 
 				RegisterAnchors(client, "json-logic"),
 
-				RegisterAnchors(client, "playground/schema"),
 				RegisterAnchors(client, "schema-basics"),
-				RegisterAnchors(client, "schema-datagen"),
-				RegisterAnchors(client, "schema-generation"),
-				RegisterAnchors(client, "schema-vocabs"),
-				RegisterAnchors(client, "vocabs-data-2022"),
-				RegisterAnchors(client, "vocabs-unique-keys"),
 				RegisterAnchors(client, "examples/schema/external-schemas"),
 				RegisterAnchors(client, "examples/schema/managing-options"),
-				RegisterAnchors(client, "examples/schema/version-selection")
+				RegisterAnchors(client, "examples/schema/version-selection"),
+				RegisterAnchors(client, "schema-datagen"),
+				RegisterAnchors(client, "schema-generation"),
+				RegisterAnchors(client, "examples/schemagen/attribute"),
+				RegisterAnchors(client, "examples/schemagen/generator"),
+				RegisterAnchors(client, "examples/schemagen/intent"),
+				RegisterAnchors(client, "examples/schemagen/refiner"),
+				RegisterAnchors(client, "schema-vocabs"),
+				RegisterAnchors(client, "vocabs-data-2022"),
+				RegisterAnchors(client, "examples/schemadata/data-ref"),
+				RegisterAnchors(client, "examples/schemadata/external-ref"),
+				//RegisterAnchors(client, "examples/schemadata/schema-ref"),
+				RegisterAnchors(client, "vocabs-unique-keys")
 			);
 		}
 

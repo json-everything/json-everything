@@ -1,6 +1,8 @@
+#  Overview {#patch}
+
 [JSON Patch](https://tools.ietf.org/html/rfc6902) is a language for modifying JSON documents.  Like JSON Schema, it is also expressed in JSON.
 
-## Syntax
+## Syntax {#patch-syntax}
 
 A patch consists of an array containing one or more operations.  Each operation may also contain one or more arguments.
 
@@ -20,7 +22,7 @@ The arguments vary among them, though all must contain at least an `op` and a `p
 - `from` specifies a source location within the JSON document from which to pull a value.
 - `value` specifies an explicit value.
 
-## Applying Patches
+## Applying Patches {#patch-apply}
 
 In JsonPatch<nsp>.Net, a `JsonPatch` object can be deserialized directly from the JSON document string.
 
@@ -44,7 +46,7 @@ var myPatchedObject = patch.Apply(myObject);
 var myDifferentTypeObject = patch.Apply<MyObject, MyDifferentObject>(myObject);
 ```
 
-## Inline Patching
+## Inline Patching {#patch-inline}
 
 The `JsonPatch` class can also be built in code using by creating a series of `PatchOperation`s through its static constructor methods.  There's one for each operation.
 
@@ -55,7 +57,7 @@ var patch = new JsonPatch(PatchOperation.Add("/foo/bar", "baz"),
 
 That's it!
 
-## Generating Patches
+## Generating Patches {#patch-generation}
 
 If you know what your start and end states are, but you want to find the differences, you can do that by generating a patch.
 

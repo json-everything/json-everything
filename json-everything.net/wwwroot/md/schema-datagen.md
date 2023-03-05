@@ -1,4 +1,4 @@
-# Generation Sample JSON Data from a Schema {#schema-datagen}
+# Generating Sample JSON Data from a Schema {#schema-datagen}
 
 JsonSchema.Net.DataGeneration is a tool that can create JSON data instances using a JSON schema as a framework.
 
