@@ -1,12 +1,12 @@
-# A Vocabulary for Identifying Uniqueness of Array Items
+# A Vocabulary for Identifying Uniqueness of Array Items {#schema-uniquekeys}
 
-## 1. Purpose
+## 1. Purpose {#schema-uniquekeys-purpose}
 
 This document describes a vocabulary defining keywords that can be used to validate that arrary instances contain unique values as determined by one or more given paths within each item.
 
 The intent for these keywords is to cover the use cases discussed in the JSON Schema vocabularies GitHub issue [#22](https://github.com/json-schema-org/json-schema-vocabularies/issues/22).
 
-## 2. Declarations
+## 2. Declarations {#schema-uniquekeys-declarations}
 
 The ID for this vocabulary is `https://gregsdennis.github.io/json-everything/vocabs-unique-keys` (the URI to this document).
 
@@ -14,7 +14,7 @@ A draft 2020-12 meta-schema which includes this vocabulary has been defined for 
 
 ***EDITOR'S COMMENT** Since this page has been moved to `json-everything.net`, these URIs may be updated soon to reflect the new domain.  I'm not sure how to go about versioning them yet.  While I figure that out, the meta-schema should still be available at this address.  The IDs remain the same.*
 
-## 3. The `uniqueKeys` Keyword
+## 3. The `uniqueKeys` Keyword {#schema-uniquekeys-keyword}
 
 The value of `uniqueKeys` must be an array of JSON Pointers as defined by [RFC 6901](https://tools.ietf.org/html/rfc6901).  At least one JSON Pointer MUST be specified.
 
@@ -22,9 +22,9 @@ These JSON Pointers, when resolved against each item, define a set of values for
 
 Validation for this keyword passes if the value sets for all of the items are distinct, that is, no two sets contain the same ordered collection.
 
-## 4. Examples
+## 4. Examples {#schema-uniquekeys-examples}
 
-### 4.1. Single Key
+### 4.1. Single Key {#schema-uniquekeys-single}
 
 The following defines a schema to validate an array with items that have unique values at `/foo`.
 
@@ -83,7 +83,7 @@ This value fails validation because the value `8` is repeated in two of the item
 ]
 ```
 
-### 4.2. Multiple Keys
+### 4.2. Multiple Keys {#schema-uniquekeys-multiple}
 
 The following defines a schema to validate an array with items that have unique _combinations_ of values at `/foo` and `/bar`.
 

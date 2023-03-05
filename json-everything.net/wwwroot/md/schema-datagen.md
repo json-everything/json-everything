@@ -1,4 +1,4 @@
-# Generation Sample JSON Data from a Schema
+# Generation Sample JSON Data from a Schema {#schema-datagen}
 
 JsonSchema.Net.DataGeneration is a tool that can create JSON data instances using a JSON schema as a framework.
 
@@ -23,7 +23,7 @@ it can generate a JSON document like
 
 Under the covers, the library uses the fabulous [Bogus](https://github.com/bchavez/Bogus) library, which is commonly used to generate random test data, and a few other tricks.
 
-## Capabilities
+## Capabilities {#schema-datagen-capabilities}
 
 This library is quite powerful.  It supports most JSON Schema keywords, including `if`/`then`/`else` and aggregation keywords (`oneOf`, `allOf`, etc.).
 
@@ -39,7 +39,7 @@ It currently does not support:
 
 Everything else _should_ be mostly supported.  Feel free to [open an issue](https://github.com/gregsdennis/json-everything/issues/new/choose) if you find something isn't working as you expect.
 
-### Strings & `format`
+### Strings & `format` {#schema-datagen-strings}
 
 All of the formats listed in the draft 2020-12 specification are supported, at least to the extent that they can be validated by JsonSchema.Net.
 
@@ -47,7 +47,7 @@ If a format is specified, it will be used.
 
 If a format is not specified, Bogus's Lorem Ipsum generator is used to create some nice (but oddly readable) garbage text.
 
-### Numerics
+### Numerics {#schema-datagen-numbers}
 
 Integer and number generation each have custom algorithms that produce values that align with minimums, maximums, multiples, and even anti-multiples (numbers that should _not_ be divisors).
 
@@ -81,7 +81,7 @@ the only valid integers are
 
 The library will generate such values with ease.
 
-### Arrays & Objects
+### Arrays & Objects {#schema-datagen-structured}
 
 Care needs to be taken when specifying arrays that can have additional items or objects that can have additional properties.  This library will unsubtly create moderatly deep trees of data if allowed.
 
@@ -100,7 +100,7 @@ To combat this, there are some built-in limitations:
 - Item and property counts default to 0-10.
 - Arrays and objects have a lower chance of generating than the simpler types (null, integer, number, string).
 
-# Generating Data
+# Generating Data {#schema-datagen-generation}
 
 All you need to generate data is a schema object.  This can be built inline or read in from an external source.  The instructions for that are on the "Overview" tab.
 
@@ -119,7 +119,7 @@ The result object has several properties:
 - `ErrorMessage` holds any error message, if unsuccessful
 - `InnerResults` holds result objects from nested generations.  This can be useful for debugging.
 
-# Summary
+# Summary {#schema-datagen-summary}
 
 So, uh, yeah.  I guess that's it really.
 

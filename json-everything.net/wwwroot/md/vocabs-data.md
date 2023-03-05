@@ -1,6 +1,6 @@
-# A Vocabulary for Accessing Data Stored in JSON
+# A Vocabulary for Accessing Data Stored in JSON {#schema-data}
 
-## 1. Purpose
+## 1. Purpose {#schema-data-2022-purpose}
 
 This document describes a vocabulary defining keywords that can be used to reference values stored in
 
@@ -12,7 +12,7 @@ and use the dereferenced values as input for other keywords.
 
 The intent for this keyword is to cover the use cases discussed across several issues in the JSON Schema specification GitHub repositories.  (A quick search for `"$data"` can readily summon these issues.)
 
-## 2. Declarations
+## 2. Declarations {#schema-data-2022-declarations}
 
 The ID for this vocabulary is `https://gregsdennis.github.io/json-everything/vocabs-data` (the URI to this document).
 
@@ -20,9 +20,9 @@ A draft 2020-12 meta-schema which includes this vocabulary has been defined for 
 
 ***EDITOR'S COMMENT** Since this page has been moved to `json-everything.net`, these URIs may be updated soon to reflect the new domain.  I'm not sure how to go about versioning them yet.  While I figure that out, the meta-schema should still be available at this address.  The IDs remain the same.*
 
-## 3. The `data` Keyword
+## 3. The `data` Keyword {#schema-data-2022-keyword}
 
-### 3.1 Syntax and Semantics
+### 3.1 Syntax and Semantics {#schema-data-semantics}
 
 The value of `data` must be an object.  The keys of the object correspond to valid JSON Schema keywords, and the values MUST be valid URI references.
 
@@ -30,7 +30,7 @@ The keys MUST be interpreted and evaluated as if they were keywords specified in
 
 The set of keywords in the schema or subschema containing `data` SHOULD be distinct from the set of keys defined within `data`.  Behavior in the event of an overlap is not defined.
 
-### 3.2 Contextual Behavior
+### 3.2 Contextual Behavior {#schema-data-behavior}
 
 `data` MUST be processed contextually in accordance with the draft of the schema in which it is used.  For example, if `data` is used in a schema that declares draft 2019-09, then
 
@@ -39,7 +39,7 @@ The set of keywords in the schema or subschema containing `data` SHOULD be disti
 
 If a key is not a recognized keyword in the schema's draft (e.g. `$dynamicAnchor` in a draft 2019-09 schema), then this key is ignored just as it would be ignored if it were in the schema or subschema containing `data`.
 
-### 3.3 URI Resolution
+### 3.3 URI Resolution {#schema-data-resolution}
 
 The instance being validated serves as the initial document for URI resolution.  This case is recognized by a fragment-only URI.  The fragment MUST be a valid JSON Pointer as defined by [RFC 6901](https://tools.ietf.org/html/rfc6901).
 
@@ -51,7 +51,7 @@ If a URI reference cannot be resolved, validation MUST fail; otherwise the full 
 
 If the resolved value is not valid for the associated keyword, validation MUST fail.
 
-### 3.4 Errors
+### 3.4 Errors {#schema-data-errors}
 
 The output formatting specified by the JSON Schema Core specification can only indicate that something failed at the `data` node, but there is no provision for providing further detail.
 
@@ -64,7 +64,7 @@ To make debugging `data` simpler, implementations SHOULD provide an error messag
 
 If both of these succeed, the validation output of the resulting subschema is reported into the overall schema output as if the subschema were actually a child of the `data` keyword.
 
-## 4. A Short Example
+## 4. A Short Example {#schema-data-example}
 
 The following defines a schema to validate an object instance with a `foo` property that must contain an integer value less than or equal to the value in the instance's `minValue` property.
 

@@ -1,4 +1,4 @@
-# Generating JSON Schema from .Net Types
+# Generating JSON Schema from .Net Types {#schema-schemagen}
 
 JsonSchema.Net.Generation is an extension package to JsonSchema.Net that provides JSON Schema generation from .Net types.
 
@@ -10,7 +10,7 @@ var schema = schemaBuilder.FromType<MyType>().Build();
 
 Done.
 
-## IMPORTANT
+## IMPORTANT {#schema-schemagen-disclaimer}
 
 Ideally, this functionality should be used to create a starting point in authoring a schema.  The schemas output by this library should be reviewed by actual people prior to being put into a production system.
 
@@ -18,7 +18,7 @@ Ideally, this functionality should be used to create a starting point in authori
 
 The suggested approach is to have a dedicated schema generation data model, separate from your domain model and DTOs, from which schemas are generated.  Generation can be done as an independent developer activity or as part of a CI/CD build chain.  This helps separate serialization and validation concerns and prevent overburdening your domain/DTO models with a bunch of attributes.
 
-## Making better schemas
+## Making better schemas {#schema-schemagen-best-practices}
 
 The above will give you a basic schema that will include the `type` keyword, and maybe a listing of the properties.  But many times you have more detailed requirements of the data you're receiving.  For example,
 
@@ -122,7 +122,7 @@ For POCOs, read-only properties and fields will be marked with a `readOnly` keyw
 
 Lastly, property names will either be listed as declared in code (default) or sorted by name.  This is controlled via the `SchemaGenerationConfiguration.PropertyOrder` property.
 
-### Nullability
+### Nullability {#schema-schemagen-nullability}
 
 There is a discrepancy between how .Net does validation and how JSON Schema does validation that centers primarily around nullable types and the `[Required]` attribute.
 
@@ -143,7 +143,7 @@ There are four options:
 
 ***BONUS NOTE** The library makes a distinction between nullable value types and reference types because value types must be explicitly nullable.  This differs from reference types which are implicitly nullable, and there's not a way (via the type itself) to make a reference type non-nullable.*
 
-### Property naming
+### Property naming {#schema-schemagen-property-names}
 
 In addition to the `[JsonPropertyName]` attribute, the configuration exposes a `PropertyNamingMethod` that allows you to define a custom method for altering property names from your code into the schema.  The `PropertyNamingMethods` static class defines a few commonly-used conventions:
 
@@ -158,14 +158,14 @@ Just set this property and the system will adjust property names accordingly.
 
 Note that the `[JsonPropertyName]` attribute takes precedence, so you can still use this to get custom naming when you've configured a method.
 
-### Additional built-in support
+### Additional built-in support {#schema-schemagen-built-in}
 
 There are a couple advanced features that bear mentioning.
 
 1. The system does have some loop detection logic in order to support self-referencing or loop-referencing types.
 1. The system will collect common subschemas into a `$defs` keyword at the root.  Identification of a subschema is by its type and the collection of attributes it is processed with.  The locations with these common subschemas will be replaced by a `$ref` that points to the appropriate entry in `$defs`.
 
-## Extending support
+## Extending support {#schema-schemagen-extension}
 
 The above will work most of the time, but occasionally you may find that you need some additional support.  Happily, the library is configured for you to provide that support yourself.
 
@@ -178,7 +178,7 @@ There are four areas that can be utilized in order to get the results you're aft
 
 These do not _all_ need to be implemented.
 
-### Generators
+### Generators {#schema-schemagen-generators}
 
 These are the first phase of generation.  When encountering a type, the system will find the first registered generator that can handle that type.  The generator then creates keyword intents (see "Intents" below).  The supported types list above is merely a list of the built-in generators.
 
@@ -207,7 +207,7 @@ Very simple.  It says that it handles booleans and then it does.
 
 To explain _how_ it does, we need to discuss intents.
 
-### The Context Object
+### The Context Object {#schema-schemagen-context}
 
 The context holds all of the data you need to determine which intents need to be applied.  It is defined by a base class, `SchemaGeneratorContextBase`, and two derivations, `TypeGenerationContext` and `MemberGenerationContext`.
 
@@ -227,7 +227,7 @@ The data exposed by contexts are:
 - `BasedOn` - a context on which this context builds
 - `Attributes` - additional attributes defined on the member
 
-### Intents
+### Intents {#schema-schemagen-intents}
 
 The `JsonSchema` type and its keywords are immutable.  So even if we _could_ get to the keyword list inside the `JsonSchemaBuilder`, we wouldn't be able to edit the keywords to perform optimizations.
 
@@ -287,7 +287,7 @@ As of v3, `IContextContainer` requires only a single method: `Replace()`.
 
 Generally intents for applicator keywords, which are keywords that have subschemas (`anyOf`, `allOf`, etc.), will need to implement this second interface.  In most cases, you can just copy this code.
 
-### Attributes
+### Attributes {#schema-schemagen-attributes}
 
 The other source for intents are attributes.  These are handled once the generator has completed adding the intents it needs to.
 
@@ -323,13 +323,13 @@ The `AddConstraints()` method works exactly the same as in the generator class. 
 
 The occasion may arise where you want to handle an attribute that's defined in some other assembly, and you can't make it implement `IAttributeHandler<T>`.  For these cases, just implement the handler class, and then add it using one of the `AttributeHandler.AddHandler()` static methods.  A handler can be removed using the `AttributeHandler.RemoveHandler<T>()` static method, passing the handler type for `T`.
 
-> #### BEWARE
+> #### BEWARE {#schema-schemagen-attributes-warning}
 > 
 > Some intents (e.g. `AnyOfIntent`) take `IEnumerable<ISchemaKeywordIntent[]>`.  Note that this is a collection of intent arrays.  In these cases, each array represents a separate subschema.
 > 
 > The confusing bit is that these also have a `params` overload that appears to just take `ISchemaKeywordIntent[]`.  However, it works the same as the non-`params` overload in that each array represents a subschema.
 
-### Refiners
+### Refiners {#schema-schemagen-refiners}
 
 Sometimes you may need to make minor adjustments to the generated schemas dynamically.  For this you'll need to create an implementation of `ISchemaRefiner`.
 
@@ -342,6 +342,6 @@ To implement a refiner, two methods will be needed:
 
 Remember that a this point, you're stil working with intents.  You can add new ones as well as modify or remove existing ones.  You really have complete freedom within a refiner.
 
-## That's it
+## That's it {#schema-schemagen-conclusion}
 
 That should get you generating schemas for all of your types.  If you come up with ideas or implement your own extensions and think they'd be handy if they were built in, feel free to open up an issue or a pull request.

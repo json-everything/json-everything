@@ -1,4 +1,4 @@
-# OpenAPI v3.1 Vocabulary
+# OpenAPI v3.1 Vocabulary {#schema-openapi}
 
 This library adds support for the vocabularies, meta-schemas, and keywords defined by the OpenAPI v3.1 specification.
 
