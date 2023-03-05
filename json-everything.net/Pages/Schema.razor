@@ -61,6 +61,14 @@
 				<RadzenPanelMenuItem Text="Refiners" Value="@("examples/schemagen/refiner")"
 									 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemagen/refiner" ))"/>
 			</RadzenPanelMenuItem>
+			<RadzenPanelMenuItem Text="Data Keyword" Expanded="false">
+				<RadzenPanelMenuItem Text="Instance References" Value="@("examples/schemadata/data-ref")"
+									 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemadata/data-ref"))"/>
+@*				<RadzenPanelMenuItem Text="Schema References" Value="@("examples/schemadata/schema-ref")"
+									 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemadata/schema-ref"))" />
+*@				<RadzenPanelMenuItem Text="Internal References" Value="@("examples/schemadata/external-ref")"
+				                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("examples/schemadata/external-ref"))"/>
+			</RadzenPanelMenuItem>
 		</RadzenPanelMenuItem>
 		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Expanded="true">
 			<RadzenPanelMenuItem Text="JsonSchema.Net" Value="@("release-notes/json-schema")"

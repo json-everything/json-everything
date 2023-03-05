@@ -1,8 +1,10 @@
-# 3.1.0 (beta 2) ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#389](https://github.com/gregsdennis/json-everything/pull/389))
+# 3.1.0 (beta 3) ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#389](https://github.com/gregsdennis/json-everything/pull/389) / [#392](https://github.com/gregsdennis/json-everything/pull/392))
 
 Updated to use JsonSchema.Net v4.
 
 Fixed deserialization bug.
+
+`DataKeyword.ExternalDataRegistry` is actually used.  Previously, checking this registry was skipped (an oversight) before moving on to fetching the data.  Also fixed the type of the property to store `JsonNode` instead of `JsonValue` to support the full range of JSON.
 
 Added `JsonSchemaExtensions.GetData()` to enable easy access to `data` keyword.
 
