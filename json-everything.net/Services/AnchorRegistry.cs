@@ -15,32 +15,47 @@ namespace JsonEverythingNet.Services
 			await Task.WhenAll(
 				RegisterAnchors(client, "json-more"),
 				RegisterAnchors(client, "examples/more/enums"),
+				RegisterAnchors(client, "release-notes/json-more"),
 
 				RegisterAnchors(client, "json-patch"),
+				RegisterAnchors(client, "release-notes/json-patch"),
 
 				RegisterAnchors(client, "json-path"),
+				RegisterAnchors(client, "release-notes/json-path"),
 
 				RegisterAnchors(client, "json-pointer"),
+				RegisterAnchors(client, "release-notes/json-pointer"),
 
 				RegisterAnchors(client, "json-logic"),
 				RegisterAnchors(client, "release-notes/json-logic"),
 
 				RegisterAnchors(client, "schema-basics"),
+				RegisterAnchors(client, "schema-vocabs"),
 				RegisterAnchors(client, "examples/schema/external-schemas"),
 				RegisterAnchors(client, "examples/schema/managing-options"),
 				RegisterAnchors(client, "examples/schema/version-selection"),
+				RegisterAnchors(client, "release-notes/json-schema"),
+
 				RegisterAnchors(client, "schema-datagen"),
+				RegisterAnchors(client, "release-notes/json-schema-datageneration"),
+
 				RegisterAnchors(client, "schema-generation"),
 				RegisterAnchors(client, "examples/schemagen/attribute"),
 				RegisterAnchors(client, "examples/schemagen/generator"),
 				RegisterAnchors(client, "examples/schemagen/intent"),
 				RegisterAnchors(client, "examples/schemagen/refiner"),
-				RegisterAnchors(client, "schema-vocabs"),
+				RegisterAnchors(client, "release-notes/json-schema-generation"),
+
 				RegisterAnchors(client, "vocabs-data-2022"),
 				RegisterAnchors(client, "examples/schemadata/data-ref"),
 				RegisterAnchors(client, "examples/schemadata/external-ref"),
 				//RegisterAnchors(client, "examples/schemadata/schema-ref"),
-				RegisterAnchors(client, "vocabs-unique-keys")
+				RegisterAnchors(client, "release-notes/json-schema-data"),
+
+				RegisterAnchors(client, "vocabs-unique-keys"),
+				RegisterAnchors(client, "release-notes/json-schema-unique-keys"),
+
+				RegisterAnchors(client, "release-notes/json-schema-openapi")
 			);
 		}
 
