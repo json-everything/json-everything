@@ -1,31 +1,31 @@
-# [3.0.3](https://github.com/gregsdennis/json-everything/pull/327)
+# [3.0.3](https://github.com/gregsdennis/json-everything/pull/327) {#release-schemagen-3.0.3}
 
 [#325](https://github.com/gregsdennis/json-everything/issues/325) - [@jnystad](https://github.com/jnystad) found an issue with `[Nullable]` where it was propagating to other properties of the same type and suggested a fix.
 
-# [3.0.2](https://github.com/gregsdennis/json-everything/pull/301)
+# [3.0.2](https://github.com/gregsdennis/json-everything/pull/301) {#release-schemagen-3.0.2}
 
 [#296](https://github.com/gregsdennis/json-everything/pull/296) - Updated handling logic for `[JsonIgnore]` to consider the attribute's `Condition` property.
 
-# 3.0.1 (no PR)
+# 3.0.1 (no PR) {#release-schemagen-3.0.1}
 
 [#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
 
-# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280)
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/280) {#release-schemagen-3.0.0}
 
 Updated all functionality to use `JsonNode` instead of `JsonElement` in line with JsonSchema.Net v3.
 
-## Breaking Changes
+## Breaking Changes {#release-schemagen-3.0.0-breaks}
 
 _`JsonElement` -> `JsonNode` type exchange changes not listed._
 
 - `IContextContainer.GetContexts()` and implementations removed as it was obsolete
 - `TypeExtensions.IsInteger()`, `.IsFloatingPoint()`, and `.IsNumber()` moved to Json.More.Net
 
-# [2.1.1](https://github.com/gregsdennis/json-everything/pull/275)
+# [2.1.1](https://github.com/gregsdennis/json-everything/pull/275) {#release-schemagen-2.1.1}
 
 [#274](https://github.com/gregsdennis/json-everything/issues/274) - Added support for `JsonObject`, `JsonArray`, and `JsonValue`.
 
-# [2.2.0](https://github.com/gregsdennis/json-everything/pull/273)
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/273) {#release-schemagen-2.2.0}
 
 [#272](https://github.com/gregsdennis/json-everything/issues/272) - Miscellaneous attributes can cause incorrect optimizations.
 
@@ -33,7 +33,7 @@ Added `SchemaGeneratorConfiguration.Optimize` to control whether common subschem
 
 Exposed `SchemaGeneratorConfiguration.Current` static property for read use by custom generators, etc.
 
-# [2.1.0](https://github.com/gregsdennis/json-everything/pull/267)
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/267) {#release-schemagen-2.1.0}
 
 [#264](https://github.com/gregsdennis/json-everything/issues/264) - Added support for `additionalProperties` and `additionalItems`.
 
@@ -41,19 +41,19 @@ Improved support for array types that inherit `IEnumerable<T>` but aren't generi
 
 Also updated return value of `SchemaGenerationContextBase.Apply()` from `JsonSchemaBuilder` to `JsonSchema`.  This is pretty hidden, so it _shouldn't_ break anyone, thus not strictly adhering to semver for this change.  Calling it out just in case.
 
-# 2.0.1 (No PR)
+# 2.0.1 (No PR) {#release-schemagen-2.0.1}
 
 Exposed `SchemaGenerationContextBase.Hash` property.  Required to implement `IContextContainer.Replace()`.
 
 Marked `IContextContainer.GetContexts()` obsolete as it's not used.
 
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/261)
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/261) {#release-schemagen-2.0.0}
 
 [#202](https://github.com/gregsdennis/json-everything/issues/202) - Added support for read-only & write-only keywords for properties that only have getters or setters.  The attributes override this detection behavior.
 
 [#256](https://github.com/gregsdennis/json-everything/pull/256) - Added support for type-level attributes.
 
-## Breaking changes
+## Breaking changes {#release-schemagen-2.0.0-breaks}
 
 - Intents no longer require equality methods (`Equals()` & `GetHashCode()`). 🎉
 - `SchemaGeneratorContext` replaced by `SchemaGenerationContextBase`, `TypeGenerationContext`, and `MemberGenerationContext`.
@@ -64,7 +64,7 @@ Marked `IContextContainer.GetContexts()` obsolete as it's not used.
 - `IAttributeHandler` is now just a placeholder.  Attribute handlers will now need to implement `IAttributeHandler<T>` where `T` is the attribute type.
 - `IAttributeHandler.AddConstraints()` now has an `attribute` parameter.
 
-## Other fixes & enhancements
+## Other fixes & enhancements {#release-schemagen-2.0.0-other}
 
 [#206](https://github.com/gregsdennis/json-everything/issues/206) - Some XML comments were inaccurate or had copy/paste errors.
 
@@ -74,33 +74,33 @@ Most attributes can now be placed on:
 - properties & fields
 - all types (class, struct, enum, interface)
 
-# [1.8.3](https://github.com/gregsdennis/json-everything/pull/200)
+# [1.8.3](https://github.com/gregsdennis/json-everything/pull/200) {#release-schemagen-1.8.3}
 
 Updated JsonSchema.Net reference to v2.0.0.  Please see [release notes](./json-schema.md) for that library as it contains breaking changes.
 
-# [1.8.2](https://github.com/gregsdennis/json-everything/pull/182)
+# [1.8.2](https://github.com/gregsdennis/json-everything/pull/182) {#release-schemagen-1.8.2}
 
 Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.
 
-# [1.8.1](https://github.com/gregsdennis/json-everything/pull/176)
+# [1.8.1](https://github.com/gregsdennis/json-everything/pull/176) {#release-schemagen-1.8.1}
 
 [#174](https://github.com/gregsdennis/json-everything/issues/174) - Switch top-level Humanizer package for more essential Humanizer.Core.  Supports English.  If other languages are required, the respective Humanizer package will need to be added to your application.
 
-# [1.8.0](https://github.com/gregsdennis/json-everything/pull/144)
+# [1.8.0](https://github.com/gregsdennis/json-everything/pull/144) {#release-schemagen-1.8.0}
 
 [#141](https://github.com/gregsdennis/json-everything/issues/141) - Added `[Title()]` and `[Description()]` attributes.
 
 Fixed `[Minimum()]`, `[ExclusiveMinimum()]`, `[Maximum()]`, and `[ExclusiveMaximum()]` attributes to take `double` instead of `uint` which was a copy/paste error.
 
-# [1.7.1](https://github.com/gregsdennis/json-everything/pull/137)
+# [1.7.1](https://github.com/gregsdennis/json-everything/pull/137) {#release-schemagen-1.7.1}
 
 [#136](https://github.com/gregsdennis/json-everything/pull/136) - Better sorting for properties, taking into account inheritance hierarchy and putting inherited properties first.  Thanks to [@wazzamatazz](https://github.com/wazzamatazz) for working this up.
 
-# [1.7.0](https://github.com/gregsdennis/json-everything/pull/135)
+# [1.7.0](https://github.com/gregsdennis/json-everything/pull/135) {#release-schemagen-1.7.0}
 
 [#134](https://github.com/gregsdennis/json-everything/issues/134) - Added custom property naming support.
 
-# [1.6.0](https://github.com/gregsdennis/json-everything/pull/130)
+# [1.6.0](https://github.com/gregsdennis/json-everything/pull/130) {#release-schemagen-1.6.0}
 
 [#128](https://github.com/gregsdennis/json-everything/pull/128) - Added support for nullability.  Special thanks to [@JMPSequeira](https://github.com/JMPSequeira) who proposed the feature and worked through multiple designs ([#124](https://github.com/gregsdennis/json-everything/pull/124) and [#127](https://github.com/gregsdennis/json-everything/pull/127)) that lead to the final solution and for adding all the tests needed to ensure proper function.
 - Added `NullableAttribute`.
@@ -111,62 +111,62 @@ Fixed `[Minimum()]`, `[ExclusiveMinimum()]`, `[Maximum()]`, and `[ExclusiveMaxim
 
 Also updated intent classes to be mutable.  Should have been this way to begin with, but was probably an oversight.
 
-# [1.5.0](https://github.com/gregsdennis/json-everything/pull/115)
+# [1.5.0](https://github.com/gregsdennis/json-everything/pull/115) {#release-schemagen-1.5.0}
 
 [#114](https://github.com/gregsdennis/json-everything/issues/114) - `DateTime` properties not generating properly.  Also fixes `Guid`, `JsonPointer`, and  `Uri` properties.
 
 Added `PropertyNamesIntent`.
 
-# [1.4.0](https://github.com/gregsdennis/json-everything/pull/113)
+# [1.4.0](https://github.com/gregsdennis/json-everything/pull/113) {#release-schemagen-1.4.0}
 
 [#109](https://github.com/gregsdennis/json-everything/issues/109) - Add properties in the order they're declared in code.  Credit to [@wazzamatazz](https://github.com/jaysvoboda)
 
 [#112](https://github.com/gregsdennis/json-everything/issues/112) - Add properties in the order they're declared in code.
 
-# [1.3.2](https://github.com/gregsdennis/json-everything/pull/105)
+# [1.3.2](https://github.com/gregsdennis/json-everything/pull/105) {#release-schemagen-1.3.2}
 
 Fixes property name callout in `required` keyword.  Credit to [@jaysvoboda](https://github.com/jaysvoboda) for finding and fixing this.
 
-# [1.3.1](https://github.com/gregsdennis/json-everything/pull/101)
+# [1.3.1](https://github.com/gregsdennis/json-everything/pull/101) {#release-schemagen-1.3.1}
 
 [#100](https://github.com/gregsdennis/json-everything/issues/100) - Don't optimize type-only subschemas.
 
-# [1.3.0](https://github.com/gregsdennis/json-everything/pull/98)
+# [1.3.0](https://github.com/gregsdennis/json-everything/pull/98) {#release-schemagen-1.3.0}
 
 [#96](https://github.com/gregsdennis/json-everything/issues/96) - Added `ISchemaRefiner` to the schema generation process to allow users to inject custom logic after intents are created.
 
 [#97](https://github.com/gregsdennis/json-everything/issues/97) - Fixed an issue with subsequent schema generations off of the same type.
 
-# [1.2.3](https://github.com/gregsdennis/json-everything/pull/88)
+# [1.2.3](https://github.com/gregsdennis/json-everything/pull/88) {#release-schemagen-1.2.3}
 
 [#87](https://github.com/gregsdennis/json-everything/issues/87) - Generation for the same property type under different property names causes StackOverflowException.
 
-# [1.2.2](https://github.com/gregsdennis/json-everything/pull/86)
+# [1.2.2](https://github.com/gregsdennis/json-everything/pull/86) {#release-schemagen-1.2.2}
 
 [#85](https://github.com/gregsdennis/json-everything/issues/85) - Generation for `List<TSelf>` producing StackOverflowException.
 
-# [1.2.1](https://github.com/gregsdennis/json-everything/pull/75)
+# [1.2.1](https://github.com/gregsdennis/json-everything/pull/75) {#release-schemagen-1.2.1}
 
 Added support for nullable reference types.
 
-# [1.2.0](https://github.com/gregsdennis/json-everything/pull/74)
+# [1.2.0](https://github.com/gregsdennis/json-everything/pull/74) {#release-schemagen-1.2.0}
 
 Added support for .Net 5 and remaining in-built JSON serialization attributes: `JsonInclude` & `JsonNumberHandling`.
 
 Exposed static class `AttributeHandler` and added methods to allow for handlers of predefined attributes.  This mechanism should only be used for attributes that cannot also be made to implement `IAttributeHandler`.  Attributes which also implement this interface are implicitly handled.
 
-# [1.1.1](https://github.com/gregsdennis/json-everything/pull/61)
+# [1.1.1](https://github.com/gregsdennis/json-everything/pull/61) {#release-schemagen-1.1.1}
 
 Signed the DLL for strong name compatibility.
 
-# [1.1.0](https://github.com/gregsdennis/json-everything/pull/49)
+# [1.1.0](https://github.com/gregsdennis/json-everything/pull/49) {#release-schemagen-1.1.0}
 
 Added support for in-built JSON serialization attributes (Standard 2.0 & Core 3.x): `JsonPropertyName` & `JsonIgnore`.
 
-# [1.0.1](https://github.com/gregsdennis/json-everything/pull/45)
+# [1.0.1](https://github.com/gregsdennis/json-everything/pull/45) {#release-schemagen-1.0.1}
 
 Added debug symbols to package.  No functional change.
 
-# [1.0.0](https://github.com/gregsdennis/json-everything/pull/41)
+# [1.0.0](https://github.com/gregsdennis/json-everything/pull/41) {#release-schemagen-1.0.0}
 
 Initial release.

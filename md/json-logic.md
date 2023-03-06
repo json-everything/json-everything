@@ -1,8 +1,8 @@
-*(Not Json<nsp>_Something_<nsp>.Net, sadly.  "JsonLogic<nsp>.Net" was already registered on Nuget.  It breaks the pattern, I know.  _C'est la vie_.)*
+#  Overview {#logic}
 
 [JsonLogic](https://jsonlogic.com) is a mechanism that can be used to apply logical transformations to JSON values and that is also itself expressed in JSON.
 
-## The syntax
+# The syntax {#logic-syntax}
 
 JsonLogic is expressed using single-keyed objects called _rules_.  The key is the operator and the value is (usually) an array containing the parameters for the operation.  Here are a few examples:
 
@@ -19,7 +19,7 @@ So if we want to ensure a value in the input data is less than 2, we could use `
 
 There are many operators that work on different data types, ranging from string and array manipulation to arithmetic to boolean logic.  The full list is [on their website](https://jsonlogic.com/operations.html), and their docs are pretty good, so I won't repeat the list here.
 
-## In code
+# In code {#logic-in-code}
 
 The library defines an object model for rules, starting with the `Rule` base class.  This type is fully serializeable, so if you have rules in a text format, just deserialize them to get a `Rule` instance.
 
@@ -52,11 +52,11 @@ or via `JsonNode.Parse()`.
 
 \* _JSON null literals need to either be cast to `string`, use `JsonNull.Node` from Json.More.Net, or use the provided `LiteralRule.Null`.  All of these result in the same semantic value._
 
-## Gotchas for .Net developers
+# Gotchas for .Net developers {#logic-gotchas}
 
 In developing this library, I found that many of the operations don't align with similar operations in .Net.  Instead they tend to mimic the behavior of Javascript.  In this section, I'll try to list some of the more significant ones.
 
-### `==` vs `===`
+## `==` vs `===` {#logic-equality}
 
 `===` defines a "strict" equality.  This is the equality we're all familiar with in .Net.
 
@@ -81,7 +81,7 @@ That _should_ cover everything, but in case something's missed, it'll just retur
 
 \*\* _These cases effectively mean that the array must have a single element that is loosely equal to the number, though perhaps something like `[1,234]` might pass.  Again, the equality is **very** loose._
 
-### Type conversion
+## Type conversion {#logic-conversions}
 
 Some operations operate on specific types: sometimes strings, sometimes numbers.  To ensure maximum support, an attempt will be made to convert values to the type that the operation prefers.  If the value cannot be converted, a `JsonLogicException` will be thrown.
 
@@ -93,13 +93,13 @@ Because `+` supports both numbers (addition) and strings (concatenation); it wil
 
 Objects are never converted.
 
-### Automatic array flattening
+## Automatic array flattening {#logic-array-flattening}
 
 Nested arrays are flattened before being operated upon.  As an example of this, `[["a"]]` is flattened to `["a"]` and `["a",["b"]]` is flattened to `["a","b"]`. 
 
 That's it.  Not much to it; just be aware that it happens.
 
-## Creating new operators
+# Creating new operators {#logic-new-operators}
 
 JSON Logic also supports [adding custom operations](https://jsonlogic.com/add_operation.html).
 
@@ -120,7 +120,7 @@ It's definitely recommended to go through the [code for the built-in ruleset](ht
 
 Once your rule is defined, it needs to be registered using the `RuleRegistry.Register<T>()` method.  This will allow the rule to be automatically deserialized.
 
-## Overriding existing operators
+# Overriding existing operators {#logic-overriding}
 
 While this library allows you to inherit from, and therefore override, the default behavior of a `Rule`, you need to be aware of the implications.
 

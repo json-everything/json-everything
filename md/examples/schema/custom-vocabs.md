@@ -1,4 +1,4 @@
-# Extending JSON Schema Validation
+# Extending JSON Schema Validation {#example-schema-vocabs}
 
 These examples will show how to extend JSON Schema validation by creating a new keyword and incorporating it into a new vocabulary.
 
@@ -6,7 +6,7 @@ These examples will show how to extend JSON Schema validation by creating a new 
 
 For a more detailed explanation about the concepts behind vocabularies, please see the Vocabularies page.
 
-## Defining a Keyword
+## Defining a Keyword {#example-schema-vocabs-keyword}
 
 We want to define a new `maxDate` keyword that allows a schema to enforce a maximum date value to appear in an instance property.  We'll start with the keyword.
 
@@ -96,7 +96,7 @@ class MaxDateJsonConverter : JsonConverter<MaxDateKeyword>
 }
 ```
 
-## Registering the Keyword
+## Registering the Keyword {#example-schema-vocabs-register-keyword}
 
 Now that we have the keyword, we need to tell the system about it.
 
@@ -108,7 +108,7 @@ SchemaKeywordRegistry.Register<MaxDateKeyword>();
 
 That's technically all you need to do to support a custom keyword.  However, going forward for JSON Schema, custom keywords should be defined in a custom vocabulary.
 
-## Defining a Vocabulary
+## Defining a Vocabulary {#example-schema-vocabs-definition}
 
 Vocabularies are used within JSON Schema to ensure that the validator you're using supports your new keyword.  Because we have already created the keyword and registered it, we know it is supported.
 

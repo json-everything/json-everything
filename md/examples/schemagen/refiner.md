@@ -1,4 +1,4 @@
-# Performing Custom Generation
+# Performing Custom Generation {#example-schemagen-refiner}
 
 Sometimes, you may need to have custom logic that changes the generated schema in a way that can't be fulfilled with Generators, Intents, or Attributes.
 

@@ -1,6 +1,6 @@
-# A Vocabulary for Accessing Data Stored in JSON
+# A Vocabulary for Accessing Data Stored in JSON {#schema-data-2022}
 
-## 1. Purpose
+## 1. Purpose {#schema-data-2022-purpose}
 
 This document describes a vocabulary defining keywords that can be used to reference values stored in
 
@@ -12,25 +12,25 @@ where the dereferenced values serve as input for keywords in a derived subschema
 
 The intent for this keyword is to cover the use cases discussed across several issues in the JSON Schema specification GitHub repositories.  (A quick search for `"$data"` can readily summon these issues.)
 
-## 2. Declarations
+## 2. Declarations {#schema-data-2022-declarations}
 
 The ID for this vocabulary is `https://json-everything.net/vocabs-data-2022`.
 
 A draft 2020-12 meta-schema which includes this vocabulary has been defined for convenience.  The ID (`$id`) for the meta-schema is `https://json-everything.net/meta/data-2022`, and it can also be found at this address.
 
-## 3. Definitions
+## 3. Definitions {#schema-data-2022-definitions}
 
-### 3.1 Formed Schema
+### 3.1 Formed Schema {#schema-data-2022-formed}
 
 The schema object created as a result of dereferencing all of the values in the `data` keyword as described in section 4.1.
 
-### 3.2 Host Schema
+### 3.2 Host Schema {#schema-data-2022-host}
 
 The schema object which contains the `data` keyword.  The processing rules that govern this schema also govern the formed schema, as specified by section 4.2.
 
-## 4. The `data` Keyword
+## 4. The `data` Keyword {#schema-data-2022-keyword}
 
-### 4.1 Syntax and Semantics
+### 4.1 Syntax and Semantics {#schema-data-2022-semantics}
 
 The value of `data` must be an object.  The keys of the object are interpreted as JSON Schema keywords, and the values MUST be one of
 
@@ -48,7 +48,7 @@ The value of `data` must be an object.  The keys of the object are interpreted a
 
 The validation and annotation results of `data` are those of the formed schema.  More detail regarding output can be found in section 3.4.
 
-### 4.2 Contextual Behavior
+### 4.2 Contextual Behavior {#schema-data-2022-behavior}
 
 `data` MUST be processed contextually in the same manner as the host schema.  Specifically,
 
@@ -59,7 +59,7 @@ Implementations SHOULD validate that the resolved data forms a valid schema agai
 
 ***NOTE** It is not necessary for an implementation to validate using the meta-schema.  Other mechanisms internal to the implementation (such as deserialization) may suffice to perform this task.*
 
-### 4.3 IRI Resolution
+### 4.3 IRI Resolution {#schema-data-2022-resolution}
 
 The values of `data` are dereferenced in different ways depending on the format of the value.
 
@@ -75,19 +75,19 @@ For each successfully resolved reference, the full value at the specified locati
 
 If a reference cannot be resolved, or if a resolved value is not valid for the associated keyword, evaluation MUST halt.  Implementations SHOULD use native features of their language to report the failure as appropriate.  Implementations MAY continue to attempt to resolve other references so that multiple resolution failures can be reported together, however further schema evaluation MUST NOT continue.
 
-#### 4.3.1 External Data Access
+#### 4.3.1 External Data Access {#schema-data-2022-external}
 
 Implementations SHOULD provide a means to pre-load and cache any external references prior to evaluation but MAY be configured to fetch external documents at evaluation time.  Documents fetched from IRIs which contain a JSON Pointer fragment MUST be interpreted using a media type, such as `application/schema-instance+json`, that allows resolution of such fragments.
 
 Users should be aware that fetching data from external locations may carry certain security risks not covered by this document.
 
-### 4.4 Output
+### 4.4 Output {#schema-data-2022-output}
 
 The evaluation output of the formed schema is reported into the overall schema output incorporating "data" into the evaluation path and following on with additional pointer segments as navigable within the formed schema.
 
 Annotation results of the formed schema are retained as per the host schema so that they can be processed by other keywords such as `unevaluatedItems` and `unevaluatedProperties`.
 
-## 5. A Short Example
+## 5. A Short Example {#schema-data-2022-example}
 
 The following defines a schema to validate an object instance with a `foo` property that must contain an integer value less than or equal to the value in the instance's `minValue` property.
 

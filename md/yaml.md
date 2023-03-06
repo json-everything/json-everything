@@ -1,12 +1,14 @@
+#  Overview {#yaml}
+
 Yaml2JsonNode is pretty simple: it converts models of YAML text that has been parsed by YamlDotNet into `JsonNode`s (and can also convert `JsonNode`s back into `YamlNode`s).  That's it.
 
-## Why?
+## Why? {#yaml-why}
 
 OpenAPI and indeed many JSON Schema documents are written in YAML because (I'm told) it's more human-readable than JSON.  Therefore it makes sense to support YAML in the various libraries.
 
 However, just as we let .Net handle the JSON parsing, we will let someone else handle the YAML parsing for us.  Ideally, we'd want to parse directly into `JsonNode`, but conversion between models is also a very acceptable solution.
 
-## Using the extensions
+## Using the extensions {#yaml-using}
 
 First, you'll need to parse the YAML.  Consult [their docs](https://github.com/aaubry/YamlDotNet/wiki), of course, but a simple way is:
 

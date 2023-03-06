@@ -1,4 +1,4 @@
-# Serializing Enumerations by Name
+# Serializing Enumerations by Name {#example-more-enums}
 
 By default, the `System.Text.Json` serializer will convert enumeration members to their numeric values.  But suppose we're interacting with an API that expects named values.  To do this, we need to tell the serializer how to convert the enum values into strings.  This is the purpose of the `EnumStringConverter<T>` class.
 
@@ -47,7 +47,7 @@ enum MemberType
 
 Now the converter will use these strings for the corresponding vauues.
 
-## Flag Enums
+## Flag Enums {#example-more-flags}
 
 When an enum has the `[Flags]` attribute, the converter will output the flag values as a comma-delimited list of string values instead of just a single value.  This covers the case where multiple values are "selected."
 

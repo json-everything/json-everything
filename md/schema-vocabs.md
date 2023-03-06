@@ -1,4 +1,4 @@
-# Vocabularies
+# Vocabularies {#schema-vocabs}
 
 JSON Schema draft 2019-09 introduced the idea of vocabularies to enable some spec support for custom keywords.
 
@@ -6,7 +6,7 @@ A vocabulary is just a collection of keywords.  It will be identified by a URI a
 
 Creating a vocabulary in JsonSchema.Net isn't strictly required in order to add custom keywords, but if you're using it to create a meta-schema that will consume and validate other draft 2019-09 or later schemas, it is strongly suggested.
 
-## How vocabularies work
+## How vocabularies work {#schema-vocabs-how-it-works}
 
 This is best explained with an example.  Suppose we have a meta-schema **M**, a schema **S** that uses **M** as its `$schema`, and a couple instances **I1** and **I2** to be validated by **S**.
 
@@ -88,7 +88,7 @@ Now, if you look at the `$vocabulary` entry for `https://myserver.net/my-vocab`,
 
 So, back to the example, because we declare the vocabulary to be required (by giving it a value of `true`) *and* because JsonSchema.Net knows about it, **I1** is reported as valid and **I2** is not.  If the vocabulary had not been required _and_ JsonSchema.Net didn't know about the vocabulary, both **I1** and **I2** would be reported as valid because the `minDate` keyword would not have been enforced.
 
-## Registering a vocabulary
+## Registering a vocabulary {#schema-vocabs-registration}
 
 To tell JsonSchema.Net about a vocabulary, you need to create a `Vocabulary` instance and register it using `VocabularyRegistry.Add<T>()`.
 
@@ -98,7 +98,7 @@ The keywords must be registered separately (see "Defining Custom Keywords" below
 
 It's not always necessary to have a meta-schema for your vocabulary.  However, if you want to enable `ValidationOptions.ValidateMetaschema`, you will need to register it.
 
-# Defining Custom Keywords
+# Defining Custom Keywords {#schema-vocabs-custom-keywords}
 
 `JsonSchema` has been designed to allow you to create your own keywords.  There are several steps that need to be performed to do this.
 
@@ -116,11 +116,11 @@ And your new keyword is ready to use.
 
 Lastly, remember that the best resource building keywords is [the code](https://github.com/gregsdennis/json-everything/tree/master/JsonSchema) where all of the built-in keywords are defined.
 
-## 1. Implement `IJsonSchemaKeyword`
+## 1. Implement `IJsonSchemaKeyword` {#schema-vocabs-custom-keywords-1}
 
 This defines the `Evaluate()` method.  Implement your validation logic.
 
-### The `EvaluationContext`
+### The `EvaluationContext` {#schema-vocabs-custom-keywords-context}
 
 The evaluation context contains all of the data that you need to perform the evaluation:
 
@@ -158,11 +158,11 @@ There are two overloads to the `Push()` method.  While both will update the sche
 
 If the instance passes validation, set any annotations by using `.SetAnnotation()` on the local result object.  This is stored as a key-value pair.  The convention is to use the keyword name as the key.  The value can be anything, but it _should_ be JSON-serializable in order to be rendered properly in the output.
 
-### Annotation consolidation
+### Annotation consolidation {#schema-vocabs-custom-keywords-annotations}
 
 Versions 3.x and earlier of this library required manual annotation collection.  As of v4, this is handled internally, so no additional steps are required when defining a new keyword.
 
-## 2. Implement one of the schema-container interfaces
+## 2. Implement one of the schema-container interfaces {#schema-vocabs-custom-keywords-2}
 
 If your keyword contains one or more subschemas, you'll need to implement one of these:
 
@@ -173,7 +173,7 @@ If your keyword contains one or more subschemas, you'll need to implement one of
 
 These will be used at the beginning of the first evaluation and during schema registration to traverse all of the subschemas a provide IDs where none is explicitly declared.  This goes on to help `$ref` and friends to their job while also making that job faster.
 
-## 3. Apply some attributes
+## 3. Apply some attributes {#schema-vocabs-custom-keyword-3}
 
 JsonSchema.Net contains several attributes that you should use to specify some metadata about your keyword.
 
@@ -182,11 +182,11 @@ JsonSchema.Net contains several attributes that you should use to specify some m
 - `SchemaVersion` - Declares a version that supports the keyword.  This can be used multiple times to declare additional drafts.
 - `Vocabulary` - Declares the ID of the vocabulary which defines the the keyword.
 
-## 4. Register your keyword
+## 4. Register your keyword {#schema-vocabs-custom-keywords-4}
 
 To make JsonSchema.Net aware of your keyword, you must register it with `SchemaKeywordRegistry.Register<T>()`.  This will enable deserialization.
 
-### Now make it nice to use
+### Now make it nice to use {#schema-vocabs-custom-extensions}
 
 To enable the fluent construction interface for your keyword, simply create an extension method on `JsonSchemaBuilder` that adds the keyword and returns the builder.  For example, adding a `description` keyword is implemented by this method:
 
@@ -198,7 +198,7 @@ public static JsonSchemaBuilder Description(this JsonSchemaBuilder builder, stri
 }
 ```
 
-## 5. Create a JSON converter
+## 5. Create a JSON converter {#schema-vocabs-custom-converter}
 
 To enable serialization and deserialization, you'll need to provide the converter for it.
 

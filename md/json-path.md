@@ -1,8 +1,10 @@
+#  Overview {#path}
+
 JSON Path is a query language for JSON documents inspired by what XPath provides for XML documents.  It was [originally proposed](https://goessner.net/articles/JsonPath/) by Matt Goessner, and now a [specification](https://github.com/jsonpath-standard/internet-draft) is in progress.
 
 Version 0.4.x is aligned with the specification as of the end of Feb 2023, including support for functions (recently merged) and arithmetic operations in expressions (not part of the spec yet).
 
-## Syntax
+# Syntax {#path-syntax}
 
 A path consists of start indicator followed by a series of segments, chained one after another.  Each segment contains one or more selectors.  Each selector takes in a collection of JSON nodes and produces a collection of JSON nodes (called a "nodelist") based on their function.  The output of the segment is the collective output of all of that segment's selectors.  Each segment takes as input the output of the previous selector.
 
@@ -24,7 +26,7 @@ In addition to the above, there are a few shorthand options for some special cas
 - `..['foo']` may be rewritten as `..foo`
 - `..[*]` may be rewritten as `..*`
 
-### Query Expressions
+## Query Expressions {#path-expressions}
 
 Filter selectors take an expression.  This expression uses a single variable, which is a JSON node as described above.  The node is denoted by `@` and any valid JSON Path can follow it.  The `@` is a stand-in for the `$` from above and acts as the root of the local value.
 
@@ -55,7 +57,7 @@ Expressions support the following operations:
 
 _**NOTE** Arithmetic operations are not part of the specification (yet), and cannot be expected to work in other JSON Path implementations._
 
-#### Functions
+### Functions {#path-functions}
 
 There is also support for functions within query expressions, which works as an extension point to add your own custom logic.
 
@@ -70,7 +72,7 @@ The specification defines the following functions:
 
 \* _I-Regexp is designed to be an interoperable subset of most popular regular expression specifications and implementations.  One difference that [could not be resolved](https://github.com/ietf-wg-jsonpath/iregexp/issues/15) was implicit anchoring.  As such, two methods were developed to handle both cases.  `match` uses implicit anchoring, while `search` does not._
 
-## In Code
+# In Code {#path-in-code}
 
 To obtain an instance of a JSON Path, you'll need to parse it from a string.
 
@@ -98,7 +100,7 @@ This will return a results object that contains the resulting nodelist or an err
 
 A node contains both the value that was found and the location in the instance _where_ it was found.  The location is always represented using the "canonical," bracketed format.
 
-## Adherence to the Proposed Specification
+# Adherence to the Proposed Specification {#path-spec}
 
 As the specification is still under authorship, there are features present in traditional JSON Path that haven't been properly described yet.  For these features, this library has been configured to mimic the consensus behaviors of other libraries as determined by the [JSON Path Comparison](https://cburgmer.github.io/json-path-comparison/) project.
 

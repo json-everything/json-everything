@@ -1,4 +1,4 @@
-# Using Attributes to Add Constraints
+# Using Attributes to Add Constraints {#example-schemagen-attribute}
 
 In the [previous example](schema-gen-intent.md) we created a keyword intent to represent a new `maxDate` keyword during generation.
 
