@@ -1,4 +1,4 @@
-# Supporting a New Keyword During Generation
+# Supporting a New Keyword During Generation {#example-schemagen-intent}
 
 This example shows how to extend schema generation to output a new keyword.
 

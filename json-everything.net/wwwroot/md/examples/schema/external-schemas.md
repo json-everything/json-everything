@@ -1,4 +1,4 @@
-# Handling Externally-defined Schemas
+# Handling Externally-defined Schemas {#example-schema-ref-resolution}
 
 JSON Schema has multiple ways to reference other schemas.  This is done to both reduce the size of the schemas that we humans have to deal with as well as to promote code reuse.  Defining a schema once to be used in multiple places is often a better approach than rewriting it in all of those places.  It also allows us to define recursive schemas.
 
@@ -6,7 +6,7 @@ References typically come in two flavors: internal and external.  Internal refer
 
 ***NOTE** You _can_ reference a subschema of an external document by giving the path to the file and a pointer to a subschema, but this isn't usually done.  Instead, that subschema would be extracted into its own file to be referenced by both schemas.*
 
-## Resolving references
+## Resolving references {#example-schema-registration}
 
 JsonSchema.Net will automatically handle internal references.  The schema document is loaded, and the library can easily resolve pointers inside of it.
 
@@ -27,7 +27,7 @@ It's best practice to ensure all of your schemas declare an `$id` keyword at the
 
 `SchemaRegistry.Global.Register()` is the part that matters here.  This adds the schema to the internal registry so that, when the schema is needed, it can be found.
 
-## Dynamically loading references
+## Dynamically loading references {#example-schema-fetching}
 
 An alternative to preloading schemas is setting up an automatic download by setting the `SchemaRegistry.Global.Fetch` function property.
 

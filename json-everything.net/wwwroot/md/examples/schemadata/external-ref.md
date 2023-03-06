@@ -1,6 +1,8 @@
+# Referencing instance data {#example-schemadata-external}
+
 Sometimes the values you want to use for schemas are stored in external files.  To reference these, you'll need to use a URI.  This URI may be combined with a pointer to indicate a location within the file.
 
-## Requiring that `A` is one of the items in _values.json_.
+## Requiring that `A` is one of the items in _values.json_ {#example-schemadata-element-of}
 
 We want to specify an enum for `A`, and the values in that enum are contained in a separate file, _values.json_.  As with the instance data reference case, JSON Schema only allows for explicit lists for `enum`, so we can't source it from somewhere else.
 

@@ -1,4 +1,4 @@
-# Working With Options
+# Working With Options {#example-schema-options}
 
 There are a few objects which declare static default values:
 
@@ -14,7 +14,7 @@ Additionally, for the two registries, the default instances are used as fallback
 
 Let's look at this a bit more deeply.
 
-## Setting output format
+## Setting output format {#example-schema-options-output}
 
 To set `Detailed` as the default output format for _all_ evaluations, use the default instance:
 
@@ -33,7 +33,7 @@ When you create a new options object, it copies all of the values from the defau
 
 `SchemaRegistry` and `VocabularyRegistry` options work a bit differently, though.
 
-## Configuring SchemaRegistry and VocabularyRegistry
+## Configuring SchemaRegistry and VocabularyRegistry {#example-schema-options-registries}
 
 The default instance for these objects is actually called `Global` because they serve as a fallback for when the local instances can't find what's being requested.  Let's look at preloading schemas to see how the schema vocabulary manages a local registry against the global one.
 

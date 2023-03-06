@@ -23,6 +23,7 @@ namespace JsonEverythingNet.Services
 				RegisterAnchors(client, "json-pointer"),
 
 				RegisterAnchors(client, "json-logic"),
+				RegisterAnchors(client, "release-notes/json-logic"),
 
 				RegisterAnchors(client, "schema-basics"),
 				RegisterAnchors(client, "examples/schema/external-schemas"),

@@ -1,4 +1,4 @@
-# Generating a Schema for a Simple Type
+# Generating a Schema for a Simple Type {#example-schemagen-generator}
 
 This example shows how to extend schema generation to cover a specific type that isn't defined by the type's properties.  This is useful for many of the scalar-like value types, such as `bool`, `int`, `DateTime`, or `TimeSpan`.
 

@@ -1,4 +1,4 @@
-# JSON Schema Version Selection
+# JSON Schema Version Selection {#example-schema-versions}
 
 JSON Schema version (or "draft") selection can be an important factor in ensuring evaluation works as expected.  Selecting the wrong draft may result in some keywords not being processed.  For example, `prefixItems` was only added with draft 2020-12.  Evaluating a schema with this keyword under a previous draft will ignore the keyword completely.
 
@@ -12,7 +12,7 @@ If you're the author of your schemas, just include this keyword, and all will be
 
 JsonSchema.Net will always respect this keyword when present.
 
-## Evaluation Options
+## Evaluation Options {#example-schema-versions-options}
 
 If the schema you're working with is out of your control, meaning you can't add a `$schema` keyword, there is some logic to determine the best candidate automatically, however the `EvaluationOptions.EvaluateAs` property will be your friend.
 
@@ -22,9 +22,9 @@ By default, the latest supported version will be used.
 
 ***IMPORTANT** The value for `$schema` is a URI (identifier), not a URL (location).  This means that the value must exactly match the `$id` from a known meta-schema.  This also means there is no `https`-for-`http` substitution.*
 
-# Examples
+# Examples {#example-schema-versions-examples}
 
-## Behaviors of Explicitly Specifying Different Versions
+## Behaviors of Explicitly Specifying Different Versions {#example-schema-versions-explicit}
 
 ```c#
 JsonSchema schema = new JsonSchemaBuilder()
@@ -80,8 +80,7 @@ Notice also that if we did use the draft 7 version of this schema, that evaluati
 
 ***NOTE** There are a lot of reasons why we chose to make this change.  You can read the discussion mainly [here](https://github.com/json-schema-org/json-schema-spec/issues/864) but also in several other issues.*
 
-
-## Letting the Evaluator Decide
+## Letting the Evaluator Decide {#example-schema-versions-auto}
 
 So suppose you _did_ have that draft 7 schema:
 
