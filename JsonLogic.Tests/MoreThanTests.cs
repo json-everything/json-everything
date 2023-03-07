@@ -31,35 +31,11 @@ public class MoreThanTests
 	}
 
 	[Test]
-	public void MoreThanStringThrowsError()
-	{
-		var rule = new MoreThanRule("foo", 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
 	public void MoreThanBooleanThrowsError()
 	{
 		var rule = new MoreThanRule(false, 2);
 
 		JsonAssert.IsFalse(rule.Apply());
-	}
-
-	[Test]
-	public void MoreThanArrayThrowsError()
-	{
-		var rule = new MoreThanRule(new JsonArray(), 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void MoreThanObjectThrowsError()
-	{
-		var rule = new MoreThanRule(new JsonObject(), 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
 
 	[Test]

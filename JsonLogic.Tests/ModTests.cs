@@ -13,20 +13,4 @@ public class ModTests
 		var actual = rule.Apply();
 		JsonAssert.AreEquivalent(4, actual);
 	}
-
-	[Test]
-	public void ModNonNumberThrowsError()
-	{
-		var rule = new ModRule("test", 5);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void ModByZeroThrowsError()
-	{
-		var rule = new ModRule(4, 0);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
 }

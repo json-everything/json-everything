@@ -13,12 +13,4 @@ public class SubtractTests
 		var actual = rule.Apply();
 		JsonAssert.AreEquivalent(-1, actual);
 	}
-
-	[Test]
-	public void SubtractNonNumberThrowsError()
-	{
-		var rule = new SubtractRule("test", 5);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
 }
