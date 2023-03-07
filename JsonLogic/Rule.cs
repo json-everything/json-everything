@@ -99,17 +99,21 @@ public class LogicComponentConverter : JsonConverter<Rule>
 		if (node is JsonObject)
 		{
 			if (node is not JsonObject { Count: 1 } data)
-				throw new JsonException("Rules must be objects that contain exactly one operator key with an array of arguments.");
+			{
+				rule = new LiteralRule(node);
+			}
+			else
+			{
+				var (op, args) = data.First();
 
-			var (op, args) = data.First();
+				var ruleType = RuleRegistry.GetRule(op);
+				if (ruleType == null)
+					throw new JsonException($"Cannot identify rule for {op}");
 
-			var ruleType = RuleRegistry.GetRule(op);
-			if (ruleType == null)
-				throw new JsonException($"Cannot identify rule for {op}");
-
-			rule = args is null 
-				? (Rule)JsonSerializer.Deserialize("[]", ruleType, options)!
-				: (Rule)args.Deserialize(ruleType, options)!;
+				rule = args is null
+					? (Rule)JsonSerializer.Deserialize("[]", ruleType, options)!
+					: (Rule)args.Deserialize(ruleType, options)!;
+			}
 		}
 		else if (node is JsonArray)
 		{

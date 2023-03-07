@@ -46,8 +46,7 @@ public class SomeRule : Rule
 	{
 		var input = Input.Apply(data, contextData);
 
-		if (input is not JsonArray arr)
-			throw new JsonLogicException("Input must evaluate to an array.");
+		if (input is not JsonArray arr) return false;
 
 		return arr.Select(value => Rule.Apply(contextData, value))
 			.Any(result => result.IsTruthy());
