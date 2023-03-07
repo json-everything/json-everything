@@ -61,33 +61,53 @@ public class LessThanEqualRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
+		var a = A.Apply(data, contextData);
+		var b = B.Apply(data, contextData);
+
+		var av = a as JsonValue;
+		var bv = b as JsonValue;
+
+		string? stringA, stringB;
+
 		if (C == null)
 		{
-			var a = A.Apply(data, contextData);
-			var b = B.Apply(data, contextData);
+			if (av != null && av.TryGetValue(out stringA) &&
+			    bv != null && bv.TryGetValue(out stringB))
+				return string.Compare(stringA, stringB, StringComparison.Ordinal) <= 0;
 
 			var numberA = a.Numberify();
 			var numberB = b.Numberify();
 
-			if (numberA == null || numberB == null)
-				throw new JsonLogicException($"Cannot compare {a.JsonType()} and {b.JsonType()}.");
+			if (numberA != null && numberB != null) return numberA <= numberB;
+			if (numberA != null || numberB != null) return false;
 
-			return numberA <= numberB;
+			stringA = a.Stringify();
+			stringB = b.Stringify();
+
+			return string.Compare(stringA, stringB, StringComparison.Ordinal) <= 0;
 		}
 
-		var low = A.Apply(data, contextData).Numberify();
-		if (low == null)
-			throw new JsonLogicException("Lower bound must parse to a number.");
+		var c = C.Apply(data, contextData);
+		var cv = c as JsonValue;
 
-		var value = B.Apply(data, contextData).Numberify();
-		if (value == null)
-			throw new JsonLogicException("Value must parse to a number.");
+		if (av != null && av.TryGetValue(out stringA) &&
+		    bv != null && bv.TryGetValue(out stringB) &&
+		    cv != null && bv.TryGetValue(out string? stringC))
+			return string.Compare(stringA, stringB, StringComparison.Ordinal) <= 0 &&
+			       string.Compare(stringB, stringC, StringComparison.Ordinal) <= 0;
 
-		var high = C.Apply(data, contextData).Numberify();
-		if (high == null)
-			throw new JsonLogicException("Upper bound must parse to a number.");
+		var low = a.Numberify();
+		var value = b.Numberify();
+		var high = c.Numberify();
+		if (low != null && value != null && high != null) return low <= value && value <= high;
+		if (low != null || value != null || high != null) return false;
 
-		return low <= value && value <= high;
+		stringA = a.Stringify();
+		stringB = b.Stringify();
+		stringC = c.Stringify();
+
+		return string.Compare(stringA, stringB, StringComparison.Ordinal) <= 0 &&
+		       string.Compare(stringB, stringC, StringComparison.Ordinal) <= 0;
 	}
 }
 
