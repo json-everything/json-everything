@@ -1,3 +1,7 @@
+# [2.0.5](https://github.com/gregsdennis/json-everything/pull/394) {#release-patch-2.0.5}
+
+[#393](https://github.com/gregsdennis/json-everything/pull/393) - Fixed an `InvalidOperationException` from some of the operations.
+
 # [2.0.4](https://github.com/gregsdennis/json-everything/pull/323) {#release-patch-2.0.4}
 
 [#322](https://github.com/gregsdennis/json-everything/pull/322) - [@z4kn4fein](https://github.com/z4kn4fein) discovered and fixed an issue in the `move` operation logic.
