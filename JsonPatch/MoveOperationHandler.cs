@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Patch;
@@ -51,7 +52,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path.Segments.Last().Value;
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment] = data;
+			objTarget[lastPathSegment] = data.Copy();
 			return;
 		}
 
@@ -66,9 +67,9 @@ internal class MoveOperationHandler : IPatchOperationHandler
 				return;
 			}
 			if (0 <= index && index < arrTarget.Count)
-				arrTarget.Insert(index, data);
+				arrTarget.Insert(index, data.Copy());
 			else if (index == arrTarget.Count)
-				arrTarget.Add(data);
+				arrTarget.Add(data.Copy());
 			else
 				context.Message = "Path indicates an index greater than the bounds of the array";
 		}

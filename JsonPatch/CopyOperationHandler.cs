@@ -14,7 +14,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (!operation.From.EvaluateAndGetParent(context.Source, out var source) ||
+		if (!operation.From.EvaluateAndGetParent(context.Source, out _) ||
 			!operation.From.TryEvaluate(context.Source, out var data))
 		{
 			context.Message = $"Source path `{operation.Path}` could not be reached.";
@@ -44,9 +44,9 @@ internal class CopyOperationHandler : IPatchOperationHandler
 		{
 			var index = lastPathSegment == "-" ? arrTarget.Count : int.Parse(lastPathSegment);
 			if (0 < index || index < arrTarget.Count)
-				arrTarget[index] = data;
+				arrTarget[index] = data.Copy();
 			else if (index == arrTarget.Count)
-				arrTarget.Add(data);
+				arrTarget.Add(data.Copy());
 		}
 	}
 }
