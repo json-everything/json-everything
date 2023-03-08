@@ -34,7 +34,7 @@ public class LogRule : Rule
 
 		Console.WriteLine(log);
 
-		return data;
+		return log;
 	}
 }
 
@@ -42,12 +42,15 @@ internal class LogRuleJsonConverter : JsonConverter<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
 
-		if (parameters is not { Length: 1 })
-			throw new JsonException("The log rule needs an array with a single parameter.");
+		var parameters = node is JsonArray
+			? node.Deserialize<Rule[]>()
+			: new[] { node.Deserialize<Rule>()! };
 
-		return new LogRule(parameters[0]);
+		return new LogRule(parameters!.Length == 0
+			? new LiteralRule("")
+			: parameters[0]);
 	}
 
 	public override void Write(Utf8JsonWriter writer, LogRule value, JsonSerializerOptions options)

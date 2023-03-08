@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -49,11 +50,9 @@ public class ModRule : Rule
 		var numberA = a.Numberify();
 		var numberB = b.Numberify();
 
-		if (numberA == null || numberB == null)
-			throw new JsonLogicException($"Cannot divide types {a.JsonType()} and {b.JsonType()}.");
+		if (numberA == null || numberB == null) return JsonNull.SignalNode;
 
-		if (numberB == 0)
-			throw new JsonLogicException("Cannot divide by zero");
+		if (numberB == 0) return JsonNull.SignalNode;
 
 		return numberA.Value % numberB.Value;
 	}

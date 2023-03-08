@@ -46,13 +46,20 @@ public class MoreThanEqualRule : Rule
 		var a = A.Apply(data, contextData);
 		var b = B.Apply(data, contextData);
 
+		if (a is JsonValue av && av.TryGetValue(out string? s1) &&
+		    b is JsonValue bv && bv.TryGetValue(out string? s2))
+			return string.Compare(s1, s2, StringComparison.Ordinal) >= 0;
+
 		var numberA = a.Numberify();
 		var numberB = b.Numberify();
 
-		if (numberA == null || numberB == null)
-			throw new JsonLogicException($"Cannot compare {a.JsonType()} and {b.JsonType()}.");
+		if (numberA != null && numberB != null) return numberA >= numberB;
+		if (numberA != null || numberB != null) return false;
 
-		return numberA >= numberB;
+		var stringA = a.Stringify();
+		var stringB = b.Stringify();
+
+		return string.Compare(stringA, stringB, StringComparison.Ordinal) >= 0;
 	}
 }
 

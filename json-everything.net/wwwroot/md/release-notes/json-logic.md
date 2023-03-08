@@ -1,3 +1,13 @@
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/395) {#release-logic-4.0.0}
+
+[#377](https://github.com/gregsdennis/json-everything/issues/377) - Alignment with JS version available online at https://jsonlogic.com/.
+
+With 3.x, when a comparison or other operation didn't make sense given the types of arguments it received, a `JsonLogicException` would be thrown.  However, the online version doesn't throw errors for these cases.  Instead it returns various values because it's Javascript.  This release attempts to align with the online version.
+
+Some of the results may not make sense from a .Net point of view, but alignment with the original implementation was the goal.
+
+This is released as a major version update because a lot of expected exceptions were removed.  There is no change to the API.
+
 # [3.3.2](https://github.com/gregsdennis/json-everything/pull/385) {#release-logic-3.3.2}
 
 [#383](https://github.com/gregsdennis/json-everything/issues/383) - `all` and `some` rules should use a local scope for `var` resolution.  Thanks to [@Sykander](https://github.com/Sykander) for finding and reasoning out this issue.

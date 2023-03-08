@@ -31,38 +31,6 @@ public class LessThanEqualTests
 	}
 
 	[Test]
-	public void LessThanEqualStringThrowsError()
-	{
-		var rule = new LessThanEqualRule("foo", 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void LessThanEqualBooleanThrowsError()
-	{
-		var rule = new LessThanEqualRule(false, 2);
-
-		JsonAssert.IsTrue(rule.Apply());
-	}
-
-	[Test]
-	public void LessThanEqualArrayThrowsError()
-	{
-		var rule = new LessThanEqualRule(new JsonArray(), 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void LessThanEqualObjectThrowsError()
-	{
-		var rule = new LessThanEqualRule(new JsonObject(), 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
 	public void LessThanEqualNullCastsNullToZero()
 	{
 		var rule = new LessThanEqualRule(LiteralRule.Null, 2);

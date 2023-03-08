@@ -13,20 +13,4 @@ public class DivideTests
 		var actual = rule.Apply();
 		JsonAssert.AreEquivalent(.8, actual);
 	}
-
-	[Test]
-	public void DivideNonNumberThrowsError()
-	{
-		var rule = new DivideRule("test", 5);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void DivideByZeroThrowsError()
-	{
-		var rule = new DivideRule(4, 0);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -46,8 +47,7 @@ public class SubtractRule : Rule
 		var value = Items[0].Apply(data, contextData);
 		var number = value.Numberify();
 
-		if (number == null)
-			throw new JsonLogicException($"Cannot subtract {value.JsonType()}.");
+		if (number == null) return JsonNull.SignalNode;
 
 		var result = number.Value;
 
@@ -59,8 +59,7 @@ public class SubtractRule : Rule
 
 			number = value.Numberify();
 
-			if (number == null)
-				throw new JsonLogicException($"Cannot subtract {value.JsonType()}.");
+			if (number == null) return JsonNull.SignalNode;
 
 			result -= number.Value;
 		}

@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -60,9 +61,7 @@ public class ReduceRule : Rule
 		var input = Input.Apply(data, contextData);
 		var accumulator = Initial.Apply(data, contextData);
 
-		if (input is null) return accumulator;
-		if (input is not JsonArray arr)
-			throw new JsonLogicException($"Cannot reduce on {input.JsonType()}.");
+		if (input is not JsonArray arr) return accumulator;
 
 		foreach (var element in arr)
 		{
@@ -74,6 +73,8 @@ public class ReduceRule : Rule
 			var item = JsonSerializer.SerializeToNode(intermediary, _options);
 
 			accumulator = Rule.Apply(data, item);
+
+			if (accumulator == JsonNull.SignalNode) break;
 		}
 
 		return accumulator;

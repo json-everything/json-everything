@@ -16,14 +16,6 @@ public class AddTests
 	}
 
 	[Test]
-	public void AddNonNumberThrowsError()
-	{
-		var rule = new AddRule("test", 5);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
 	public void AddSingleNumberDoesNothing()
 	{
 		var rule = new AddRule(3.14);
@@ -39,30 +31,6 @@ public class AddTests
 
 		var actual = rule.Apply();
 		JsonAssert.AreEquivalent(3.14, actual);
-	}
-
-	[Test]
-	public void AddSingleStringWithJunkThrowsError()
-	{
-		var rule = new AddRule("foo");
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void AddSingleArrayThrowsError()
-	{
-		var rule = new AddRule(new JsonArray { false, 5 });
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void AddSingleObjectThrowsError()
-	{
-		var rule = new AddRule(new JsonObject { ["foo"] = 5 });
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
 
 	[Test]

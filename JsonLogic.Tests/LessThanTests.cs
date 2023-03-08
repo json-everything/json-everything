@@ -31,35 +31,11 @@ public class LessThanTests
 	}
 
 	[Test]
-	public void LessThanStringThrowsError()
-	{
-		var rule = new LessThanRule("foo", 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
 	public void LessThanBooleanReturnsTrue()
 	{
 		var rule = new LessThanRule(false, 2);
 
 		JsonAssert.IsTrue(rule.Apply());
-	}
-
-	[Test]
-	public void LessThanArrayThrowsError()
-	{
-		var rule = new LessThanRule(new JsonArray(), 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
-	}
-
-	[Test]
-	public void LessThanObjectThrowsError()
-	{
-		var rule = new LessThanRule(new JsonObject(), 2);
-
-		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}
 
 	[Test]

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -47,8 +48,7 @@ public class MaxRule : Rule
 			.Select(e => new { Type = e.JsonType(), Value = e.Numberify() })
 			.ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any())
-			throw new JsonLogicException($"Cannot find max with {nulls.First().Type}.");
+		if (nulls.Any()) return JsonNull.SignalNode;
 
 		return items.Max(i => i.Value!.Value);
 	}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -45,8 +46,7 @@ public class MinRule : Rule
 	{
 		var items = Items.Select(i => i.Apply(data, contextData)).Select(e => new { Type = e.JsonType(), Value = e.Numberify() }).ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any())
-			throw new JsonLogicException($"Cannot find min with {nulls.First().Type}.");
+		if (nulls.Any()) return JsonNull.SignalNode;
 
 		return items.Min(i => i.Value!.Value);
 	}

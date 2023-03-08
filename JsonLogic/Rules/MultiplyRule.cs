@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -49,8 +50,7 @@ public class MultiplyRule : Rule
 
 			var number = value.Numberify();
 
-			if (number == null)
-				throw new JsonLogicException($"Cannot multiply {value.JsonType()}.");
+			if (number == null) return JsonNull.SignalNode;
 
 			result *= number.Value;
 		}
