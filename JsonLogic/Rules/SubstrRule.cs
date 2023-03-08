@@ -61,35 +61,29 @@ public class SubstrRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var input = Input.Apply(data, contextData);
-		var start = Start.Apply(data, contextData);
+		var input = Input is LiteralRule { Value: null }
+			? "null"
+			: Input.Apply(data, contextData).Stringify() ?? string.Empty;
+		var start = Start.Apply(data, contextData).Numberify() ?? 0;
 
-		if (input is not JsonValue inputValue || !inputValue.TryGetValue(out string? stringInput))
-			throw new JsonLogicException($"Cannot substring a {input.JsonType()}.");
+		var numberStart = (int)start;
 
-		if (start is not JsonValue startValue || startValue.GetInteger() == null)
-			throw new JsonLogicException("Start value must be an integer");
-
-		var numberStart = (int)startValue.GetInteger()!.Value;
-
-		if (numberStart < -stringInput.Length) return input;
+		if (numberStart < -input.Length) return input;
 		if (numberStart < 0)
-			numberStart = Math.Max(stringInput.Length + numberStart, 0);
-		if (numberStart >= stringInput.Length) return string.Empty;
+			numberStart = Math.Max(input.Length + numberStart, 0);
+		if (numberStart >= input.Length) return string.Empty;
 
-		if (Count == null) return stringInput[numberStart..];
+		if (Count == null) return input[numberStart..];
 
-		var count = Count.Apply(data, contextData);
-		if (count is not JsonValue countValue || countValue.GetInteger() == null)
-			throw new JsonLogicException("Count value must be an integer");
+		var count = Count.Apply(data, contextData).Numberify() ?? 0;
 
-		var integerCount = (int)countValue.GetInteger()!.Value;
-		var availableLength = stringInput.Length - numberStart;
+		var integerCount = (int)count;
+		var availableLength = input.Length - numberStart;
 		if (integerCount < 0)
 			integerCount = Math.Max(availableLength + integerCount, 0);
 		integerCount = Math.Min(availableLength, integerCount);
 
-		return stringInput.Substring(numberStart, integerCount);
+		return input.Substring(numberStart, integerCount);
 	}
 }
 

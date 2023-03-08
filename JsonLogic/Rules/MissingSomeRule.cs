@@ -47,24 +47,28 @@ public class MissingSomeRule : Rule
 	/// <returns>The result of the rule.</returns>
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
-		var requiredCount = RequiredCount.Apply(data, contextData).Numberify();
+		var requiredCount = RequiredCount.Apply(data, contextData).Numberify() ?? 1;
 		var components = Components.Apply(data, contextData);
 		if (components is not JsonArray arr)
-			throw new JsonLogicException("Expected array of required paths.");
+			arr = new JsonArray(components.Copy());
 
 		var expected = arr.SelectMany(e => e.Flatten()).ToList();
-		if (expected.Any(e => e is JsonValue v && !v.TryGetValue(out string? _)))
-			throw new JsonLogicException("Expected array of required paths.");
 
 		if (data is not JsonObject)
 			return expected.ToJsonArray();
 
-		var paths = expected.Cast<JsonValue>().Select(e => e.GetValue<string?>()!)
-			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
+		var paths = expected
 			.Select(p =>
 			{
-				p.Pointer.TryEvaluate(data, out var value);
-				return new { Path = p.Path, Value = value };
+				if (p is JsonValue v && v.TryGetValue(out string? s))
+					return new { Path = p, Pointer = JsonPointer.Parse(s == string.Empty ? "" : $"/{s.Replace('.', '/')}") };
+				return new { Path = p, Pointer = (JsonPointer?)null }!;
+			})
+			.Select(p =>
+			{
+				if (p.Pointer != null! && p.Pointer.TryEvaluate(data, out var value))
+					return new { Path = p.Path, Value = value };
+				return new { Path = p.Path, Value = (JsonNode?)null };
 			})
 			.ToList();
 
