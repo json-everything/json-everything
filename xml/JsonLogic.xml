@@ -373,7 +373,8 @@
              <returns>
             	A string representation of the value as follows:
             
-             - strings try to parse a number from the value
+             - empty string returns 0
+             - all other strings try to parse a number from the value
              - true returns 1
              - false returns 0
             	- numbers are unchanged
