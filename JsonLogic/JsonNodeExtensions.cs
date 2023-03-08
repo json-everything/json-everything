@@ -82,7 +82,8 @@ public static class JsonNodeExtensions
 	/// <returns>
 	///	A string representation of the value as follows:
 	///
-	/// - strings try to parse a number from the value
+	/// - empty string returns 0
+	/// - all other strings try to parse a number from the value
 	/// - true returns 1
 	/// - false returns 0
 	///	- numbers are unchanged
@@ -94,7 +95,12 @@ public static class JsonNodeExtensions
 
 		if (node is not JsonValue value) return null;
 
-		if (value.TryGetValue(out string? s)) return decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var d) ? d : null;
+		if (value.TryGetValue(out string? s))
+			return s == string.Empty
+				? 0
+				: decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var d)
+					? d
+					: null;
 
 		if (value.TryGetValue(out bool b)) return b ? 1 : 0;
 

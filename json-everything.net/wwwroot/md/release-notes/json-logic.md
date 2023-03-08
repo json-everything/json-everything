@@ -1,3 +1,7 @@
+# 4.0.1 (no PR) {#release-logic-4.0.0}
+
+Empty strings "numberify" to 0.
+
 # [4.0.0](https://github.com/gregsdennis/json-everything/pull/395) {#release-logic-4.0.0}
 
 [#377](https://github.com/gregsdennis/json-everything/issues/377) - Alignment with JS version available online at https://jsonlogic.com/.
