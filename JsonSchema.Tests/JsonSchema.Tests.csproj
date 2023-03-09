@@ -14,7 +14,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Humanizer.Core" Version="2.11.10" />
-		<PackageReference Include="JunitXml.TestLogger" Version="3.0.124" />
 		<PackageReference Include="FluentAssertions" Version="6.10.0" />
 		<PackageReference Include="nunit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
