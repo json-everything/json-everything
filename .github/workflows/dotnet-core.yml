@@ -78,6 +78,8 @@ jobs:
   
   test-report:
     runs-on: ubuntu-latest
+    needs: build
+    if: success() || failure()
     steps:
     - uses: dorny/test-reporter@v1
       with:
