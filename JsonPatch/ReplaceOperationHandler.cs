@@ -18,9 +18,10 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		if (!operation.Path.EvaluateAndGetParent(context.Source, out var target))
+		if (!operation.Path.EvaluateAndGetParent(context.Source, out var target) ||
+			!operation.Path.TryEvaluate(context.Source, out _))
 		{
-			context.Message = $"Target path `{operation.From}` could not be reached.";
+			context.Message = $"Target path `{operation.Path}` could not be reached.";
 			return;
 		}
 
