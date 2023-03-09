@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -53,10 +54,11 @@ public class GithubTests
 		var arrayObject = JsonDocument.Parse(arrayObjectJson).RootElement;
 
 		// Way 1: patch whole array
-		var patchedArray = patchConfig.Apply(arrayObject.AsNode()).Result;  // <- does nothing
+		var patchedArray = patchConfig.Apply(arrayObject.AsNode()).Result; // <- does nothing
 
 		Console.WriteLine(JsonSerializer.Serialize(patchedArray));
 	}
+
 	[Test]
 	public void Issue393_NodeAlreadyHasParent_2()
 	{
@@ -100,10 +102,11 @@ public class GithubTests
 		// Way 2: just patch every element
 		foreach (var element in jsonArray)
 		{
-			var patchedNode = patchConfig.Apply(element).Result;            // <-  throws an error
+			var patchedNode = patchConfig.Apply(element).Result; // <-  throws an error
 			Console.WriteLine(JsonSerializer.Serialize(patchedNode));
 		}
 	}
+
 	[Test]
 	public void Issue393_NodeAlreadyHasParent_3()
 	{
@@ -150,8 +153,31 @@ public class GithubTests
 			var nodeToPatch = jsonArray[currentIndex];
 			jsonArray.RemoveAt(currentIndex);
 
-			var patchedNode = patchConfig.Apply(nodeToPatch).Result;        // <-  throws an error
+			var patchedNode = patchConfig.Apply(nodeToPatch).Result; // <-  throws an error
 			Console.WriteLine(JsonSerializer.Serialize(patchedNode));
 		}
+	}
+
+	[Test]
+	public void Issue397_ReplaceShouldThrowForMissingValue()
+	{
+		const string mask = "*****";
+		var maskJson = JsonValue.Create(mask);
+
+		var pathsToPatch = new[] { "/first_name", "/last_name" };
+
+		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
+		var patchConfig = new JsonPatch(patchOperations);
+
+		const string singleObjectJson = @"{
+	""id"":""640729d45434f90313d25c78"",
+    ""guid"":""f2e2767c-03e0-4862-addc-7d46c55efb33"",
+	""city"":""Boston""
+}";
+
+		var singleObject = JsonNode.Parse(singleObjectJson);
+		var result = patchConfig.Apply(singleObject);
+		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
+		Assert.IsNotNull(patchConfig.Apply(singleObject).Error);
 	}
 }

@@ -1,6 +1,10 @@
+# [2.0.6](https://github.com/gregsdennis/json-everything/pull/400) {#release-patch-2.0.6}
+
+[#397](https://github.com/gregsdennis/json-everything/issues/397) - Fixed an issue where `replace` needs to check that the target location exists before proceeding with the `add` portion of its operation.
+
 # [2.0.5](https://github.com/gregsdennis/json-everything/pull/394) {#release-patch-2.0.5}
 
-[#393](https://github.com/gregsdennis/json-everything/pull/393) - Fixed an `InvalidOperationException` from some of the operations.
+[#393](https://github.com/gregsdennis/json-everything/issues/393) - Fixed an `InvalidOperationException` from some of the operations.
 
 # [2.0.4](https://github.com/gregsdennis/json-everything/pull/323) {#release-patch-2.0.4}
 
