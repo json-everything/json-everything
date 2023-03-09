@@ -63,7 +63,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test --no-restore --verbosity normal --logger:"junit;LogFileName=test-results.xml"
+        run: dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-results.trx"
       - name: Upload DLLs for analysis
         uses: actions/upload-artifact@v2
         with:
@@ -74,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Unit Test Results
-          path: '**/*/test-results.xml'
+          path: '**/*/test-results.trx'
 
   test-results:
     runs-on: ubuntu-latest
@@ -87,44 +87,44 @@ jobs:
         with:
           path: artifacts
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: '**/*/test-results.xml'
+          files: '**/*/test-results.trx'
 
   test-badge:
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
+    if: success() || failure()
     steps:
-    - name: Extract Branch Name
-      run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-    - name: Download Artifacts
-      uses: actions/download-artifact@v2
-      with:
-        path: artifacts
-    - name: Get badge details
-      run: |
-        find . -name test-results.xml -exec cat '{}' >> all-results.xml \;
-        TEST_COUNT=`grep -Pio '(?<=tests=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`
-        echo "FAIL_COUNT=`grep -Pio '(?<=failures=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
-        echo "PASS_COUNT=$((TEST_COUNT - FAIL_COUNT))" >> $GITHUB_ENV
-        if [[ $FAIL_COUNT -eq 0 ]]
-        then
-          echo "BUILD_STATUS=success" >> $GITHUB_ENV
-        else
-          echo "BUILD_STATUS=critical" >> $GITHUB_ENV
-        fi
-    - name: Create test results badge
-      if: env.BRANCH == 'master'
-      uses: schneegans/dynamic-badges-action@v1.0.0
-      with:
-        auth: ${{ secrets.TEST_BADGE_KEY }}
-        gistID: 28607f2d276032f4d9a7f2c807e44df7
-        filename: test-results-badge.json
-        label: tests
-        message: ${{ format('{0} passing | {1} failing', env.PASS_COUNT, env.FAIL_COUNT) }}
-        color: ${{ env.BUILD_STATUS }}
+      - name: Extract Branch Name
+        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - name: Get badge details
+        run: |
+          find . -name test-results.trx -exec cat '{}' >> all-results.xml \;
+          echo "FAIL_COUNT=`grep -Pio '(?<=failed=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
+          echo "PASS_COUNT=`grep -Pio '(?<=passed=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
+          if [[ $FAIL_COUNT -eq 0 ]]
+          then
+            echo "BUILD_STATUS=success" >> $GITHUB_ENV
+          else
+            echo "BUILD_STATUS=critical" >> $GITHUB_ENV
+          fi
+      - name: Create test results badge
+        if: env.BRANCH == 'master'
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.TEST_BADGE_KEY }}
+          gistID: 28607f2d276032f4d9a7f2c807e44df7
+          filename: test-results-badge.json
+          label: tests
+          message: ${{ format('{0} passing | {1} failing', env.PASS_COUNT, env.FAIL_COUNT) }}
+          color: ${{ env.BUILD_STATUS }}
 
   analyze-more:
     if: github.event_name == 'pull_request'

@@ -26,29 +26,29 @@ public class GithubTests
 		Console.WriteLine(JsonSerializer.Serialize(patchConfig));
 
 		const string singleObjectJson = "{" +
-		                                "\"_id\":\"640729d45434f90313d25c78\"," +
-		                                "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
-		                                "\"first_name\":\"Kathrine\"," +
-		                                "\"last_name\":\"Pate\"" +
-		                                "}";
+										"\"_id\":\"640729d45434f90313d25c78\"," +
+										"\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
+										"\"first_name\":\"Kathrine\"," +
+										"\"last_name\":\"Pate\"" +
+										"}";
 
 		var singleObject = JsonDocument.Parse(singleObjectJson).RootElement;
 		var patchedSingleObject = patchConfig.Apply(singleObject.AsNode()).Result;
 		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject));
 
 		const string arrayObjectJson = "[" +
-		                               "{" +
-		                               "\"_id\":\"640729d45434f90313d25c78\"," +
-		                               "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
-		                               "\"first_name\":\"Kathrine\"," +
-		                               "\"last_name\":\"Pate\"" +
-		                               "}," +
-		                               "{\"_id\":\"640729d45b5824ffcabc30a5\"," +
-		                               "\"guid\":\"73193eda-074b-4f31-9f09-507a008ccb75\"," +
-		                               "\"first_name\":\"Rivers\"," +
-		                               "\"last_name\":\"Smith\"" +
-		                               "}" +
-		                               "]";
+									   "{" +
+									   "\"_id\":\"640729d45434f90313d25c78\"," +
+									   "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
+									   "\"first_name\":\"Kathrine\"," +
+									   "\"last_name\":\"Pate\"" +
+									   "}," +
+									   "{\"_id\":\"640729d45b5824ffcabc30a5\"," +
+									   "\"guid\":\"73193eda-074b-4f31-9f09-507a008ccb75\"," +
+									   "\"first_name\":\"Rivers\"," +
+									   "\"last_name\":\"Smith\"" +
+									   "}" +
+									   "]";
 
 		var arrayObject = JsonDocument.Parse(arrayObjectJson).RootElement;
 
@@ -69,33 +69,33 @@ public class GithubTests
 		var patchConfig = new JsonPatch(patchOperations);
 
 		const string singleObjectJson = "{" +
-		                                "\"_id\":\"640729d45434f90313d25c78\"," +
-		                                "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
-		                                "\"first_name\":\"Kathrine\"," +
-		                                "\"last_name\":\"Pate\"" +
-		                                "}";
+										"\"_id\":\"640729d45434f90313d25c78\"," +
+										"\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
+										"\"first_name\":\"Kathrine\"," +
+										"\"last_name\":\"Pate\"" +
+										"}";
 
 		var singleObject = JsonDocument.Parse(singleObjectJson).RootElement;
 		var patchedSingleObject = patchConfig.Apply(singleObject.AsNode()).Result;
 		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject));
 
 		const string arrayObjectJson = "[" +
-		                               "{" +
-		                               "\"_id\":\"640729d45434f90313d25c78\"," +
-		                               "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
-		                               "\"first_name\":\"Kathrine\"," +
-		                               "\"last_name\":\"Pate\"" +
-		                               "}," +
-		                               "{\"_id\":\"640729d45b5824ffcabc30a5\"," +
-		                               "\"guid\":\"73193eda-074b-4f31-9f09-507a008ccb75\"," +
-		                               "\"first_name\":\"Rivers\"," +
-		                               "\"last_name\":\"Smith\"" +
-		                               "}" +
-		                               "]";
+									   "{" +
+									   "\"_id\":\"640729d45434f90313d25c78\"," +
+									   "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
+									   "\"first_name\":\"Kathrine\"," +
+									   "\"last_name\":\"Pate\"" +
+									   "}," +
+									   "{\"_id\":\"640729d45b5824ffcabc30a5\"," +
+									   "\"guid\":\"73193eda-074b-4f31-9f09-507a008ccb75\"," +
+									   "\"first_name\":\"Rivers\"," +
+									   "\"last_name\":\"Smith\"" +
+									   "}" +
+									   "]";
 
 		var arrayObject = JsonDocument.Parse(arrayObjectJson).RootElement;
 
-		var jsonArray = arrayObject.AsNode().AsArray();
+		var jsonArray = arrayObject.AsNode()!.AsArray();
 
 		// Way 2: just patch every element
 		foreach (var element in jsonArray)
@@ -116,33 +116,33 @@ public class GithubTests
 		var patchConfig = new JsonPatch(patchOperations);
 
 		const string singleObjectJson = "{" +
-		                                "\"_id\":\"640729d45434f90313d25c78\"," +
-		                                "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
-		                                "\"first_name\":\"Kathrine\"," +
-		                                "\"last_name\":\"Pate\"" +
-		                                "}";
+										"\"_id\":\"640729d45434f90313d25c78\"," +
+										"\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
+										"\"first_name\":\"Kathrine\"," +
+										"\"last_name\":\"Pate\"" +
+										"}";
 
 		var singleObject = JsonNode.Parse(singleObjectJson);
 		var patchedSingleObject = patchConfig.Apply(singleObject).Result;
 		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject));
 
 		const string arrayObjectJson = "[" +
-		                               "{" +
-		                               "\"_id\":\"640729d45434f90313d25c78\"," +
-		                               "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
-		                               "\"first_name\":\"Kathrine\"," +
-		                               "\"last_name\":\"Pate\"" +
-		                               "}," +
-		                               "{\"_id\":\"640729d45b5824ffcabc30a5\"," +
-		                               "\"guid\":\"73193eda-074b-4f31-9f09-507a008ccb75\"," +
-		                               "\"first_name\":\"Rivers\"," +
-		                               "\"last_name\":\"Smith\"" +
-		                               "}" +
-		                               "]";
+									   "{" +
+									   "\"_id\":\"640729d45434f90313d25c78\"," +
+									   "\"guid\":\"f2e2767c-03e0-4862-addc-7d46c55efb33\"," +
+									   "\"first_name\":\"Kathrine\"," +
+									   "\"last_name\":\"Pate\"" +
+									   "}," +
+									   "{\"_id\":\"640729d45b5824ffcabc30a5\"," +
+									   "\"guid\":\"73193eda-074b-4f31-9f09-507a008ccb75\"," +
+									   "\"first_name\":\"Rivers\"," +
+									   "\"last_name\":\"Smith\"" +
+									   "}" +
+									   "]";
 
 		var arrayObject = JsonNode.Parse(arrayObjectJson);
 
-		var jsonArray = arrayObject.AsArray();
+		var jsonArray = arrayObject!.AsArray();
 
 		// Way 3: remove from initial array and then patch
 		for (int currentIndex = jsonArray.Count - 1; currentIndex >= 0; currentIndex--)
