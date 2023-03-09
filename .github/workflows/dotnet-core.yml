@@ -107,9 +107,8 @@ jobs:
       - name: Get badge details
         run: |
           find . -name test-results.trx -exec cat '{}' >> all-results.xml \;
-          TEST_COUNT=`grep -Pio '(?<=total=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`
-          echo "FAIL_COUNT=`grep -Pio '(?<=failures=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
-          echo "PASS_COUNT=$((TEST_COUNT - FAIL_COUNT))" >> $GITHUB_ENV
+          echo "FAIL_COUNT=`grep -Pio '(?<=failed=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
+          echo "PASS_COUNT=`grep -Pio '(?<=passed=")\d+' all-results.xml | awk '{ SUM += $1} END { print SUM }'`" >> $GITHUB_ENV
           if [[ $FAIL_COUNT -eq 0 ]]
           then
             echo "BUILD_STATUS=success" >> $GITHUB_ENV
