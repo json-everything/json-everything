@@ -73,7 +73,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Unit Test Results
+          name: unit-test-results
           path: '**/*/test-results.trx'
   
   test-report:
@@ -81,10 +81,10 @@ jobs:
     steps:
     - uses: dorny/test-reporter@v1
       with:
-        artifact: Unit Test Results       # artifact name
+        artifact: unit-test-results       # artifact name
         name: Test Results (test)                 # Name of the check run which will be created
         path: '**/*/test-results.trx'                     # Path to test results (inside artifact .zip)
-        reporter: jest-junit              # Format of test results
+        reporter: dotnet-trx              # Format of test results
 
   # test-results:
   #   runs-on: ubuntu-latest
