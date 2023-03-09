@@ -55,6 +55,13 @@ internal static class ValueExpressionParser
 			return false;
 		}
 
+		if (!options.AllowMathOperations)
+		{
+			index = i;
+			expression = left;
+			return true;
+		}
+
 		while (i < source.Length)
 		{
 			// handle )

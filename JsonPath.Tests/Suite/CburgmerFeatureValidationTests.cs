@@ -190,8 +190,8 @@ public class CburgmerFeatureValidationTests
 				return;
 			}
 
-			if (exception != null)
-				throw new Exception("An exception was thrown", exception);
+			if (exception != null) throw exception;
+
 			if (testCase.Consensus == null)
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 
