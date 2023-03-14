@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
@@ -57,5 +58,188 @@ public class BundlingTests
 		var result = schema.Evaluate(instance.RootElement, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
+	}
+
+	[Test]
+	public void BundleMultipleDocuments()
+	{
+		JsonSchema foo = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/foo")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("bar", new JsonSchemaBuilder().Ref("bar"))
+			);
+
+		JsonSchema bar = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/bar")
+			.Type(SchemaValueType.String);
+
+		// for reference
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/foo(bundled)")
+			.Defs(
+				("foo", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/foo")
+					.Type(SchemaValueType.Object)
+					.Properties(
+						("bar", new JsonSchemaBuilder().Ref("bar"))
+					)
+				),
+				("bar", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/bar")
+					.Type(SchemaValueType.String)
+				)
+			)
+			.Ref("foo");
+
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(bar);
+		var actual = foo.Bundle(options);
+
+		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/foo"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/bar"));
+	}
+
+	[Test]
+	public void BundleMultipleDocumentsWithAlreadyBundledSubschema()
+	{
+		JsonSchema foo = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/foo")
+			.Defs(
+				("baz", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/baz")
+					.Type(SchemaValueType.Integer)
+				)
+			)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("bar", new JsonSchemaBuilder().Ref("bar")),
+				("baz", new JsonSchemaBuilder().Ref("baz"))
+			);
+
+		JsonSchema bar = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/bar")
+			.Type(SchemaValueType.String);
+
+		// for reference
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/foo(bundled)")
+			.Defs(
+				("foo", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/foo")
+					.Defs(
+						("baz", new JsonSchemaBuilder()
+							.Schema(MetaSchemas.Draft202012Id)
+							.Id("https://json-everything/baz")
+							.Type(SchemaValueType.Integer)
+						)
+					)
+					.Type(SchemaValueType.Object)
+					.Properties(
+						("bar", new JsonSchemaBuilder().Ref("bar")),
+						("baz", new JsonSchemaBuilder().Ref("baz"))
+					)
+				),
+				("bar", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/bar")
+					.Type(SchemaValueType.String)
+				)
+			)
+			.Ref("foo");
+
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(bar);
+		var actual = foo.Bundle(options);
+
+		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/foo"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/bar"));
+		Assert.That(() => actual.GetDefs()!.Values.All(x => x.GetId().OriginalString != "https://json-everything/baz"));
+	}
+
+	[Test]
+	public void BundleMultipleDocumentsMultipleRefs()
+	{
+		JsonSchema foo = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/foo")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("bar", new JsonSchemaBuilder().Ref("bar"))
+			);
+
+		JsonSchema bar = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/bar")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("baz", new JsonSchemaBuilder().Ref("baz"))
+			);
+
+		JsonSchema baz = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/baz")
+			.Type(SchemaValueType.String);
+
+		// for reference
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/foo(bundled)")
+			.Defs(
+				("foo", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/foo")
+					.Type(SchemaValueType.Object)
+					.Properties(
+						("bar", new JsonSchemaBuilder().Ref("bar"))
+					)
+				),
+				("bar", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/bar")
+					.Type(SchemaValueType.Object)
+					.Properties(
+						("baz", new JsonSchemaBuilder().Ref("baz"))
+					)
+				),
+				("baz", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/baz")
+					.Type(SchemaValueType.String)
+				)
+			)
+			.Ref("foo");
+
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(bar);
+		options.SchemaRegistry.Register(baz);
+		var actual = foo.Bundle(options);
+
+		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(baz, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/foo"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/bar"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/baz"));
 	}
 }
