@@ -47,7 +47,7 @@ public class SearchFunction : IPathFunctionDefinition
 	/// <see cref="InvalidOperationException"/> if the value is
 	/// <see cref="FunctionType.Unspecified"/>
 	/// </remarks>
-	public FunctionType ReturnType => FunctionType.Boolean;
+	public FunctionType ReturnType => FunctionType.Logical;
 
 	/// <summary>
 	/// Evaluates the function.

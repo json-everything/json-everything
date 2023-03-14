@@ -18,7 +18,7 @@ public enum FunctionType
 	/// Indicates the function returns a non-JSON boolean value that can be
 	/// compared with logical operators.
 	/// </summary>
-	Boolean,
+	Logical,
 	/// <summary>
 	/// Indicates the function returns a nodelist.
 	/// </summary>

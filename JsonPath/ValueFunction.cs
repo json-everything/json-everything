@@ -7,15 +7,15 @@ using System.Text.RegularExpressions;
 namespace Json.Path;
 
 /// <summary>
-/// Implements the `match()` function which determines if a string exactly matches a regular
-/// expression (using implicit anchoring).
+/// Implements the `match()` function which determines if any substring within
+/// a string matches a regular expression.
 /// </summary>
-public class MatchFunction : IPathFunctionDefinition
+public class ValueFunction : IPathFunctionDefinition
 {
 	/// <summary>
 	/// Gets the function name.
 	/// </summary>
-	public string Name => "match";
+	public string Name => "value";
 
 	/// <summary>
 	/// Defines the sets of parameters that are valid for this function.
@@ -29,7 +29,7 @@ public class MatchFunction : IPathFunctionDefinition
 	public IEnumerable<IEnumerable<ParameterType>> ParameterSets { get; } =
 		new[]
 		{
-			new[] { ParameterType.String, ParameterType.String }
+			new[] { ParameterType.Nodelist }
 		};
 
 	/// <summary>
@@ -47,7 +47,7 @@ public class MatchFunction : IPathFunctionDefinition
 	/// <see cref="InvalidOperationException"/> if the value is
 	/// <see cref="FunctionType.Unspecified"/>
 	/// </remarks>
-	public FunctionType ReturnType => FunctionType.Logical;
+	public FunctionType ReturnType => FunctionType.Value;
 
 	/// <summary>
 	/// Evaluates the function.
@@ -60,6 +60,6 @@ public class MatchFunction : IPathFunctionDefinition
 		if (!args[0].TryGetSingleValue().TryGetValue<string>(out var text)) return NodeList.Empty;
 		if (!args[1].TryGetSingleValue().TryGetValue<string>(out var regex)) return NodeList.Empty;
 
-		return (JsonValue)Regex.IsMatch(text, $"^{regex}$", RegexOptions.ECMAScript);
+		return (JsonValue)Regex.IsMatch(text, regex, RegexOptions.ECMAScript);
 	}
 }
