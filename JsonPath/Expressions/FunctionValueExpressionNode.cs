@@ -7,27 +7,30 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class ValueFunctionExpressionNode : ValueExpressionNode
+internal class FunctionValueExpressionNode : ValueExpressionNode
 {
-	public IPathFunctionDefinition Function { get; }
-	public ValueExpressionNode[] Parameters { get; }
+	public ValueFunctionDefinition Function { get; }
+	public ExpressionNode[] Parameters { get; }
 
-	public ValueFunctionExpressionNode(IPathFunctionDefinition function, IEnumerable<ValueExpressionNode> parameters)
+	public FunctionValueExpressionNode(ValueFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
 	}
 
-	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
+	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		var parameterValues = Parameters.Select(x =>
 		{
-			var result = x.Evaluate(globalParameter, localParameter);
-			if (result != null) return (NodeList)result;
-			return NodeList.Empty;
-		});
+			return x switch
+			{
+				ValueExpressionNode c => (object?)c.Evaluate(globalParameter, localParameter),
+				BooleanResultExpressionNode b => b.Evaluate(globalParameter, localParameter),
+				_ => throw new ArgumentOutOfRangeException("parameter")
+			};
+		}).ToArray();
 
-		return Function.Evaluate(parameterValues);
+		return Function.Invoke(parameterValues);
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -54,7 +57,7 @@ internal class ValueFunctionExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class ValueFunctionExpressionParser : IValueExpressionParser
+internal class FunctionValueExpressionParser : IValueExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
@@ -65,14 +68,14 @@ internal class ValueFunctionExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		if (!function.ReturnType.HasFlag(FunctionType.Value))
+		if (function is not ValueFunctionDefinition valueFunction)
 		{
 			expression = null;
 			return false;
 		}
 
 		index = i;
-		expression = new ValueFunctionExpressionNode(function, parameters);
+		expression = new FunctionValueExpressionNode(valueFunction, parameters);
 		return true;
 	}
 }

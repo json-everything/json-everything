@@ -7,15 +7,17 @@ internal class DivideOperator : IBinaryValueOperator
 {
 	public int Precedence => 2;
 
-	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
+	public PathValue? Evaluate(PathValue? left, PathValue? right)
 	{
-		if (left.TryGetSingleValue() is not JsonValue lValue ||
-		    right.TryGetSingleValue() is not JsonValue rValue)
+		if (left?.TryGetJson() is not JsonValue lValue ||
+		    right?.TryGetJson() is not JsonValue rValue)
 			return null;
 
 		var rNumber = rValue.GetNumber();
 
-		return rNumber is null or 0 ? null : lValue.GetNumber() / rNumber;
+		return rNumber is null or 0
+			? null
+			: (JsonNode?)(lValue.GetNumber() / rNumber);
 	}
 
 	public override string ToString()

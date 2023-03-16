@@ -13,7 +13,7 @@ internal static class LogicalExpressionParser
 	{
 		new BinaryLogicalExpressionParser(),
 		new UnaryLogicalExpressionParser(),
-		new BooleanFunctionExpressionParser()
+		new FunctionBooleanExpressionParser()
 	};
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)

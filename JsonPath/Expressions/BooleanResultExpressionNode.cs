@@ -5,11 +5,9 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal abstract class BooleanResultExpressionNode
+internal abstract class BooleanResultExpressionNode : ExpressionNode
 {
 	public abstract bool Evaluate(JsonNode? globalParameter, JsonNode? localParameter);
-
-	public abstract void BuildString(StringBuilder builder);
 }
 
 internal static class BooleanResultExpressionParser

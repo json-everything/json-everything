@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
@@ -7,15 +6,15 @@ internal class ExistsOperator : IUnaryComparativeOperator
 {
 	public int Precedence => 10;
 
-	public bool Evaluate(JsonNode? value)
+	public bool Evaluate(PathValue? value)
 	{
-		if (value is not JsonValue jValue)
-			return value is not null;
-
-		if (jValue.TryGetValue(out NodeList? nodeList))
-			return nodeList.Any();
-
-		return true;
+		return value switch
+		{
+			JsonPathValue j => j.Value != null,
+			NodeListPathValue n => n.Value.Any(),
+			LogicalPathValue l => l.Value,
+			_ => false
+		};
 	}
 
 	public override string ToString()

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path;
 
@@ -20,7 +21,7 @@ public class Node
 
 	internal Node(in JsonNode? value, in JsonPath? location)
 	{
-		Value = value;
+		Value = value ?? JsonNull.SignalNode;
 		Location = location;
 	}
 }

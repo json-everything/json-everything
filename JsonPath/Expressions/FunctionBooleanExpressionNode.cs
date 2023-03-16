@@ -4,16 +4,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
-using Json.More;
 
 namespace Json.Path.Expressions;
 
-internal class BooleanFunctionExpressionNode : LogicalExpressionNode
+internal class FunctionBooleanExpressionNode : LogicalExpressionNode
 {
-	public IPathFunctionDefinition Function { get; }
-	public ValueExpressionNode[] Parameters { get; }
+	public LogicalFunctionDefinition Function { get; }
+	public ExpressionNode[] Parameters { get; }
 
-	public BooleanFunctionExpressionNode(IPathFunctionDefinition function, IEnumerable<ValueExpressionNode> parameters)
+	public FunctionBooleanExpressionNode(LogicalFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
@@ -23,14 +22,15 @@ internal class BooleanFunctionExpressionNode : LogicalExpressionNode
 	{
 		var parameterValues = Parameters.Select(x =>
 		{
-			var result = x.Evaluate(globalParameter, localParameter);
-			if (result != null) return (NodeList)result;
-			return NodeList.Empty;
-		});
+			return x switch
+			{
+				ValueExpressionNode c => (object?)c.Evaluate(globalParameter, localParameter),
+				BooleanResultExpressionNode b => b.Evaluate(globalParameter, localParameter),
+				_ => throw new ArgumentOutOfRangeException("parameter")
+			};
+		}).ToArray();
 
-		var nodeList = Function.Evaluate(parameterValues);
-
-		return nodeList.Count == 1 && nodeList[0].Value.IsEquivalentTo(true);
+		return Function.Invoke(parameterValues) == true;
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -57,7 +57,7 @@ internal class BooleanFunctionExpressionNode : LogicalExpressionNode
 	}
 }
 
-internal class BooleanFunctionExpressionParser : ILogicalExpressionParser
+internal class FunctionBooleanExpressionParser : ILogicalExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
@@ -68,13 +68,13 @@ internal class BooleanFunctionExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		if (!function.ReturnType.HasFlag(FunctionType.Logical))
+		if (function is not LogicalFunctionDefinition logicalFunc)
 		{
 			expression = null;
 			return false;
 		}
 
-		expression = new BooleanFunctionExpressionNode(function, parameters);
+		expression = new FunctionBooleanExpressionNode(logicalFunc, parameters);
 		index = i;
 		return true;
 	}

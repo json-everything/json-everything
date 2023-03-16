@@ -8,10 +8,13 @@ internal class LessThanOperator : IBinaryComparativeOperator
 {
 	public int Precedence => 10;
 
-	public bool Evaluate(JsonNode? left, JsonNode? right)
+	public bool Evaluate(PathValue? left, PathValue? right)
 	{
-		if (left.TryGetSingleValue() is not JsonValue lValue ||
-		    right.TryGetSingleValue() is not JsonValue rValue)
+		var jLeft = left?.TryGetJson();
+		var jRight = right?.TryGetJson();
+
+		if (jLeft.TryGetSingleValue() is not JsonValue lValue ||
+		    jRight.TryGetSingleValue() is not JsonValue rValue)
 			return false;
 
 		if (lValue.TryGetValue(out string? leftString) &&

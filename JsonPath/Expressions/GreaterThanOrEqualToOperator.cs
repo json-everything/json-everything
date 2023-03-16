@@ -8,15 +8,15 @@ internal class GreaterThanOrEqualToOperator : IBinaryComparativeOperator
 {
 	public int Precedence => 10;
 
-	public bool Evaluate(JsonNode? left, JsonNode? right)
+	public bool Evaluate(PathValue? left, PathValue? right)
 	{
-		left = left.TryGetSingleValue();
-		right = right.TryGetSingleValue();
+		var jLeft = left?.TryGetJson();
+		var jRight = right?.TryGetJson();
 
-		if (left.IsEquivalentTo(right)) return true;
+		if (jLeft.IsEquivalentTo(jRight)) return true;
 
-		if (left is not JsonValue lValue ||
-		    right is not JsonValue rValue)
+		if (jLeft is not JsonValue lValue ||
+		    jRight is not JsonValue rValue)
 			return false;
 
 		if (lValue.TryGetValue(out string? leftString) &&

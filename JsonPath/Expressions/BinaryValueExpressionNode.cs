@@ -20,7 +20,7 @@ internal class BinaryValueExpressionNode : ValueExpressionNode
 		NestLevel = nestLevel;
 	}
 
-	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
+	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		return Operator.Evaluate(Left.Evaluate(globalParameter, localParameter), Right.Evaluate(globalParameter, localParameter));
 	}

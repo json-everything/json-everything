@@ -15,7 +15,7 @@ internal class LiteralExpressionNode : ValueExpressionNode
 		Value = value ?? JsonNull.SignalNode;
 	}
 
-	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
+	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		return Value;
 	}
