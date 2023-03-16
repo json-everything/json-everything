@@ -69,8 +69,36 @@ The specification defines the following functions:
 - `count(<nodelist>)` to return the number of nodes in a nodelist.
 - `match(<iregexp>, <text>)` to return whether the text is an exact match for a regular expression per [I-Regexp](https://www.ietf.org/archive/id/draft-ietf-jsonpath-iregexp-02.html).\*
 - `search(<iregexp>, <text>)` to return whether the text _contains_ an exact match for a regular expression per [I-Regexp](https://www.ietf.org/archive/id/draft-ietf-jsonpath-iregexp-02.html).\*
+- `value(<nodelist>)` to convert a nodelist to a value: single-nodelists extract their node's value; multiple-/empty nodelists convert to `Nothing` (no node, absent).
 
 \* _I-Regexp is designed to be an interoperable subset of most popular regular expression specifications and implementations.  One difference that [could not be resolved](https://github.com/ietf-wg-jsonpath/iregexp/issues/15) was implicit anchoring.  As such, two methods were developed to handle both cases.  `match` uses implicit anchoring, while `search` does not._
+
+#### Custom Functions {#path-custom-functions}
+
+There is also support for defining your own functions.
+
+To do this, you'll need to decide what type your function will return and derive from the appropriate base class:
+
+| Return type | What that means | Base class | Associated C# type |
+|:-|:-|:-|:-|
+| `ValueType` | JSON values or `Nothing` | `ValueFunctionDefinition` | `JsonNode?` |
+| `LogicalType` | a boolean (not related to the JSON `true`/`false` literals) | `LiteralFunctionDefinition` | `bool` |
+| `NodesType` | a nodelist, as returned by `@.a` or `@.*` | `NodeListFunctionDefinition` | `NodeList` |
+
+Once you've created your function class, you'll need to implement the `Name` property (abstracted in the base class) to identify the function.  You'll also need to create an `Evaluate()` function that
+
+- returns the associated C# type for the base class
+- only has parameters of one of the above types
+
+You're welcome to have as many parameters as you want, as long as they're one of the three types listed in the table.
+
+For an example, please see the [`LengthFunction` implementation](https://github.com/gregsdennis/json-everything/blob/master/JsonPath/LengthFunction.cs) in the code.
+
+Now that your function class is created, all that's left is to register it:
+
+```c#
+FunctionRepository.Register(new MyCustomFunc());
+```
 
 # In Code {#path-in-code}
 
