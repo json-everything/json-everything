@@ -5,7 +5,6 @@ namespace Json.Path;
 /// <summary>
 /// Indicates the return type of a filter expression function.
 /// </summary>
-[Flags]
 public enum FunctionType
 {
 	/// <summary>
@@ -16,14 +15,14 @@ public enum FunctionType
 	/// Indicates the function returns a JSON-like value that can be
 	/// compared with equality and inequality operators.
 	/// </summary>
-	Value = 1,
+	Value,
 	/// <summary>
 	/// Indicates the function returns a non-JSON boolean value that can be
 	/// compared with logical operators.
 	/// </summary>
-	Logical = 2,
+	Logical,
 	/// <summary>
 	/// Indicates the function returns a nodelist.
 	/// </summary>
-	Nodelist = 4
+	Nodelist
 }

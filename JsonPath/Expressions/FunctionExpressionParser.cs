@@ -72,9 +72,6 @@ internal static class FunctionExpressionParser
 				return false;
 			}
 
-			// TODO: check parameter lists for appropriate argument type and parse accordingly
-			// TODO: (maybe) support for function overloads.  See https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base/issues/430
-
 			if (parameterTypeList[parameterIndex] == FunctionType.Value)
 			{
 				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options))

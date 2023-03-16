@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
 using Json.Path.Expressions;
@@ -25,8 +23,14 @@ internal interface IReflectiveFunctionDefinition
 	internal (FunctionType[] ArgTypes, MethodInfo Method) Evaluator { get; set; }
 }
 
+/// <summary>
+/// Base class for defining an expression function which returns `ValueType`.
+/// </summary>
 public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
+	/// <summary>
+	/// Gets the function name.
+	/// </summary>
 	public abstract string Name { get; }
 
 	(FunctionType[] ArgTypes, MethodInfo Method) IReflectiveFunctionDefinition.Evaluator { get; set; }
@@ -44,8 +48,14 @@ public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, I
 	}
 }
 
+/// <summary>
+/// Base class for defining an expression function which returns `LogicalType`.
+/// </summary>
 public abstract class LogicalFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
+	/// <summary>
+	/// Gets the function name.
+	/// </summary>
 	public abstract string Name { get; }
 
 	(FunctionType[] ArgTypes, MethodInfo Method) IReflectiveFunctionDefinition.Evaluator { get; set; }
@@ -61,8 +71,14 @@ public abstract class LogicalFunctionDefinition : IReflectiveFunctionDefinition,
 	}
 }
 
+/// <summary>
+/// Base class for defining an expression function which returns `NodesType`.
+/// </summary>
 public abstract class NodelistFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
+	/// <summary>
+	/// Gets the function name.
+	/// </summary>
 	public abstract string Name { get; }
 
 	(FunctionType[] ArgTypes, MethodInfo Method) IReflectiveFunctionDefinition.Evaluator { get; set; }
