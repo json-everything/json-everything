@@ -3,8 +3,7 @@
 namespace Json.Path;
 
 /// <summary>
-/// Implements the `match()` function which determines if any substring within
-/// a string matches a regular expression.
+/// Implements the `value()` function which extracts a single value from a nodelist.
 /// </summary>
 public class ValueFunction : ValueFunctionDefinition
 {

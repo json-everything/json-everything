@@ -21,7 +21,7 @@ public class Node
 
 	internal Node(in JsonNode? value, in JsonPath? location)
 	{
-		Value = value ?? JsonNull.SignalNode;
+		Value = value;
 		Location = location;
 	}
 }

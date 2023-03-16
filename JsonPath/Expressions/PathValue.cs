@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path.Expressions;
 
@@ -7,7 +8,7 @@ internal abstract class PathValue
 	public JsonNode? TryGetJson() =>
 		this switch
 		{
-			JsonPathValue v => v.Value,
+			JsonPathValue v => v.Value ?? JsonNull.SignalNode,
 			NodeListPathValue n => n.Value.TryGetSingleValue(),
 			_ => null
 		};

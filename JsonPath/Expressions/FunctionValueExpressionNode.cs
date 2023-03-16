@@ -9,10 +9,10 @@ namespace Json.Path.Expressions;
 
 internal class FunctionValueExpressionNode : ValueExpressionNode
 {
-	public ValueFunctionDefinition Function { get; }
+	public IPathFunctionDefinition Function { get; }
 	public ExpressionNode[] Parameters { get; }
 
-	public FunctionValueExpressionNode(ValueFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
+	public FunctionValueExpressionNode(IPathFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
@@ -30,7 +30,12 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 			};
 		}).ToArray();
 
-		return Function.Invoke(parameterValues);
+		return Function switch
+		{
+			ValueFunctionDefinition vFunc => vFunc.Invoke(parameterValues),
+			NodelistFunctionDefinition nFunc => nFunc.Invoke(parameterValues),
+			_ => throw new ArgumentException("This shouldn't happen.  Logical functions are not valid here.")
+		};
 	}
 
 	public override void BuildString(StringBuilder builder)

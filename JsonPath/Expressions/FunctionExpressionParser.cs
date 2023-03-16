@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Json.Path.Expressions;
 
@@ -54,7 +53,7 @@ internal static class FunctionExpressionParser
 		arguments = new List<ExpressionNode>();
 		var done = false;
 
-		var parameterTypeList = ((IReflectiveFunctionDefinition)function).Evaluators!.Single().ArgTypes;
+		var parameterTypeList = ((IReflectiveFunctionDefinition)function).Evaluator.ArgTypes;
 		var parameterIndex = 0;
 
 		while (i < source.Length && !done)
@@ -99,13 +98,31 @@ internal static class FunctionExpressionParser
 			}
 			else
 			{
+				// this must return a path or function that returns nodelist
 				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options))
 				{
 					arguments = null;
 					function = null;
 					return false;
 				}
-				arguments.Add(expr);
+
+				switch (expr)
+				{
+					case PathExpressionNode:
+						arguments.Add(expr);
+						break;
+					case FunctionValueExpressionNode { Function: not NodelistFunctionDefinition }:
+						arguments = null;
+						function = null;
+						return false;
+					case FunctionValueExpressionNode funcExpr:
+						arguments.Add(expr);
+						break;
+					default:
+						arguments = null;
+						function = null;
+						return false;
+				}
 			}
 
 			if (!source.ConsumeWhitespace(ref i))

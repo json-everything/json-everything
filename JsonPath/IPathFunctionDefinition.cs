@@ -22,42 +22,18 @@ public interface IPathFunctionDefinition
 
 internal interface IReflectiveFunctionDefinition
 {
-	internal (FunctionType[] ArgTypes, MethodInfo Method)[]? Evaluators { get; set; }
-}
-
-internal class ArgumentTypeComparer : IEqualityComparer<FunctionType>
-{
-	public static ArgumentTypeComparer Instance { get; } = new();
-
-	private ArgumentTypeComparer(){}
-
-	public bool Equals(FunctionType x, FunctionType y)
-	{
-		return x != FunctionType.Unspecified && y != FunctionType.Unspecified &&
-		       x.HasFlag(y);
-	}
-
-	public int GetHashCode(FunctionType obj)
-	{
-		return 0;
-	}
+	internal (FunctionType[] ArgTypes, MethodInfo Method) Evaluator { get; set; }
 }
 
 public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
 	public abstract string Name { get; }
 
-	(FunctionType[] ArgTypes, MethodInfo Method)[]? IReflectiveFunctionDefinition.Evaluators { get; set; }
+	(FunctionType[] ArgTypes, MethodInfo Method) IReflectiveFunctionDefinition.Evaluator { get; set; }
 
 	internal PathValue? Invoke(object?[] arguments)
 	{
-		// TODO: support for overloads
-		//var argumentTypes = arguments.ToArgumentTypes();
-		//var method = ((IReflectiveFunctionDefinition)this).Evaluators?
-		//	.FirstOrDefault(x => x.ArgTypes.SequenceEqual(argumentTypes, ArgumentTypeComparer.Instance))
-		//	.Method;
-
-		var (parameterTypes, method) = ((IReflectiveFunctionDefinition)this).Evaluators!.Single();
+		var (parameterTypes, method) = ((IReflectiveFunctionDefinition)this).Evaluator;
 
 		if (method == null)
 			throw new InvalidOperationException("Cannot find appropriate method. This should have been caught during parsing.");
@@ -72,17 +48,11 @@ public abstract class LogicalFunctionDefinition : IReflectiveFunctionDefinition,
 {
 	public abstract string Name { get; }
 
-	(FunctionType[] ArgTypes, MethodInfo Method)[]? IReflectiveFunctionDefinition.Evaluators { get; set; }
+	(FunctionType[] ArgTypes, MethodInfo Method) IReflectiveFunctionDefinition.Evaluator { get; set; }
 
 	internal bool? Invoke(object?[] arguments)
 	{
-		// TODO: support for overloads
-		//var argumentTypes = arguments.ToArgumentTypes();
-		//var method = ((IReflectiveFunctionDefinition)this).Evaluators?
-		//	.FirstOrDefault(x => x.ArgTypes.SequenceEqual(argumentTypes, ArgumentTypeComparer.Instance))
-		//	.Method;
-
-		var (parameterTypes, method) = ((IReflectiveFunctionDefinition)this).Evaluators!.Single();
+		var (parameterTypes, method) = ((IReflectiveFunctionDefinition)this).Evaluator;
 
 		if (method == null)
 			throw new InvalidOperationException("Cannot find appropriate method. This should have been caught during parsing.");
@@ -95,17 +65,11 @@ public abstract class NodelistFunctionDefinition : IReflectiveFunctionDefinition
 {
 	public abstract string Name { get; }
 
-	(FunctionType[] ArgTypes, MethodInfo Method)[]? IReflectiveFunctionDefinition.Evaluators { get; set; }
+	(FunctionType[] ArgTypes, MethodInfo Method) IReflectiveFunctionDefinition.Evaluator { get; set; }
 
 	internal NodeList? Invoke(object?[] arguments)
 	{
-		// TODO: support for overloads
-		//var argumentTypes = arguments.ToArgumentTypes();
-		//var method = ((IReflectiveFunctionDefinition)this).Evaluators?
-		//	.FirstOrDefault(x => x.ArgTypes.SequenceEqual(argumentTypes, ArgumentTypeComparer.Instance))
-		//	.Method;
-
-		var (parameterTypes, method) = ((IReflectiveFunctionDefinition)this).Evaluators!.Single();
+		var (parameterTypes, method) = ((IReflectiveFunctionDefinition)this).Evaluator;
 
 		if (method == null)
 			throw new InvalidOperationException("Cannot find appropriate method. This should have been caught during parsing.");

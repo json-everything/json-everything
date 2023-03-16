@@ -108,6 +108,11 @@ public class CburgmerFeatureValidationTests
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
+	private static readonly PathParsingOptions _parsingOptions = new()
+	{
+		AllowMathOperations = true
+	};
+
 	//  - id: array_index
 	//    pathSegment: $[2]
 	//    document: ["first", "second", "third", "forth", "fifth"]
@@ -215,8 +220,8 @@ public class CburgmerFeatureValidationTests
 	{
 		var o = JsonNode.Parse(jsonString);
 
-		var path = JsonPath.Parse(pathString);
-		var results = path?.Evaluate(o);
+		var path = JsonPath.Parse(pathString, _parsingOptions);
+		var results = path.Evaluate(o);
 
 		return results;
 	}

@@ -97,26 +97,28 @@ public static class FunctionRepository
 	{
 		var functionType = function.GetType();
 		var methods = functionType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-			.Where(m => m.Name == "Evaluate" && m.ReturnType == returnType);
+			.Where(m => m.Name == "Evaluate" && m.ReturnType == returnType)
+			.ToList();
 
-		var evaluators = new List<(FunctionType[] ArgTypes, MethodInfo Method)>();
+		if (methods.Count == 0)
+			throw new ArgumentException($"Cannot find an 'Evaluate' method that returns type '{returnType.FullName}'.");
+		if (methods.Count > 1)
+			throw new ArgumentException($"Found more than one 'Evaluate' method that returns type '{returnType.FullName}'.  Overloads are not permitted.");
 
-		foreach (var method in methods)
-		{
-			var parameters = method.GetParameters()
-				.Select(x =>
-				{
-					if (x.ParameterType == typeof(JsonNode)) return FunctionType.Value;
-					if (x.ParameterType == typeof(bool)) return FunctionType.Logical;
-					if (x.ParameterType == typeof(NodeList)) return FunctionType.Nodelist;
-					return (FunctionType?)null;
-				}).ToArray();
+		var method = methods[0];
 
-			if (parameters.Any(x => x == null)) continue;
+		var parameters = method.GetParameters()
+			.Select(x =>
+			{
+				if (x.ParameterType == typeof(JsonNode)) return FunctionType.Value;
+				if (x.ParameterType == typeof(bool)) return FunctionType.Logical;
+				if (x.ParameterType == typeof(NodeList)) return FunctionType.Nodelist;
+				return (FunctionType?)null;
+			}).ToArray();
 
-			evaluators.Add((parameters.Cast<FunctionType>().ToArray(), method));
-		}
+		if (parameters.Any(x => x == null))
+			throw new ArgumentException($"'Evaluate' method parameters may only be of types '{typeof(JsonNode)}', '{typeof(bool)}', or '{typeof(NodeList)}'.");
 
-		function.Evaluators = evaluators.ToArray();
+		function.Evaluator = (parameters.Cast<FunctionType>().ToArray(), method);
 	}
 }
