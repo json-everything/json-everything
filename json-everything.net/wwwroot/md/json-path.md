@@ -67,8 +67,8 @@ The specification defines the following functions:
 
 - `length(<value>)` to return the length of a string or the number of items in an array or object.  Takes a single parameter.
 - `count(<nodelist>)` to return the number of nodes in a nodelist.
-- `match(<iregexp>, <text>)` to return whether the text is an exact match for a regular expression per [I-Regexp](https://www.ietf.org/archive/id/draft-ietf-jsonpath-iregexp-02.html).\*
-- `search(<iregexp>, <text>)` to return whether the text _contains_ an exact match for a regular expression per [I-Regexp](https://www.ietf.org/archive/id/draft-ietf-jsonpath-iregexp-02.html).\*
+- `match(<text>, <iregexp>)` to return whether the text is an exact match for a regular expression per [I-Regexp](https://www.ietf.org/archive/id/draft-ietf-jsonpath-iregexp-02.html).\*
+- `search(<text>, <iregexp>)` to return whether the text _contains_ an exact match for a regular expression per [I-Regexp](https://www.ietf.org/archive/id/draft-ietf-jsonpath-iregexp-02.html).\*
 - `value(<nodelist>)` to convert a nodelist to a value: single-nodelists extract their node's value; multiple-/empty nodelists convert to `Nothing` (no node, absent).
 
 \* _I-Regexp is designed to be an interoperable subset of most popular regular expression specifications and implementations.  One difference that [could not be resolved](https://github.com/ietf-wg-jsonpath/iregexp/issues/15) was implicit anchoring.  As such, two methods were developed to handle both cases.  `match` uses implicit anchoring, while `search` does not._
