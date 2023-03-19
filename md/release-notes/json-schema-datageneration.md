@@ -1,3 +1,7 @@
+# 1.0.4 (no PR) {#release-schemadatagen-1.0.4}
+
+[#405](https://github.com/gregsdennis/json-everything/issues/405) - v1.0.3 referenced beta version of JsonSchema.Net.  This update reverts that dependency to JsonSchema v3.3.2.
+
 # [1.0.3](https://github.com/gregsdennis/json-everything/pull/386) {#release-schemadatagen-1.0.3}
 
 [#384](https://github.com/gregsdennis/json-everything/issues/384) - Schemas with embedded `enum`s were re-using nodes instead of copying them, causing an `InvalidOperationException`.  Thanks to [@leonardo-gooten](https://github.com/leonardo-gooten) for reporting this.
