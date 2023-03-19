@@ -1,3 +1,7 @@
+# [4.0.2](https://github.com/gregsdennis/json-everything/pull/409) {#release-logic-4.0.2}
+
+[#404](https://github.com/gregsdennis/json-everything/issues/404) - `missing` checks for truthiness of the value at the location, not just that the location exists.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding this issue.
+
 # 4.0.1 (no PR) {#release-logic-4.0.0}
 
 Empty strings "numberify" to 0.
