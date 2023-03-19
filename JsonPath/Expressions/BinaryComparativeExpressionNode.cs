@@ -1,5 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -77,6 +77,12 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 			return false;
 		}
 
+		if (IsNonSingularPath(left) || IsNonSingularPath(right))
+		{
+			expression = null;
+			return false;
+		}
+
 		if (!source.ConsumeWhitespace(ref i))
 		{
 			expression = null;
@@ -98,5 +104,10 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 		expression = new BinaryComparativeExpressionNode(op, left, right);
 		index = i;
 		return true;
+	}
+
+	private static bool IsNonSingularPath(ValueExpressionNode node)
+	{
+		return node is PathExpressionNode { Path.IsSingular: false };
 	}
 }
