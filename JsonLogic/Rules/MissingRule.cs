@@ -55,7 +55,7 @@ public class MissingRule : Rule
 				return new { Path = p.Path, Value = value };
 			});
 
-		return paths.Where(p => p.Value == null)
+		return paths.Where(p => !p.Value.IsTruthy())
 			.Select(k => (JsonNode?)k.Path)
 			.ToJsonArray();
 
