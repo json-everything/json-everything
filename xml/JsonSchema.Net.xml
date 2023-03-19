@@ -3489,6 +3489,17 @@
             <param name="options">The options to use for this evaluation.</param>
             <returns>A <see cref="T:Json.Schema.EvaluationResults"/> that provides the outcome of the evaluation.</returns>
         </member>
+        <member name="M:Json.Schema.JsonSchemaExtensions.Bundle(Json.Schema.JsonSchema,Json.Schema.EvaluationOptions)">
+            <summary>
+            Generates a bundle schema that contains all of the externally referenced schemas
+            in a single document.
+            </summary>
+            <param name="jsonSchema">The root schema.</param>
+            <param name="options">Options (used for the schema registry)</param>
+            <returns>A JSON Schema with all referenced schemas.</returns>
+            <exception cref="T:Json.Schema.JsonSchemaException">Thrown if a reference cannot be resolved.</exception>
+            <exception cref="T:System.NotSupportedException">Thrown if a reference resolves to a non-JSON-Schema document.</exception>
+        </member>
         <member name="M:Json.Schema.JsonSchemaExtensions.GetAdditionalItems(Json.Schema.JsonSchema)">
             <summary>
             Gets the schema for `additionalItems` if the keyword exists.

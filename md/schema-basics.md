@@ -492,6 +492,70 @@ In order to support scenarios where schemas cannot be registered ahead of time, 
 
 The URI that is passed may need to be transformed, based on the schemas you're dealing with.  For instance if you're loading schemas from a local filesystem, and the schema `$ref`s use relative paths, you may need to prepend the working folder to the URI in order to locate it.
 
+## Bundling
+
+JSON Schema can be bundled so that they include all of their referenced documents.  This process can make sharing schemas significantly easier as only a single file need to be shared.
+
+This library bundles schemas by collecting all of the referenced documents along with the root schema into a new schema's `$defs` keyword, then adding a `$ref` to the definition for the root schema.
+
+For example, given this root and external schema:
+
+```jsonc
+// root
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-everything.net/foo",
+  "type": "object",
+  "properties": {
+    "bar": {
+      "$ref": "bar"
+    }
+  }
+}
+
+// external
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-everything.net/bar",
+  "type": "string"
+}
+```
+
+calling `schema.Bundle()`
+
+```c#
+var bundled = rootSchema.Bundle();
+```
+
+generates the following bundled schema:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-everything.net/foo(bundled)",
+  "$defs": {
+    "26f6f0d167": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://json-everything.net/foo",
+      "type": "object",
+      "properties": {
+        "bar": {
+          "$ref": "bar"
+        }
+      }
+    },
+    "c6e748adb1": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://json-everything.net/bar",
+      "type": "string"
+    }
+  },
+  "$ref": "https://json-everything.net/foo"
+}
+```
+
+***NOTE** This process requires that all external documents are registered or automatic resolution be enabled.*
+
 # Customizing error messages {#schema-errors}
 
 The library exposes the `ErrorMessages` static type which includes read/write properties for all of the error messages.  Customization of error messages can be achieved by setting these properties.
