@@ -14,6 +14,7 @@ Updated to meet the requirements in [draft 11](https://www.ietf.org/archive/id/d
 - `FunctionType` now matches the type system in the spec
 - `ParameterType` removed and usages replaced with `FunctionType`
 - `NodeList` implicit casts removed as they are no longer defined by the spec
+- Fixed a parsing issue that allowed non-singular paths in filter expressions
 
 # [0.4.0](https://github.com/gregsdennis/json-everything/pull/372) {#release-path-0.4.0}
 
