@@ -1,4 +1,4 @@
-# [4.0.0 (beta 3)](https://github.com/gregsdennis/json-everything/pull/326) {#release-schema-4.0.0}
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/326) {#release-schema-4.0.0}
 
 This update adds support for the latest version of JSON Schema while also making a few architectural changes to ease the burden for implementing custom keywords.
 
@@ -27,11 +27,11 @@ It also renames several methods from "Validate" to "Evaluate" to reflect the ide
     - `Push(JsonPointer instanceLocation, JsonNode? instance, JsonPointer evaluationPath, JsonSchema subschema, Uri? newUri = null)` used for new schema & instance locations (e.g. keywords like `properties`)
     - `Push(JsonPointer evaluationPath, JsonSchema subschema, Uri? newUri = null)` used for new schema locations evaluating the same instance location (e.g. keywords like `anyOf`)
 - `IJsonSchemaKeyword.Validate()` renamed to `IJsonSchemaKeyword.Evaluate()` (applies to all keyword types as well)
+- `JsonSchemaExtensions.Validate()` renamed to `JsonSchemaExtensions.Evaluate()`
 - `ErrorMessages` & associated string resources
   - `Contains` replaced with `ContainsTooFew` and `ContainsTooMany`
   - `MaxContains` and `MinContains` removed
   - reference-related errors removed
-- `JsonSchemaExtensions.Validate()` renamed to `JsonSchemaExtensions.Evaluate()`
 - `Draft` renamed to `SpecVersion` to align with the JSON Schema movement toward a stable specification
   - `SchemaDraftAttribute` renamed to `SchemaSpecVersionAttribute`
   - related methods and properties have also been updated
@@ -69,7 +69,8 @@ It also renames several methods from "Validate" to "Evaluate" to reflect the ide
   - `DeclaredVersion` has been added
 - `JsonSchemaExtensions`
   - Added extensions for each keyword to enable easier keyword value access, e.g. `schema.GetTitle()`
-  - Added `Validate()` extensions to help ease transition from "Validate()" to "Evaluate()"
+  - Added `.Bundle()` to generate a bundled schema that includes all referenced schemas
+  - Added `.Validate()` extensions to help ease transition from `.Validate()` to `.Evaluate()`
 - Added `PropertyDependenciesKeyword`
 - Added `ICustomSchemaCollector` to handle keywords that contain subschemas but don't fit into one of the other "container" interfaces, e.g. `propertyDependencies`
 - Added `MetaSchemas.DraftNext` and associated properties
