@@ -1,3 +1,7 @@
+# [4.0.3](https://github.com/gregsdennis/json-everything/pull/410) {#release-logic-4.0.3}
+
+[#404](https://github.com/gregsdennis/json-everything/issues/404) - `missing` _doesn't_ check for truthiness, it special cases the empty string.
+
 # [4.0.2](https://github.com/gregsdennis/json-everything/pull/409) {#release-logic-4.0.2}
 
 [#404](https://github.com/gregsdennis/json-everything/issues/404) - `missing` checks for truthiness of the value at the location, not just that the location exists.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding this issue.
