@@ -15,9 +15,9 @@
 		<PackageTags>json logic json-logic jsonlogic</PackageTags>
 		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-logic.md) and https://json-everything.net/json-logic</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>4.0.2</Version>
+		<Version>4.0.3</Version>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
-		<FileVersion>4.0.2.0</FileVersion>
+		<FileVersion>4.0.3.0</FileVersion>
 		<DocumentationFile>JsonLogic.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
