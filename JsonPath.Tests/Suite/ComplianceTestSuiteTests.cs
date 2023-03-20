@@ -26,12 +26,7 @@ public class ComplianceTestSuiteTests
 		get
 		{
 			var fileText = File.ReadAllText(_testsFile);
-			var suite = JsonSerializer.Deserialize<ComplianceTestSuite>(fileText, new JsonSerializerOptions
-			{
-				AllowTrailingCommas = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-				PropertyNameCaseInsensitive = true
-			});
+			var suite = JsonSerializer.Deserialize<ComplianceTestSuite>(fileText, SerializerOptions.Default);
 			return suite!.Tests.Select(t => new TestCaseData(t) { TestName = t.Name });
 		}
 	}
@@ -71,13 +66,23 @@ public class ComplianceTestSuiteTests
 		var actual = path.Evaluate(testCase.Document);
 
 		var actualValues = actual.Matches!.Select(m => m.Value).ToJsonArray();
-		Console.WriteLine($"Actual (values): {actualValues}");
+		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actualValues, SerializerOptions.Default)}");
 		Console.WriteLine();
-		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");
+		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, SerializerOptions.Default)}");
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
 		var expected = testCase.Result!.ToJsonArray();
 		Assert.IsTrue(expected.IsEquivalentTo(actualValues));
 	}
+}
+
+public static class SerializerOptions
+{
+	public static JsonSerializerOptions Default = new()
+	{
+		AllowTrailingCommas = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+		PropertyNameCaseInsensitive = true
+	};
 }
