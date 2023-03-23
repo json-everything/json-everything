@@ -16,7 +16,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.OpenApi.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>1.1.0-beta3</Version>
+		<Version>1.1.0</Version>
 		<FileVersion>1.1.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>

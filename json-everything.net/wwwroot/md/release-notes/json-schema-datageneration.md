@@ -1,3 +1,7 @@
+# 1.1.0 (no PR) {#release-schemadatagen-1.1.0}
+
+Updated JsonSchema.Net reference to v4.0.0.
+
 # 1.0.4 (no PR) {#release-schemadatagen-1.0.4}
 
 [#405](https://github.com/gregsdennis/json-everything/issues/405) - v1.0.3 referenced beta version of JsonSchema.Net.  This update reverts that dependency to JsonSchema v3.3.2.

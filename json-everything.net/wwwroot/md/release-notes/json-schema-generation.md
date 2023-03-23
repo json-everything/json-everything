@@ -1,3 +1,7 @@
+# 3.1.0 (no PR) {#release-schemagen-3.1.0}
+
+Updated JsonSchema.Net reference to v4.0.0.
+
 # [3.0.3](https://github.com/gregsdennis/json-everything/pull/327) {#release-schemagen-3.0.3}
 
 [#325](https://github.com/gregsdennis/json-everything/issues/325) - [@jnystad](https://github.com/jnystad) found an issue with `[Nullable]` where it was propagating to other properties of the same type and suggested a fix.
