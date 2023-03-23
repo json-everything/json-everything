@@ -62,7 +62,7 @@ public class JsonPath
 		options ??= new PathParsingOptions();
 
 		int index = 0;
-		return PathParser.Parse(source, ref index, options, true);
+		return PathParser.Parse(source, ref index, options, !options.AllowRelativePathStart);
 	}
 
 	/// <summary>
