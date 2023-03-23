@@ -40,7 +40,7 @@ public class PathParsingOptions
 	/// whitespace will be removed before passing the string onto
 	/// parsing functionality.
 	/// </remarks>
-	public bool TolerateLeadingAndTrailingWhitespace { get; set; }
+	public bool TolerateSurroundingWhitespace { get; set; }
 
 	/// <summary>
 	/// Gets or sets whether the `in` operator is allowed.
@@ -49,8 +49,8 @@ public class PathParsingOptions
 	/// These operators are an extension of the specification, so they
 	/// are disallowed by default.
 	///
-	/// Also requires that <see cref="AllowJsonConstructs"/> be set to
-	/// `true`.
+	/// May also require that <see cref="AllowJsonConstructs"/> be set to
+	/// `true` so that array and object literals are also permitted.
 	/// </remarks>
 	public bool AllowInOperator { get; set; }
 }

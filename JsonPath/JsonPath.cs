@@ -61,7 +61,7 @@ public class JsonPath
 	{
 		options ??= new PathParsingOptions();
 
-		if (options.TolerateLeadingAndTrailingWhitespace)
+		if (options.TolerateSurroundingWhitespace)
 			source = source.Trim();
 
 		int index = 0;
@@ -79,7 +79,7 @@ public class JsonPath
 	{
 		options ??= new PathParsingOptions();
 
-		if (options.TolerateLeadingAndTrailingWhitespace)
+		if (options.TolerateSurroundingWhitespace)
 			source = source.Trim();
 
 		int index = 0;

@@ -123,7 +123,8 @@ public class CburgmerFeatureValidationTests
 		AllowMathOperations = true,
 		AllowRelativePathStart = true,
 		AllowJsonConstructs = true,
-		TolerateLeadingAndTrailingWhitespace = true
+		TolerateSurroundingWhitespace = true,
+		AllowInOperator = true
 	};
 
 	//  - id: array_index
