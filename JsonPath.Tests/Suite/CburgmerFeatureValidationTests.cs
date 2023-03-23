@@ -82,6 +82,15 @@ public class CburgmerFeatureValidationTests
 		// only literals are supported in expressions
 		"$[?(@.d==['v1','v2'])]",
 
+		// only singular paths are allowed in comparisons
+		"$[?(@[0:1]==[1])]",  // also array literals are disallowed
+		"$[?(@.*==[1,2])]",   // also array literals are disallowed
+		"$[?(@[0:1]==1)]",
+		"$[?(@[*]==2)]",
+		"$[?(@.*==2)]",
+		"$[?(@[*]>=4)]",
+		"$.x[?(@[*]>=$.y[*])]",
+
 		// other invalid syntaxes
 		"$...key",
 		"$.['key']",
@@ -106,6 +115,11 @@ public class CburgmerFeatureValidationTests
 	private static readonly JsonSerializerOptions _linearSerializerOptions = new()
 	{
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+
+	private static readonly PathParsingOptions _parsingOptions = new()
+	{
+		AllowMathOperations = true
 	};
 
 	//  - id: array_index
@@ -190,8 +204,8 @@ public class CburgmerFeatureValidationTests
 				return;
 			}
 
-			if (exception != null)
-				throw new Exception("An exception was thrown", exception);
+			if (exception != null) throw exception;
+
 			if (testCase.Consensus == null)
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 
@@ -215,8 +229,8 @@ public class CburgmerFeatureValidationTests
 	{
 		var o = JsonNode.Parse(jsonString);
 
-		var path = JsonPath.Parse(pathString);
-		var results = path?.Evaluate(o);
+		var path = JsonPath.Parse(pathString, _parsingOptions);
+		var results = path.Evaluate(o);
 
 		return results;
 	}

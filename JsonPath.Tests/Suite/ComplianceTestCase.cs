@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -19,11 +19,10 @@ public class ComplianceTestCase
 
 	public override string ToString()
 	{
-		var result = Result == null ? null : $"[{string.Join(", ", Result.Select(e => e!.ToJsonString()))}]";
 		return $"Name:     {Name}\n" +
 			   $"Selector: {Selector}\n" +
-			   $"Document: {Document}\n" +
-			   $"Result:   {result}\n" +
+			   $"Document: {JsonSerializer.Serialize(Document, SerializerOptions.Default)}\n" +
+			   $"Result:   {JsonSerializer.Serialize(Result, SerializerOptions.Default)}\n" +
 			   $"IsValid:  {!InvalidSelector}";
 	}
 }

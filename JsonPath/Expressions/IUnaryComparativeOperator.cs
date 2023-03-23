@@ -1,8 +1,6 @@
-﻿using System.Text.Json.Nodes;
-
-namespace Json.Path.Expressions;
+﻿namespace Json.Path.Expressions;
 
 internal interface IUnaryComparativeOperator : IExpressionOperator
 {
-	bool Evaluate(JsonNode? value);
+	bool Evaluate(PathValue? value);
 }

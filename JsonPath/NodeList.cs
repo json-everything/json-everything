@@ -46,28 +46,4 @@ public class NodeList : IReadOnlyList<Node>
 	{
 		return GetEnumerator();
 	}
-
-	/// <summary>
-	/// Implicitly converts from <see cref="JsonNode"/> to <see cref="NodeList"/>.
-	/// </summary>
-	/// <param name="node">A `JsonNode`.</param>
-	/// <remarks>
-	/// If the `JsonNode`'s underlying value is a nodelist, that nodelist is returned
-	/// rather than a new nodelist being created.
-	/// </remarks>
-	public static implicit operator NodeList(JsonNode node)
-	{
-		if (node.TryGetValue<NodeList>(out var nodeList)) return nodeList;
-
-		return new NodeList(new Node[] { new(node, null) });
-	}
-
-	/// <summary>
-	/// Implicitly converts from <see cref="NodeList"/> to <see cref="JsonNode"/>
-	/// </summary>
-	/// <param name="list">The nodelist.</param>
-	public static implicit operator JsonNode(NodeList list)
-	{
-		return JsonValue.Create(list)!;
-	}
 }

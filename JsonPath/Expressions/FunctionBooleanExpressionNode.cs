@@ -7,27 +7,30 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class ValueFunctionExpressionNode : ValueExpressionNode
+internal class FunctionBooleanExpressionNode : LogicalExpressionNode
 {
-	public IPathFunctionDefinition Function { get; }
-	public ValueExpressionNode[] Parameters { get; }
+	public LogicalFunctionDefinition Function { get; }
+	public ExpressionNode[] Parameters { get; }
 
-	public ValueFunctionExpressionNode(IPathFunctionDefinition function, IEnumerable<ValueExpressionNode> parameters)
+	public FunctionBooleanExpressionNode(LogicalFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
 	}
 
-	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
+	public override bool Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		var parameterValues = Parameters.Select(x =>
 		{
-			var result = x.Evaluate(globalParameter, localParameter);
-			if (result != null) return (NodeList)result;
-			return NodeList.Empty;
-		});
+			return x switch
+			{
+				ValueExpressionNode c => (object?)c.Evaluate(globalParameter, localParameter),
+				BooleanResultExpressionNode b => b.Evaluate(globalParameter, localParameter),
+				_ => throw new ArgumentOutOfRangeException("parameter")
+			};
+		}).ToArray();
 
-		return Function.Evaluate(parameterValues);
+		return Function.Invoke(parameterValues) == true;
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -54,9 +57,9 @@ internal class ValueFunctionExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class ValueFunctionExpressionParser : IValueExpressionParser
+internal class FunctionBooleanExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
 		if (!FunctionExpressionParser.TryParseFunction(source, ref i, out var parameters, out var function, options))
@@ -65,14 +68,14 @@ internal class ValueFunctionExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		if (!function.ReturnType.HasFlag(FunctionType.Value))
+		if (function is not LogicalFunctionDefinition logicalFunc)
 		{
 			expression = null;
 			return false;
 		}
 
+		expression = new FunctionBooleanExpressionNode(logicalFunc, parameters);
 		index = i;
-		expression = new ValueFunctionExpressionNode(function, parameters);
 		return true;
 	}
 }

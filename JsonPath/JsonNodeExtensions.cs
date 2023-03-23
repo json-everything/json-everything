@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path;
 
@@ -76,7 +77,7 @@ public static class JsonNodeExtensions
 	public static JsonNode? TryGetSingleValue(this NodeList nodeList)
 	{
 		return nodeList.Count == 1
-			? nodeList[0].Value
+			? nodeList[0].Value ?? JsonNull.SignalNode
 			: null;
 	}
 }

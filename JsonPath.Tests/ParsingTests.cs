@@ -57,18 +57,35 @@ public class ParsingTests
 			new TestCaseData("$[?(@.foo && !@.bar)]"),
 			new TestCaseData("$[?!(@.foo == false)]"),
 			new TestCaseData("$[?(@.foo == false)]"),
-			new TestCaseData("$[?(@.foo==(4+5))]"),
-			new TestCaseData("$[?(@.foo==2*(4+5))]"),
-			new TestCaseData("$[?(@.foo==2+(4+5))]"),
-			new TestCaseData("$[?(@.foo==2-(4+5))]"),
 			new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
 
 			new TestCaseData("$[1,'foo',1:2:3,*]"),
 		};
 
 	[TestCaseSource(nameof(SuccessCases))]
-	public void Parse(string path)
+	public void ParseSuccess(string path)
 	{
 		Console.WriteLine(JsonPath.Parse(path));
+	}
+
+	public static IEnumerable<TestCaseData> OptionalCases =>
+		new[]
+		{
+			new TestCaseData("$[?(@.foo==(4+5))]"),
+			new TestCaseData("$[?(@.foo==2*(4+5))]"),
+			new TestCaseData("$[?(@.foo==2+(4+5))]"),
+			new TestCaseData("$[?(@.foo==2-(4+5))]"),
+		};
+
+	[TestCaseSource(nameof(OptionalCases))]
+	public void ParseWithOptions(string path)
+	{
+		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowMathOperations = true}));
+	}
+
+	[TestCaseSource(nameof(OptionalCases))]
+	public void ParseWithoutOptions(string path)
+	{
+		Assert.Throws<PathParseException>(() => JsonPath.Parse(path));
 	}
 }

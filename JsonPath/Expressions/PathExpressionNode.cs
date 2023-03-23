@@ -2,7 +2,6 @@
 using System;
 using System.Text;
 using System.Text.Json.Nodes;
-using Json.More;
 
 namespace Json.Path.Expressions;
 
@@ -15,7 +14,7 @@ internal class PathExpressionNode : ValueExpressionNode
 		Path = path;
 	}
 
-	public override JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
+	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
 		var parameter = Path.Scope == PathScope.Global
 			? globalParameter
@@ -23,9 +22,7 @@ internal class PathExpressionNode : ValueExpressionNode
 
 		var result = Path.Evaluate(parameter);
 
-		return result.Matches?.Count == 1
-			? result.Matches[0].Value ?? JsonNull.SignalNode
-			: result.Matches ?? NodeList.Empty;
+		return result.Matches ?? NodeList.Empty;
 	}
 
 	public override void BuildString(StringBuilder builder)

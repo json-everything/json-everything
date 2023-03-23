@@ -1,10 +1,8 @@
-﻿using System.Text.Json.Nodes;
-
-namespace Json.Path.Expressions;
+﻿namespace Json.Path.Expressions;
 
 internal interface IBinaryValueOperator : IExpressionOperator
 {
-	JsonNode? Evaluate(JsonNode? left, JsonNode? right);
+	PathValue? Evaluate(PathValue? left, PathValue? right);
 }
 
 internal interface IExpressionOperator

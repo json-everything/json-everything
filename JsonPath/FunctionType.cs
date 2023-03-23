@@ -1,4 +1,6 @@
-﻿namespace Json.Path;
+﻿using System;
+
+namespace Json.Path;
 
 /// <summary>
 /// Indicates the return type of a filter expression function.
@@ -18,7 +20,7 @@ public enum FunctionType
 	/// Indicates the function returns a non-JSON boolean value that can be
 	/// compared with logical operators.
 	/// </summary>
-	Boolean,
+	Logical,
 	/// <summary>
 	/// Indicates the function returns a nodelist.
 	/// </summary>

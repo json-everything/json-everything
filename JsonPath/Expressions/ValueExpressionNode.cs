@@ -1,22 +1,20 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
-using System.Text;
 using System.Text.Json.Nodes;
+using Json.More;
 
 namespace Json.Path.Expressions;
 
-internal abstract class ValueExpressionNode
+internal abstract class ValueExpressionNode : ExpressionNode
 {
-	public abstract JsonNode? Evaluate(JsonNode? globalParameter, JsonNode? localParameter);
-
-	public abstract void BuildString(StringBuilder builder);
+	public abstract PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter);
 }
 
 internal static class ValueExpressionParser
 {
 	private static readonly IValueExpressionParser[] _operandParsers =
 	{
-		new ValueFunctionExpressionParser(),
+		new FunctionValueExpressionParser(),
 		new LiteralExpressionParser(),
 		new PathExpressionParser(),
 	};
@@ -53,6 +51,13 @@ internal static class ValueExpressionParser
 		{
 			expression = null;
 			return false;
+		}
+
+		if (!options.AllowMathOperations)
+		{
+			index = i;
+			expression = left;
+			return true;
 		}
 
 		while (i < source.Length)

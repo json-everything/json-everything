@@ -7,17 +7,17 @@ internal class AddOperator : IBinaryValueOperator
 {
 	public int Precedence => 1;
 
-	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
+	public PathValue? Evaluate(PathValue? left, PathValue? right)
 	{
-		if (left.TryGetSingleValue() is not JsonValue lValue ||
-		    right.TryGetSingleValue() is not JsonValue rValue)
+		if (left?.TryGetJson() is not JsonValue lValue ||
+		    right?.TryGetJson() is not JsonValue rValue)
 			return null;
 
 		if (lValue.TryGetValue(out string? leftString) &&
 		    rValue.TryGetValue(out string? rightString))
-			return leftString + rightString;
+			return (JsonNode?)(leftString + rightString);
 
-		return lValue.GetNumber() + rValue.GetNumber();
+		return (JsonNode?)(lValue.GetNumber() + rValue.GetNumber());
 	}
 
 	public override string ToString()
