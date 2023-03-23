@@ -15,47 +15,31 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.CountFunction.ParameterSets">
-            <summary>
-            Defines the sets of parameters that are valid for this function.
-            </summary>
-            <remarks>
-            The value of this property is a collection of collections where
-            each inner collection represents a single parameter set.  The
-            outer collection represents differing parameter sets and can
-            be thought of as "overloads."
-            </remarks>
-        </member>
-        <member name="P:Json.Path.CountFunction.ReturnType">
-             <summary>
-             The type returned by the function.
-             </summary>
-             <remarks>
-             This is important for function composition: using a function
-             as a parameter of another function.
-            
-             This library assumes that a function may return `Nothing` and
-             automatically handles that case.  This value should be set to
-             what kind of non-`Nothing` type the function returns.
-            
-             Registration of the function will throw an
-             <see cref="T:System.InvalidOperationException"/> if the value is
-             <see cref="F:Json.Path.FunctionType.Unspecified"/>
-             </remarks>
-        </member>
-        <member name="M:Json.Path.CountFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+        <member name="M:Json.Path.CountFunction.Evaluate(Json.Path.NodeList)">
             <summary>
             Evaluates the function.
             </summary>
-            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
-            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+            <param name="nodeList">A nodelist</param>
+            <returns>The number of nodes in the nodelist.</returns>
         </member>
         <member name="T:Json.Path.FunctionRepository">
             <summary>
             Stores expression function definitions.
             </summary>
         </member>
-        <member name="M:Json.Path.FunctionRepository.Register(Json.Path.IPathFunctionDefinition)">
+        <member name="M:Json.Path.FunctionRepository.Register(Json.Path.ValueFunctionDefinition)">
+            <summary>
+            Registers a new function implementation, allowing it to be parsed.
+            </summary>
+            <param name="function">The function.</param>
+        </member>
+        <member name="M:Json.Path.FunctionRepository.Register(Json.Path.LogicalFunctionDefinition)">
+            <summary>
+            Registers a new function implementation, allowing it to be parsed.
+            </summary>
+            <param name="function">The function.</param>
+        </member>
+        <member name="M:Json.Path.FunctionRepository.Register(Json.Path.NodelistFunctionDefinition)">
             <summary>
             Registers a new function implementation, allowing it to be parsed.
             </summary>
@@ -96,7 +80,7 @@
             compared with equality and inequality operators.
             </summary>
         </member>
-        <member name="F:Json.Path.FunctionType.Boolean">
+        <member name="F:Json.Path.FunctionType.Logical">
             <summary>
             Indicates the function returns a non-JSON boolean value that can be
             compared with logical operators.
@@ -127,47 +111,43 @@
             <summary>
             Defines properties and methods required for an expression function.
             </summary>
-            <remarks>Functions must be registered with <see cref="M:Json.Path.FunctionRepository.Register(Json.Path.IPathFunctionDefinition)"/></remarks>
+            <remarks>Functions must be registered with one of the static `Register()`
+            methods defined on <see cref="T:Json.Path.FunctionRepository"/></remarks>
         </member>
         <member name="P:Json.Path.IPathFunctionDefinition.Name">
             <summary>
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.IPathFunctionDefinition.ParameterSets">
+        <member name="T:Json.Path.ValueFunctionDefinition">
             <summary>
-            Defines the sets of parameters that are valid for this function.
+            Base class for defining an expression function which returns `ValueType`.
             </summary>
-            <remarks>
-            The value of this property is a collection of collections where
-            each inner collection represents a single parameter set.  The
-            outer collection represents differing parameter sets and can
-            be thought of as "overloads."
-            </remarks>
         </member>
-        <member name="P:Json.Path.IPathFunctionDefinition.ReturnType">
-             <summary>
-             The type returned by the function.
-             </summary>
-             <remarks>
-             This is important for function composition: using a function
-             as a parameter of another function.
-            
-             This library assumes that a function may return `Nothing` and
-             automatically handles that case.  This value should be set to
-             what kind of non-`Nothing` type the function returns.
-            
-             Registration of the function will throw an
-             <see cref="T:System.InvalidOperationException"/> if the value is
-             <see cref="F:Json.Path.FunctionType.Unspecified"/>
-             </remarks>
-        </member>
-        <member name="M:Json.Path.IPathFunctionDefinition.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+        <member name="P:Json.Path.ValueFunctionDefinition.Name">
             <summary>
-            Evaluates the function.
+            Gets the function name.
             </summary>
-            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
-            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+        </member>
+        <member name="T:Json.Path.LogicalFunctionDefinition">
+            <summary>
+            Base class for defining an expression function which returns `LogicalType`.
+            </summary>
+        </member>
+        <member name="P:Json.Path.LogicalFunctionDefinition.Name">
+            <summary>
+            Gets the function name.
+            </summary>
+        </member>
+        <member name="T:Json.Path.NodelistFunctionDefinition">
+            <summary>
+            Base class for defining an expression function which returns `NodesType`.
+            </summary>
+        </member>
+        <member name="P:Json.Path.NodelistFunctionDefinition.Name">
+            <summary>
+            Gets the function name.
+            </summary>
         </member>
         <member name="T:Json.Path.ISelector">
             <summary>
@@ -360,40 +340,12 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.LengthFunction.ParameterSets">
-            <summary>
-            Defines the sets of parameters that are valid for this function.
-            </summary>
-            <remarks>
-            The value of this property is a collection of collections where
-            each inner collection represents a single parameter set.  The
-            outer collection represents differing parameter sets and can
-            be thought of as "overloads."
-            </remarks>
-        </member>
-        <member name="P:Json.Path.LengthFunction.ReturnType">
-             <summary>
-             The type returned by the function.
-             </summary>
-             <remarks>
-             This is important for function composition: using a function
-             as a parameter of another function.
-            
-             This library assumes that a function may return `Nothing` and
-             automatically handles that case.  This value should be set to
-             what kind of non-`Nothing` type the function returns.
-            
-             Registration of the function will throw an
-             <see cref="T:System.InvalidOperationException"/> if the value is
-             <see cref="F:Json.Path.FunctionType.Unspecified"/>
-             </remarks>
-        </member>
-        <member name="M:Json.Path.LengthFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+        <member name="M:Json.Path.LengthFunction.Evaluate(System.Text.Json.Nodes.JsonNode)">
             <summary>
             Evaluates the function.
             </summary>
-            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
-            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+            <param name="value">An object, array, or string</param>
+            <returns>If an object or array, the number of items it contains; if a string, the length.</returns>
         </member>
         <member name="T:Json.Path.MatchFunction">
             <summary>
@@ -406,40 +358,13 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.MatchFunction.ParameterSets">
-            <summary>
-            Defines the sets of parameters that are valid for this function.
-            </summary>
-            <remarks>
-            The value of this property is a collection of collections where
-            each inner collection represents a single parameter set.  The
-            outer collection represents differing parameter sets and can
-            be thought of as "overloads."
-            </remarks>
-        </member>
-        <member name="P:Json.Path.MatchFunction.ReturnType">
-             <summary>
-             The type returned by the function.
-             </summary>
-             <remarks>
-             This is important for function composition: using a function
-             as a parameter of another function.
-            
-             This library assumes that a function may return `Nothing` and
-             automatically handles that case.  This value should be set to
-             what kind of non-`Nothing` type the function returns.
-            
-             Registration of the function will throw an
-             <see cref="T:System.InvalidOperationException"/> if the value is
-             <see cref="F:Json.Path.FunctionType.Unspecified"/>
-             </remarks>
-        </member>
-        <member name="M:Json.Path.MatchFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+        <member name="M:Json.Path.MatchFunction.Evaluate(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
             <summary>
             Evaluates the function.
             </summary>
-            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
-            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+            <param name="value">The value to test.</param>
+            <param name="pattern">The iregexp pattern to test against.</param>
+            <returns>true if the whole string is a match for the pattern; false otherwise.</returns>
         </member>
         <member name="T:Json.Path.Node">
             <summary>
@@ -485,62 +410,6 @@
             <summary>Returns an enumerator that iterates through the collection.</summary>
             <returns>An enumerator that can be used to iterate through the collection.</returns>
         </member>
-        <member name="M:Json.Path.NodeList.op_Implicit(System.Text.Json.Nodes.JsonNode)~Json.Path.NodeList">
-            <summary>
-            Implicitly converts from <see cref="T:System.Text.Json.Nodes.JsonNode"/> to <see cref="T:Json.Path.NodeList"/>.
-            </summary>
-            <param name="node">A `JsonNode`.</param>
-            <remarks>
-            If the `JsonNode`'s underlying value is a nodelist, that nodelist is returned
-            rather than a new nodelist being created.
-            </remarks>
-        </member>
-        <member name="M:Json.Path.NodeList.op_Implicit(Json.Path.NodeList)~System.Text.Json.Nodes.JsonNode">
-            <summary>
-            Implicitly converts from <see cref="T:Json.Path.NodeList"/> to <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-            </summary>
-            <param name="list">The nodelist.</param>
-        </member>
-        <member name="T:Json.Path.ParameterType">
-            <summary>
-            Denotes function parameter types.
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.Unspecified">
-            <summary>
-            Parameter type unknown
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.Object">
-            <summary>
-            Parameter must be an object
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.Array">
-            <summary>
-            Parameter must be an array
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.String">
-            <summary>
-            Parameter must be a string
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.Number">
-            <summary>
-            Parameter must be a number
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.Boolean">
-            <summary>
-            Parameter must be either `true` or `false`
-            </summary>
-        </member>
-        <member name="F:Json.Path.ParameterType.Null">
-            <summary>
-            Parameter must be `null`
-            </summary>
-        </member>
         <member name="T:Json.Path.PathEvaluationOptions">
             <summary>
             Provides a number of options to be used during evaluation.
@@ -563,6 +432,15 @@
             <summary>
             Defines a set of configuration options to control parsing behavior.
             </summary>
+        </member>
+        <member name="P:Json.Path.PathParsingOptions.AllowMathOperations">
+            <summary>
+            Gets or sets whether mathematical operators will be allowed.
+            </summary>
+            <remarks>
+            These operators are an extension of the specification, so they
+            are disallowed by default.
+            </remarks>
         </member>
         <member name="T:Json.Path.PathResult">
             <summary>
@@ -635,40 +513,30 @@
             Gets the function name.
             </summary>
         </member>
-        <member name="P:Json.Path.SearchFunction.ParameterSets">
-            <summary>
-            Defines the sets of parameters that are valid for this function.
-            </summary>
-            <remarks>
-            The value of this property is a collection of collections where
-            each inner collection represents a single parameter set.  The
-            outer collection represents differing parameter sets and can
-            be thought of as "overloads."
-            </remarks>
-        </member>
-        <member name="P:Json.Path.SearchFunction.ReturnType">
-             <summary>
-             The type returned by the function.
-             </summary>
-             <remarks>
-             This is important for function composition: using a function
-             as a parameter of another function.
-            
-             This library assumes that a function may return `Nothing` and
-             automatically handles that case.  This value should be set to
-             what kind of non-`Nothing` type the function returns.
-            
-             Registration of the function will throw an
-             <see cref="T:System.InvalidOperationException"/> if the value is
-             <see cref="F:Json.Path.FunctionType.Unspecified"/>
-             </remarks>
-        </member>
-        <member name="M:Json.Path.SearchFunction.Evaluate(System.Collections.Generic.IEnumerable{Json.Path.NodeList})">
+        <member name="M:Json.Path.SearchFunction.Evaluate(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
             <summary>
             Evaluates the function.
             </summary>
-            <param name="arguments">A collection of nodelists where each nodelist in the collection corresponds to a single argument.</param>
-            <returns>A nodelist.  If the evaluation fails, an empty nodelist is returned.</returns>
+            <param name="value">The value to test.</param>
+            <param name="pattern">The iregexp pattern to test against.</param>
+            <returns>true if the string contains a match for the pattern; false otherwise.</returns>
+        </member>
+        <member name="T:Json.Path.ValueFunction">
+            <summary>
+            Implements the `value()` function which extracts a single value from a nodelist.
+            </summary>
+        </member>
+        <member name="P:Json.Path.ValueFunction.Name">
+            <summary>
+            Gets the function name.
+            </summary>
+        </member>
+        <member name="M:Json.Path.ValueFunction.Evaluate(Json.Path.NodeList)">
+            <summary>
+            Evaluates the function.
+            </summary>
+            <param name="nodeList">A nodelist.</param>
+            <returns>If the nodelist contains a single node, that node's value; otherwise null.</returns>
         </member>
     </members>
 </doc>

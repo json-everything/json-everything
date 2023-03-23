@@ -1,3 +1,21 @@
+# [0.5.0](https://github.com/gregsdennis/json-everything/pull/407) {#release-path-0.5.0}
+
+Updated to meet the requirements in [draft 11](https://www.ietf.org/archive/id/draft-ietf-jsonpath-base-11.html).
+
+- Update function definition
+  - only name is required by the interface
+  - functions must now inherit from `ValueFunctionDefinition`, `LogicalFunctionDefinition`, or `NodeListFunctionDefinition`
+  - `Evaluate()` is now detected via reflection at registration time
+    - return type must conform to the base class
+    - any count of parameters are supported, but they must be of type `JsonNode`, `bool`, or `NodeList`
+    - only one evaluation method per function class
+- Added `value()` function
+- Moved parsing of math operators behind `PathParsingOptions.AllowMathOperations`, which defaults to `false`
+- `FunctionType` now matches the type system in the spec
+- `ParameterType` removed and usages replaced with `FunctionType`
+- `NodeList` implicit casts removed as they are no longer defined by the spec
+- Fixed a parsing issue that allowed non-singular paths in filter expressions
+
 # [0.4.0](https://github.com/gregsdennis/json-everything/pull/372) {#release-path-0.4.0}
 
 - Updated function definition
