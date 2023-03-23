@@ -81,6 +81,7 @@ public class CburgmerFeatureValidationTests
 
 		// only literals are supported in expressions
 		"$[?(@.d==['v1','v2'])]",
+		"$[?(!(@.d==[\"v1\",\"v2\"]) || (@.d == true))]",
 
 		// only singular paths are allowed in comparisons
 		"$[?(@[0:1]==[1])]",  // also array literals are disallowed
@@ -120,7 +121,8 @@ public class CburgmerFeatureValidationTests
 	private static readonly PathParsingOptions _parsingOptions = new()
 	{
 		AllowMathOperations = true,
-		AllowRelativePathStart = true
+		AllowRelativePathStart = true,
+		AllowJsonConstructs = true
 	};
 
 	//  - id: array_index

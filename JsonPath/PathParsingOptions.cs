@@ -21,8 +21,8 @@ public class PathParsingOptions
 	public bool AllowRelativePathStart { get; set; }
 
 	/// <summary>
-	/// Gets or sets whether JSON objects and arrays are permitted in
-	/// expression syntax.
+	/// Gets or sets whether JSON objects and arrays (double-quotes only)
+	/// are permitted in expression syntax.
 	/// </summary>
 	/// <remarks>
 	/// Per the specification, only numbers, strings, `null`, `true`,
