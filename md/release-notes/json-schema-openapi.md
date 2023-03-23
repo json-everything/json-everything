@@ -1,4 +1,4 @@
-# 1.1.0 (beta 3) ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#389](https://github.com/gregsdennis/json-everything/pull/389)) {#release-schemaopenapi-1.1.0}
+# 1.1.0 ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#389](https://github.com/gregsdennis/json-everything/pull/389)) {#release-schemaopenapi-1.1.0}
 
 Updated to use JsonSchema.Net v4.
 

@@ -1,4 +1,4 @@
-# 2.1.0 (beta 2) ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#366](https://github.com/gregsdennis/json-everything/pull/366) / [#389](https://github.com/gregsdennis/json-everything/pull/389)) {#release-schemauniquekeys-2.1.0}
+# 2.1.0 ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#366](https://github.com/gregsdennis/json-everything/pull/366) / [#389](https://github.com/gregsdennis/json-everything/pull/389)) {#release-schemauniquekeys-2.1.0}
 
 Updated to use JsonSchema.Net v4.
 
