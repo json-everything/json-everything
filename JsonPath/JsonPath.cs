@@ -61,6 +61,9 @@ public class JsonPath
 	{
 		options ??= new PathParsingOptions();
 
+		if (options.TolerateLeadingAndTrailingWhitespace)
+			source = source.Trim();
+
 		int index = 0;
 		return PathParser.Parse(source, ref index, options, !options.AllowRelativePathStart);
 	}
@@ -75,9 +78,12 @@ public class JsonPath
 	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPath? path, PathParsingOptions? options = null)
 	{
 		options ??= new PathParsingOptions();
-	
+
+		if (options.TolerateLeadingAndTrailingWhitespace)
+			source = source.Trim();
+
 		int index = 0;
-		return PathParser.TryParse(source.Trim(), ref index, out path, options, true);
+		return PathParser.TryParse(source, ref index, out path, options, true);
 	}
 
 	/// <summary>
