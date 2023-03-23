@@ -82,6 +82,15 @@ public class CburgmerFeatureValidationTests
 		// only literals are supported in expressions
 		"$[?(@.d==['v1','v2'])]",
 
+		// only singular paths are allowed in comparisons
+		"$[?(@[0:1]==[1])]",  // also array literals are disallowed
+		"$[?(@.*==[1,2])]",   // also array literals are disallowed
+		"$[?(@[0:1]==1)]",
+		"$[?(@[*]==2)]",
+		"$[?(@.*==2)]",
+		"$[?(@[*]>=4)]",
+		"$.x[?(@[*]>=$.y[*])]",
+
 		// other invalid syntaxes
 		"$...key",
 		"$.['key']",
