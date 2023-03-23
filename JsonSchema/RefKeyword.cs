@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -46,8 +47,13 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	public void Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		//If the Uri is a local path remove any of the internal generated scopes from things like Allof an OneOf blocks
+		if (Reference.OriginalString.StartsWith("."))
+		{
+			var baseUri=context.Scope.FirstOrDefault(x => !x.OriginalString.StartsWith("https://json-everything.net"));
+			if (baseUri != null) newUri = new Uri(baseUri, Reference);
+		}
 		var navigation = (newUri.OriginalString, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
