@@ -1,3 +1,12 @@
+# [0.5.1](https://github.com/gregsdennis/json-everything/pull/412) {#release-path-0.5.1}
+
+Added optional support for:
+
+- allowing leading and trailing whitespace
+- `in` operator in expressions
+- JSON constructs as literals in expressions
+- relative paths (starting a path with `@`)
+
 # [0.5.0](https://github.com/gregsdennis/json-everything/pull/407) {#release-path-0.5.0}
 
 Updated to meet the requirements in [draft 11](https://www.ietf.org/archive/id/draft-ietf-jsonpath-base-11.html).

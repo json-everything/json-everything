@@ -435,12 +435,52 @@
         </member>
         <member name="P:Json.Path.PathParsingOptions.AllowMathOperations">
             <summary>
-            Gets or sets whether mathematical operators will be allowed.
+            Gets or sets whether mathematical operators are allowed.
             </summary>
             <remarks>
             These operators are an extension of the specification, so they
             are disallowed by default.
             </remarks>
+        </member>
+        <member name="P:Json.Path.PathParsingOptions.AllowRelativePathStart">
+            <summary>
+            Gets or sets whether a JSON Path can start with the `@` symbol
+            instead of `$`.
+            </summary>
+        </member>
+        <member name="P:Json.Path.PathParsingOptions.AllowJsonConstructs">
+            <summary>
+            Gets or sets whether JSON objects and arrays (double-quotes only)
+            are permitted in expression syntax.
+            </summary>
+            <remarks>
+            Per the specification, only numbers, strings, `null`, `true`,
+            and `false` are permitted.
+            </remarks>
+        </member>
+        <member name="P:Json.Path.PathParsingOptions.TolerateSurroundingWhitespace">
+            <summary>
+            Gets or sets whether the JSON Path can contain leading and
+            trailing whitespace.
+            </summary>
+            <remarks>
+            Per the specification, such whitespace is not strictly part of
+            the syntax, so they are forbidden.  It is expected that such
+            whitespace will be removed before passing the string onto
+            parsing functionality.
+            </remarks>
+        </member>
+        <member name="P:Json.Path.PathParsingOptions.AllowInOperator">
+             <summary>
+             Gets or sets whether the `in` operator is allowed.
+             </summary>
+             <remarks>
+             These operators are an extension of the specification, so they
+             are disallowed by default.
+            
+             May also require that <see cref="P:Json.Path.PathParsingOptions.AllowJsonConstructs"/> be set to
+             `true` so that array and object literals are also permitted.
+             </remarks>
         </member>
         <member name="T:Json.Path.PathResult">
             <summary>
