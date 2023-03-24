@@ -79,11 +79,23 @@ public class JsonPath
 	{
 		options ??= new PathParsingOptions();
 
-		if (options.TolerateSurroundingWhitespace)
-			source = source.Trim();
+		if (!options.TolerateSurroundingWhitespace && (char.IsWhiteSpace(source[0]) || char.IsWhiteSpace(source[^1])))
+		{
+			path = null;
+			return false;
+		}
+
+		source = source.Trim();
 
 		int index = 0;
-		return PathParser.TryParse(source, ref index, out path, options, true);
+		if (!PathParser.TryParse(source, ref index, out path, options, true)) return false;
+		if (index != source.Length)
+		{
+			path = null;
+			return false;
+		}
+
+		return true;
 	}
 
 	/// <summary>

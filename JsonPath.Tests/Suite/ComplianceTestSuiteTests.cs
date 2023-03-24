@@ -55,7 +55,7 @@ public class ComplianceTestSuiteTests
 				Assert.Fail("TryParse() threw an exception");
 				throw; // this will never run, but the compiler doesn't know that Assert.Fail() will always throw.
 			}
-			Assert.IsTrue(tryParseResult);
+			Assert.IsFalse(tryParseResult);
 
 			var exception = Assert.Throws<PathParseException>(() => JsonPath.Parse(testCase.Selector));
 			Console.WriteLine($"Error: {exception!.Message}");

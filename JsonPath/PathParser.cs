@@ -155,71 +155,73 @@ internal static class PathParser
 		var isRecursive = false;
 		var isShorthand = false;
 
-		if (!source.ConsumeWhitespace(ref index))
+		var i = index;
+
+		if (!source.ConsumeWhitespace(ref i))
 		{
 			segment = null;
 			return false;
 		}
 
-		if (source[index] == '[')
+		if (source[i] == '[')
 		{
-			if (!TryParseBracketed(source, ref index, selectors, options))
+			if (!TryParseBracketed(source, ref i, selectors, options))
 			{
 				segment = null;
 				return false;
 			}
 		}
-		else if (source[index] == '.')
+		else if (source[i] == '.')
 		{
-			index++; // consume .
+			i++; // consume .
 
-			if (source[index] == '.')
+			if (source[i] == '.')
 			{
 				isRecursive = true;
-				index++; // consume second .
+				i++; // consume second .
 
-				if (!source.ConsumeWhitespace(ref index))
+				if (!source.ConsumeWhitespace(ref i))
 				{
 					segment = null;
 					return false;
 				}
 
-				if (source[index] == '[')
+				if (source[i] == '[')
 				{
-					if (!TryParseBracketed(source, ref index, selectors, options))
+					if (!TryParseBracketed(source, ref i, selectors, options))
 					{
 						segment = null;
 						return false;
 					}
 				}
-				else if (source[index] == '*')
+				else if (source[i] == '*')
 				{
 					selectors.Add(new WildcardSelector());
 					isRecursive = true;
 					isShorthand = true;
-					index++;
+					i++;
 				}
 				else
 				{
 					isRecursive = true;
 					isShorthand = true;
-					if (!TryParseName(source, ref index, selectors))
+					if (!TryParseName(source, ref i, selectors))
 					{
 						segment = null;
 						return false;
 					}
 				}
 			}
-			else if (source[index] == '*')
+			else if (source[i] == '*')
 			{
 				selectors.Add(new WildcardSelector());
 				isShorthand = true;
-				index++;
+				i++;
 			}
 			else
 			{
 				isShorthand = true;
-				if (!TryParseName(source, ref index, selectors))
+				if (!TryParseName(source, ref i, selectors))
 				{
 					segment = null;
 					return false;
@@ -239,6 +241,7 @@ internal static class PathParser
 			return false;
 		}
 
+		index = i;
 		segment = new PathSegment(selectors, isRecursive, isShorthand);
 		return true;
 	}
