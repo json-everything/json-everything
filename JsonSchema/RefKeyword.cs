@@ -48,7 +48,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	{
 		context.EnterKeyword(Name);
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
-
+		//Attempts go get schema and related info
 		var getSchema = (Uri newUri) =>
 		{
 			var navigation = (newUri.OriginalString, context.InstanceLocation);
@@ -89,13 +89,22 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			try { return getSchema(newUri); }
 			catch (Exception e)
 			{
-				//If the Uri is a local path remove any of the internal generated scopes from things like Allof an OneOf blocks if the reference isn't a local one
-				var baseUri = context.Scope.FirstOrDefault(x => !x.OriginalString.StartsWith("https://json-everything.net"));
-				if (baseUri != null) newUri = new Uri(baseUri, Reference);
-				return getSchema(newUri);
+				try
+				{
+					//If the Uri is a local path remove any of the internal generated scopes from things like Allof an OneOf blocks if the reference isn't a local one
+					var baseUri = context.Scope.FirstOrDefault(x => !x.OriginalString.StartsWith("https://json-everything.net"));
+					if (baseUri != null) newUri = new Uri(baseUri, Reference);
+					return getSchema(newUri);
+				}
+				catch(Exception e2){
+
+					throw new  AggregateException($"Couldn't properly resolve json schema after trying both normal and local path:",new[]{e,e2});
+				}
 			}
 		};
+
 		var (targetSchema, navigation, pointerFragment) = tryGetSchema();
+
 		context.NavigatedReferences.Add(navigation);
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		if (pointerFragment != null)
