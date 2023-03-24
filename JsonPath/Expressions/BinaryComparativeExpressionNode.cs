@@ -70,6 +70,12 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 			return false;
 		}
 
+		if (op is InOperator && !options.AllowInOperator)
+		{
+			expression = null;
+			return false;
+		}
+
 		// parse value
 		if (!ValueExpressionParser.TryParse(source, ref i, out var right, options))
 		{

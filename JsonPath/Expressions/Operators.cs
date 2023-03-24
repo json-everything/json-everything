@@ -17,6 +17,7 @@ internal static class Operators
 	public static readonly IBinaryComparativeOperator LessThanOrEqualTo = new LessThanOrEqualToOperator();
 	public static readonly IBinaryComparativeOperator GreaterThan = new GreaterThanOperator();
 	public static readonly IBinaryComparativeOperator GreaterThanOrEqualTo = new GreaterThanOrEqualToOperator();
+	public static readonly IBinaryComparativeOperator In = new InOperator();
 
 	public static readonly IUnaryComparativeOperator Exists = new ExistsOperator();
 
@@ -112,6 +113,11 @@ internal static class BinaryComparativeOperatorParser
 		{
 			op = Operators.GreaterThan;
 			index++;
+		}
+		else if (portion.Equals("in", StringComparison.Ordinal))
+		{
+			op = Operators.In;
+			index += 2;
 		}
 		else
 		{

@@ -41,6 +41,12 @@ internal class LiteralExpressionParser : IValueExpressionParser
 			return false;
 		}
 
+		if (node is not JsonValue && !options.AllowJsonConstructs)
+		{
+			expression = null;
+			return false;
+		}
+
 		expression = new LiteralExpressionNode(node);
 		return true;
 	}

@@ -81,6 +81,7 @@ public class CburgmerFeatureValidationTests
 
 		// only literals are supported in expressions
 		"$[?(@.d==['v1','v2'])]",
+		"$[?(!(@.d==[\"v1\",\"v2\"]) || (@.d == true))]",
 
 		// only singular paths are allowed in comparisons
 		"$[?(@[0:1]==[1])]",  // also array literals are disallowed
@@ -119,7 +120,11 @@ public class CburgmerFeatureValidationTests
 
 	private static readonly PathParsingOptions _parsingOptions = new()
 	{
-		AllowMathOperations = true
+		AllowMathOperations = true,
+		AllowRelativePathStart = true,
+		AllowJsonConstructs = true,
+		TolerateSurroundingWhitespace = true,
+		AllowInOperator = true
 	};
 
 	//  - id: array_index
@@ -152,7 +157,7 @@ public class CburgmerFeatureValidationTests
 				if (TryMatch(line, _idPattern, out var value))
 				{
 					if (currentTestCase != null)
-						yield return new TestCaseData(currentTestCase) { TestName = currentTestCase.TestName };
+						yield return new TestCaseData(currentTestCase) { TestName = $"{currentTestCase.PathString} - {currentTestCase.TestName}" };
 					currentTestCase = new CburgmerTestCase { TestName = value };
 				}
 				else if (TryMatch(line, _selectorPattern, out value))
@@ -174,9 +179,6 @@ public class CburgmerFeatureValidationTests
 	[TestCaseSource(nameof(TestCases))]
 	public void Run(CburgmerTestCase testCase)
 	{
-		if (_notSupported.Contains(testCase.PathString))
-			Assert.Inconclusive("This case will not be supported.");
-
 		Console.WriteLine();
 		Console.WriteLine();
 		Console.WriteLine(testCase);
@@ -197,14 +199,17 @@ public class CburgmerFeatureValidationTests
 
 		if (actual == null)
 		{
-			if (testCase.Consensus == "NOT_SUPPORTED")
-			{
-				if (exception != null) 
-					Console.WriteLine(exception);
-				return;
-			}
+			if (exception != null)
+				Console.WriteLine(exception);
 
-			if (exception != null) throw exception;
+			if (testCase.Consensus == "NOT_SUPPORTED") return;
+
+			if (exception != null)
+			{
+				if (_notSupported.Contains(testCase.PathString))
+					Assert.Inconclusive("This case will not be supported.");
+				throw exception;
+			}
 
 			if (testCase.Consensus == null)
 				Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
