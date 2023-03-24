@@ -59,7 +59,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 
 			JsonSchema? targetSchema = null;
 			var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-			                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+							 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 			{
@@ -75,7 +75,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 				if (targetBase is JsonSchema targetBaseSchema &&
-				    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+					targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 					targetSchema = anchorDefinition.Schema;
 			}
 
@@ -83,22 +83,29 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 			return (targetSchema, navigation, pointerFragment);
 		};
+
 		//Make two attempts to get the schema. Once using the default resolver and once using a resolver designed to find local file references
 		var tryGetSchema = () =>
 		{
-			try { return getSchema(newUri); }
+			try
+			{
+				var newUri = new Uri(context.Scope.LocalScope, Reference);
+				return getSchema(newUri);
+			}
 			catch (Exception e)
 			{
 				try
 				{
 					//If the Uri is a local path remove any of the internal generated scopes from things like Allof an OneOf blocks if the reference isn't a local one
 					var baseUri = context.Scope.FirstOrDefault(x => !x.OriginalString.StartsWith("https://json-everything.net"));
-					if (baseUri != null) newUri = new Uri(baseUri, Reference);
+					if (baseUri == null) throw;
+					var newUri = new Uri(baseUri, Reference);
 					return getSchema(newUri);
 				}
-				catch(Exception e2){
+				catch (Exception e2)
+				{
 
-					throw new  AggregateException($"Couldn't properly resolve json schema after trying both normal and local path:",new[]{e,e2});
+					throw new AggregateException($"Couldn't properly resolve json schema after trying both normal and local path:", new[] { e, e2 });
 				}
 			}
 		};
