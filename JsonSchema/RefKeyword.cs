@@ -48,43 +48,54 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	{
 		context.EnterKeyword(Name);
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
-		//If the Uri is a local path remove any of the internal generated scopes from things like Allof an OneOf blocks
-		if (Reference.OriginalString.StartsWith("."))
+
+		var getSchema = (Uri newUri) =>
 		{
-			var baseUri=context.Scope.FirstOrDefault(x => !x.OriginalString.StartsWith("https://json-everything.net"));
-			if (baseUri != null) newUri = new Uri(baseUri, Reference);
-		}
-		var navigation = (newUri.OriginalString, context.InstanceLocation);
-		if (context.NavigatedReferences.Contains(navigation))
-			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
+			var navigation = (newUri.OriginalString, context.InstanceLocation);
+			if (context.NavigatedReferences.Contains(navigation))
+				throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
 
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+			var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
-		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+			JsonSchema? targetSchema = null;
+			var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+			                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+			{
+				if (targetBase == null)
+					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
+				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+			}
+			else
+			{
+				var anchorFragment = newUri.Fragment.Substring(1);
+				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
+
+				if (targetBase is JsonSchema targetBaseSchema &&
+				    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+					targetSchema = anchorDefinition.Schema;
+			}
+
+			if (targetSchema == null)
+				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
+			return (targetSchema, navigation, pointerFragment);
+		};
+		//Make two attempts to get the schema. Once using the default resolver and once using a resolver designed to find local file references
+		var tryGetSchema = () =>
 		{
-			if (targetBase == null)
-				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-			
-			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
-		}
-		else
-		{
-			var anchorFragment = newUri.Fragment.Substring(1);
-			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
-				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-
-			if (targetBase is JsonSchema targetBaseSchema &&
-			    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-				targetSchema = anchorDefinition.Schema;
-		}
-
-		if (targetSchema == null)
-			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
-
+			try { return getSchema(newUri); }
+			catch (Exception e)
+			{
+				//If the Uri is a local path remove any of the internal generated scopes from things like Allof an OneOf blocks if the reference isn't a local one
+				var baseUri = context.Scope.FirstOrDefault(x => !x.OriginalString.StartsWith("https://json-everything.net"));
+				if (baseUri != null) newUri = new Uri(baseUri, Reference);
+				return getSchema(newUri);
+			}
+		};
+		var (targetSchema, navigation, pointerFragment) = tryGetSchema();
 		context.NavigatedReferences.Add(navigation);
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		if (pointerFragment != null)
@@ -131,9 +142,8 @@ internal class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	{
 		var uri = reader.GetString();
 		return new RefKeyword(new Uri(uri!, UriKind.RelativeOrAbsolute));
-
-
 	}
+
 	public override void Write(Utf8JsonWriter writer, RefKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(RefKeyword.Name);
