@@ -1,4 +1,4 @@
-# [4.0.1](https://github.com/gregsdennis/json-everything/pull/326) {#release-schema-4.0.1}
+# [4.0.1](https://github.com/gregsdennis/json-everything/pull/418) {#release-schema-4.0.1}
 
 - Add `IIdKeyword` to potentially support using an ID keyword other than `$id` (foot gun, generally, please don't use)
 - Fix bundling issue when the schema contains `items` - thanks to [@amis92](https://github.com/amis92) for finding and reporting this bug
