@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -395,5 +396,154 @@ public class VocabularyTests
 		Console.WriteLine();
 
 		results.AssertValid();
+	}
+
+	[SchemaKeyword(Name)]
+	[SchemaSpecVersion(SpecVersion.Draft202012)]
+	[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]
+	public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<Draft4ExclusiveMinimumKeyword>
+	{
+		internal const string Name = "exclusiveMinimum";
+
+		private readonly ExclusiveMinimumKeyword? _postDraft6Keyword;
+
+		public bool? BoolValue { get; }
+		public decimal? NumberValue => _postDraft6Keyword?.Value;
+
+		public Draft4ExclusiveMinimumKeyword(bool value)
+		{
+			BoolValue = value;
+		}
+
+		public Draft4ExclusiveMinimumKeyword(decimal value)
+		{
+			_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
+		}
+
+		public void Evaluate(EvaluationContext context)
+		{
+			if (BoolValue.HasValue)
+			{
+				if (!BoolValue.Value)
+				{
+					context.NotApplicable(() => "exclusiveMinimum does nothing when false");
+					return;
+				}
+
+				var minimum = context.LocalSchema.GetMinimum();
+
+				if (!minimum.HasValue)
+				{
+					context.NotApplicable(() => "minimum not defined");
+					return;
+				}
+
+				var schemaValueType = context.LocalInstance.GetSchemaValueType();
+				if (schemaValueType is not SchemaValueType.Number or SchemaValueType.Integer)
+				{
+					context.WrongValueKind(schemaValueType);
+					return;
+				}
+
+				var number = context.LocalInstance!.AsValue().GetNumber();
+				if (number == minimum) 
+					context.LocalResult.Fail(Name, "minimum is exclusive");
+			}
+			else
+				_postDraft6Keyword!.Evaluate(context);
+		}
+
+		public bool Equals(Draft4ExclusiveMinimumKeyword? other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return BoolValue.Equals(other.BoolValue);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return Equals(obj as Draft4ExclusiveMinimumKeyword);
+		}
+
+		public override int GetHashCode()
+		{
+			return BoolValue.GetHashCode();
+		}
+	}
+
+	private class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
+	{
+		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			return reader.TokenType switch
+			{
+				JsonTokenType.True or JsonTokenType.False => new Draft4ExclusiveMinimumKeyword(reader.GetBoolean()),
+				JsonTokenType.Number => new Draft4ExclusiveMinimumKeyword(reader.GetDecimal()),
+				_ => throw new JsonException("Expected boolean or number")
+			};
+		}
+
+		public override void Write(Utf8JsonWriter writer, Draft4ExclusiveMinimumKeyword value, JsonSerializerOptions options)
+		{
+			if (value.BoolValue.HasValue)
+				writer.WriteBoolean(Draft4ExclusiveMinimumKeyword.Name, value.BoolValue.Value);
+			else
+				writer.WriteNumber(Draft4ExclusiveMinimumKeyword.Name, value.NumberValue!.Value);
+		}
+	}
+
+	[TestCase(3, false)]
+	[TestCase(8, true)]
+	[TestCase(5, false)]
+	[TestCase(5.1, true)]
+	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
+	{
+		try
+		{
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
+
+			var schemaText = @"{
+	""minimum"": 5,
+	""exclusiveMinimum"": true
+}";
+			var schema = JsonSchema.FromText(schemaText);
+
+			JsonNode instance = instanceValue;
+
+			var result = schema.Evaluate(instance);
+
+			Assert.AreEqual(isValid, result.IsValid);
+		}
+		finally
+		{
+			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
+		}
+	}
+
+	[TestCase(3, false)]
+	[TestCase(8, true)]
+	[TestCase(5, false)]
+	[TestCase(5.1, true)]
+	public void Draft4ExclusiveMinimumOverrideWithDraft6Usage(decimal instanceValue, bool isValid)
+	{
+		try
+		{
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
+
+			var schemaText = @"{
+	""exclusiveMinimum"": 5
+}";
+			var schema = JsonSchema.FromText(schemaText);
+
+			JsonNode instance = instanceValue;
+
+			var result = schema.Evaluate(instance);
+
+			Assert.AreEqual(isValid, result.IsValid);
+		}
+		finally
+		{
+			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
+		}
 	}
 }

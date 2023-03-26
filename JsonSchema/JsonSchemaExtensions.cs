@@ -119,10 +119,15 @@ public static partial class JsonSchemaExtensions
 
 				if (schema.Keywords == null) continue;
 
-				schemasToSearch.AddRange(schema.Keywords.OfType<ISchemaContainer>().Select(x => x.Schema));
-				schemasToSearch.AddRange(schema.Keywords.OfType<ISchemaCollector>().SelectMany(x => x.Schemas));
-				schemasToSearch.AddRange(schema.Keywords.OfType<IKeyedSchemaCollector>().SelectMany(x => x.Schemas.Values));
-				schemasToSearch.AddRange(schema.Keywords.OfType<ICustomSchemaCollector>().SelectMany(x => x.Schemas));
+				// I shouldn't ordinarily have to check for null here,
+				// but ItemsKeyword implements two interfaces and only one
+				// will be populated at a time.  There may be others
+				// that implement multiple in the same way, so I need to
+				// consider that.
+				schemasToSearch.AddRange(schema.Keywords.OfType<ISchemaContainer>().Where(x => x.Schema != null!).Select(x => x.Schema));
+				schemasToSearch.AddRange(schema.Keywords.OfType<ISchemaCollector>().Where(x => x.Schemas != null!).SelectMany(x => x.Schemas));
+				schemasToSearch.AddRange(schema.Keywords.OfType<IKeyedSchemaCollector>().Where(x => x.Schemas != null!).SelectMany(x => x.Schemas.Values));
+				schemasToSearch.AddRange(schema.Keywords.OfType<ICustomSchemaCollector>().Where(x => x.Schemas != null!).SelectMany(x => x.Schemas));
 
 				if (schema.BaseUri != nextReference && !bundledReferences.Contains(schema.BaseUri))
 					bundledReferences.Add(schema.BaseUri);

@@ -477,7 +477,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the value of `type` if the keyword exists.
 	/// </summary>
-	public static SchemaValueType? GetType(this JsonSchema schema)
+	public static SchemaValueType? GetJsonType(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<TypeKeyword>(TypeKeyword.Name, out var k) ? k!.Type : null;
 	}
