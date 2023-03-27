@@ -1,3 +1,7 @@
+# [1.7.0](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.7.0}
+
+`EnumStringConverter<T>` now supports reading and writing dictionary keys.
+
 # [1.7.0](https://github.com/gregsdennis/json-everything/pull/328) {#release-more-1.7.0}
 
 Added optional parameter for serializer option in `.AsJsonString()` extensions.
