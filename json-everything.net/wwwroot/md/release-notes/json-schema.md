@@ -4,6 +4,7 @@
 - Fix bundling issue when the schema contains `items` - thanks to [@amis92](https://github.com/amis92) for finding and reporting this bug
 - `JsonSchema.GetType()` extension is blocked by `object.GetType()`, so it has been renamed to `.GetJsonType()`
 - Add implicit conversions from `JsonSchema`, `List<string>`, and `string[]` to `SchemaOrPropertyList` to help with `JsonSchemaBuilder.Dependencies()` syntax
+- Add support for higher-precision `date-time` formats - thanks to [@faldor20](https://github.com/faldor20) for submitting this
 
 # [4.0.0](https://github.com/gregsdennis/json-everything/pull/326) {#release-schema-4.0.0}
 
