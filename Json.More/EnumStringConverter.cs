@@ -78,7 +78,7 @@ public class EnumStringConverter<T> : JsonConverter<T>
 		EnsureMap();
 
 		string str;
-		if (reader.TokenType != JsonTokenType.String)
+		if (reader.TokenType is not (JsonTokenType.String or JsonTokenType.PropertyName))
 		{
 			if (typeToConvert.GetCustomAttribute<FlagsAttribute>() != null && reader.TokenType == JsonTokenType.StartArray)
 			{
@@ -108,6 +108,16 @@ public class EnumStringConverter<T> : JsonConverter<T>
 			: throw new JsonException($"Could not find appropriate value for {str} in type {typeToConvert.Name}");
 	}
 
+	/// <summary>Reads a dictionary key from a JSON property name.</summary>
+	/// <param name="reader">The <see cref="T:System.Text.Json.Utf8JsonReader" /> to read from.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">The options to use when reading the value.</param>
+	/// <returns>The value that was converted.</returns>
+	public override T ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		return Read(ref reader, typeToConvert, options);
+	}
+
 	/// <summary>Writes a specified value as JSON.</summary>
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
@@ -129,6 +139,17 @@ public class EnumStringConverter<T> : JsonConverter<T>
 		}
 
 		writer.WriteStringValue(WriteValues[value]);
+	}
+
+	/// <summary>Writes a dictionary key as a JSON property name.</summary>
+	/// <param name="writer">The <see cref="T:System.Text.Json.Utf8JsonWriter" /> to write to.</param>
+	/// <param name="value">The value to convert. The value of <see cref="P:System.Text.Json.Serialization.JsonConverter`1.HandleNull" /> determines if the converter handles <see langword="null" /> values.</param>
+	/// <param name="options">The options to use when writing the value.</param>
+	public override void WriteAsPropertyName(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+	{
+        EnsureMap();
+        
+        writer.WritePropertyName(WriteValues[value]);
 	}
 
 	private static Func<T, T, T> BuildAggregator()

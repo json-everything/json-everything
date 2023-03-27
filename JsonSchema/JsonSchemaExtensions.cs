@@ -119,10 +119,7 @@ public static partial class JsonSchemaExtensions
 
 				if (schema.Keywords == null) continue;
 
-				schemasToSearch.AddRange(schema.Keywords.OfType<ISchemaContainer>().Select(x => x.Schema));
-				schemasToSearch.AddRange(schema.Keywords.OfType<ISchemaCollector>().SelectMany(x => x.Schemas));
-				schemasToSearch.AddRange(schema.Keywords.OfType<IKeyedSchemaCollector>().SelectMany(x => x.Schemas.Values));
-				schemasToSearch.AddRange(schema.Keywords.OfType<ICustomSchemaCollector>().SelectMany(x => x.Schemas));
+				schemasToSearch.AddRange(schema.Keywords.SelectMany(JsonSchema.GetSubschemas));
 
 				if (schema.BaseUri != nextReference && !bundledReferences.Contains(schema.BaseUri))
 					bundledReferences.Add(schema.BaseUri);

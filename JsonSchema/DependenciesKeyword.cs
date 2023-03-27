@@ -198,9 +198,9 @@ public class SchemaOrPropertyList : IEquatable<SchemaOrPropertyList>
 	/// Creates a property dependency.
 	/// </summary>
 	/// <param name="requirements">The property dependency.</param>
-	public SchemaOrPropertyList(List<string> requirements)
+	public SchemaOrPropertyList(IEnumerable<string> requirements)
 	{
-		Requirements = requirements;
+		Requirements = requirements.ToList();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -229,6 +229,30 @@ public class SchemaOrPropertyList : IEquatable<SchemaOrPropertyList>
 		{
 			return ((Schema?.GetHashCode() ?? 0) * 397) ^ (Requirements?.GetCollectionHashCode() ?? 0);
 		}
+	}
+
+	/// <summary>
+	/// Implicitly creates a <see cref="SchemaOrPropertyList"/> from a <see cref="JsonSchema"/>.
+	/// </summary>
+	public static implicit operator SchemaOrPropertyList(JsonSchema schema)
+	{
+		return new SchemaOrPropertyList(schema);
+	}
+
+	/// <summary>
+	/// Implicitly creates a <see cref="SchemaOrPropertyList"/> from a list of strings.
+	/// </summary>
+	public static implicit operator SchemaOrPropertyList(List<string> requirements)
+	{
+		return new SchemaOrPropertyList(requirements);
+	}
+
+	/// <summary>
+	/// Implicitly creates a <see cref="SchemaOrPropertyList"/> from an array of strings.
+	/// </summary>
+	public static implicit operator SchemaOrPropertyList(string[] requirements)
+	{
+		return new SchemaOrPropertyList(requirements);
 	}
 }
 

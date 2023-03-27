@@ -33,6 +33,18 @@ public class FormatTests
 		Assert.False(result.IsValid);
 	}
 
+	[Test]
+	public void longDateTime_pass()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Format(Formats.DateTime);
+
+		var value = JsonNode.Parse("\"2023-03-22T07:56:28.610645938Z\"");
+
+		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
+
+		Assert.True(result.IsValid);
+	}
 	private static readonly Uri _formatAssertionMetaSchemaId = new("https://json-everything/test/format-assertion");
 	private static readonly JsonSchema _formatAssertionMetaSchema =
 		new JsonSchemaBuilder()

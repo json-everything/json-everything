@@ -278,10 +278,11 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 			return;
 		}
 
-		if (schema.TryGetKeyword<IdKeyword>(IdKeyword.Name, out var idKeyword))
+		var idKeyword = (IIdKeyword?)schema.Keywords!.FirstOrDefault(x => x is IIdKeyword);
+		if (idKeyword != null)
 		{
-			if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
-			    idKeyword!.Id.OriginalString[0] == '#' &&
+			if (evaluatingAs <= SpecVersion.Draft7 &&
+			    idKeyword.Id.OriginalString[0] == '#' &&
 			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
 			{
 				schema.BaseUri = currentBaseUri;
@@ -321,7 +322,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		}
 	}
 
-	private static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
 	{
 		switch (keyword)
 		{

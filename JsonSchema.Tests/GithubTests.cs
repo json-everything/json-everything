@@ -749,4 +749,19 @@ public class GithubTests
 			result.AssertValid();
 		});
 	}
+
+	[Test]
+	public void Issue417_BundleWithItemsFails()
+	{
+		// items: true
+		var singleItemSchema = new JsonSchemaBuilder()
+			.Items(JsonSchema.True)
+			.Build();
+		singleItemSchema.Bundle(); // throws
+		// items: [true, true]
+		var multiItemSchema = new JsonSchemaBuilder()
+			.Items(new[] { JsonSchema.True, JsonSchema.True })
+			.Build();
+		multiItemSchema.Bundle(); // throws
+	}
 }

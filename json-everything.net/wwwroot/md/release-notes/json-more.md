@@ -1,3 +1,9 @@
+# [1.8.0](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.8.0}
+
+- `EnumStringConverter<T>` now supports reading and writing dictionary keys.
+- Added `JsonNode.GetPathFromRoot()` to support valid JSON Path syntax (replacement for `JsonNode.GetPath()`)
+- Added `JsonNode.GetPointerFromRoot()` because JSON Pointers are more correct for isolating a single location
+
 # [1.7.0](https://github.com/gregsdennis/json-everything/pull/328) {#release-more-1.7.0}
 
 Added optional parameter for serializer option in `.AsJsonString()` extensions.

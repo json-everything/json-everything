@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -19,7 +18,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(IdKeywordJsonConverter))]
-public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
+public class IdKeyword : IIdKeyword, IEquatable<IdKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -27,7 +26,7 @@ public class IdKeyword : IJsonSchemaKeyword, IEquatable<IdKeyword>
 	public const string Name = "$id";
 
 	/// <summary>
-	/// The ID.
+	/// Defines the URI ID.
 	/// </summary>
 	public Uri Id { get; }
 
