@@ -322,7 +322,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		}
 	}
 
-	private static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
 	{
 		switch (keyword)
 		{
