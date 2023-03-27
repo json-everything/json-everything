@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace Json.More;
 
@@ -11,6 +14,11 @@ namespace Json.More;
 /// </summary>
 public static class JsonNodeExtensions
 {
+	private static readonly JsonSerializerOptions _unfriendlyCharSerialization = new()
+	{
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+
 	/// <summary>
 	/// Determines JSON-compatible equivalence.
 	/// </summary>
@@ -226,5 +234,74 @@ public static class JsonNodeExtensions
 	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
 	{
 		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
+	}
+
+	///  <summary>
+	///  Gets a JSON Path string that indicates the node's location within
+	///  its JSON structure.
+	///  </summary>
+	///  <param name="node">The node to find.</param>
+	///  <param name="useShorthand">Determines whether shorthand syntax is used when possible, e.g. `$.foo`.</param>
+	///  <exception cref="ArgumentNullException">Null nodes cannot be located as the parent cannot be determined.</exception>
+	///  <returns>
+	/// 	A string containing a JSON Path.
+	///  </returns>
+	public static string GetPathFromRoot(this JsonNode node, bool useShorthand = false)
+	{
+		var current = node ?? throw new ArgumentNullException(nameof(node), "null nodes cannot be located");
+
+		var segments = new Stack<JsonValue>();
+		while (current != null)
+		{
+			var segment = current.Parent switch
+			{
+				null => null,
+				JsonObject obj => GetKey(obj, current),
+				JsonArray arr => GetIndex(arr, current),
+				_ => throw new ArgumentOutOfRangeException("parent", "this shouldn't happen")
+			};
+			segments.Push(segment);
+			current = current.Parent;
+		}
+
+		var sb = new StringBuilder();
+		sb.Append("$");
+		segments.Pop();  // first is always null - the root
+		while (segments.Any())
+		{
+			var segment = segments.Pop();
+			var index = segment.GetNumber();
+			sb.Append(index != null ? $"[{index}]" : GetNamedSegment(segment, useShorthand));
+		}
+
+		return sb.ToString();
+	}
+
+	private static JsonValue GetKey(JsonObject obj, JsonNode current)
+	{
+		return JsonValue.Create(obj.First(x => ReferenceEquals(x.Value, current)).Key)!;
+	}
+
+	private static JsonValue GetIndex(JsonArray arr, JsonNode current)
+	{
+		return JsonValue.Create(arr.IndexOf(current));
+	}
+
+	private static string GetNamedSegment(JsonValue segment, bool useShorthand)
+	{
+		var value = segment.GetValue<string>();
+		if (useShorthand && Regex.IsMatch(value, "^[a-z][a-z_]*$"))  return $".{value}";
+
+		return $"['{PrepForJsonPath(segment.AsJsonString(_unfriendlyCharSerialization))}']";
+	}
+
+	// pass JSON string because it will handle char escaping inside the string.
+	// just need to replace the quotes.
+	private static string PrepForJsonPath(string jsonString)
+	{
+		var content = jsonString.Substring(1, jsonString.Length-2);
+		var escaped = content.Replace("\\\"", "\"")
+			.Replace("'", "\\'");
+		return escaped;
 	}
 }

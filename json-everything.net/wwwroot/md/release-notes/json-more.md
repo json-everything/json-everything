@@ -1,6 +1,7 @@
 # [1.7.1](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.7.1}
 
-`EnumStringConverter<T>` now supports reading and writing dictionary keys.
+- `EnumStringConverter<T>` now supports reading and writing dictionary keys.
+- Added `JsonNode.GetPathFromRoot()` to support valid JSON Path syntax (replacement for `JsonNode.GetPath()`)
 
 # [1.7.0](https://github.com/gregsdennis/json-everything/pull/328) {#release-more-1.7.0}
 
