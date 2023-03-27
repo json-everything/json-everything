@@ -1,4 +1,4 @@
-# [1.7.0](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.7.0}
+# [1.7.1](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.7.1}
 
 `EnumStringConverter<T>` now supports reading and writing dictionary keys.
 
