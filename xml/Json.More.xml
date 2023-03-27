@@ -13,11 +13,24 @@
             <returns>The converted value.</returns>
             <exception cref="T:System.Text.Json.JsonException">Element was not a string or could not identify the JSON value as a known enum value.</exception>
         </member>
+        <member name="M:Json.More.EnumStringConverter`1.ReadAsPropertyName(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads a dictionary key from a JSON property name.</summary>
+            <param name="reader">The <see cref="T:System.Text.Json.Utf8JsonReader" /> to read from.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">The options to use when reading the value.</param>
+            <returns>The value that was converted.</returns>
+        </member>
         <member name="M:Json.More.EnumStringConverter`1.Write(System.Text.Json.Utf8JsonWriter,`0,System.Text.Json.JsonSerializerOptions)">
             <summary>Writes a specified value as JSON.</summary>
             <param name="writer">The writer to write to.</param>
             <param name="value">The value to convert to JSON.</param>
             <param name="options">An object that specifies serialization options to use.</param>
+        </member>
+        <member name="M:Json.More.EnumStringConverter`1.WriteAsPropertyName(System.Text.Json.Utf8JsonWriter,`0,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a dictionary key as a JSON property name.</summary>
+            <param name="writer">The <see cref="T:System.Text.Json.Utf8JsonWriter" /> to write to.</param>
+            <param name="value">The value to convert. The value of <see cref="P:System.Text.Json.Serialization.JsonConverter`1.HandleNull" /> determines if the converter handles <see langword="null" /> values.</param>
+            <param name="options">The options to use when writing the value.</param>
         </member>
         <member name="T:Json.More.JsonDocumentEqualityComparer">
              <summary>
@@ -396,6 +409,29 @@
             </summary>
             <param name="nodes">The nodes.</param>
             <returns>A JSON array.</returns>
+        </member>
+        <member name="M:Json.More.JsonNodeExtensions.GetPathFromRoot(System.Text.Json.Nodes.JsonNode,System.Boolean)">
+             <summary>
+             Gets a JSON Path string that indicates the node's location within
+             its JSON structure.
+             </summary>
+             <param name="node">The node to find.</param>
+             <param name="useShorthand">Determines whether shorthand syntax is used when possible, e.g. `$.foo`.</param>
+             <exception cref="T:System.ArgumentNullException">Null nodes cannot be located as the parent cannot be determined.</exception>
+             <returns>
+            	A string containing a JSON Path.
+             </returns>
+        </member>
+        <member name="M:Json.More.JsonNodeExtensions.GetPointerFromRoot(System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Gets a JSON Pointer string that indicates the node's location within
+             its JSON structure.
+             </summary>
+             <param name="node">The node to find.</param>
+             <exception cref="T:System.ArgumentNullException">Null nodes cannot be located as the parent cannot be determined.</exception>
+             <returns>
+            	A string containing a JSON Pointer.
+             </returns>
         </member>
         <member name="T:Json.More.JsonNull">
              <summary>

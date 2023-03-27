@@ -979,7 +979,7 @@
             </summary>
             <param name="schema">The schema dependency.</param>
         </member>
-        <member name="M:Json.Schema.SchemaOrPropertyList.#ctor(System.Collections.Generic.List{System.String})">
+        <member name="M:Json.Schema.SchemaOrPropertyList.#ctor(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Creates a property dependency.
             </summary>
@@ -998,6 +998,21 @@
         <member name="M:Json.Schema.SchemaOrPropertyList.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Json.Schema.SchemaOrPropertyList.op_Implicit(Json.Schema.JsonSchema)~Json.Schema.SchemaOrPropertyList">
+            <summary>
+            Implicitly creates a <see cref="T:Json.Schema.SchemaOrPropertyList"/> from a <see cref="T:Json.Schema.JsonSchema"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.SchemaOrPropertyList.op_Implicit(System.Collections.Generic.List{System.String})~Json.Schema.SchemaOrPropertyList">
+            <summary>
+            Implicitly creates a <see cref="T:Json.Schema.SchemaOrPropertyList"/> from a list of strings.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.SchemaOrPropertyList.op_Implicit(System.String[])~Json.Schema.SchemaOrPropertyList">
+            <summary>
+            Implicitly creates a <see cref="T:Json.Schema.SchemaOrPropertyList"/> from an array of strings.
+            </summary>
         </member>
         <member name="T:Json.Schema.DependentRequiredKeyword">
             <summary>
@@ -2240,7 +2255,7 @@
         </member>
         <member name="P:Json.Schema.IdKeyword.Id">
             <summary>
-            The ID.
+            Defines the URI ID.
             </summary>
         </member>
         <member name="M:Json.Schema.IdKeyword.#ctor(System.Uri)">
@@ -2309,6 +2324,17 @@
         <member name="M:Json.Schema.IfKeyword.GetHashCode">
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.IIdKeyword">
+            <summary>
+            Allows definition of a custom schema identifier keyword.
+            WARNING - Foot-gun mode: use only if you know what you're doing.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.IIdKeyword.Id">
+            <summary>
+            Defines the URI ID.
+            </summary>
         </member>
         <member name="T:Json.Schema.IJsonSchemaKeyword">
             <summary>
@@ -3790,7 +3816,7 @@
             Gets the value of `title` if the keyword exists.
             </summary>
         </member>
-        <member name="M:Json.Schema.JsonSchemaExtensions.GetType(Json.Schema.JsonSchema)">
+        <member name="M:Json.Schema.JsonSchemaExtensions.GetJsonType(Json.Schema.JsonSchema)">
             <summary>
             Gets the value of `type` if the keyword exists.
             </summary>
