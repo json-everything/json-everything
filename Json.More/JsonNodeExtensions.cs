@@ -250,6 +250,23 @@ public static class JsonNodeExtensions
 	{
 		var current = node ?? throw new ArgumentNullException(nameof(node), "null nodes cannot be located");
 
+		var segments = GetSegments(current);
+
+		var sb = new StringBuilder();
+		sb.Append("$");
+		segments.Pop();  // first is always null - the root
+		while (segments.Any())
+		{
+			var segment = segments.Pop();
+			var index = segment.GetNumber();
+			sb.Append(index != null ? $"[{index}]" : GetNamedSegmentForPath(segment, useShorthand));
+		}
+
+		return sb.ToString();
+	}
+
+	private static Stack<JsonValue> GetSegments(JsonNode current)
+	{
 		var segments = new Stack<JsonValue>();
 		while (current != null)
 		{
@@ -264,17 +281,7 @@ public static class JsonNodeExtensions
 			current = current.Parent;
 		}
 
-		var sb = new StringBuilder();
-		sb.Append("$");
-		segments.Pop();  // first is always null - the root
-		while (segments.Any())
-		{
-			var segment = segments.Pop();
-			var index = segment.GetNumber();
-			sb.Append(index != null ? $"[{index}]" : GetNamedSegment(segment, useShorthand));
-		}
-
-		return sb.ToString();
+		return segments;
 	}
 
 	private static JsonValue GetKey(JsonObject obj, JsonNode current)
@@ -287,7 +294,7 @@ public static class JsonNodeExtensions
 		return JsonValue.Create(arr.IndexOf(current));
 	}
 
-	private static string GetNamedSegment(JsonValue segment, bool useShorthand)
+	private static string GetNamedSegmentForPath(JsonValue segment, bool useShorthand)
 	{
 		var value = segment.GetValue<string>();
 		if (useShorthand && Regex.IsMatch(value, "^[a-z][a-z_]*$"))  return $".{value}";
@@ -302,6 +309,40 @@ public static class JsonNodeExtensions
 		var content = jsonString.Substring(1, jsonString.Length-2);
 		var escaped = content.Replace("\\\"", "\"")
 			.Replace("'", "\\'");
+		return escaped;
+	}
+
+	///  <summary>
+	///  Gets a JSON Pointer string that indicates the node's location within
+	///  its JSON structure.
+	///  </summary>
+	///  <param name="node">The node to find.</param>
+	///  <exception cref="ArgumentNullException">Null nodes cannot be located as the parent cannot be determined.</exception>
+	///  <returns>
+	/// 	A string containing a JSON Pointer.
+	///  </returns>
+	public static string GetPointerFromRoot(this JsonNode node)
+	{
+		var current = node ?? throw new ArgumentNullException(nameof(node), "null nodes cannot be located");
+
+		var segments = GetSegments(current);
+
+		var sb = new StringBuilder();
+		segments.Pop();  // first is always null - the root
+		while (segments.Any())
+		{
+			var segment = segments.Pop();
+			var index = segment.GetNumber();
+			sb.Append(index != null ? $"/{index}" : $"/{PrepForJsonPointer(segment.GetValue<string>())}");
+		}
+
+		return sb.ToString();
+	}
+
+	private static string PrepForJsonPointer(string s)
+	{
+		var escaped = s.Replace("~", "~0")
+			.Replace("/", "~1");
 		return escaped;
 	}
 }
