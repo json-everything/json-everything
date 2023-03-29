@@ -73,13 +73,13 @@ public class SchemaRegistry
 	/// <param name="document">The schema.</param>
 	public void Register(IBaseDocument document)
 	{
-		RegisterSchema(document.BaseUri, document);
+		Register(document.BaseUri, document);
 	}
 
 	/// <summary>
 	/// Registers a schema by URI.
 	/// </summary>
-	/// <param name="uri">The URI ID of the schema..</param>
+	/// <param name="uri">The URI ID of the schema..</pardam>
 	/// <param name="document">The schema.</param>
 	public void Register(Uri? uri, IBaseDocument document)
 	{
