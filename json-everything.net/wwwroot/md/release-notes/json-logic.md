@@ -1,4 +1,4 @@
-# [4.0.3](https://github.com/gregsdennis/json-everything/pull/422) {#release-logic-4.0.3}
+# [4.0.4](https://github.com/gregsdennis/json-everything/pull/422) {#release-logic-4.0.4}
 
 [#420](https://github.com/gregsdennis/json-everything/issues/404) - `<=` not working for the "between" case.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding and fixing this issue.
 
