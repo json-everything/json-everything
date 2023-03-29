@@ -1,3 +1,7 @@
+# [4.0.2](https://github.com/gregsdennis/json-everything/pull/423) {#release-schema-4.0.2}
+
+[#419](https://github.com/gregsdennis/json-everything/issues/419) - Fixed an issue with schema registration and populating IDs.  Thanks to [@lennver](https://github.com/lennver) for providing reproduction for this issue.
+
 # [4.0.1](https://github.com/gregsdennis/json-everything/pull/418) {#release-schema-4.0.1}
 
 - Add `IIdKeyword` to potentially support using an ID keyword other than `$id` (foot gun, generally, please don't use)

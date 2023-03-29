@@ -1,0 +1,11 @@
+{
+	"$id": "level2.json",
+	"required": [
+		"weekly"
+	],
+	"properties": {
+		"weekly": {
+			"type": "boolean"
+		}
+	}
+}

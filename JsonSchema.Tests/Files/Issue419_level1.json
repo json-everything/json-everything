@@ -1,0 +1,11 @@
+{
+	"$id": "level1.json",
+	"properties": {
+		"timeSpan": {
+			"$ref": "level2.json"
+		}
+	},
+	"required": [
+		"timeSpan"
+	]
+}

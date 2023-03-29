@@ -1,0 +1,12 @@
+{
+  "$id": "root.json",
+  "type": "object",
+  "required": [
+    "global"
+  ],
+  "properties": {
+    "global": {
+      "$ref": "level1.json"
+    }
+  }
+}

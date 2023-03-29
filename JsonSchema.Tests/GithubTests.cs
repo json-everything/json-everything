@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -13,6 +12,17 @@ namespace Json.Schema.Tests;
 
 public class GithubTests
 {
+	private static string GetFile(int issue, string name)
+	{
+		return Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", $"Issue{issue}_{name}.json")
+			.AdjustForPlatform();
+	}
+
+	private static string GetResource(int issue, string name)
+	{
+		return File.ReadAllText(GetFile(issue, name));
+	}
+
 	[Test]
 	public void Issue18_SomethingNotValidatingRight()
 	{
@@ -517,14 +527,6 @@ public class GithubTests
 		}
 	}
 
-	private static string GetResource(int issue, string name)
-	{
-		var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", $"Issue{issue}_{name}.json")
-			.AdjustForPlatform();
-
-		return File.ReadAllText(path);
-	}
-
 	[Test]
 	public void Issue191_SelfReferentialCustomMetaschemaShouldError()
 	{
@@ -763,5 +765,23 @@ public class GithubTests
 			.Items(new[] { JsonSchema.True, JsonSchema.True })
 			.Build();
 		multiItemSchema.Bundle(); // throws
+	}
+
+	[Test]
+	public void Issue419_SecondLevelReferences()
+	{
+		var level2 = JsonSchema.FromFile(GetFile(419, "level2"));
+		SchemaRegistry.Global.Register(level2);
+
+		var level1 = JsonSchema.FromFile(GetFile(419, "level1"));
+		SchemaRegistry.Global.Register(level1);
+
+		var rootSchema = JsonSchema.FromFile(GetFile(419, "root"));
+
+		var config = JsonNode.Parse(GetResource(419, "config"));
+
+		var result = rootSchema.Evaluate(config);
+
+		result.AssertValid();
 	}
 }

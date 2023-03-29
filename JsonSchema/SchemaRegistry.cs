@@ -73,7 +73,7 @@ public class SchemaRegistry
 	/// <param name="document">The schema.</param>
 	public void Register(IBaseDocument document)
 	{
-		RegisterSchema(document.BaseUri, document);
+		Register(document.BaseUri, document);
 	}
 
 	/// <summary>
