@@ -1,3 +1,7 @@
+# [4.0.3](https://github.com/gregsdennis/json-everything/pull/422) {#release-logic-4.0.3}
+
+[#420](https://github.com/gregsdennis/json-everything/issues/404) - `<=` not working for the "between" case.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding and fixing this issue.
+
 # [4.0.3](https://github.com/gregsdennis/json-everything/pull/410) {#release-logic-4.0.3}
 
 [#404](https://github.com/gregsdennis/json-everything/issues/404) - `missing` _doesn't_ check for truthiness, it special cases the empty string.
