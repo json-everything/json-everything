@@ -92,7 +92,7 @@ public class LessThanEqualRule : Rule
 
 		if (av != null && av.TryGetValue(out stringA) &&
 		    bv != null && bv.TryGetValue(out stringB) &&
-		    cv != null && bv.TryGetValue(out string? stringC))
+		    cv != null && cv.TryGetValue(out string? stringC))
 			return string.Compare(stringA, stringB, StringComparison.Ordinal) <= 0 &&
 			       string.Compare(stringB, stringC, StringComparison.Ordinal) <= 0;
 
