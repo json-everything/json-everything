@@ -297,6 +297,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 			{
 				case JsonArray array:
 					segmentValue = segment.Value;
+					if (segmentValue == string.Empty) return false;
 					if (segmentValue == "0")
 					{
 						if (array.Count == 0) return false;

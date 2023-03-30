@@ -1,5 +1,9 @@
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/326) {#release-pointer-3.0.0}
 
+
+
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/326) {#release-pointer-3.0.0}
+
 Updated model to more correctly represent a basic JSON Pointer.
 
 - URL encoding is merely a formatting concern
