@@ -258,16 +258,16 @@ public static class JsonNodeExtensions
 		while (segments.Any())
 		{
 			var segment = segments.Pop();
-			var index = segment.GetNumber();
-			sb.Append(index != null ? $"[{index}]" : GetNamedSegmentForPath(segment, useShorthand));
+			var index = segment?.GetNumber();
+			sb.Append(index != null ? $"[{index}]" : GetNamedSegmentForPath(segment!, useShorthand));
 		}
 
 		return sb.ToString();
 	}
 
-	private static Stack<JsonValue> GetSegments(JsonNode current)
+	private static Stack<JsonValue?> GetSegments(JsonNode? current)
 	{
-		var segments = new Stack<JsonValue>();
+		var segments = new Stack<JsonValue?>();
 		while (current != null)
 		{
 			var segment = current.Parent switch
@@ -332,8 +332,8 @@ public static class JsonNodeExtensions
 		while (segments.Any())
 		{
 			var segment = segments.Pop();
-			var index = segment.GetNumber();
-			sb.Append(index != null ? $"/{index}" : $"/{PrepForJsonPointer(segment.GetValue<string>())}");
+			var index = segment?.GetNumber();
+			sb.Append(index != null ? $"/{index}" : $"/{PrepForJsonPointer(segment!.GetValue<string>())}");
 		}
 
 		return sb.ToString();
