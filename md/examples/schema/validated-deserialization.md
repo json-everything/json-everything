@@ -33,6 +33,18 @@ the schema can't know whether the `required` constraints have been satisfied unt
 
 This is the worst case. At best, the required properties would appear at the beginning of the stream, and `required` could satisfy its constraint early.  However, in general, we must account for the worst case.
 
+Another example involves the `if`/`then`/`else` keywords.
+
+```json
+{
+  "if": { "required": [ "foo"] },
+  "then": { "required": [ "bar" ] },
+  "else": { "not": { "required": [ "bar" ] } }
+}
+```
+
+Here, the instance is only allowed to have a `bar` property if it also has a `foo` property.  Unless `foo` and `bar` are close together at the beginning of the stream, we _must_ read the entire object before we can validate it.
+
 ## So how do we validate before deserialization? {#schema-validated-deserialization-how-to}
 
 `JsonSchema` operates on `JsonNode`.  Because of this, we can split our deserialization into two steps and insert validation in the middle.
