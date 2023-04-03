@@ -31,6 +31,7 @@ namespace JsonEverythingNet.Services
 
 				RegisterAnchors(client, "schema-basics"),
 				RegisterAnchors(client, "schema-vocabs"),
+				RegisterAnchors(client, "examples/schema/validated-deserialization"),
 				RegisterAnchors(client, "examples/schema/external-schemas"),
 				RegisterAnchors(client, "examples/schema/managing-options"),
 				RegisterAnchors(client, "examples/schema/version-selection"),
