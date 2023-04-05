@@ -1,3 +1,7 @@
+# [4.0.3](https://github.com/gregsdennis/json-everything/pull/427) {#release-schema-4.0.3}
+
+[#426](https://github.com/gregsdennis/json-everything/issues/426) - `$ref`s that pointed to schemas with `file://` URIs don't resolve correctly.  Thanks to [@faldor20](https://github.com/faldor20) for finding and fixing this issue.
+
 # [4.0.2](https://github.com/gregsdennis/json-everything/pull/423) {#release-schema-4.0.2}
 
 [#419](https://github.com/gregsdennis/json-everything/issues/419) - Fixed an issue with schema registration and populating IDs.  Thanks to [@lennver](https://github.com/lennver) for providing reproduction for this issue.
