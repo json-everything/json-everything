@@ -48,6 +48,15 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.EnterKeyword(Name);
 
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		string fragment = newUri.Fragment;
+		
+		//If the uri is a file we set the fragment here because it will be lost in the uri
+		if (context.Scope.LocalScope.IsFile && Reference.OriginalString.StartsWith("#"))
+		{
+			newUri = context.Scope.LocalScope;
+			fragment = Reference.OriginalString;
+		}
+
 		var navigation = (newUri.OriginalString, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
@@ -58,16 +67,16 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
 		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-		if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-			
+
 			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 		}
 		else
 		{
-			var anchorFragment = newUri.Fragment.Substring(1);
+			var anchorFragment = fragment.Substring(1);
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 

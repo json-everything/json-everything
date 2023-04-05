@@ -1,0 +1,4 @@
+{
+	"$schema": "./Issue426_schema.json",
+	"myBirthday": "1970-01-01"
+}
