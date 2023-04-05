@@ -784,4 +784,17 @@ public class GithubTests
 
 		result.AssertValid();
 	}
+	[Test]
+	public void Issue426_FileFragmentRefs()
+	{
+		var schema = JsonSchema.FromFile(GetFile(426, "schema"));
+		SchemaRegistry.Global.Register(schema);
+		
+		var data = JsonNode.Parse(File.ReadAllText(GetFile(426, "data")));
+		
+		var result = schema.Evaluate(data);
+
+		result.AssertValid();
+	}
+	
 }
