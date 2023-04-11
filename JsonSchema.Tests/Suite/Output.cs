@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests.Suite;
@@ -145,6 +146,22 @@ public class Output
 		Console.WriteLine(JsonSerializer.Serialize(serializedResult, serializerOptions));
 		Console.WriteLine();
 
+		if (test.ExpectedLocations != null!)
+		{
+			var expectedLocation = test.ExpectedLocations[format];
+			Assert.IsTrue(expectedLocation.TryEvaluate(serializedResult, out var location));
+
+			if (test.Operation == "contains")
+			{
+				if (location is not JsonArray arr || !arr.Any())
+				{
+					Assert.Fail();
+					return; // compiler doesn't know assert.fail() throws
+				}
+
+				Assert.IsTrue(arr.Any(x => IsMatch(x, test.OutputUnit!.AsObject())));
+			}
+		}
 
 		var outputSchema = test.Output![format];
 		result = outputSchema.Evaluate(serializedResult, new EvaluationOptions
@@ -163,6 +180,20 @@ public class Output
 		}
 
 		result.AssertValid();
+	}
+
+	private static bool IsMatch(JsonNode? target, JsonObject expected)
+	{
+		if (target is not JsonObject obj) return false;
+
+		foreach (var property in expected)
+		{
+			if (!obj.TryGetPropertyValue(property.Key, out var targetValue)) return false;
+
+			if (!targetValue.IsEquivalentTo(property.Value)) return false;
+		}
+
+		return true;
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)
