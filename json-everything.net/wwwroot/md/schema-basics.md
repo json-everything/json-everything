@@ -500,7 +500,7 @@ This library bundles schemas by collecting all of the referenced documents along
 
 For example, given this root and external schema:
 
-```jsonc
+```json
 // root
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
