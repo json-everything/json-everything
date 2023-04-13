@@ -52,9 +52,6 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		// If the uri is a file we need to set the fragment manually because it will be lost in the uri
 		if (context.Scope.LocalScope.IsFile && Reference.OriginalString.Contains("#"))
 		{
-			//Ideas to detect fragment better and support paths with hashes in them:
-			//last # if the uri doens't end in a .json
-			//any hash that looks like '.json#/'
 			if (Reference.OriginalString.StartsWith("#"))
 			{
 				fragment = Reference.OriginalString;
@@ -65,7 +62,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			{
 				var parts=Reference.OriginalString.Split('#');
 				if (parts.Length != 2)
-					throw new ArgumentException(
+					throw new JsonSchemaException(
 						$"Given a reference with more than one '#' in it. We cannot tell if this is a fragment, or where the fragment starts. Please don't use '#'s in fileNames or paths.\n Reference:{Reference.OriginalString} ");
 				fragment = '#'+parts[1];
 				newUri =new Uri(context.Scope.LocalScope, parts[0]);
