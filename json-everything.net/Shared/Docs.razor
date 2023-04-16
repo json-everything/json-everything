@@ -84,7 +84,7 @@
 	
 		var pipeline = new MarkdownPipelineBuilder()
 			.UseAdvancedExtensions()
-			.UseSyntaxHighlighting()
+			.UseSyntaxHighlighting(StyleSheets.Custom)
 			.Build();
 		var html = Markdown.ToHtml(markdown, pipeline);
 		html = html.Replace("<table>", "<table class=\"table\">");
