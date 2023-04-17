@@ -63,7 +63,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 				var parts=Reference.OriginalString.Split('#');
 				if (parts.Length != 2)
 					throw new JsonSchemaException(
-						$"Given a reference with more than one '#' in it. We cannot tell if this is a fragment, or where the fragment starts. Please don't use '#'s in fileNames or paths.\n Reference:{Reference.OriginalString} ");
+						"File references with multiple hashes are not supported.");
 				fragment = '#'+parts[1];
 				newUri =new Uri(context.Scope.LocalScope, parts[0]);
 
