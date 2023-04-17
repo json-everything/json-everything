@@ -8,10 +8,18 @@
 @inject NavigationManager NavigationManager
 @inject ApiDocGenerationService DocGenerator
 
+@{
+#pragma warning disable CS8625
+}
+
 <div class="docs-pane">
 	@((MarkupString)_value)
 	<AnchorNavigation @ref="_anchorNav" Owner="this"/>
 </div>
+
+@{
+#pragma warning restore CS8625
+}
 
 @code{
 
@@ -57,7 +65,7 @@
 					{
 						return x.ExportedTypes;
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 						Console.WriteLine($"Failed to load types for assembly '{x.FullName}'");
 						return Enumerable.Empty<Type>();
