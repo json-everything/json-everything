@@ -6,32 +6,30 @@ namespace Json.Schema.Tests;
 
 public class References
 {
-	
-	private static string GetFile( string name)
+	private static string GetFile(string name)
 	{
-		return Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files","Referencing", $"{name}.json")
+		return Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "Referencing", $"{name}.json")
 			.AdjustForPlatform();
 	}
 
-	private static string GetResource( string name)
+	private static string GetResource(string name)
 	{
-		return File.ReadAllText(GetFile( name));
+		return File.ReadAllText(GetFile(name));
 	}
 
 	[Test]
 	public void ReferenceFragmentFromFile()
 	{
-		var baseSchema =JsonSchema.FromFile(GetFile("base_schema"));
-		var refSchema =JsonSchema.FromFile(GetFile("ref_schema"));
-		
-		var baseData = JsonNode.Parse( GetResource("base_data"));
-		
+		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"));
+		var refSchema = JsonSchema.FromFile(GetFile("ref_schema"));
+
+		var baseData = JsonNode.Parse(GetResource("base_data"));
+
 		SchemaRegistry.Global.Register(refSchema);
 		SchemaRegistry.Global.Register(baseSchema);
 
-		var res=baseSchema.Evaluate(baseData);
-		
+		var res = baseSchema.Evaluate(baseData);
+
 		res.AssertValid();
 	}
-	
 }
