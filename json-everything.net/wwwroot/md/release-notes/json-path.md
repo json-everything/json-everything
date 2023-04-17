@@ -1,3 +1,7 @@
+# [0.5.2](https://github.com/gregsdennis/json-everything/pull/431) {#release-path-0.5.2}
+
+Improved support for regular expressions matching unicode text.
+
 # [0.5.1](https://github.com/gregsdennis/json-everything/pull/412) {#release-path-0.5.1}
 
 Added optional support for:
