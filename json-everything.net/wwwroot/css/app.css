@@ -235,6 +235,13 @@ a.navbar-brand {
 }
 
 /*--- DOCS ---*/
+.docs-pane {
+	margin: 2em auto;
+	max-width: 1080px;
+	overflow: hidden;
+	width: 100%;
+}
+
 pre {
 	padding: 9.5px;
 	font-size: 13px;
