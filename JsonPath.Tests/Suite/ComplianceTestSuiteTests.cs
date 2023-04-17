@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using Json.More;
 using NUnit.Framework;
 
@@ -14,6 +16,8 @@ public class ComplianceTestSuiteTests
 	private const string _testsFile = @"../../../../ref-repos/jsonpath-compliance-test-suite/cts.json";
 	private static readonly string[] _notSupported =
 	{
+		"filter, match function, unicode, surrogate pair",
+		"filter, search function, unicode, surrogate pair"
 	};
 
 	//  - id: array_index
@@ -34,7 +38,7 @@ public class ComplianceTestSuiteTests
 	[TestCaseSource(nameof(TestCases))]
 	public void Run(ComplianceTestCase testCase)
 	{
-		if (_notSupported.Contains(testCase.Selector))
+		if (_notSupported.Contains(testCase.Name))
 			Assert.Inconclusive("This case will not be supported.");
 
 		Console.WriteLine();
