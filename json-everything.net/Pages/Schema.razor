@@ -269,8 +269,7 @@
 				"json" => _generateDataText,
 				"csharp" => _generateSchemaText,
 				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
-			_schemaEditor.GetModel()
-				.ContinueWith(x => MonacoEditorBase.SetModelLanguage(x.Result, _inputLanguage));
+			_schemaEditor.SetLanguage(_inputLanguage);
 			SchemaEditorLabel = value switch {
 				"json" => "Schema",
 				"csharp" => "Class Definition",
@@ -300,6 +299,8 @@
 		await HandleSchemaChanged();
 		await HandleInstanceChanged();
 
+		await _outputEditor.SetLanguageAsync("json");
+	
 		JsonSchema schema;
 		try
 		{
@@ -308,6 +309,7 @@
 		}
 		catch (Exception e)
 		{
+			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
@@ -318,28 +320,40 @@
 		}
 		catch (Exception e)
 		{
+			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue($"Instance is invalid\n\n{e.Message}");
 			return;
 		}
 
-		var results = schema.Evaluate(instance, _options.ToValidationOptions());
-
-		var serializerOptions = new JsonSerializerOptions
+		try
 		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-		if (_options.OutputStructure == SpecVersion.Draft202012)
-			serializerOptions.Converters.Add(new Pre202012EvaluationResultsJsonConverter());
-		var resultText = JsonSerializer.Serialize(results, serializerOptions);
+			var results = schema.Evaluate(instance, _options.ToValidationOptions());
 
-		await _outputEditor.SetValue(resultText);
+			var serializerOptions = new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			};
+			if (_options.OutputStructure == SpecVersion.Draft202012)
+				serializerOptions.Converters.Add(new Pre202012EvaluationResultsJsonConverter());
+			var resultText = JsonSerializer.Serialize(results, serializerOptions);
+
+			await _outputEditor.SetValue(resultText);
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetValue(e.Message);
+			return;
+		}
 	}
 
 	private async Task Generate()
 	{
 		await HandleSchemaChanged();
 		await HandleInstanceChanged();
+
+		await _outputEditor.SetLanguageAsync("json");
 
 		switch (_inputLanguage)
 		{
@@ -361,6 +375,7 @@
 		}
 		catch (Exception e)
 		{
+			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
@@ -432,6 +447,7 @@ namespace JsonEverythingTemp
 		}
 		catch (Exception e)
 		{
+			await _outputEditor.SetLanguageAsync("text");
 			await _instanceEditor.SetValue(e.Message);
 			throw;
 		}
