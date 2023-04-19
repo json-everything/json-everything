@@ -73,8 +73,6 @@ The specification defines the following functions:
 
 \* _I-Regexp is designed to be an interoperable subset of most popular regular expression specifications and implementations.  One difference that [could not be resolved](https://github.com/ietf-wg-jsonpath/iregexp/issues/15) was implicit anchoring.  As such, two methods were developed to handle both cases.  `match` uses implicit anchoring, while `search` does not._
 
-_**UNSUPPORTED** .Net's `Regex` engine has trouble with matching non-BMP Unicode characters.  There are two .Net issues worth reading that cover this: [#36425](https://github.com/dotnet/runtime/issues/36425) and [#16922](https://github.com/dotnet/runtime/issues/16922).  Therefore regular expressions that contain these characters are generally unsupported by this library._
-
 #### Custom Functions {#path-custom-functions}
 
 There is also support for defining your own functions.

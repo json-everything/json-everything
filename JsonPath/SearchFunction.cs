@@ -25,6 +25,7 @@ public class SearchFunction : LogicalFunctionDefinition
 		if (!value.TryGetValue<string>(out var text)) return false;
 		if (!pattern.TryGetValue<string>(out var regex)) return false;
 
-		return Regex.IsMatch(text, regex, RegexOptions.ECMAScript);
+		var dotnetTranslation = regex.HandleDotNetSupportIssues();
+		return Regex.IsMatch(text, dotnetTranslation, RegexOptions.ECMAScript);
 	}
 }
