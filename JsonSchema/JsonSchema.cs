@@ -275,6 +275,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		    schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
 		{
 			schema.BaseUri = currentBaseUri;
+			if (selfRegister)
+				registry.RegisterSchema(schema.BaseUri, schema);
 			return;
 		}
 
