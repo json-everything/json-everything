@@ -784,6 +784,7 @@ public class GithubTests
 
 		result.AssertValid();
 	}
+
 	[Test]
 	public void Issue426_FileFragmentRefs()
 	{
@@ -796,5 +797,34 @@ public class GithubTests
 
 		result.AssertValid();
 	}
-	
+
+	[Test]
+	public void Issue432_UnresolvedLocalRef()
+	{
+		var schema = JsonSchema.FromText(@"{
+  ""$schema"": ""http://json-schema.org/draft-06/schema#"",
+  ""$ref"": ""#/definitions/Order"",
+  ""definitions"": {
+    ""Order"": {
+      ""type"": ""object"",
+      ""additionalProperties"": true,
+      ""properties"": {
+        ""orderId"": {
+          ""type"": ""string"",
+          ""format"": ""uuid""
+        }
+      },
+      ""required"": [
+        ""orderId""
+      ],
+      ""title"": ""Order""
+    }
+  }
+}");
+		var instance = JsonNode.Parse("{ \"orderId\": \"3cb65f2d-4049-43c1-b185-1943765acd9\" }");
+
+		var result = schema.Evaluate(instance);
+		
+		result.AssertValid();
+	}
 }
