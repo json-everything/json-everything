@@ -1,3 +1,7 @@
+# [4.0.4](https://github.com/gregsdennis/json-everything/pull/433) {#release-schema-4.0.4}
+
+[#432](https://github.com/gregsdennis/json-everything/issues/432) - Local `$ref`s that occur at the root of a draft 6 or 7 schema don't resolve.  Thanks to [@Jeroen-VDW](https://github.com/Jeroen-VDW) for reporting this issue.
+
 # [4.0.3](https://github.com/gregsdennis/json-everything/pull/427) {#release-schema-4.0.3}
 
 [#426](https://github.com/gregsdennis/json-everything/issues/426) - `$ref`s that pointed to schemas with `file://` URIs don't resolve correctly.  Thanks to [@faldor20](https://github.com/faldor20) for finding and fixing this issue.
