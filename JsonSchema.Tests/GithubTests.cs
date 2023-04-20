@@ -827,4 +827,56 @@ public class GithubTests
 		
 		result.AssertValid();
 	}
+
+	[Test]
+	public void Issue432_UnresolvedLocalRef_Again()
+	{
+		var schema = JsonSchema.FromText(@"{
+  ""$schema"": ""http://json-schema.org/draft-06/schema#"",
+  ""$ref"": ""#/definitions/Order"",
+  ""definitions"": {
+    ""Order"": {
+      ""type"": ""object"",
+      ""additionalProperties"": true,
+      ""properties"": {
+        ""orderId"": {
+          ""type"": ""string"",
+          ""format"": ""uuid""
+        },
+        ""customer"": {
+          ""$ref"": ""#/definitions/Customer""
+        }
+      },
+      ""required"": [
+        ""customer"",
+        ""orderId""
+      ],
+      ""title"": ""Order""
+    },
+    ""Customer"": {
+      ""type"": ""object"",
+      ""additionalProperties"": false,
+      ""properties"": {
+        ""name"": {
+          ""type"": ""string""
+        }
+      },
+      ""required"": [
+        ""name""
+      ],
+      ""title"": ""Customer""
+    }
+  }
+}");
+		var instance = JsonNode.Parse(@"{
+  ""orderId"": ""3cb65f2d-4049-4c1-b185-194365acdf99"",
+  ""customer"": {
+    ""name"": ""Some Customer""
+  }
+}");
+
+		var result = schema.Evaluate(instance);
+		
+		result.AssertValid();
+	}
 }
