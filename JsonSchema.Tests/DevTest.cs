@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -9,34 +10,25 @@ namespace Json.Schema.Tests;
 public class DevTest
 {
 	[Test]
-	public void Test()
+	public void Issue435()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
-			.Schema(MetaSchemas.Draft202012Id)
-			.Id("example-schema")
-			.Type(SchemaValueType.Object)
-			.Title("foo object schema")
-			.Properties(
-				("foo", new JsonSchemaBuilder()
-					.Title("foo's title")
-					.Description("foo's description")
-					.Type(SchemaValueType.String)
-					.Pattern("^foo ")
-					.MinLength(10)
-				)
-			)
-			.Required("foo")
-			.AdditionalProperties(false);
+		var backslashes = "C:\\projects\\json-everything\\JsonSchema.Tests\\bin\\Debug\\netcoreapp3.1\\Files\\Issue435_schema.json";
+		var backslashesUri = new Uri(backslashes);
+		
+		var fileUri = new Uri("file:///C:/projects/json-everything/JsonSchema.Tests/bin/Debug/netcoreapp3.1/Files/Issue435_schema.json", UriKind.RelativeOrAbsolute);
+		var pointer = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
 
-		var instance = new JsonObject { ["foo"] = "foo awe;ovinawe" };
+		var backslashesUriResult = new Uri(backslashesUri, pointer);
+		var fileUriResult = new Uri(fileUri, pointer);
 
-		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
-
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Converters = { new Pre202012EvaluationResultsJsonConverter() }
-		}));
+		Console.WriteLine("File path: {0}", backslashes);
+		Console.WriteLine("File path (URI): {0}", backslashesUri.OriginalString);
+		Console.WriteLine();
+		Console.WriteLine("Direct URI: {0}", fileUri.OriginalString);
+		Console.WriteLine();
+		Console.WriteLine("Fragment: {0}", pointer.OriginalString);
+		Console.WriteLine();
+		Console.WriteLine("Combined, backslashes: {0}", backslashesUriResult);
+		Console.WriteLine("Combined, direct:      {0}", fileUriResult);
 	}
 }
