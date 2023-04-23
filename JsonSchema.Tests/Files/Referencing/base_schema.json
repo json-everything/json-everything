@@ -5,10 +5,12 @@
 		"$schema":{},
 		"referencedDate": {
 			"$ref": "./ref_schema.json#/definitions/myDate"
+		},
+		"hashUriDate": {
+			"$ref": "./schema_with_#_in_uri.json#/definitions/myDate"
 		}
 	},
 	"additionalProperties": false,
 	"required": [
-		"referencedDate"
 	]
 }

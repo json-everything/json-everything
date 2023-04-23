@@ -32,4 +32,18 @@ public class References
 
 		res.AssertValid();
 	}
+	[Test]
+	public void MultipleHashInUriThrowsException()
+	{
+		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"));
+		var refSchema = JsonSchema.FromFile(GetFile("ref_schema"));
+		var hashSchema = JsonSchema.FromFile(GetFile("schema_with_#_in_uri"));
+
+		var baseData = JsonNode.Parse(GetResource("base_data_hash_uri"));
+
+		SchemaRegistry.Global.Register(refSchema);
+		SchemaRegistry.Global.Register(baseSchema);
+		SchemaRegistry.Global.Register(hashSchema);
+		Assert.Throws<JsonSchemaException>(()=>baseSchema.Evaluate(baseData));
+	}
 }

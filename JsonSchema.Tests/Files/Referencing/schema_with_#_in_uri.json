@@ -1,0 +1,22 @@
+{
+	"$schema":"https://json-schema.org/draft/2020-12/schema",
+
+	"definitions": {
+		"myDate":{
+			"type":"string",
+			"format":"date-time"
+		},
+
+		"myData":{
+			"type":"object",
+			"required":[
+				"name"
+			],
+			"properties":{
+
+				"name":{"type":"string"}
+			}
+		}
+	}
+}
+
