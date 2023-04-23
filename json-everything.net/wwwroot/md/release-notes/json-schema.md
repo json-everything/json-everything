@@ -1,3 +1,7 @@
+# [4.0.6](https://github.com/gregsdennis/json-everything/pull/436) {#release-schema-4.0.6}
+
+Schemas loaded with `.FromFile()` have a bad URI set that prevents fragments being added.  This is a .Net bug.  The result of this bug is that schemas loaded with `.FromFile()` cannot resolve references correctly.  This update includes a workaround to fix the behavior.  Thanks to [@faldor20](https://github.com/faldor20) for working on the issue initially, and to [@jpmikkers](https://github.com/jpmikkers) for finding a scenario that led to finding the root cause.
+
 # [4.0.5](https://github.com/gregsdennis/json-everything/pull/434) {#release-schema-4.0.5}
 
 [#432](https://github.com/gregsdennis/json-everything/issues/432) - Local `$ref`s that occur at the root of a draft 6 or 7 schema cause nested `$ref`s in the same schema resource to fail.  Thanks to [@Jeroen-VDW](https://github.com/Jeroen-VDW) for following up.
