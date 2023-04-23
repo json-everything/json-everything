@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.Tests;
 
-public class References
+public class ReferenceTests
 {
 	private static string GetFile(string name)
 	{
@@ -44,6 +44,7 @@ public class References
 		SchemaRegistry.Global.Register(refSchema);
 		SchemaRegistry.Global.Register(baseSchema);
 		SchemaRegistry.Global.Register(hashSchema);
+		
 		Assert.Throws<JsonSchemaException>(()=>baseSchema.Evaluate(baseData));
 	}
 }
