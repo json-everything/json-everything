@@ -96,7 +96,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
-		schema.BaseUri = new Uri(Path.GetFullPath(fileName));
+		schema.BaseUri = new Uri($"file:///{Path.GetFullPath(fileName)}");
 		return schema;
 	}
 
@@ -272,47 +272,50 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		if (schema.BoolValue.HasValue) return;
 		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
-		    schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
-		{
-			schema.BaseUri = currentBaseUri;
-			return;
-		}
-
-		var idKeyword = (IIdKeyword?)schema.Keywords!.FirstOrDefault(x => x is IIdKeyword);
-		if (idKeyword != null)
-		{
-			if (evaluatingAs <= SpecVersion.Draft7 &&
-			    idKeyword.Id.OriginalString[0] == '#' &&
-			    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
-			{
-				schema.BaseUri = currentBaseUri;
-				resourceRoot.Anchors[idKeyword.Id.OriginalString.Substring(1)] = (schema, false);
-			}
-			else
-			{
-				schema.IsResourceRoot = true;
-				schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
-				resourceRoot = schema;
-				schema.BaseUri = new Uri(currentBaseUri, idKeyword!.Id);
-				registry.RegisterSchema(schema.BaseUri, schema);
-			}
-		}
-		else
+			schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
 		{
 			schema.BaseUri = currentBaseUri;
 			if (selfRegister)
 				registry.RegisterSchema(schema.BaseUri, schema);
 		}
+		else
+		{
+			var idKeyword = (IIdKeyword?)schema.Keywords!.FirstOrDefault(x => x is IIdKeyword);
+			if (idKeyword != null)
+			{
+				if (evaluatingAs <= SpecVersion.Draft7 &&
+				    idKeyword.Id.OriginalString[0] == '#' &&
+				    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
+				{
+					schema.BaseUri = currentBaseUri;
+					resourceRoot.Anchors[idKeyword.Id.OriginalString.Substring(1)] = (schema, false);
+				}
+				else
+				{
+					schema.IsResourceRoot = true;
+					schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
+					resourceRoot = schema;
+					schema.BaseUri = new Uri(currentBaseUri, idKeyword!.Id);
+					registry.RegisterSchema(schema.BaseUri, schema);
+				}
+			}
+			else
+			{
+				schema.BaseUri = currentBaseUri;
+				if (selfRegister)
+					registry.RegisterSchema(schema.BaseUri, schema);
+			}
 
-		if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword))
-			resourceRoot.Anchors[anchorKeyword!.Anchor] = (schema, false);
+			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword))
+				resourceRoot.Anchors[anchorKeyword!.Anchor] = (schema, false);
 
-		if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword))
-			resourceRoot.Anchors[dynamicAnchorKeyword!.Value] = (schema, true);
+			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword))
+				resourceRoot.Anchors[dynamicAnchorKeyword!.Value] = (schema, true);
 
-		schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
-		if (recursiveAnchorKeyword is { Value: true })
-			resourceRoot.RecursiveAnchor = schema;
+			schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
+			if (recursiveAnchorKeyword is { Value: true })
+				resourceRoot.RecursiveAnchor = schema;
+		}
 
 		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
 

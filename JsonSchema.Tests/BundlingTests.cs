@@ -77,6 +77,7 @@ public class BundlingTests
 			.Type(SchemaValueType.String);
 
 		// for reference
+		// ReSharper disable once UnusedVariable
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
 			.Id("https://json-everything/foo(bundled)")
@@ -105,8 +106,8 @@ public class BundlingTests
 		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
 		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/foo"));
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/bar"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/foo"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
 	}
 
 	[Test]
@@ -134,6 +135,7 @@ public class BundlingTests
 			.Type(SchemaValueType.String);
 
 		// for reference
+		// ReSharper disable once UnusedVariable
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
 			.Id("https://json-everything/foo(bundled)")
@@ -170,9 +172,9 @@ public class BundlingTests
 		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
 		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/foo"));
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/bar"));
-		Assert.That(() => actual.GetDefs()!.Values.All(x => x.GetId().OriginalString != "https://json-everything/baz"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/foo"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
+		Assert.That(() => actual.GetDefs()!.Values.All(x => x.GetId()!.OriginalString != "https://json-everything/baz"));
 	}
 
 	[Test]
@@ -200,6 +202,7 @@ public class BundlingTests
 			.Type(SchemaValueType.String);
 
 		// for reference
+		// ReSharper disable once UnusedVariable
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
 			.Id("https://json-everything/foo(bundled)")
@@ -238,8 +241,8 @@ public class BundlingTests
 		Console.WriteLine(JsonSerializer.Serialize(baz, TestEnvironment.SerializerOptions));
 		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/foo"));
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/bar"));
-		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId().OriginalString == "https://json-everything/baz"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/foo"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/baz"));
 	}
 }

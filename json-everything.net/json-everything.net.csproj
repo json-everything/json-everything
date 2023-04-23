@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
-    <PackageReference Include="Markdig" Version="0.30.2" />
+    <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.5" PrivateAssets="all" />

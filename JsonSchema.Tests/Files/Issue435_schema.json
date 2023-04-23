@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+
+  "type": "array",
+  "items": { "$ref": "#/$defs/DerivedType" },
+
+  "$defs": {
+
+    "BaseType": {
+      "type": "object",
+      "properties": {
+        "field1": { "type": "string" }
+      }
+    },
+
+    "DerivedType": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseType" },
+        { "properties": { "field2": { "type": "string" } } }
+      ]
+    }
+  }
+}

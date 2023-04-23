@@ -34,7 +34,7 @@ public class ComplianceTestSuiteTests
 	[TestCaseSource(nameof(TestCases))]
 	public void Run(ComplianceTestCase testCase)
 	{
-		if (_notSupported.Contains(testCase.Selector))
+		if (_notSupported.Contains(testCase.Name))
 			Assert.Inconclusive("This case will not be supported.");
 
 		Console.WriteLine();
