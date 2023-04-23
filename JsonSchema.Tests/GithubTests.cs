@@ -879,4 +879,73 @@ public class GithubTests
 		
 		result.AssertValid();
 	}
+
+	[Test]
+	public void Issue435_NonCircularRefThrowing()
+	{
+		var schema = JsonSchema.FromText(@"{
+  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
+
+  ""type"": ""array"",
+  ""items"": { ""$ref"": ""#/$defs/DerivedType"" },
+
+  ""$defs"": {
+
+    ""BaseType"": {
+      ""type"": ""object"",
+      ""properties"": {
+        ""field1"": { ""type"": ""string"" }
+      }
+    },
+
+    ""DerivedType"": {
+      ""allOf"": [
+        { ""$ref"": ""#/$defs/BaseType"" },
+        { ""properties"": { ""field2"": { ""type"": ""string"" } } }
+      ]
+    }
+  }
+}");
+
+		//var instance = new JsonArray
+		//{
+		//	new JsonObject
+		//	{
+		//		["field1"] = "foo",
+		//		["field2"] = "bar"
+		//	}
+		//};
+
+		var instance = JsonNode.Parse(@"[
+  {
+    ""field1"": ""foo"",
+    ""field2"": ""bar""
+  }
+]");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue435_NonCircularRefThrowing_File()
+	{
+		var file = GetFile(435, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonArray
+		{
+			new JsonObject
+			{
+				["field1"] = "foo",
+				["field2"] = "bar"
+			}
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
+
+		result.AssertValid();
+	}
 }

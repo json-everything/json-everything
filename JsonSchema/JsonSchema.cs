@@ -96,7 +96,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
-		schema.BaseUri = new Uri(Path.GetFullPath(fileName));
+		schema.BaseUri = new Uri($"file:///{Path.GetFullPath(fileName)}");
 		return schema;
 	}
 
