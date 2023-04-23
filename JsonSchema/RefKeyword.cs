@@ -47,20 +47,8 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	{
 		context.EnterKeyword(Name);
 
-		Uri newUri;
-		string fragment;
-
-		// If the uri is a file we need to set the fragment manually because it will be lost in the uri
-		//if (context.Scope.LocalScope.IsFile && Reference.OriginalString.StartsWith("#"))
-		//{
-		//	newUri = context.Scope.LocalScope;
-		//	fragment = Reference.OriginalString;
-		//}
-		//else
-		//{
-		newUri = new Uri(context.Scope.LocalScope, Reference);
-		fragment = newUri.Fragment;
-		//}
+		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var fragment = newUri.Fragment;
 
 		var navigation = (newUri.OriginalString, context.InstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))

@@ -12,10 +12,10 @@ public class DevTest
 	[Test]
 	public void Issue435()
 	{
-		var backslashes = "C:\\projects\\json-everything\\JsonSchema.Tests\\bin\\Debug\\netcoreapp3.1\\Files\\Issue435_schema.json";
+		var backslashes = "C:\\Folder\\Issue435_schema.json";
 		var backslashesUri = new Uri(backslashes);
 		
-		var fileUri = new Uri("file:///C:/projects/json-everything/JsonSchema.Tests/bin/Debug/netcoreapp3.1/Files/Issue435_schema.json", UriKind.RelativeOrAbsolute);
+		var fileUri = new Uri($"file:///{backslashes}", UriKind.RelativeOrAbsolute);
 		var pointer = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
 
 		var backslashesUriResult = new Uri(backslashesUri, pointer);
