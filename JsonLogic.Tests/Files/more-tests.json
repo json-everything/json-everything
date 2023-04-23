@@ -124,5 +124,12 @@
 			{"+":[{"var":"current"}, 5]},
 			10
 		]}, {}, 10 ],
+	[ {"reduce":[
+			{ "var": "additionalDrivers" },
+			{ "missing": { "var": "current.driverId" } },
+			false
+		]},
+	  { "additionalDrivers": [ { "driverId": true } ] },
+	  [ true ] ],
 	"EOF"
 ]
