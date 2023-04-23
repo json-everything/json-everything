@@ -10,25 +10,24 @@ namespace Json.Schema.Tests;
 public class DevTest
 {
 	[Test]
-	public void Issue435()
+	public void Test()
 	{
-		var backslashes = "C:\\Folder\\Issue435_schema.json";
-		var backslashesUri = new Uri(backslashes);
+		var filePath = "C:\\Folder\\Issue435_schema.json";
+
+		var withoutProtocol = new Uri(filePath);
+		var withProtocol = new Uri($"file:///{filePath}");
 		
-		var fileUri = new Uri($"file:///{backslashes}", UriKind.RelativeOrAbsolute);
-		var pointer = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
+		var fragment = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
 
-		var backslashesUriResult = new Uri(backslashesUri, pointer);
-		var fileUriResult = new Uri(fileUri, pointer);
+		var withoutProtocolResult = new Uri(withoutProtocol, fragment);
+		var fileUriResult = new Uri(withProtocol, fragment);
 
-		Console.WriteLine("File path: {0}", backslashes);
-		Console.WriteLine("File path (URI): {0}", backslashesUri.OriginalString);
+		Console.WriteLine("File path: {0}", filePath);
 		Console.WriteLine();
-		Console.WriteLine("Direct URI: {0}", fileUri.OriginalString);
+		Console.WriteLine("Without protocol: {0}", withoutProtocol);
+		Console.WriteLine("With protocol:    {0}", withProtocol);
 		Console.WriteLine();
-		Console.WriteLine("Fragment: {0}", pointer.OriginalString);
-		Console.WriteLine();
-		Console.WriteLine("Combined, backslashes: {0}", backslashesUriResult);
-		Console.WriteLine("Combined, direct:      {0}", fileUriResult);
+		Console.WriteLine("Combined, Without: {0}", withoutProtocolResult);
+		Console.WriteLine("Combined, With:    {0}", fileUriResult);
 	}
 }
