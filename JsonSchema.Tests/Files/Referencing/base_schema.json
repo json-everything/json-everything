@@ -1,0 +1,16 @@
+{
+	"$schema":"https://json-schema.org/draft/2020-12/schema",
+	"type": "object",
+	"properties": {
+		"$schema":{},
+		"referencedDate": {
+			"$ref": "./ref_schema.json#/definitions/myDate"
+		},
+		"hashUriDate": {
+			"$ref": "./schema_with_#_in_uri.json#/definitions/myDate"
+		}
+	},
+	"additionalProperties": false,
+	"required": [
+	]
+}
