@@ -126,10 +126,17 @@
 		]}, {}, 10 ],
 	[ {"reduce":[
 			{ "var": "additionalDrivers" },
-			{ "missing": { "var": "current.driverId" } },
+			{ "!": { "missing": { "var": "current.driverId" } } },
 			false
 		]},
 	  { "additionalDrivers": [ { "driverId": true } ] },
-	  [ true ] ],
+	  true ],
+	[ {"reduce": [
+			{ "var": "additionalDrivers" },
+			{ "missing": ["current.driverId"] },
+			false
+		]},
+	  { "additionalDrivers": [ { "driverId": true } ] },
+	  [] ],
 	"EOF"
 ]

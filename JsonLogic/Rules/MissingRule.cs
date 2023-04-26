@@ -42,13 +42,19 @@ public class MissingRule : Rule
 	{
 		var expected = Components.SelectMany(c => c.Apply(data, contextData).Flatten())
 			.OfType<JsonValue>()
-			.Where(v => v.TryGetValue(out string? _));
+			.Where(v => v.TryGetValue(out string? _)).ToList();
 
 		if (data is not JsonObject)
 			return expected.ToJsonArray();
 
 		var paths = expected.Select(e => e.GetValue<string?>()!)
-			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
+			.Select(p => new
+			{
+				Path = p,
+				Pointer = p == string.Empty
+					? JsonPointer.Empty
+					: JsonPointer.Parse($"/{p.Replace('.', '/')}")
+			})
 			.Select(p =>
 			{
 				p.Pointer.TryEvaluate(data, out var value);
