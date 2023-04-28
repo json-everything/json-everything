@@ -1,7 +1,6 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -33,18 +32,26 @@ public class FormatTests
 		Assert.False(result.IsValid);
 	}
 
-	[Test]
-	public void longDateTime_pass()
+	[TestCase("2023-04-28T21:51:26.56Z")]
+	[TestCase("2023-03-22T07:56:28.610645938Z")]
+	[TestCase("2023-03-22 07:56:28.610645938Z")]
+	[TestCase("2023-04-28T21:50:24-00:00")]
+	[TestCase("2023-04-29t09:50:36+12:00")]
+	[TestCase("2023-04-28 21:50:44Z")]
+	[TestCase("2023-04-28_21:50:58.563Z")]
+	[TestCase("2023-04-28_21:51:10Z")]
+	public void DateTime_Pass(string dateString)
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format(Formats.DateTime);
 
-		var value = JsonNode.Parse("\"2023-03-22T07:56:28.610645938Z\"");
+		var value = JsonNode.Parse($"\"{dateString}\"");
 
 		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
 		Assert.True(result.IsValid);
 	}
+
 	private static readonly Uri _formatAssertionMetaSchemaId = new("https://json-everything/test/format-assertion");
 	private static readonly JsonSchema _formatAssertionMetaSchema =
 		new JsonSchemaBuilder()
