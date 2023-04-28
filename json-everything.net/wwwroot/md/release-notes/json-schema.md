@@ -1,3 +1,7 @@
+# [4.0.7](https://github.com/gregsdennis/json-everything/pull/442) {#release-schema-4.0.7}
+
+v4.0.1 used an ISO 8601 regex to enable higher-precision support.  This has been corrected to use an RFC 3339 regex instead for proper JSON Schema support.  However, as reported in [#439](https://github.com/gregsdennis/json-everything/issues/439), .Net doesn't like deserialization of RFC 3339 date-times.
+
 # [4.0.6](https://github.com/gregsdennis/json-everything/pull/436) {#release-schema-4.0.6}
 
 Schemas loaded with `.FromFile()` have a bad URI set that prevents fragments being added.  This is a [.Net bug](https://github.com/dotnet/runtime/issues/85229).  The result of this bug is that schemas loaded with `.FromFile()` cannot resolve references correctly.  This update includes a workaround to fix the behavior.  Thanks to [@faldor20](https://github.com/faldor20) for working on the issue initially, and to [@jpmikkers](https://github.com/jpmikkers) for finding a scenario that led to finding the root cause.

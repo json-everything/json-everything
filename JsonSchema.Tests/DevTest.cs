@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
