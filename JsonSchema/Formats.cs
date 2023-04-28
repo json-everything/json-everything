@@ -14,18 +14,6 @@ namespace Json.Schema;
 public static class Formats
 {
 	private static readonly ConcurrentDictionary<string, Format> _registry;
-	private static readonly string[] _dateTimeFormats =
-	{
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffffffK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffffK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ssK",
-		"yyyy'-'MM'-'dd'T'HH':'mm':'ss"
-	};
 	private static readonly string[] _timeFormats =
 	{
 		"HH':'mm':'ss'.'fffffffK",
@@ -266,7 +254,7 @@ public static class Formats
 
 	private static bool CheckDateTime(JsonNode? node)
 	{
-		return CheckDateFormat(node, _dateTimeFormats);
+		return CheckDateFormat(node);
 	}
 
 	private static bool CheckDateFormat(JsonNode? node, params string[] formats)
@@ -274,8 +262,11 @@ public static class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var dateString = node!.GetValue<string>().ToUpperInvariant();
-		var canParseExact = System.DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
-		if (canParseExact) return true;
+		if (formats.Length != 0)
+		{
+			var canParseExact = System.DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+			if (canParseExact) return true;
+		}
 
 		//date-times with very high precision don't get matched by TryParseExact but are still actually parsable.
 		//We use a fallback to catch these cases
