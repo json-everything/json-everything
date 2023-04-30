@@ -15,8 +15,21 @@ public class ValidatingJsonConverter : JsonConverterFactory
 {
 	private static readonly ConcurrentDictionary<Type, JsonConverter?> _cache = new();
 
+	/// <summary>
+	/// Specifies the output format.
+	/// </summary>
 	public OutputFormat? OutputFormat { get; set; }
+	/// <summary>
+	/// Gets or sets a log which will output processing information.
+	/// </summary>
 	public ILog? Log { get; set; }
+	/// <summary>
+	/// Specifies whether the `format` keyword should be required to provide
+	/// validation results.  Default is false, which just produces annotations
+	/// for drafts 2019-09 and prior or follows the behavior set forth by the
+	/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
+	/// a meta-schema declaring draft 2020-12.
+	/// </summary>
 	public bool? RequireFormatValidation { get; set; }
 
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
