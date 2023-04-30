@@ -29,6 +29,8 @@
 		<RadzenPanelMenuItem Text="Documentation" Icon="article" Expanded="true">
 			<RadzenPanelMenuItem Text="Overview" Value="@("schema-basics")"
 			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-basics"))"/>
+			<RadzenPanelMenuItem Text="Serializer Support" Value="@("schema-serialization")"
+								 Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-serialization"))" />
 			<RadzenPanelMenuItem Text="Vocabularies" Value="@("schema-vocabs")"
 			                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("schema-vocabs"))"/>
 			<RadzenPanelMenuItem Text="Schema Generation" Value="@("schema-generation")"

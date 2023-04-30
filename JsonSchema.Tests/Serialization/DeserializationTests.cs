@@ -8,7 +8,7 @@ using RangeAttribute = System.ComponentModel.DataAnnotations.RangeAttribute;
 
 namespace Json.Schema.Tests.Serialization;
 
-public class TypeTests
+public class DeserializationTests
 {
 	private class Foo
 	{
@@ -19,7 +19,7 @@ public class TypeTests
 		public int Value { get; set; }
 	}
 
-	[JsonSchema(typeof(TypeTests), nameof(FooSchema))]
+	[JsonSchema(typeof(DeserializationTests), nameof(FooSchema))]
 	private class FooWithSchema
 	{
 		public string? Bar { get; set; }

@@ -15,6 +15,10 @@ public class ValidatingJsonConverter : JsonConverterFactory
 {
 	private static readonly ConcurrentDictionary<Type, JsonConverter?> _cache = new();
 
+	public OutputFormat? OutputFormat { get; set; }
+	public ILog? Log { get; set; }
+	public bool? RequireFormatValidation { get; set; }
+
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
 	/// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
 	/// <returns>
@@ -53,7 +57,12 @@ public class ValidatingJsonConverter : JsonConverterFactory
 			newOptions.Converters.Remove(this);
 			return newOptions;
 		};
-		converter = (JsonConverter?)Activator.CreateInstance(converterType, schemaAttribute.Schema, optionsFactory);
+		converter = (JsonConverter)Activator.CreateInstance(converterType, schemaAttribute.Schema, optionsFactory);
+
+		var validatingConverter = (IValidatingJsonConverter)converter;
+		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
+		validatingConverter.Log = Log;
+		validatingConverter.RequireFormatValidation = RequireFormatValidation ?? false;
 
 		_cache[typeToConvert] = converter;
 
@@ -61,10 +70,21 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	}
 }
 
-internal class ValidatingJsonConverter<T> : JsonConverter<T>
+internal interface IValidatingJsonConverter
+{
+	public OutputFormat OutputFormat { get; set; }
+	public ILog? Log { get; set; }
+	public bool RequireFormatValidation { get; set; }
+}
+
+internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonConverter
 {
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
+
+	public OutputFormat OutputFormat { get; set; } = OutputFormat.Flag;
+	public ILog? Log { get; set; } = null;
+	public bool RequireFormatValidation { get; set; }
 
 	public ValidatingJsonConverter(JsonSchema schema, Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory)
 	{
@@ -79,7 +99,9 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.List
+			OutputFormat = OutputFormat,
+			Log = Log!,
+			RequireFormatValidation = RequireFormatValidation
 		});
 
 		var newOptions = _optionsFactory(options);
