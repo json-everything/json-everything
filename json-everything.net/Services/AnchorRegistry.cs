@@ -30,6 +30,7 @@ namespace JsonEverythingNet.Services
 				RegisterAnchors(client, "release-notes/json-logic"),
 
 				RegisterAnchors(client, "schema-basics"),
+				RegisterAnchors(client, "schema-serialization"),
 				RegisterAnchors(client, "schema-vocabs"),
 				RegisterAnchors(client, "examples/schema/validated-deserialization"),
 				RegisterAnchors(client, "examples/schema/external-schemas"),

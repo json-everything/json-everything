@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/gregsdennis/json-everything/pull/443) {#release-schema-4.1.0}
+
+Adds support for schema validation during deserialization.
+
+- Adds `[JsonSchema]` attribute
+- Adds `ValidatingJsonConverter`
+
 # [4.0.7](https://github.com/gregsdennis/json-everything/pull/442) {#release-schema-4.0.7}
 
 v4.0.1 used an ISO 8601 regex to enable higher-precision support.  This has been corrected to use an RFC 3339 regex instead for proper JSON Schema support.  However, as reported in [#439](https://github.com/gregsdennis/json-everything/issues/439), .Net doesn't like deserialization of RFC 3339 date-times.
