@@ -5591,6 +5591,58 @@
             Indicates the value should be null.
             </summary>
         </member>
+        <member name="T:Json.Schema.Serialization.JsonSchemaAttribute">
+            <summary>
+            Identifies a <see cref="T:Json.Schema.JsonSchema"/> to use when deserializing a type.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Serialization.JsonSchemaAttribute.#ctor(System.Type,System.String)">
+            <summary>
+            Identifies a <see cref="T:Json.Schema.JsonSchema"/> to use when deserializing a type.
+            </summary>
+            <param name="declaringType">The type declaring the schema.</param>
+            <param name="memberName">The property or field name for the schema.  This member must be public and static.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the member cannot be found or is not public and static.</exception>
+        </member>
+        <member name="T:Json.Schema.Serialization.ValidatingJsonConverter">
+            <summary>
+            Adds schema validation for types decorated with the <see cref="T:Json.Schema.Serialization.JsonSchemaAttribute"/>.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Serialization.ValidatingJsonConverter.OutputFormat">
+            <summary>
+            Specifies the output format.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Serialization.ValidatingJsonConverter.Log">
+            <summary>
+            Gets or sets a log which will output processing information.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Serialization.ValidatingJsonConverter.RequireFormatValidation">
+            <summary>
+            Specifies whether the `format` keyword should be required to provide
+            validation results.  Default is false, which just produces annotations
+            for drafts 2019-09 and prior or follows the behavior set forth by the
+            format-annotation vocabulary requirement in the `$vocabulary` keyword in
+            a meta-schema declaring draft 2020-12.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Serialization.ValidatingJsonConverter.CanConvert(System.Type)">
+            <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
+            <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
+            <returns>
+            <see langword="true" /> if the instance can convert the specified object type; otherwise, <see langword="false" />.</returns>
+        </member>
+        <member name="M:Json.Schema.Serialization.ValidatingJsonConverter.CreateConverter(System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Creates a converter for a specified type.</summary>
+            <param name="typeToConvert">The type handled by the converter.</param>
+            <param name="options">The serialization options to use.</param>
+            <returns>
+            An instance of a <see cref="T:System.Text.Json.Serialization.JsonConverter`1"/> where `T` is compatible with <paramref name="typeToConvert"/>.
+            If <see langword="null"/> is returned, a <see cref="T:System.NotSupportedException"/> will be thrown.
+            </returns>
+        </member>
         <member name="T:Json.Schema.SpecVersion">
             <summary>
             Enumerates the supported JSON Schema specification versions.
