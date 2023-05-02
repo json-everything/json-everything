@@ -87,6 +87,11 @@ public class EvaluationOptions
 	/// </summary>
 	public CultureInfo? Culture { get; set; }
 
+	/// <summary>
+	/// Provides filtering options for output formats.
+	/// </summary>
+	public OutputFilteringOptions OutputFiltering { get; } = new();
+
 	internal SpecVersion EvaluatingAs { get; set; }
 
 	static EvaluationOptions()
@@ -134,36 +139,38 @@ public class EvaluationOptions
 	/// Ignores annotations from the specified keyword.
 	/// </summary>
 	/// <typeparam name="T">The keyword type which should not have annotations.</typeparam>
+	[Obsolete("Use `OutputFiltering` instead.")]
 	public void IgnoreAnnotationsFrom<T>()
 		where T : IJsonSchemaKeyword
 	{
-		_ignoredAnnotationTypes ??= new HashSet<Type>();
-
-		_ignoredAnnotationTypes.Add(typeof(T));
+		OutputFiltering.IgnoreAnnotationsFrom<T>();
 	}
 
 	/// <summary>
-	/// 
+	/// Ignores all annotations.
 	/// </summary>
+	[Obsolete("Use `OutputFiltering` instead.")]
 	public void IgnoreAllAnnotations()
 	{
-		_ignoredAnnotationTypes = new HashSet<Type>(SchemaKeywordRegistry.KeywordTypes);
+		OutputFiltering.IgnoreAllAnnotations();
 	}
 
 	/// <summary>
 	/// Clears ignored annotations.
 	/// </summary>
+	[Obsolete("Use `OutputFiltering` instead.")]
 	public void ClearIgnoredAnnotations()
 	{
-		_ignoredAnnotationTypes = null;
+		OutputFiltering.ClearIgnoredAnnotations();
 	}
 
 	/// <summary>
 	/// Restores annotation collection for the specified keyword.
 	/// </summary>
+	[Obsolete("Use `OutputFiltering` instead.")]
 	public void CollectAnnotationsFrom<T>()
 	{
-		_ignoredAnnotationTypes?.Remove(typeof(T));
+		OutputFiltering.CollectAnnotationsFrom<T>();
 	}
 
 	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)

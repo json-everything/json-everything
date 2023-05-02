@@ -703,7 +703,7 @@ public class OutputTests
 }";
 		var options = EvaluationOptions.From(EvaluationOptions.Default);
 		options.OutputFormat = OutputFormat.Hierarchical;
-		options.IgnoreAnnotationsFrom<TitleKeyword>();
+		options.OutputFiltering.IgnoreAnnotationsFrom<TitleKeyword>();
 		var result = schema.Evaluate(instance, options);
 
 		result.AssertValid(expected);
@@ -739,7 +739,7 @@ public class OutputTests
 }";
 		var options = EvaluationOptions.From(EvaluationOptions.Default);
 		options.OutputFormat = OutputFormat.Hierarchical;
-		options.IgnoreAnnotationsFrom<PropertiesKeyword>();
+		options.OutputFiltering.IgnoreAnnotationsFrom<PropertiesKeyword>();
 		var result = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
