@@ -96,7 +96,13 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
-		schema.BaseUri = new Uri($"file:///{Path.GetFullPath(fileName)}");
+		var path = Path.GetFullPath(fileName);
+		// For some reason, full *nix file paths (which start with '/' don't work quite right when
+		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
+		// first folder in the path is then interpreted as the host.  To account for this, we
+		// need to prepend with 'file://' instead.
+		var protocol = path.StartsWith("/") ? "file://" : "file:///";
+		schema.BaseUri = new Uri($"{protocol}{path}");
 		return schema;
 	}
 

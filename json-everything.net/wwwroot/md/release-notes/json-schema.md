@@ -1,3 +1,5 @@
+# [4.1.1](https://github.com/gregsdennis/json-everything/pull/443) {#release-schema-4.1.1}
+
 # [4.1.0](https://github.com/gregsdennis/json-everything/pull/443) {#release-schema-4.1.0}
 
 Adds support for schema validation during deserialization.
