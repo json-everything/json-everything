@@ -1,4 +1,6 @@
-# [4.1.1](https://github.com/gregsdennis/json-everything/pull/443) {#release-schema-4.1.1}
+# [4.1.1](https://github.com/gregsdennis/json-everything/pull/447) {#release-schema-4.1.1}
+
+[Powershell PR #19610](https://github.com/PowerShell/PowerShell/pull/19610) - Support for \*nix-based file paths caused an error in setting the base URI that resulted in the first folder in the path being interpreted as the URI host.
 
 # [4.1.0](https://github.com/gregsdennis/json-everything/pull/443) {#release-schema-4.1.0}
 
