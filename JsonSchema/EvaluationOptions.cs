@@ -80,7 +80,8 @@ public class EvaluationOptions
 	/// <summary>
 	/// Gets the set of keyword types from which annotations will be ignored.
 	/// </summary>
-	public IEnumerable<Type>? IgnoredAnnotations => _ignoredAnnotationTypes;
+	[Obsolete("Use `OutputFiltering` instead.")]
+	public IEnumerable<Type>? IgnoredAnnotations => OutputFiltering.IgnoredAnnotations;
 
 	/// <summary>
 	/// Gets or sets the culture for error messages.  Overrides <see cref="ErrorMessages.Culture"/>.

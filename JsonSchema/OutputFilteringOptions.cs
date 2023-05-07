@@ -8,7 +8,12 @@ namespace Json.Schema;
 /// </summary>
 public class OutputFilteringOptions
 {
-	internal HashSet<Type>? IgnoredAnnotationTypes { get; private set; }
+	private HashSet<Type>? _ignoredAnnotationTypes;
+
+	/// <summary>
+	/// Gets the set of keyword types from which annotations will be ignored.
+	/// </summary>
+	public IEnumerable<Type>? IgnoredAnnotations => _ignoredAnnotationTypes;
 
 	/// <summary>
 	/// Ignores annotations from the specified keyword.
@@ -17,9 +22,9 @@ public class OutputFilteringOptions
 	public void IgnoreAnnotationsFrom<T>()
 		where T : IJsonSchemaKeyword
 	{
-		IgnoredAnnotationTypes ??= new HashSet<Type>();
+		_ignoredAnnotationTypes ??= new HashSet<Type>();
 
-		IgnoredAnnotationTypes.Add(typeof(T));
+		_ignoredAnnotationTypes.Add(typeof(T));
 	}
 
 	/// <summary>
@@ -27,7 +32,7 @@ public class OutputFilteringOptions
 	/// </summary>
 	public void IgnoreAllAnnotations()
 	{
-		IgnoredAnnotationTypes = new HashSet<Type>(SchemaKeywordRegistry.KeywordTypes);
+		_ignoredAnnotationTypes = new HashSet<Type>(SchemaKeywordRegistry.KeywordTypes);
 	}
 
 	/// <summary>
@@ -35,7 +40,7 @@ public class OutputFilteringOptions
 	/// </summary>
 	public void ClearIgnoredAnnotations()
 	{
-		IgnoredAnnotationTypes = null;
+		_ignoredAnnotationTypes = null;
 	}
 
 	/// <summary>
@@ -43,6 +48,6 @@ public class OutputFilteringOptions
 	/// </summary>
 	public void CollectAnnotationsFrom<T>()
 	{
-		IgnoredAnnotationTypes?.Remove(typeof(T));
+		_ignoredAnnotationTypes?.Remove(typeof(T));
 	}
 }
