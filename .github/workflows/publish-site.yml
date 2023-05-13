@@ -1,4 +1,3 @@
-# https://github.com/marketplace/actions/deploy-to-heroku
 name: Publish json-everything.net
 on:
   push:
