@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      # TODO: checkout docs repo to ./json-everything-docs
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -28,17 +29,21 @@ jobs:
             3.1.x
             5.0.x
             6.0.x
+            7.0.x
       - name: Install dependencies
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-results.trx"
-      - name: Upload DLLs for analysis
-        uses: actions/upload-artifact@v2
-        with:
-          name: DLLs
-          path: '**/bin/Release/*/*.dll'
+      - name: Generate docs
+        run: dotnet ./tools/MarkdownGenerator/bin/Release/net6.0/MarkdownGenerator.dll "./json-everything-docs/_docs/api"
+      - name: Commit docs
+        run: |
+          git add -A
+          git commit -m "regenerated api docs"
+      - name: Push docs
+        # TODO: push docs
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2

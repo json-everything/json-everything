@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace ApiDocsGenerator.MarkdownGen;
 
 public interface IMarkdownWriter
@@ -25,4 +27,5 @@ public interface IMarkdownWriter
 	string Code(string text);
 	string Link(string anchorName, string? text);
 	string HeadingLink(string anchorName, string? text = null);
+	void AddFrontMatter(JsonObject data);
 }

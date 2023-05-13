@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using ApiDocsGenerator.MarkdownGen.Reflection;
 
@@ -27,7 +28,8 @@ public class DocumentationGenerator
 
 	public static async Task GenerateMarkdown(
 		Type type,
-		IMarkdownWriter markdownWriter)
+		IMarkdownWriter markdownWriter,
+		string index)
 	{
 		string GetXmlCommentsFileName(Assembly assembly)
 		{
@@ -37,7 +39,7 @@ public class DocumentationGenerator
 		var typeList = new OrderedTypeList(type);
 		var generator = new DocumentationGenerator(markdownWriter, GetXmlCommentsFileName);
 		var typeInfo = typeList.TypesToDocument.First(x => x.Type == type);
-		await generator.WriteDocumentationForType(typeInfo);
+		await generator.WriteDocumentationForType(typeInfo, index);
 	}
 
 	private static string? TypeNameWithLinks(Type type)
@@ -191,7 +193,7 @@ public class DocumentationGenerator
 
 	private async Task WriteClassDocumentation(TypeCollection.TypeInformation typeData)
 	{
-		_writer.WriteH1(TypeTitle(typeData.Type));
+		//_writer.WriteH1(TypeTitle(typeData.Type));
 		_writer.WriteLine(_writer.Bold("Namespace:") + " " + typeData.Type.Namespace);
 		WriteInheritance(typeData.Type);
 
@@ -280,8 +282,26 @@ public class DocumentationGenerator
 		WriteH4Example(comments.Example);
 	}
 
-	private async Task WriteDocumentationForType(TypeCollection.TypeInformation typeData)
+	private async Task WriteDocumentationForType(TypeCollection.TypeInformation typeData, string index)
 	{
+		//---
+		//layout: page
+		//title: JsonSchema.Net Basics
+		//md_title: _JsonSchema.Net_ Basics
+		//bookmark: Basics
+		//permalink: /schema/:title/
+		//icon: fas fa-tag
+		//order: "1.1"
+		//---
+		_writer.AddFrontMatter(new JsonObject
+		{
+			["layout"] = "page",
+			["title"] = TypeTitle(typeData.Type),
+			["bookmark"] = typeData.Type.Name,
+			["permalink"] = $"/api/{typeData.Type.Assembly.GetName().Name}/:title/",
+			["order"] = index
+		});
+
 		if (typeData.Type.IsEnum)
 			await WriteEnumDocumentation(typeData.Type);
 		else if (typeof(Delegate).IsAssignableFrom(typeData.Type))

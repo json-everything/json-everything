@@ -19,37 +19,46 @@ namespace ApiDocsGenerator
 		{
 			var outputDir = args.Length == 0 ? "output" : args[0];
 
-			await GenerateAndSaveDocs<JsonSchema>(outputDir, "schema");
-			await GenerateAndSaveDocs<JsonPatch>(outputDir, "patch");
-			await GenerateAndSaveDocs<JsonPath>(outputDir, "path");
-			await GenerateAndSaveDocs<JsonPointer>(outputDir, "pointer");
-			await GenerateAndSaveDocs(typeof(JsonLogic), outputDir, "logic");
-			await GenerateAndSaveDocs(typeof(YamlConverter), outputDir, "yaml");
-			await GenerateAndSaveDocs(typeof(JsonNull), outputDir, "more");
-			await GenerateAndSaveDocs<DataKeyword>(outputDir, "schema", "data");
-			await GenerateAndSaveDocs<UniqueKeysKeyword>(outputDir, "schema", "uniqueKeys");
-			await GenerateAndSaveDocs<DiscriminatorKeyword>(outputDir, "schema", "openapi");
-			await GenerateAndSaveDocs<NumberRange>(outputDir, "schema", "datagen");
-			await GenerateAndSaveDocs<ISchemaGenerator>(outputDir, "schema", "schemagen");
+			await GenerateAndSaveDocs<JsonSchema>("9.01", outputDir);
+			await GenerateAndSaveDocs<DataKeyword>("9.02", outputDir);
+			await GenerateAndSaveDocs<UniqueKeysKeyword>("9.03", outputDir);
+			await GenerateAndSaveDocs<DiscriminatorKeyword>("9.04", outputDir);
+			await GenerateAndSaveDocs<ISchemaGenerator>("9.05", outputDir);
+			await GenerateAndSaveDocs<NumberRange>("9.06", outputDir);
+			await GenerateAndSaveDocs<JsonPath>("9.07", outputDir);
+			await GenerateAndSaveDocs<JsonPatch>("9.08", outputDir);
+			await GenerateAndSaveDocs<JsonPointer>("9.09", outputDir);
+			await GenerateAndSaveDocs(typeof(JsonLogic), "9.10", outputDir);
+			await GenerateAndSaveDocs(typeof(JsonNull), "9.11", outputDir);
+			await GenerateAndSaveDocs(typeof(YamlConverter), "9.12", outputDir);
 		}
 
-		private static Task GenerateAndSaveDocs<T>(params string[] outputDir)
+		private static Task GenerateAndSaveDocs<T>(string index, params string[] outputDir)
 		{
-			return GenerateAndSaveDocs(typeof(T), outputDir);
+			return GenerateAndSaveDocs(typeof(T), index, outputDir);
 		}
 
-		private static async Task GenerateAndSaveDocs(Type type, params string[] outputDir)
+		private static async Task GenerateAndSaveDocs(Type type, string index, params string[] outputDir)
 		{
-			var docs = await ApiDocGenerationService.GenerateForAssemblyContaining(type);
+			var docs = await ApiDocGenerationService.GenerateForAssemblyContaining(type, index);
+			var asmName = type.Assembly.GetName().Name!;
 
 			foreach (var (path, doc) in docs)
 			{
-				var fullOutputPath = outputDir.Concat(path).ToArray();
+				var fullOutputPath = outputDir.Concat(new []{asmName, path}).ToArray();
 				var filePath = $"{Path.Combine(fullOutputPath)}.md";
 
-				var directoryName = Path.GetDirectoryName(filePath);
+				var directoryName = Path.GetDirectoryName(filePath)!;
 				if (!Directory.Exists(directoryName))
-					Directory.CreateDirectory(directoryName!);
+					Directory.CreateDirectory(directoryName);
+				var titlePath = Path.Combine(directoryName, "title.md");
+				if (!File.Exists(titlePath))
+				{
+					var (title, close) = ApiDocGenerationService.GenerateFolderMarkersForNamespace(type, index);
+					var closePath = Path.Combine(directoryName, "close.md");
+					await File.WriteAllTextAsync(titlePath, title);
+					await File.WriteAllTextAsync(closePath, close);
+				}
 				await File.WriteAllTextAsync(filePath, doc);
 			}
 		}

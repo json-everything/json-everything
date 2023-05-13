@@ -1,5 +1,9 @@
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.More;
 
 namespace ApiDocsGenerator.MarkdownGen.MarkdownWriters;
 
@@ -12,6 +16,17 @@ public class GithubMarkdownWriter : IMarkdownWriter
 	#region Basic writing
 
 	private readonly StringBuilder _allText = new();
+	private readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
+	public void AddFrontMatter(JsonObject data)
+	{
+		_allText.AppendLine("---");
+		foreach (var kvp in data)
+		{
+			_allText.AppendLine($"{kvp.Key}: {kvp.Value.AsJsonString(_serializerOptions)}");
+		}
+		_allText.AppendLine("---");
+	}
 
 	public void Write(string? text)
 	{
