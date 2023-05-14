@@ -35,7 +35,7 @@ jobs:
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
-      - name: Commit & Push docs
+      - name: Commit
         # if: env.BRANCH == 'master'
         run: |
           cd json-everything-docs
@@ -43,4 +43,13 @@ jobs:
           git config user.name json-everything-ci
           git add -A
           git commit -m "regenerated api docs"
-          git push
+      - name: Push docs
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.DOCS_UPDATE_KEY }}
+        with:
+          source-directory: 'json-everything-docs'
+          destination-github-username: 'gregsdennis'
+          destination-repository-name: 'json-everything-docs'
+          user-email: ci@json-everything.net
+          target-branch: main
