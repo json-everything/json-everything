@@ -24,7 +24,6 @@ jobs:
         with:
           repository: gregsdennis/json-everything-docs
           path: json-everything-docs
-          ssh: ${{ secrets.DOCS_UPDATE_KEY }}
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -51,11 +50,12 @@ jobs:
         # if: env.BRANCH == 'master'
         run: |
           cd json-everything-docs
-          git config user.email "gregsdennis@yahoo.com"
-          git config user.name "Greg Dennis"
+          git config user.email gregsdennis@yahoo.com
+          git config user.name gregsdennis
+          git remote -v
           git add -A
           git commit -m "regenerated api docs"
-          git push origin main
+          git push
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2
