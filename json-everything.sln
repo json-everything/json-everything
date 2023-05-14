@@ -128,7 +128,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaml2JsonNode.Tests", "Yaml
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A09F0319-B69A-401D-814D-43524E883850}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDocsGenerator", "tools\MarkdownGenerator\ApiDocsGenerator.csproj", "{63EB78DD-70B3-41BB-86D1-0E7886F8A312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDocsGenerator", "tools\ApiDocsGenerator\ApiDocsGenerator.csproj", "{63EB78DD-70B3-41BB-86D1-0E7886F8A312}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
