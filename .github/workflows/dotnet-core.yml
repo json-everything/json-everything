@@ -33,7 +33,6 @@ jobs:
             3.1.x
             5.0.x
             6.0.x
-            7.0.x
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -43,7 +42,7 @@ jobs:
       - name: Generate docs
         # if: env.BRANCH == 'master'
         run: |
-          mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net7.0/. doc-tool
+          mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
       - name: Commit docs
