@@ -8,7 +8,7 @@ public static class ApiDocGenerationService
 	public static async Task<IEnumerable<(string path, string doc)>> GenerateForAssemblyContaining(Type type, string index)
 	{
 		var assembly = type.Assembly;
-		var allTypes = assembly.ExportedTypes;
+		var allTypes = assembly.ExportedTypes.OrderBy(x => x.Name);
 
 		var docs = await Task.WhenAll(allTypes.Select(async (x, i) =>
 		(

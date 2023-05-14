@@ -150,6 +150,7 @@ public class DocumentationGenerator
 			foreach (var prop in enumComments.ValueComments)
 				_writer.WriteTableRow(_writer.Bold(prop.Name),
 					ProcessTags(prop.Summary));
+			_writer.WriteEndTable();
 		}
 	}
 
@@ -180,6 +181,7 @@ public class DocumentationGenerator
 				_writer.WriteTableRow(paramName,
 					parameters[i++].ToTypeNameString(_typeLinkConverter, true),
 					ProcessTags(text));
+			_writer.WriteEndTable();
 		}
 
 		_writer.WriteLine();
@@ -213,22 +215,24 @@ public class DocumentationGenerator
 		{
 			_writer.WriteH2("Fields");
 			_writer.WriteTableTitle("Name", "Type", "Summary");
-			foreach (var field in allFields)
+			foreach (var field in allFields.OrderBy(x => x.Info.Name))
 				_writer.WriteTableRow(
 					_writer.Bold(field.Info.Name),
 					field.Info.ToTypeNameString(_typeLinkConverter, true),
 					ProcessTags(field.Comments.Summary));
+			_writer.WriteEndTable();
 		}
 
 		if (allProperties.Count > 0)
 		{
 			_writer.WriteH2("Properties");
 			_writer.WriteTableTitle("Name", "Type", "Summary");
-			foreach (var prop in allProperties)
+			foreach (var prop in allProperties.OrderBy(x => x.Info.Name))
 				_writer.WriteTableRow(
 					_writer.Bold(prop.Info.Name),
 					prop.Info.ToTypeNameString(_typeLinkConverter, true),
 					ProcessTags(prop.Comments.Summary));
+			_writer.WriteEndTable();
 		}
 
 		if (allConstructors.Count > 0)
@@ -243,7 +247,7 @@ public class DocumentationGenerator
 		{
 			_writer.WriteH2("Methods");
 			foreach (var (info, comments) in allMethods
-						 .OrderBy(m => m.Info.Name)
+				         .OrderBy(m => m.Info.Name)
 						 .ThenBy(m => m.Info.GetParameters().Length))
 				WriteMethodDetails(info.Name, info, comments);
 		}
@@ -268,6 +272,7 @@ public class DocumentationGenerator
 				_writer.WriteTableRow(paramName,
 					parameters[i++].ToTypeNameString(_typeLinkConverter, true),
 					ProcessTags(text));
+			_writer.WriteEndTable();
 		}
 
 		_writer.WriteLine();

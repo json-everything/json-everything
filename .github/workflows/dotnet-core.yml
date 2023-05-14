@@ -19,7 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # TODO: checkout docs repo to ./json-everything-docs
+      - name: Checkout docs repo
+        uses: actions/checkout@v3
+        with:
+          repository: gregsdennis/json-everything-docs
+          path: json-everything-docs
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -37,13 +41,22 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-results.trx"
       - name: Generate docs
+        # if: env.BRANCH == 'master'
         run: dotnet ./tools/MarkdownGenerator/bin/Release/net6.0/MarkdownGenerator.dll "./json-everything-docs/_docs/api"
       - name: Commit docs
+        # if: env.BRANCH == 'master'
         run: |
           git add -A
           git commit -m "regenerated api docs"
       - name: Push docs
-        # TODO: push docs
+        # if: env.BRANCH == 'master'
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: "json-everything-docs"
+          destination-repository-name: "json-everything-docs"
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2

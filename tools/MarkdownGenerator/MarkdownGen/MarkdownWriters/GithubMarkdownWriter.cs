@@ -95,6 +95,7 @@ public class GithubMarkdownWriter : IMarkdownWriter
 		_allText.AppendLine("```c#");
 		_allText.AppendLine(text);
 		_allText.AppendLine("```");
+		_allText.AppendLine();
 	}
 
 	#endregion
@@ -110,6 +111,11 @@ public class GithubMarkdownWriter : IMarkdownWriter
 	public void WriteTableRow(params string?[] texts)
 	{
 		Write("| " + string.Join(" | ", texts.Select(EscapeSpecialText)) + " |");
+	}
+
+	public void WriteEndTable()
+	{
+		_allText.AppendLine();
 	}
 
 	#endregion

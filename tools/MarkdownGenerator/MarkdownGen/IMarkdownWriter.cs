@@ -28,4 +28,5 @@ public interface IMarkdownWriter
 	string Link(string anchorName, string? text);
 	string HeadingLink(string anchorName, string? text = null);
 	void AddFrontMatter(JsonObject data);
+	void WriteEndTable();
 }
