@@ -24,7 +24,7 @@ jobs:
         with:
           repository: gregsdennis/json-everything-docs
           path: json-everything-docs
-          ssh: ${{ secrets.DOCS_UPDATE_KEY }}
+          ssh: ${{ secrets.GITHUB_TOKEN }}
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -53,7 +53,7 @@ jobs:
           cd json-everything-docs
           git config user.email gregsdennis@yahoo.com
           git config user.name gregsdennis
-          git remote -v
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/json-everything-docs
           git add -A
           git commit -m "regenerated api docs"
           git push
