@@ -53,7 +53,7 @@ jobs:
           cd json-everything-docs
           git config user.email gregsdennis@yahoo.com
           git config user.name gregsdennis
-          git remote set-url origin https://x-access-token:${{ secrets.DOCS_UPDATE_KEY }}@github.com/json-everything-docs
+          git remote set-url origin https://x-access-token:${{ secrets.DOCS_UPDATE_KEY }}@github.com/gregsdennis/json-everything-docs
           git add -A
           git commit -m "regenerated api docs"
           git push
