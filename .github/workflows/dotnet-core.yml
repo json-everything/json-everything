@@ -43,6 +43,7 @@ jobs:
         # if: env.BRANCH == 'master'
         run: |
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
+          find . -type f -name "*.xml"
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
       - name: Commit docs
