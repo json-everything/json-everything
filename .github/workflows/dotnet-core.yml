@@ -24,6 +24,7 @@ jobs:
         with:
           repository: gregsdennis/json-everything-docs
           path: json-everything-docs
+          ssh: ${{ secrets.DOCS_UPDATE_KEY }}
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -46,7 +47,7 @@ jobs:
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
-      - name: Commit docs
+      - name: Commit & Push docs
         # if: env.BRANCH == 'master'
         run: |
           cd json-everything-docs
@@ -54,14 +55,7 @@ jobs:
           git config user.name "Greg Dennis"
           git add -A
           git commit -m "regenerated api docs"
-      - name: Push docs
-        # if: env.BRANCH == 'master'
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          SSH_DEPLOY_KEY: ${{ secrets.DOCS_UPDATE_KEY }}
-        with:
-          source-directory: "json-everything-docs"
-          destination-repository-name: "json-everything-docs"
+          git push origin main
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2
