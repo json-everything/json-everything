@@ -12,7 +12,7 @@
 Json*.xml
 Yaml*.xml
 /JsonSchema/nuspec/*/*.dll
-
+doc-tool/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
