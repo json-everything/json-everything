@@ -1,0 +1,47 @@
+name: Update Docs
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'Json*/**/*'
+      - 'Yaml2JsonNode*/**/*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: restore submodules
+      - name: Checkout docs repo
+        uses: actions/checkout@v3
+        with:
+          repository: gregsdennis/json-everything-docs
+          path: json-everything-docs
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Generate docs
+        # if: env.BRANCH == 'master'
+        run: |
+          mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
+          cd ./doc-tool
+          dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
+      - name: Commit & Push docs
+        # if: env.BRANCH == 'master'
+        run: |
+          cd json-everything-docs
+          git config user.email ci@json-everything.net
+          git config user.name json-everything-ci
+          git add -A
+          git commit -m "regenerated api docs"
+          git push

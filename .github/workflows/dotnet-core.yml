@@ -19,12 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Checkout docs repo
-        uses: actions/checkout@v3
-        with:
-          repository: gregsdennis/json-everything-docs
-          path: json-everything-docs
-          ssh: ${{ secrets.GITHUB_TOKEN }}
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
@@ -39,24 +33,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        if: cancelled()
         run: dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-results.trx"
-      - name: Generate docs
-        # if: env.BRANCH == 'master'
-        run: |
-          mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
-          cd ./doc-tool
-          dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
-      - name: Commit & Push docs
-        # if: env.BRANCH == 'master'
-        run: |
-          cd json-everything-docs
-          git config user.email gregsdennis@yahoo.com
-          git config user.name gregsdennis
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/gregsdennis/json-everything-docs
-          git add -A
-          git commit -m "regenerated api docs"
-          git push
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2
