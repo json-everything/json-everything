@@ -38,6 +38,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
+        if: cancelled()
         run: dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-results.trx"
       - name: Generate docs
         # if: env.BRANCH == 'master'
