@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: restore submodules
       - name: Checkout docs repo
         uses: actions/checkout@v3
         with:
