@@ -43,7 +43,7 @@ jobs:
       - name: Generate docs
         # if: env.BRANCH == 'master'
         run: |
-          mkdir -p doc-tool && cp tools/MarkdownGenerator/bin/Release/net7.0/. doc-tool
+          mkdir -p doc-tool && cp -r tools/MarkdownGenerator/bin/Release/net7.0/. doc-tool
           cd ./doc-tool
           dotnet MarkdownGenerator.dll "../json-everything-docs/_docs/api"
       - name: Commit docs
