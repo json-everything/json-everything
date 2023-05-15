@@ -87,6 +87,14 @@ a,
 	display: inline-block;
 }
 
+.banner-container {
+	margin-top: 1.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 50%;
+	text-align: center !important;
+}
+
 .announcement-border {
 	background-color: #500a88;
 	border-color: #6800B7;
@@ -336,3 +344,4 @@ blockquote {
 		.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover {
 			background-color: rgba(255, 255, 255, 0.2);
 		}
+

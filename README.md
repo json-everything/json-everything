@@ -1,5 +1,7 @@
 ### _NEW!!!_ `json-everything` now has a [blog](https://blog.json-everything.net) that covers how to use the technologies provided by this project as well as everything else JSON!
 
+### _NEW!!!_ `json-everything` has a new [documentation site](https://docs.json-everything.net) that provides guides, examples, release notes, and full API reference!
+
 ---
 
 <br>
@@ -36,9 +38,9 @@ Supported languages for JsonSchema.Net
 
 </details>
 
-|Play & Learn|Discuss|Ask|Built with|
-|:-:|:-:|:-:|:-:|
-|<a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a>|<a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a>|<a href="https://stackoverflow.com/questions/tagged/json-everything"><img src="Resources/stackoverflow.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a>|<a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"></a>|
+|Play | Learn|Discuss|Ask|Built with|
+|:-:|:-:|:-:|:-:|:-:|
+|<a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a>|<a href="https://docs.json-everything.net"><img src="Resources/json-logo-256.png" alt="Read the docs" title="Read the docs" height="50"><br>Documentation</a>|<a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a>|<a href="https://stackoverflow.com/questions/tagged/json-everything"><img src="Resources/stackoverflow.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a>|<a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"></a>|
 
 `json-everything` also has a [blog](https://blog.json-everything.net)!
 
@@ -72,7 +74,11 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 - Yaml2JsonNode
   - When you use YamlDotNet to parse YAML text, this library will convert it to `JsonNode` for you!  Then you can use that data wherever you already have support for `JsonNode` (like all of those ☝️).
 
-Please see [json-everything.net](https://json-everything.net) for an online playground where you can experiment with these packages, documentation to learn about them, and a blog for all things JSON!
+Please see
+
+- [json-everything.net](https://json-everything.net) for an online playground where you can experiment with these packages, all run in your client, powered by Blazor.
+- [docs.json-everything.net](https://docs.json-everything.net) for documentation.
+- [blog.json-everything.net](https://blog.json-everything.net) for a blog about all things JSON!
 
 You can also view JSON Schema Test Suite results on [Bowtie](https://bowtie-json-schema.github.io/bowtie), which runs the test suite against multiple implementations across different platforms.
 

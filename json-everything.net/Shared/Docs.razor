@@ -12,6 +12,20 @@
 #pragma warning disable CS8625
 }
 
+<div class="banner-container">
+	<div class="announcement-border text-center px-3 py-1 div-hcenter">
+		<div>
+			<strong>Announcement!</strong>
+			All documentation (guides, examples, release notes, and API reference) for
+			this project is moving to
+			<a href="https://docs.json-everything.net">https://docs.json-everything.net</a>.
+			There's also a link in the upper right corner.
+			The documentation will remain on the main site for a short time longer.
+			However, moving forward, the main site will be primarily the playgrounds only.
+		</div>
+	</div>
+</div>
+
 <div class="docs-pane">
 	@((MarkupString)_value)
 	<AnchorNavigation @ref="_anchorNav" Owner="this"/>
