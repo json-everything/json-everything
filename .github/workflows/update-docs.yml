@@ -31,6 +31,12 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
+      - name: Upload Built Tool
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Generated Files
+          path: 'tools/ApiDocsGenerator/bin/Release/net6.0/**/*'
       - name: Generate docs
         # if: env.BRANCH == 'master'
         run: |
