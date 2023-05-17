@@ -31,26 +31,22 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
-      - name: Upload Built Tool
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Built Tool
-          path: 'tools/ApiDocsGenerator/bin/Release/net6.0/**/*'
+      # - name: Upload Built Tool
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Built Tool
+      #     path: 'tools/ApiDocsGenerator/bin/Release/net6.0/**/*'
       - name: Generate docs
-        # if: env.BRANCH == 'master'
         run: |
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
-      - name: Upload Generated Files
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Generated Files
-          path: 'json-everything-docs/_docs/api/**/*'
+      # - name: Upload Generated Files
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Generated Files
+      #     path: 'json-everything-docs/_docs/api/**/*'
       - name: Commit
-        # if: env.BRANCH == 'master'
         run: |
           cd json-everything-docs
           git config user.email ci@json-everything.net
