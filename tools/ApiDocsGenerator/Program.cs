@@ -56,11 +56,17 @@ namespace ApiDocsGenerator
 				{
 					var (title, close) = ApiDocGenerationService.GenerateFolderMarkersForNamespace(type, index);
 					var closePath = Path.Combine(directoryName, "close.md");
-					await File.WriteAllTextAsync(titlePath, title);
-					await File.WriteAllTextAsync(closePath, close);
+					await WriteFile(titlePath, title);
+					await WriteFile(closePath, close);
 				}
-				await File.WriteAllTextAsync(filePath, doc);
+				await WriteFile(filePath, doc);
 			}
+		}
+
+		private static async Task WriteFile(string filePath, string content)
+		{
+			Console.WriteLine("Writing file: '{0}'", filePath);
+			await File.WriteAllTextAsync(filePath, content);
 		}
 	}
 }
