@@ -6,6 +6,8 @@ on:
     paths:
       - 'Json*/**/*'
       - 'Yaml2JsonNode*/**/*'
+      - 'tools/ApiDocsGenerator*/**/*'
+      - '.github\workflows\update-docs.yml'
   workflow_dispatch:
 
 jobs:
