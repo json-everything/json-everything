@@ -37,6 +37,12 @@ jobs:
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
+      - name: Upload Generated Files
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Generated Files
+          path: 'json-everything-docs/_docs/api/**/*'
       - name: Commit
         # if: env.BRANCH == 'master'
         run: |
