@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text.RegularExpressions;
 using ApiDocsGenerator.MarkdownGen;
 using ApiDocsGenerator.MarkdownGen.MarkdownWriters;
 
@@ -35,6 +37,7 @@ bookmark: {asmName}
 permalink: /api/{asmName}/:title/
 folder: true
 order: ""{index}""
+version: ""{GetVersion(type)}""
 ---
 ";
 		var close = @$"---
@@ -45,5 +48,12 @@ order: ""{index}.99""
 ";
 
 		return (title, close);
+	}
+
+	private static string GetVersion(Type type)
+	{
+		var attribute = type.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+		var version = Regex.Match(attribute!.InformationalVersion, @"\d+\.\d+\.\d+(-[^+]+)?").Value;
+		return version;
 	}
 }
