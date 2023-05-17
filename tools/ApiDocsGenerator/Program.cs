@@ -52,13 +52,10 @@ namespace ApiDocsGenerator
 				if (!Directory.Exists(directoryName))
 					Directory.CreateDirectory(directoryName);
 				var titlePath = Path.Combine(directoryName, "title.md");
-				if (!File.Exists(titlePath))
-				{
-					var (title, close) = ApiDocGenerationService.GenerateFolderMarkersForNamespace(type, index);
-					var closePath = Path.Combine(directoryName, "close.md");
-					await WriteFile(titlePath, title);
-					await WriteFile(closePath, close);
-				}
+				var (title, close) = ApiDocGenerationService.GenerateFolderMarkersForNamespace(type, index);
+				var closePath = Path.Combine(directoryName, "close.md");
+				await WriteFile(titlePath, title);
+				await WriteFile(closePath, close);
 				await WriteFile(filePath, doc);
 			}
 		}
