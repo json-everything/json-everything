@@ -1,3 +1,7 @@
+# [3.1.1](https://github.com/gregsdennis/json-everything/pull/454) {#release-schemagen-3.1.1}
+
+[#450](https://github.com/gregsdennis/json-everything/issues/450) - Fixed an edge case issue where a recursive class structure defining the same property type caused a stack overflow when the outer class property was decorated with `[Nullable]`.
+
 # 3.1.0 (no PR) {#release-schemagen-3.1.0}
 
 Updated JsonSchema.Net reference to v4.0.0.
