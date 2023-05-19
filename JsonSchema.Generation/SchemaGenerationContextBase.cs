@@ -55,6 +55,7 @@ public abstract class SchemaGenerationContextBase
 	protected SchemaGenerationContextBase(Type type)
 	{
 		Type = type;
+		DebuggerDisplay = Type.CSharpName();
 	}
 
 	/// <summary>
@@ -106,4 +107,6 @@ public abstract class SchemaGenerationContextBase
 
 		return (IComparer<MemberInfo>)comparer!;
 	}
+	
+	internal string DebuggerDisplay { get; set; }
 }

@@ -40,14 +40,20 @@ public static class SchemaGenerationContextCache
 		{
 			if (memberAttributes != null && memberAttributes.Any())
 			{
-				var basedOn = Get(type);
-				context = new MemberGenerationContext(basedOn, memberAttributes);
+				var memberContext = new MemberGenerationContext(type, memberAttributes);
+				context = memberContext;
+				Cache[hash] = memberContext;
+				memberContext.BasedOn = Get(type);
+				if (hash != memberContext.BasedOn.Hash)
+					memberContext.BasedOn.ReferenceCount--;
 			}
 			else
+			{
 				context = new TypeGenerationContext(type);
+				Cache[hash] = context;
+			}
 
 			context.Hash = hash;
-			Cache[hash] = context;
 
 			context.GenerateIntents();
 		}
