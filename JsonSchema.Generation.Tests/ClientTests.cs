@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
+using Json.More;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
 
@@ -257,5 +258,27 @@ public class ClientTests
 		JsonSchema actual = new JsonSchemaBuilder().FromType<TypeWithSomeNullableOthersNot>();
 
 		AssertEqual(expected, actual);
+	}
+
+	public class MyType450
+	{
+		[Nullable(true)]
+		public IEnumerable<MyItem450> Items { get; set; }
+	}
+
+	public class MyItem450
+	{
+		[Nullable(true)]
+		public IEnumerable<MyItem450> Items { get; set; }
+	}
+
+	[Test]
+	public void Issue450_StackOverflowFromNestedCollections()
+	{
+		var schema = new JsonSchemaBuilder()
+			.FromType<MyType450>()
+			.Build();
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions{WriteIndented = true}));
 	}
 }
