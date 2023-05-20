@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using Humanizer;
 using Json.More;
 using Json.Schema.Generation.Intents;
 
@@ -60,7 +62,7 @@ public static class SchemaGenerationContextOptimizer
 
 	private static string GetDefName(SchemaGenerationContextBase context, List<string> currentNames)
 	{
-		var name = GetName(context.Type);
+		var name = GetName(context.Type).Camelize();
 		var regex = new Regex($@"^{name}\d*$");
 		var count = currentNames.Count(n => regex.IsMatch(n));
 		if (count != 0)
@@ -75,8 +77,42 @@ public static class SchemaGenerationContextOptimizer
 		if (type.IsInteger()) return "integer";
 		if (type.IsNumber()) return "number";
 		if (type == typeof(string)) return "string";
-		if (type.IsArray()) return "array";
 		if (type == typeof(bool)) return "boolean";
-		return type.Name;
+		if (type.IsArray)
+		{
+			var itemType = type.GetElementType();
+			return $"array of {GetName(itemType!)}";
+		}
+		if (type.IsGenericType &&
+		    typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()) &&
+		    type.GenericTypeArguments.Length == 1)
+		{
+			var itemType = type.GenericTypeArguments[0];
+			return $"array of {GetName(itemType)}";
+		}
+		return type.GetFriendlyTypeName();
+	}
+
+	private static string GetFriendlyTypeName(this Type type, StringBuilder? sb = null)
+	{
+		sb ??= new StringBuilder();
+		var name = type.Name;
+		if (!type.IsGenericType)
+		{
+			if (type.IsNested && !type.IsGenericParameter)
+				name = $"{name} in {GetName(type.DeclaringType!)}";
+			return name;
+		}
+
+		sb.Append(name.Substring(0, name.IndexOf('`')));
+		sb.Append(" of ");
+		sb.Append(string.Join(" and ", type.GetGenericArguments()
+			.Select(x => GetFriendlyTypeName(x, sb))));
+		name = sb.ToString();
+
+		if (type.IsNested)
+			name = $"{name} in {GetName(type.DeclaringType!)}";
+
+		return name;
 	}
 }
