@@ -1,3 +1,9 @@
+# [3.2.0](https://github.com/gregsdennis/json-everything/pull/456) {#release-schemagen-3.2.0}
+
+[#455](https://github.com/gregsdennis/json-everything/issues/455) - Better naming for `$defs` keys.
+
+Also added `ITypeNameGenerator` and `SchemaGenerationContextOptimizer.TypeNameGenerator` to allow custom naming.
+
 # [3.1.1](https://github.com/gregsdennis/json-everything/pull/454) {#release-schemagen-3.1.1}
 
 [#450](https://github.com/gregsdennis/json-everything/issues/450) - Fixed an edge case issue where a recursive class structure defining the same property type caused a stack overflow when the outer class property was decorated with `[Nullable]`.
