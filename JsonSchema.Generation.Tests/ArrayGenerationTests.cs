@@ -146,7 +146,7 @@ public class ArrayGenerationTests
 	{
 		var expected = new JsonSchemaBuilder()
 			.Defs(
-				("EnumTest", new JsonSchemaBuilder()
+				("enumTestInArrayGenerationTests", new JsonSchemaBuilder()
 					.Enum("One", "Two")
 					.Title("A test enum")
 				)
@@ -155,9 +155,9 @@ public class ArrayGenerationTests
 			.Properties(
 				("List", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)
-					.Items(new JsonSchemaBuilder().Ref("#/$defs/EnumTest"))
+					.Items(new JsonSchemaBuilder().Ref("#/$defs/enumTestInArrayGenerationTests"))
 				),
-				("Single", new JsonSchemaBuilder().Ref("#/$defs/EnumTest"))
+				("Single", new JsonSchemaBuilder().Ref("#/$defs/enumTestInArrayGenerationTests"))
 			);
 
 		var actual = new JsonSchemaBuilder().FromType<MultipleTestEnums>();

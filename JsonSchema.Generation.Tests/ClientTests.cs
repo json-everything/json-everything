@@ -68,7 +68,7 @@ public class ClientTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Defs(
-				(nameof(TreeNodeMetaData), new JsonSchemaBuilder()
+				("treeNodeMetaDataInClientTests", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.Properties(
 						(nameof(TreeNodeMetaData.Node), new JsonSchemaBuilder().Ref("#")),
@@ -81,10 +81,10 @@ public class ClientTests
 					.Type(SchemaValueType.String)
 				),
 				("left", new JsonSchemaBuilder()
-					.Ref($"#/$defs/{nameof(TreeNodeMetaData)}")
+					.Ref($"#/$defs/treeNodeMetaDataInClientTests")
 				),
 				("right", new JsonSchemaBuilder()
-					.Ref($"#/$defs/{nameof(TreeNodeMetaData)}")
+					.Ref($"#/$defs/treeNodeMetaDataInClientTests")
 				)
 			);
 
@@ -150,11 +150,11 @@ public class ClientTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("Property1", new JsonSchemaBuilder().Ref("#/$defs/Guid")),
-				("Property2", new JsonSchemaBuilder().Ref("#/$defs/Guid"))
+				("Property1", new JsonSchemaBuilder().Ref("#/$defs/guid")),
+				("Property2", new JsonSchemaBuilder().Ref("#/$defs/guid"))
 			)
 			.Defs(
-				("Guid", new JsonSchemaBuilder()
+				("guid", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.Uuid)
 				)
