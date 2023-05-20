@@ -14,6 +14,11 @@ namespace Json.Schema.Generation;
 /// </summary>
 public static class SchemaGenerationContextOptimizer
 {
+	/// <summary>
+	/// Provides custom naming functionality.
+	/// </summary>
+	public static ITypeNameGenerator? TypeNameGenerator { get; set; }
+
 	internal static void Optimize()
 	{
 		var allContexts = SchemaGenerationContextCache.Cache.Values;
@@ -62,9 +67,9 @@ public static class SchemaGenerationContextOptimizer
 
 	private static string GetDefName(SchemaGenerationContextBase context, List<string> currentNames)
 	{
-		var name = GetName(context.Type).Camelize();
+		var name = TypeNameGenerator?.GenerateName(context.Type) ?? GetName(context.Type).Camelize();
 		var regex = new Regex($@"^{name}\d*$");
-		var count = currentNames.Count(n => regex.IsMatch(n));
+		var count = currentNames.Count(regex.IsMatch);
 		if (count != 0)
 			name += count;
 
