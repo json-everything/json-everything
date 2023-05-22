@@ -6,29 +6,13 @@
 
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
-@inject ApiDocGenerationService DocGenerator
 
 @{
 #pragma warning disable CS8625
 }
 
-<div class="banner-container">
-	<div class="announcement-border text-center px-3 py-1 div-hcenter">
-		<div>
-			<strong>Announcement!</strong>
-			All documentation (guides, examples, release notes, and API reference) for
-			this project is moving to
-			<a href="https://docs.json-everything.net">https://docs.json-everything.net</a>.
-			There's also a link in the upper right corner.
-			The documentation will remain on the main site for a short time longer.
-			However, moving forward, the main site will be primarily the playgrounds only.
-		</div>
-	</div>
-</div>
-
 <div class="docs-pane">
 	@((MarkupString)_value)
-	<AnchorNavigation @ref="_anchorNav" Owner="this"/>
 </div>
 
 @{
@@ -44,10 +28,6 @@
 	private static readonly Regex _tablePattern = new(@"<table>");
 
 	private string _value = "";
-
-#pragma warning disable CS8618
-	private AnchorNavigation _anchorNav;
-#pragma warning restore CS8618
 
 	public async Task SetPage(string page)
 	{
@@ -69,39 +49,15 @@
 
 		string markdown;
 
-		if (Page.StartsWith("type/"))
+		try
 		{
-			var typeName = Page[5..];
-			var type = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(x =>
-				{
-					try
-					{
-						return x.ExportedTypes;
-					}
-					catch (Exception)
-					{
-						Console.WriteLine($"Failed to load types for assembly '{x.FullName}'");
-						return Enumerable.Empty<Type>();
-					}
-				})
-				.FirstOrDefault(x => x.FullName == typeName);
-			markdown = type == null
-				? $"***ERROR** Couldn't find type `{typeName}`.  Please report by opening an issue on Github."
-				: await DocGenerator.GenerateForType(type);
+			markdown = await Http.GetStringAsync($"/md/{Page}.md");
 		}
-		else
+		catch (Exception)
 		{
-			try
-			{
-				markdown = await Http.GetStringAsync($"/md/{Page}.md");
-			}
-			catch (Exception)
-			{
-				Console.WriteLine("Markdown file could not be found.");
-				_value = "";
-				return;
-			}
+			Console.WriteLine("Markdown file could not be found.");
+			_value = "";
+			return;
 		}
 	
 		var pipeline = new MarkdownPipelineBuilder()
@@ -111,18 +67,6 @@
 		var html = Markdown.ToHtml(markdown, pipeline);
 		html = html.Replace("<table>", "<table class=\"table\">");
 
-		if (!Page.Contains("type/"))
-		{
-			var localPath = GetPath();
-			var headerLinkPattern = _headerLinkPattern.Replace("[[localPath]]", localPath);
-			html = RegexPatterns.HeaderPattern.Replace(html, headerLinkPattern);
-		}
-
 		_value = html;
-	}
-
-	private string GetPath()
-	{
-		return NavigationManager.Uri.Replace(NavigationManager.BaseUri, string.Empty).Split('#')[0];
 	}
 }

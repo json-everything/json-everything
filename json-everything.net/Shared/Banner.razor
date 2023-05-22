@@ -1,0 +1,22 @@
+﻿<div class="banner-container">
+	<div class="announcement-border text-center px-3 py-1 div-hcenter">
+		<div>
+			<strong>@Title</strong>
+			@((MarkupString)Content)
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string Title { get; set; }
+	[Parameter]
+	public string Content { get; set; }
+
+	public const string AnnouncementTitle = "Announcement!";
+	public const string DocsMessage = "All documentation (guides, examples, release notes, and API reference) for this project has moved to<br/> " +
+	                            "<a href=\"https://docs.json-everything.net\">https://docs.json-everything.net</a>.  " +
+	                            "There's also a link in the upper right corner.";
+	public const string BowtieMessage = "View JSON Schema Test Suite results on <a href=\"https://bowtie-json-schema.github.io/bowtie/\">Bowtie</a> " +
+	                              "and compare with other JSON Schema implementations across multiple platforms!";
+}
