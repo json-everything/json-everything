@@ -33,19 +33,6 @@ public class PathParsingOptions
 	public bool AllowJsonConstructs { get; set; }
 
 	/// <summary>
-	/// Gets or sets whether the JSON Path can contain leading and
-	/// trailing whitespace.
-	/// </summary>
-	/// <remarks>
-	/// Per the specification, such whitespace is not strictly part of
-	/// the syntax, so they are forbidden.  It is expected that such
-	/// whitespace will be removed before passing the string onto
-	/// parsing functionality.
-	/// </remarks>
-	[Obsolete("Use TolerateExtraWhitespace instead.")]
-	public bool TolerateSurroundingWhitespace { get; set; }
-
-	/// <summary>
 	/// Gets or sets whether the JSON Path can contain whitespace in places
 	/// the spec says it shouldn't, e.g. between a function name and the
 	/// opening parenthesis.
