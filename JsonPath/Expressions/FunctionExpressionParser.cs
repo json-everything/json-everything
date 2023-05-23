@@ -32,7 +32,7 @@ internal static class FunctionExpressionParser
 			return false;
 		}
 
-		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
+		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			arguments = null;
 			function = null;

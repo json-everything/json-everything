@@ -49,7 +49,7 @@ internal static class UtilityExtensions
 	{
 		var i = index;
 
-		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
+		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			name = null;
 			return false;

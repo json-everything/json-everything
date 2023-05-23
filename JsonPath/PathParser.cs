@@ -167,7 +167,7 @@ internal static class PathParser
 
 		var i = index;
 
-		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
+		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			segment = null;
 			return false;
@@ -190,7 +190,7 @@ internal static class PathParser
 				isRecursive = true;
 				i++; // consume second .
 
-				if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
+				if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i) || i == source.Length)
 				{
 					segment = null;
 					return false;
@@ -325,7 +325,7 @@ internal static class PathParser
 
 		while (index < source.Length && !done)
 		{
-			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index)) return false;
+			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index) || index == source.Length) return false;
 
 			ISelector? selector = null;
 
@@ -338,7 +338,7 @@ internal static class PathParser
 
 			selectors.Add(selector);
 
-			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index)) return false;
+			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index) || index == source.Length) return false;
 
 			switch (source[index])
 			{
