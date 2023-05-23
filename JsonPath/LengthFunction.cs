@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Globalization;
+using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
@@ -26,7 +27,7 @@ public class LengthFunction : ValueFunctionDefinition
 		{
 			JsonObject obj => (JsonValue)obj.Count,
 			JsonArray arr => (JsonValue)arr.Count,
-			JsonValue val when val.TryGetValue(out string? s) => (JsonValue)s.Length,
+			JsonValue val when val.TryGetValue(out string? s) => (JsonValue)new StringInfo(s).LengthInTextElements,
 			_ => null
 		};
 	}

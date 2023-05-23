@@ -96,7 +96,12 @@ internal static class PathParser
 		var isRecursive = false;
 		var isShorthand = false;
 
-		if (!source.ConsumeWhitespace(ref index))
+		if (options.TolerateExtraWhitespace)
+		{
+			if (!source.ConsumeWhitespace(ref index))
+				throw new PathParseException(index, "Unexpected end of input");
+		}
+		else if (index == source.Length)
 			throw new PathParseException(index, "Unexpected end of input");
 
 		if (source[index] == '[')
@@ -110,7 +115,12 @@ internal static class PathParser
 				isRecursive = true;
 				index++; // consume second .
 
-				if (!source.ConsumeWhitespace(ref index))
+				if (options.TolerateExtraWhitespace)
+				{
+					if (!source.ConsumeWhitespace(ref index))
+						throw new PathParseException(index, "Unexpected end of input");
+				}
+				else if (index == source.Length)
 					throw new PathParseException(index, "Unexpected end of input");
 
 				if (source[index] == '[') 
@@ -124,7 +134,7 @@ internal static class PathParser
 				else
 				{
 					isShorthand = true;
-					ParseName(source, ref index, selectors);
+					ParseName(source, ref index, selectors, options);
 				}
 			}
 			else if (source[index] == '*')
@@ -136,7 +146,7 @@ internal static class PathParser
 			else
 			{
 				isShorthand = true;
-				ParseName(source, ref index, selectors);
+				ParseName(source, ref index, selectors, options);
 			}
 		}
 
@@ -157,7 +167,7 @@ internal static class PathParser
 
 		var i = index;
 
-		if (!source.ConsumeWhitespace(ref i))
+		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
 		{
 			segment = null;
 			return false;
@@ -180,7 +190,7 @@ internal static class PathParser
 				isRecursive = true;
 				i++; // consume second .
 
-				if (!source.ConsumeWhitespace(ref i))
+				if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
 				{
 					segment = null;
 					return false;
@@ -205,7 +215,7 @@ internal static class PathParser
 				{
 					isRecursive = true;
 					isShorthand = true;
-					if (!TryParseName(source, ref i, selectors))
+					if (!TryParseName(source, ref i, selectors, options))
 					{
 						segment = null;
 						return false;
@@ -221,7 +231,7 @@ internal static class PathParser
 			else
 			{
 				isShorthand = true;
-				if (!TryParseName(source, ref i, selectors))
+				if (!TryParseName(source, ref i, selectors, options))
 				{
 					segment = null;
 					return false;
@@ -246,16 +256,16 @@ internal static class PathParser
 		return true;
 	}
 
-	private static void ParseName(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	private static void ParseName(ReadOnlySpan<char> source, ref int index, List<ISelector> selectors, PathParsingOptions options)
 	{
-		if (!source.TryParseName(ref index, out var name)) return;
+		if (!source.TryParseName(ref index, out var name, options)) return;
 
 		selectors.Add(new NameSelector(name));
 	}
 
-	private static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors)
+	private static bool TryParseName(this ReadOnlySpan<char> source, ref int index, List<ISelector> selectors, PathParsingOptions options)
 	{
-		if (!source.TryParseName(ref index, out var name)) return false;
+		if (!source.TryParseName(ref index, out var name, options)) return false;
 
 		selectors.Add(new NameSelector(name));
 		return true;
@@ -270,6 +280,7 @@ internal static class PathParser
 		{
 			if (!source.ConsumeWhitespace(ref index))
 				throw new PathParseException(index, "Unexpected end of input");
+
 			ISelector? selector = null;
 
 			foreach (var parser in _parsers)
@@ -314,7 +325,7 @@ internal static class PathParser
 
 		while (index < source.Length && !done)
 		{
-			if (!source.ConsumeWhitespace(ref index)) return false;
+			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index)) return false;
 
 			ISelector? selector = null;
 
@@ -327,7 +338,7 @@ internal static class PathParser
 
 			selectors.Add(selector);
 
-			if (!source.ConsumeWhitespace(ref index)) return false;
+			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index)) return false;
 
 			switch (source[index])
 			{

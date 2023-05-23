@@ -18,7 +18,7 @@ internal static class FunctionExpressionParser
 		}
 
 		// parse function name
-		if (!source.TryParseName(ref i, out var name))
+		if (!source.TryParseName(ref i, out var name, options))
 		{
 			arguments = null;
 			function = null;
@@ -32,7 +32,7 @@ internal static class FunctionExpressionParser
 			return false;
 		}
 
-		if (!source.ConsumeWhitespace(ref i))
+		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i))
 		{
 			arguments = null;
 			function = null;

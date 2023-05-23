@@ -1,4 +1,6 @@
-﻿namespace Json.Path;
+﻿using System;
+
+namespace Json.Path;
 
 /// <summary>
 /// Defines a set of configuration options to control parsing behavior.
@@ -40,7 +42,19 @@ public class PathParsingOptions
 	/// whitespace will be removed before passing the string onto
 	/// parsing functionality.
 	/// </remarks>
+	[Obsolete("Use TolerateExtraWhitespace instead.")]
 	public bool TolerateSurroundingWhitespace { get; set; }
+
+	/// <summary>
+	/// Gets or sets whether the JSON Path can contain whitespace in places
+	/// the spec says it shouldn't, e.g. between a function name and the
+	/// opening parenthesis.
+	/// </summary>
+	/// <remarks>
+	/// Per the specification, leading or trailing whitespace is also
+	/// forbidden.  Enabling this option permits this.
+	/// </remarks>
+	public bool TolerateExtraWhitespace { get; set; }
 
 	/// <summary>
 	/// Gets or sets whether the `in` operator is allowed.
