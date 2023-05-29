@@ -14,9 +14,9 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<PackageTags>json-path jsonpath query path json</PackageTags>
 		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-path.md) and https://json-everything.net/json-path</PackageReleaseNotes>
-		<Version>0.5.2</Version>
-		<FileVersion>0.5.2.0</FileVersion>
-		<AssemblyVersion>0.5.0.0</AssemblyVersion>
+		<Version>0.6.0</Version>
+		<FileVersion>0.6.0.0</FileVersion>
+		<AssemblyVersion>0.6.0.0</AssemblyVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>

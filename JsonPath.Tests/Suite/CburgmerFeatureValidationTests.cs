@@ -123,7 +123,7 @@ public class CburgmerFeatureValidationTests
 		AllowMathOperations = true,
 		AllowRelativePathStart = true,
 		AllowJsonConstructs = true,
-		TolerateSurroundingWhitespace = true,
+		TolerateExtraWhitespace = true,
 		AllowInOperator = true
 	};
 

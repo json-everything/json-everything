@@ -45,11 +45,11 @@ internal static class UtilityExtensions
 			   ch.In(0x80..0x10FFFF);
 	}
 
-	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out string? name)
+	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out string? name, PathParsingOptions options)
 	{
 		var i = index;
 
-		if (!source.ConsumeWhitespace(ref i))
+		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			name = null;
 			return false;
