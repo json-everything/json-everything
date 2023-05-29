@@ -458,16 +458,15 @@
             and `false` are permitted.
             </remarks>
         </member>
-        <member name="P:Json.Path.PathParsingOptions.TolerateSurroundingWhitespace">
+        <member name="P:Json.Path.PathParsingOptions.TolerateExtraWhitespace">
             <summary>
-            Gets or sets whether the JSON Path can contain leading and
-            trailing whitespace.
+            Gets or sets whether the JSON Path can contain whitespace in places
+            the spec says it shouldn't, e.g. between a function name and the
+            opening parenthesis.
             </summary>
             <remarks>
-            Per the specification, such whitespace is not strictly part of
-            the syntax, so they are forbidden.  It is expected that such
-            whitespace will be removed before passing the string onto
-            parsing functionality.
+            Per the specification, leading or trailing whitespace is also
+            forbidden.  Enabling this option permits this.
             </remarks>
         </member>
         <member name="P:Json.Path.PathParsingOptions.AllowInOperator">
