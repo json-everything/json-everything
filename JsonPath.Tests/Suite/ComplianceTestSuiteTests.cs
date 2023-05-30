@@ -73,7 +73,7 @@ public class ComplianceTestSuiteTests
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
 		var expected = testCase.Result!.ToJsonArray();
-		Assert.IsTrue(expected.IsEquivalentTo(actualValues));
+		Assert.IsTrue(expected.IsEquivalentTo(actualValues), "Unexpected results returned");
 	}
 }
 
