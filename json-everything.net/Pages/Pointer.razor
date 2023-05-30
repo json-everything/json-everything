@@ -3,8 +3,6 @@
 @using System.Text.Json
 @using Json.Pointer
 @using JsonEverythingNet.Services
-@using Radzen
-@using Radzen.Blazor
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 
@@ -13,18 +11,9 @@
 <PageTitle>JSON Pointer - json-everything.net</PageTitle>
 
 
-<div class="row fill-remaining">
-	<RadzenPanelMenu class="col-2 mh-100 mw-content" Click="SetPagePath">
-		<RadzenPanelMenuItem Text="Playground" Icon="article" Value="@("playground/pointer")"
-		                     Path="@(_pageName)"/>
-		<RadzenPanelMenuItem Text="Documentation" Icon="article" Value="@("json-pointer")"
-		                     Path="@(_pageName + "#" + AnchorRegistry.GetFirstFragment("json-pointer"))"/>
-		<RadzenPanelMenuItem Text="Release Notes" Icon="format_list_numbered" Value="@("release-notes/json-pointer")"/>
-		<RadzenPanelMenuItem Text="API Reference" Icon="format_list_numbered" Expanded="true">
-			<ApiIndex AssemblyContaining="@typeof(JsonPointer)"/>
-		</RadzenPanelMenuItem>
-	</RadzenPanelMenu>
-	<div class="col-8-stretch mh-100 scroll">
+<div class="row mx-3 fill-remaining">
+	<div class="mh-100 scroll">
+		<Banner Title="@Banner.AnnouncementTitle" Content="@Banner.DocsMessage" />
 		<div class="navbar me-2">
 			<div class="align-items-center hstack mx-2">
 				<h1 class="display-4">JSON Pointer</h1>
@@ -45,7 +34,7 @@
 			</div>
 		</div>
 		
-		<div class="me-3 @_playgroundStyle">
+		<div class="me-3">
 			<EditForm Model="_input" class="col-12 mb-4">
 				<label class="my-2 w-100">
 					Pointer
@@ -80,18 +69,15 @@
 		</div>
 
 		<div class="ms-4">
-			<Docs @ref="_docs" Page="playground/pointer"/>
+			<Docs Page="playground/pointer"/>
 		</div>
 	</div>
 </div>
 
 @code {
-	private const string _pageName = "json-pointer";
 	#pragma warning disable CS8618
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
-	private Docs _docs;
-	private string _playgroundStyle = "d-none";
 
 	private readonly InputModel _input = new();
 
@@ -116,8 +102,6 @@
 
 		LoadSavedPath();
 		await LoadSavedInstance();
-
-		_playgroundStyle = _docs.Page == "playground/pointer" ? "" : "d-none";
 	}
 
 	private async Task Evaluate()
@@ -180,17 +164,5 @@
 	private async Task LoadSavedInstance()
 	{
 		await CookieManager.LoadEditorValue(_instanceEditor, "pointer-instance");
-	}
-
-	private async Task SetPagePath(MouseEventArgs args)
-	{
-		if (args is not MenuItemEventArgs menuArgs) return;
-
-		var page = (string?)menuArgs.Value;
-		if (page == null) return;
-
-		await _docs.SetPage(page);
-	
-		_playgroundStyle = page == "playground/pointer" ? "" : "d-none";
 	}
 }
