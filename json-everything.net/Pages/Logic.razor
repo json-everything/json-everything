@@ -7,7 +7,7 @@
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
 
-@inject CookieManager CookieManager;
+@inject DataManager DataManager;
 
 <PageTitle>JSON Logic - json-everything.net</PageTitle>
 
@@ -64,7 +64,7 @@
 			<label>
 				Result
 				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 					              CssClass="h-100"/>
 				</div>
 			</label>
@@ -129,30 +129,32 @@
 
 	private async Task SaveLogic()
 	{
-		await CookieManager.SaveEditorValue(_logicEditor, "logic");
+		await DataManager.SaveEditorValue(_logicEditor, "logic");
 	}
 
 	private async Task LoadSavedLogic()
 	{
-		await CookieManager.LoadEditorValue(_logicEditor, "logic");
+		await DataManager.LoadEditorValue(_logicEditor, "logic");
 	}
 
 	private async Task SaveInstance()
 	{
-		await CookieManager.SaveEditorValue(_instanceEditor, "logic-instance");
+		await DataManager.SaveEditorValue(_instanceEditor, "logic-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await CookieManager.LoadEditorValue(_instanceEditor, "logic-instance");
+		await DataManager.LoadEditorValue(_instanceEditor, "logic-instance");
 	}
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		await CookieManager.Initialize();
-	    await _outputEditor.SetValue(string.Empty);
+		if (firstRender)
+		{
+			await LoadSavedLogic();
+			await LoadSavedInstance();
+		}
 
-		await LoadSavedLogic();
-		await LoadSavedInstance();
+		await base.OnAfterRenderAsync(firstRender);
 	}
 }

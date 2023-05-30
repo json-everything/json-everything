@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
     <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />

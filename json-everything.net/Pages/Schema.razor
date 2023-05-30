@@ -15,7 +15,7 @@
 @using System.Text.Json.Nodes
 @using Json.Schema.OpenApi
 
-@inject CookieManager CookieManager;
+@inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
@@ -130,7 +130,7 @@
 			<label class="mb-4">
 				Results
 				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 					              CssClass="h-100 mb-2"/>
 				</div>
 			</label>
@@ -201,7 +201,7 @@
 				"json" => "Schema",
 				"csharp" => "Class Definition",
 				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
-			Task.Run(() => CookieManager.Set("schema-input-language", value));
+			Task.Run(() => DataManager.Set("schema-input-language", value));
 		}
 	}
 
@@ -394,43 +394,45 @@ namespace JsonEverythingTemp
 
 	private async Task HandleSchemaChanged()
 	{
-		await CookieManager.SaveEditorValue(_schemaEditor, "schema");
+		await DataManager.SaveEditorValue(_schemaEditor, "schema");
 	}
 
 	private async Task LoadSavedSchema()
 	{
-		await CookieManager.LoadEditorValue(_schemaEditor, "schema");
+		await DataManager.LoadEditorValue(_schemaEditor, "schema");
 	}
 
 	private async Task HandleInstanceChanged()
 	{
-		await CookieManager.SaveEditorValue(_instanceEditor, "schema-instance");
+		await DataManager.SaveEditorValue(_instanceEditor, "schema-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await CookieManager.LoadEditorValue(_instanceEditor, "schema-instance");
+		await DataManager.LoadEditorValue(_instanceEditor, "schema-instance");
 	}
 
-	private void LoadSavedSettings()
+	private async Task LoadSavedSettings()
 	{
-		InputLanguage = CookieManager.Get("schema-input-language") ?? "json";
+		InputLanguage = await DataManager.Get("schema-input-language") ?? "json";
 	}
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		await CookieManager.Initialize();
-		await _outputEditor.SetValue(string.Empty);
+		if (firstRender)
+		{
+			Json.Schema.Data.Vocabularies.Register();
+			Json.Schema.UniqueKeys.Vocabularies.Register();
+			Json.Schema.OpenApi.Vocabularies.Register();
 
-		Json.Schema.Data.Vocabularies.Register();
-		Json.Schema.UniqueKeys.Vocabularies.Register();
-		Json.Schema.OpenApi.Vocabularies.Register();
+			await LoadSavedSchema();
+			await LoadSavedInstance();
+			await LoadSavedSettings();
 
-		await LoadSavedSchema();
-		await LoadSavedInstance();
-		LoadSavedSettings();
+			await LoadAssemblyReferences();
+		}
 
-		await LoadAssemblyReferences();
+		await base.OnAfterRenderAsync(firstRender);
 	}
 
 	private async Task LoadAssemblyReferences()

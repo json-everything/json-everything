@@ -212,6 +212,7 @@ a.navbar-brand {
 
 .header-btn {
 	background-color: transparent;
+    text-decoration: none;
 }
 
 .header-btn:hover {

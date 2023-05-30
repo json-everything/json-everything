@@ -7,7 +7,7 @@
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
 
-@inject CookieManager CookieManager;
+@inject DataManager DataManager;
 
 <PageTitle>JSON Path - json-everything.net</PageTitle>
 
@@ -95,13 +95,15 @@
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		await CookieManager.Initialize();
-	    await _outputEditor.SetValue(string.Empty);
+		if (firstRender)
+		{
+			await LoadSavedPath();
+			await LoadSavedInstance();
+		}
 
-		LoadSavedPath();
-		await LoadSavedInstance();
+		await base.OnAfterRenderAsync(firstRender);
 	}
 
 	private async Task Evaluate()
@@ -146,23 +148,23 @@
 	{
 		var pathText = args.Value as string;
 
-		await CookieManager.Set("path", pathText ?? string.Empty);
+		await DataManager.Set("path", pathText ?? string.Empty);
 	}
 
-	private void LoadSavedPath()
+	private async Task LoadSavedPath()
 	{
-		var pathText = CookieManager.Get("path") ?? string.Empty;
+		var pathText = await DataManager.Get("path") ?? string.Empty;
 
 		_input.Path = pathText;
 	}
 
 	private async Task SaveInstance()
 	{
-		await CookieManager.SaveEditorValue(_instanceEditor, "path-instance");
+		await DataManager.SaveEditorValue(_instanceEditor, "path-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await CookieManager.LoadEditorValue(_instanceEditor, "path-instance");
+		await DataManager.LoadEditorValue(_instanceEditor, "path-instance");
 	}
 }

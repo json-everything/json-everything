@@ -6,7 +6,7 @@
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 
-@inject CookieManager CookieManager;
+@inject DataManager DataManager;
 
 <PageTitle>JSON Pointer - json-everything.net</PageTitle>
 
@@ -95,13 +95,15 @@
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		await CookieManager.Initialize();
-	    await _outputEditor.SetValue(string.Empty);
+		if (firstRender)
+		{
+			await LoadSavedPath();
+			await LoadSavedInstance();
+		}
 
-		LoadSavedPath();
-		await LoadSavedInstance();
+		await base.OnAfterRenderAsync(firstRender);
 	}
 
 	private async Task Evaluate()
@@ -146,23 +148,23 @@
 	{
 		var pointerText = args.Value as string;
 
-		await CookieManager.Set("pointer", pointerText ?? string.Empty);
+		await DataManager.Set("pointer", pointerText ?? string.Empty);
 	}
 
-	private void LoadSavedPath()
+	private async Task LoadSavedPath()
 	{
-		var pointerText = CookieManager.Get("pointer") ?? string.Empty;
+		var pointerText = await DataManager.Get("pointer") ?? string.Empty;
 
 		_input.Pointer = pointerText;
 	}
 
 	private async Task SaveInstance()
 	{
-		await CookieManager.SaveEditorValue(_instanceEditor, "pointer-instance");
+		await DataManager.SaveEditorValue(_instanceEditor, "pointer-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await CookieManager.LoadEditorValue(_instanceEditor, "pointer-instance");
+		await DataManager.LoadEditorValue(_instanceEditor, "pointer-instance");
 	}
 }

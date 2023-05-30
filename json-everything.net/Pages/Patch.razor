@@ -7,7 +7,7 @@
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
 
-@inject CookieManager CookieManager;
+@inject DataManager DataManager;
 
 <PageTitle>JSON Patch - json-everything.net</PageTitle>
 
@@ -69,7 +69,7 @@
 			<label>
 				Result
 				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-otuput" ConstructionOptions="ReadOnlyOptions"
+					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 					              CssClass="h-100"/>
 				</div>
 			</label>
@@ -172,30 +172,32 @@
 
 	private async Task SavePatch()
 	{
-		await CookieManager.SaveEditorValue(_patchEditor, "patch");
+		await DataManager.SaveEditorValue(_patchEditor, "patch");
 	}
 
 	private async Task LoadSavedPatch()
 	{
-		await CookieManager.LoadEditorValue(_patchEditor, "patch");
+		await DataManager.LoadEditorValue(_patchEditor, "patch");
 	}
 
 	private async Task SaveInstance()
 	{
-		await CookieManager.SaveEditorValue(_instanceEditor, "patch-instance");
+		await DataManager.SaveEditorValue(_instanceEditor, "patch-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await CookieManager.LoadEditorValue(_instanceEditor, "patch-instance");
+		await DataManager.LoadEditorValue(_instanceEditor, "patch-instance");
 	}
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		await CookieManager.Initialize();
-	    await _outputEditor.SetValue(string.Empty);
+		if (firstRender)
+		{
+			await LoadSavedPatch();
+			await LoadSavedInstance();
+		}
 
-		await LoadSavedPatch();
-		await LoadSavedInstance();
+		await base.OnAfterRenderAsync(firstRender);
 	}
 }
