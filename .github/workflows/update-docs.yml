@@ -40,7 +40,7 @@ jobs:
         run: |
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
           cd ./doc-tool
-          dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs/api"
+          dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs"
       # - name: Upload Generated Files
       #   uses: actions/upload-artifact@v2
       #   with:

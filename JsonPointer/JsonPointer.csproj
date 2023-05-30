@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\json-everything.net\wwwroot\md\release-notes\json-pointer.md" Link="json-pointer.md" />
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-pointer.md" Link="release-notes.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

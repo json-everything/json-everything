@@ -29,7 +29,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-path.md" Link="json-path.md" />
+		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-path.md" Link="release-notes.md" />
 		<None Include="..\LICENSE" Link="LICENSE">
 			<PackagePath></PackagePath>
 			<Pack>True</Pack>

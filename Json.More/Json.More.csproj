@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\json-everything.net\wwwroot\md\release-notes\json-more.md" Link="json-more.md" />
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-more.md" Link="release-notes.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

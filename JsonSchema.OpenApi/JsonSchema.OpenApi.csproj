@@ -37,7 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\json-everything.net\wwwroot\md\release-notes\json-schema-openapi.md" Link="json-schema-openapi.md" />
+		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-openapi.md" Link="release-notes.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

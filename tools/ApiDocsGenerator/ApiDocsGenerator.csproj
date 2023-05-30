@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\..\Json.More\Json.More.csproj" />
     <ProjectReference Include="..\..\JsonLogic\JsonLogic.csproj" />
@@ -20,6 +21,12 @@
     <ProjectReference Include="..\..\JsonSchema.UniqueKeys\JsonSchema.UniqueKeys.csproj" />
     <ProjectReference Include="..\..\JsonSchema\JsonSchema.csproj" />
     <ProjectReference Include="..\..\Yaml2JsonNode\Yaml2JsonNode.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="release-notes\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
