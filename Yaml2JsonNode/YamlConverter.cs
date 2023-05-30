@@ -122,6 +122,8 @@ public static class YamlConverter
 
 	private static YamlScalarNode ToYamlScalar(this JsonValue val)
 	{
+		if (val.TryGetValue(out string? s)) return new YamlScalarNode(s);
+
 		return new YamlScalarNode(val.ToJsonString());
 	}
 }
