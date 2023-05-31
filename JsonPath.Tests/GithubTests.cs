@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Path.Tests;
@@ -19,5 +20,24 @@ public class GithubTests
 	{
 		var path = JsonPath.Parse(pathText);
 		Console.WriteLine(path);
+	}
+
+	[Test]
+	public void Issue463_StringComparison()
+	{
+		var data = new JsonArray
+		{
+			"2023-04-23",
+			"2023-06-07",
+			"2023-07-08",
+			"2023-08-09",
+			"2023-09-10",
+			"2024-01-01"
+		};
+
+		var path = JsonPath.Parse("$[?@ >= '2023-05-01']");
+		var results = path.Evaluate(data);
+
+		Assert.AreEqual(5, results.Matches.Count);
 	}
 }
