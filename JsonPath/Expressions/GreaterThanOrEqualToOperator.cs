@@ -21,7 +21,7 @@ internal class GreaterThanOrEqualToOperator : IBinaryComparativeOperator
 
 		if (lValue.TryGetValue(out string? leftString) &&
 		    rValue.TryGetValue(out string? rightString))
-			return string.Compare(leftString, rightString, StringComparison.Ordinal) is 1 or 0;
+			return string.Compare(leftString, rightString, StringComparison.Ordinal) >= 0;
 
 		return lValue.GetNumber() >= rValue.GetNumber();
 	}
