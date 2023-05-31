@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "8.07"
 ---
+# [0.6.1](https://github.com/gregsdennis/json-everything/pull/464) {#release-path-0.6.1}
+
+[#463](https://github.com/gregsdennis/json-everything/issues/463) - Fixed implementation for string comparisons in filter expressions.  Thanks to [@idefy](https://github.com/idefy) for reporting this.
+
 # [0.6.0](https://github.com/gregsdennis/json-everything/pull/459) {#release-path-0.6.0}
 
 Updated support for whitespace in all the right places.
