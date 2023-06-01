@@ -7,6 +7,6 @@ namespace Json.Schema.Generation;
 /// `required` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class RequiredAttribute : Attribute
+public class RequiredAttribute : SchemaGenerationAttribute
 {
 }
