@@ -33,6 +33,7 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 		DebuggerDisplay = Type.CSharpName() + $"[{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
 	}
 
+#pragma warning disable CS8618
 	internal MemberGenerationContext(Type basedOnType, List<Attribute> attributes)
 		: base(basedOnType)
 	{
@@ -40,4 +41,5 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 
 		DebuggerDisplay = Type.CSharpName() + $"[{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
 	}
+#pragma warning restore CS8618
 }
