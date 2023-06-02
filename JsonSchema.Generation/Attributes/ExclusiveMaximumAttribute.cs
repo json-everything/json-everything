@@ -8,8 +8,9 @@ namespace Json.Schema.Generation;
 /// Applies an `exclusiveMaximum` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class ExclusiveMaximumAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class ExclusiveMaximumAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The exclusive maximum.

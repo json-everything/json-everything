@@ -8,8 +8,9 @@ namespace Json.Schema.Generation;
 /// Applies a `minimum` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MinimumAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MinimumAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The minimum.

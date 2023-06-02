@@ -7,8 +7,9 @@ namespace Json.Schema.Generation;
 /// Applies an `additionalProperties` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class AdditionalPropertiesAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class AdditionalPropertiesAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// If the attribute value represents a boolean schema, gets the boolean value.

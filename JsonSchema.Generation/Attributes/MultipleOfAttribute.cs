@@ -8,8 +8,9 @@ namespace Json.Schema.Generation;
 /// Applies a `multipleOf` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MultipleOfAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MultipleOfAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The divisor.

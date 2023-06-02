@@ -7,8 +7,9 @@ namespace Json.Schema.Generation;
 /// Applies a `minItems` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MinItemsAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MinItemsAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The minimum number of items.

@@ -6,7 +6,7 @@ namespace Json.Schema.Generation;
 /// Indicates a property is required and should be listed in the
 /// `required` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
 public class RequiredAttribute : SchemaGenerationAttribute
 {
 }

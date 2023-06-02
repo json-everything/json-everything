@@ -7,8 +7,9 @@ namespace Json.Schema.Generation;
 /// adds or removes `null` in the `type` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class NullableAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class NullableAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// Gets whether `null` should be included in the `type` keyword.

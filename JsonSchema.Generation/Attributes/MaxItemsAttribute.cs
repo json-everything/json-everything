@@ -7,8 +7,9 @@ namespace Json.Schema.Generation;
 /// Applies an `maxItems` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MaxItemsAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MaxItemsAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The maximum number of items.

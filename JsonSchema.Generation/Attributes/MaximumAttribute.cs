@@ -8,8 +8,9 @@ namespace Json.Schema.Generation;
 /// Applies a `maximum` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MaximumAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MaximumAttribute : SchemaGenerationAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The maximum.
