@@ -10,7 +10,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class PatternAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class PatternAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The regular expression pattern.

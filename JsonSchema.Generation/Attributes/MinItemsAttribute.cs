@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class MinItemsAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class MinItemsAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The minimum number of items.

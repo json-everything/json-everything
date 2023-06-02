@@ -7,7 +7,7 @@ namespace Json.Schema.Generation;
 /// `required` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
-public class RequiredAttribute : SchemaGenerationAttribute
+public class RequiredAttribute : ConditionalAttribute
 {
 	internal string PropertyName { get; set; }
 }

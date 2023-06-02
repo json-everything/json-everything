@@ -10,7 +10,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class ExclusiveMaximumAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class ExclusiveMaximumAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The exclusive maximum.

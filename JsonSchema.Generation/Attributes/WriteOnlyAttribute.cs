@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class WriteOnlyAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class WriteOnlyAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// Whether the property should be write-only.

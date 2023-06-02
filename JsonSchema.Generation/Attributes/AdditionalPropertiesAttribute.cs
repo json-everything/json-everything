@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class AdditionalPropertiesAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class AdditionalPropertiesAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// If the attribute value represents a boolean schema, gets the boolean value.

@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class UniqueItemsAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class UniqueItemsAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// Whether the items should be unique.

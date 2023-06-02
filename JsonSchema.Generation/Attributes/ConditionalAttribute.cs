@@ -2,7 +2,7 @@
 
 namespace Json.Schema.Generation;
 
-public abstract class SchemaGenerationAttribute : Attribute
+public abstract class ConditionalAttribute : Attribute
 {
 	public object? ConditionGroup { get; set; }
 }

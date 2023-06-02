@@ -4,7 +4,7 @@ namespace Json.Schema.Generation;
 
 [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class IfEnumAttribute : SchemaGenerationAttribute
+public class IfEnumAttribute : ConditionalAttribute
 {
 	public string PropertyName { get; set; }
 	public bool UseNumbers { get; set; }

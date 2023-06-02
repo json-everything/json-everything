@@ -16,9 +16,9 @@ internal static class AssertionExtensions
 		Assert.AreEqual(expected, actual);
 	}
 
-	public static void VerifyGeneration<T>(JsonSchema expected)
+	public static void VerifyGeneration<T>(JsonSchema expected, SchemaGeneratorConfiguration? config = null)
 	{
-		JsonSchema actual = new JsonSchemaBuilder().FromType<T>();
+		JsonSchema actual = new JsonSchemaBuilder().FromType<T>(config);
 		AssertEqual(expected, actual);
 	}
 }

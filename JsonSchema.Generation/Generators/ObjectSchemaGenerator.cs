@@ -38,7 +38,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			_ => membersToGenerate
 		};
 
-		var conditionalAttributes = new Dictionary<object, List<SchemaGenerationAttribute>>();
+		var conditionalAttributes = new Dictionary<object, List<(MemberInfo, ConditionalAttribute)>>();
 
 		foreach (var member in membersToGenerate)
 		{
@@ -47,14 +47,14 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 								  memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
 			if (ignoreAttribute != null) continue;
 
-			var unconditionalAttributes = memberAttributes.Where(x => x is not SchemaGenerationAttribute sga || sga.ConditionGroup == null).ToList();
-			var localConditionalAttributes = memberAttributes.Except(unconditionalAttributes).OfType<SchemaGenerationAttribute>().ToList();
+			var unconditionalAttributes = memberAttributes.Where(x => x is not ConditionalAttribute sga || sga.ConditionGroup == null).ToList();
+			var localConditionalAttributes = memberAttributes.Except(unconditionalAttributes).OfType<ConditionalAttribute>().ToList();
 			foreach (var conditions in localConditionalAttributes.GroupBy(x => x.ConditionGroup))
 			{
 				if (!conditionalAttributes.TryGetValue(conditions.Key!, out var list)) 
-					conditionalAttributes[conditions.Key!] = list = new List<SchemaGenerationAttribute>();
+					conditionalAttributes[conditions.Key!] = list = new List<(MemberInfo, ConditionalAttribute)>();
 
-				list.AddRange(conditions);
+				list.AddRange(conditions.Select(x => (member, x)));
 			}
 
 			if (member.IsReadOnly() && !unconditionalAttributes.OfType<ReadOnlyAttribute>().Any())
@@ -98,10 +98,17 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		var conditionGroups = context.Type.GetCustomAttributes()
 			.Where(x => x is IfAttribute or IfEnumAttribute)
-			.Cast<SchemaGenerationAttribute>()
+			.Cast<ConditionalAttribute>()
 			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
 			.GroupBy(x => x.ConditionGroup)
 			.ToList();
+
+		if (!conditionGroups.Any()) return;
+
+		foreach (var condition in conditionGroups.SelectMany(x => x))
+		{
+			condition.PropertyName = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(condition.PropertyName);
+		}
 
 		if (conditionGroups.Count == 1)
 		{
@@ -109,8 +116,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			var conditionKey = conditionGroups[0].Key!;
 			if (conditionalAttributes.TryGetValue(conditionKey, out var consequences))
 			{
-				context.Intents.Add(GenerateIf(conditionGroups[0]));
-				context.Intents.Add(GenerateThen(consequences));
+				var thenSubschema = GenerateThen(consequences);
+
+				if (thenSubschema != null)
+				{
+					context.Intents.Add(GenerateIf(conditionGroups[0]));
+					context.Intents.Add(thenSubschema);
+				}
 			}
 		}
 		else
@@ -122,11 +134,14 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				var conditionKey = conditionGroup.Key!;
 				if (conditionalAttributes.TryGetValue(conditionKey, out var consequences))
 				{
-					anyOf.Subschemas.Add(new ISchemaKeywordIntent[]
-					{
-						GenerateIf(conditionGroup),
-						GenerateThen(consequences)
-					});
+					var thenSubschema = GenerateThen(consequences);
+
+					if (thenSubschema != null)
+						anyOf.Subschemas.Add(new ISchemaKeywordIntent[]
+						{
+							GenerateIf(conditionGroup),
+							thenSubschema
+						});
 				}
 			}
 			if (anyOf.Subschemas.Any())
@@ -134,13 +149,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		}
 	}
 
-	private static IEnumerable<IfAttribute> ExpandEnumConditions(SchemaGenerationAttribute conditionGroup, IEnumerable<MemberInfo> members)
+	private static IEnumerable<IfAttribute> ExpandEnumConditions(ConditionalAttribute conditionGroup, IEnumerable<MemberInfo> members)
 	{
 		if (conditionGroup is IfAttribute ifAttribute) yield return ifAttribute;
 
 		if (conditionGroup is IfEnumAttribute ifEnumAttribute)
 		{
-			var member = members.FirstOrDefault(x => x.Name == ifEnumAttribute.PropertyName);
+			var member = members.FirstOrDefault(x => SchemaGeneratorConfiguration.Current.PropertyNamingMethod(x.Name) == ifEnumAttribute.PropertyName);
 			if (member == null) yield break;
 
 			var memberType = member!.GetMemberType();
@@ -160,7 +175,6 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var required = new List<string>();
 		foreach (var condition in conditions)
 		{
-			// TODO: This needs to be the configured name.
 			properties.Add(condition.PropertyName, new AdHocGenerationContext
 			{
 				Intents = { new ConstIntent(condition.Value) }
@@ -178,20 +192,35 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		return ifIntent;
 	}
 
-	private static ThenIntent GenerateThen(IEnumerable<SchemaGenerationAttribute> consequences)
+	private static ThenIntent? GenerateThen(List<(MemberInfo member, ConditionalAttribute attribute)> consequences)
 	{
-		var context = new AdHocGenerationContext();
-		var applicable = consequences.OfType<IAttributeHandler>(); // should be all
-		var required = consequences.OfType<RequiredAttribute>().Select(x => x.PropertyName).ToList();
-		foreach (var consequence in applicable)
+		var applicable = consequences.Where(x => x.attribute is IAttributeHandler); // should be all
+		var required = consequences.Where(x => x.attribute is RequiredAttribute)
+			.Select(x => ((RequiredAttribute)x.attribute).PropertyName)
+			.ToList();
+		var properties = new Dictionary<string, SchemaGenerationContextBase>();
+		foreach (var consequence in applicable.GroupBy(x => x.member))
 		{
-			consequence.AddConstraints(context, (SchemaGenerationAttribute)consequence);
+			var type = consequence.Key.GetMemberType();
+			var localContext = new TypeGenerationContext(type);
+			foreach (var (_, attribute) in consequence)
+			{
+				((IAttributeHandler)attribute).AddConstraints(localContext, attribute);
+			}
+			properties.Add(SchemaGeneratorConfiguration.Current.PropertyNamingMethod(consequence.Key.Name), localContext);
 		}
 
-		if (required.Any())
-			context.Intents.Add(new RequiredIntent(required));
+		var thenIntents = new List<ISchemaKeywordIntent>();
 
-		var thenIntent = new ThenIntent(context.Intents);
+		if (properties.Any())
+			thenIntents.Add(new PropertiesIntent(properties));
+
+		if (required.Any())
+			thenIntents.Add(new RequiredIntent(required));
+
+		if (!thenIntents.Any()) return null;
+
+		var thenIntent = new ThenIntent(thenIntents);
 
 		return thenIntent;
 	}

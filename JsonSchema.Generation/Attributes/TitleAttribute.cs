@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class TitleAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class TitleAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The title.

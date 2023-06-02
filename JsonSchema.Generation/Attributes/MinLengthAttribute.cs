@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class MinLengthAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class MinLengthAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The minimum length.

@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class ReadOnlyAttribute : SchemaGenerationAttribute, IAttributeHandler
+public class ReadOnlyAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// Whether the property should be read-only.
