@@ -7,9 +7,11 @@ namespace Json.Schema.Generation;
 public class IfEnumAttribute : SchemaGenerationAttribute
 {
 	public string PropertyName { get; set; }
+	public bool UseNumbers { get; set; }
 
-	public IfEnumAttribute(string propertyName)
+	public IfEnumAttribute(string propertyName, bool useNumbers = false)
 	{
 		PropertyName = propertyName;
+		UseNumbers = useNumbers;
 	}
 }

@@ -99,7 +99,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var conditionGroups = context.Type.GetCustomAttributes()
 			.Where(x => x is IfAttribute or IfEnumAttribute)
 			.Cast<SchemaGenerationAttribute>()
-			.SelectMany(ExpandEnumConditions)
+			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
 			.GroupBy(x => x.ConditionGroup)
 			.ToList();
 
@@ -129,15 +129,29 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 					});
 				}
 			}
-			context.Intents.Add(anyOf);
+			if (anyOf.Subschemas.Any())
+				context.Intents.Add(anyOf);
 		}
 	}
 
-	private static IEnumerable<IfAttribute> ExpandEnumConditions(SchemaGenerationAttribute conditionGroup)
+	private static IEnumerable<IfAttribute> ExpandEnumConditions(SchemaGenerationAttribute conditionGroup, IEnumerable<MemberInfo> members)
 	{
 		if (conditionGroup is IfAttribute ifAttribute) yield return ifAttribute;
 
+		if (conditionGroup is IfEnumAttribute ifEnumAttribute)
+		{
+			var member = members.FirstOrDefault(x => x.Name == ifEnumAttribute.PropertyName);
+			if (member == null) yield break;
 
+			var memberType = member!.GetMemberType();
+			if (!memberType.IsEnum) yield break;
+
+			var values = Enum.GetValues(memberType);
+			foreach (var value in values)
+			{
+				yield return new IfAttribute(ifEnumAttribute.PropertyName, ifEnumAttribute.UseNumbers ? value : value.ToString(), value);
+			}
+		}
 	}
 
 	private static IfIntent GenerateIf(IEnumerable<IfAttribute> conditions)
