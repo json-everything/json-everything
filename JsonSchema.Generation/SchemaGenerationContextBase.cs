@@ -58,6 +58,11 @@ public abstract class SchemaGenerationContextBase
 		DebuggerDisplay = Type.CSharpName();
 	}
 
+	private protected SchemaGenerationContextBase()
+	{
+		DebuggerDisplay = "ad-hoc";
+	}
+
 	/// <summary>
 	/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.
 	/// </summary>

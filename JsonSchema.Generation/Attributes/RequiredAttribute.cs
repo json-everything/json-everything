@@ -9,4 +9,5 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
 public class RequiredAttribute : SchemaGenerationAttribute
 {
+	internal string PropertyName { get; set; }
 }

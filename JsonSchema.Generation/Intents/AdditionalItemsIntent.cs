@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Json.Schema.Generation.Intents;
+﻿namespace Json.Schema.Generation.Intents;
 
 /// <summary>
 /// Provides intent to create an `additionalItems` keyword.
@@ -19,17 +17,6 @@ public class AdditionalItemsIntent : ISchemaKeywordIntent, IContextContainer
 	public AdditionalItemsIntent(SchemaGenerationContextBase context)
 	{
 		Context = context;
-	}
-
-	/// <summary>
-	/// Gets the contexts.
-	/// </summary>
-	/// <returns>
-	///	The <see cref="SchemaGenerationContextBase"/>s contained by this object.
-	/// </returns>
-	public IEnumerable<SchemaGenerationContextBase> GetContexts()
-	{
-		return new[] { Context };
 	}
 
 	/// <summary>

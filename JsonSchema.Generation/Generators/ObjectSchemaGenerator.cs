@@ -38,6 +38,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			_ => membersToGenerate
 		};
 
+		var conditionalAttributes = new Dictionary<object, List<SchemaGenerationAttribute>>();
+
 		foreach (var member in membersToGenerate)
 		{
 			var memberAttributes = member.GetCustomAttributes().ToList();
@@ -45,8 +47,15 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 								  memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
 			if (ignoreAttribute != null) continue;
 
-			var unconditionalAttributes = memberAttributes.OfType<SchemaGenerationAttribute>().Where(x => x.ConditionGroup == null).Cast<Attribute>().ToList();
-			var conditionalAttributes = memberAttributes.Except(unconditionalAttributes).ToList();
+			var unconditionalAttributes = memberAttributes.Where(x => x is not SchemaGenerationAttribute sga || sga.ConditionGroup == null).ToList();
+			var localConditionalAttributes = memberAttributes.Except(unconditionalAttributes).OfType<SchemaGenerationAttribute>().ToList();
+			foreach (var conditions in localConditionalAttributes.GroupBy(x => x.ConditionGroup))
+			{
+				if (!conditionalAttributes.TryGetValue(conditions.Key!, out var list)) 
+					conditionalAttributes[conditions.Key!] = list = new List<SchemaGenerationAttribute>();
+
+				list.AddRange(conditions);
+			}
 
 			if (member.IsReadOnly() && !unconditionalAttributes.OfType<ReadOnlyAttribute>().Any())
 				unconditionalAttributes.Add(new ReadOnlyAttribute(true));
@@ -72,8 +81,12 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			if (unconditionalAttributes.OfType<RequiredAttribute>().Any())
 				required.Add(name);
-		}
 
+			foreach (var conditionalRequiredAttribute in localConditionalAttributes.OfType<RequiredAttribute>())
+			{
+				conditionalRequiredAttribute.PropertyName = name;
+			}
+		}
 
 		if (props.Count > 0)
 		{
@@ -82,6 +95,90 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (required.Count > 0)
 				context.Intents.Add(new RequiredIntent(required));
 		}
+
+		var conditionGroups = context.Type.GetCustomAttributes()
+			.Where(x => x is IfAttribute or IfEnumAttribute)
+			.Cast<SchemaGenerationAttribute>()
+			.SelectMany(ExpandEnumConditions)
+			.GroupBy(x => x.ConditionGroup)
+			.ToList();
+
+		if (conditionGroups.Count == 1)
+		{
+			// add directly to schema
+			var conditionKey = conditionGroups[0].Key!;
+			if (conditionalAttributes.TryGetValue(conditionKey, out var consequences))
+			{
+				context.Intents.Add(GenerateIf(conditionGroups[0]));
+				context.Intents.Add(GenerateThen(consequences));
+			}
+		}
+		else
+		{
+			// wrap in anyOf
+			var anyOf = new AnyOfIntent();
+			foreach (var conditionGroup in conditionGroups)
+			{
+				var conditionKey = conditionGroup.Key!;
+				if (conditionalAttributes.TryGetValue(conditionKey, out var consequences))
+				{
+					anyOf.Subschemas.Add(new ISchemaKeywordIntent[]
+					{
+						GenerateIf(conditionGroup),
+						GenerateThen(consequences)
+					});
+				}
+			}
+			context.Intents.Add(anyOf);
+		}
 	}
 
+	private static IEnumerable<IfAttribute> ExpandEnumConditions(SchemaGenerationAttribute conditionGroup)
+	{
+		if (conditionGroup is IfAttribute ifAttribute) yield return ifAttribute;
+
+
+	}
+
+	private static IfIntent GenerateIf(IEnumerable<IfAttribute> conditions)
+	{
+		var properties = new Dictionary<string, SchemaGenerationContextBase>();
+		var required = new List<string>();
+		foreach (var condition in conditions)
+		{
+			// TODO: This needs to be the configured name.
+			properties.Add(condition.PropertyName, new AdHocGenerationContext
+			{
+				Intents = { new ConstIntent(condition.Value) }
+			});
+
+			required.Add(condition.PropertyName);
+		}
+
+		var ifIntent = new IfIntent(new ISchemaKeywordIntent[]
+		{
+			new PropertiesIntent(properties),
+			new RequiredIntent(required)
+		});
+
+		return ifIntent;
+	}
+
+	private static ThenIntent GenerateThen(IEnumerable<SchemaGenerationAttribute> consequences)
+	{
+		var context = new AdHocGenerationContext();
+		var applicable = consequences.OfType<IAttributeHandler>(); // should be all
+		var required = consequences.OfType<RequiredAttribute>().Select(x => x.PropertyName).ToList();
+		foreach (var consequence in applicable)
+		{
+			consequence.AddConstraints(context, (SchemaGenerationAttribute)consequence);
+		}
+
+		if (required.Any())
+			context.Intents.Add(new RequiredIntent(required));
+
+		var thenIntent = new ThenIntent(context.Intents);
+
+		return thenIntent;
+	}
 }
