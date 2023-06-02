@@ -58,10 +58,12 @@ public abstract class SchemaGenerationContextBase
 		DebuggerDisplay = Type.CSharpName();
 	}
 
+#pragma warning disable CS8618
 	private protected SchemaGenerationContextBase()
 	{
 		DebuggerDisplay = "ad-hoc";
 	}
+#pragma warning restore CS8618
 
 	/// <summary>
 	/// Applies the keyword to the <see cref="JsonSchemaBuilder"/>.

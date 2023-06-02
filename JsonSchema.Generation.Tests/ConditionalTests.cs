@@ -2,6 +2,7 @@
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable UnusedMember.Global
 
 namespace Json.Schema.Generation.Tests;
 

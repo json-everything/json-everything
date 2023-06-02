@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable UnusedMember.Local
 
 namespace Json.Schema.Generation.Tests;
 
@@ -28,7 +29,7 @@ public class AttributeHandlerTests
 		void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 		{
 			var maxLength = attribute as AttributeWithIndirectHandler;
-			context.Intents.Add(new Intents.MaxLengthIntent(maxLength.MaxLength));
+			context.Intents.Add(new Intents.MaxLengthIntent(maxLength!.MaxLength));
 		}
 	}
 

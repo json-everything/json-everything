@@ -2,6 +2,9 @@
 
 namespace Json.Schema.Generation.Intents;
 
+/// <summary>
+/// Provides intent to create a `const` keyword.
+/// </summary>
 public class ConstIntent : ISchemaKeywordIntent
 {
 	/// <summary>

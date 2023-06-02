@@ -2,8 +2,14 @@
 
 namespace Json.Schema.Generation.Intents;
 
+/// <summary>
+/// Provides intent to create an `else` keyword.
+/// </summary>
 public class ElseIntent : ISchemaKeywordIntent
 {
+	/// <summary>
+	/// A set of intents used to define the subschema.
+	/// </summary>
 	public IEnumerable<ISchemaKeywordIntent> Subschema { get; }
 
 	/// <summary>
