@@ -17,6 +17,6 @@ public class IfAttribute : SchemaGenerationAttribute, IAttributeHandler<IfAttrib
 
 	public void AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		throw new NotImplementedException();
+		
 	}
 }

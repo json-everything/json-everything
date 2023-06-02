@@ -15,6 +15,6 @@ public class IfEnumAttribute : SchemaGenerationAttribute, IAttributeHandler<IfAt
 
 	public void AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		throw new NotImplementedException();
+		
 	}
 }

@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using Json.More;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
 
@@ -89,15 +87,6 @@ public class ClientTests
 			);
 
 		VerifyGeneration<TreeNode>(expected);
-	}
-
-	private static void VerifyGeneration<T>(JsonSchema expected)
-	{
-		JsonSchema actual = new JsonSchemaBuilder().FromType<T>();
-
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
-		Assert.AreEqual(expected, actual);
 	}
 
 	[UsedImplicitly]

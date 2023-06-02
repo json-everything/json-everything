@@ -41,27 +41,27 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		foreach (var member in membersToGenerate)
 		{
 			var memberAttributes = member.GetCustomAttributes().ToList();
-#pragma warning disable 8600 // Assigning null to non-null
-			// ReSharper disable once AssignNullToNotNullAttribute
-			var ignoreAttribute = (Attribute)memberAttributes.OfType<JsonIgnoreAttribute>().Where(a=>a.Condition == JsonIgnoreCondition.Always).FirstOrDefault() ??
+			var ignoreAttribute = (Attribute?)memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault(a=>a.Condition == JsonIgnoreCondition.Always) ??
 								  memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
-#pragma warning restore 8600
 			if (ignoreAttribute != null) continue;
 
-			if (member.IsReadOnly() && !memberAttributes.OfType<ReadOnlyAttribute>().Any())
-				memberAttributes.Add(new ReadOnlyAttribute(true));
+			var unconditionalAttributes = memberAttributes.OfType<SchemaGenerationAttribute>().Where(x => x.ConditionGroup == null).Cast<Attribute>().ToList();
+			var conditionalAttributes = memberAttributes.Except(unconditionalAttributes).ToList();
 
-			if (member.IsWriteOnly() && !memberAttributes.OfType<WriteOnlyAttribute>().Any())
-				memberAttributes.Add(new WriteOnlyAttribute(true));
+			if (member.IsReadOnly() && !unconditionalAttributes.OfType<ReadOnlyAttribute>().Any())
+				unconditionalAttributes.Add(new ReadOnlyAttribute(true));
 
-			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), memberAttributes);
+			if (member.IsWriteOnly() && !unconditionalAttributes.OfType<WriteOnlyAttribute>().Any())
+				unconditionalAttributes.Add(new WriteOnlyAttribute(true));
+
+			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(member.Name);
-			var nameAttribute = memberAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
+			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 			if (nameAttribute != null)
 				name = nameAttribute.Name;
 
-			if (memberAttributes.OfType<ObsoleteAttribute>().Any())
+			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
 				if (memberContext is TypeGenerationContext)
 					memberContext = new MemberGenerationContext(memberContext, new List<Attribute>());
@@ -70,7 +70,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			props.Add(name, memberContext);
 
-			if (memberAttributes.OfType<RequiredAttribute>().Any())
+			if (unconditionalAttributes.OfType<RequiredAttribute>().Any())
 				required.Add(name);
 		}
 

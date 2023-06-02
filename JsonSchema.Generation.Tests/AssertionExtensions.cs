@@ -15,4 +15,10 @@ internal static class AssertionExtensions
 		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
 		Assert.AreEqual(expected, actual);
 	}
+
+	public static void VerifyGeneration<T>(JsonSchema expected)
+	{
+		JsonSchema actual = new JsonSchemaBuilder().FromType<T>();
+		AssertEqual(expected, actual);
+	}
 }
