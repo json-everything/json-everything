@@ -64,10 +64,11 @@ namespace Json.Schema.Generation.Tests
 				.Type(SchemaValueType.Object)
 				.Properties(
 					("Toggle", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
+					("OtherToggle", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
 					("Required", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 					("OtherRequired", new JsonSchemaBuilder().Type(SchemaValueType.String))
 				)
-				.Required("Toggle")
+				.Required("Toggle", "OtherToggle")
 				.AllOf(
 					new JsonSchemaBuilder()
 						.If(new JsonSchemaBuilder()
@@ -111,9 +112,10 @@ namespace Json.Schema.Generation.Tests
 				.Type(SchemaValueType.Object)
 				.Properties(
 					("Toggle", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
+					("OtherToggle", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
 					("Required", new JsonSchemaBuilder().Type(SchemaValueType.String))
 				)
-				.Required("Toggle")
+				.Required("Toggle", "OtherToggle")
 				.If(new JsonSchemaBuilder()
 					.Properties(
 						("Toggle", new JsonSchemaBuilder().Const(true)),
