@@ -6,7 +6,7 @@ order: "8.02"
 ---
 # [3.3.0](https://github.com/gregsdennis/json-everything/pull/466) {#release-schemagen-3.3.0}
 
-Added conditional schema generation using new `[If]` and `[IfEnum]` attributes to define condition groups and then assigning other attributes to those groups.
+Added conditional schema generation using new attributes to define condition groups and then assigning other attributes to those groups.
 
 # [3.2.0](https://github.com/gregsdennis/json-everything/pull/456) {#release-schemagen-3.2.0}
 
