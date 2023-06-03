@@ -6,7 +6,7 @@ namespace Json.Schema.Generation;
 /// Creates or amends a condition group by expecting a value in a property.
 /// </summary>
 [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, AllowMultiple = true)]
-public class IfAttribute : ConditionalAttribute
+public class IfAttribute : ConditionalAttribute, IConditionAttribute
 {
 	/// <summary>
 	/// The property name.

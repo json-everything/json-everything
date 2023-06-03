@@ -29,12 +29,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var membersToGenerate = propertiesToGenerate.Cast<MemberInfo>()
 			.Concat(fieldsToGenerate)
 			.Concat(hiddenPropertiesToGenerate)
-			.Concat(hiddenFieldsToGenerate);
+			.Concat(hiddenFieldsToGenerate)
+			.ToList();
 
 		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
-			PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer),
-			PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name),
+			PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer).ToList(),
+			PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name).ToList(),
 			_ => membersToGenerate
 		};
 
@@ -97,18 +98,12 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		}
 
 		var conditionGroups = context.Type.GetCustomAttributes()
-			.Where(x => x is IfAttribute or IfEnumAttribute)
-			.Cast<ConditionalAttribute>()
+			.OfType<IConditionAttribute>()
 			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
 			.GroupBy(x => x.ConditionGroup)
 			.ToList();
 
 		if (!conditionGroups.Any()) return;
-
-		foreach (var condition in conditionGroups.SelectMany(x => x))
-		{
-			condition.PropertyName = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(condition.PropertyName);
-		}
 
 		if (conditionGroups.Count == 1)
 		{
@@ -149,38 +144,61 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		}
 	}
 
-	private static IEnumerable<IfAttribute> ExpandEnumConditions(ConditionalAttribute conditionGroup, IEnumerable<MemberInfo> members)
+	private static IEnumerable<IConditionAttribute> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
 	{
-		if (conditionGroup is IfAttribute ifAttribute) yield return ifAttribute;
+		var member = members.FirstOrDefault(x => x.Name == condition.PropertyName);
+		if (member == null) yield break;
 
-		if (conditionGroup is IfEnumAttribute ifEnumAttribute)
+		var memberType = member.GetMemberType();
+		switch (condition)
 		{
-			var member = members.FirstOrDefault(x => SchemaGeneratorConfiguration.Current.PropertyNamingMethod(x.Name) == ifEnumAttribute.PropertyName);
-			if (member == null) yield break;
+			case IfMinAttribute min:
+				min.PropertyType = memberType;
+				break;
+			case IfMaxAttribute max:
+				max.PropertyType = memberType;
+				break;
+			case IfEnumAttribute when !memberType.IsEnum:
+				yield break;
+			case IfEnumAttribute ifEnumAttribute:
+				var values = Enum.GetValues(memberType);
+				foreach (var value in values)
+				{
+					yield return new IfAttribute(ifEnumAttribute.PropertyName, ifEnumAttribute.UseNumbers ? value : value.ToString(), value);
+				}
 
-			var memberType = member!.GetMemberType();
-			if (!memberType.IsEnum) yield break;
-
-			var values = Enum.GetValues(memberType);
-			foreach (var value in values)
-			{
-				yield return new IfAttribute(ifEnumAttribute.PropertyName, ifEnumAttribute.UseNumbers ? value : value.ToString(), value);
-			}
+				yield break;
 		}
+		yield return condition;
 	}
 
-	private static IfIntent GenerateIf(IEnumerable<IfAttribute> conditions)
+	private static IfIntent GenerateIf(IEnumerable<IConditionAttribute> conditions)
 	{
 		var properties = new Dictionary<string, SchemaGenerationContextBase>();
 		var required = new List<string>();
 		foreach (var condition in conditions)
 		{
-			properties.Add(condition.PropertyName, new AdHocGenerationContext
+			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(condition.PropertyName);
+			if (!properties.TryGetValue(name, out var context))
+				properties[name] = context = new AdHocGenerationContext();
+			switch (condition)
 			{
-				Intents = { new ConstIntent(condition.Value) }
-			});
-
-			required.Add(condition.PropertyName);
+				case IfAttribute ifAtt:
+					context.Intents.Add(new ConstIntent(ifAtt.Value));
+					break;
+				case IfMinAttribute ifMin:
+					var minIntent = ifMin.GetIntent();
+					if (minIntent == null) continue;
+					context.Intents.Add(minIntent);
+					break;
+				case IfMaxAttribute ifMax:
+					var maxIntent = ifMax.GetIntent();
+					if (maxIntent == null) continue;
+					context.Intents.Add(maxIntent);
+					break;
+			}
+			if (!required.Contains(name))
+				required.Add(name);
 		}
 
 		var ifIntent = new IfIntent(new ISchemaKeywordIntent[]

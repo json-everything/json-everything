@@ -10,7 +10,7 @@ namespace Json.Schema.Generation;
 /// </remarks>
 [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class IfEnumAttribute : ConditionalAttribute
+public class IfEnumAttribute : ConditionalAttribute, IConditionAttribute
 {
 	/// <summary>
 	/// The property name.

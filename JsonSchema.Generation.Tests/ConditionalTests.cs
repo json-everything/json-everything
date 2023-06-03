@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
@@ -371,5 +372,159 @@ public class ConditionalTests
 			);
 
 		VerifyGeneration<SplitAgeRanges>(expected);
+	}
+
+	[IfMin(nameof(Value), 10, "group")]
+	[IfMax(nameof(Value), 20, "group", IsExclusive = true)]
+	public class NumberRangeConditions
+	{
+		[Required]
+		public int Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		public string Required { get; set; }
+	}
+
+	[Test]
+	public void NumberRangeConditionsGeneration()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Required", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			.Required("Value")
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("Value", new JsonSchemaBuilder()
+						.Minimum(10)
+						.ExclusiveMaximum(20)
+					)
+				)
+				.Required("Value")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Required("Required")
+			);
+
+		VerifyGeneration<NumberRangeConditions>(expected);
+	}
+
+	[IfMin(nameof(Value), 10, "group")]
+	[IfMax(nameof(Value), 20, "group")]
+	public class StringLengthRangeConditions
+	{
+		[Required]
+		public string Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		public string Required { get; set; }
+	}
+
+	[Test]
+	public void StringLengthRangeConditionsGeneration()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("Required", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			.Required("Value")
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("Value", new JsonSchemaBuilder()
+						.MinLength(10)
+						.MaxLength(20)
+					)
+				)
+				.Required("Value")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Required("Required")
+			);
+
+		VerifyGeneration<StringLengthRangeConditions>(expected);
+	}
+
+	[IfMin(nameof(Value), 10, "group")]
+	[IfMax(nameof(Value), 20, "group")]
+	public class ArrayLengthRangeConditions
+	{
+		[Required]
+		public int[] Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		public string Required { get; set; }
+	}
+
+	[Test]
+	public void ArrayLengthRangeConditionsGeneration()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+				),
+				("Required", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			.Required("Value")
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("Value", new JsonSchemaBuilder()
+						.MinItems(10)
+						.MaxItems(20)
+					)
+				)
+				.Required("Value")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Required("Required")
+			);
+
+		VerifyGeneration<ArrayLengthRangeConditions>(expected);
+	}
+
+	[IfMin(nameof(Value), 10, "group")]
+	[IfMax(nameof(Value), 20, "group")]
+	public class DictionaryLengthRangeConditions
+	{
+		[Required]
+		public Dictionary<string, int> Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		public string Required { get; set; }
+	}
+
+	[Test]
+	public void DictionaryLengthRangeConditionsGeneration()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object)
+					.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+				),
+				("Required", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			.Required("Value")
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("Value", new JsonSchemaBuilder()
+						.MinProperties(10)
+						.MaxProperties(20)
+					)
+				)
+				.Required("Value")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Required("Required")
+			);
+
+		VerifyGeneration<DictionaryLengthRangeConditions>(expected);
 	}
 }
