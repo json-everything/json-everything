@@ -12,14 +12,14 @@ public interface ISelector
 	/// <summary>
 	/// Evaluates the selector.
 	/// </summary>
-	/// <param name="node">The node to evaluate.</param>
+	/// <param name="match">The node to evaluate.</param>
 	/// <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
 	/// <returns>
 	/// A collection of nodes.
 	///
 	/// Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
 	/// </returns>
-	IEnumerable<Node> Evaluate(Node node, JsonNode? rootNode);
+	IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode);
 
 	/// <summary>
 	/// Builds a string using a string builder.

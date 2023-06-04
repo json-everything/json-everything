@@ -7,31 +7,49 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
-internal class NameSelector : ISelector, IHaveShorthand
+/// <summary>
+/// Represents a name selector.
+/// </summary>
+public class NameSelector : ISelector, IHaveShorthand
 {
+	/// <summary>
+	/// Gets the name.
+	/// </summary>
 	public string Name { get; }
 
-	public NameSelector(string name)
+	internal NameSelector(string name)
 	{
 		Name = name;
 	}
 
-	public string ToShorthandString()
+	string IHaveShorthand.ToShorthandString()
 	{
 		return $".{Name}";
 	}
 
-	public void AppendShorthandString(StringBuilder builder)
+	void IHaveShorthand.AppendShorthandString(StringBuilder builder)
 	{
 		builder.Append('.');
 		builder.Append(Name);
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		return $"'{Name}'"; // TODO escape this
 	}
 
+	/// <summary>
+	/// Evaluates the selector.
+	/// </summary>
+	/// <param name="match">The node to evaluate.</param>
+	/// <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+	/// <returns>
+	/// A collection of nodes.
+	///
+	/// Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+	/// </returns>
 	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
@@ -40,6 +58,10 @@ internal class NameSelector : ISelector, IHaveShorthand
 		if (obj.TryGetPropertyValue(Name, out var value)) yield return new Node(value, match.Location!.Append(Name));
 	}
 
+	/// <summary>
+	/// Builds a string using a string builder.
+	/// </summary>
+	/// <param name="builder">The string builder.</param>
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append('\'');

@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
-using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal abstract class BooleanResultExpressionNode : ExpressionNode
+internal abstract class BooleanResultExpressionNode : ExpressionNode, IFilterExpression
 {
 	public abstract bool Evaluate(JsonNode? globalParameter, JsonNode? localParameter);
 }

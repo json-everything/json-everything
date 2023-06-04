@@ -6,19 +6,33 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
-internal class SliceSelector : ISelector
+/// <summary>
+/// Represents a slice selector in the form `start : end : step`.
+/// </summary>
+public class SliceSelector : ISelector
 {
+	/// <summary>
+	/// Gets the start.
+	/// </summary>
 	public int? Start { get; }
+	/// <summary>
+	/// Gets the end.
+	/// </summary>
 	public int? End { get; }
+	/// <summary>
+	/// Gets the step.
+	/// </summary>
 	public int? Step { get; }
 
-	public SliceSelector(int? start, int? end, int? step)
+	internal SliceSelector(int? start, int? end, int? step)
 	{
 		Start = start;
 		End = end;
 		Step = step;
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		return Step.HasValue
@@ -26,6 +40,16 @@ internal class SliceSelector : ISelector
 			: $"{Start}:{End}";
 	}
 
+	/// <summary>
+	/// Evaluates the selector.
+	/// </summary>
+	/// <param name="match">The node to evaluate.</param>
+	/// <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+	/// <returns>
+	/// A collection of nodes.
+	///
+	/// Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+	/// </returns>
 	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
@@ -59,6 +83,10 @@ internal class SliceSelector : ISelector
 		}
 	}
 
+	/// <summary>
+	/// Builds a string using a string builder.
+	/// </summary>
+	/// <param name="builder">The string builder.</param>
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append(Start);
