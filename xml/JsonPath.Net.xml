@@ -22,6 +22,38 @@
             <param name="nodeList">A nodelist</param>
             <returns>The number of nodes in the nodelist.</returns>
         </member>
+        <member name="T:Json.Path.FilterSelector">
+            <summary>
+            Represents a filter expression selector.
+            </summary>
+        </member>
+        <member name="P:Json.Path.FilterSelector.Expression">
+            <summary>
+            Gets the expression.
+            </summary>
+        </member>
+        <member name="M:Json.Path.FilterSelector.Evaluate(Json.Path.Node,System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Evaluates the selector.
+             </summary>
+             <param name="match">The node to evaluate.</param>
+             <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+             <returns>
+             A collection of nodes.
+            
+             Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+             </returns>
+        </member>
+        <member name="M:Json.Path.FilterSelector.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string using a string builder.
+            </summary>
+            <param name="builder">The string builder.</param>
+        </member>
+        <member name="M:Json.Path.FilterSelector.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
         <member name="T:Json.Path.FunctionRepository">
             <summary>
             Stores expression function definitions.
@@ -91,21 +123,58 @@
             Indicates the function returns a nodelist.
             </summary>
         </member>
-        <member name="T:Json.Path.IHaveShorthand">
+        <member name="T:Json.Path.IFilterExpression">
             <summary>
-            Implemented by selectors which have a shorthand syntax.
+            Exposes the filter expression.
             </summary>
         </member>
-        <member name="M:Json.Path.IHaveShorthand.ToShorthandString">
+        <member name="M:Json.Path.IFilterExpression.Evaluate(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNode)">
             <summary>
-            Gets the shorthand syntax string.
+            Evaluates the selector.
             </summary>
-            <returns>The shorthand syntax string.</returns>
+            <param name="globalParameter">The root node of the data, represented by `$`.</param>
+            <param name="localParameter">The current node in the filter, represented by `@`.</param>
+            <returns>
+            true if the node should be selected; false otherwise.
+            </returns>
         </member>
-        <member name="M:Json.Path.IHaveShorthand.AppendShorthandString(System.Text.StringBuilder)">
+        <member name="M:Json.Path.IFilterExpression.BuildString(System.Text.StringBuilder)">
             <summary>
-            Appends the shorthand syntax string to a string builder.
+            Builds a string using a string builder.
             </summary>
+            <param name="builder">The string builder.</param>
+        </member>
+        <member name="T:Json.Path.IndexSelector">
+            <summary>
+            Represents an index selector.
+            </summary>
+        </member>
+        <member name="P:Json.Path.IndexSelector.Index">
+            <summary>
+            Gets the index.
+            </summary>
+        </member>
+        <member name="M:Json.Path.IndexSelector.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Json.Path.IndexSelector.Evaluate(Json.Path.Node,System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Evaluates the selector.
+             </summary>
+             <param name="match">The node to evaluate.</param>
+             <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+             <returns>
+             A collection of nodes.
+            
+             Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+             </returns>
+        </member>
+        <member name="M:Json.Path.IndexSelector.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string using a string builder.
+            </summary>
+            <param name="builder">The string builder.</param>
         </member>
         <member name="T:Json.Path.IPathFunctionDefinition">
             <summary>
@@ -158,7 +227,7 @@
              <summary>
              Evaluates the selector.
              </summary>
-             <param name="node">The node to evaluate.</param>
+             <param name="match">The node to evaluate.</param>
              <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
              <returns>
              A collection of nodes.
@@ -259,6 +328,11 @@
              For example, `$['foo'][1]` is a singular path.  Shorthand syntax (e.g. `$.foo[1]`)
              is also allowed.
              </remarks>
+        </member>
+        <member name="P:Json.Path.JsonPath.Segments">
+            <summary>
+            Gets the segments of the path.
+            </summary>
         </member>
         <member name="M:Json.Path.JsonPath.Parse(System.String,Json.Path.PathParsingOptions)">
             <summary>
@@ -365,6 +439,38 @@
             <param name="value">The value to test.</param>
             <param name="pattern">The iregexp pattern to test against.</param>
             <returns>true if the whole string is a match for the pattern; false otherwise.</returns>
+        </member>
+        <member name="T:Json.Path.NameSelector">
+            <summary>
+            Represents a name selector.
+            </summary>
+        </member>
+        <member name="P:Json.Path.NameSelector.Name">
+            <summary>
+            Gets the name.
+            </summary>
+        </member>
+        <member name="M:Json.Path.NameSelector.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Json.Path.NameSelector.Evaluate(Json.Path.Node,System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Evaluates the selector.
+             </summary>
+             <param name="match">The node to evaluate.</param>
+             <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+             <returns>
+             A collection of nodes.
+            
+             Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+             </returns>
+        </member>
+        <member name="M:Json.Path.NameSelector.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string using a string builder.
+            </summary>
+            <param name="builder">The string builder.</param>
         </member>
         <member name="T:Json.Path.Node">
             <summary>
@@ -560,6 +666,48 @@
             <param name="pattern">The iregexp pattern to test against.</param>
             <returns>true if the string contains a match for the pattern; false otherwise.</returns>
         </member>
+        <member name="T:Json.Path.SliceSelector">
+            <summary>
+            Represents a slice selector in the form `start : end : step`.
+            </summary>
+        </member>
+        <member name="P:Json.Path.SliceSelector.Start">
+            <summary>
+            Gets the start.
+            </summary>
+        </member>
+        <member name="P:Json.Path.SliceSelector.End">
+            <summary>
+            Gets the end.
+            </summary>
+        </member>
+        <member name="P:Json.Path.SliceSelector.Step">
+            <summary>
+            Gets the step.
+            </summary>
+        </member>
+        <member name="M:Json.Path.SliceSelector.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Json.Path.SliceSelector.Evaluate(Json.Path.Node,System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Evaluates the selector.
+             </summary>
+             <param name="match">The node to evaluate.</param>
+             <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+             <returns>
+             A collection of nodes.
+            
+             Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+             </returns>
+        </member>
+        <member name="M:Json.Path.SliceSelector.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string using a string builder.
+            </summary>
+            <param name="builder">The string builder.</param>
+        </member>
         <member name="T:Json.Path.ValueFunction">
             <summary>
             Implements the `value()` function which extracts a single value from a nodelist.
@@ -576,6 +724,33 @@
             </summary>
             <param name="nodeList">A nodelist.</param>
             <returns>If the nodelist contains a single node, that node's value; otherwise null.</returns>
+        </member>
+        <member name="T:Json.Path.WildcardSelector">
+            <summary>
+            Represents a wildcard selector, `[*]` or `.*`.
+            </summary>
+        </member>
+        <member name="M:Json.Path.WildcardSelector.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Json.Path.WildcardSelector.Evaluate(Json.Path.Node,System.Text.Json.Nodes.JsonNode)">
+             <summary>
+             Evaluates the selector.
+             </summary>
+             <param name="match">The node to evaluate.</param>
+             <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+             <returns>
+             A collection of nodes.
+            
+             Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+             </returns>
+        </member>
+        <member name="M:Json.Path.WildcardSelector.BuildString(System.Text.StringBuilder)">
+            <summary>
+            Builds a string using a string builder.
+            </summary>
+            <param name="builder">The string builder.</param>
         </member>
     </members>
 </doc>
