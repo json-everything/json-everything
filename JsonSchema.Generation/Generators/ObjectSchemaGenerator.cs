@@ -122,8 +122,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		}
 		else
 		{
-			// wrap in anyOf
-			var anyOf = new AnyOfIntent();
+			// wrap in allOf
+			var allOf = new AllOfIntent();
 			foreach (var conditionGroup in conditionGroups)
 			{
 				var conditionKey = conditionGroup.Key!;
@@ -132,15 +132,15 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 					var thenSubschema = GenerateThen(consequences);
 
 					if (thenSubschema != null)
-						anyOf.Subschemas.Add(new ISchemaKeywordIntent[]
+						allOf.Subschemas.Add(new ISchemaKeywordIntent[]
 						{
 							GenerateIf(conditionGroup),
 							thenSubschema
 						});
 				}
 			}
-			if (anyOf.Subschemas.Any())
-				context.Intents.Add(anyOf);
+			if (allOf.Subschemas.Any())
+				context.Intents.Add(allOf);
 		}
 	}
 

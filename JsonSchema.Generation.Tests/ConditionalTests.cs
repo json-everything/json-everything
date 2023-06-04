@@ -95,7 +95,7 @@ public class ConditionalTests
 				("OtherRequired", new JsonSchemaBuilder().Type(SchemaValueType.String))
 			)
 			.Required("Toggle", "OtherToggle")
-			.AnyOf(
+			.AllOf(
 				new JsonSchemaBuilder()
 					.If(new JsonSchemaBuilder()
 						.Properties(
@@ -219,7 +219,7 @@ public class ConditionalTests
 				("OtherRequired", new JsonSchemaBuilder().Type(SchemaValueType.String))
 			)
 			.Required("Day")
-			.AnyOf(
+			.AllOf(
 				new JsonSchemaBuilder()
 					.If(new JsonSchemaBuilder()
 						.Properties(
@@ -315,7 +315,7 @@ public class ConditionalTests
 				("CanVote", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
 			)
 			.Required("Name", "AgeCategory", "Age", "CanVote")
-			.AnyOf(
+			.AllOf(
 				new JsonSchemaBuilder()
 					.If(new JsonSchemaBuilder()
 						.Properties(
