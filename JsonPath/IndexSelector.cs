@@ -6,20 +6,38 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
-internal class IndexSelector : ISelector
+/// <summary>
+/// Represents an index selector.
+/// </summary>
+public class IndexSelector : ISelector
 {
+	/// <summary>
+	/// Gets the index.
+	/// </summary>
 	public int Index { get; }
 
-	public IndexSelector(int index)
+	internal IndexSelector(int index)
 	{
 		Index = index;
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		return Index.ToString();
 	}
 
+	/// <summary>
+	/// Evaluates the selector.
+	/// </summary>
+	/// <param name="match">The node to evaluate.</param>
+	/// <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+	/// <returns>
+	/// A collection of nodes.
+	///
+	/// Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+	/// </returns>
 	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
@@ -35,6 +53,10 @@ internal class IndexSelector : ISelector
 		else yield return new Node(arr[Index], match.Location!.Append(Index));
 	}
 
+	/// <summary>
+	/// Builds a string using a string builder.
+	/// </summary>
+	/// <param name="builder">The string builder.</param>
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append(Index);

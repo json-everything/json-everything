@@ -6,23 +6,40 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path;
 
-internal class WildcardSelector : ISelector, IHaveShorthand
+/// <summary>
+/// Represents a wildcard selector, `[*]` or `.*`.
+/// </summary>
+public class WildcardSelector : ISelector, IHaveShorthand
 {
-	public string ToShorthandString()
+	internal WildcardSelector(){}
+
+	string IHaveShorthand.ToShorthandString()
 	{
 		return ".*";
 	}
 
-	public void AppendShorthandString(StringBuilder builder)
+	void IHaveShorthand.AppendShorthandString(StringBuilder builder)
 	{
 		builder.Append(".*");
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
 		return "*";
 	}
 
+	/// <summary>
+	/// Evaluates the selector.
+	/// </summary>
+	/// <param name="match">The node to evaluate.</param>
+	/// <param name="rootNode">The root node (typically used by filter selectors, e.g. `$[?@foo &lt; $.bar]`)</param>
+	/// <returns>
+	/// A collection of nodes.
+	///
+	/// Semantically, this is a nodelist, but leaving as IEnumerable&lt;Node&gt; allows for deferred execution.
+	/// </returns>
 	public IEnumerable<Node> Evaluate(Node match, JsonNode? rootNode)
 	{
 		var node = match.Value;
@@ -43,6 +60,10 @@ internal class WildcardSelector : ISelector, IHaveShorthand
 		}
 	}
 
+	/// <summary>
+	/// Builds a string using a string builder.
+	/// </summary>
+	/// <param name="builder">The string builder.</param>
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append('*');
