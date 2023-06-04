@@ -39,7 +39,7 @@ jobs:
       - name: Generate docs
         run: |
           mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net6.0/. doc-tool
-          rm -r ./json-everything/_docs/api/*
+          rm -r ./json-everything-docs/_docs/api/*
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs"
       # - name: Upload Generated Files
