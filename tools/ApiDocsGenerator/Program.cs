@@ -19,7 +19,7 @@ namespace ApiDocsGenerator
 		{
 			var outputDir = args.Length == 0 ? "output" : args[0];
 
-			await CopyReleaseNotes(outputDir, "release-notes");
+			CopyReleaseNotes(outputDir, "release-notes");
 
 			await GenerateAndSaveDocs<JsonSchema>("9.01", outputDir, "api");
 			await GenerateAndSaveDocs<DataKeyword>("9.02", outputDir, "api");
@@ -35,7 +35,7 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs(typeof(YamlConverter), "9.12", outputDir, "api");
 		}
 
-		private static async Task CopyReleaseNotes(params string[] outputDir)
+		private static void CopyReleaseNotes(params string[] outputDir)
 		{
 			CopyDirectory("release-notes", Path.Combine(outputDir), false);
 		}
