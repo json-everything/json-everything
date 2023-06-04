@@ -39,10 +39,13 @@ public class JsonPath
 	/// is also allowed.
 	/// </remarks>
 	public bool IsSingular => Segments.All(x => !x.IsRecursive &&
-	                                             x.Selectors.Length == 1 &&
-	                                             x.Selectors[0] is IndexSelector or NameSelector);
+	                                            x.Selectors.Length == 1 &&
+	                                            x.Selectors[0] is IndexSelector or NameSelector);
 
-	internal PathSegment[] Segments { get; }
+	/// <summary>
+	/// Gets the segments of the path.
+	/// </summary>
+	public PathSegment[] Segments { get; }
 
 	internal JsonPath(PathScope scope, IEnumerable<PathSegment> segments)
 	{
