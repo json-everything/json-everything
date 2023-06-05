@@ -33,6 +33,7 @@ public static class ApiDocGenerationService
 		var asmName = type.Assembly.GetName().Name;
 
 		var title = @$"---
+title: __title
 bookmark: {asmName}
 permalink: /api/{asmName}/:title/
 folder: true
@@ -41,7 +42,8 @@ version: ""{GetVersion(type)}""
 ---
 ";
 		var close = @$"---
-permalink: /api/JsonSchema.Net/:title/
+title: __close
+permalink: /api/{asmName}/:title/
 close: true
 order: ""{index}.99""
 ---
