@@ -52,7 +52,7 @@ jobs:
         with:
           path: artifacts
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action/composite@master
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
