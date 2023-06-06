@@ -52,6 +52,14 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public bool Optimize { get; set; } = true;
 
+	/// <summary>
+	/// Gets or sets whether properties that are affected by conditionals are defined
+	/// globally or only within their respective `then` subschemas.  True restricts
+	/// those property definitions to `then` subschemas and adds a top-level
+	/// `unevaluatedProperties: false`; false (default) defines them globally.
+	/// </summary>
+	public bool StrictConditionals { get; set; }
+
 #pragma warning disable CS8618
 	/// <summary>
 	/// Thread-static storage of the current configuration. Only to be used for reading

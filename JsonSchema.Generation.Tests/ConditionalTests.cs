@@ -64,6 +64,34 @@ public class ConditionalTests
 		});
 	}
 
+
+	[Test]
+	public void SingleConditionStrictGeneration()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Toggle", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+			)
+			.Required("Toggle")
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("Toggle", new JsonSchemaBuilder().Const(true))
+				)
+				.Required("Toggle")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Properties(
+					("Required", new JsonSchemaBuilder().Type(SchemaValueType.String))
+				)
+				.Required("Required")
+			)
+			.UnevaluatedProperties(false);
+
+		VerifyGeneration<SingleCondition>(expected, new SchemaGeneratorConfiguration { StrictConditionals = true });
+	}
+
+
 	[If(nameof(Toggle), true, "ifToggle")]
 	[If(nameof(OtherToggle), 42, "ifOtherToggle")]
 	public class MultipleConditionGroups

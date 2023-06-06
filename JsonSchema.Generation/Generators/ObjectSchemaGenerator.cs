@@ -40,6 +40,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		};
 
 		var conditionalAttributes = new Dictionary<object, List<(MemberInfo, ConditionalAttribute)>>();
+		var strictPropertyDefinitions = new Dictionary<(object, string), SchemaGenerationContextBase>();
+		var addUnevaluatedProperties = false;
 
 		foreach (var member in membersToGenerate)
 		{
@@ -78,7 +80,18 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				memberContext.Intents.Add(new DeprecatedIntent(true));
 			}
 
-			props.Add(name, memberContext);
+			if (SchemaGeneratorConfiguration.Current.StrictConditionals &&
+			    localConditionalAttributes.Any())
+			{
+				addUnevaluatedProperties = true;
+				var applicableConditionGroups = localConditionalAttributes.Select(x => x.ConditionGroup).Distinct();
+				foreach (var conditionGroup in applicableConditionGroups)
+				{
+					strictPropertyDefinitions.Add((conditionGroup!, name), memberContext);
+				}
+			}
+			else
+				props.Add(name, memberContext);
 
 			if (unconditionalAttributes.OfType<RequiredAttribute>().Any())
 				required.Add(name);
@@ -111,7 +124,9 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			var conditionKey = conditionGroups[0].Key!;
 			if (conditionalAttributes.TryGetValue(conditionKey, out var consequences))
 			{
-				var thenSubschema = GenerateThen(consequences);
+				var strictProperties = strictPropertyDefinitions.Where(x => Equals(x.Key.Item1, conditionKey))
+					.ToDictionary(x => x.Key.Item2, x => x.Value);
+				var thenSubschema = GenerateThen(consequences, strictProperties);
 
 				if (thenSubschema != null)
 				{
@@ -129,7 +144,9 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				var conditionKey = conditionGroup.Key!;
 				if (conditionalAttributes.TryGetValue(conditionKey, out var consequences))
 				{
-					var thenSubschema = GenerateThen(consequences);
+					var strictProperties = strictPropertyDefinitions.Where(x => Equals(x.Key.Item1, conditionKey))
+						.ToDictionary(x => x.Key.Item2, x => x.Value);
+					var thenSubschema = GenerateThen(consequences, strictProperties);
 
 					if (thenSubschema != null)
 						allOf.Subschemas.Add(new ISchemaKeywordIntent[]
@@ -142,6 +159,9 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (allOf.Subschemas.Any())
 				context.Intents.Add(allOf);
 		}
+
+		if (addUnevaluatedProperties)
+			context.Intents.Add(new UnevaluatedPropertiesIntent());
 	}
 
 	private static IEnumerable<IConditionAttribute> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
@@ -210,22 +230,30 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		return ifIntent;
 	}
 
-	private static ThenIntent? GenerateThen(List<(MemberInfo member, ConditionalAttribute attribute)> consequences)
+	private static ThenIntent? GenerateThen(List<(MemberInfo member, ConditionalAttribute attribute)> consequences,
+		Dictionary<string, SchemaGenerationContextBase> prebuiltMemberContexts)
 	{
 		var applicable = consequences.Where(x => x.attribute is IAttributeHandler); // should be all
 		var required = consequences.Where(x => x.attribute is RequiredAttribute)
 			.Select(x => ((RequiredAttribute)x.attribute).PropertyName)
 			.ToList();
-		var properties = new Dictionary<string, SchemaGenerationContextBase>();
+		var properties = prebuiltMemberContexts;
 		foreach (var consequence in applicable.GroupBy(x => x.member))
 		{
-			var type = consequence.Key.GetMemberType();
-			var localContext = new TypeGenerationContext(type);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(consequence.Key.Name);
+			if (properties.TryGetValue(name, out var localContext))
+				localContext = new MemberGenerationContext(localContext, new List<Attribute>());
+			else
+			{
+				var type = consequence.Key.GetMemberType();
+				localContext = new TypeGenerationContext(type);
+			}
 			foreach (var (_, attribute) in consequence)
 			{
 				((IAttributeHandler)attribute).AddConstraints(localContext, attribute);
 			}
-			properties.Add(SchemaGeneratorConfiguration.Current.PropertyNamingMethod(consequence.Key.Name), localContext);
+
+			properties[name] = localContext;
 		}
 
 		var thenIntents = new List<ISchemaKeywordIntent>();
