@@ -1,22 +1,20 @@
-﻿using System.Collections.Generic;
-
-namespace Json.Schema.Generation.Intents;
+﻿namespace Json.Schema.Generation.Intents;
 
 /// <summary>
-/// Provides intent to create an `additionalProperties` keyword.
+/// Provides intent to create an `unevaluatedProperties` keyword.
 /// </summary>
-public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContainer
+public class UnevaluatedPropertiesIntent : ISchemaKeywordIntent, IContextContainer
 {
 	/// <summary>
 	/// The context that represents the inner requirements.
 	/// </summary>
-	public SchemaGenerationContextBase Context { get; private set; }
+	public SchemaGenerationContextBase? Context { get; private set; }
 
 	/// <summary>
-	/// Creates a new <see cref="AdditionalPropertiesIntent"/> instance.
+	/// Creates a new <see cref="UnevaluatedPropertiesIntent"/> instance.
 	/// </summary>
-	/// <param name="context">The context.</param>
-	public AdditionalPropertiesIntent(SchemaGenerationContextBase context)
+	/// <param name="context">The context, or null to apply the false schema.</param>
+	public UnevaluatedPropertiesIntent(SchemaGenerationContextBase? context = null)
 	{
 		Context = context;
 	}
@@ -28,7 +26,7 @@ public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContaine
 	/// <param name="newContext">The new context.</param>
 	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
 	{
-		if (Context.Hash == hashCode)
+		if (Context?.Hash == hashCode)
 			Context = newContext;
 	}
 
@@ -38,6 +36,6 @@ public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContaine
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.AdditionalProperties(Context.Apply());
+		builder.UnevaluatedProperties(Context?.Apply() ?? false);
 	}
 }

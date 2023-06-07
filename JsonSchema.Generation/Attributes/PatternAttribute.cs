@@ -8,8 +8,9 @@ namespace Json.Schema.Generation;
 /// Applies a `pattern` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class PatternAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class PatternAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The regular expression pattern.

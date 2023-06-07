@@ -3,13 +3,14 @@
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>Json.Schema.Generation.Tests</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-		<NoWarn>IDE1006</NoWarn>
+		<NoWarn>IDE1006,CS8618</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

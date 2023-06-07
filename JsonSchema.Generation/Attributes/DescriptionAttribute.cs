@@ -7,8 +7,9 @@ namespace Json.Schema.Generation;
 /// Applies a `description` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class DescriptionAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class DescriptionAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The description.

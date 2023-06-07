@@ -1,36 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Json.More;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
 
 /// <summary>
-/// Applies a `multipleOf` keyword.
+/// Applies an `exclusiveMaximum` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MultipleOfAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class ExclusiveMaximumAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
-	/// The divisor.
+	/// The exclusive maximum.
 	/// </summary>
 	public decimal Value { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="MultipleOfAttribute"/> instance.
+	/// Creates a new <see cref="ExclusiveMaximumAttribute"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public MultipleOfAttribute(double value)
+	public ExclusiveMaximumAttribute(double value)
 	{
-		Value = (decimal)value;
+		Value = Convert.ToDecimal(value);
 	}
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
 		if (!context.Type.IsNumber()) return;
 
-		context.Intents.Add(new MultipleOfIntent(Value));
+		context.Intents.Add(new ExclusiveMaximumIntent(Value));
 	}
 }

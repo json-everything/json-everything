@@ -7,8 +7,9 @@ namespace Json.Schema.Generation;
 /// Applies an `additionalProperties` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class AdditionalPropertiesAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class AdditionalItemsAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// If the attribute value represents a boolean schema, gets the boolean value.
@@ -23,7 +24,7 @@ public class AdditionalPropertiesAttribute : Attribute, IAttributeHandler
 	/// Creates a new <see cref="AdditionalPropertiesAttribute"/> instance.
 	/// </summary>
 	/// <param name="boolSchema">A boolean schema.</param>
-	public AdditionalPropertiesAttribute(bool boolSchema)
+	public AdditionalItemsAttribute(bool boolSchema)
 	{
 		BoolValue = boolSchema;
 	}
@@ -32,7 +33,7 @@ public class AdditionalPropertiesAttribute : Attribute, IAttributeHandler
 	/// Creates a new <see cref="AdditionalPropertiesAttribute"/> instance.
 	/// </summary>
 	/// <param name="typeSchema">A type to generate the a schema for the keyword.</param>
-	public AdditionalPropertiesAttribute(Type typeSchema)
+	public AdditionalItemsAttribute(Type typeSchema)
 	{
 		TypeValue = typeSchema;
 	}
@@ -41,12 +42,12 @@ public class AdditionalPropertiesAttribute : Attribute, IAttributeHandler
 	{
 		if (BoolValue.HasValue)
 		{
-			context.Intents.Add(new AdditionalPropertiesIntent(BoolValue.Value
+			context.Intents.Add(new AdditionalItemsIntent(BoolValue.Value
 				? SchemaGenerationContextBase.True
 				: SchemaGenerationContextBase.False));
 			return;
 		}
 
-		context.Intents.Add(new AdditionalPropertiesIntent(SchemaGenerationContextCache.Get(TypeValue!)));
+		context.Intents.Add(new AdditionalItemsIntent(SchemaGenerationContextCache.Get(TypeValue!)));
 	}
 }

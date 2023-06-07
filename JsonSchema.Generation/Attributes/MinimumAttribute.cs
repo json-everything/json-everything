@@ -5,22 +5,23 @@ using Json.Schema.Generation.Intents;
 namespace Json.Schema.Generation;
 
 /// <summary>
-/// Applies a `maximum` keyword.
+/// Applies a `minimum` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MaximumAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MinimumAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
-	/// The maximum.
+	/// The minimum.
 	/// </summary>
 	public decimal Value { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="MaximumAttribute"/> instance.
+	/// Creates a new <see cref="MinimumAttribute"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public MaximumAttribute(double value)
+	public MinimumAttribute(double value)
 	{
 		Value = Convert.ToDecimal(value);
 	}
@@ -29,6 +30,6 @@ public class MaximumAttribute : Attribute, IAttributeHandler
 	{
 		if (!context.Type.IsNumber()) return;
 
-		context.Intents.Add(new MaximumIntent(Value));
+		context.Intents.Add(new MinimumIntent(Value));
 	}
 }

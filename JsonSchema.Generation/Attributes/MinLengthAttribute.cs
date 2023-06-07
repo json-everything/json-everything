@@ -4,22 +4,23 @@ using Json.Schema.Generation.Intents;
 namespace Json.Schema.Generation;
 
 /// <summary>
-/// Applies a `maxLength` keyword.
+/// Applies a `minimum` keyword.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-public class MaxLengthAttribute : Attribute, IAttributeHandler
+				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
+	AllowMultiple = true)]
+public class MinLengthAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
-	/// The maximum length.
+	/// The minimum length.
 	/// </summary>
 	public uint Length { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="MaxLengthAttribute"/> instance.
+	/// Creates a new <see cref="MinLengthAttribute"/> instance.
 	/// </summary>
 	/// <param name="length">The value.</param>
-	public MaxLengthAttribute(uint length)
+	public MinLengthAttribute(uint length)
 	{
 		Length = length;
 	}
@@ -28,6 +29,6 @@ public class MaxLengthAttribute : Attribute, IAttributeHandler
 	{
 		if (context.Type != typeof(string)) return;
 
-		context.Intents.Add(new MaxLengthIntent(Length));
+		context.Intents.Add(new MinLengthIntent(Length));
 	}
 }

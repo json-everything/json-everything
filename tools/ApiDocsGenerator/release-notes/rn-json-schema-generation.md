@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.3.0](https://github.com/gregsdennis/json-everything/pull/466) {#release-schemagen-3.3.0}
+
+Added conditional schema generation using new attributes to define condition groups and then assigning other attributes to those groups.
+
 # [3.2.0](https://github.com/gregsdennis/json-everything/pull/456) {#release-schemagen-3.2.0}
 
 [#455](https://github.com/gregsdennis/json-everything/issues/455) - Better naming for `$defs` keys.

@@ -4,9 +4,9 @@ using System.Linq;
 namespace Json.Schema.Generation.Intents;
 
 /// <summary>
-/// Provides intent to create a `anyOf` keyword.
+/// Provides intent to create a `allOf` keyword.
 /// </summary>
-public class AnyOfIntent : ISchemaKeywordIntent
+public class AllOfIntent : ISchemaKeywordIntent
 {
 	/// <summary>
 	/// Gets the subschemas to include.
@@ -14,19 +14,19 @@ public class AnyOfIntent : ISchemaKeywordIntent
 	public List<IEnumerable<ISchemaKeywordIntent>> Subschemas { get; }
 
 	/// <summary>
-	/// Creates a new instance of the <see cref="AnyOfIntent"/> class.
+	/// Creates a new instance of the <see cref="AllOfIntent"/> class.
 	/// </summary>
 	/// <param name="subschemas">The subschemas to include.</param>
-	public AnyOfIntent(IEnumerable<IEnumerable<ISchemaKeywordIntent>> subschemas)
+	public AllOfIntent(IEnumerable<IEnumerable<ISchemaKeywordIntent>> subschemas)
 	{
 		Subschemas = subschemas.ToList();
 	}
 
 	/// <summary>
-	/// Creates a new instance of the <see cref="AnyOfIntent"/> class.
+	/// Creates a new instance of the <see cref="AllOfIntent"/> class.
 	/// </summary>
 	/// <param name="subschemas">The subschemas to include.</param>
-	public AnyOfIntent(params IEnumerable<ISchemaKeywordIntent>[] subschemas)
+	public AllOfIntent(params IEnumerable<ISchemaKeywordIntent>[] subschemas)
 	{
 		Subschemas = subschemas.ToList();
 	}
@@ -37,7 +37,7 @@ public class AnyOfIntent : ISchemaKeywordIntent
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.AnyOf(Subschemas.Select(Build));
+		builder.AllOf(Subschemas.Select(Build));
 	}
 
 	private static JsonSchema Build(IEnumerable<ISchemaKeywordIntent> subschema)
