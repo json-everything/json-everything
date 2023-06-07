@@ -4,6 +4,29 @@
         <name>JsonSchema.Net.Generation</name>
     </assembly>
     <members>
+        <member name="T:Json.Schema.Generation.AttributeHandler">
+            <summary>
+            Adds attribute-related schema elements.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.AttributeHandler.AddHandler``1">
+            <summary>
+            Adds a handler for a custom attribute that cannot be made to implement <see cref="T:Json.Schema.Generation.IAttributeHandler"/>.
+            </summary>
+            <typeparam name="T">The handler type.</typeparam>
+        </member>
+        <member name="M:Json.Schema.Generation.AttributeHandler.AddHandler(Json.Schema.Generation.IAttributeHandler)">
+            <summary>
+            Adds a handler for a custom attribute that cannot be made to implement <see cref="T:Json.Schema.Generation.IAttributeHandler"/>.
+            </summary>
+            <param name="handler">The handler.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.AttributeHandler.RemoveHandler``1">
+            <summary>
+            Removes a handler type.
+            </summary>
+            <typeparam name="T">The handler type.</typeparam>
+        </member>
         <member name="T:Json.Schema.Generation.AdditionalItemsAttribute">
             <summary>
             Applies an `additionalProperties` keyword.
@@ -58,42 +81,31 @@
             </summary>
             <param name="typeSchema">A type to generate the a schema for the keyword.</param>
         </member>
-        <member name="T:Json.Schema.Generation.AttributeHandler">
+        <member name="T:Json.Schema.Generation.ConditionalAttribute">
             <summary>
-            Adds attribute-related schema elements.
+            Serves as a base class for attributes which support conditional schema generation.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.AttributeHandler.AddHandler``1">
+        <member name="P:Json.Schema.Generation.ConditionalAttribute.ConditionGroup">
             <summary>
-            Adds a handler for a custom attribute that cannot be made to implement <see cref="T:Json.Schema.Generation.IAttributeHandler"/>.
-            </summary>
-            <typeparam name="T">The handler type.</typeparam>
-        </member>
-        <member name="M:Json.Schema.Generation.AttributeHandler.AddHandler(Json.Schema.Generation.IAttributeHandler)">
-            <summary>
-            Adds a handler for a custom attribute that cannot be made to implement <see cref="T:Json.Schema.Generation.IAttributeHandler"/>.
-            </summary>
-            <param name="handler">The handler.</param>
-        </member>
-        <member name="M:Json.Schema.Generation.AttributeHandler.RemoveHandler``1">
-            <summary>
-            Removes a handler type.
-            </summary>
-            <typeparam name="T">The handler type.</typeparam>
-        </member>
-        <member name="T:Json.Schema.Generation.ContextExtensions">
-            <summary>
-            Extension methods for context objects.
+            Identifies the condition group under which this attribute applies.
             </summary>
         </member>
-        <member name="M:Json.Schema.Generation.ContextExtensions.GetAttributes(Json.Schema.Generation.SchemaGenerationContextBase)">
+        <member name="T:Json.Schema.Generation.ConstAttribute">
             <summary>
-            Gets the attribute set.  Type contexts get type attributes; member context
-            get member attributes.
+            Applies a `const` keyword.
             </summary>
-            <param name="context">The context.</param>
-            <returns>The attribute set.</returns>
-            <exception cref="T:System.InvalidOperationException">Thrown for other context types.</exception>
+        </member>
+        <member name="P:Json.Schema.Generation.ConstAttribute.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.ConstAttribute.#ctor(System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.ConstAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
         </member>
         <member name="T:Json.Schema.Generation.DescriptionAttribute">
             <summary>
@@ -142,6 +154,387 @@
             Creates a new <see cref="T:Json.Schema.Generation.ExclusiveMinimumAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.IfAttribute">
+            <summary>
+            Creates or amends a condition group by expecting a value in a property.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfAttribute.PropertyName">
+            <summary>
+            The property name.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfAttribute.Value">
+            <summary>
+            The expected property value.
+            </summary>
+            <remarks>
+            The compiler will allow any compile-time constant, however only JSON-compatible
+            values will work.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.IfAttribute.#ctor(System.String,System.Object,System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.IfAttribute"/> instance.
+            </summary>
+            <param name="propertyName">The name of the property.</param>
+            <param name="value">The expected value for the property (should be JSON-compatible).</param>
+            <param name="group">The condition group.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.IfEnumAttribute">
+            <summary>
+            Creates multiple condition groups based on the value of an enum property, one group for each defined enum value.
+            </summary>
+            <remarks>
+            The enum type is inferred from the property.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.Generation.IfEnumAttribute.PropertyName">
+            <summary>
+            The property name.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfEnumAttribute.UseNumbers">
+            <summary>
+            Gets or sets whether to use numbers or names in the condition.  Default is to use names.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.IfEnumAttribute.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.IfEnumAttribute"/> instance.
+            </summary>
+            <param name="propertyName">The property name.</param>
+            <param name="useNumbers">(optional) Whether to use numbers or names in the condition.  Default is to use names.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.IfMaxAttribute">
+            <summary>
+            Creates or amends a condition group by defining an expected maximum value in a property.
+            </summary>
+            <remarks>
+            The specific keywords which are added depend on the type of the targeted property.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.Generation.IfMaxAttribute.PropertyName">
+            <summary>
+            The property name.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfMaxAttribute.Value">
+            <summary>
+            The expected maximum value.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfMaxAttribute.IsExclusive">
+            <summary>
+            Gets or sets whether the value should be exclusive.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.IfMaxAttribute.#ctor(System.String,System.Double,System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.IfAttribute"/> instance.
+            </summary>
+            <param name="propertyName">The name of the property.</param>
+            <param name="value">The expected maximum value for the property.</param>
+            <param name="group">The condition group.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.IfMinAttribute">
+            <summary>
+            Creates or amends a condition group by defining an expected minimum value in a property.
+            </summary>
+            <remarks>
+            The specific keywords which are added depend on the type of the targeted property.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.Generation.IfMinAttribute.PropertyName">
+            <summary>
+            The property name.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfMinAttribute.Value">
+            <summary>
+            The expected minimum value.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.IfMinAttribute.IsExclusive">
+            <summary>
+            Gets or sets whether the value should be exclusive.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.IfMinAttribute.#ctor(System.String,System.Double,System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.IfAttribute"/> instance.
+            </summary>
+            <param name="propertyName">The name of the property.</param>
+            <param name="value">The expected minimum value for the property.</param>
+            <param name="group">The condition group.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonExcludeAttribute">
+            <summary>
+            Indicates that the property should be excluded from generation.
+            </summary>
+            <remarks>
+            This attribute functions exactly the same as the <see cref="T:System.Text.Json.Serialization.JsonIgnoreAttribute"/>.  It
+            is included separately to support the case where the model should be serialized with
+            a property but schema generation should ignore it.
+            </remarks>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonExcludeAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonExcludeAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
+            <summary>
+            Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGenerationContextBase,System.Attribute)">
+            <summary>
+            Processes the type and any attributes (present on the context), and adds
+            intents to the context.
+            </summary>
+            <param name="context">The generation context.</param>
+            <param name="attribute"></param>
+        </member>
+        <member name="T:Json.Schema.Generation.MaximumAttribute">
+            <summary>
+            Applies a `maximum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MaximumAttribute.Value">
+            <summary>
+            The maximum.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MaximumAttribute.#ctor(System.Double)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MaximumAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.MaxItemsAttribute">
+            <summary>
+            Applies an `maxItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MaxItemsAttribute.Value">
+            <summary>
+            The maximum number of items.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MaxItemsAttribute.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MaxItemsAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.MaxLengthAttribute">
+            <summary>
+            Applies a `maxLength` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MaxLengthAttribute.Length">
+            <summary>
+            The maximum length.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MaxLengthAttribute.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MaxLengthAttribute"/> instance.
+            </summary>
+            <param name="length">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.MinimumAttribute">
+            <summary>
+            Applies a `minimum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MinimumAttribute.Value">
+            <summary>
+            The minimum.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MinimumAttribute.#ctor(System.Double)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MinimumAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.MinItemsAttribute">
+            <summary>
+            Applies a `minItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MinItemsAttribute.Value">
+            <summary>
+            The minimum number of items.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MinItemsAttribute.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MinItemsAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.MinLengthAttribute">
+            <summary>
+            Applies a `minimum` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MinLengthAttribute.Length">
+            <summary>
+            The minimum length.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MinLengthAttribute.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MinLengthAttribute"/> instance.
+            </summary>
+            <param name="length">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.MultipleOfAttribute">
+            <summary>
+            Applies a `multipleOf` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.MultipleOfAttribute.Value">
+            <summary>
+            The divisor.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.MultipleOfAttribute.#ctor(System.Double)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.MultipleOfAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.NullableAttribute">
+            <summary>
+            Overrides the <see cref="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability"/> option and either
+            adds or removes `null` in the `type` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.NullableAttribute.IsNullable">
+            <summary>
+            Gets whether `null` should be included in the `type` keyword.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.NullableAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.NullableAttribute"/> instance.
+            </summary>
+            <param name="isNullable">Whether `null` should be included in the `type` keyword.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.PatternAttribute">
+            <summary>
+            Applies a `pattern` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.PatternAttribute.Value">
+            <summary>
+            The regular expression pattern.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.PatternAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.PatternAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.ReadOnlyAttribute">
+            <summary>
+            Applies a `readOnly` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.ReadOnlyAttribute.Value">
+            <summary>
+            Whether the property should be read-only.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance with a value of `true`.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.RequiredAttribute">
+            <summary>
+            Indicates a property is required and should be listed in the
+            `required` keyword.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.Generation.TitleAttribute">
+            <summary>
+            Applies a `title` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.TitleAttribute.Title">
+            <summary>
+            The title.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.TitleAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.TitleAttribute"/> instance.
+            </summary>
+            <param name="title">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.UniqueItemsAttribute">
+            <summary>
+            Applies a `uniqueItems` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.UniqueItemsAttribute.Value">
+            <summary>
+            Whether the items should be unique.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.UniqueItemsAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.UniqueItemsAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.WriteOnlyAttribute">
+            <summary>
+            Applies a `writeOnly` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.WriteOnlyAttribute.Value">
+            <summary>
+            Whether the property should be write-only.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance with a value of `true`.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.ContextExtensions">
+            <summary>
+            Extension methods for context objects.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.ContextExtensions.GetAttributes(Json.Schema.Generation.SchemaGenerationContextBase)">
+            <summary>
+            Gets the attribute set.  Type contexts get type attributes; member context
+            get member attributes.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>The attribute set.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown for other context types.</exception>
         </member>
         <member name="T:Json.Schema.Generation.GeneratorRegistry">
             <summary>
@@ -245,14 +638,6 @@
             </summary>
             <param name="context">The context.</param>
         </member>
-        <member name="M:Json.Schema.Generation.Intents.AdditionalItemsIntent.GetContexts">
-            <summary>
-            Gets the contexts.
-            </summary>
-            <returns>
-            The <see cref="T:Json.Schema.Generation.SchemaGenerationContextBase"/>s contained by this object.
-            </returns>
-        </member>
         <member name="M:Json.Schema.Generation.Intents.AdditionalItemsIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGenerationContextBase)">
             <summary>
             Replaces one context with another.
@@ -282,14 +667,6 @@
             </summary>
             <param name="context">The context.</param>
         </member>
-        <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.GetContexts">
-            <summary>
-            Gets the contexts.
-            </summary>
-            <returns>
-            The <see cref="T:Json.Schema.Generation.SchemaGenerationContextBase"/>s contained by this object.
-            </returns>
-        </member>
         <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGenerationContextBase)">
             <summary>
             Replaces one context with another.
@@ -298,6 +675,34 @@
             <param name="newContext">The new context.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.AdditionalPropertiesIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.AllOfIntent">
+            <summary>
+            Provides intent to create a `allOf` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.AllOfIntent.Subschemas">
+            <summary>
+            Gets the subschemas to include.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AllOfIntent.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}})">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Schema.Generation.Intents.AllOfIntent"/> class.
+            </summary>
+            <param name="subschemas">The subschemas to include.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AllOfIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent}[])">
+            <summary>
+            Creates a new instance of the <see cref="T:Json.Schema.Generation.Intents.AllOfIntent"/> class.
+            </summary>
+            <param name="subschemas">The subschemas to include.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.AllOfIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -326,6 +731,28 @@
             <param name="subschemas">The subschemas to include.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.AnyOfIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.ConstIntent">
+            <summary>
+            Provides intent to create a `const` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ConstIntent.Value">
+            <summary>
+            The expected value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ConstIntent.#ctor(System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ConstIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -392,6 +819,27 @@
             <param name="value">The value.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.DescriptionIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.ElseIntent">
+            <summary>
+            Provides intent to create an `else` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ElseIntent.Subschema">
+            <summary>
+            A set of intents used to define the subschema.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ElseIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ElseIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -486,6 +934,27 @@
             <param name="format">The format.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.FormatIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.IfIntent">
+            <summary>
+            Provides intent to create an `if` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.IfIntent.Subschema">
+            <summary>
+            A set of intents used to define the subschema.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.IfIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.IfIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -586,6 +1055,28 @@
             </summary>
             <param name="builder">The builder.</param>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.MaxPropertiesIntent">
+            <summary>
+            Provides intent to create a `maxProperties` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MaxPropertiesIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxPropertiesIntent.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MaxPropertiesIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MaxPropertiesIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
         <member name="T:Json.Schema.Generation.Intents.MinimumIntent">
             <summary>
             Provides intent to create a `minimum` keyword.
@@ -647,6 +1138,28 @@
             <param name="value">The value.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.MinLengthIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.MinPropertiesIntent">
+            <summary>
+            Provides intent to create a `minProperties` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.MinPropertiesIntent.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinPropertiesIntent.#ctor(System.UInt32)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.MinPropertiesIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.MinPropertiesIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -824,6 +1337,27 @@
             </summary>
             <param name="builder">The builder.</param>
         </member>
+        <member name="T:Json.Schema.Generation.Intents.ThenIntent">
+            <summary>
+            Provides intent to create a `then` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.ThenIntent.Subschema">
+            <summary>
+            A set of intents used to define the subschema.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ThenIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent})">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.ThenIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
         <member name="T:Json.Schema.Generation.Intents.TitleIntent">
             <summary>
             Provides intent to create a `title` keyword.
@@ -863,6 +1397,35 @@
             <param name="type">The type.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.TypeIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.UnevaluatedPropertiesIntent">
+            <summary>
+            Provides intent to create an `unevaluatedProperties` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.UnevaluatedPropertiesIntent.Context">
+            <summary>
+            The context that represents the inner requirements.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UnevaluatedPropertiesIntent.#ctor(Json.Schema.Generation.SchemaGenerationContextBase)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.UnevaluatedPropertiesIntent"/> instance.
+            </summary>
+            <param name="context">The context, or null to apply the false schema.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UnevaluatedPropertiesIntent.Replace(System.Int32,Json.Schema.Generation.SchemaGenerationContextBase)">
+            <summary>
+            Replaces one context with another.
+            </summary>
+            <param name="hashCode">The hashcode of the context to replace.</param>
+            <param name="newContext">The new context.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.UnevaluatedPropertiesIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -971,94 +1534,6 @@
             <param name="type">The type.</param>
             <returns>A string to use for the type; null to use the library-provided behavior.</returns>
         </member>
-        <member name="T:Json.Schema.Generation.JsonExcludeAttribute">
-            <summary>
-            Indicates that the property should be excluded from generation.
-            </summary>
-            <remarks>
-            This attribute functions exactly the same as the <see cref="T:System.Text.Json.Serialization.JsonIgnoreAttribute"/>.  It
-            is included separately to support the case where the model should be serialized with
-            a property but schema generation should ignore it.
-            </remarks>
-        </member>
-        <member name="M:Json.Schema.Generation.JsonExcludeAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonExcludeAttribute"/>.
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.JsonIncludeAttribute">
-             <summary>
-             Indicates that the property or field should be included for serialization and deserialization.
-             </summary>
-             <remarks>
-             When applied to a public property, indicates that non-public getters and setters should be used for serialization and deserialization.
-            
-             Non-public properties and fields are not allowed when serializing and deserializing. If the attribute is used on a non-public property or field,
-             an <see cref="T:System.InvalidOperationException"/> is thrown during the first serialization or deserialization of the declaring type.
-             </remarks>
-        </member>
-        <member name="M:Json.Schema.Generation.JsonIncludeAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonIncludeAttribute"/>.
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.JsonNumberHandling">
-            <summary>
-            Determines how <see cref="T:System.Text.Json.JsonSerializer"/> handles numbers when serializing and deserializing.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.JsonNumberHandling.Strict">
-            <summary>
-            Numbers will only be read from <see cref="F:System.Text.Json.JsonTokenType.Number"/> tokens and will only be written as JSON numbers (without quotes).
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.JsonNumberHandling.AllowReadingFromString">
-            <summary>
-            Numbers can be read from <see cref="F:System.Text.Json.JsonTokenType.String"/> tokens.
-            Does not prevent numbers from being read from <see cref="F:System.Text.Json.JsonTokenType.Number"/> token.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.JsonNumberHandling.WriteAsString">
-            <summary>
-            Numbers will be written as JSON strings (with quotes), not as JSON numbers.
-            </summary>
-        </member>
-        <member name="F:Json.Schema.Generation.JsonNumberHandling.AllowNamedFloatingPointLiterals">
-            <summary>
-            The "NaN", "Infinity", and "-Infinity" <see cref="F:System.Text.Json.JsonTokenType.String"/> tokens can be read as
-            floating-point constants, and the <see cref="T:System.Single"/> and <see cref="T:System.Double"/> values for these
-            constants will be written as their corresponding JSON string representations.
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttribute">
-            <summary>
-            When placed on a type, property, or field, indicates what <see cref="T:Json.Schema.Generation.JsonNumberHandling"/>
-            settings should be used when serializing or deserializing numbers.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.JsonNumberHandlingAttribute.Handling">
-            <summary>
-            Indicates what settings should be used when serializing or deserializing numbers.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.JsonNumberHandlingAttribute.#ctor(Json.Schema.Generation.JsonNumberHandling)">
-            <summary>
-            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonNumberHandlingAttribute"/>.
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
-            <summary>
-            Handler for the <see cref="T:Json.Schema.Generation.JsonNumberHandlingAttribute"/>.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.JsonNumberHandlingAttributeHandler.AddConstraints(Json.Schema.Generation.SchemaGenerationContextBase,System.Attribute)">
-            <summary>
-            Processes the type and any attributes (present on the context), and adds
-            intents to the context.
-            </summary>
-            <param name="context">The generation context.</param>
-            <param name="attribute"></param>
-        </member>
         <member name="T:Json.Schema.Generation.JsonSchemaBuilderExtensions">
             <summary>
             Provides extension methods for schema generation.
@@ -1082,54 +1557,6 @@
             <param name="configuration">The generator configuration.</param>
             <returns>The schema builder (for fluent syntax support).</returns>
         </member>
-        <member name="T:Json.Schema.Generation.MaximumAttribute">
-            <summary>
-            Applies a `maximum` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MaximumAttribute.Value">
-            <summary>
-            The maximum.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MaximumAttribute.#ctor(System.Double)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MaximumAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.MaxItemsAttribute">
-            <summary>
-            Applies an `maxItems` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MaxItemsAttribute.Value">
-            <summary>
-            The maximum number of items.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MaxItemsAttribute.#ctor(System.UInt32)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MaxItemsAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.MaxLengthAttribute">
-            <summary>
-            Applies a `maxLength` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MaxLengthAttribute.Length">
-            <summary>
-            The maximum length.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MaxLengthAttribute.#ctor(System.UInt32)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MaxLengthAttribute"/> instance.
-            </summary>
-            <param name="length">The value.</param>
-        </member>
         <member name="T:Json.Schema.Generation.MemberGenerationContext">
             <summary>
             Provides context for object members to include those attributes.
@@ -1144,70 +1571,6 @@
             <summary>
             Gets the set of member attributes.
             </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.MinimumAttribute">
-            <summary>
-            Applies a `minimum` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MinimumAttribute.Value">
-            <summary>
-            The minimum.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MinimumAttribute.#ctor(System.Double)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MinimumAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.MinItemsAttribute">
-            <summary>
-            Applies a `minItems` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MinItemsAttribute.Value">
-            <summary>
-            The minimum number of items.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MinItemsAttribute.#ctor(System.UInt32)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MinItemsAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.MinLengthAttribute">
-            <summary>
-            Applies a `minimum` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MinLengthAttribute.Length">
-            <summary>
-            The minimum length.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MinLengthAttribute.#ctor(System.UInt32)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MinLengthAttribute"/> instance.
-            </summary>
-            <param name="length">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.MultipleOfAttribute">
-            <summary>
-            Applies a `multipleOf` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.MultipleOfAttribute.Value">
-            <summary>
-            The divisor.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.MultipleOfAttribute.#ctor(System.Double)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.MultipleOfAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
         </member>
         <member name="T:Json.Schema.Generation.Nullability">
             <summary>
@@ -1233,39 +1596,6 @@
             <summary>
             Indicates that `null` will be applied to both reference types and <see cref="T:System.Nullable`1"/> types.
             </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.NullableAttribute">
-            <summary>
-            Overrides the <see cref="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability"/> option and either
-            adds or removes `null` in the `type` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.NullableAttribute.IsNullable">
-            <summary>
-            Gets whether `null` should be included in the `type` keyword.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.NullableAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.NullableAttribute"/> instance.
-            </summary>
-            <param name="isNullable">Whether `null` should be included in the `type` keyword.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.PatternAttribute">
-            <summary>
-            Applies a `pattern` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.PatternAttribute.Value">
-            <summary>
-            The regular expression pattern.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.PatternAttribute.#ctor(System.String)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.PatternAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
         </member>
         <member name="T:Json.Schema.Generation.PropertyNamingMethod">
             <summary>
@@ -1332,33 +1662,6 @@
         <member name="F:Json.Schema.Generation.PropertyOrder.ByName">
             <summary>
             Properties will be sorted by name, case-insensitive.
-            </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.ReadOnlyAttribute">
-            <summary>
-            Applies a `readOnly` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.ReadOnlyAttribute.Value">
-            <summary>
-            Whether the property should be read-only.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance with a value of `true`.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.ReadOnlyAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.ReadOnlyAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.RequiredAttribute">
-            <summary>
-            Indicates a property is required and should be listed in the
-            `required` keyword.
             </summary>
         </member>
         <member name="T:Json.Schema.Generation.SchemaGenerationContextBase">
@@ -1485,28 +1788,20 @@
             Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
             </summary>
         </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.StrictConditionals">
+            <summary>
+            Gets or sets whether properties that are affected by conditionals are defined
+            globally or only within their respective `then` subschemas.  True restricts
+            those property definitions to `then` subschemas and adds a top-level
+            `unevaluatedProperties: false`; false (default) defines them globally.
+            </summary>
+        </member>
         <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Current">
             <summary>
             Thread-static storage of the current configuration. Only to be used for reading
             the configuration. Setting values on this object will be overwritten when starting
             generation.
             </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.TitleAttribute">
-            <summary>
-            Applies a `title` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.TitleAttribute.Title">
-            <summary>
-            The title.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.TitleAttribute.#ctor(System.String)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.TitleAttribute"/> instance.
-            </summary>
-            <param name="title">The value.</param>
         </member>
         <member name="T:Json.Schema.Generation.TypeExtensions">
             <summary>
@@ -1524,43 +1819,6 @@
             <summary>
             Provides a context for generating schemas for types.
             </summary>
-        </member>
-        <member name="T:Json.Schema.Generation.UniqueItemsAttribute">
-            <summary>
-            Applies a `uniqueItems` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.UniqueItemsAttribute.Value">
-            <summary>
-            Whether the items should be unique.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.UniqueItemsAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.UniqueItemsAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="T:Json.Schema.Generation.WriteOnlyAttribute">
-            <summary>
-            Applies a `writeOnly` keyword.
-            </summary>
-        </member>
-        <member name="P:Json.Schema.Generation.WriteOnlyAttribute.Value">
-            <summary>
-            Whether the property should be write-only.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance with a value of `true`.
-            </summary>
-        </member>
-        <member name="M:Json.Schema.Generation.WriteOnlyAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.WriteOnlyAttribute"/> instance.
-            </summary>
-            <param name="value">The value.</param>
         </member>
     </members>
 </doc>
