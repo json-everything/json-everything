@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [4.1.2](https://github.com/gregsdennis/json-everything/pull/469) {#release-schema-4.1.2}
+
+[#468](https://github.com/gregsdennis/json-everything/issues/468) - [@Fresa](https://github.com/Fresa) found that `JsonNodeBaseDocument` doesn't properly resolve references in schemas that it contatins and proposed the fix.
+
 # [4.1.1](https://github.com/gregsdennis/json-everything/pull/447) {#release-schema-4.1.1}
 
 [Powershell PR #19610](https://github.com/PowerShell/PowerShell/pull/19610) - Support for \*nix-based file paths caused an error in setting the base URI that resulted in the first folder in the path being interpreted as the URI host.
