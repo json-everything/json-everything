@@ -27,7 +27,7 @@ public class LocalizationTests
 	{
 		try
 		{
-			ErrorMessages.Culture = CultureInfo.GetCultureInfo("es");
+			ErrorMessages.Culture = CultureInfo.GetCultureInfo("es-es");
 
 			JsonSchema schema = new JsonSchemaBuilder()
 				.Type(SchemaValueType.Number)

@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [4.1.3](https://github.com/gregsdennis/json-everything/pull/470) {#release-schema-4.1.3}
+
+[#457](https://github.com/gregsdennis/json-everything/issues/457) - [@pawel-wachalski](https://github.com/pawel-wachalski) added Norwegian and Swedish as supported translations for error messages.
+
 # [4.1.2](https://github.com/gregsdennis/json-everything/pull/469) {#release-schema-4.1.2}
 
 [#468](https://github.com/gregsdennis/json-everything/issues/468) - [@Fresa](https://github.com/Fresa) found that `JsonNodeBaseDocument` doesn't properly resolve references in schemas that it contatins and proposed the fix.

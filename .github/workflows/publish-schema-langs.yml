@@ -1,12 +1,13 @@
 # https://github.com/marketplace/actions/publish-nuget
 name: Publish JsonSchema.Net Languages
 on:
-  push:
-    branches:
-      - master # Default release branch
-    paths:
-      - JsonSchema/nuspec/**
-      - JsonSchema/Localization/**
+  # disabling this until I can figure out how to stop building the languages into the main package.
+  # push:
+  #   branches:
+  #     - master # Default release branch
+  #   paths:
+  #     - JsonSchema/nuspec/**
+  #     - JsonSchema/Localization/**
   workflow_dispatch:
 
 jobs:

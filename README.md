@@ -27,16 +27,11 @@
 |Json.More.Net|<a href="https://www.nuget.org/packages/Json.More.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Json.More.Net.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a>|
 |Yaml2JsonNode|<a href="https://www.nuget.org/packages/Yaml2JsonNode/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Yaml2JsonNode.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/Yaml2JsonNode.svg?svg=true"></img></a>|
 
-<details>
-<summary>
-Supported languages for JsonSchema.Net
-</summary>
+Error message translations for JsonSchema.Net available in:
 
-|||||  
-|-|-|:-|:-|
-|Spanish|JsonSchema.Net.es|<a href="https://www.nuget.org/packages/JsonSchema.Net.es/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.es.svg?svg=true"></img>|<img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.es.svg?svg=true"></img></a>|
-
-</details>
+- Spanish
+- Norwegian
+- Swedish
 
 |Play | Learn|Discuss|Ask|Built with|
 |:-:|:-:|:-:|:-:|:-:|
