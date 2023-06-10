@@ -29,9 +29,11 @@
 
 Error message translations for JsonSchema.Net available in:
 
-- Spanish
-- Norwegian
-- Swedish
+- Spanish `es-es`
+- Norwegian `nb-no`
+- Swedish `sv-se`
+
+***NOTE** For now, these translations are included in the JsonSchema.Net nuget package.  However as this list grows, it may make more sense to publish separate packages.*
 
 |Play | Learn|Discuss|Ask|Built with|
 |:-:|:-:|:-:|:-:|:-:|
