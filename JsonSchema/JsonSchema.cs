@@ -232,6 +232,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 
+		if (!Enum.IsDefined(typeof(SpecVersion), desiredDraft)) return desiredDraft;
+
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{
 			var metaSchemaId = schemaKeyword?.Schema;
