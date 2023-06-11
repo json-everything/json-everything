@@ -326,6 +326,34 @@ public class PatchExtensionTests
 		Assert.AreEqual(5, final?.Numbers?[0]);
 	}
 
+	[Test]
+	public void CreatePatch_JsonContext()
+	{
+		var initial = new TestModel
+		{
+			Id = Guid.NewGuid(),
+			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]").RootElement
+		};
+		var expected = new TestModel
+		{
+			Id = Guid.Parse("40664cc7-864f-4eed-939c-78076a252df0"),
+			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
+		};
+		var patchExpected =
+			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"40664cc7-864f-4eed-939c-78076a252df0\"}," +
+			"{\"op\":\"replace\",\"path\":\"/Attributes/1/test\",\"value\":\"test32132\"}," +
+			"{\"op\":\"remove\",\"path\":\"/Attributes/2/test\"}," +
+			"{\"op\":\"add\",\"path\":\"/Attributes/2/test1\",\"value\":\"test321\"}," +
+			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/2\",\"value\":3}," +
+			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
+
+		var patch = initial.CreatePatch(expected);
+		// use source generated json serializer context
+		var patchJson = JsonSerializer.Serialize(patch, TestJsonContext.Default.JsonPatch);
+
+		Assert.AreEqual(patchExpected, patchJson);
+	}
+
 	private static void OutputPatch(JsonPatch patch)
 	{
 		Console.WriteLine(JsonSerializer.Serialize(patch, new JsonSerializerOptions { WriteIndented = true }));
@@ -338,4 +366,13 @@ public class PatchExtensionTests
 
 		Assert.AreEqual(expected, actual);
 	}
+
+
+
+}
+
+[JsonSerializable(typeof(JsonPatch))]
+public partial class TestJsonContext : JsonSerializerContext
+{
+
 }
