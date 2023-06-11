@@ -231,7 +231,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
-
+		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
 		if (!Enum.IsDefined(typeof(SpecVersion), desiredDraft)) return desiredDraft;
 
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
