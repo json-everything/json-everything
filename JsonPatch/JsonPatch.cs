@@ -83,7 +83,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	}
 }
 
-internal class PatchJsonConverter : JsonConverter<JsonPatch>
+public class PatchJsonConverter : JsonConverter<JsonPatch>
 {
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
