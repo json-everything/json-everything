@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net.sv-se</id>
-    <version>2.0.0</version>
+    <version>1.0.0</version>
     <title>JsonSchema.Net Locale (sv-se)</title>
     <authors>Greg Dennis</authors>
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
@@ -17,7 +17,7 @@
     <file src="sv-se\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\sv-se" />
     <file src="json-logo-256.png" target="json-logo-256.png" />
   </files>
-	<dependencies>
-		<dependency id="JsonSchema.Net" version="4.0.0" />
-	</dependencies>
+  <dependencies>
+    <dependency id="JsonSchema.Net" version="4.0.0" />
+  </dependencies>
 </package>
