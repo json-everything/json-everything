@@ -20,7 +20,7 @@ jobs:
           NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema.Localization/nuspec/ --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
           echo $NUSPEC_FILES
           DELIMITER="$(openssl rand -hex 8)"
-          echo "NUSPEC_FILES=$DELIMITER" >> $GITHUB_OUTPUT
+          echo "NUSPEC_FILES<<$DELIMITER" >> $GITHUB_OUTPUT
           echo "$NUSPEC_FILES" >> $GITHUB_OUTPUT
           echo "$DELIMITER" >> $GITHUB_OUTPUT
       - name: Setup .NET Core
