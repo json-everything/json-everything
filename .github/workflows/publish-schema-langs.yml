@@ -33,7 +33,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: localization
-          path: JsonSchema.Localization/bin/Release/netstandard2.0/**/*
+          path: JsonSchema.Localization/nuspec/**/*
       - uses: actions/upload-artifact@v2
         with:
           name: localization
