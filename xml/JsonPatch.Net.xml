@@ -47,6 +47,24 @@
             <summary>Serves as the default hash function.</summary>
             <returns>A hash code for the current object.</returns>
         </member>
+        <member name="T:Json.Patch.PatchJsonConverter">
+            <summary>
+            Provides JSON conversion logic for <see cref="T:Json.Patch.JsonPatch"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Patch.PatchJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Patch.JsonPatch"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Patch.PatchJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Patch.JsonPatch,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+        </member>
         <member name="T:Json.Patch.OperationType">
             <summary>
             Enumerates the valid JSON Patch operation types.
