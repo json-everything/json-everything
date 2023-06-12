@@ -1,12 +1,13 @@
 # https://github.com/marketplace/actions/publish-nuget
 name: Publish JsonSchema.Net Languages
 on:
-   push:
-     branches:
-       - master # Default release branch
-     paths:
-       - JsonSchema.Localization/**
-   workflow_dispatch:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - .github/workflows/publish-schema-langs.yml
+      - JsonSchema.Localization/**
+  workflow_dispatch:
 
 jobs:
   build-localizations:
