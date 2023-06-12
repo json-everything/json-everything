@@ -4,6 +4,10 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "8.08"
 ---
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/472) {#release-patch-2.1.0}
+
+[#471](https://github.com/gregsdennis/json-everything/issues/397) - Make patch json converter public to support .Net source generation.  Thanks to [@pwelter34](https://github.com/pwelter34) for highlighting this use case.
+
 # [2.0.6](https://github.com/gregsdennis/json-everything/pull/400) {#release-patch-2.0.6}
 
 [#397](https://github.com/gregsdennis/json-everything/issues/397) - Fixed an issue where `replace` needs to check that the target location exists before proceeding with the `add` portion of its operation.

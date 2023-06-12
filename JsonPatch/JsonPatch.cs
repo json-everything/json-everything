@@ -83,8 +83,16 @@ public class JsonPatch : IEquatable<JsonPatch>
 	}
 }
 
-internal class PatchJsonConverter : JsonConverter<JsonPatch>
+/// <summary>
+/// Provides JSON conversion logic for <see cref="JsonPatch"/>.
+/// </summary>
+public class PatchJsonConverter : JsonConverter<JsonPatch>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="JsonPatch"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var operations = JsonSerializer.Deserialize<List<PatchOperation>>(ref reader, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })!;
@@ -92,6 +100,10 @@ internal class PatchJsonConverter : JsonConverter<JsonPatch>
 		return new JsonPatch(operations);
 	}
 
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
 		JsonSerializer.Serialize(writer, value.Operations);
