@@ -19,7 +19,7 @@ jobs:
         run: |
           NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema.Localization/nuspec/ --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g')
           echo ${NUSPEC_FILES}
-          echo "::set-output name=NUSPEC_FILES::${NUSPEC_FILES}"
+          echo "NUSPEC_FILES::${NUSPEC_FILES}" >> $GITHUB_OUTPUT
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
