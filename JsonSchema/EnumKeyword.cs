@@ -28,7 +28,18 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// </summary>
 	public const string Name = "enum";
 
-	private readonly HashSet<JsonNode?> _values;
+	private readonly JsonNode?[] _values;
+
+	/// <summary>
+	/// Gets or sets whether the keyword will check for unique values when deserializing.
+	/// </summary>
+	/// <remarks>
+	/// The specification states that values SHOULD be unique.  As this is not a "MUST"
+	/// requirement, implementations need to support multiple values.  This setting
+	/// allows enforcement of unique values.  It is recommended, but off by default
+	/// for specification compliance.
+	/// </remarks>
+	public static bool RequireUniqueValues { get; set; }
 
 	/// <summary>
 	/// The collection of enum values.
@@ -44,10 +55,9 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// <param name="values">The collection of enum values.</param>
 	public EnumKeyword(params JsonNode?[] values)
 	{
-		_values = new HashSet<JsonNode?>(values ?? throw new ArgumentNullException(nameof(values)),
-			JsonNodeEqualityComparer.Instance);
+		_values = values;
 
-		if (_values.Count != values.Length)
+		if (RequireUniqueValues && _values.GroupBy(x => x, JsonNodeEqualityComparer.Instance).Any(x => x.Count() > 1))
 			throw new ArgumentException("`enum` requires unique values");
 	}
 
@@ -57,10 +67,9 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	/// <param name="values">The collection of enum values.</param>
 	public EnumKeyword(IEnumerable<JsonNode?> values)
 	{
-		_values = new HashSet<JsonNode?>(values ?? throw new ArgumentNullException(nameof(values)),
-			JsonNodeEqualityComparer.Instance);
+		_values = values.ToArray();
 
-		if (_values.Count != values.Count())
+		if (RequireUniqueValues && _values.GroupBy(x => x, JsonNodeEqualityComparer.Instance).Any(x => x.Count() > 1))
 			throw new ArgumentException("`enum` requires unique values");
 	}
 
