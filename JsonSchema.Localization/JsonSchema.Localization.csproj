@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<ItemGroup>
+	  <ResourceFiles Include="$(TargetDir)**\*" Exclude="$(TargetDir)*" />
+	</ItemGroup>
+
+	<Move SourceFiles="@(ResourceFiles)" DestinationFolder="nuspec\%(RecursiveDir)" />
+  </Target>
+
+  <ItemGroup>
+    <Compile Remove="nuspec\**\*.dll" />
+    <EmbeddedResource Remove="nuspec\**\*.dll" />
+    <None Remove="nuspec\**\*.dll" />
+  </ItemGroup>
+
+</Project>
