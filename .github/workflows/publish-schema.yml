@@ -90,15 +90,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-output
-          path: artifacts
+          path: artifacts/JsonSchema
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: '6.x'
       - name: pack
         run: |
+          # includes "JsonSchema/nuspec/"
           NUSPEC_NAME=${{ matrix.nuspec }}
-          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/
+          nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}

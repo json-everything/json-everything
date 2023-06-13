@@ -2,6 +2,7 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net</id>
+    <version>0.0.1</version>
     <authors>Greg Dennis</authors>
     <license type="expression">MIT</license>
     <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
