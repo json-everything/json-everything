@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [4.1.4](https://github.com/gregsdennis/json-everything/pull/473) {#release-schema-4.1.4}
+
+The JSON Schema spec states that the value of the `enum` keyword SHOULD contain unique values, but this isn't a hard requirement.  This change allows duplicate values.
+
 # [4.1.3](https://github.com/gregsdennis/json-everything/pull/470) {#release-schema-4.1.3}
 
 [#457](https://github.com/gregsdennis/json-everything/issues/457) - [@pawel-wachalski](https://github.com/pawel-wachalski) added Norwegian and Swedish as supported translations for error messages.
