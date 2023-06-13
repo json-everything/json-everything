@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net.nb-NO</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>JsonSchema.Net Locale (nb-NO)</title>
     <authors>Greg Dennis</authors>
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>

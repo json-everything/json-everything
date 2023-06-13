@@ -5,7 +5,6 @@
     <version>0.0.1</version>
     <authors>Greg Dennis</authors>
     <license type="expression">MIT</license>
-    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
     <icon>json-logo-256.png</icon>
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
     <description>JSON Schema built on the System.Text.Json namespace.</description>
