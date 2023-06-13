@@ -36,6 +36,10 @@ jobs:
       - name: Get version
         run: |
           echo "version=$(grep '<Version' JsonSchema/JsonSchema.csproj | cut -f2 -d">"|cut -f1 -d"<")" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: JsonSchema/bin/Release/netstandard2.0/**/*
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
   publish-core:
@@ -44,9 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          path: artifacts
+          name: build-output
+          path: nuspec
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
@@ -54,7 +59,7 @@ jobs:
       - name: pack
         run: |
           NUSPEC_NAME=JsonSchema/nuspec/JsonSchema.Net.nuspec
-          nuget pack ${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version=${{ needs.build.outputs.version }}
+          nuget pack ${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${{ needs.build.outputs.version }}
       - name: push
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
@@ -62,9 +67,9 @@ jobs:
           echo ${PKG_NAME}
           # nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
       - name: archive packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: archive-packages
+          name: archive-packages-core
           path: nupkg/*.nupkg
   publish-localizations:
     needs: build
@@ -75,9 +80,10 @@ jobs:
         nuspec: ${{ fromJson(needs.build.outputs.matrix) }}
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          path: artifacts
+          name: build-output
+          path: nuspec
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
@@ -93,7 +99,7 @@ jobs:
           echo ${PKG_NAME}
           # nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
       - name: archive packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: archive-packages
+          name: archive-packages-localizations
           path: nupkg/*.nupkg
