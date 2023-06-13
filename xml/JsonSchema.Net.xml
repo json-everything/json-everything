@@ -1460,6 +1460,17 @@
             The JSON name of the keyword.
             </summary>
         </member>
+        <member name="P:Json.Schema.EnumKeyword.RequireUniqueValues">
+            <summary>
+            Gets or sets whether the keyword will check for unique values when deserializing.
+            </summary>
+            <remarks>
+            The specification states that values SHOULD be unique.  As this is not a "MUST"
+            requirement, implementations need to support multiple values.  This setting
+            allows enforcement of unique values.  It is recommended, but off by default
+            for specification compliance.
+            </remarks>
+        </member>
         <member name="P:Json.Schema.EnumKeyword.Values">
             <summary>
             The collection of enum values.
