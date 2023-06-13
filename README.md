@@ -33,7 +33,7 @@ Error message translations for JsonSchema.Net available in:
 - Norwegian `nb-no`
 - Swedish `sv-se`
 
-***NOTE** For now, these translations are included in the JsonSchema.Net nuget package.  However as this list grows, it may make more sense to publish separate packages.*
+***NOTE** Each language pack is provided by its own Nuget package.*
 
 |Play | Learn|Discuss|Ask|Built with|
 |:-:|:-:|:-:|:-:|:-:|
