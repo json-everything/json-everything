@@ -21,9 +21,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="JsonSchema\bin\Release\netstandard2.0\JsonSchema.Net.dll" target="lib\netstandard2.0" />
-    <file src="JsonSchema\bin\Release\netstandard2.0\JsonSchema.Net.xml" target="lib\netstandard2.0" />
-    <file src="Resources\json-logo-256.png" target="json-logo-256.png" />
-    <file src="LICENSE" target="LICENSE" />
+    <file src="..\..\JsonSchema\bin\Release\netstandard2.0\JsonSchema.Net.dll" target="lib\netstandard2.0" />
+    <file src="..\..\JsonSchema\bin\Release\netstandard2.0\JsonSchema.Net.xml" target="lib\netstandard2.0" />
+    <file src="..\..\Resources\json-logo-256.png" target="json-logo-256.png" />
+    <file src="..\..\LICENSE" target="LICENSE" />
   </files>
 </package>
