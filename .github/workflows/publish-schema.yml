@@ -72,7 +72,7 @@ jobs:
           VERSION=${{ needs.build.outputs.version }}
           PKG_NAME=JsonSchema.Net.${VERSION}.nupkg
           echo ${PKG_NAME}
-          # nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
+          nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
@@ -105,7 +105,7 @@ jobs:
           NUSPEC_NAME=${{ matrix.nuspec }}
           PKG_NAME=${NUSPEC_NAME%.nuspec}.*.nupkg
           echo ${PKG_NAME}
-          # nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
+          nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
