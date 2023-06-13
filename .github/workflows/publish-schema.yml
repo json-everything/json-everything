@@ -65,7 +65,7 @@ jobs:
       - name: pack
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
-          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -p:version={{ needs.build.outputs.version }} -Symbols -SymbolPackageFormat snupkg
+          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -p:version=${{ needs.build.outputs.version }} -Symbols -SymbolPackageFormat snupkg
       - name: push
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
