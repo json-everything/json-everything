@@ -20,9 +20,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="JsonSchema.Net.dll" target="lib\netstandard2.0" />
-    <file src="JsonSchema.Net.xml" target="lib\netstandard2.0" />
-    <file src="json-logo-256.png" target="json-logo-256.png" />
-    <file src="..\..\LICENSE" target="LICENSE" />
+    <file src="..\JsonSchema.Net.dll" target="lib\netstandard2.0" />
+    <file src="..\JsonSchema.Net.xml" target="lib\netstandard2.0" />
+    <file src="..\json-logo-256.png" target="json-logo-256.png" />
   </files>
 </package>

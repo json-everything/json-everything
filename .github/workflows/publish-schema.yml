@@ -55,7 +55,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-output
-          path: nuspec
+          path: artifacts
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
@@ -65,7 +65,7 @@ jobs:
           NUSPEC_NAME=JsonSchema.Net.nuspec
           VERSION=${{ needs.build.outputs.version }}
           echo $VERSION
-          nuget pack nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
+          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
       - name: push
         run: |
           NUSPEC_NAME=JsonSchema.Net.nuspec
@@ -90,7 +90,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-output
-          path: nuspec
+          path: artifacts
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
@@ -98,7 +98,7 @@ jobs:
       - name: pack
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
-          nuget pack nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/
+          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
