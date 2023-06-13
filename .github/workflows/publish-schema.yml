@@ -58,8 +58,8 @@ jobs:
           nuget-version: '6.x'
       - name: pack
         run: |
-          NUSPEC_NAME=JsonSchema/nuspec/JsonSchema.Net.nuspec
-          nuget pack ${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${{ needs.build.outputs.version }}
+          NUSPEC_NAME=JsonSchema.Net.nuspec
+          nuget pack nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${{ needs.build.outputs.version }}
       - name: push
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
@@ -91,7 +91,7 @@ jobs:
       - name: pack
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
-          nuget pack ${NUSPEC_NAME} -OutputDirectory nupkg/
+          nuget pack nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
           NUSPEC_NAME=${{ matrix.nuspec }}
