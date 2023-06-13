@@ -10,7 +10,7 @@
     <description>JSON Schema built on the System.Text.Json namespace.</description>
     <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
     <tags>json-schema validation schema json</tags>
-    <repository type="git" url="https://github.com/gregsdennis/json-everything" commit="fef5ae1fe0e388d6cc3279f120565b1b204d0e18" />
+    <repository type="git" url="https://github.com/gregsdennis/json-everything" />
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="Json.More.Net" version="1.8.0" exclude="Build,Analyzers" />
