@@ -4,6 +4,10 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.2.0](https://github.com/gregsdennis/json-everything/pull/475) {#release-yaml-1.2.0}
+
+Add `YamlSerializer` static class to provide more natural serializer methods.
+
 # 1.1.1 (No PR) {#release-yaml-1.1.1}
 
 Fixes issue with converting strings from JSON to YAML.  Previously, quotes were included.
