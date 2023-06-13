@@ -102,10 +102,9 @@ jobs:
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
-          NUSPEC_NAME=${{ matrix.nuspec }}
-          PKG_NAME=${NUSPEC_NAME%.nuspec}.*.nupkg
+          PKG_NAME=*.nupkg
           echo ${PKG_NAME}
-          nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
+          nuget push nupkg/*.nupkg -Source https://www.nuget.org
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
