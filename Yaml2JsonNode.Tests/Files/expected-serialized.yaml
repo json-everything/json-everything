@@ -1,0 +1,15 @@
+﻿StringProp: string
+IntProp: 42
+DecimalProp: 42.5
+DoubleProp: 42.9
+BoolProp: true
+ListOfInts:
+- 1
+- 2
+- 3
+- 4
+MapOfStrings:
+  string1: found
+  string2: lost
+NestedObject:
+  OtherString: yep

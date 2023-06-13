@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Files\expected-serialized.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Files\yaml-content.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
