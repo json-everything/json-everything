@@ -130,8 +130,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A09F0319
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDocsGenerator", "tools\ApiDocsGenerator\ApiDocsGenerator.csproj", "{63EB78DD-70B3-41BB-86D1-0E7886F8A312}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchema.Localization", "JsonSchema.Localization\JsonSchema.Localization.csproj", "{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -301,12 +299,6 @@ Global
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312}.Localization|Any CPU.Build.0 = Release|Any CPU
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}.Localization|Any CPU.Build.0 = Debug|Any CPU
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -345,7 +337,6 @@ Global
 		{16891EEF-985F-4BDC-9C97-0D40707BF9F6} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
 		{9F30736E-69EC-4B7A-B78B-7C116C33F010} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312} = {A09F0319-B69A-401D-814D-43524E883850}
-		{DBB0A99B-B623-4D27-8DE3-598E7117EE4D} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata minClientVersion="2.12">
-    <id>JsonSchema.Net.sv-se</id>
+    <id>JsonSchema.Net.nb-NO</id>
     <version>1.0.0</version>
-    <title>JsonSchema.Net Locale (sv-se)</title>
+    <title>JsonSchema.Net Locale (nb-NO)</title>
     <authors>Greg Dennis</authors>
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
     <icon>json-logo-256.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>JsonSchema.Net Locale Swedish (sv-se)</description>
+    <description>JsonSchema.Net Locale Norwegian (nb-NO)</description>
     <license type="expression">MIT</license>
     <repository type="git" url="https://github.com/gregsdennis/json-everything" />
-    <language>es</language>
+    <language>nb-NO</language>
     <dependencies>
       <dependency id="JsonSchema.Net" version="4.0.0" />
     </dependencies>
   </metadata>
   <files>
-    <file src="sv-se\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\sv-se" />
+    <file src="JsonSchema\bin\Release\netstandard2.0\nb-NO\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\nb-NO" />
     <file src="json-logo-256.png" target="json-logo-256.png" />
   </files>
 </package>

@@ -9,28 +9,67 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-core:
-    name: build, pack & publish core package
+  build:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - id: get-localized-nuspecs
+        run: |
+          NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema/nuspec/ --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
+          echo $NUSPEC_FILES
+          DELIMITER="$(openssl rand -hex 8)"
+          echo "NUSPEC_FILES<<$DELIMITER" >> $GITHUB_OUTPUT
+          echo "$NUSPEC_FILES" >> $GITHUB_OUTPUT
+          echo "$DELIMITER" >> $GITHUB_OUTPUT
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
       # Publish
-      - name: publish schema
-        id: publish_schema
-        uses: alirezanet/publish-nuget@v3.0.0
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        # Localization build automatically moves localization DLLs into nuspec/ folder
+        run: dotnet build JsonSchema/JsonSchema.csproj --configuration Release --no-restore
+      - uses: actions/upload-artifact@v2
         with:
-          PROJECT_FILE_PATH: JsonSchema/JsonSchema.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          INCLUDE_SYMBOLS: true
-          TAG_FORMAT: schema-v*
+          name: nuspec
+          path: JsonSchema/nuspec/**/*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nuspec
+          path: Resources/json-logo-256.png
+    outputs:
+      matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
+  publish:
+    needs: build
+    name: pack & publish
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nuspec: ${{ fromJson(needs.build.outputs.matrix) }}
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: '6.x'
+      - name: pack
+        run: |
+          NUSPEC_NAME=${{ matrix.nuspec }}
+          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/
+      - name: push
+        run: |
+          NUSPEC_NAME=${{ matrix.nuspec }}
+          PKG_NAME=${NUSPEC_NAME%.nuspec}.*.nupkg
+          echo ${PKG_NAME}
+          # nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org
       - name: archive packages
         uses: actions/upload-artifact@v2
         with:
           name: archive-packages
-          path: |
-            **/*.nupkg
-            **/*.snupkg
+          path: nupkg/*.nupkg

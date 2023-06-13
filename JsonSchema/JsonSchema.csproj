@@ -18,7 +18,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<AssemblyName>JsonSchema.Net</AssemblyName>
 		<PackageIcon>json-logo-256.png</PackageIcon>
-		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-schema.md) and https://json-everything.net/json-schema</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/</PackageReleaseNotes>
 		<DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -64,17 +64,7 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Localization'">
-		<ItemGroup>
-			<ResourceFiles Include="$(TargetDir)**\*" Exclude="$(TargetDir)*" />
-		</ItemGroup>
-
-		<Move SourceFiles="@(ResourceFiles)" DestinationFolder="nuspec\%(RecursiveDir)" />
-	</Target>
-
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
 		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
