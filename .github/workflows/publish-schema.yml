@@ -34,6 +34,7 @@ jobs:
         # Localization build automatically moves localization DLLs into nuspec/ folder
         run: dotnet build JsonSchema/JsonSchema.csproj --configuration Release --no-restore
       - name: Get version
+        id: get-version
         run: |
           version="$(grep '<Version' JsonSchema/JsonSchema.csproj | cut -f2 -d'>'|cut -f1 -d'<')"
           echo $version
@@ -44,6 +45,7 @@ jobs:
           path: JsonSchema/bin/Release/netstandard2.0/**/*
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
+      version: ${{ steps.get-version.outputs.version }}
   publish-core:
     needs: build
     name: pack & publish core
@@ -66,7 +68,7 @@ jobs:
           nuget pack nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
       - name: push
         run: |
-          NUSPEC_NAME=${{ matrix.nuspec }}
+          NUSPEC_NAME=JsonSchema.Net.nuspec
           VERSION=${{ needs.build.outputs.version }}
           PKG_NAME=JsonSchema.Net.${VERSION}.nupkg
           echo ${PKG_NAME}
