@@ -45,7 +45,7 @@ public class DeserializationTests
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		Converters = { new ValidatingJsonConverter() }
+		Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
 	};
 
 	/// <summary>
@@ -66,13 +66,14 @@ public class DeserializationTests
   ""Value"": ""value""
 }";
 
-				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, _options);
+				var model = JsonSerializer.Deserialize<Foo>(jsonText, _options);
 
 				Console.WriteLine(JsonSerializer.Serialize(model, _options));
 			}
 			catch (Exception e)
 			{
 				HandleException(e);
+				Assert.AreNotEqual("JSON does not meet schema requirements", e.Message);
 				throw;
 			}
 		});
@@ -101,6 +102,7 @@ public class DeserializationTests
 			catch (Exception e)
 			{
 				HandleException(e);
+				Assert.AreEqual("JSON does not meet schema requirements", e.Message);
 				throw;
 			}
 		});
@@ -266,6 +268,7 @@ public class DeserializationTests
 	private static void HandleException(Exception e)
 	{
 		Console.WriteLine(e);
+		Console.WriteLine();
 		if (e.Data.Contains("validation"))
 		{
 			var validation = (EvaluationResults)e.Data["validation"]!;
