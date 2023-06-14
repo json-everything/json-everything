@@ -17,7 +17,7 @@ public static class KeywordExtensions
 						!t.IsAbstract &&
 						!t.IsInterface &&
 						t != typeof(UnrecognizedKeyword))
-			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
+			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>()!.Name);
 	private static readonly Type[] _keywordDependencies =
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()

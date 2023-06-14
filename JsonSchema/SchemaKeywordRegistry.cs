@@ -30,7 +30,7 @@ public static class SchemaKeywordRegistry
 				.GetTypes()
 				.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
 							t.GetCustomAttribute<SchemaKeywordAttribute>() != null)
-				.Select(t => new { Type = t, Keyword = t.GetCustomAttribute<SchemaKeywordAttribute>().Name })
+				.Select(t => new { Type = t, Keyword = t.GetCustomAttribute<SchemaKeywordAttribute>()!.Name })
 				.ToDictionary(k => k.Keyword, k => k.Type));
 
 		using var document = JsonDocument.Parse("null");
@@ -49,7 +49,7 @@ public static class SchemaKeywordRegistry
 		where T : IJsonSchemaKeyword, IEquatable<T>
 	{
 		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
-		if (keyword == null)
+		if (keyword is null)
 			throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords[keyword.Name] = typeof(T);
@@ -63,7 +63,7 @@ public static class SchemaKeywordRegistry
 		where T : IJsonSchemaKeyword
 	{
 		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
-		if (keyword == null)
+		if (keyword is null)
 			throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords.TryRemove(keyword.Name, out _);

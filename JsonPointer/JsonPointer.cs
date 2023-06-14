@@ -182,7 +182,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 					 and { NodeType: ExpressionType.ArrayIndex })
 			{
 				// Array index
-				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value.ToString()));
+				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value!.ToString()!));
 				body = binaryExpression.Left;
 			}
 			else if (body is ParameterExpression) break; // this is the param of the expression itself.
@@ -336,11 +336,11 @@ public class JsonPointer : IEquatable<JsonPointer>
 	{
 		var sb = new StringBuilder();
 		if (pointerStyle == JsonPointerStyle.UriEncoded)
-			sb.Append("#");
+			sb.Append('#');
 
 		foreach (var segment in Segments)
 		{
-			sb.Append("/");
+			sb.Append('/');
 			sb.Append(segment.ToString(pointerStyle));
 		}
 
@@ -357,17 +357,20 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonPointer other)
+	public bool Equals(JsonPointer? other)
 	{
+		if (other is null) return false;
+		if (ReferenceEquals(this, other)) return true;
+
 		return Segments.SequenceEqual(other.Segments);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		return obj is JsonPointer other && Equals(other);
+		return Equals(obj as JsonPointer);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>

@@ -39,7 +39,7 @@ public class VocabularyTests
 
 		public bool Equals(MinDateKeyword? other)
 		{
-			if (ReferenceEquals(null, other)) return false;
+			if (other is null) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return Date.Equals(other.Date);
 		}
@@ -101,7 +101,7 @@ public class VocabularyTests
 
 		public bool Equals(NonVocabMinDateKeyword? other)
 		{
-			if (ReferenceEquals(null, other)) return false;
+			if (other is null) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return Date.Equals(other.Date);
 		}
@@ -164,7 +164,7 @@ public class VocabularyTests
 
 		public bool Equals(MaxDateKeyword? other)
 		{
-			if (ReferenceEquals(null, other)) return false;
+			if (other is null) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return Date.Equals(other.Date);
 		}
@@ -455,7 +455,7 @@ public class VocabularyTests
 
 		public bool Equals(Draft4ExclusiveMinimumKeyword? other)
 		{
-			if (ReferenceEquals(null, other)) return false;
+			if (other is null) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return BoolValue.Equals(other.BoolValue);
 		}

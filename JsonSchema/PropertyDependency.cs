@@ -40,7 +40,7 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(PropertyDependency? other)
 	{
-		if (ReferenceEquals(null, other)) return false;
+		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 		if (Schemas.Count != other.Schemas.Count) return false;
 		var byKey = Schemas.Join(other.Schemas,

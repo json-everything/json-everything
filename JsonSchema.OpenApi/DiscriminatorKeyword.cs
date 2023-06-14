@@ -80,7 +80,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(DiscriminatorKeyword? other)
 	{
-		if (ReferenceEquals(null, other)) return false;
+		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 		if (PropertyName != other.PropertyName) return false;
 		if ((Mapping == null) != (other.Mapping == null)) return false;
@@ -124,7 +124,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>
 	/// <param name="obj">The object to compare with the current object.</param>
 	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		return Equals(obj as DiscriminatorKeyword);
 	}

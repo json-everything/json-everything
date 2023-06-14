@@ -109,7 +109,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(PropertyDependenciesKeyword? other)
 	{
-		if (ReferenceEquals(null, other)) return false;
+		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 		if (Dependencies.Count != other.Dependencies.Count) return false;
 		var byKey = Dependencies.Join(other.Dependencies,

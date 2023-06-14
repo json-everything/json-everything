@@ -99,7 +99,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(PropertiesKeyword? other)
 	{
-		if (ReferenceEquals(null, other)) return false;
+		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 		if (Properties.Count != other.Properties.Count) return false;
 		var byKey = Properties.Join(other.Properties,
@@ -115,7 +115,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>
 	/// <param name="obj">The object to compare with the current object.</param>
 	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		return Equals(obj as PropertiesKeyword);
 	}

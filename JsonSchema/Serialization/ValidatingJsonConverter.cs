@@ -70,7 +70,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 			newOptions.Converters.Remove(this);
 			return newOptions;
 		};
-		converter = (JsonConverter)Activator.CreateInstance(converterType, schemaAttribute.Schema, optionsFactory);
+		converter = (JsonConverter)Activator.CreateInstance(converterType, schemaAttribute.Schema, optionsFactory)!;
 
 		var validatingConverter = (IValidatingJsonConverter)converter;
 		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;

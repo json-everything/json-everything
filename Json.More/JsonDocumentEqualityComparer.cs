@@ -23,7 +23,7 @@ public class JsonDocumentEqualityComparer : IEqualityComparer<JsonDocument>
 	/// <param name="x">The first object of type T to compare.</param>
 	/// <param name="y">The second object of type T to compare.</param>
 	/// <returns>true if the specified objects are equal; otherwise, false.</returns>
-	public bool Equals(JsonDocument x, JsonDocument y)
+	public bool Equals(JsonDocument? x, JsonDocument? y)
 	{
 		return x.IsEquivalentTo(y);
 	}

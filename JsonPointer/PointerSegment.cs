@@ -12,7 +12,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <summary>
 	/// Gets the segment value.
 	/// </summary>
-	public string Value { get; private set; }
+	public string Value { get; private init; }
 
 #pragma warning disable CS8618
 	private PointerSegment() { }
@@ -159,7 +159,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		return obj is PointerSegment other && Equals(other);
 	}

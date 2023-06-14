@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 
 namespace Json.Schema.Data;
 
@@ -87,7 +86,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		}
 
 		if (failedReferences.Any())
-			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
+			throw new RefResolutionException(failedReferences.Select(x => x.ToString()!));
 
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
@@ -129,7 +128,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(DataKeyword? other)
 	{
-		if (ReferenceEquals(null, other)) return false;
+		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 		if (References.Count != other.References.Count) return false;
 		var byKey = References.Join(other.References,
@@ -145,7 +144,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>
 	/// <param name="obj">The object to compare with the current object.</param>
 	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		return Equals(obj as DataKeyword);
 	}
@@ -165,7 +164,7 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 	private static string GetKeyword(Type keywordType)
 	{
 		var field = keywordType.GetField("Name", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-		return (string)field!.GetValue(null);
+		return (string)field!.GetValue(null)!;
 	}
 
 	public override DataKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
