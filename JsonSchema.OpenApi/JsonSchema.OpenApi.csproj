@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<AssemblyName>JsonSchema.Net.OpenApi</AssemblyName>
 		<RootNamespace>Json.Schema.OpenApi</RootNamespace>
@@ -49,8 +49,6 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
 		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>

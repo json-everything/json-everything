@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>Json.Logic</RootNamespace>
 		<AssemblyName>JsonLogic</AssemblyName>
@@ -50,8 +50,6 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
 		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>

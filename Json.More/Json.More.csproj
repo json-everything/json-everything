@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>Json.More.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Version>1.8.0</Version>
@@ -28,7 +28,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="6.0.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
@@ -45,8 +44,6 @@
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
 		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
