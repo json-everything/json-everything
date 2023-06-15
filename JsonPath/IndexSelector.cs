@@ -48,9 +48,9 @@ public class IndexSelector : ISelector
 		{
 			var adjusted = arr.Count + Index;
 			if (adjusted < 0) yield break;
-			yield return new Node(arr[adjusted], match.Location!.Append(adjusted));
+			yield return new Node(arr[adjusted], match.Location.Append(adjusted));
 		}
-		else yield return new Node(arr[Index], match.Location!.Append(Index));
+		else yield return new Node(arr[Index], match.Location.Append(Index));
 	}
 
 	/// <summary>

@@ -47,7 +47,7 @@ public class WildcardSelector : ISelector, IHaveShorthand
 		{
 			foreach (var member in obj)
 			{
-				yield return new Node(member.Value, match.Location!.Append(member.Key));
+				yield return new Node(member.Value, match.Location.Append(member.Key));
 			}
 		}
 		else if (node is JsonArray arr)
@@ -55,7 +55,7 @@ public class WildcardSelector : ISelector, IHaveShorthand
 			for (var i = 0; i < arr.Count; i++)
 			{
 				var member = arr[i];
-				yield return new Node(member, match.Location!.Append(i));
+				yield return new Node(member, match.Location.Append(i));
 			}
 		}
 	}

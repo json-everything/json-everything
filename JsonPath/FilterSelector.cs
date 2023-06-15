@@ -40,7 +40,7 @@ public class FilterSelector : ISelector
 			foreach (var member in obj)
 			{
 				if (Expression.Evaluate(rootNode, member.Value))
-					yield return new Node(member.Value, match.Location!.Append(member.Key));
+					yield return new Node(member.Value, match.Location.Append(member.Key));
 			}
 		}
 		else if (node is JsonArray arr)
@@ -49,7 +49,7 @@ public class FilterSelector : ISelector
 			{
 				var member = arr[(Index)i];
 				if (Expression.Evaluate(rootNode, member))
-					yield return new Node(member, match.Location!.Append(i));
+					yield return new Node(member, match.Location.Append(i));
 			}
 		}
 	}
