@@ -122,7 +122,11 @@ public static class YamlConverter
 
 	private static YamlScalarNode ToYamlScalar(this JsonValue val)
 	{
-		if (val.TryGetValue(out string? s)) return new YamlScalarNode(s);
+		if (val.TryGetValue(out string? s))
+			return new YamlScalarNode(s)
+			{
+				Style = s.Contains('"') ? ScalarStyle.SingleQuoted : ScalarStyle.DoubleQuoted
+			};
 
 		return new YamlScalarNode(val.ToJsonString());
 	}

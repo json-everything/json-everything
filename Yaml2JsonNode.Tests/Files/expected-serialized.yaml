@@ -1,4 +1,4 @@
-﻿StringProp: string
+﻿StringProp: "string"
 IntProp: 42
 DecimalProp: 42.5
 DoubleProp: 42.9
@@ -9,7 +9,7 @@ ListOfInts:
 - 3
 - 4
 MapOfStrings:
-  string1: found
-  string2: lost
+  string1: "found"
+  string2: "lost"
 NestedObject:
-  OtherString: yep
+  OtherString: "yep"
