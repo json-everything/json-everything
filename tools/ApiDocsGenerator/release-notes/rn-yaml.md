@@ -4,6 +4,12 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.2.1](https://github.com/gregsdennis/json-everything/pull/477) {#release-yaml-1.2.1}
+
+[#476](https://github.com/gregsdennis/json-everything/issues/476) - [@amis92](https://github.com/amis92) discovered that JSON -> YAML -> JSON doesn't work when the data has string-encoded numbers and proposed the fix.
+
+This change sets _all_ strings to have double-quotes unless the string itself has a double-quote, in which case it'll set for single-quotes.
+
 # [1.2.0](https://github.com/gregsdennis/json-everything/pull/475) {#release-yaml-1.2.0}
 
 Add `YamlSerializer` static class to provide more natural serializer methods.
