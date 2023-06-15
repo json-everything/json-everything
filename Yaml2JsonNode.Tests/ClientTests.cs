@@ -42,13 +42,9 @@ public class ClientTests
 		});
 
 		var builder = new SerializerBuilder();
-
 		var serializer = builder.Build();
-
 		using var writer = new StringWriter();
-
 		serializer.Serialize(writer, yamlObject);
-
 		var text = writer.ToString();
 
 		Console.WriteLine(text);
