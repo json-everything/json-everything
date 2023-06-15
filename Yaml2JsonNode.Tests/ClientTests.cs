@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
 
 namespace Yaml2JsonNode.Tests;
 
@@ -31,5 +28,29 @@ public class ClientTests
 		Console.WriteLine(jsonRoundText);
 
 		Assert.True(json.IsEquivalentTo(jsonRoundTripped));
+	}
+
+	[Test]
+	public void Issue476_YamlNumberAsString()
+	{
+		var yamlValue = new YamlScalarNode("123");
+		var yamlKey = new YamlScalarNode("a");
+
+		var yamlObject = new YamlMappingNode(new Dictionary<YamlNode, YamlNode>
+		{
+			[yamlKey] = yamlValue
+		});
+
+		var builder = new SerializerBuilder();
+
+		var serializer = builder.Build();
+
+		using var writer = new StringWriter();
+
+		serializer.Serialize(writer, yamlObject);
+
+		var text = writer.ToString();
+
+		Console.WriteLine(text);
 	}
 }
