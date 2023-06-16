@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -9,7 +10,7 @@ namespace Json.Schema.Tests;
 public class BundlingTests
 {
 	[Test]
-	public void Draft201909ContainsDraft202012_InnerShouldProcess202012Keywords()
+	public async Task Draft201909ContainsDraft202012_InnerShouldProcess202012Keywords()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft201909Id)
@@ -29,13 +30,13 @@ public class BundlingTests
 
 		var instance = JsonDocument.Parse("[[1, \"other string\"]]");
 
-		var result = schema.Evaluate(instance.RootElement, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = await schema.Evaluate(instance.RootElement, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Draft202012ContainsDraft201909_InnerShouldIgnore202012Keywords()
+	public async Task Draft202012ContainsDraft201909_InnerShouldIgnore202012Keywords()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -55,13 +56,13 @@ public class BundlingTests
 
 		var instance = JsonDocument.Parse("[[\"one string\", \"other string\"]]");
 
-		var result = schema.Evaluate(instance.RootElement, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = await schema.Evaluate(instance.RootElement, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void BundleMultipleDocuments()
+	public async Task BundleMultipleDocuments()
 	{
 		JsonSchema foo = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -99,8 +100,8 @@ public class BundlingTests
 			.Ref("foo");
 
 		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(bar);
-		var actual = foo.Bundle(options);
+		await options.SchemaRegistry.Register(bar);
+		var actual = await foo.Bundle(options);
 
 		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
 		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
@@ -111,7 +112,7 @@ public class BundlingTests
 	}
 
 	[Test]
-	public void BundleMultipleDocumentsWithAlreadyBundledSubschema()
+	public async Task BundleMultipleDocumentsWithAlreadyBundledSubschema()
 	{
 		JsonSchema foo = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -165,8 +166,8 @@ public class BundlingTests
 			.Ref("foo");
 
 		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(bar);
-		var actual = foo.Bundle(options);
+		await options.SchemaRegistry.Register(bar);
+		var actual = await foo.Bundle(options);
 
 		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
 		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
@@ -178,7 +179,7 @@ public class BundlingTests
 	}
 
 	[Test]
-	public void BundleMultipleDocumentsMultipleRefs()
+	public async Task BundleMultipleDocumentsMultipleRefs()
 	{
 		JsonSchema foo = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -232,9 +233,9 @@ public class BundlingTests
 			.Ref("foo");
 
 		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(bar);
-		options.SchemaRegistry.Register(baz);
-		var actual = foo.Bundle(options);
+		await options.SchemaRegistry.Register(bar);
+		await options.SchemaRegistry.Register(baz);
+		var actual = await foo.Bundle(options);
 
 		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
 		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));

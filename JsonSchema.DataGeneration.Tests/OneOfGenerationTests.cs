@@ -1,11 +1,14 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
+
+using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
 namespace Json.Schema.DataGeneration.Tests;
 
 internal class OneOfGenerationTests
 {
 	[Test]
-	public void OneOfWithDifferentTypesButOneTypeIsDuplicatedForcingTheOther()
+	public async Task OneOfWithDifferentTypesButOneTypeIsDuplicatedForcingTheOther()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.OneOf(
@@ -14,11 +17,11 @@ internal class OneOfGenerationTests
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		TestHelpers.Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void OneOfWithMultipleOfCannotBeMultipleOfBoth()
+	public async Task OneOfWithMultipleOfCannotBeMultipleOfBoth()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Integer)
@@ -31,6 +34,6 @@ internal class OneOfGenerationTests
 			.Minimum(0)
 			.Maximum(50);
 
-		TestHelpers.Run(schema);
+		await Run(schema);
 	}
 }

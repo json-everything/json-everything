@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
@@ -8,59 +9,59 @@ namespace Json.Schema.DataGeneration.Tests;
 public class StringGenerationTests
 {
 	[Test]
-	public void SimpleString()
+	public async Task SimpleString()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void MinLength()
+	public async Task MinLength()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.MinLength(30);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void MaxLength()
+	public async Task MaxLength()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void SpecifiedRange()
+	public async Task SpecifiedRange()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("regex not supported")]
-	public void ContainsDog()
+	public async Task ContainsDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Pattern("dog");
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("regex not supported")]
-	public void ContainsDogWithSizeConstraints()
+	public async Task ContainsDogWithSizeConstraints()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
@@ -68,23 +69,23 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("regex not supported")]
-	public void DoesNotContainDog()
+	public async Task DoesNotContainDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Not(new JsonSchemaBuilder().Pattern("dog"));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("regex not supported")]
-	public void DoesNotContainDogWithSizeConstraints()
+	public async Task DoesNotContainDogWithSizeConstraints()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
@@ -92,12 +93,12 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("not supported by regex lib")]
-	public void ContainsCatAndDoesNotContainDogWithSizeConstraints()
+	public async Task ContainsCatAndDoesNotContainDogWithSizeConstraints()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
@@ -106,12 +107,12 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("regex not supported")]
-	public void ContainsEitherCatOrDog()
+	public async Task ContainsEitherCatOrDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
@@ -122,12 +123,12 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("regex not supported")]
-	public void ContainsExclusivelyEitherCatOrDog()
+	public async Task ContainsExclusivelyEitherCatOrDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
@@ -138,177 +139,177 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void FormatDate()
+	public async Task FormatDate()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Date);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatDateTime()
+	public async Task FormatDateTime()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.DateTime);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatDuration()
+	public async Task FormatDuration()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Duration);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatEmail()
+	public async Task FormatEmail()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Email);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatHostname()
+	public async Task FormatHostname()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Hostname);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatIdnEmail()
+	public async Task FormatIdnEmail()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.IdnEmail);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatIdnHostname()
+	public async Task FormatIdnHostname()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.IdnHostname);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatIpv4()
+	public async Task FormatIpv4()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Ipv4);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatIpv6()
+	public async Task FormatIpv6()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Ipv6);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatIri()
+	public async Task FormatIri()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Iri);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatIriReference()
+	public async Task FormatIriReference()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.IriReference);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatJsonPointer()
+	public async Task FormatJsonPointer()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.JsonPointer);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatRelativeJsonPointer()
+	public async Task FormatRelativeJsonPointer()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.RelativeJsonPointer);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatTime()
+	public async Task FormatTime()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Time);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatUri()
+	public async Task FormatUri()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Uri);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatUriReference()
+	public async Task FormatUriReference()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.UriReference);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]
-	public void FormatUuid()
+	public async Task FormatUuid()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.Uuid);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		await Run(schema, new EvaluationOptions { RequireFormatValidation = true });
 	}
 
 	[Test]

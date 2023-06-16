@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,68 +8,68 @@ namespace Json.Schema.DataGeneration.Tests;
 public class NumberGenerationTests
 {
 	[Test]
-	public void GenerateNumber()
+	public async Task GenerateNumber()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void Minimum()
+	public async Task Minimum()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.Minimum(0.2m);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void Maximum()
+	public async Task Maximum()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.Maximum(0.8m);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void MultipleOf()
+	public async Task MultipleOf()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.MultipleOf(0.3m);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void NotMultipleOf()
+	public async Task NotMultipleOf()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.Not(new JsonSchemaBuilder().MultipleOf(0.6m));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void MultipleOfAndNotMultipleOf()
+	public async Task MultipleOfAndNotMultipleOf()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.MultipleOf(0.3m)
 			.Not(new JsonSchemaBuilder().MultipleOf(0.6m));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("flaky")]
-	public void MultipleOfWithRange()
+	public async Task MultipleOfWithRange()
 	{
 		// This test highlights an issue with the number generation:
 		// Periodically, the rounding can cause the generation to be
@@ -80,6 +81,6 @@ public class NumberGenerationTests
 			.Maximum(20)
 			.MultipleOf(2.3m);
 
-		Run(schema);
+		await Run(schema);
 	}
 }

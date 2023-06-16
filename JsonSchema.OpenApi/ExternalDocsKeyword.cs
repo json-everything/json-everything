@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema.OpenApi;
 
@@ -63,13 +64,15 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 
 		// todo ??? 
 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

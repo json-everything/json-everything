@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Humanizer;
 using Json.More;
 using Json.Schema.Tests;
@@ -66,7 +67,10 @@ public class Suite
 
 	static Suite()
 	{
-		Vocabularies.Register();
+		var task = Vocabularies.Register();
+		if (task.IsCompleted) return;
+
+		task.RunSynchronously();
 	}
 
 	[OneTimeSetUp]
@@ -79,16 +83,16 @@ public class Suite
 		if (!Directory.Exists(remotesFilePath))
 			throw new Exception("cannot find remotes path");
 
-		DataKeyword.Fetch = uri =>
+		DataKeyword.Fetch = async uri =>
 		{
 			var filePath = uri.OriginalString.Replace("http://localhost:1234", remotesPath);
-			var text = File.ReadAllText(filePath);
+			var text = await File.ReadAllTextAsync(filePath);
 			return JsonNode.Parse(text);
 		};
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
+	public async Task Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -113,11 +117,11 @@ public class Suite
 
 		if (test.Error)
 		{
-			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.Evaluate(test.Data, options));
+			Assert.ThrowsAsync(Is.InstanceOf<Exception>(), () => collection.Schema.Evaluate(test.Data, options));
 			return;
 		}
 
-		var result = collection.Schema.Evaluate(test.Data, options);
+		var result = await collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 

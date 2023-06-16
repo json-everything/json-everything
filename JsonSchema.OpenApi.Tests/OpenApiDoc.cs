@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Path;
 using Json.Pointer;
 
@@ -26,15 +27,17 @@ public class OpenApiDoc : IBaseDocument
 		BaseUri = baseUri;
 
 		// Register this doc under the URI so that it's resolved when requested
-		SchemaRegistry.Global.Register(this);
+		var task = SchemaRegistry.Global.Register(this);
+		if (!task.IsCompleted)
+			task.RunSynchronously();
 
 		Initialize(definition);
 	}
 
 	// implements IBaseDocument
-	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	public Task<JsonSchema?> FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
-		return _lookup.TryGetValue(pointer, out var schema) ? schema : null;
+		return Task.FromResult(_lookup.TryGetValue(pointer, out var schema) ? schema : null);
 	}
 
 	private void Initialize(JsonNode definition)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 
 namespace Json.Schema;
@@ -46,20 +47,20 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var scheamValueType = context.LocalInstance.GetSchemaValueType();
-		if (scheamValueType != SchemaValueType.Array)
+		var schemaValueType = context.LocalInstance.GetSchemaValueType();
+		if (schemaValueType != SchemaValueType.Array)
 		{
-			context.WrongValueKind(scheamValueType);
-			return;
+			context.WrongValueKind(schemaValueType);
+			return Task.CompletedTask;
 		}
 
 		if (!Value)
 		{
 			context.ExitKeyword(Name, true);
-			return;
+			return Task.CompletedTask;
 		}
 
 		var array = (JsonArray)context.LocalInstance!;
@@ -78,6 +79,8 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		}
 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

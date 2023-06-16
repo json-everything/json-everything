@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -16,7 +17,7 @@ public class SchemaRegistry
 	private static readonly Uri _empty = new("http://everything.json/");
 
 	private Dictionary<Uri, Registration>? _registered;
-	private Func<Uri, IBaseDocument?>? _fetch;
+	private Func<Uri, Task<IBaseDocument?>>? _fetch;
 
 	/// <summary>
 	/// The global registry.
@@ -26,54 +27,54 @@ public class SchemaRegistry
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
 	/// </summary>
-	public Func<Uri, IBaseDocument?> Fetch
+	public Func<Uri, Task<IBaseDocument?>> Fetch
 	{
-		get => _fetch ??= _ => null;
+		get => _fetch ??= _ => Task.FromResult<IBaseDocument?>(null);
 		set => _fetch = value;
 	}
 
-	internal void InitializeMetaSchemas()
+	internal async Task InitializeMetaSchemas()
 	{
-		JsonSchema.Initialize(MetaSchemas.Draft6, this);
+		await JsonSchema.Initialize(MetaSchemas.Draft6, this);
 
-		JsonSchema.Initialize(MetaSchemas.Draft7, this);
+		await JsonSchema.Initialize(MetaSchemas.Draft7, this);
 
-		JsonSchema.Initialize(MetaSchemas.Draft201909, this);
-		JsonSchema.Initialize(MetaSchemas.Core201909, this);
-		JsonSchema.Initialize(MetaSchemas.Applicator201909, this);
-		JsonSchema.Initialize(MetaSchemas.Validation201909, this);
-		JsonSchema.Initialize(MetaSchemas.Metadata201909, this);
-		JsonSchema.Initialize(MetaSchemas.Format201909, this);
-		JsonSchema.Initialize(MetaSchemas.Content201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Draft201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Core201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Applicator201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Validation201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Metadata201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Format201909, this);
+		await JsonSchema.Initialize(MetaSchemas.Content201909, this);
 
-		JsonSchema.Initialize(MetaSchemas.Draft202012, this);
-		JsonSchema.Initialize(MetaSchemas.Core202012, this);
-		JsonSchema.Initialize(MetaSchemas.Applicator202012, this);
-		JsonSchema.Initialize(MetaSchemas.Validation202012, this);
-		JsonSchema.Initialize(MetaSchemas.Metadata202012, this);
-		JsonSchema.Initialize(MetaSchemas.Unevaluated202012, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAnnotation202012, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAssertion202012, this);
-		JsonSchema.Initialize(MetaSchemas.Content202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Draft202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Core202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Applicator202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Validation202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Metadata202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Unevaluated202012, this);
+		await JsonSchema.Initialize(MetaSchemas.FormatAnnotation202012, this);
+		await JsonSchema.Initialize(MetaSchemas.FormatAssertion202012, this);
+		await JsonSchema.Initialize(MetaSchemas.Content202012, this);
 
-		JsonSchema.Initialize(MetaSchemas.DraftNext, this);
-		JsonSchema.Initialize(MetaSchemas.CoreNext, this);
-		JsonSchema.Initialize(MetaSchemas.ApplicatorNext, this);
-		JsonSchema.Initialize(MetaSchemas.ValidationNext, this);
-		JsonSchema.Initialize(MetaSchemas.MetadataNext, this);
-		JsonSchema.Initialize(MetaSchemas.UnevaluatedNext, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAnnotationNext, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAssertionNext, this);
-		JsonSchema.Initialize(MetaSchemas.ContentNext, this);
+		await JsonSchema.Initialize(MetaSchemas.DraftNext, this);
+		await JsonSchema.Initialize(MetaSchemas.CoreNext, this);
+		await JsonSchema.Initialize(MetaSchemas.ApplicatorNext, this);
+		await JsonSchema.Initialize(MetaSchemas.ValidationNext, this);
+		await JsonSchema.Initialize(MetaSchemas.MetadataNext, this);
+		await JsonSchema.Initialize(MetaSchemas.UnevaluatedNext, this);
+		await JsonSchema.Initialize(MetaSchemas.FormatAnnotationNext, this);
+		await JsonSchema.Initialize(MetaSchemas.FormatAssertionNext, this);
+		await JsonSchema.Initialize(MetaSchemas.ContentNext, this);
 	}
 
 	/// <summary>
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="document">The schema.</param>
-	public void Register(IBaseDocument document)
+	public async Task Register(IBaseDocument document)
 	{
-		Register(document.BaseUri, document);
+		await Register(document.BaseUri, document);
 	}
 
 	/// <summary>
@@ -81,12 +82,12 @@ public class SchemaRegistry
 	/// </summary>
 	/// <param name="uri">The URI ID of the schema..</param>
 	/// <param name="document">The schema.</param>
-	public void Register(Uri? uri, IBaseDocument document)
+	public async Task Register(Uri? uri, IBaseDocument document)
 	{
 		RegisterSchema(uri, document);
 
 		if (document is JsonSchema schema)
-			JsonSchema.Initialize(schema, this, uri);
+			await JsonSchema.Initialize(schema, this, uri);
 	}
 
 	internal void RegisterSchema(Uri? uri, IBaseDocument document)
@@ -108,14 +109,14 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public IBaseDocument? Get(Uri? uri)
+	public async Task<IBaseDocument?> Get(Uri? uri)
 	{
-		var registration = GetRegistration(uri);
+		var registration = await GetRegistration(uri);
 
 		return registration?.Root;
 	}
 
-	private Registration? GetRegistration(Uri? uri)
+	private async Task<Registration?> GetRegistration(Uri? uri)
 	{
 		Registration? registration = null;
 		uri = MakeAbsolute(uri);
@@ -128,10 +129,10 @@ public class SchemaRegistry
 
 		if (registration == null)
 		{
-			var schema = Fetch(uri) ?? Global.Fetch(uri);
+			var schema = await Fetch(uri) ?? await Global.Fetch(uri);
 			if (schema == null) return null;
 
-			Register(uri, schema);
+			await Register(uri, schema);
 			registration = CheckRegistry(_registered!, uri);
 		}
 

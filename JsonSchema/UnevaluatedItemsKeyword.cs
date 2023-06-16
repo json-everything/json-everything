@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 
 namespace Json.Schema;
@@ -49,7 +50,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -130,7 +131,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 			var item = array[i];
 			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			context.Evaluate();
+			await context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

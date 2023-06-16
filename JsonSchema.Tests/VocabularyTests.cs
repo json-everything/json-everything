@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -35,6 +36,8 @@ public class VocabularyTests
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
+
+			return Task.CompletedTask;
 		}
 
 		public bool Equals(MinDateKeyword? other)
@@ -88,7 +91,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -97,6 +100,8 @@ public class VocabularyTests
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
+
+			return Task.CompletedTask;
 		}
 
 		public bool Equals(NonVocabMinDateKeyword? other)
@@ -151,7 +156,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -160,6 +165,8 @@ public class VocabularyTests
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
 					("provided", date),
 					("value", Date));
+
+			return Task.CompletedTask;
 		}
 
 		public bool Equals(MaxDateKeyword? other)
@@ -244,7 +251,7 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void SchemaValidation_ValidateMetaSchemaTrue_VocabularyNotKnown()
+	public async Task SchemaValidation_ValidateMetaSchemaTrue_VocabularyNotKnown()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
@@ -255,8 +262,8 @@ public class VocabularyTests
 		{
 			ValidateAgainstMetaSchema = true
 		};
-		options.SchemaRegistry.Register(DatesMetaSchema);
-		var results = schema.Evaluate(instance, options);
+		await options.SchemaRegistry.Register(DatesMetaSchema);
+		var results = await schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -267,7 +274,7 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void SchemaValidation_ValidateMetaSchemaFalse_VocabularyNotKnown()
+	public async Task SchemaValidation_ValidateMetaSchemaFalse_VocabularyNotKnown()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
@@ -275,8 +282,8 @@ public class VocabularyTests
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
 		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(DatesMetaSchema);
-		var results = schema.Evaluate(instance, options);
+		await options.SchemaRegistry.Register(DatesMetaSchema);
+		var results = await schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -287,14 +294,14 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_NoCustomKeywords()
+	public async Task SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_NoCustomKeywords()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft201909Id)
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Evaluate(instance);
+		var results = await schema.Evaluate(instance);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -305,14 +312,14 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_WithCustomKeywords()
+	public async Task SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_WithCustomKeywords()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft201909Id)
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Evaluate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
+		var results = await schema.Evaluate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -323,14 +330,14 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft7()
+	public async Task SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft7()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft7Id)
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Evaluate(instance);
+		var results = await schema.Evaluate(instance);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -341,7 +348,7 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void SchemaValidation_ValidateMetaSchemaTrue_VocabularyKnown()
+	public async Task SchemaValidation_ValidateMetaSchemaTrue_VocabularyKnown()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
@@ -352,9 +359,9 @@ public class VocabularyTests
 		{
 			ValidateAgainstMetaSchema = true
 		};
-		options.SchemaRegistry.Register(DatesMetaSchema);
+		await options.SchemaRegistry.Register(DatesMetaSchema);
 		options.VocabularyRegistry.Register(DatesVocabulary);
-		var results = schema.Evaluate(instance, options);
+		var results = await schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -365,14 +372,14 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void MetaSchemaValidation_VocabularyNotKnown()
+	public async Task MetaSchemaValidation_VocabularyNotKnown()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
 
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
-		var results = DatesMetaSchema.Evaluate(schemaAsJson);
+		var results = await DatesMetaSchema.Evaluate(schemaAsJson);
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
@@ -381,7 +388,7 @@ public class VocabularyTests
 	}
 
 	[Test]
-	public void MetaSchemaValidation_VocabularyKnown()
+	public async Task MetaSchemaValidation_VocabularyKnown()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema("http://mydates.com/schema")
@@ -390,7 +397,7 @@ public class VocabularyTests
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
 		var options = new EvaluationOptions();
 		options.VocabularyRegistry.Register(DatesVocabulary);
-		var results = DatesMetaSchema.Evaluate(schemaAsJson, options);
+		var results = await DatesMetaSchema.Evaluate(schemaAsJson, options);
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
@@ -420,7 +427,7 @@ public class VocabularyTests
 			_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
 		}
 
-		public void Evaluate(EvaluationContext context)
+		public async Task Evaluate(EvaluationContext context)
 		{
 			if (BoolValue.HasValue)
 			{
@@ -439,7 +446,7 @@ public class VocabularyTests
 				}
 
 				var schemaValueType = context.LocalInstance.GetSchemaValueType();
-				if (schemaValueType is not SchemaValueType.Number or SchemaValueType.Integer)
+				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 				{
 					context.WrongValueKind(schemaValueType);
 					return;
@@ -450,7 +457,7 @@ public class VocabularyTests
 					context.LocalResult.Fail(Name, "minimum is exclusive");
 			}
 			else
-				_postDraft6Keyword!.Evaluate(context);
+				await _postDraft6Keyword!.Evaluate(context);
 		}
 
 		public bool Equals(Draft4ExclusiveMinimumKeyword? other)
@@ -496,7 +503,7 @@ public class VocabularyTests
 	[TestCase(8, true)]
 	[TestCase(5, false)]
 	[TestCase(5.1, true)]
-	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
+	public async Task Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
 	{
 		try
 		{
@@ -510,7 +517,7 @@ public class VocabularyTests
 
 			JsonNode instance = instanceValue;
 
-			var result = schema.Evaluate(instance);
+			var result = await schema.Evaluate(instance);
 
 			Assert.AreEqual(isValid, result.IsValid);
 		}
@@ -524,7 +531,7 @@ public class VocabularyTests
 	[TestCase(8, true)]
 	[TestCase(5, false)]
 	[TestCase(5.1, true)]
-	public void Draft4ExclusiveMinimumOverrideWithDraft6Usage(decimal instanceValue, bool isValid)
+	public async Task Draft4ExclusiveMinimumOverrideWithDraft6Usage(decimal instanceValue, bool isValid)
 	{
 		try
 		{
@@ -537,7 +544,7 @@ public class VocabularyTests
 
 			JsonNode instance = instanceValue;
 
-			var result = schema.Evaluate(instance);
+			var result = await schema.Evaluate(instance);
 
 			Assert.AreEqual(isValid, result.IsValid);
 		}

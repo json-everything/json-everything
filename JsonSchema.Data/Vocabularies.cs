@@ -1,4 +1,6 @@
-﻿namespace Json.Schema.Data;
+﻿using System.Threading.Tasks;
+
+namespace Json.Schema.Data;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
@@ -18,13 +20,13 @@ public static class Vocabularies
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
 	/// </summary>
-	public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
+	public static async Task Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
 	{
 		vocabRegistry ??= VocabularyRegistry.Global;
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(Data);
 		SchemaKeywordRegistry.Register<DataKeyword>();
-		schemaRegistry.Register(MetaSchemas.Data);
+		await schemaRegistry.Register(MetaSchemas.Data);
 	}
 }

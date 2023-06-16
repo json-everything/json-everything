@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -43,7 +44,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 
@@ -57,7 +58,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		var targetBase = await context.Options.SchemaRegistry.Get(newBaseUri) ??
 		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
@@ -65,7 +66,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+			targetSchema = await targetBase.FindSubschema(pointerFragment!, context.Options);
 		}
 		else
 		{
@@ -85,7 +86,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		if (pointerFragment != null)
 			context.LocalResult.SetSchemaReference(pointerFragment);
-		context.Evaluate();
+		await context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		context.NavigatedReferences.Remove(navigation);

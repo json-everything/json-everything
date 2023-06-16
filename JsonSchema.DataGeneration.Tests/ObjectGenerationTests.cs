@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,7 +8,7 @@ namespace Json.Schema.DataGeneration.Tests;
 public class ObjectGenerationTests
 {
 	[Test]
-	public void GeneratesSingleProperty()
+	public async Task GeneratesSingleProperty()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -15,11 +16,11 @@ public class ObjectGenerationTests
 				("foo", true)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GeneratesMultipleProperties()
+	public async Task GeneratesMultipleProperties()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -28,11 +29,11 @@ public class ObjectGenerationTests
 				("bar", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void AdditionalPropertiesFalse()
+	public async Task AdditionalPropertiesFalse()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -42,11 +43,11 @@ public class ObjectGenerationTests
 			)
 			.AdditionalProperties(false);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void RequiredPropertyNotListedInProperties()
+	public async Task RequiredPropertyNotListedInProperties()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -56,11 +57,11 @@ public class ObjectGenerationTests
 			)
 			.Required("baz");
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void DefineThreePickTwo()
+	public async Task DefineThreePickTwo()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -71,11 +72,11 @@ public class ObjectGenerationTests
 			)
 			.MaxProperties(2);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void DefineThreePickTwoButMustContainBaz()
+	public async Task DefineThreePickTwoButMustContainBaz()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -87,6 +88,6 @@ public class ObjectGenerationTests
 			.Required("baz")
 			.MaxProperties(2);
 
-		Run(schema);
+		await Run(schema);
 	}
 }

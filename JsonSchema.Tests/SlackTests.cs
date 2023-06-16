@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -52,7 +52,7 @@ public class SlackTests
 	}
 
 	[Test]
-	public void TypeNonNullAndNullFailsValidation()
+	public async Task TypeNonNullAndNullFailsValidation()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -75,7 +75,7 @@ public class SlackTests
 			}
 		};
 
-		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var results = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 	}

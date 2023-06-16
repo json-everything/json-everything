@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
@@ -12,7 +13,7 @@ namespace Json.Schema.OpenApi.Tests;
 public class GithubTests
 {
 	[Test]
-	public void Issue388_DiscriminatorSerializationException()
+	public async Task Issue388_DiscriminatorSerializationException()
 	{
 		var schemaAsJson = @"{
   ""type"": ""object"",
@@ -164,7 +165,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText(schemaAsJson);
 		var json = JsonNode.Parse(exampleAsJson);
 		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
-		var result = schema.Evaluate(json, options);
+		var result = await schema.Evaluate(json, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions
 		{

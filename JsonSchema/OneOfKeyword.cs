@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -54,7 +55,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var validCount = 0;
@@ -64,7 +65,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
 			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			context.Evaluate();
+			await context.Evaluate();
 			validCount += context.LocalResult.IsValid ? 1 : 0;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

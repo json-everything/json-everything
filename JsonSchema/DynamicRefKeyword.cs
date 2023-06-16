@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -41,7 +42,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 
@@ -50,12 +51,12 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		var anchorName = Reference.OriginalString.Split('#').Last();
 
 		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		var targetBase = await context.Options.SchemaRegistry.Get(newBaseUri) ??
 		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 		foreach (var uri in context.Scope.Reverse())
 		{
-			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
+			var scopeRoot = await context.Options.SchemaRegistry.Get(uri);
 			if (scopeRoot == null)
 				throw new Exception("This shouldn't happen");
 
@@ -75,7 +76,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		if (targetSchema == null)
 		{
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
-				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+				targetSchema = await targetBase.FindSubschema(pointerFragment!, context.Options);
 			else
 			{
 				anchorName = newUri.Fragment.Substring(1);
@@ -92,7 +93,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
-		context.Evaluate();
+		await context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)

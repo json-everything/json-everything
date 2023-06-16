@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
 
@@ -62,14 +63,14 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Array)
 		{
 			context.WrongValueKind(schemaValueType);
-			return;
+			return Task.CompletedTask;
 		}
 
 		var array = (JsonArray)context.LocalInstance!;
@@ -94,7 +95,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 					{
 						context.LocalResult.Fail(Name, $"Found duplicate items at indices {i} and {j}");
 						context.ExitKeyword(Name);
-						return;
+						return Task.CompletedTask;
 					}
 					matchedIndexPairs.Add((i, j));
 				}
@@ -108,6 +109,8 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		}
 
 		context.ExitKeyword(Name);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

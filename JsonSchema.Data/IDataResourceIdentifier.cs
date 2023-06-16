@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 
 namespace Json.Schema.Data;
 
@@ -11,7 +12,6 @@ public interface IDataResourceIdentifier
 	/// Attempts to resolve the reference.
 	/// </summary>
 	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
-	/// <returns>true if resolution is successful; false otherwise.</returns>
-	bool TryResolve(EvaluationContext context, out JsonNode? value);
+	/// <returns>true and the node if resolution is successful; false otherwise.</returns>
+	Task<(bool, JsonNode?)> TryResolve(EvaluationContext context);
 }

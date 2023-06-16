@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -26,5 +27,5 @@ public interface IBaseDocument
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
 	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options);
+	Task<JsonSchema?> FindSubschema(JsonPointer pointer, EvaluationOptions options);
 }

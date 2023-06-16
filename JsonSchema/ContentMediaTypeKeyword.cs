@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -41,18 +42,20 @@ public class ContentMediaTypeKeyword : IJsonSchemaKeyword, IEquatable<ContentMed
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
 			context.WrongValueKind(schemaValueType);
-			return;
+			return Task.CompletedTask;
 		}
 
 		context.LocalResult.SetAnnotation(Name, Value);
 		context.ExitKeyword(Name, true);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

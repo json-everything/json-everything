@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -44,7 +45,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var overallResult = true;
@@ -76,6 +77,8 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		if (!overallResult)
 			context.LocalResult.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

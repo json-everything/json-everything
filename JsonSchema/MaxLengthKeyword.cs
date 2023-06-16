@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -43,20 +44,22 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.String)
 		{
 			context.WrongValueKind(schemaValueType);
-			return;
+			return Task.CompletedTask;
 		}
 
 		var length = new StringInfo(context.LocalInstance!.GetValue<string>()).LengthInTextElements;
 		if (Value < length)
 			context.LocalResult.Fail(Name, ErrorMessages.MaxLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

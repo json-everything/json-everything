@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -139,7 +140,7 @@ public class EvaluationContext
 	/// <summary>
 	/// Evaluates as a subschema.  To be called from within keywords.
 	/// </summary>
-	public void Evaluate()
+	public async Task Evaluate()
 	{
 		if (LocalSchema.BoolValue.HasValue)
 		{
@@ -160,7 +161,7 @@ public class EvaluationContext
 				keywordTypesToProcess ??= GetKeywordsToProcess();
 			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
 
-			keyword.Evaluate(this);
+			await keyword.Evaluate(this);
 
 			if (!LocalResult.IsValid && ApplyOptimizations) break;
 		}

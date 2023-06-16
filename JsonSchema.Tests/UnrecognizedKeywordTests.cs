@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 
@@ -20,13 +21,13 @@ public class UnrecognizedKeywordTests
 	}
 
 	[Test]
-	public void FooProducesAnAnnotation()
+	public async Task FooProducesAnAnnotation()
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
 
-		var result = schema!.Evaluate("{}", new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = await schema!.Evaluate("{}", new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);

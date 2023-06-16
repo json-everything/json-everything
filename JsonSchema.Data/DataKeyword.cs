@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
+using System.Threading.Tasks;
 
 namespace Json.Schema.Data;
 
@@ -36,7 +36,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// The default method simply attempts to download the resource.  There is no
 	/// caching involved.
 	/// </remarks>
-	public static Func<Uri, JsonNode?>? Fetch { get; set; }
+	public static Func<Uri, Task<JsonNode?>>? Fetch { get; set; }
 
 	/// <summary>
 	/// Provides a registry for known external data sources.
@@ -73,14 +73,15 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// Thrown when the formed schema contains values that are invalid for the associated
 	/// keywords.
 	/// </exception>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var data = new Dictionary<string, JsonNode>();
 		var failedReferences = new List<IDataResourceIdentifier>();
 		foreach (var reference in References)
 		{
-			if (!reference.Value.TryResolve(context, out var resolved))
+			var (success, resolved) = await reference.Value.TryResolve(context);
+			if (!success)
 				failedReferences.Add(reference.Value);
 
 			data.Add(reference.Key, resolved!);
@@ -93,7 +94,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
 		context.Push(context.EvaluationPath.Combine(Name), subschema);
-		context.Evaluate();
+		await context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)
@@ -109,13 +110,13 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// <exception cref="FormatException">
 	/// Thrown when the URI scheme is not `http`, `https`, or `file`.
 	/// </exception>
-	public static JsonNode? SimpleDownload(Uri uri)
+	public static async Task<JsonNode?> SimpleDownload(Uri uri)
 	{
 		switch (uri.Scheme)
 		{
 			case "http":
 			case "https":
-				return new HttpClient().GetStringAsync(uri).Result;
+				return await new HttpClient().GetStringAsync(uri);
 			case "file":
 				var filename = Uri.UnescapeDataString(uri.AbsolutePath);
 				return File.ReadAllText(filename);

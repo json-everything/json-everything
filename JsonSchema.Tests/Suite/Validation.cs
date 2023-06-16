@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 
@@ -113,7 +114,7 @@ public class Validation
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
+	public async Task Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -136,7 +137,7 @@ public class Validation
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
-		var result = collection.Schema.Evaluate(test.Data, options);
+		var result = await collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 

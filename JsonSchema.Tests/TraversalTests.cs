@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -6,7 +7,7 @@ namespace Json.Schema.Tests;
 public class TraversalTests
 {
 	[Test]
-	public void PropertyDependenciesCanBeNavigated()
+	public async Task PropertyDependenciesCanBeNavigated()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Id("https://traversal.test")
@@ -26,7 +27,7 @@ public class TraversalTests
 			["bar"] = true
 		};
 
-		var result = schema.Evaluate(instance);
+		var result = await schema.Evaluate(instance);
 
 		result.AssertInvalid();
 	}

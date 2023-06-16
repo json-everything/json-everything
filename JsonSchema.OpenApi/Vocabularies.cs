@@ -1,4 +1,6 @@
-﻿namespace Json.Schema.OpenApi;
+﻿using System.Threading.Tasks;
+
+namespace Json.Schema.OpenApi;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
@@ -23,7 +25,7 @@ public static class Vocabularies
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
 	/// </summary>
-	public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
+	public static async Task Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
 	{
 		vocabRegistry ??= VocabularyRegistry.Global;
 		schemaRegistry ??= SchemaRegistry.Global;
@@ -33,6 +35,6 @@ public static class Vocabularies
 		SchemaKeywordRegistry.Register<DiscriminatorKeyword>();
 		SchemaKeywordRegistry.Register<ExternalDocsKeyword>();
 		SchemaKeywordRegistry.Register<XmlKeyword>();
-		schemaRegistry.Register(MetaSchemas.OpenApiMeta);
+		await schemaRegistry.Register(MetaSchemas.OpenApiMeta);
 	}
 }

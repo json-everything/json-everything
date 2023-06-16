@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Json.Schema;
@@ -1133,20 +1134,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public static EvaluationResults Evaluate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
-	{
-		return builder.Build().Evaluate(root, options);
-	}
-
-	/// <summary>
-	/// Convenience method that builds and evaluates with a single call.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	[Obsolete("Use Evalute() instead.")]
-	public static EvaluationResults Validate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
+	public static Task<EvaluationResults> Evaluate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
 	{
 		return builder.Build().Evaluate(root, options);
 	}

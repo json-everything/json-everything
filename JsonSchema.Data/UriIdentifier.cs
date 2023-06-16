@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -28,9 +29,8 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// Attempts to resolve the reference.
 	/// </summary>
 	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
 	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(EvaluationContext context, out JsonNode? value)
+	public async Task<(bool, JsonNode?)> TryResolve(EvaluationContext context)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 		var baseUri = parts[0];
@@ -41,14 +41,14 @@ public class UriIdentifier : IDataResourceIdentifier
 		{
 			bool wasResolved;
 			if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newUri))
-				wasResolved = Download(newUri, out data);
+				(wasResolved, data) = await Download(newUri);
 			else
 			{
 				var uriFolder = context.Scope.LocalScope.OriginalString.EndsWith("/")
 					? context.Scope.LocalScope
 					: context.Scope.LocalScope.GetParentUri();
 				var newBaseUri = new Uri(uriFolder, baseUri);
-				wasResolved = Download(newBaseUri, out data);
+				(wasResolved, data) = await Download(newBaseUri);
 			}
 
 			if (!wasResolved)
@@ -68,24 +68,20 @@ public class UriIdentifier : IDataResourceIdentifier
 			data = resolved;
 		}
 
-		value = data;
-		return true;
+		return (true, data);
 	}
 
-	private static bool Download(Uri uri, out JsonNode? node)
+	private static async Task<(bool, JsonNode?)> Download(Uri uri)
 	{
-		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out node))
+		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out var node))
 			// protect against the off-hand that someone registered a null.
-			return node != null;
+			return (node != null, node);
 
 		if (DataKeyword.Fetch == null)
-		{
-			node = null;
-			return false;
-		}
+			return (false, null);
 
-		node = DataKeyword.Fetch(uri);
-		return true;
+		node = await DataKeyword.Fetch(uri);
+		return (true, node);
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>

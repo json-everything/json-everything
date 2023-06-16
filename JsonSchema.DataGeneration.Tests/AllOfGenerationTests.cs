@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,7 +8,7 @@ namespace Json.Schema.DataGeneration.Tests;
 internal class AllOfGenerationTests
 {
 	[Test]
-	public void AllOfWithMinAndMaxNumber()
+	public async Task AllOfWithMinAndMaxNumber()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.AllOf(
@@ -16,7 +17,7 @@ internal class AllOfGenerationTests
 				new JsonSchemaBuilder().Maximum(20)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,7 +8,7 @@ namespace Json.Schema.DataGeneration.Tests;
 internal class AnyOfGenerationTests
 {
 	[Test]
-	public void AnyOfWithDifferentTypes()
+	public async Task AnyOfWithDifferentTypes()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.AnyOf(
@@ -15,11 +16,11 @@ internal class AnyOfGenerationTests
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void AnyOfWithImpossibleFirstItem()
+	public async Task AnyOfWithImpossibleFirstItem()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.AnyOf(
@@ -30,6 +31,6 @@ internal class AnyOfGenerationTests
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 }

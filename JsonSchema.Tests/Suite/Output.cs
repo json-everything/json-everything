@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 
@@ -104,7 +105,7 @@ public class Output
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string format, string fileName, EvaluationOptions options)
+	public async Task Test(TestCollection collection, TestCase test, string format, string fileName, EvaluationOptions options)
 	{
 		var serializerOptions = new JsonSerializerOptions
 		{
@@ -137,7 +138,7 @@ public class Output
 			_ => throw new ArgumentOutOfRangeException(nameof(format))
 		};
 		options.OutputFormat = outputFormat;
-		var result = collection.Schema.Evaluate(test.Data, options);
+		var result = await collection.Schema.Evaluate(test.Data, options);
 		var serializedResult = JsonSerializer.SerializeToNode(result, new JsonSerializerOptions
 		{
 			Converters = { converter }
@@ -147,7 +148,7 @@ public class Output
 
 
 		var outputSchema = test.Output![format];
-		result = outputSchema.Evaluate(serializedResult, new EvaluationOptions
+		result = await outputSchema.Evaluate(serializedResult, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		});

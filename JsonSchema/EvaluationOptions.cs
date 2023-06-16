@@ -102,7 +102,10 @@ public class EvaluationOptions
 	{
 		// It's necessary to call this from here because
 		// SchemaRegistry.Global is defined to look at the default options.
-		Default.SchemaRegistry.InitializeMetaSchemas();
+		var task = Default.SchemaRegistry.InitializeMetaSchemas();
+		if (task.IsCompleted) return;
+
+		task.RunSynchronously();
 	}
 
 	/// <summary>

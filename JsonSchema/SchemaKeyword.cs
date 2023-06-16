@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -44,10 +45,10 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
+		var metaSchema = await context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
 		if (metaSchema == null)
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
@@ -65,7 +66,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		var schemaAsJson = document.RootElement;
 		var newOptions = EvaluationOptions.From(context.Options);
 		newOptions.ValidateAgainstMetaSchema = false;
-		var results = metaSchema.Evaluate(schemaAsJson, newOptions);
+		var results = await metaSchema.Evaluate(schemaAsJson, newOptions);
 
 		if (!results.IsValid)
 			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));

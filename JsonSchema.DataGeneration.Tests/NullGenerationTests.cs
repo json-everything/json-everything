@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
@@ -7,11 +8,11 @@ namespace Json.Schema.DataGeneration.Tests;
 public class NullGenerationTests
 {
 	[Test]
-	public void GenerateNull()
+	public async Task GenerateNull()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Null);
 
-		Run(schema);
+		await Run(schema);
 	}
 }

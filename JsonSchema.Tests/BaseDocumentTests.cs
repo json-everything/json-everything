@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -9,7 +10,7 @@ namespace Json.Schema.Tests;
 public class BaseDocumentTests
 {
 	[Test]
-	public void SchemasEmbeddedInJsonCanBeReferenced_Valid()
+	public async Task SchemasEmbeddedInJsonCanBeReferenced_Valid()
 	{
 		JsonSchema targetSchema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Integer);
@@ -30,20 +31,20 @@ public class BaseDocumentTests
 		};
 
 		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		await options.SchemaRegistry.Register(jsonBaseDoc);
 
 		JsonSchema subjectSchema = new JsonSchemaBuilder()
 			.Ref("http://localhost:1234/doc#/prop2/1");
 
 		JsonNode instance = 42;
 
-		var result = subjectSchema.Evaluate(instance, options);
+		var result = await subjectSchema.Evaluate(instance, options);
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void SchemasEmbeddedInJsonCanBeReferenced_Invalid()
+	public async Task SchemasEmbeddedInJsonCanBeReferenced_Invalid()
 	{
 		JsonSchema targetSchema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Integer);
@@ -64,20 +65,20 @@ public class BaseDocumentTests
 		};
 
 		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		await options.SchemaRegistry.Register(jsonBaseDoc);
 
 		JsonSchema subjectSchema = new JsonSchemaBuilder()
 			.Ref("http://localhost:1234/doc#/prop2/1");
 
 		JsonNode instance = "baz"!;
 
-		var result = subjectSchema.Evaluate(instance, options);
+		var result = await subjectSchema.Evaluate(instance, options);
 
 		result.AssertInvalid();
 	}
 
 	[Test]
-	public void ReferencesFromWithinEmbeddedSchemas()
+	public async Task ReferencesFromWithinEmbeddedSchemas()
 	{
 		var json = new JsonObject
 		{
@@ -102,20 +103,20 @@ public class BaseDocumentTests
 		};
 
 		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		await options.SchemaRegistry.Register(jsonBaseDoc);
 
 		JsonSchema subjectSchema = new JsonSchemaBuilder()
 			.Ref("http://localhost:1234/doc#/prop3");
 
 		JsonNode instance = 42;
 
-		var result = subjectSchema.Evaluate(instance, options);
+		var result = await subjectSchema.Evaluate(instance, options);
 
 		result.IsValid.Should().BeTrue();
 	}
 
 	[Test]
-	public void NestedReferencesFromWithinEmbeddedSchemas()
+	public async Task NestedReferencesFromWithinEmbeddedSchemas()
 	{
 		var json = new JsonObject
 		{
@@ -147,14 +148,14 @@ public class BaseDocumentTests
 		};
 
 		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		await options.SchemaRegistry.Register(jsonBaseDoc);
 
 		JsonSchema subjectSchema = new JsonSchemaBuilder()
 			.Ref("http://localhost:1234/doc#/prop3");
 
 		JsonNode instance = new JsonObject { ["data"] = 42 };
 
-		var result = subjectSchema.Evaluate(instance, options);
+		var result = await subjectSchema.Evaluate(instance, options);
 
 		result.IsValid.Should().BeTrue();
 	}

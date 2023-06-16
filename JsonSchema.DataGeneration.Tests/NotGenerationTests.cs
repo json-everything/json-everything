@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,16 +8,16 @@ namespace Json.Schema.DataGeneration.Tests;
 public class NotGenerationTests
 {
 	[Test]
-	public void NotAnObject()
+	public async Task NotAnObject()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Not(new JsonSchemaBuilder().Type(SchemaValueType.Object));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void DefinitelyAString()
+	public async Task DefinitelyAString()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Not(new JsonSchemaBuilder()
@@ -28,11 +29,11 @@ public class NotGenerationTests
 					  SchemaValueType.Boolean)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void NotInRange()
+	public async Task NotInRange()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Integer)
@@ -41,11 +42,11 @@ public class NotGenerationTests
 				.Maximum(500)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void NumberNotInSubrange()
+	public async Task NumberNotInSubrange()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Integer)
@@ -56,12 +57,12 @@ public class NotGenerationTests
 				.Maximum(500)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	// TODO: verify that array generation is checking bound type for min/max items (and props, too)
 	[Test]
-	public void ItemCountNotInRange()
+	public async Task ItemCountNotInRange()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -71,11 +72,11 @@ public class NotGenerationTests
 				.MaxItems(10)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void ItemsAreNotString()
+	public async Task ItemsAreNotString()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -84,12 +85,12 @@ public class NotGenerationTests
 				.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("flaky, not sure why")]
-	public void DoesNotContainString()
+	public async Task DoesNotContainString()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -97,11 +98,11 @@ public class NotGenerationTests
 				.Contains(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void ContainsAtLeastOneNonstring()
+	public async Task ContainsAtLeastOneNonstring()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -111,12 +112,12 @@ public class NotGenerationTests
 				)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
 	[Ignore("flaky, not sure why")]
-	public void DoesNotContainStringOrNull()
+	public async Task DoesNotContainStringOrNull()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -133,15 +134,15 @@ public class NotGenerationTests
 					)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void AnObjectThatDoesNotContainAFooPropertyWithoutSpecifyingType()
+	public async Task AnObjectThatDoesNotContainAFooPropertyWithoutSpecifyingType()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Not(new JsonSchemaBuilder().Required("foo"));
 
-		Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		await Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 	}
 }

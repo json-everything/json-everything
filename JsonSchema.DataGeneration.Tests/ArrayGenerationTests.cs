@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,7 +8,7 @@ namespace Json.Schema.DataGeneration.Tests;
 public class ArrayGenerationTests
 {
 	[Test]
-	public void GenerateArrayOfNumbers()
+	public async Task GenerateArrayOfNumbers()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -20,11 +21,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayOfNumbersNoMax()
+	public async Task GenerateArrayOfNumbersNoMax()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -36,11 +37,11 @@ public class ArrayGenerationTests
 			)
 			.MinItems(3);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayOfNumbersWithAllOf()
+	public async Task GenerateArrayOfNumbersWithAllOf()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -58,11 +59,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayOfNumbersWithAnyOf()
+	public async Task GenerateArrayOfNumbersWithAnyOf()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -80,11 +81,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayThatContains100()
+	public async Task GenerateArrayThatContains100()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -99,11 +100,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayThatContainsAtLeastTwo100s()
+	public async Task GenerateArrayThatContainsAtLeastTwo100s()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -119,11 +120,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayThatContainsAtMostThree100s()
+	public async Task GenerateArrayThatContainsAtMostThree100s()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -139,11 +140,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateArrayThatContainsBetweenTwoAndFive100s()
+	public async Task GenerateArrayThatContainsBetweenTwoAndFive100s()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -160,7 +161,7 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(20);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
@@ -184,7 +185,7 @@ public class ArrayGenerationTests
 	}
 
 	[Test]
-	public void GenerateSequentialArray()
+	public async Task GenerateSequentialArray()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -204,11 +205,11 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(3);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateSequentialArrayPlusMore()
+	public async Task GenerateSequentialArrayPlusMore()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -228,11 +229,11 @@ public class ArrayGenerationTests
 			.MinItems(5)
 			.MaxItems(10);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateSequentialArrayPlusSpecifiedMore()
+	public async Task GenerateSequentialArrayPlusSpecifiedMore()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -257,11 +258,11 @@ public class ArrayGenerationTests
 				.Maximum(200)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateSequentialArrayWithFewerItems()
+	public async Task GenerateSequentialArrayWithFewerItems()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -280,11 +281,11 @@ public class ArrayGenerationTests
 			})
 			.MaxItems(2);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateSequentialArrayPlusMoreAndContains()
+	public async Task GenerateSequentialArrayPlusMoreAndContains()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -309,11 +310,11 @@ public class ArrayGenerationTests
 				.Maximum(100)
 			);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateSequentialArrayWithNoMoreItems()
+	public async Task GenerateSequentialArrayWithNoMoreItems()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -332,11 +333,11 @@ public class ArrayGenerationTests
 			})
 			.Items(false);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void GenerateSequentialArrayWithNoMoreItemsAndMinItems()
+	public async Task GenerateSequentialArrayWithNoMoreItemsAndMinItems()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
@@ -356,7 +357,7 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.Items(false);
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]

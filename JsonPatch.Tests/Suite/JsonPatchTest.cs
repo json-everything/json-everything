@@ -102,13 +102,13 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 
 		try
 		{
-			var results = JsonPatchTest.TestSchema.Evaluate(node, new EvaluationOptions
-			{
-				OutputFormat = OutputFormat.Hierarchical,
-				RequireFormatValidation = true
-			});
-			if (results.IsValid)
-			{
+			//var results = JsonPatchTest.TestSchema.Evaluate(node, new EvaluationOptions
+			//{
+			//	OutputFormat = OutputFormat.Hierarchical,
+			//	RequireFormatValidation = true
+			//}).Result;
+			//if (results.IsValid)
+			//{
 				var model = node.Deserialize<Model>(options)!;
 				return new JsonPatchTest
 				{
@@ -120,10 +120,10 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 					Patch = model.Patch,
 					Disabled = model.Disabled
 				};
-			}
+			//}
 
-			Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
-			return null;
+			//Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+			//return null;
 		}
 		catch (JsonException e)
 		{

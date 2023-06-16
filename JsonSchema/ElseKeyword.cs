@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 
 namespace Json.Schema;
@@ -44,7 +45,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Else
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
@@ -62,7 +63,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Else
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Evaluate();
+		await context.Evaluate();
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		if (!valid) 

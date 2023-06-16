@@ -1,19 +1,22 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using NUnit.Framework;
+
+#pragma warning disable CS1998
 
 namespace Json.Schema.Tests;
 
 public class FetchTests
 {
 	[Test]
-	public void LocalRegistryFindsRef()
+	public async Task LocalRegistryFindsRef()
 	{
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
-				Fetch = uri =>
+				Fetch = async uri =>
 				{
 					if (uri.AbsoluteUri == "http://my.schema/test1")
 						return JsonSchema.FromText("{\"type\": \"string\"}");
@@ -25,13 +28,13 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Evaluate(json.RootElement, options);
+		var results = await schema.Evaluate(json.RootElement, options);
 
 		results.AssertInvalid();
 	}
 
 	[Test]
-	public void GlobalRegistryFindsRef()
+	public async Task GlobalRegistryFindsRef()
 	{
 		try
 		{
@@ -39,7 +42,7 @@ public class FetchTests
 			{
 				OutputFormat = OutputFormat.Hierarchical
 			};
-			SchemaRegistry.Global.Fetch = uri =>
+			SchemaRegistry.Global.Fetch = async uri =>
 			{
 				if (uri.AbsoluteUri == "http://my.schema/test1")
 					return JsonSchema.FromText("{\"type\": \"string\"}");
@@ -49,7 +52,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			var results = schema.Evaluate(json.RootElement, options);
+			var results = await schema.Evaluate(json.RootElement, options);
 
 			results.AssertInvalid();
 		}
@@ -67,7 +70,7 @@ public class FetchTests
 			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
-				Fetch = uri =>
+				Fetch = async uri =>
 				{
 					if (uri.AbsoluteUri == "http://my.schema/test2")
 						return JsonSchema.FromText("{\"type\": \"string\"}");
@@ -79,7 +82,7 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
+		Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
 	}
 
 	[Test]
@@ -91,7 +94,7 @@ public class FetchTests
 			{
 				OutputFormat = OutputFormat.Hierarchical
 			};
-			SchemaRegistry.Global.Fetch = uri =>
+			SchemaRegistry.Global.Fetch = async uri =>
 			{
 				if (uri.AbsoluteUri == "http://my.schema/test2")
 					return JsonSchema.FromText("{\"type\": \"string\"}");
@@ -101,7 +104,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
+			Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
 		}
 		finally
 		{
@@ -114,12 +117,12 @@ public class FetchTests
 	{
 		try
 		{
-			SchemaRegistry.Global.Fetch = _ => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}");
+			SchemaRegistry.Global.Fetch = async _ => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}");
 			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
 			using var json = JsonDocument.Parse("10");
 
-			Assert.Throws<JsonException>(() => schema.Evaluate(json.RootElement));
+			Assert.ThrowsAsync<JsonException>(() => schema.Evaluate(json.RootElement));
 		}
 		finally
 		{

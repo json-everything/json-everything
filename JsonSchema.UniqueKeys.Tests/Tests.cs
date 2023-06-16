@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
@@ -29,15 +30,15 @@ public class SpecExampleTests
 		.UniqueKeys("/foo", "/bar");
 
 	[OneTimeSetUp]
-	public void Setup()
+	public static async Task Setup()
 	{
-		Vocabularies.Register();
+		await Vocabularies.Register();
 
 		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 
 	[Test]
-	public void SingleKeySchema_UniqueValuesAtKeyPasses()
+	public async Task SingleKeySchema_UniqueValuesAtKeyPasses()
 	{
 		var instance = JsonDocument.Parse(@"[
 			  { ""foo"": 8 },
@@ -45,13 +46,13 @@ public class SpecExampleTests
 			  { ""foo"": 42 }
 			]").RootElement;
 
-		var results = _singleKeySchema.Evaluate(instance);
+		var results = await _singleKeySchema.Evaluate(instance);
 
 		results.AssertValid();
 	}
 
 	[Test]
-	public void SingleKeySchema_DuplicateValuesAtKeyFails()
+	public async Task SingleKeySchema_DuplicateValuesAtKeyFails()
 	{
 		var instance = JsonDocument.Parse(@"[
 			  { ""foo"": 8 },
@@ -59,26 +60,26 @@ public class SpecExampleTests
 			  { ""foo"": 8 }
 			]").RootElement;
 
-		var results = _singleKeySchema.Evaluate(instance);
+		var results = await _singleKeySchema.Evaluate(instance);
 
 		results.AssertInvalid();
 	}
 
 	[Test]
-	public void SingleKeySchema_NotAllItemsHaveFooPasses()
+	public async Task SingleKeySchema_NotAllItemsHaveFooPasses()
 	{
 		var instance = JsonDocument.Parse(@"[
 			  { ""foo"": 8 },
 			  { ""bar"": 8 }
 			]").RootElement;
 
-		var results = _singleKeySchema.Evaluate(instance);
+		var results = await _singleKeySchema.Evaluate(instance);
 
 		results.AssertValid();
 	}
 
 	[Test]
-	public void SingleKeySchema_DuplicateValuesAtKeyFailsEvenThoughItemsAreDistinct()
+	public async Task SingleKeySchema_DuplicateValuesAtKeyFailsEvenThoughItemsAreDistinct()
 	{
 		var instance = JsonDocument.Parse(@"[
 			  { ""foo"": 8, ""bar"": true },
@@ -86,13 +87,13 @@ public class SpecExampleTests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-		var results = _singleKeySchema.Evaluate(instance);
+		var results = await _singleKeySchema.Evaluate(instance);
 
 		results.AssertInvalid();
 	}
 
 	[Test]
-	public void MultiKey_UniqueValuesAtKeysPasses()
+	public async Task MultiKey_UniqueValuesAtKeysPasses()
 	{
 		var instance = JsonDocument.Parse(@"[
 			  { ""foo"": 8, ""bar"": true },
@@ -100,13 +101,13 @@ public class SpecExampleTests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-		var results = _multiKeySchema.Evaluate(instance);
+		var results = await _multiKeySchema.Evaluate(instance);
 
 		results.AssertValid();
 	}
 
 	[Test]
-	public void MultiKey_DuplicateValuesAtKeysFailsEvenThoughItemsAreDistinct()
+	public async Task MultiKey_DuplicateValuesAtKeysFailsEvenThoughItemsAreDistinct()
 	{
 		var instance = JsonDocument.Parse(@"[
 			  { ""foo"": 8, ""bar"": true, ""baz"": ""yes"" },
@@ -114,7 +115,7 @@ public class SpecExampleTests
 			  { ""foo"": 8, ""bar"": false }
 			]").RootElement;
 
-		var results = _multiKeySchema.Evaluate(instance);
+		var results = await _multiKeySchema.Evaluate(instance);
 
 		results.AssertInvalid();
 	}

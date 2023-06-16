@@ -1,7 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Schema.Tests;
 using NUnit.Framework;
+#pragma warning disable CS1998
 
 namespace Json.Schema.Data.Tests;
 
@@ -43,53 +45,53 @@ public class Tests
 		);
 
 	[OneTimeSetUp]
-	public void Setup()
+	public async Task Setup()
 	{
-		Vocabularies.Register();
+		await Vocabularies.Register();
 
 		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 
 	[Test]
-	public void InstanceRef_Passing()
+	public async Task InstanceRef_Passing()
 	{
 		var instanceData = "{\"minValue\":5,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Evaluate(instance);
+		var result = await InstanceRef.Evaluate(instance);
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void InstanceRef_Failing()
+	public async Task InstanceRef_Failing()
 	{
 		var instanceData = "{\"minValue\":15,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRef.Evaluate(instance);
+		var result = await InstanceRef.Evaluate(instance);
 
 		result.AssertInvalid();
 	}
 
 	[Test]
-	public void InstanceRelativeRef_Passing()
+	public async Task InstanceRelativeRef_Passing()
 	{
 		var instanceData = "{\"minValue\":5,\"foo\":{\"bar\":10}}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRelativeRef.Evaluate(instance);
+		var result = await InstanceRelativeRef.Evaluate(instance);
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void InstanceRelativeRef_Failing()
+	public async Task InstanceRelativeRef_Failing()
 	{
 		var instanceData = "{\"minValue\":15,\"foo\":{\"bar\":10}}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		var result = InstanceRelativeRef.Evaluate(instance);
+		var result = await InstanceRelativeRef.Evaluate(instance);
 
 		result.AssertInvalid();
 	}
@@ -100,7 +102,7 @@ public class Tests
 		var instanceData = "{\"minValue\":true,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		Assert.Throws<JsonException>(() => InstanceRef.Evaluate(instance));
+		Assert.ThrowsAsync<JsonException>(() => InstanceRef.Evaluate(instance));
 	}
 
 	[Test]
@@ -109,20 +111,20 @@ public class Tests
 		var instanceData = "{\"minValu\":5,\"foo\":10}";
 		var instance = JsonDocument.Parse(instanceData).RootElement;
 
-		Assert.Throws<RefResolutionException>(() => InstanceRef.Evaluate(instance));
+		Assert.ThrowsAsync<RefResolutionException>(() => InstanceRef.Evaluate(instance));
 	}
 
 	[Test]
-	public void ExternalRef_Passing()
+	public async Task ExternalRef_Passing()
 	{
 		try
 		{
-			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":5}");
+			DataKeyword.Fetch = async _ => JsonNode.Parse("{\"minValue\":5}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
 
-			var result = ExternalRef.Evaluate(instance);
+			var result = await ExternalRef.Evaluate(instance);
 
 			result.AssertValid();
 		}
@@ -133,16 +135,16 @@ public class Tests
 	}
 
 	[Test]
-	public void ExternalRef_Failing()
+	public async Task ExternalRef_Failing()
 	{
 		try
 		{
-			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":15}");
+			DataKeyword.Fetch = async _ => JsonNode.Parse("{\"minValue\":15}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
 
-			var result = ExternalRef.Evaluate(instance);
+			var result = await ExternalRef.Evaluate(instance);
 
 			result.AssertInvalid();
 		}

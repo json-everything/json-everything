@@ -9,16 +9,16 @@ namespace Json.Schema.Tests;
 public class CreationTests
 {
 	[Test]
-	public void FromText()
+	public async Task FromText()
 	{
 		var schema = JsonSchema.FromText("{\"$id\":\"http://my.schema/test1\",\"minimum\":5}");
 
-		var results = schema.Evaluate(10);
+		var results = await schema.Evaluate(10);
 
 		Assert.True(results.IsValid);
 	}
 	[Test]
-	public void FromTextIgnoringComments()
+	public async Task FromTextIgnoringComments()
 	{
 		var options = new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip };
 		var schema = JsonSchema.FromText(@"{
@@ -29,7 +29,7 @@ public class CreationTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Evaluate(json.RootElement);
+		var results = await schema.Evaluate(json.RootElement);
 
 		Assert.True(results.IsValid);
 	}
@@ -43,7 +43,7 @@ public class CreationTests
 
 		using var json = JsonDocument.Parse("10");
 
-		var results = schema.Evaluate(json.RootElement);
+		var results = await schema.Evaluate(json.RootElement);
 
 		Assert.True(results.IsValid);
 	}

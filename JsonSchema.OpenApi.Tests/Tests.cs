@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Pointer;
 using Json.Schema.Tests;
 using NUnit.Framework;
@@ -12,9 +13,9 @@ namespace Json.Schema.OpenApi.Tests;
 public class SpecExampleTests
 {
 	[OneTimeSetUp]
-	public void Setup()
+	public async Task Setup()
 	{
-		Vocabularies.Register();
+		await Vocabularies.Register();
 
 		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
@@ -32,7 +33,7 @@ public class SpecExampleTests
 	}
 
 	[Test]
-	public void DevTest()
+	public async Task DevTest()
 	{
 		var openApiDocText = @"{
   ""openapi"": ""3.1.0"",
@@ -88,7 +89,7 @@ public class SpecExampleTests
 
 		var openApiDocNode = JsonNode.Parse(openApiDocText);
 		var openApiDoc = new OpenApiDoc(new Uri("http://localhost:1234/openapi"), openApiDocNode!);
-		var targetSchema = openApiDoc.FindSubschema(JsonPointer.Parse("/webhooks/newPet/post/requestBody/content/application~1json/schema"), EvaluationOptions.Default);
+		var targetSchema = await openApiDoc.FindSubschema(JsonPointer.Parse("/webhooks/newPet/post/requestBody/content/application~1json/schema"), EvaluationOptions.Default);
 
 		var payload = new JsonObject
 		{
@@ -97,7 +98,7 @@ public class SpecExampleTests
 			["tag"] = "a very good dog"
 		};
 
-		var result = targetSchema!.Evaluate(payload);
+		var result = await targetSchema!.Evaluate(payload);
 
 		result.AssertValid();
 	}

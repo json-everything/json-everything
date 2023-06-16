@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -50,7 +51,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value.Key);
@@ -58,7 +59,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
 		{
 			context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
-			return;
+			return Task.CompletedTask;
 		}
 
 		var requireValidation = context.Options.RequireFormatValidation;
@@ -93,6 +94,8 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		}
 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

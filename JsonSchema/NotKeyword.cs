@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -43,11 +44,11 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKe
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		context.Push(evaluationPath: context.EvaluationPath.Combine(Name), Schema);
-		context.Evaluate();
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		await context.Evaluate();
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (result)

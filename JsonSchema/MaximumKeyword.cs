@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.More;
 
 namespace Json.Schema;
@@ -43,20 +44,22 @@ public class MaximumKeyword : IJsonSchemaKeyword, IEquatable<MaximumKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 		{
 			context.WrongValueKind(schemaValueType);
-			return;
+			return Task.CompletedTask;
 		}
 
 		var number = context.LocalInstance!.AsValue().GetNumber();
 		if (Value < number)
 			context.LocalResult.Fail(Name, ErrorMessages.Maximum, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

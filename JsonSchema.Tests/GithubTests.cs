@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
+#pragma warning disable CS1998
 
 namespace Json.Schema.Tests;
 
@@ -24,7 +25,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue18_SomethingNotValidatingRight()
+	public async Task Issue18_SomethingNotValidatingRight()
 	{
 		var instance = JsonNode.Parse(@"{
     ""prop1"": {
@@ -158,7 +159,7 @@ public class GithubTests
 	""additionalProperties"": false
 }");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 	}
@@ -169,7 +170,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance));
+		Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(instance));
 	}
 
 	[Test]
@@ -178,7 +179,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		}));
@@ -194,7 +195,7 @@ public class GithubTests
 	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d7"": 7}", false)]
 	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d9"": 9}", true)]
 	[TestCase(SpecVersion.Draft201909, @"{""abc"": 1, ""d7"": 7, ""d9"": 9}", true)]
-	public void Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(SpecVersion version, string instance, bool isValid)
+	public async Task Issue19_SchemaShouldOnlyUseSpecifiedDraftKeywords(SpecVersion version, string instance, bool isValid)
 	{
 		var schema = JsonSerializer.Deserialize<JsonSchema>(@"
 {
@@ -212,14 +213,14 @@ public class GithubTests
 		};
 		var element = JsonNode.Parse(instance);
 
-		var val = schema.Evaluate(element, opts);
+		var val = await schema.Evaluate(element, opts);
 		Console.WriteLine("Elem `{0}` got validation `{1}`", instance, val.IsValid);
 		if (isValid) val.AssertValid();
 		else val.AssertInvalid();
 	}
 
 	[Test]
-	public void Issue29_SchemaFromFileWithoutIdShouldInheritUriFromFilePath()
+	public async Task Issue29_SchemaFromFileWithoutIdShouldInheritUriFromFilePath()
 	{
 		var schemaFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue29-schema-without-id.json")
 			.AdjustForPlatform();
@@ -233,13 +234,13 @@ public class GithubTests
 }";
 		var schema = JsonSchema.FromFile(schemaFile);
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var validation = await schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
 
 	[Test]
-	public void Issue29_SchemaFromFileWithIdShouldKeepUriFromId()
+	public async Task Issue29_SchemaFromFileWithIdShouldKeepUriFromId()
 	{
 		var schemaFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue29-schema-with-id.json")
 			.AdjustForPlatform();
@@ -253,13 +254,13 @@ public class GithubTests
 }";
 		var schema = JsonSchema.FromFile(schemaFile);
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var validation = await schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
 
 	[Test]
-	public void Issue29_SchemaWithOnlyFileNameIdShouldUseDefaultBaseUri()
+	public async Task Issue29_SchemaWithOnlyFileNameIdShouldUseDefaultBaseUri()
 	{
 		var schemaStr = @"{
   ""$schema"": ""http://json-schema.org/draft-07/schema#"",
@@ -278,7 +279,7 @@ public class GithubTests
 }";
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr)!;
 		var json = JsonNode.Parse(jsonStr);
-		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var validation = await schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -386,7 +387,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue79_RefsTryingToResolveParent()
+	public async Task Issue79_RefsTryingToResolveParent()
 	{
 		var schema1Str = @"
 {
@@ -423,20 +424,20 @@ public class GithubTests
 			OutputFormat = OutputFormat.Hierarchical,
 			SchemaRegistry =
 			{
-				Fetch = uri =>
+				Fetch = async uri =>
 				{
 					Assert.True(map.TryGetValue(uri, out var ret), "Unexpected uri: {0}", uri);
 					return ret;
 				}
 			}
 		};
-		var result = schema2.Evaluate(json, options);
+		var result = await schema2.Evaluate(json, options);
 		result.AssertValid();
 		Assert.AreEqual(result.Details[0].Details[0].SchemaLocation, "https://json-everything.net/schema1.json#");
 	}
 
 	[Test]
-	public void Issue79_RefsTryingToResolveParent_Explanation()
+	public async Task Issue79_RefsTryingToResolveParent_Explanation()
 	{
 		var schemaText = @"{
   ""$id"": ""https://mydomain.com/outer"",
@@ -476,8 +477,10 @@ public class GithubTests
 		var passing = JsonNode.Parse(passingText);
 		var failing = JsonNode.Parse(failingText);
 
-		schema!.Evaluate(passing, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertValid();
-		schema.Evaluate(failing, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical }).AssertInvalid();
+		var passingResult = await schema!.Evaluate(passing, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		passingResult.AssertValid();
+		var failingResult = await schema.Evaluate(failing, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		failingResult.AssertInvalid();
 	}
 
 	[Test]
@@ -489,7 +492,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json));
+		Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(json));
 	}
 
 	[Test]
@@ -504,7 +507,7 @@ public class GithubTests
 
 		var json = JsonNode.Parse("\"value\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json));
+		Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(json));
 	}
 
 	[SchemaKeyword(Name)]
@@ -521,7 +524,7 @@ public class GithubTests
 			throw new NotImplementedException();
 		}
 
-		public void Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context)
 		{
 			throw new NotImplementedException();
 		}
@@ -540,11 +543,11 @@ public class GithubTests
 
 		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
 
-		Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
+		Assert.ThrowsAsync<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
 	}
 
 	[Test]
-	public void Issue208_BundlingNotWorking()
+	public async Task Issue208_BundlingNotWorking()
 	{
 		JsonSchema externalSchema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -558,7 +561,7 @@ public class GithubTests
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		};
-		options.SchemaRegistry.Register(new Uri("https://my-external-schema"), externalSchema);
+		await options.SchemaRegistry.Register(new Uri("https://my-external-schema"), externalSchema);
 
 		JsonSchema mySchema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -581,7 +584,8 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"first\":{\"first\":\"first\"},\"second\":{\"second\":\"second\"}}");
 
-		mySchema.Evaluate(instance, options).AssertValid();
+		var result = await mySchema.Evaluate(instance, options);
+		result.AssertValid();
 
 	}
 
@@ -596,14 +600,14 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.ThrowsAsync<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			ValidateAgainstMetaSchema = true
 		}));
 	}
 
 	[Test]
-	public void Issue212_CouldNotResolveAnchorReference_Inline()
+	public async Task Issue212_CouldNotResolveAnchorReference_Inline()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft7Id)
@@ -635,7 +639,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		var res = schema.Evaluate(instance, new EvaluationOptions
+		var res = await schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			ValidateAgainstMetaSchema = true
@@ -644,7 +648,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue216_AdditionalPropertiesShouldRelyOnDeclarationsForDraft7()
+	public async Task Issue216_AdditionalPropertiesShouldRelyOnDeclarationsForDraft7()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft7Id)
@@ -657,7 +661,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"foo\":1,\"bar\":false}");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertInvalid();
 		var nodes = new List<EvaluationResults> { result };
@@ -671,7 +675,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue226_MessageInValidResult()
+	public async Task Issue226_MessageInValidResult()
 	{
 		var schemaText = GetResource(226, "schema");
 		var instanceText = GetResource(226, "instance");
@@ -679,13 +683,13 @@ public class GithubTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse(instanceText);
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Issue352_ConcurrentValidationsWithReferences()
+	public async Task Issue352_ConcurrentValidationsWithReferences()
 	{
 		var schema = JsonSchema.FromText(@"{
             ""$schema"": ""http://json-schema.org/draft-07/schema#"",
@@ -731,12 +735,12 @@ public class GithubTests
 			jsonMessages.Add(instance.Copy());
 		}
 
-		Parallel.ForEach(jsonMessages, json =>
+		await Task.WhenAll(jsonMessages.Select(async json =>
 		{
 			EvaluationResults result;
 			try
 			{
-				result = schema.Evaluate(json, new EvaluationOptions
+				result = await schema.Evaluate(json, new EvaluationOptions
 				{
 					OutputFormat = OutputFormat.List,
 					RequireFormatValidation = true
@@ -749,57 +753,57 @@ public class GithubTests
 			}
 
 			result.AssertValid();
-		});
+		}));
 	}
 
 	[Test]
-	public void Issue417_BundleWithItemsFails()
+	public async Task Issue417_BundleWithItemsFails()
 	{
 		// items: true
 		var singleItemSchema = new JsonSchemaBuilder()
 			.Items(JsonSchema.True)
 			.Build();
-		singleItemSchema.Bundle(); // throws
+		await singleItemSchema.Bundle(); // throws
 		// items: [true, true]
 		var multiItemSchema = new JsonSchemaBuilder()
 			.Items(new[] { JsonSchema.True, JsonSchema.True })
 			.Build();
-		multiItemSchema.Bundle(); // throws
+		await multiItemSchema.Bundle(); // throws
 	}
 
 	[Test]
-	public void Issue419_SecondLevelReferences()
+	public async Task Issue419_SecondLevelReferences()
 	{
 		var level2 = JsonSchema.FromFile(GetFile(419, "level2"));
-		SchemaRegistry.Global.Register(level2);
+		await SchemaRegistry.Global.Register(level2);
 
 		var level1 = JsonSchema.FromFile(GetFile(419, "level1"));
-		SchemaRegistry.Global.Register(level1);
+		await SchemaRegistry.Global.Register(level1);
 
 		var rootSchema = JsonSchema.FromFile(GetFile(419, "root"));
 
 		var config = JsonNode.Parse(GetResource(419, "config"));
 
-		var result = rootSchema.Evaluate(config);
+		var result = await rootSchema.Evaluate(config);
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Issue426_FileFragmentRefs()
+	public async Task Issue426_FileFragmentRefs()
 	{
 		var schema = JsonSchema.FromFile(GetFile(426, "schema"));
-		SchemaRegistry.Global.Register(schema);
+		await SchemaRegistry.Global.Register(schema);
 		
-		var data = JsonNode.Parse(File.ReadAllText(GetFile(426, "data")));
+		var data = JsonNode.Parse(await File.ReadAllTextAsync(GetFile(426, "data")));
 		
-		var result = schema.Evaluate(data);
+		var result = await schema.Evaluate(data);
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Issue432_UnresolvedLocalRef()
+	public async Task Issue432_UnresolvedLocalRef()
 	{
 		var schema = JsonSchema.FromText(@"{
   ""$schema"": ""http://json-schema.org/draft-06/schema#"",
@@ -823,13 +827,13 @@ public class GithubTests
 }");
 		var instance = JsonNode.Parse("{ \"orderId\": \"3cb65f2d-4049-43c1-b185-1943765acd9\" }");
 
-		var result = schema.Evaluate(instance);
+		var result = await schema.Evaluate(instance);
 		
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Issue432_UnresolvedLocalRef_Again()
+	public async Task Issue432_UnresolvedLocalRef_Again()
 	{
 		var schema = JsonSchema.FromText(@"{
   ""$schema"": ""http://json-schema.org/draft-06/schema#"",
@@ -875,13 +879,13 @@ public class GithubTests
   }
 }");
 
-		var result = schema.Evaluate(instance);
+		var result = await schema.Evaluate(instance);
 		
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Issue435_NonCircularRefThrowing()
+	public async Task Issue435_NonCircularRefThrowing()
 	{
 		var schema = JsonSchema.FromText(@"{
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
@@ -923,13 +927,13 @@ public class GithubTests
   }
 ]");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
+		var result = await schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
 		result.AssertValid();
 	}
 
 	[Test]
-	public void Issue435_NonCircularRefThrowing_File()
+	public async Task Issue435_NonCircularRefThrowing_File()
 	{
 		var file = GetFile(435, "schema");
 
@@ -944,7 +948,7 @@ public class GithubTests
 			}
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
+		var result = await schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
 		result.AssertValid();
 	}

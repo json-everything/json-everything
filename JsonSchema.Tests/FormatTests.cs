@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -8,26 +9,26 @@ namespace Json.Schema.Tests;
 public class FormatTests
 {
 	[Test]
-	public void Ipv4_Pass()
+	public async Task Ipv4_Pass()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format(Formats.Ipv4);
 
 		var value = JsonNode.Parse("\"100.2.54.3\"");
 
-		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
+		var result = await schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
 		Assert.True(result.IsValid);
 	}
 	[Test]
-	public void Ipv4_Fail()
+	public async Task Ipv4_Fail()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format(Formats.Ipv4);
 
 		var value = JsonNode.Parse("\"100.2.5444.3\"");
 
-		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
+		var result = await schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
 		Assert.False(result.IsValid);
 	}
@@ -40,14 +41,14 @@ public class FormatTests
 	[TestCase("2023-04-28 21:50:44Z")]
 	[TestCase("2023-04-28_21:50:58.563Z")]
 	[TestCase("2023-04-28_21:51:10Z")]
-	public void DateTime_Pass(string dateString)
+	public async Task DateTime_Pass(string dateString)
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format(Formats.DateTime);
 
 		var value = JsonNode.Parse($"\"{dateString}\"");
 
-		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
+		var result = await schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
 		Assert.True(result.IsValid);
 	}
@@ -74,7 +75,7 @@ public class FormatTests
 			.Type(SchemaValueType.Object | SchemaValueType.Boolean);
 
 	[Test]
-	public void UnknownFormat_Annotation_ReportsFormat()
+	public async Task UnknownFormat_Annotation_ReportsFormat()
 	{
 		var schemaText = $@"{{
 	""$schema"": ""{MetaSchemas.Draft202012Id}"",
@@ -84,7 +85,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse("\"a value\"");
 
-		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var results = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
 		var serialized = JsonSerializer.Serialize(results);
@@ -92,7 +93,7 @@ public class FormatTests
 	}
 
 	[Test]
-	public void UnknownFormat_Assertion_FailsValidation()
+	public async Task UnknownFormat_Assertion_FailsValidation()
 	{
 		var options = new EvaluationOptions
 		{
@@ -106,10 +107,10 @@ public class FormatTests
 	""format"": ""something-dumb""
 }}";
 		var schema = JsonSchema.FromText(schemaText);
-		options.SchemaRegistry.Register(_formatAssertionMetaSchema);
+		await options.SchemaRegistry.Register(_formatAssertionMetaSchema);
 		var instance = JsonNode.Parse("\"a value\"");
 
-		var results = schema.Evaluate(instance, options);
+		var results = await schema.Evaluate(instance, options);
 
 		results.AssertInvalid();
 		var serialized = JsonSerializer.Serialize(results);
@@ -117,7 +118,7 @@ public class FormatTests
 	}
 
 	[Test]
-	public void UnknownFormat_AnnotationWithAssertionOption_FailsValidation()
+	public async Task UnknownFormat_AnnotationWithAssertionOption_FailsValidation()
 	{
 		var schemaText = $@"{{
 	""$schema"": ""{MetaSchemas.Draft202012Id}"",
@@ -127,7 +128,7 @@ public class FormatTests
 		var schema = JsonSchema.FromText(schemaText);
 		var instance = JsonNode.Parse("\"a value\"");
 
-		var results = schema.Evaluate(instance, new EvaluationOptions
+		var results = await schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true,
@@ -150,7 +151,7 @@ public class FormatTests
 	[TestCase("\"1dd7fe33f97f42cf89c5789018bae64d\"", true)]
 	[TestCase("\"nwvoiwe;oiabe23oi32\"", false)]
 	[TestCase("true", true)]
-	public void RegexBasedFormatWorksProperly(string jsonText, bool isValid)
+	public async Task RegexBasedFormatWorksProperly(string jsonText, bool isValid)
 	{
 		Formats.Register(new RegexBasedFormat());
 
@@ -158,7 +159,7 @@ public class FormatTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Format("hexadecimal");
 
-		var results = schema.Evaluate(json, new EvaluationOptions
+		var results = await schema.Evaluate(json, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			RequireFormatValidation = true

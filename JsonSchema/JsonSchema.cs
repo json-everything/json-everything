@@ -189,19 +189,19 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
+	public async Task<EvaluationResults> Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
 		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
-		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
+		options.EvaluatingAs = await DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		await PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
 		var context = new EvaluationContext(options, BaseUri, root, this);
 
 		options.Log.Write(() => "Beginning evaluation.");
-		context.Evaluate();
+		await context.Evaluate();
 
 		options.Log.Write(() => "Transforming output.");
 		var results = context.LocalResult;
@@ -223,12 +223,12 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return results;
 	}
 
-	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
+	internal static async Task Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineSpecVersion(schema, registry, SpecVersion.Unspecified), true);
+		await PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, await DetermineSpecVersion(schema, registry, SpecVersion.Unspecified), true);
 	}
 
-	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
+	private static async Task<SpecVersion> DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
@@ -254,7 +254,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 					return version;
 				}
 
-				var metaSchema = registry.Get(metaSchemaId) as JsonSchema;
+				var metaSchema = await registry.Get(metaSchemaId) as JsonSchema;
 				if (metaSchema == null)
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
 
@@ -276,7 +276,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return candidates.Any() ? candidates.Max() : SpecVersion.DraftNext;
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs, bool selfRegister = false)
+	private static async Task PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
 		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
@@ -301,9 +301,9 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 				else
 				{
 					schema.IsResourceRoot = true;
-					schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
+					schema.DeclaredVersion = await DetermineSpecVersion(schema, registry, evaluatingAs);
 					resourceRoot = schema;
-					schema.BaseUri = new Uri(currentBaseUri, idKeyword!.Id);
+					schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
 					registry.RegisterSchema(schema.BaseUri, schema);
 				}
 			}
@@ -329,7 +329,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 		foreach (var subschema in subschemas)
 		{
-			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
+			await PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
 		}
 	}
 
@@ -361,7 +361,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		}
 	}
 
-	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	async Task<JsonSchema?> IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object resolvable = this;
 		for (var i = 0; i < pointer.Segments.Length; i++)
@@ -414,7 +414,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 				var asSchema = FromText(value?.ToString() ?? "null");
 				var hostSchema = (JsonSchema)resolvable;
 				asSchema.BaseUri = hostSchema.BaseUri;
-				PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry, options.EvaluatingAs);
+				await PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry, options.EvaluatingAs);
 				return asSchema;
 			}
 

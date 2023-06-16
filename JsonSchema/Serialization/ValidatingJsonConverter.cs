@@ -110,12 +110,13 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 		var readerCopy = reader;
 		var node = JsonSerializer.Deserialize<JsonNode?>(ref readerCopy, options);
 		
+		// TODO: this isn't the right way to do async, but it kinda works...
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat,
 			Log = Log!,
 			RequireFormatValidation = RequireFormatValidation
-		});
+		}).Result;
 
 		var newOptions = _optionsFactory(options);
 

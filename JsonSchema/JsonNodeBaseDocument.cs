@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -45,7 +46,7 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
 	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	public async Task<JsonSchema?> FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		if (_foundSubschemas.TryGetValue(pointer, out var schema)) return schema;
 
@@ -53,7 +54,7 @@ public class JsonNodeBaseDocument : IBaseDocument
 
 		schema = location.Deserialize<JsonSchema>();
 		if (schema != null) 
-			JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
+			await JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
 
 		_foundSubschemas[pointer] = schema;
 

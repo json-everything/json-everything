@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -45,7 +46,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -76,7 +77,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 			{
 				context.Log(() => "Found schema requirement.");
 				context.Push(context.EvaluationPath.Combine(name), requirements.Schema);
-				context.Evaluate();
+				await context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				if (context.LocalResult.IsValid)
 					evaluatedProperties.Add(name);

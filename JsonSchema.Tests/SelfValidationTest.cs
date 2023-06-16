@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -40,16 +41,16 @@ public class SelfValidationTest
 		};
 
 	[TestCaseSource(nameof(TestData))]
-	public void Hardcoded(JsonSchema schema)
+	public async Task Hardcoded(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema);
-		var validation = schema.Evaluate(JsonNode.Parse(json), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var validation = await schema.Evaluate(JsonNode.Parse(json), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
 
 	[TestCaseSource(nameof(TestData))]
-	public void Online(JsonSchema schema)
+	public async Task Online(JsonSchema schema)
 	{
 		try
 		{
@@ -58,8 +59,8 @@ public class SelfValidationTest
 			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
 			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson);
 
-			var localValidation = schema.Evaluate(JsonNode.Parse(onlineSchemaJson));
-			var onlineValidation = onlineSchema!.Evaluate(JsonNode.Parse(localSchemaJson));
+			var localValidation = await schema.Evaluate(JsonNode.Parse(onlineSchemaJson));
+			var onlineValidation = await onlineSchema!.Evaluate(JsonNode.Parse(localSchemaJson));
 
 			try
 			{

@@ -2,6 +2,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -35,9 +36,9 @@ public class OutputTests
 
 
 	[Test]
-	public void Flag_Success()
+	public async Task Flag_Success()
 	{
-		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Flag);
+		var result = await Validate("{\"passes\":\"value\"}", OutputFormat.Flag);
 		var expected = @"{
   ""valid"": true
 }";
@@ -46,9 +47,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Flag_Failure()
+	public async Task Flag_Failure()
 	{
-		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Flag);
+		var result = await Validate("{\"fails\":\"value\"}", OutputFormat.Flag);
 		var expected = @"{
   ""valid"": false
 }";
@@ -57,9 +58,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Basic_Success()
+	public async Task Basic_Success()
 	{
-		var result = Validate("{\"passes\":\"value\"}", OutputFormat.List);
+		var result = await Validate("{\"passes\":\"value\"}", OutputFormat.List);
 		var expected = @"{
   ""valid"": true,
   ""details"": [
@@ -85,9 +86,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Basic_Failure()
+	public async Task Basic_Failure()
 	{
-		var result = Validate("{\"fails\":\"value\"}", OutputFormat.List);
+		var result = await Validate("{\"fails\":\"value\"}", OutputFormat.List);
 		var expected = @"{
   ""valid"": false,
   ""details"": [
@@ -113,9 +114,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Success()
+	public async Task Hierarchical_Success()
 	{
-		var result = Validate("{\"passes\":\"value\"}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"passes\":\"value\"}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
@@ -140,9 +141,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Failure()
+	public async Task Hierarchical_Failure()
 	{
-		var result = Validate("{\"fails\":\"value\"}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"fails\":\"value\"}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
@@ -164,14 +165,14 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Failure_WithDroppedAnnotations()
+	public async Task Hierarchical_Failure_WithDroppedAnnotations()
 	{
 		var instance = JsonNode.Parse("{\"fails\":\"value\"}");
 		var options = EvaluationOptions.From(EvaluationOptions.Default);
 		options.OutputFormat = OutputFormat.Hierarchical;
 		options.PreserveDroppedAnnotations = true;
 
-		var result = _schema.Evaluate(instance, options);
+		var result = await _schema.Evaluate(instance, options);
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
@@ -198,9 +199,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Multi_Success()
+	public async Task Hierarchical_Multi_Success()
 	{
-		var result = Validate("{\"multi\":8}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"multi\":8}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
@@ -255,9 +256,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Multi_Failure_Both()
+	public async Task Hierarchical_Multi_Failure_Both()
 	{
-		var result = Validate("{\"multi\":3.5}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"multi\":3.5}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
@@ -313,9 +314,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Multi_Failure_Integer()
+	public async Task Hierarchical_Multi_Failure_Integer()
 	{
-		var result = Validate("{\"fails\":8.5}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"fails\":8.5}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
@@ -338,9 +339,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void Hierarchical_Multi_Failure_Minimum()
+	public async Task Hierarchical_Multi_Failure_Minimum()
 	{
-		var result = Validate("{\"fails\":3}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"fails\":3}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
@@ -363,9 +364,9 @@ public class OutputTests
 	}
 
 	[Test]
-	public void RelativeAndAbsoluteLocations()
+	public async Task RelativeAndAbsoluteLocations()
 	{
-		var result = Validate("{\"refs\":8.8}", OutputFormat.Hierarchical);
+		var result = await Validate("{\"refs\":8.8}", OutputFormat.Hierarchical);
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
@@ -395,13 +396,13 @@ public class OutputTests
 		result.AssertInvalid(expected);
 	}
 
-	private static EvaluationResults Validate(string json, OutputFormat format)
+	private static async Task<EvaluationResults> Validate(string json, OutputFormat format)
 	{
 		var instance = JsonNode.Parse(json);
 		var options = EvaluationOptions.From(EvaluationOptions.Default);
 		options.OutputFormat = format;
 
-		var result = _schema.Evaluate(instance, options);
+		var result = await _schema.Evaluate(instance, options);
 		return result;
 	}
 
@@ -425,7 +426,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void UnevaluatedPropertiesDoesNotGiveExtraErrors()
+	public async Task UnevaluatedPropertiesDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Properties(
@@ -435,7 +436,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -444,7 +445,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void UnevaluatedPropertiesStillGivesExtraErrorsForReffedSchemas()
+	public async Task UnevaluatedPropertiesStillGivesExtraErrorsForReffedSchemas()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Defs(
@@ -459,7 +460,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("{\"foo\": null}");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -468,7 +469,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void AdditionalItemsDoesNotGiveExtraErrors()
+	public async Task AdditionalItemsDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Items(new JsonSchema[] { true, false })
@@ -476,7 +477,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("[1,2]");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -485,7 +486,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void UnevaluatedItemsDoesNotGiveExtraErrors()
+	public async Task UnevaluatedItemsDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft201909Id)
@@ -494,7 +495,7 @@ public class OutputTests
 
 		var instance = JsonNode.Parse("[1,2]");
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, _serializerOptions);
 		Console.WriteLine(serialized);
@@ -503,13 +504,13 @@ public class OutputTests
 	}
 
 	[Test]
-	public void FalseSchemaFailsEverything()
+	public async Task FalseSchemaFailsEverything()
 	{
 		JsonSchema schema = false;
 
 		var instance = JsonDocument.Parse("[1,2]").RootElement;
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var expected = @"{
   ""valid"": false,
@@ -530,7 +531,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void NewOutputFormat()
+	public async Task NewOutputFormat()
 	{
 		var schema = JsonSchema.FromText(@"{
   ""$id"": ""https://json-schema.org/schemas/example"",
@@ -587,7 +588,7 @@ public class OutputTests
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		};
-		var result = schema.Evaluate(failing, validationOptions);
+		var result = await schema.Evaluate(failing, validationOptions);
 
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
@@ -596,7 +597,7 @@ public class OutputTests
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
 
-		result = schema.Evaluate(passing, validationOptions);
+		result = await schema.Evaluate(passing, validationOptions);
 
 		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 		Console.WriteLine();
@@ -606,7 +607,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void EtherCondensedOption()
+	public async Task EtherCondensedOption()
 	{
 		var instance = JsonNode.Parse(@"{
   ""type"": ""object"",
@@ -676,7 +677,7 @@ public class OutputTests
 }");
 
 		EvaluationOptions.Default.Log = null!;
-		var result = MetaSchemas.Draft202012.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var result = await MetaSchemas.Draft202012.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		//result.ToBasic();
 
@@ -684,7 +685,7 @@ public class OutputTests
 	}
 
 	[Test]
-	public void IgnoreTitleAnnotations()
+	public async Task IgnoreTitleAnnotations()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Id("https://test.com/schema")
@@ -704,13 +705,13 @@ public class OutputTests
 		var options = EvaluationOptions.From(EvaluationOptions.Default);
 		options.OutputFormat = OutputFormat.Hierarchical;
 		options.IgnoreAnnotationsFrom<TitleKeyword>();
-		var result = schema.Evaluate(instance, options);
+		var result = await schema.Evaluate(instance, options);
 
 		result.AssertValid(expected);
 	}
 
 	[Test]
-	public void CollectButDoNotReportPropertiesAnnotations()
+	public async Task CollectButDoNotReportPropertiesAnnotations()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Id("https://test.com/schema")
@@ -740,7 +741,7 @@ public class OutputTests
 		var options = EvaluationOptions.From(EvaluationOptions.Default);
 		options.OutputFormat = OutputFormat.Hierarchical;
 		options.IgnoreAnnotationsFrom<PropertiesKeyword>();
-		var result = schema.Evaluate(instance, options);
+		var result = await schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();

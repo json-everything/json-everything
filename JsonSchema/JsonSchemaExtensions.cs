@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.More;
 
 namespace Json.Schema;
@@ -19,9 +19,9 @@ public static partial class JsonSchemaExtensions
 	/// <param name="jsonDocument">Instance to be evaluated.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public static EvaluationResults Evaluate(this JsonSchema jsonSchema, JsonDocument jsonDocument, EvaluationOptions? options = null)
+	public static async Task<EvaluationResults> Evaluate(this JsonSchema jsonSchema, JsonDocument jsonDocument, EvaluationOptions? options = null)
 	{
-		return jsonSchema.Evaluate(jsonDocument.RootElement, options);
+		return await jsonSchema.Evaluate(jsonDocument.RootElement, options);
 	}
 
 	/// <summary>
@@ -31,48 +31,9 @@ public static partial class JsonSchemaExtensions
 	/// <param name="jsonElement">Instance to be evaluated.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public static EvaluationResults Evaluate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
+	public static async Task<EvaluationResults> Evaluate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
 	{
-		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
-	}
-
-	/// <summary>
-	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
-	/// </summary>
-	/// <param name="jsonSchema">The schema.</param>
-	/// <param name="jsonNode">Instance to be evaluated.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	[Obsolete("Use Evaluate() instead.")]
-	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonNode jsonNode, EvaluationOptions? options = null)
-	{
-		return jsonSchema.Evaluate(jsonNode, options);
-	}
-
-	/// <summary>
-	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
-	/// </summary>
-	/// <param name="jsonSchema">The schema.</param>
-	/// <param name="jsonDocument">Instance to be evaluated.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	[Obsolete("Use Evaluate() instead.")]
-	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonDocument jsonDocument, EvaluationOptions? options = null)
-	{
-		return jsonSchema.Evaluate(jsonDocument.RootElement, options);
-	}
-
-	/// <summary>
-	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonElement"/>.
-	/// </summary>
-	/// <param name="jsonSchema">The schema.</param>
-	/// <param name="jsonElement">Instance to be evaluated.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	[Obsolete("Use Evaluate() instead.")]
-	public static EvaluationResults Validate(this JsonSchema jsonSchema, JsonElement jsonElement, EvaluationOptions? options = null)
-	{
-		return jsonSchema.Evaluate(jsonElement.AsNode(), options);
+		return await jsonSchema.Evaluate(jsonElement.AsNode(), options);
 	}
 
 	/// <summary>
@@ -84,11 +45,11 @@ public static partial class JsonSchemaExtensions
 	/// <returns>A JSON Schema with all referenced schemas.</returns>
 	/// <exception cref="JsonSchemaException">Thrown if a reference cannot be resolved.</exception>
 	/// <exception cref="NotSupportedException">Thrown if a reference resolves to a non-JSON-Schema document.</exception>
-	public static JsonSchema Bundle(this JsonSchema jsonSchema, EvaluationOptions? options = null)
+	public static async Task<JsonSchema> Bundle(this JsonSchema jsonSchema, EvaluationOptions? options = null)
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
-		JsonSchema.Initialize(jsonSchema, options.SchemaRegistry);
+		await JsonSchema.Initialize(jsonSchema, options.SchemaRegistry);
 
 		var schemasToSearch = new List<JsonSchema>();
 		var externalSchemas = new Dictionary<string, JsonSchema>();
@@ -100,13 +61,13 @@ public static partial class JsonSchemaExtensions
 			var nextReference = referencesToCheck[0];
 			referencesToCheck.RemoveAt(0);
 
-			var resolved = options.SchemaRegistry.Get(nextReference);
+			var resolved = await options.SchemaRegistry.Get(nextReference);
 			if (resolved == null)
 				throw new JsonSchemaException($"Cannot resolve reference: '{nextReference}'");
 			if (resolved is not JsonSchema resolvedSchema)
 				throw new NotSupportedException("Bundling is not supported for non-schema root documents");
 
-			JsonSchema.Initialize(resolvedSchema, options.SchemaRegistry);
+			await JsonSchema.Initialize(resolvedSchema, options.SchemaRegistry);
 
 			if (!bundledReferences.Contains(nextReference))
 				externalSchemas.Add(Guid.NewGuid().ToString("N").Substring(0, 10), resolvedSchema);

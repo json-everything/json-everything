@@ -421,9 +421,9 @@ namespace JsonEverythingTemp
 	{
 		if (firstRender)
 		{
-			Json.Schema.Data.Vocabularies.Register();
-			Json.Schema.UniqueKeys.Vocabularies.Register();
-			Json.Schema.OpenApi.Vocabularies.Register();
+			await Json.Schema.Data.Vocabularies.Register();
+			await Json.Schema.UniqueKeys.Vocabularies.Register();
+			await Json.Schema.OpenApi.Vocabularies.Register();
 
 			await LoadSavedSchema();
 			await LoadSavedInstance();

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -26,16 +27,14 @@ public class RelativeJsonPointerIdentifier : IDataResourceIdentifier
 	/// Attempts to resolve the reference.
 	/// </summary>
 	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
 	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(EvaluationContext context, out JsonNode? value)
+	public Task<(bool, JsonNode?)> TryResolve(EvaluationContext context)
 	{
 		if (context.LocalInstance == null)
-		{
-			value = null;
-			return false;
-		}
-		return Target.TryEvaluate(context.LocalInstance, out value);
+			return Task.FromResult<(bool, JsonNode?)>((false, null));
+
+		var success = Target.TryEvaluate(context.LocalInstance, out var value);
+		return Task.FromResult((success, value));
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>

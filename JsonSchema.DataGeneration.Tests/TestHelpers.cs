@@ -2,13 +2,14 @@
 using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
-	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
+	public static async Task Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
 		var result = schema.GenerateData();
 
@@ -21,7 +22,7 @@ public static class TestHelpers
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			}));
-		var validation = schema.Evaluate(result.Result, options);
+		var validation = await schema.Evaluate(result.Result, options);
 		Console.WriteLine(JsonSerializer.Serialize(validation,
 			new JsonSerializerOptions
 			{

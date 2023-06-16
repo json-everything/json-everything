@@ -117,6 +117,6 @@ public class SerializationTests
 
 		var json = JsonNode.Parse("{\"foo\":1, \"bar\":2, \"foo\":false}");
 
-		Assert.Throws<JsonException>(() => schema.Evaluate(json));
+		Assert.ThrowsAsync<JsonException>(() => schema.Evaluate(json));
 	}
 }

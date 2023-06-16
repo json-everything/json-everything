@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 using static Json.Schema.DataGeneration.Tests.TestHelpers;
 
@@ -7,72 +8,72 @@ namespace Json.Schema.DataGeneration.Tests;
 public class ConditionalGenerationTests
 {
 	[Test]
-	public void IfThenElse()
+	public async Task IfThenElse()
 	{
 		var schema = new JsonSchemaBuilder()
 			.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Then(new JsonSchemaBuilder().MultipleOf(3))
 			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void ThenElse()
+	public async Task ThenElse()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Boolean)
 			.Then(new JsonSchemaBuilder().MultipleOf(3))
 			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void IfThen()
+	public async Task IfThen()
 	{
 		var schema = new JsonSchemaBuilder()
 			.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Then(new JsonSchemaBuilder().MultipleOf(3));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void IfElse()
+	public async Task IfElse()
 	{
 		var schema = new JsonSchemaBuilder()
 			.If(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void ConstInConditional()
+	public async Task ConstInConditional()
 	{
 		var schema = new JsonSchemaBuilder()
 			.If(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Then(new JsonSchemaBuilder().Const("foo"))
 			.Else(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-		Run(schema);
+		await Run(schema);
 	}
 
 	[Test]
-	public void TypeInConditionalResult()
+	public async Task TypeInConditionalResult()
 	{
 		var schema = new JsonSchemaBuilder()
 			.If(new JsonSchemaBuilder().Required("foo"))
 			.Then(new JsonSchemaBuilder().Type(SchemaValueType.Object))
 			.Else(true);
 
-		Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		await Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 	}
 
 	[Test]
 	//[Ignore("This is just an extension of " + nameof(TypeInConditionalResult) + ". Included for reference.")]
-	public void TypeInConditionalResult2()
+	public async Task TypeInConditionalResult2()
 	{
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -98,6 +99,6 @@ public class ConditionalGenerationTests
 			)
 			.Required("people");
 
-		Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		await Run(schema, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 	}
 }

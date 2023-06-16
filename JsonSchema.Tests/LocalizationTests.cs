@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -7,7 +8,7 @@ namespace Json.Schema.Tests;
 public class LocalizationTests
 {
 	[Test]
-	public void MinimumReturnsDefaultErrorMessage()
+	public async Task MinimumReturnsDefaultErrorMessage()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
@@ -15,7 +16,7 @@ public class LocalizationTests
 
 		var instance = JsonNode.Parse("5");
 
-		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var results = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		var message = results.Errors!["minimum"];
 
@@ -24,7 +25,7 @@ public class LocalizationTests
 
 	[Test]
 	[Ignore("Can't test localization since resource file is in a separate dll now.")]
-	public void MinimumReturnsDefaultErrorMessageButInSpanish()
+	public async Task MinimumReturnsDefaultErrorMessageButInSpanish()
 	{
 		try
 		{
@@ -36,7 +37,7 @@ public class LocalizationTests
 
 			var instance = JsonNode.Parse("5");
 
-			var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+			var results = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 			var message = results.Errors!["minimum"];
 
@@ -49,7 +50,7 @@ public class LocalizationTests
 	}
 
 	[Test]
-	public void MinimumReturnsCustomErrorMessage()
+	public async Task MinimumReturnsCustomErrorMessage()
 	{
 		try
 		{
@@ -61,7 +62,7 @@ public class LocalizationTests
 
 			var instance = JsonNode.Parse("5");
 
-			var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+			var results = await schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 			var message = results.Errors!["minimum"];
 

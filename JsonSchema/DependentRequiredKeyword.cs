@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -45,18 +46,18 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{
 			context.WrongValueKind(schemaValueType);
-			return;
+			return Task.CompletedTask;
 		}
 
 		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
+		if (!obj.VerifyJsonObject()) return Task.CompletedTask;
 
 		var overallResult = true;
 		var missingDependencies = new Dictionary<string, List<string>>();
@@ -98,6 +99,8 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		}
 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

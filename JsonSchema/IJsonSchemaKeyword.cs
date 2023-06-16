@@ -1,4 +1,6 @@
-﻿namespace Json.Schema;
+﻿using System.Threading.Tasks;
+
+namespace Json.Schema;
 
 /// <summary>
 /// Defines basic functionality for schema keywords.
@@ -9,5 +11,5 @@ public interface IJsonSchemaKeyword
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	void Evaluate(EvaluationContext context);
+	Task Evaluate(EvaluationContext context);
 }
