@@ -254,7 +254,7 @@
 
 		try
 		{
-			var results = schema.Evaluate(instance, _options.ToValidationOptions());
+			var results = await schema.Evaluate(instance, _options.ToValidationOptions());
 
 			var serializerOptions = new JsonSerializerOptions
 			{
@@ -271,7 +271,6 @@
 		{
 			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue(e.Message);
-			return;
 		}
 	}
 
@@ -355,9 +354,9 @@ namespace JsonEverythingTemp
 			if (!emitResult.Success)
 			{
 				Console.WriteLine("You may expect a list of what compilation errors there are, but unfortunately " +
-										"Roslyn doesn't seem to be giving that information out (or I don't know how to " +
-										"interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
-										"know what these mean, please drop a line in a GitHub issue.");
+				                  "Roslyn doesn't seem to be giving that information out (or I don't know how to " +
+				                  "interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
+				                  "know what these mean, please drop a line in a GitHub issue.");
 				await _instanceEditor.SetValue("Compilation error");
 				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
 				//	.Select(x => GetErrorDetails(source, x)));
@@ -421,6 +420,17 @@ namespace JsonEverythingTemp
 	{
 		if (firstRender)
 		{
+			SchemaRegistry.Global.Fetch = async uri =>
+			{
+				var client = new HttpClient();
+				var content = await client.GetStreamAsync(uri);
+				var node = await JsonSerializer.DeserializeAsync<JsonNode>(content);
+
+				if (node == null) return null;
+
+				return new JsonNodeBaseDocument(node, uri);
+			};
+
 			await Json.Schema.Data.Vocabularies.Register();
 			await Json.Schema.UniqueKeys.Vocabularies.Register();
 			await Json.Schema.OpenApi.Vocabularies.Register();
