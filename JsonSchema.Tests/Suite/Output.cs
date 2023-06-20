@@ -70,7 +70,7 @@ public class Output
 			if (shortFileName == "output-schema")
 			{
 				var outputSchema = JsonSchema.FromFile(fileName);
-				SchemaRegistry.Global.Register(new Uri(fileName), outputSchema);
+				SchemaRegistry.Global.Register(new Uri(fileName), outputSchema).Wait();
 				continue;
 			}
 

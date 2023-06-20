@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Json.More;
 
@@ -88,7 +89,7 @@ public class TestSuiteRunner
 		}
 	}
 
-	public static void LoadRemoteSchemas()
+	public static async Task LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(Directory.GetCurrentDirectory(), _remoteSchemasPath)
@@ -101,7 +102,7 @@ public class TestSuiteRunner
 		{
 			var schema = JsonSchema.FromFile(fileName);
 			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-			SchemaRegistry.Global.Register(uri, schema);
+			await SchemaRegistry.Global.Register(uri, schema);
 		}
 	}
 

@@ -96,7 +96,7 @@ public class Validation
 	}
 
 	[OneTimeSetUp]
-	public void LoadRemoteSchemas()
+	public async Task LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
@@ -109,7 +109,7 @@ public class Validation
 		{
 			var schema = JsonSchema.FromFile(fileName);
 			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-			SchemaRegistry.Global.Register(uri, schema);
+			await SchemaRegistry.Global.Register(uri, schema);
 		}
 	}
 
