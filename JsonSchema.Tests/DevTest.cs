@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Json.More;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -11,24 +10,50 @@ namespace Json.Schema.Tests;
 public class DevTest
 {
 	[Test]
-	public void Test()
+	public async Task Test()
 	{
-		var filePath = "C:\\Folder\\Issue435_schema.json";
+		var rand = new Random();
+		var cancellationToken = new CancellationTokenSource();
+		var tasks = Enumerable.Range(0, 10).Select(async x =>
+		{
+			try
+			{
+				var delay = Math.Round(rand.NextDouble()*20 + 1, 2);
+				Console.WriteLine($"{x} started - {delay}");
+				await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken.Token);
+				var value = rand.Next(100);
+				Console.WriteLine($"{x} completed - {value}");
+				return value;
+			}
+			catch (TaskCanceledException e)
+			{
+				Console.WriteLine($"{x} cancelled");
+				throw;
+			}
+		});
 
-		var withoutProtocol = new Uri(filePath);
-		var withProtocol = new Uri($"file:///{filePath}");
-		
-		var fragment = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
+		var result = await tasks.WhenAny(x => x > 70);
 
-		var withoutProtocolResult = new Uri(withoutProtocol, fragment);
-		var fileUriResult = new Uri(withProtocol, fragment);
+		cancellationToken.Cancel();
 
-		Console.WriteLine("File path: {0}", filePath);
-		Console.WriteLine();
-		Console.WriteLine("Without protocol: {0}", withoutProtocol);
-		Console.WriteLine("With protocol:    {0}", withProtocol);
-		Console.WriteLine();
-		Console.WriteLine("Combined, Without: {0}", withoutProtocolResult);
-		Console.WriteLine("Combined, With:    {0}", fileUriResult);
+		Console.WriteLine($"Winner: {result.Result}");
+	}
+}
+
+static class TaskEx
+{
+	public static async Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks, Func<T, bool> predicate)
+	{
+		var list = tasks.ToList();
+		T result;
+		Task<T> task;
+		do
+		{
+			task = await Task.WhenAny(list);
+			result = task.Result;
+			list.Remove(task);
+		} while (list.Any() && !predicate(result));
+
+		return task;
 	}
 }
