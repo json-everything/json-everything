@@ -9,8 +9,6 @@ class Program
 {
 	static void Main(string[] args)
 	{
-		TestSuiteRunner.LoadRemoteSchemas();
-
 #if DEBUG
 		IConfig config = new DebugBuildConfig();
 		config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
