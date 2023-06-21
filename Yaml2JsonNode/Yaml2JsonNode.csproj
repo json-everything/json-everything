@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 	  <PackageId>Yaml2JsonNode</PackageId>
 	  <Authors>Greg Dennis</Authors>
-	  <Version>1.2.1</Version>
+	  <Version>1.2.2</Version>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <FileVersion>1.2.1.0</FileVersion>
+	  <FileVersion>1.2.2.0</FileVersion>
 	  <Description>Allows conversion of YamlDotNet's YAML models to JsonNodes.</Description>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
