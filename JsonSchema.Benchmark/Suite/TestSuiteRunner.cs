@@ -92,7 +92,7 @@ public class TestSuiteRunner
 	private static async Task LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
-		var remotesPath = Path.Combine(Directory.GetCurrentDirectory(), _remoteSchemasPath)
+		var remotesPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, _remoteSchemasPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(remotesPath)) throw new Exception("Cannot find remotes folder");
 
