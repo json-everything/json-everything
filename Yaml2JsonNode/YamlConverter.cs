@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json.Nodes;
 using YamlDotNet.Core;
@@ -101,23 +102,20 @@ public static class YamlConverter
 
 	private static JsonValue ToJsonValue(this YamlScalarNode yaml)
 	{
-		switch (yaml.Style)
+		return yaml.Style switch
 		{
-			case ScalarStyle.Plain:
-				return decimal.TryParse(yaml.Value, out var d)
-					? JsonValue.Create(d)
-					: bool.TryParse(yaml.Value, out var b)
-						? JsonValue.Create(b)
-						: JsonValue.Create(yaml.Value)!;
-			case ScalarStyle.SingleQuoted:
-			case ScalarStyle.DoubleQuoted:
-			case ScalarStyle.Literal:
-			case ScalarStyle.Folded:
-			case ScalarStyle.Any:
-				return JsonValue.Create(yaml.Value)!;
-			default:
-				throw new ArgumentOutOfRangeException();
-		}
+			ScalarStyle.Plain => decimal.TryParse(yaml.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var d)
+				? JsonValue.Create(d)
+				: bool.TryParse(yaml.Value, out var b)
+					? JsonValue.Create(b)
+					: JsonValue.Create(yaml.Value)!,
+			ScalarStyle.SingleQuoted => JsonValue.Create(yaml.Value)!,
+			ScalarStyle.DoubleQuoted => JsonValue.Create(yaml.Value)!,
+			ScalarStyle.Literal => JsonValue.Create(yaml.Value)!,
+			ScalarStyle.Folded => JsonValue.Create(yaml.Value)!,
+			ScalarStyle.Any => JsonValue.Create(yaml.Value)!,
+			_ => throw new ArgumentOutOfRangeException()
+		};
 	}
 
 	private static YamlScalarNode ToYamlScalar(this JsonValue val)
