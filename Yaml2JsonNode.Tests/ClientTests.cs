@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Globalization;
+using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 using YamlDotNet.RepresentationModel;
@@ -48,5 +49,51 @@ public class ClientTests
 		var text = writer.ToString();
 
 		Console.WriteLine(text);
+	}
+
+	[Test]
+	public void Issue478_DecimalFormatting_Comma()
+	{
+		var culture = CultureInfo.CurrentCulture;
+
+		try
+		{
+			CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("es-ES");
+
+			var yamlText = @"data: 4,789";
+
+			var expected = new JsonObject { ["data"] = 4789 };
+
+			var actual = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
+
+			Assert.True(actual.IsEquivalentTo(expected));
+		}
+		finally
+		{
+			CultureInfo.CurrentCulture = culture;
+		}
+	}
+
+	[Test]
+	public void Issue478_DecimalFormatting_Dot()
+	{
+		var culture = CultureInfo.CurrentCulture;
+
+		try
+		{
+			CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("es-ES");
+
+			var yamlText = @"data: 4.789";
+
+			var expected = new JsonObject { ["data"] = 4.789 };
+
+			var actual = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
+
+			Assert.True(actual.IsEquivalentTo(expected));
+		}
+		finally
+		{
+			CultureInfo.CurrentCulture = culture;
+		}
 	}
 }
