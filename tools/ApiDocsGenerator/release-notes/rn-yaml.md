@@ -4,6 +4,10 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.2.2](https://github.com/gregsdennis/json-everything/pull/479) {#release-yaml-1.2.2}
+
+[#478](https://github.com/gregsdennis/json-everything/issues/478) - Converting numbers from YAML to JSON parses numbers against the machine's current culture, not the invariant culture.
+
 # [1.2.1](https://github.com/gregsdennis/json-everything/pull/477) {#release-yaml-1.2.1}
 
 [#476](https://github.com/gregsdennis/json-everything/issues/476) - [@amis92](https://github.com/amis92) discovered that JSON -> YAML -> JSON doesn't work when the data has string-encoded numbers and proposed the fix.
