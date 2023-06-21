@@ -10,8 +10,6 @@ class Program
 {
 	static async Task Main(string[] args)
 	{
-		await TestSuiteRunner.LoadRemoteSchemas();
-
 #if DEBUG
 		IConfig config = new DebugBuildConfig();
 		config.WithOptions(ConfigOptions.DisableOptimizationsValidator);

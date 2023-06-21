@@ -89,7 +89,7 @@ public class TestSuiteRunner
 		}
 	}
 
-	public static async Task LoadRemoteSchemas()
+	private static async Task LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(Directory.GetCurrentDirectory(), _remoteSchemasPath)
@@ -104,6 +104,13 @@ public class TestSuiteRunner
 			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
 			await SchemaRegistry.Global.Register(uri, schema);
 		}
+	}
+
+	[GlobalSetup]
+	public async Task BenchmarkSetup()
+	{
+		await LoadRemoteSchemas();
+		_ = GetAllTests();
 	}
 
 	[Benchmark]
@@ -128,7 +135,7 @@ public class TestSuiteRunner
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		var result = collection.Schema.Evaluate(test.Data, collection.Options);
+		_ = collection.Schema.Evaluate(test.Data, collection.Options);
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)
