@@ -114,7 +114,7 @@ public class TestSuiteRunner
 	}
 
 	[Benchmark]
-	public int RunSuite()
+	public async Task<int> RunSuite()
 	{
 		int i = 0;
 		var collections = GetAllTests();
@@ -123,7 +123,7 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				Benchmark(collection, test);
+				await Benchmark(collection, test);
 				i++;
 			}
 		}
@@ -131,11 +131,11 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private static void Benchmark(TestCollection collection, TestCase test)
+	private static async Task Benchmark(TestCollection collection, TestCase test)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		_ = collection.Schema.Evaluate(test.Data, collection.Options);
+		_ = await collection.Schema.Evaluate(test.Data, collection.Options);
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)

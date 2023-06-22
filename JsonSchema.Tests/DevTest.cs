@@ -25,7 +25,7 @@ public class DevTest
 				Console.WriteLine($"{x} completed - {value}");
 				return value;
 			}
-			catch (TaskCanceledException e)
+			catch (TaskCanceledException)
 			{
 				Console.WriteLine($"{x} cancelled");
 				throw;
@@ -40,20 +40,3 @@ public class DevTest
 	}
 }
 
-static class TaskEx
-{
-	public static async Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks, Func<T, bool> predicate)
-	{
-		var list = tasks.ToList();
-		T result;
-		Task<T> task;
-		do
-		{
-			task = await Task.WhenAny(list);
-			result = task.Result;
-			list.Remove(task);
-		} while (list.Any() && !predicate(result));
-
-		return task;
-	}
-}

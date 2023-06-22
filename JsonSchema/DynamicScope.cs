@@ -25,6 +25,11 @@ public class DynamicScope : IEnumerable<Uri>
 		_scope.Push(initialScope);
 	}
 
+	internal DynamicScope(DynamicScope source)
+	{
+		_scope = new Stack<Uri>(source._scope);
+	}
+
 	internal void Push(Uri newLocal)
 	{
 		_scope.Push(newLocal);

@@ -19,6 +19,7 @@ public class EvaluationContext
 	private readonly Stack<EvaluationResults> _localResults = new();
 	private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new();
 	private readonly Stack<bool> _requireAnnotations = new();
+	private readonly EvaluationContext? _branchSource;
 
 	/// <summary>
 	/// The option set for the evaluation.
@@ -89,6 +90,48 @@ public class EvaluationContext
 		_localResults.Push(new EvaluationResults(this));
 		_metaSchemaVocabs.Push(null);
 		_requireAnnotations.Push(RequiresAnnotationCollection(schemaRoot));
+	}
+
+	private EvaluationContext(EvaluationContext source)
+	{
+		_branchSource = source;
+
+		Options = source.Options;
+		InstanceRoot = source.InstanceRoot;
+		SchemaRoot = source.SchemaRoot;
+		Scope = new DynamicScope(source.Scope);
+		_localInstances.Push(source.LocalInstance);
+		_instanceLocations.Push(source.InstanceLocation);
+		_localSchemas.Push(source.LocalSchema);
+		_evaluationPaths.Push(source.EvaluationPath);
+		_localResults.Push(source.LocalResult);
+		_metaSchemaVocabs.Push(source.MetaSchemaVocabs);
+		_requireAnnotations.Push(source._requireAnnotations.Peek());
+	}
+
+	public EvaluationContext AsyncBranch(in JsonPointer instanceLocation,
+		in JsonNode? instance,
+		in JsonPointer evaluationPath,
+		in JsonSchema subschema)
+	{
+		var branch = new EvaluationContext(this);
+		branch.Push(instanceLocation, instance, evaluationPath, subschema);
+
+		return branch;
+	}
+
+	public EvaluationContext AsyncBranch(in JsonPointer evaluationPath,
+		in JsonSchema subschema)
+	{
+		var branch = new EvaluationContext(this);
+		branch.Push(evaluationPath, subschema);
+
+		return branch;
+	}
+
+	public void Merge(EvaluationContext asyncContext)
+	{
+		LocalResult.AddNestedResult(asyncContext.LocalResult);
 	}
 
 	/// <summary>

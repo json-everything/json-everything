@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -59,18 +60,43 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 	{
 		context.EnterKeyword(Name);
 		var overallResult = true;
-		for (var i = 0; i < Schemas.Count; i++)
+
+		var tasks = Schemas.Select(async (schema, i) =>
 		{
-			var i1 = i;
-			context.Log(() => $"Processing {Name}[{i1}]...");
-			var schema = Schemas[i];
-			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			await context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+			context.Log(() => $"Processing {Name}[{i}]...");
+			var branch = context.AsyncBranch(context.EvaluationPath.Combine(Name, i), schema);
+			await branch.Evaluate();
+			context.Merge(branch);
+			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+			return branch.LocalResult.IsValid;
+		}).ToArray();
+
+		if (context.ApplyOptimizations)
+		{
+			var cancellationToken = new CancellationTokenSource();
+			var failedValidation = await tasks.WhenAny(x => !x);
+			cancellationToken.Cancel();
+			
+			overallResult = failedValidation != null;
 		}
+		else
+		{
+			await Task.WhenAll(tasks);
+			overallResult = tasks.All(x => x.Result);
+		}
+
+		//for (var i = 0; i < Schemas.Count; i++)
+		//{
+		//	var i1 = i;
+		//	context.Log(() => $"Processing {Name}[{i1}]...");
+		//	var schema = Schemas[i];
+		//	context.Push(context.EvaluationPath.Combine(Name, i), schema);
+		//	await context.Evaluate();
+		//	overallResult &= context.LocalResult.IsValid;
+		//	context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
+		//	context.Pop();
+		//	if (!overallResult && context.ApplyOptimizations) break;
+		//}
 
 		if (!overallResult)
 			context.LocalResult.Fail();
