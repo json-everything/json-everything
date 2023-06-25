@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -58,18 +59,29 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var overallResult = false;
-		for (var i = 0; i < Schemas.Count; i++)
+		bool overallResult;
+
+		var tasks = Schemas.Select(async (schema, i) =>
 		{
-			var i1 = i;
-			context.Log(() => $"Processing {Name}[{i1}]...");
-			var schema = Schemas[i];
-			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			await context.Evaluate();
-			overallResult |= context.LocalResult.IsValid;
-			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (overallResult && context.ApplyOptimizations) break;
+			context.Log(() => $"Processing {Name}[{i}]...");
+			var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name, i), schema);
+			await branch.Evaluate();
+			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+			return branch.LocalResult.IsValid;
+		}).ToArray();
+
+		if (context.ApplyOptimizations)
+		{
+			var cancellationToken = new CancellationTokenSource();
+			var passedValidation = await tasks.WhenAny(x => x);
+			cancellationToken.Cancel();
+
+			overallResult = passedValidation != null;
+		}
+		else
+		{
+			await Task.WhenAll(tasks);
+			overallResult = tasks.Any(x => x.Result);
 		}
 
 		if (!overallResult)

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 
@@ -69,19 +71,39 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 
 		var startIndex = (int)annotation.AsValue().GetInteger()!;
 		var array = (JsonArray)context.LocalInstance!;
-		for (int i = startIndex; i < array.Count; i++)
+
+		var tasks = Enumerable.Range(startIndex, array.Count - startIndex)
+			.Select(async i =>
+			{
+				context.Log(() => $"Evaluating item at index {i}.");
+				var item = array[i];
+				var branch = context.ParallelBranch(context.InstanceLocation.Combine(i),
+					item ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(Name),
+					Schema);
+				await branch.Evaluate();
+				context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+
+				return (i, branch.LocalResult.IsValid);
+			}).ToArray();
+
+		if (tasks.Any())
 		{
-			var i1 = i;
-			context.Log(() => $"Evaluating item at index {i1}.");
-			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(Name), Schema);
-			await context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+			if (context.ApplyOptimizations)
+			{
+				var cancellationToken = new CancellationTokenSource();
+				var failedValidation = await tasks.WhenAny(x => !x.IsValid);
+				cancellationToken.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.IsValid);
+			}
 		}
+
 		context.Options.LogIndentLevel--;
 		context.LocalResult.SetAnnotation(Name, true);
 

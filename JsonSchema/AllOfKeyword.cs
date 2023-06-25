@@ -59,14 +59,13 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 	public async Task Evaluate(EvaluationContext context)
 	{
 		context.EnterKeyword(Name);
-		var overallResult = true;
+		bool overallResult;
 
 		var tasks = Schemas.Select(async (schema, i) =>
 		{
 			context.Log(() => $"Processing {Name}[{i}]...");
-			var branch = context.AsyncBranch(context.EvaluationPath.Combine(Name, i), schema);
+			var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name, i), schema);
 			await branch.Evaluate();
-			context.Merge(branch);
 			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
 			return branch.LocalResult.IsValid;
 		}).ToArray();
@@ -77,26 +76,13 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 			var failedValidation = await tasks.WhenAny(x => !x);
 			cancellationToken.Cancel();
 			
-			overallResult = failedValidation != null;
+			overallResult = failedValidation == null;
 		}
 		else
 		{
 			await Task.WhenAll(tasks);
 			overallResult = tasks.All(x => x.Result);
 		}
-
-		//for (var i = 0; i < Schemas.Count; i++)
-		//{
-		//	var i1 = i;
-		//	context.Log(() => $"Processing {Name}[{i1}]...");
-		//	var schema = Schemas[i];
-		//	context.Push(context.EvaluationPath.Combine(Name, i), schema);
-		//	await context.Evaluate();
-		//	overallResult &= context.LocalResult.IsValid;
-		//	context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
-		//	context.Pop();
-		//	if (!overallResult && context.ApplyOptimizations) break;
-		//}
 
 		if (!overallResult)
 			context.LocalResult.Fail();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -62,9 +63,10 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 		if (!obj.VerifyJsonObject()) return;
 
 		context.Options.LogIndentLevel++;
-		var overallResult = true;
+		bool overallResult = true;
 		var evaluatedProperties = new List<string>();
-		foreach (var property in Properties)
+
+		var tasks = Properties.Select(async property =>
 		{
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var schema = property.Value;
@@ -72,22 +74,39 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 			if (!obj.TryGetPropertyValue(name, out var item))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
+				return ((string?)null, (bool?)null);
 			}
 
-			context.Push(context.InstanceLocation.Combine(name),
+			var branch = context.ParallelBranch(context.InstanceLocation.Combine(name),
 				item,
 				context.EvaluationPath.Combine(Name, name),
 				schema);
-			await context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			evaluatedProperties.Add(name);
+			await branch.Evaluate();
+			var localResult = branch.LocalResult.IsValid;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+
+			return (name, localResult);
+		}).ToArray();
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var cancellationToken = new CancellationTokenSource();
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false);
+				cancellationToken.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
+			}
 		}
+
 		context.Options.LogIndentLevel--;
+		evaluatedProperties.AddRange(tasks.Select(x => x.Result.Item1!).Where(x => x != null));
 		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
 
 		if (!overallResult)

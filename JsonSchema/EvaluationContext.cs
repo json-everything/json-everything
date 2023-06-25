@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.Pointer;
 
@@ -109,7 +110,7 @@ public class EvaluationContext
 		_requireAnnotations.Push(source._requireAnnotations.Peek());
 	}
 
-	public EvaluationContext AsyncBranch(in JsonPointer instanceLocation,
+	public EvaluationContext ParallelBranch(in JsonPointer instanceLocation,
 		in JsonNode? instance,
 		in JsonPointer evaluationPath,
 		in JsonSchema subschema)
@@ -120,18 +121,13 @@ public class EvaluationContext
 		return branch;
 	}
 
-	public EvaluationContext AsyncBranch(in JsonPointer evaluationPath,
+	public EvaluationContext ParallelBranch(in JsonPointer evaluationPath,
 		in JsonSchema subschema)
 	{
 		var branch = new EvaluationContext(this);
 		branch.Push(evaluationPath, subschema);
 
 		return branch;
-	}
-
-	public void Merge(EvaluationContext asyncContext)
-	{
-		LocalResult.AddNestedResult(asyncContext.LocalResult);
 	}
 
 	/// <summary>

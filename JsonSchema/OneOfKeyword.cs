@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -59,17 +60,38 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 	{
 		context.EnterKeyword(Name);
 		var validCount = 0;
-		for (var i = 0; i < Schemas.Count; i++)
+
+		var tasks = Schemas.Select(async (schema, i) =>
 		{
-			var i1 = i;
-			context.Log(() => $"Processing {Name}[{i1}]...");
-			var schema = Schemas[i];
-			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			await context.Evaluate();
-			validCount += context.LocalResult.IsValid ? 1 : 0;
-			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (validCount > 1 && context.ApplyOptimizations) break;
+			context.Log(() => $"Processing {Name}[{i}]...");
+			var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name, i), schema);
+			await branch.Evaluate();
+			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+			return branch.LocalResult.IsValid;
+		}).ToList();
+
+		if (context.ApplyOptimizations)
+		{
+			var cancellationToken = new CancellationTokenSource();
+			var passedValidation = await tasks.WhenAny(x => x);
+			tasks.Remove(passedValidation);
+			if (passedValidation != null)
+				validCount++;
+
+			Task<bool>? otherPassedValidation = null;
+			if (tasks.Any())
+			{
+				otherPassedValidation = await tasks.WhenAny(x => x);
+				cancellationToken.Cancel();
+			}
+
+			if (otherPassedValidation != null)
+				validCount++;
+		}
+		else
+		{
+			await Task.WhenAll(tasks);
+			validCount = tasks.Count(x => x.Result);
 		}
 
 		if (validCount != 1)
