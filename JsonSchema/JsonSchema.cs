@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.Pointer;
 
@@ -188,8 +189,9 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	/// </summary>
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
+	/// <param name="token">The cancellation token used by the caller.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public async Task<EvaluationResults> Evaluate(JsonNode? root, EvaluationOptions? options = null)
+	public async Task<EvaluationResults> Evaluate(JsonNode? root, EvaluationOptions? options = null, CancellationToken? token = null)
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
@@ -201,7 +203,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		var context = new EvaluationContext(options, BaseUri, root, this);
 
 		options.Log.Write(() => "Beginning evaluation.");
-		await context.Evaluate();
+		await context.Evaluate(token ?? default);
 
 		options.Log.Write(() => "Transforming output.");
 		var results = context.LocalResult;

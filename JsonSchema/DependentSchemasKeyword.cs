@@ -62,8 +62,14 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
-		foreach (var property in Schemas)
+
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
+		var tasks = Schemas.Select(async property =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+
 			context.Options.LogIndentLevel++;
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var schema = property.Value;
@@ -71,19 +77,31 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
+				return (property.Key, true);
 			}
 
-			context.Push(context.EvaluationPath.Combine(name), schema);
-			await context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			if (!overallResult && context.ApplyOptimizations) break;
-
-			if (context.LocalResult.IsValid)
-				evaluatedProperties.Add(name);
-			context.Log(() => $"Property '{property.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
+			var branch = context.ParallelBranch(context.EvaluationPath.Combine(name), schema);
+			await branch.Evaluate(tokenSource.Token);
+			context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 			context.Options.LogIndentLevel--;
-			context.Pop();
+
+			return (property.Key, branch.LocalResult.IsValid);
+		}).ToArray();
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2);
+			}
 		}
 
 		if (!overallResult)

@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Json.Schema;
 
@@ -58,20 +59,43 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 			return;
 		}
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
 		var obj = (JsonObject)context.LocalInstance!;
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		foreach (var name in obj.Select(p => p.Key))
+
+		var tasks = obj.Select(x => x.Key)
+			.Select(async name =>
+			{
+				if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+
+				context.Log(() => $"Evaluating property name '{name}'.");
+				var branch = context.ParallelBranch(context.InstanceLocation.Combine(name), name,
+					context.EvaluationPath.Combine(name), Schema);
+				await branch.Evaluate(tokenSource.Token);
+				context.Log(() => $"Property name '{name}' {branch.LocalResult.IsValid.GetValidityString()}.");
+
+				return (name, branch.LocalResult.IsValid);
+			}).ToArray();
+
+		if (tasks.Any())
 		{
-			context.Log(() => $"Evaluating property name '{name}'.");
-			context.Push(context.InstanceLocation.Combine(name), name,
-				context.EvaluationPath.Combine(name), Schema);
-			await context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
+			}
 		}
+
 		context.Options.LogIndentLevel--;
 
 		if (!overallResult)

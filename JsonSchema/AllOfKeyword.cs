@@ -71,7 +71,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 			context.Log(() => $"Processing {Name}[{i}]...");
 			var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name, i), schema);
 			await branch.Evaluate(tokenSource.Token);
-			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
+			context.Log(() => $"{Name}[{i}] {branch.LocalResult.IsValid.GetValidityString()}.");
 			return branch.LocalResult.IsValid;
 		}).ToArray();
 

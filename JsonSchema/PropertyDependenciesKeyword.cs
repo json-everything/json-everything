@@ -57,40 +57,61 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		var obj = (JsonObject)context.LocalInstance!;
 		if (!obj.VerifyJsonObject()) return;
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
-		foreach (var property in Dependencies)
+
+		var tasks = Dependencies.Select(async property =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var dependency = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out var value))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
+				return (null, null);
 			}
 
 			if (value.GetSchemaValueType() != SchemaValueType.String)
 			{
 				context.Log(() => $"Property '{property.Key}' is not a string. Skipping.");
-				continue;
+				return (null, null);
 			}
 
 			var stringValue = value!.GetValue<string>();
 			if (!dependency.Schemas.TryGetValue(stringValue, out var schema))
 			{
 				context.Log(() => $"Property '{property.Key}' does not specify a requirement for value '{stringValue}'");
-				continue;
+				return (null, null);
 			}
 
-			context.Push(context.EvaluationPath.Combine(name, stringValue), schema);
-			await context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+			var branch = context.ParallelBranch(context.EvaluationPath.Combine(name, stringValue), schema);
+			await branch.Evaluate(tokenSource.Token);
+			context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+
+			return (property.Key, branch.LocalResult.IsValid);
+		}).ToArray();
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
+			}
 		}
+
 		context.Options.LogIndentLevel--;
 
 		if (!overallResult)

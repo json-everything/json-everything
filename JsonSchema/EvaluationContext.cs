@@ -191,7 +191,7 @@ public class EvaluationContext
 	/// Evaluates as a subschema.  To be called from within keywords.
 	/// </summary>
 	/// <param name="token">The cancellation token used by the caller.</param>
-	public async Task Evaluate(CancellationToken? token = null)
+	public async Task Evaluate(CancellationToken token)
 	{
 		if (LocalSchema.BoolValue.HasValue)
 		{
@@ -215,10 +215,10 @@ public class EvaluationContext
 		{
 			// skip $schema
 			if (group.Key == long.MinValue) continue;
-			if (token?.IsCancellationRequested ?? false) return;
+			if (token.IsCancellationRequested) return;
 
 			var tokenSource = new CancellationTokenSource();
-			token?.Register(tokenSource.Cancel);
+			token.Register(tokenSource.Cancel);
 
 			var tasks = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true)
 				.Select(async x =>

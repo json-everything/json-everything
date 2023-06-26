@@ -94,6 +94,12 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 
 		var array = (JsonArray)context.LocalInstance!;
 		var overallResult = true;
+
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+		Task<bool>[] tasks;
+		var maxEvaluations = array.Count;
+
 		if (SingleSchema != null)
 		{
 			context.Options.LogIndentLevel++;
@@ -112,22 +118,20 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 				startIndex = (int)annotation;
 			}
 
-			for (int i = startIndex; i < array.Count; i++)
-			{
-				var i1 = i;
-				context.Log(() => $"Evaluating item at index {i1}.");
-				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), SingleSchema);
-				await context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-			context.Options.LogIndentLevel--;
+			tasks = Enumerable.Range(startIndex, array.Count - startIndex)
+				.Select(async i =>
+				{
+					if (tokenSource.Token.IsCancellationRequested) return true;
 
-			context.LocalResult.SetAnnotation(Name, true);
+					context.Log(() => $"Evaluating item at index {i}.");
+					var item = array[i];
+					var branch = context.ParallelBranch(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+						context.EvaluationPath.Combine(Name), SingleSchema);
+					await branch.Evaluate(tokenSource.Token);
+					context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
+
+					return branch.LocalResult.IsValid;
+				}).ToArray();
 		}
 		else // array
 		{
@@ -136,30 +140,49 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
 
 			context.Options.LogIndentLevel++;
-			var maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
-			for (int i = 0; i < maxEvaluations; i++)
-			{
-				var i1 = i;
-				context.Log(() => $"Evaluating item at index {i1}.");
-				var schema = ArraySchemas[i];
-				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(i),
-					item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(i),
-					schema);
-				await context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-			context.Options.LogIndentLevel--;
+			maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
 
-			if (maxEvaluations == array.Count)
-				context.LocalResult.SetAnnotation(Name, true);
-			else
-				context.LocalResult.SetAnnotation(Name, maxEvaluations);
+			tasks = Enumerable.Range(0, maxEvaluations)
+				.Select(async i =>
+				{
+					if (tokenSource.Token.IsCancellationRequested) return true;
+
+					context.Log(() => $"Evaluating item at index {i}.");
+					var schema = ArraySchemas[i];
+					var item = array[i];
+					var branch = context.ParallelBranch(context.InstanceLocation.Combine(i),
+						item ?? JsonNull.SignalNode,
+						context.EvaluationPath.Combine(i),
+						schema);
+					await branch.Evaluate(tokenSource.Token);
+					context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
+
+					return branch.LocalResult.IsValid;
+				}).ToArray();
 		}
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result);
+			}
+		}
+
+
+		context.Options.LogIndentLevel--;
+		if (maxEvaluations == array.Count)
+			context.LocalResult.SetAnnotation(Name, true);
+		else
+			context.LocalResult.SetAnnotation(Name, maxEvaluations);
 
 		if (!overallResult)
 			context.LocalResult.Fail();

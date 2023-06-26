@@ -87,8 +87,8 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 					item ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name),
 					Schema);
-				await branch.Evaluate();
-				context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
+				await branch.Evaluate(tokenSource.Token);
+				context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
 
 				return (i, branch.LocalResult.IsValid);
 			}).ToArray();

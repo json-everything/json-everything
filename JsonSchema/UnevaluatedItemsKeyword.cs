@@ -127,18 +127,40 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 			else
 				context.Log(() => $"No annotations from {ContainsKeyword.Name}.");
 		}
-		foreach (var i in indicesToEvaluate)
+
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
+		var tasks = indicesToEvaluate.Select(async i =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return (i, true);
+
 			context.Log(() => $"Evaluating item at index {i}.");
 			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
+			var branch = context.ParallelBranch(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			await context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Log(() => $"Item at index {i} {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+			await branch.Evaluate(tokenSource.Token);
+			context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
+
+			return (i, branch.LocalResult.IsValid);
+		}).ToArray();
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2);
+			}
 		}
+
 		context.Options.LogIndentLevel--;
 
 		context.LocalResult.SetAnnotation(Name, true);

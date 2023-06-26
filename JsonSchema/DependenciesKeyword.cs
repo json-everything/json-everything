@@ -63,28 +63,33 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
-		foreach (var property in Requirements)
+
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
+		var tasks = Requirements.Select(async property =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+
+			var localResult = true;
+
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var requirements = property.Value;
 			var name = property.Key;
 			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
+				return ((string?)null, true);
 			}
 
 			context.Options.LogIndentLevel++;
 			if (requirements.Schema != null)
 			{
 				context.Log(() => "Found schema requirement.");
-				context.Push(context.EvaluationPath.Combine(name), requirements.Schema);
-				await context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				if (context.LocalResult.IsValid)
-					evaluatedProperties.Add(name);
-				context.Log(() => $"Property '{property.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
+				var branch = context.ParallelBranch(context.EvaluationPath.Combine(name), requirements.Schema);
+				await branch.Evaluate(tokenSource.Token);
+				localResult = branch.LocalResult.IsValid;
+				context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 			}
 			else
 			{
@@ -94,7 +99,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 				{
 					if (obj.TryGetPropertyValue(dependency, out _)) continue;
 
-					overallResult = false;
+					localResult = false;
 					missingDependencies.Add(dependency);
 				}
 
@@ -103,12 +108,28 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 				else
 				{
 					context.Log(() => $"Missing properties [{string.Join(",", missingDependencies.Select(x => $"'{x}'"))}].");
-					overallResult = false;
+					localResult = false;
 				}
 			}
 			context.Options.LogIndentLevel--;
 
-			if (!overallResult && context.ApplyOptimizations) break;
+			return (property.Key, localResult);
+		}).ToArray();
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2);
+			}
 		}
 
 		if (!overallResult)

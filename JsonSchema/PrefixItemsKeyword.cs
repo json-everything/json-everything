@@ -73,18 +73,40 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 		var array = (JsonArray)context.LocalInstance!;
 		var overallResult = true;
 		var maxEvaluations = Math.Min(ArraySchemas.Count, array.Count);
-		for (int i = 0; i < maxEvaluations; i++)
+
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
+		var tasks = Enumerable.Range(0, maxEvaluations)
+			.Select(async i =>
+			{
+				if (tokenSource.Token.IsCancellationRequested) return true;
+		
+				var schema = ArraySchemas[i];
+				var item = array[i];
+				var branch = context.ParallelBranch(context.InstanceLocation.Combine(i),
+					item ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(i),
+					schema);
+				await branch.Evaluate(tokenSource.Token);
+
+				return branch.LocalResult.IsValid;
+			}).ToArray();
+
+		if (tasks.Any())
 		{
-			var schema = ArraySchemas[i];
-			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(i),
-				item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(i),
-				schema);
-			await context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result);
+			}
 		}
 
 		if (maxEvaluations == array.Count)

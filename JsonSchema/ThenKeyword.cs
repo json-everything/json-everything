@@ -65,7 +65,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		if (!valid)

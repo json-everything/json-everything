@@ -72,7 +72,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 
 		var tasks = Properties.Select(async property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var schema = property.Value;
@@ -80,14 +80,14 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 			if (!obj.TryGetPropertyValue(name, out var item))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return ((string?)null, (bool?)null);
+				return (null, null);
 			}
 
 			var branch = context.ParallelBranch(context.InstanceLocation.Combine(name),
 				item,
 				context.EvaluationPath.Combine(Name, name),
 				schema);
-			await branch.Evaluate();
+			await branch.Evaluate(tokenSource.Token);
 			var localResult = branch.LocalResult.IsValid;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 

@@ -80,25 +80,43 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 		var evaluatedProperties = new List<string>();
-		foreach (var entry in Patterns)
-		{
-			var schema = entry.Value;
-			var pattern = entry.Key;
-			foreach (var instanceProperty in obj.Where(p => pattern.IsMatch(p.Key)))
+
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
+		var tasks = Patterns.SelectMany(p => obj.Where(kvp => p.Key.IsMatch(kvp.Key))
+			.Select(async instanceProperty =>
 			{
+				if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
-				context.Push(context.InstanceLocation.Combine(instanceProperty.Key),
+				var branch = context.ParallelBranch(context.InstanceLocation.Combine(instanceProperty.Key),
 					instanceProperty.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{pattern}")),
-					schema);
-				await context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-				evaluatedProperties.Add(instanceProperty.Key);
+					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{p.Key}")),
+					p.Value);
+				await branch.Evaluate(tokenSource.Token);
+				context.Log(() => $"Property '{instanceProperty.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+
+				return (instanceProperty.Key, branch.LocalResult.IsValid);
+			}
+		)).ToArray();
+
+		if (tasks.Any())
+		{
+			if (context.ApplyOptimizations)
+			{
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
+				tokenSource.Cancel();
+
+				overallResult = failedValidation == null;
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
 			}
 		}
+
 		if (InvalidPatterns?.Any() ?? false)
 		{
 			foreach (var pattern in InvalidPatterns)
@@ -112,7 +130,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 			}
 		}
 		context.Options.LogIndentLevel--;
-
+		evaluatedProperties.AddRange(tasks.Select(x => x.Result.Item1!).Where(x => x != null));
 		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
 		if (!overallResult)
 			context.LocalResult.Fail();

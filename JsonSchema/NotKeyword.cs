@@ -50,7 +50,7 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKe
 	{
 		context.EnterKeyword(Name);
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (result)

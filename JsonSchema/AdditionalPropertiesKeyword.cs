@@ -107,12 +107,12 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 
 		var tasks = additionalProperties.Select(async property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
 			if (!obj.TryGetPropertyValue(property.Key, out var item))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return ((string?)null, (bool?)null);
+				return (null, null);
 			}
 
 			context.Log(() => $"Evaluating property '{property.Key}'.");
@@ -120,7 +120,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 				item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name),
 				Schema);
-			await branch.Evaluate();
+			await branch.Evaluate(tokenSource.Token);
 			var localResult = branch.LocalResult.IsValid;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 

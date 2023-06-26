@@ -65,7 +65,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Else
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		if (!valid) 

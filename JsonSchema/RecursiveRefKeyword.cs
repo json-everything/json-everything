@@ -93,7 +93,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)

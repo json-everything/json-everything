@@ -96,7 +96,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
 		context.Push(context.EvaluationPath.Combine(Name), subschema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)

@@ -48,7 +48,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 	{
 		context.EnterKeyword(Name);
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		context.LocalResult.SetAnnotation(Name, valid);
