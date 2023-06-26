@@ -32,7 +32,7 @@ public class DevTest
 			}
 		});
 
-		var result = await tasks.WhenAny(x => x > 70);
+		var result = await tasks.WhenAny(x => x > 70, cancellationToken.Token);
 
 		cancellationToken.Cancel();
 

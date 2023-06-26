@@ -56,13 +56,18 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var validCount = 0;
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
 		var tasks = Schemas.Select(async (schema, i) =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return true;
+
 			context.Log(() => $"Processing {Name}[{i}]...");
 			var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name, i), schema);
 			await branch.Evaluate();
@@ -72,18 +77,17 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 
 		if (context.ApplyOptimizations)
 		{
-			var cancellationToken = new CancellationTokenSource();
-			var passedValidation = await tasks.WhenAny(x => x);
+			var passedValidation = await tasks.WhenAny(x => x, tokenSource.Token);
 			tasks.Remove(passedValidation);
 			if (passedValidation != null)
 				validCount++;
 
 			if (tasks.Any())
 			{
-				var otherPassedValidation = await tasks.WhenAny(x => x);
+				var otherPassedValidation = await tasks.WhenAny(x => x, tokenSource.Token);
 				if (otherPassedValidation != null)
 				{
-					cancellationToken.Cancel();
+					tokenSource.Cancel();
 					validCount++;
 				}
 			}

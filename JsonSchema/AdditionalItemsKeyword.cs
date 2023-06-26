@@ -45,7 +45,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -72,9 +72,14 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		var startIndex = (int)annotation.AsValue().GetInteger()!;
 		var array = (JsonArray)context.LocalInstance!;
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
 		var tasks = Enumerable.Range(startIndex, array.Count - startIndex)
 			.Select(async i =>
 			{
+				if (tokenSource.Token.IsCancellationRequested) return (i, true);
+
 				context.Log(() => $"Evaluating item at index {i}.");
 				var item = array[i];
 				var branch = context.ParallelBranch(context.InstanceLocation.Combine(i),
@@ -91,16 +96,15 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		{
 			if (context.ApplyOptimizations)
 			{
-				var cancellationToken = new CancellationTokenSource();
-				var failedValidation = await tasks.WhenAny(x => !x.IsValid);
-				cancellationToken.Cancel();
+				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				tokenSource.Cancel();
 
 				overallResult = failedValidation == null;
 			}
 			else
 			{
 				await Task.WhenAll(tasks);
-				overallResult = tasks.All(x => x.Result.IsValid);
+				overallResult = tasks.All(x => x.Result.Item2);
 			}
 		}
 

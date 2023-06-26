@@ -56,25 +56,28 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		bool overallResult;
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
 		var tasks = Schemas.Select(async (schema, i) =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return true;
+
 			context.Log(() => $"Processing {Name}[{i}]...");
 			var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name, i), schema);
-			await branch.Evaluate();
+			await branch.Evaluate(tokenSource.Token);
 			context.Log(() => $"{Name}[{i}] {context.LocalResult.IsValid.GetValidityString()}.");
 			return branch.LocalResult.IsValid;
 		}).ToArray();
 
 		if (context.ApplyOptimizations)
 		{
-			var cancellationToken = new CancellationTokenSource();
-			var failedValidation = await tasks.WhenAny(x => !x);
-			cancellationToken.Cancel();
+			var failedValidation = await tasks.WhenAny(x => !x, tokenSource.Token);
+			tokenSource.Cancel();
 			
 			overallResult = failedValidation == null;
 		}

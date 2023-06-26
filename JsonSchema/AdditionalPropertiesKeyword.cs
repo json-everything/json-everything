@@ -51,7 +51,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -101,8 +101,13 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
 		evaluatedProperties.Clear();
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
 		var tasks = additionalProperties.Select(async property =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+
 			if (!obj.TryGetPropertyValue(property.Key, out var item))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
@@ -125,9 +130,8 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		{
 			if (context.ApplyOptimizations)
 			{
-				var cancellationToken = new CancellationTokenSource();
-				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false);
-				cancellationToken.Cancel();
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
+				tokenSource.Cancel();
 
 				overallResult = failedValidation == null;
 			}

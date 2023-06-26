@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 
@@ -49,7 +51,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -61,19 +63,26 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			return;
 		}
 
-		var validIndices = new List<JsonNode>();
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+		Task<(JsonNode, bool)>[] tasks;
+
 		if (schemaValueType == SchemaValueType.Array)
 		{
 			var array = (JsonArray)context.LocalInstance!;
-			for (int i = 0; i < array.Count; i++)
+
+			tasks = array.Select(async (x, i) =>
 			{
-				context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), Schema);
-				await context.Evaluate();
-				if (context.LocalResult.IsValid)
-					validIndices.Add(i);
-				context.Pop();
-			}
+				if (tokenSource.Token.IsCancellationRequested) return (-1, false);
+
+				var branch = context.ParallelBranch(context.InstanceLocation.Combine(i),
+					x ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(Name),
+					Schema);
+				await branch.Evaluate(tokenSource.Token);
+
+				return ((JsonNode)i, branch.LocalResult.IsValid);
+			}).ToArray();
 		}
 		else
 		{
@@ -84,21 +93,31 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 				return;
 			}
 			var obj = (JsonObject)context.LocalInstance!;
-			foreach (var kvp in obj)
+
+			tasks = obj.Select(async (kvp) =>
 			{
-				context.Push(context.InstanceLocation.Combine(kvp.Key), kvp.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), Schema);
-				await context.Evaluate();
-				if (context.LocalResult.IsValid)
-					validIndices.Add(kvp.Key!);
-				context.Pop();
-			}
+				if (tokenSource.Token.IsCancellationRequested) return (-1, false);
+		
+				var branch = context.ParallelBranch(context.InstanceLocation.Combine(kvp.Key),
+					kvp.Value ?? JsonNull.SignalNode,
+					context.EvaluationPath.Combine(Name),
+					Schema);
+				await branch.Evaluate(tokenSource.Token);
+
+				return ((JsonNode)kvp.Key!, branch.LocalResult.IsValid);
+			}).ToArray();
 		}
+
+		// no optimizations here; must run them all
+		await Task.WhenAll(tasks);
+
+		if (tokenSource.Token.IsCancellationRequested) return;
 
 		context.LocalResult.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation);
 		context.LocalResult.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation);
 		var min = minContainsAnnotation?.GetValue<uint>() ?? 1;
 		var max = maxContainsAnnotation?.GetValue<uint>() ?? uint.MaxValue;
+		var validIndices = tasks.Where(x => x.Result.Item2).Select(x => x.Result.Item1).ToJsonArray();
 		var validCount = validIndices.Count;
 
 		if (validCount < min)
@@ -106,7 +125,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 		else if (validCount > max)
 			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooMany, ("received", validCount), ("maximum", max));
 		else
-			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
+			context.LocalResult.SetAnnotation(Name, validIndices);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 

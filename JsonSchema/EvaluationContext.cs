@@ -20,7 +20,6 @@ public class EvaluationContext
 	private readonly Stack<EvaluationResults> _localResults = new();
 	private readonly Stack<IReadOnlyDictionary<Uri, bool>?> _metaSchemaVocabs = new();
 	private readonly Stack<bool> _requireAnnotations = new();
-	private readonly EvaluationContext? _branchSource;
 
 	/// <summary>
 	/// The option set for the evaluation.
@@ -95,8 +94,6 @@ public class EvaluationContext
 
 	private EvaluationContext(EvaluationContext source)
 	{
-		_branchSource = source;
-
 		Options = source.Options;
 		InstanceRoot = source.InstanceRoot;
 		SchemaRoot = source.SchemaRoot;
@@ -179,7 +176,7 @@ public class EvaluationContext
 	/// <summary>
 	/// Evaluates as a subschema.  To be called from within keywords.
 	/// </summary>
-	public async Task Evaluate()
+	public async Task Evaluate(CancellationToken? token = null)
 	{
 		if (LocalSchema.BoolValue.HasValue)
 		{
@@ -189,20 +186,42 @@ public class EvaluationContext
 			return;
 		}
 
-		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, LocalSchema.DeclaredVersion);
+		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, LocalSchema.DeclaredVersion).ToArray();
 
-		HashSet<Type>? keywordTypesToProcess = null;
-		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
+		var tokenSource = new CancellationTokenSource();
+		token?.Register(tokenSource.Cancel);
+
+		var schemaKeyword = keywords.OfType<SchemaKeyword>().SingleOrDefault();
+		if (schemaKeyword != null)
+			await schemaKeyword.Evaluate(this, tokenSource.Token);
+
+		var keywordTypesToProcess = GetKeywordsToProcess();
+		var filteredAndGrouped = keywords.GroupBy(x => x.Priority())
+			.OrderBy(x => x.Key);
+
+		foreach (var group in filteredAndGrouped)
 		{
-			// $schema is always processed first, and this should only be set
-			// after $schema has been evaluated.
-			if (keyword is not SchemaKeyword && !Options.ProcessCustomKeywords)
-				keywordTypesToProcess ??= GetKeywordsToProcess();
-			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
+			// skip $schema
+			if (group.Key == long.MinValue) continue;
+			if (tokenSource.Token.IsCancellationRequested) return;
 
-			await keyword.Evaluate(this);
+			var tasks = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true)
+				.Select(async x =>
+				{
+					if (!tokenSource.Token.IsCancellationRequested)
+						await x.Evaluate(this, tokenSource.Token);
+					return LocalResult.IsValid;
+				});
 
-			if (!LocalResult.IsValid && ApplyOptimizations) break;
+			if (ApplyOptimizations)
+			{
+				await tasks.WhenAny(x => !x, tokenSource.Token);
+				tokenSource.Cancel();
+			}
+			else
+			{
+				await Task.WhenAll(tasks);
+			}
 		}
 	}
 

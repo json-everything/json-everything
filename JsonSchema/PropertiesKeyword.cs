@@ -49,7 +49,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -62,12 +62,17 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 		var obj = (JsonObject)context.LocalInstance!;
 		if (!obj.VerifyJsonObject()) return;
 
+		var tokenSource = new CancellationTokenSource();
+		token.Register(tokenSource.Cancel);
+
 		context.Options.LogIndentLevel++;
 		bool overallResult = true;
 		var evaluatedProperties = new List<string>();
 
 		var tasks = Properties.Select(async property =>
 		{
+			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var schema = property.Value;
 			var name = property.Key;
@@ -92,9 +97,8 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 		{
 			if (context.ApplyOptimizations)
 			{
-				var cancellationToken = new CancellationTokenSource();
-				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false);
-				cancellationToken.Cancel();
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
+				tokenSource.Cancel();
 
 				overallResult = failedValidation == null;
 			}

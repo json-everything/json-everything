@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
@@ -524,7 +525,7 @@ public class GithubTests
 			throw new NotImplementedException();
 		}
 
-		public Task Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context, CancellationToken token)
 		{
 			throw new NotImplementedException();
 		}

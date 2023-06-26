@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema.Data;
@@ -73,7 +74,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// Thrown when the formed schema contains values that are invalid for the associated
 	/// keywords.
 	/// </exception>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var data = new Dictionary<string, JsonNode>();
