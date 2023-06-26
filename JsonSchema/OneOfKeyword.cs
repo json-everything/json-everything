@@ -78,15 +78,15 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 			if (passedValidation != null)
 				validCount++;
 
-			Task<bool>? otherPassedValidation = null;
 			if (tasks.Any())
 			{
-				otherPassedValidation = await tasks.WhenAny(x => x);
-				cancellationToken.Cancel();
+				var otherPassedValidation = await tasks.WhenAny(x => x);
+				if (otherPassedValidation != null)
+				{
+					cancellationToken.Cancel();
+					validCount++;
+				}
 			}
-
-			if (otherPassedValidation != null)
-				validCount++;
 		}
 		else
 		{
