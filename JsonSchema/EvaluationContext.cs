@@ -188,12 +188,9 @@ public class EvaluationContext
 
 		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, LocalSchema.DeclaredVersion).ToArray();
 
-		var tokenSource = new CancellationTokenSource();
-		token?.Register(tokenSource.Cancel);
-
 		var schemaKeyword = keywords.OfType<SchemaKeyword>().SingleOrDefault();
 		if (schemaKeyword != null)
-			await schemaKeyword.Evaluate(this, tokenSource.Token);
+			await schemaKeyword.Evaluate(this, default);
 
 		var keywordTypesToProcess = GetKeywordsToProcess();
 		var filteredAndGrouped = keywords.GroupBy(x => x.Priority())
@@ -203,7 +200,10 @@ public class EvaluationContext
 		{
 			// skip $schema
 			if (group.Key == long.MinValue) continue;
-			if (tokenSource.Token.IsCancellationRequested) return;
+			if (token?.IsCancellationRequested ?? false) return;
+
+			var tokenSource = new CancellationTokenSource();
+			token?.Register(tokenSource.Cancel);
 
 			var tasks = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true)
 				.Select(async x =>
