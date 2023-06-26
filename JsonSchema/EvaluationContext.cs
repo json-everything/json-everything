@@ -107,6 +107,14 @@ public class EvaluationContext
 		_requireAnnotations.Push(source._requireAnnotations.Peek());
 	}
 
+	/// <summary>
+	/// Creates a new context to be used for parallel processing.
+	/// </summary>
+	/// <param name="instanceLocation">The location within the data instance root.</param>
+	/// <param name="instance">The data instance.</param>
+	/// <param name="evaluationPath">The location within the schema root.</param>
+	/// <param name="subschema">The subschema.</param>
+	/// <returns>A new context.</returns>
 	public EvaluationContext ParallelBranch(in JsonPointer instanceLocation,
 		in JsonNode? instance,
 		in JsonPointer evaluationPath,
@@ -118,6 +126,12 @@ public class EvaluationContext
 		return branch;
 	}
 
+	/// <summary>
+	/// Creates a new context to be used for parallel processing.
+	/// </summary>
+	/// <param name="evaluationPath">The location within the schema root.</param>
+	/// <param name="subschema">The subschema.</param>
+	/// <returns>A new context.</returns>
 	public EvaluationContext ParallelBranch(in JsonPointer evaluationPath,
 		in JsonSchema subschema)
 	{
@@ -176,6 +190,7 @@ public class EvaluationContext
 	/// <summary>
 	/// Evaluates as a subschema.  To be called from within keywords.
 	/// </summary>
+	/// <param name="token">The cancellation token used by the caller.</param>
 	public async Task Evaluate(CancellationToken? token = null)
 	{
 		if (LocalSchema.BoolValue.HasValue)

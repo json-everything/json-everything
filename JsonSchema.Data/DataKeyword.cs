@@ -70,6 +70,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
+	/// <param name="token">The cancellation token used by the caller.</param>
 	/// <exception cref="JsonException">
 	/// Thrown when the formed schema contains values that are invalid for the associated
 	/// keywords.
