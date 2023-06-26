@@ -119,7 +119,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			}
 
 			tasks = Enumerable.Range(startIndex, array.Count - startIndex)
-				.Select(async i =>
+				.Select(i => Task.Run(async () =>
 				{
 					if (tokenSource.Token.IsCancellationRequested) return true;
 
@@ -131,7 +131,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 					context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
 
 					return branch.LocalResult.IsValid;
-				}).ToArray();
+				}, tokenSource.Token)).ToArray();
 		}
 		else // array
 		{
@@ -143,7 +143,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
 
 			tasks = Enumerable.Range(0, maxEvaluations)
-				.Select(async i =>
+				.Select(i => Task.Run(async () =>
 				{
 					if (tokenSource.Token.IsCancellationRequested) return true;
 
@@ -158,7 +158,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 					context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
 
 					return branch.LocalResult.IsValid;
-				}).ToArray();
+				}, tokenSource.Token)).ToArray();
 		}
 
 		if (tasks.Any())

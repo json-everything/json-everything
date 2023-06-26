@@ -67,7 +67,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 		var overallResult = true;
 
 		var tasks = obj.Select(x => x.Key)
-			.Select(async name =>
+			.Select(name => Task.Run(async () =>
 			{
 				if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -78,7 +78,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 				context.Log(() => $"Property name '{name}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
 				return (name, branch.LocalResult.IsValid);
-			}).ToArray();
+			}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

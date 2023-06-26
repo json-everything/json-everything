@@ -85,7 +85,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		token.Register(tokenSource.Cancel);
 
 		var tasks = Patterns.SelectMany(p => obj.Where(kvp => p.Key.IsMatch(kvp.Key))
-			.Select(async instanceProperty =>
+			.Select(instanceProperty => Task.Run(async () =>
 			{
 				if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -98,8 +98,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 				context.Log(() => $"Property '{instanceProperty.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
 				return (instanceProperty.Key, branch.LocalResult.IsValid);
-			}
-		)).ToArray();
+			}, tokenSource.Token))).ToArray();
 
 		if (tasks.Any())
 		{

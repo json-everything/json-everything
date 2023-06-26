@@ -105,7 +105,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = additionalProperties.Select(async property =>
+		var tasks = additionalProperties.Select(property => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -125,7 +125,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 
 			return (property.Key, localResult);
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

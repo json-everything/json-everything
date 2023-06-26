@@ -208,6 +208,13 @@ public class EvaluationContext
 			await schemaKeyword.Evaluate(this, default);
 
 		var keywordTypesToProcess = GetKeywordsToProcess();
+
+		// The following creates a problem between the serial and parallel runners in that
+		// some of the serial runners push, which changes the state of the context.  This
+		// interferes with any other runners that expect the initial state of the context
+		// when they process.
+		// The only way I can think to resolve this is to go back to fully copying this object.
+
 		var filteredAndGrouped = keywords.GroupBy(x => x.Priority())
 			.OrderBy(x => x.Key);
 
@@ -220,13 +227,14 @@ public class EvaluationContext
 			var tokenSource = new CancellationTokenSource();
 			token.Register(tokenSource.Cancel);
 
-			var tasks = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true)
-				.Select(async x =>
+			var processable = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true);
+
+			var tasks = processable.Select(x => Task.Run(async () =>
 				{
 					if (!tokenSource.Token.IsCancellationRequested)
 						await x.Evaluate(this, tokenSource.Token);
 					return LocalResult.IsValid;
-				});
+				}, tokenSource.Token));
 
 			if (ApplyOptimizations)
 			{
@@ -238,6 +246,20 @@ public class EvaluationContext
 				await Task.WhenAll(tasks);
 			}
 		}
+
+		//var prioritized = keywords.OrderBy(x => x.Priority());
+
+		//foreach (var keyword in prioritized)
+		//{
+		//	if (keyword.Priority() == long.MinValue) continue; // skip $schema
+		//	if (keywordTypesToProcess != null && !keywordTypesToProcess.Contains(keyword.GetType())) continue;
+		//	if (token.IsCancellationRequested) return;
+
+		//	var tokenSource = new CancellationTokenSource();
+		//	token.Register(tokenSource.Cancel);
+
+		//	await keyword.Evaluate(this, tokenSource.Token);
+		//}
 	}
 
 	private static bool RequiresAnnotationCollection(JsonSchema schema)

@@ -131,7 +131,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = indicesToEvaluate.Select(async i =>
+		var tasks = indicesToEvaluate.Select(i => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return (i, true);
 
@@ -143,7 +143,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 			context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
 
 			return (i, branch.LocalResult.IsValid);
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

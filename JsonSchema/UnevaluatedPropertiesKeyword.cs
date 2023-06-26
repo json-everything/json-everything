@@ -118,7 +118,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = unevaluatedProperties.Select(async property =>
+		var tasks = unevaluatedProperties.Select(property => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -135,7 +135,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 			context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
 			return (property.Key, branch.LocalResult.IsValid);
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

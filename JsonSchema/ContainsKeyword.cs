@@ -95,7 +95,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			}
 			var obj = (JsonObject)context.LocalInstance!;
 
-			tasks = obj.Select(async (kvp) =>
+			tasks = obj.Select(kvp => Task.Run(async () =>
 			{
 				if (tokenSource.Token.IsCancellationRequested) return (-1, false);
 		
@@ -106,7 +106,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 				await branch.Evaluate(tokenSource.Token);
 
 				return ((JsonNode)kvp.Key!, branch.LocalResult.IsValid);
-			}).ToArray();
+			}, tokenSource.Token)).ToArray();
 		}
 
 		// no optimizations here; must run them all; interested in how many passed

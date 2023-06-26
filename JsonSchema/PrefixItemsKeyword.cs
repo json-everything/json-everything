@@ -78,7 +78,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 		token.Register(tokenSource.Cancel);
 
 		var tasks = Enumerable.Range(0, maxEvaluations)
-			.Select(async i =>
+			.Select(i => Task.Run(async () =>
 			{
 				if (tokenSource.Token.IsCancellationRequested) return true;
 		
@@ -91,7 +91,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 				await branch.Evaluate(tokenSource.Token);
 
 				return branch.LocalResult.IsValid;
-			}).ToArray();
+			}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

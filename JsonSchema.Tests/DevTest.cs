@@ -14,7 +14,7 @@ public class DevTest
 	{
 		var rand = new Random();
 		var cancellationToken = new CancellationTokenSource();
-		var tasks = Enumerable.Range(0, 10).Select(async x =>
+		var tasks = Enumerable.Range(0, 10).Select(x => Task.Run(async () => 
 		{
 			try
 			{
@@ -30,7 +30,7 @@ public class DevTest
 				Console.WriteLine($"{x} cancelled");
 				throw;
 			}
-		});
+		}, cancellationToken.Token));
 
 		var result = await tasks.WhenAny(x => x > 70, cancellationToken.Token);
 

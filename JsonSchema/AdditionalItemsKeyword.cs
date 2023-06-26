@@ -77,7 +77,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		token.Register(tokenSource.Cancel);
 
 		var tasks = Enumerable.Range(startIndex, array.Count - startIndex)
-			.Select(async i =>
+			.Select(i => Task.Run(async () =>
 			{
 				if (tokenSource.Token.IsCancellationRequested) return ((int?)null, (bool?)null);
 
@@ -91,7 +91,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 				context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
 
 				return (i, branch.LocalResult.IsValid);
-			}).ToArray();
+			}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

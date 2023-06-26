@@ -63,7 +63,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 
-		var tasks = Dependencies.Select(async property =>
+		var tasks = Dependencies.Select(property => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -94,7 +94,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 			context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
 			return (property.Key, branch.LocalResult.IsValid);
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

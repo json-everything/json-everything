@@ -65,7 +65,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = Schemas.Select(async (schema, i) =>
+		var tasks = Schemas.Select((schema, i) => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return true;
 
@@ -74,7 +74,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 			await branch.Evaluate(tokenSource.Token);
 			context.Log(() => $"{Name}[{i}] {branch.LocalResult.IsValid.GetValidityString()}.");
 			return branch.LocalResult.IsValid;
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (context.ApplyOptimizations)
 		{

@@ -66,7 +66,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = Schemas.Select(async property =>
+		var tasks = Schemas.Select(property => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -86,7 +86,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			context.Options.LogIndentLevel--;
 
 			return (property.Key, branch.LocalResult.IsValid);
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{

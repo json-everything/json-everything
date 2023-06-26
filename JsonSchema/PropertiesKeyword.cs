@@ -70,7 +70,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 		bool overallResult = true;
 		var evaluatedProperties = new List<string>();
 
-		var tasks = Properties.Select(async property =>
+		var tasks = Properties.Select(property => Task.Run(async () =>
 		{
 			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
@@ -92,7 +92,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
 
 			return (name, localResult);
-		}).ToArray();
+		}, tokenSource.Token)).ToArray();
 
 		if (tasks.Any())
 		{
