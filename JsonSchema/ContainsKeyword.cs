@@ -109,7 +109,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			}).ToArray();
 		}
 
-		// no optimizations here; must run them all
+		// no optimizations here; must run them all; interested in how many passed
 		await Task.WhenAll(tasks);
 
 		if (tokenSource.Token.IsCancellationRequested) return;

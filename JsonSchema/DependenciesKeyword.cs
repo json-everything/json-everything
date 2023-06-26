@@ -69,7 +69,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 
 		var tasks = Requirements.Select(async property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
 			var localResult = true;
 
@@ -79,7 +79,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return ((string?)null, true);
+				return (null, null);
 			}
 
 			context.Options.LogIndentLevel++;
@@ -120,7 +120,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 		{
 			if (context.ApplyOptimizations)
 			{
-				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
 				tokenSource.Cancel();
 
 				overallResult = failedValidation == null;
@@ -128,7 +128,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 			else
 			{
 				await Task.WhenAll(tasks);
-				overallResult = tasks.All(x => x.Result.Item2);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
 			}
 		}
 

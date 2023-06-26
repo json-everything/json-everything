@@ -79,7 +79,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		var tasks = Enumerable.Range(startIndex, array.Count - startIndex)
 			.Select(async i =>
 			{
-				if (tokenSource.Token.IsCancellationRequested) return (i, true);
+				if (tokenSource.Token.IsCancellationRequested) return ((int?)null, (bool?)null);
 
 				context.Log(() => $"Evaluating item at index {i}.");
 				var item = array[i];
@@ -97,7 +97,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		{
 			if (context.ApplyOptimizations)
 			{
-				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
 				tokenSource.Cancel();
 
 				overallResult = failedValidation == null;
@@ -105,7 +105,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 			else
 			{
 				await Task.WhenAll(tasks);
-				overallResult = tasks.All(x => x.Result.Item2);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
 			}
 		}
 

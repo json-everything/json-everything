@@ -68,7 +68,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 
 		var tasks = Schemas.Select(async property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return (property.Key, true);
+			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
 
 			context.Options.LogIndentLevel++;
 			context.Log(() => $"Evaluating property '{property.Key}'.");
@@ -77,7 +77,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return (property.Key, true);
+				return (null, null);
 			}
 
 			var branch = context.ParallelBranch(context.EvaluationPath.Combine(name), schema);
@@ -92,7 +92,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		{
 			if (context.ApplyOptimizations)
 			{
-				var failedValidation = await tasks.WhenAny(x => !x.Item2, tokenSource.Token);
+				var failedValidation = await tasks.WhenAny(x => !x.Item2 ?? false, tokenSource.Token);
 				tokenSource.Cancel();
 
 				overallResult = failedValidation == null;
@@ -100,7 +100,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			else
 			{
 				await Task.WhenAll(tasks);
-				overallResult = tasks.All(x => x.Result.Item2);
+				overallResult = tasks.All(x => x.Result.Item2 ?? true);
 			}
 		}
 
