@@ -92,10 +92,9 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
-		await context.Evaluate(token);
-		var result = context.LocalResult.IsValid;
-		context.Pop();
+		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), targetSchema);
+		await branch.Evaluate(token);
+		var result = branch.LocalResult.IsValid;
 		if (!result)
 			context.LocalResult.Fail();
 

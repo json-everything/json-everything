@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -11,6 +15,7 @@ namespace Json.Schema;
 /// <summary>
 /// Provides a single source of data for evaluation operations.
 /// </summary>
+[JsonConverter(typeof(DebugContextConverter))]
 public class EvaluationContext
 {
 	private readonly Stack<JsonNode?> _localInstances = new();
@@ -83,7 +88,7 @@ public class EvaluationContext
 		InstanceRoot = instanceRoot;
 		SchemaRoot = schemaRoot;
 		Scope = new DynamicScope(currentUri);
-		_localInstances.Push(instanceRoot);
+		_localInstances.Push(InstanceRoot);
 		_instanceLocations.Push(JsonPointer.Empty);
 		_localSchemas.Push(schemaRoot);
 		_evaluationPaths.Push(JsonPointer.Empty);
@@ -123,6 +128,16 @@ public class EvaluationContext
 		var branch = new EvaluationContext(this);
 		branch.Push(instanceLocation, instance, evaluationPath, subschema);
 
+		if (!branch.InstanceRoot.IsEquivalentTo(InstanceRoot))
+			throw new Exception("data copied incorrectly")
+			{
+				Data =
+				{
+					["source"] = JsonSerializer.Serialize(this),
+					["branch"] = JsonSerializer.Serialize(branch)
+				}
+			};
+
 		return branch;
 	}
 
@@ -138,6 +153,16 @@ public class EvaluationContext
 		var branch = new EvaluationContext(this);
 		branch.Push(evaluationPath, subschema);
 
+		if (!branch.InstanceRoot.IsEquivalentTo(InstanceRoot))
+			throw new Exception("data copied incorrectly")
+			{
+				Data =
+				{
+					["source"] = JsonSerializer.Serialize(this),
+					["branch"] = JsonSerializer.Serialize(branch)
+				}
+			};
+
 		return branch;
 	}
 
@@ -148,7 +173,7 @@ public class EvaluationContext
 	/// <param name="instance">The data instance.</param>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
-	public void Push(in JsonPointer instanceLocation,
+	private void Push(in JsonPointer instanceLocation,
 		in JsonNode? instance,
 		in JsonPointer evaluationPath,
 		in JsonSchema subschema)
@@ -171,7 +196,7 @@ public class EvaluationContext
 	/// </summary>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
-	public void Push(in JsonPointer evaluationPath,
+	private void Push(in JsonPointer evaluationPath,
 		in JsonSchema subschema)
 	{
 		_instanceLocations.Push(InstanceLocation);
@@ -232,7 +257,11 @@ public class EvaluationContext
 			var tasks = processable.Select(x => Task.Run(async () =>
 				{
 					if (!tokenSource.Token.IsCancellationRequested)
+					{
+						Console.WriteLine($"starting {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)}");
 						await x.Evaluate(this, tokenSource.Token);
+						Console.WriteLine($"returning from {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)}");
+					}
 					return LocalResult.IsValid;
 				}, tokenSource.Token));
 
@@ -246,20 +275,6 @@ public class EvaluationContext
 				await Task.WhenAll(tasks);
 			}
 		}
-
-		//var prioritized = keywords.OrderBy(x => x.Priority());
-
-		//foreach (var keyword in prioritized)
-		//{
-		//	if (keyword.Priority() == long.MinValue) continue; // skip $schema
-		//	if (keywordTypesToProcess != null && !keywordTypesToProcess.Contains(keyword.GetType())) continue;
-		//	if (token.IsCancellationRequested) return;
-
-		//	var tokenSource = new CancellationTokenSource();
-		//	token.Register(tokenSource.Cancel);
-
-		//	await keyword.Evaluate(this, tokenSource.Token);
-		//}
 	}
 
 	private static bool RequiresAnnotationCollection(JsonSchema schema)
@@ -271,7 +286,7 @@ public class EvaluationContext
 	/// <summary>
 	/// Pops the state from the stack to return to a previous layer of evaluation.
 	/// </summary>
-	public void Pop()
+	private void Pop()
 	{
 		_instanceLocations.Pop();
 		_localInstances.Pop();
@@ -301,5 +316,29 @@ public class EvaluationContext
 			: new HashSet<Type>(MetaSchemaVocabs.Keys
 				.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
 								 Enumerable.Empty<Type>()));
+	}
+}
+
+internal class DebugContextConverter : JsonConverter<EvaluationContext>
+{
+	public override EvaluationContext? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		throw new NotImplementedException();
+	}
+
+	public override void Write(Utf8JsonWriter writer, EvaluationContext value, JsonSerializerOptions options)
+	{
+		writer.WriteStartObject();
+		writer.WritePropertyName("localInstance");
+		JsonSerializer.Serialize(writer, value.LocalInstance, options);
+		writer.WritePropertyName("evaluationPath");
+		JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+		writer.WritePropertyName("localSchema");
+		JsonSerializer.Serialize(writer, value.LocalSchema, options);
+		writer.WritePropertyName("instanceRoot");
+		JsonSerializer.Serialize(writer, value.InstanceRoot, options);
+		writer.WritePropertyName("instanceLocation");
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		writer.WriteEndObject();
 	}
 }

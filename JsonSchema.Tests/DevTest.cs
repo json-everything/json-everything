@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -36,7 +38,30 @@ public class DevTest
 
 		cancellationToken.Cancel();
 
-		Console.WriteLine($"Winner: {result.Result}");
+		Console.WriteLine($"Winner: {result!.Result}");
+	}
+
+	[Test]
+	public void OtherTest()
+	{
+		var obj = new JsonObject
+		{
+			["a"] = 1,
+			["b"] = 1,
+			["c"] = 1,
+			["d"] = 1,
+		};
+
+		var enumerator1 = obj.GetEnumerator();
+		var enumerator2 = obj.GetEnumerator();
+
+		enumerator1.MoveNext();
+		enumerator1.MoveNext();
+		enumerator1.MoveNext();
+
+		enumerator2.MoveNext();
+
+		Assert.AreEqual("a", enumerator2.Current.Key);
 	}
 }
 

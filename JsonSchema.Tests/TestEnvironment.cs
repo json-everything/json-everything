@@ -7,7 +7,7 @@ namespace Json.Schema.Tests;
 [SetUpFixture]
 public class TestEnvironment
 {
-	public static JsonSerializerOptions SerializerOptions = new()
+	public static readonly JsonSerializerOptions SerializerOptions = new()
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -16,8 +16,8 @@ public class TestEnvironment
 [OneTimeSetUp]
 	public void Setup()
 	{
-//#if !DEBUG
+#if !DEBUG
 		EvaluationOptions.Default.Log = new TestLog();
-//#endif
+#endif
 	}
 }

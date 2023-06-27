@@ -120,11 +120,10 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		{
 			foreach (var pattern in InvalidPatterns)
 			{
-				context.Push(context.EvaluationPath.Combine(pattern), false);
-				context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
+				var branch = context.ParallelBranch(context.EvaluationPath.Combine(pattern), false);
+				branch.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
 				overallResult = false;
-				context.Log(() => $"Discovered invalid pattern '{pattern}'.");
-				context.Pop();
+				branch.Log(() => $"Discovered invalid pattern '{pattern}'.");
 				if (!overallResult && context.ApplyOptimizations) break;
 			}
 		}

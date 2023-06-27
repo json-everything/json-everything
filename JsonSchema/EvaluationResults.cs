@@ -214,9 +214,12 @@ public class EvaluationResults
 	{
 		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
 
-		_annotations ??= new();
+		lock (this)
+		{
+			_annotations ??= new();
 
-		_annotations[keyword] = value;
+			_annotations[keyword] = value;
+		}
 	}
 
 	/// <summary>
@@ -276,8 +279,11 @@ public class EvaluationResults
 		IsValid = false;
 		if (message == null) return;
 
-		_errors ??= new();
-		_errors[keyword] = message;
+		lock (this)
+		{
+			_errors ??= new();
+			_errors[keyword] = message;
+		}
 	}
 
 	/// <summary>
@@ -289,8 +295,11 @@ public class EvaluationResults
 	public void Fail(string keyword, string message, params (string token, object? value)[] parameters)
 	{
 		IsValid = false;
-		_errors ??= new();
-		_errors[keyword] = message.ReplaceTokens(parameters);
+		lock (this)
+		{
+			_errors ??= new();
+			_errors[keyword] = message.ReplaceTokens(parameters);
+		}
 	}
 
 	/// <summary>
@@ -308,8 +317,11 @@ public class EvaluationResults
 
 	internal void AddNestedResult(EvaluationResults results)
 	{
-		_details ??= new List<EvaluationResults>();
-		_details.Add(results);
+		lock (this)
+		{
+			_details ??= new List<EvaluationResults>();
+			_details.Add(results);
+		}
 		results.Parent = this;
 	}
 }

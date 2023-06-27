@@ -47,10 +47,9 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
-		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate(token);
-		var valid = context.LocalResult.IsValid;
-		context.Pop();
+		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), Schema);
+		await branch.Evaluate(token);
+		var valid = branch.LocalResult.IsValid;
 		context.LocalResult.SetAnnotation(Name, valid);
 		context.ExitKeyword(Name, true);
 	}

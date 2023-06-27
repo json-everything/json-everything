@@ -64,10 +64,9 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Else
 			return;
 		}
 
-		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate(token);
-		var valid = context.LocalResult.IsValid;
-		context.Pop();
+		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), Schema);
+		await branch.Evaluate(token);
+		var valid = branch.LocalResult.IsValid;
 		if (!valid) 
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
