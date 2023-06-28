@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Json.Schema.Tests.Suite;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -41,27 +42,95 @@ public class DevTest
 		Console.WriteLine($"Winner: {result!.Result}");
 	}
 
+	class Context
+	{
+		private readonly Stack<JsonNode?> _locals = new();
+
+		public JsonNode? Root { get; private set; }
+		public JsonNode? Local => _locals.Peek();
+
+		public Context(JsonNode root)
+		{
+			Root = root;
+			_locals.Push(root);
+		}
+		private Context(){}
+
+		public Context Branch(JsonNode? newLocal)
+		{
+			var branch = new Context
+			{
+				Root = Root
+			};
+			branch._locals.Push(Local);
+			branch._locals.Push(newLocal);
+
+			return branch;
+		}
+
+		public async Task PrintLeafs()
+		{
+			if (Local is JsonObject obj)
+			{
+				if (!obj.Any())
+					throw new Exception();
+				await Task.WhenAll(obj.Select(kvp => Task.Run(async () =>
+				{
+					var newContext = Branch(kvp.Value);
+					await newContext.PrintLeafs();
+				})));
+			}
+			else
+				Console.WriteLine(Local);
+		}
+	}
+
 	[Test]
-	public void OtherTest()
+	[Ignore("")]
+	public async Task OtherTest()
 	{
 		var obj = new JsonObject
 		{
-			["a"] = 1,
-			["b"] = 1,
-			["c"] = 1,
-			["d"] = 1,
+			["a"] = new JsonObject
+			{
+				["a"] = 1.1,
+				["b"] = 1.2,
+				["c"] = 1.3,
+				["d"] = 1.4
+			},
+			["b"] = new JsonObject
+			{
+				["a"] = 2.1,
+				["b"] = 2.2,
+				["c"] = 2.3,
+				["d"] = 2.4
+			},
+			["c"] = new JsonObject
+			{
+				["a"] = 3.1,
+				["b"] = 3.2,
+				["c"] = 3.3,
+				["d"] = 3.4
+			},
+			["d"] = new JsonObject
+			{
+				["a"] = 4.1,
+				["b"] = 4.2,
+				["c"] = 4.3,
+				["d"] = 4.4,
+			}
 		};
 
-		var enumerator1 = obj.GetEnumerator();
-		var enumerator2 = obj.GetEnumerator();
+		async Task Selector()
+		{
+			var context = new Context(obj);
+			await context.PrintLeafs();
+		}
 
-		enumerator1.MoveNext();
-		enumerator1.MoveNext();
-		enumerator1.MoveNext();
+		var tasks = Enumerable.Range(0, 10000)
+			.Select(_ => Task.Run(Selector));
 
-		enumerator2.MoveNext();
-
-		Assert.AreEqual("a", enumerator2.Current.Key);
+		await Task.WhenAll(tasks);
 	}
 }
 

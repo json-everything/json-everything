@@ -27,6 +27,8 @@ public static class JsonNodeExtensions
 	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
 	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
+		if (ReferenceEquals(a, b)) return true;
+
 		switch (a, b)
 		{
 			case (null, null):

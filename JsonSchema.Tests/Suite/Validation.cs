@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
@@ -138,7 +139,6 @@ public class Validation
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = await collection.Schema.Evaluate(test.Data, options);
-		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)

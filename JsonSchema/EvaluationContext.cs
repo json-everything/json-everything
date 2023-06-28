@@ -88,7 +88,7 @@ public class EvaluationContext
 		InstanceRoot = instanceRoot;
 		SchemaRoot = schemaRoot;
 		Scope = new DynamicScope(currentUri);
-		_localInstances.Push(InstanceRoot);
+		_localInstances.Push(instanceRoot);
 		_instanceLocations.Push(JsonPointer.Empty);
 		_localSchemas.Push(schemaRoot);
 		_evaluationPaths.Push(JsonPointer.Empty);
@@ -128,16 +128,6 @@ public class EvaluationContext
 		var branch = new EvaluationContext(this);
 		branch.Push(instanceLocation, instance, evaluationPath, subschema);
 
-		if (!branch.InstanceRoot.IsEquivalentTo(InstanceRoot))
-			throw new Exception("data copied incorrectly")
-			{
-				Data =
-				{
-					["source"] = JsonSerializer.Serialize(this),
-					["branch"] = JsonSerializer.Serialize(branch)
-				}
-			};
-
 		return branch;
 	}
 
@@ -152,16 +142,6 @@ public class EvaluationContext
 	{
 		var branch = new EvaluationContext(this);
 		branch.Push(evaluationPath, subschema);
-
-		if (!branch.InstanceRoot.IsEquivalentTo(InstanceRoot))
-			throw new Exception("data copied incorrectly")
-			{
-				Data =
-				{
-					["source"] = JsonSerializer.Serialize(this),
-					["branch"] = JsonSerializer.Serialize(branch)
-				}
-			};
 
 		return branch;
 	}
@@ -258,9 +238,9 @@ public class EvaluationContext
 				{
 					if (!tokenSource.Token.IsCancellationRequested)
 					{
-						Console.WriteLine($"starting {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)}");
+						Console.WriteLine($"starting {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
 						await x.Evaluate(this, tokenSource.Token);
-						Console.WriteLine($"returning from {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)}");
+						Console.WriteLine($"returning from {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
 					}
 					return LocalResult.IsValid;
 				}, tokenSource.Token));
