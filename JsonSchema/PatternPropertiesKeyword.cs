@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
@@ -63,7 +64,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 
@@ -89,7 +90,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 					instanceProperty.Value ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{pattern}")),
 					schema);
-				await context.Evaluate();
+				await context.Evaluate(token);
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();

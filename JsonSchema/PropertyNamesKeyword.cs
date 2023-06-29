@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -46,7 +47,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -64,7 +65,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 			context.Log(() => $"Evaluating property name '{name}'.");
 			context.Push(context.InstanceLocation.Combine(name), name,
 				context.EvaluationPath.Combine(name), Schema);
-			await context.Evaluate();
+			await context.Evaluate(token);
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

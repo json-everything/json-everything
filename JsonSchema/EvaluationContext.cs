@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.Pointer;
 
@@ -91,6 +93,22 @@ public class EvaluationContext
 		_requireAnnotations.Push(RequiresAnnotationCollection(schemaRoot));
 	}
 
+	private EvaluationContext(EvaluationContext source)
+	{
+		Options = source.Options;
+		InstanceRoot = source.InstanceRoot;
+		SchemaRoot = source.SchemaRoot;
+		Scope = new DynamicScope(source.Scope);
+		_localInstances.Push(source.LocalInstance);
+		_instanceLocations.Push(source.InstanceLocation);
+		_localSchemas.Push(source.LocalSchema);
+		_evaluationPaths.Push(source.EvaluationPath);
+		_localResults.Push(source.LocalResult);
+		_metaSchemaVocabs.Push(source.MetaSchemaVocabs);
+		_requireAnnotations.Push(source._requireAnnotations.Peek());
+		NavigatedReferences.AddRange(source.NavigatedReferences);
+	}
+
 	/// <summary>
 	/// Pushes the state onto the stack and sets up for a nested layer of evaluation.
 	/// </summary>
@@ -140,7 +158,7 @@ public class EvaluationContext
 	/// <summary>
 	/// Evaluates as a subschema.  To be called from within keywords.
 	/// </summary>
-	public async Task Evaluate()
+	public async Task Evaluate(CancellationToken token)
 	{
 		if (LocalSchema.BoolValue.HasValue)
 		{
@@ -150,20 +168,62 @@ public class EvaluationContext
 			return;
 		}
 
-		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, LocalSchema.DeclaredVersion);
+		var keywords = Options.FilterKeywords(LocalSchema.Keywords!, LocalSchema.DeclaredVersion).ToArray();
 
-		HashSet<Type>? keywordTypesToProcess = null;
-		foreach (var keyword in keywords.OrderBy(k => k.Priority()))
+		var schemaKeyword = keywords.OfType<SchemaKeyword>().SingleOrDefault();
+		if (schemaKeyword != null)
+			await schemaKeyword.Evaluate(this, token);
+
+		var keywordTypesToProcess = GetKeywordsToProcess();
+
+		// The following creates a problem between the serial and parallel runners in that
+		// some of the serial runners push, which changes the state of the context.  This
+		// interferes with any other runners that expect the initial state of the context
+		// when they process.
+		// The only way I can think to resolve this is to go back to fully copying this object.
+
+		var filteredAndGrouped = keywords.GroupBy(x => x.Priority())
+			.OrderBy(x => x.Key);
+
+		foreach (var group in filteredAndGrouped)
 		{
-			// $schema is always processed first, and this should only be set
-			// after $schema has been evaluated.
-			if (keyword is not SchemaKeyword && !Options.ProcessCustomKeywords)
-				keywordTypesToProcess ??= GetKeywordsToProcess();
-			if (!keywordTypesToProcess?.Contains(keyword.GetType()) ?? false) continue;
+			// skip $schema
+			if (group.Key == long.MinValue) continue;
+			if (token.IsCancellationRequested) return;
 
-			await keyword.Evaluate(this);
+			var tokenSource = new CancellationTokenSource();
+			token.Register(tokenSource.Cancel);
 
-			if (!LocalResult.IsValid && ApplyOptimizations) break;
+			var processable = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true);
+
+			var tasks = processable.Select(x => Task.Run(async () =>
+			{
+				if (!tokenSource.Token.IsCancellationRequested)
+				{
+					Console.WriteLine($"starting  {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
+					var branch = new EvaluationContext(this);
+					await x.Evaluate(branch, tokenSource.Token);
+					Console.WriteLine($"returning {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
+				}
+				return LocalResult.IsValid;
+			}, tokenSource.Token));
+
+			try
+			{
+				if (ApplyOptimizations)
+				{
+					await tasks.WhenAny(x => !x, tokenSource.Token);
+					tokenSource.Cancel();
+				}
+				else
+				{
+					await Task.WhenAll(tasks);
+				}
+			}
+			catch (AggregateException e)
+			{
+				throw e.InnerException!;
+			}
 		}
 	}
 

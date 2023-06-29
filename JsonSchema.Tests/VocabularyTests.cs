@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public Task Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context, CancellationToken token)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -91,7 +92,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public Task Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context, CancellationToken token)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -156,7 +157,7 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public Task Evaluate(EvaluationContext context)
+		public Task Evaluate(EvaluationContext context, CancellationToken token)
 		{
 			var dateString = context.LocalInstance!.GetValue<string>();
 			var date = DateTime.Parse(dateString);
@@ -427,7 +428,7 @@ public class VocabularyTests
 			_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
 		}
 
-		public async Task Evaluate(EvaluationContext context)
+		public async Task Evaluate(EvaluationContext context, CancellationToken token)
 		{
 			if (BoolValue.HasValue)
 			{
@@ -457,7 +458,7 @@ public class VocabularyTests
 					context.LocalResult.Fail(Name, "minimum is exclusive");
 			}
 			else
-				await _postDraft6Keyword!.Evaluate(context);
+				await _postDraft6Keyword!.Evaluate(context, token);
 		}
 
 		public bool Equals(Draft4ExclusiveMinimumKeyword? other)

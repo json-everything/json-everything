@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.Schema;
 
@@ -23,6 +24,11 @@ public class DynamicScope : IEnumerable<Uri>
 	{
 		_scope = new Stack<Uri>();
 		_scope.Push(initialScope);
+	}
+
+	internal DynamicScope(DynamicScope source)
+	{
+		_scope = new Stack<Uri>(source._scope.Reverse());
 	}
 
 	internal void Push(Uri newLocal)

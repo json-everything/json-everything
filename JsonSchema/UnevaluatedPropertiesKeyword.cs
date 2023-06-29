@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
@@ -53,7 +54,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -123,7 +124,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			await context.Evaluate();
+			await context.Evaluate(token);
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");

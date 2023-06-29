@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -55,7 +56,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var overallResult = true;
@@ -65,7 +66,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 			context.Log(() => $"Processing {Name}[{i1}]...");
 			var schema = Schemas[i];
 			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			await context.Evaluate();
+			await context.Evaluate(token);
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
 			context.Pop();

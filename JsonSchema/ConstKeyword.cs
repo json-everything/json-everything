@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 
@@ -45,7 +46,7 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public Task Evaluate(EvaluationContext context)
+	public Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		if (!Value.IsEquivalentTo(context.LocalInstance))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.Pointer;
 
@@ -44,7 +45,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 
@@ -86,7 +87,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		if (pointerFragment != null)
 			context.LocalResult.SetSchemaReference(pointerFragment);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		context.NavigatedReferences.Remove(navigation);

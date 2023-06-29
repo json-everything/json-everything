@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 
@@ -49,7 +50,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -69,7 +70,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			{
 				context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name), Schema);
-				await context.Evaluate();
+				await context.Evaluate(token);
 				if (context.LocalResult.IsValid)
 					validIndices.Add(i);
 				context.Pop();
@@ -88,7 +89,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			{
 				context.Push(context.InstanceLocation.Combine(kvp.Key), kvp.Value ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name), Schema);
-				await context.Evaluate();
+				await context.Evaluate(token);
 				if (context.LocalResult.IsValid)
 					validIndices.Add(kvp.Key!);
 				context.Pop();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 
@@ -80,7 +81,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -117,7 +118,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name), SingleSchema);
-				await context.Evaluate();
+				await context.Evaluate(token);
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();
@@ -145,7 +146,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 					item ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(i),
 					schema);
-				await context.Evaluate();
+				await context.Evaluate(token);
 				overallResult &= context.LocalResult.IsValid;
 				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
 				context.Pop();

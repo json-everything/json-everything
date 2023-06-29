@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.Pointer;
 
@@ -42,7 +43,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 
@@ -93,7 +94,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		}
 
 		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var result = context.LocalResult.IsValid;
 		context.Pop();
 		if (!result)

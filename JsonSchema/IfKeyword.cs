@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -42,11 +43,11 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		await context.Evaluate();
+		await context.Evaluate(token);
 		var valid = context.LocalResult.IsValid;
 		context.Pop();
 		context.LocalResult.SetAnnotation(Name, valid);

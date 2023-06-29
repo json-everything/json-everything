@@ -201,7 +201,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		var context = new EvaluationContext(options, BaseUri, root, this);
 
 		options.Log.Write(() => "Beginning evaluation.");
-		await context.Evaluate();
+		await context.Evaluate(default);
 
 		options.Log.Write(() => "Transforming output.");
 		var results = context.LocalResult;

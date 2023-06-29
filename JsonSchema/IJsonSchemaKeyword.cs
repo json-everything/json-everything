@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Json.Schema;
 
@@ -11,5 +12,5 @@ public interface IJsonSchemaKeyword
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	Task Evaluate(EvaluationContext context);
+	Task Evaluate(EvaluationContext context, CancellationToken token);
 }

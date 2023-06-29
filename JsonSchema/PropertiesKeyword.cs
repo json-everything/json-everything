@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Json.Schema;
@@ -48,7 +49,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
-	public async Task Evaluate(EvaluationContext context)
+	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
@@ -79,7 +80,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 				item,
 				context.EvaluationPath.Combine(Name, name),
 				schema);
-			await context.Evaluate();
+			await context.Evaluate(token);
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
 			evaluatedProperties.Add(name);
