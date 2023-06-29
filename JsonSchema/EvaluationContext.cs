@@ -188,13 +188,12 @@ public class EvaluationContext
 		foreach (var group in filteredAndGrouped)
 		{
 			// skip $schema
-			if (group.Key == long.MinValue) continue;
 			if (token.IsCancellationRequested) return;
 
 			var tokenSource = new CancellationTokenSource();
 			token.Register(tokenSource.Cancel);
 
-			var processable = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true);
+			var processable = group.Where(x => Options.ProcessCustomKeywords || (keywordTypesToProcess?.Contains(x.GetType()) ?? true));
 
 			var tasks = processable.Select(x => Task.Run(async () =>
 			{
@@ -265,6 +264,7 @@ public class EvaluationContext
 			? null
 			: new HashSet<Type>(MetaSchemaVocabs.Keys
 				.SelectMany(x => Options.VocabularyRegistry.Get(x)?.Keywords ??
-								 Enumerable.Empty<Type>()));
+				                 Enumerable.Empty<Type>())
+				.Except(new[] { typeof(SchemaKeyword) }));
 	}
 }
