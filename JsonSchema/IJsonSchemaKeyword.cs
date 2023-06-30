@@ -12,5 +12,6 @@ public interface IJsonSchemaKeyword
 	/// Performs evaluation for the keyword.
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
+	/// <param name="token">A cancellation token to know if other branches of the schema have completed in an optimized evaluation.</param>
 	Task Evaluate(EvaluationContext context, CancellationToken token);
 }
