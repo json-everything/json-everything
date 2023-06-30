@@ -193,13 +193,12 @@ public class EvaluationContext
 			{
 				if (!tokenSource.Token.IsCancellationRequested)
 				{
-					// I have no idea why this works, but without this line, it seems that either the local
+					// I have no idea why this works, but without this, it seems that either the local
 					// instance or the instance root just randomly lose their data in a multi-threaded context.
-					// and only if they're an object.
 					// Simply touching the local instance at all before entering a secondary thread seems
 					// to stop the problem.  I'm leaving this in here for now, but feel free to comment this line
 					// and see the chaos that ensues.
-					_ = LocalInstance is JsonObject obj ? obj.Count : 0;
+					Touch(LocalInstance);
 
 					var branch = new EvaluationContext(this);
 					// ReSharper disable once MethodSupportsCancellation
@@ -219,6 +218,15 @@ public class EvaluationContext
 				await Task.WhenAll(tasks);
 			}
 		}
+	}
+
+	private static void Touch(JsonNode? node)
+	{
+		// This is the least processor-intensive way I could think to touch these values.
+		if (node is JsonObject obj)
+			_ = obj.Count;
+		else if (node is JsonArray arr)
+			_ = arr.Count;
 	}
 
 	private static bool RequiresAnnotationCollection(JsonSchema schema)

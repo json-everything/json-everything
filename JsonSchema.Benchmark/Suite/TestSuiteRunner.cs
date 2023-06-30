@@ -6,11 +6,13 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
 using Json.More;
 
 namespace Json.Schema.Benchmark.Suite;
 
 [MemoryDiagnoser]
+[Orderer(SummaryOrderPolicy.Method)]
 public class TestSuiteRunner
 {
 	private const string _benchmarkOffset = @"../../../../";
@@ -19,9 +21,11 @@ public class TestSuiteRunner
 
 	private const bool _runDraftNext = true;
 
+	private static IEnumerable<TestCollection>? _allTests;
+
 	public static IEnumerable<TestCollection> GetAllTests()
 	{
-		return GetTests("draft6")
+		return _allTests ??= GetTests("draft6")
 			.Concat(GetTests("draft7"))
 			.Concat(GetTests("draft2019-09"))
 			.Concat(GetTests("draft2020-12"))
@@ -114,16 +118,22 @@ public class TestSuiteRunner
 	}
 
 	[Benchmark]
-	public int RunSuite()
+	[Arguments(true)]
+	[Arguments(false)]
+	public async Task<int> RunSuite(bool optimized)
 	{
 		int i = 0;
 		var collections = GetAllTests();
 
 		foreach (var collection in collections)
 		{
+			collection.Options.OutputFormat = optimized
+				? OutputFormat.Flag
+				: OutputFormat.List;
+
 			foreach (var test in collection.Tests)
 			{
-				Benchmark(collection, test);
+				await Benchmark(collection, test);
 				i++;
 			}
 		}
@@ -131,11 +141,11 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private static void Benchmark(TestCollection collection, TestCase test)
+	private static async Task Benchmark(TestCollection collection, TestCase test)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		_ = collection.Schema.Evaluate(test.Data, collection.Options);
+		_ = await collection.Schema.Evaluate(test.Data, collection.Options);
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)
