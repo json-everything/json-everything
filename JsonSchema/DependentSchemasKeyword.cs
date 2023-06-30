@@ -77,13 +77,13 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			context.Push(context.EvaluationPath.Combine(name), schema);
 			await context.Evaluate(token);
 			overallResult &= context.LocalResult.IsValid;
+			context.Log(() => $"Property '{property.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
+			context.Options.LogIndentLevel--;
+			context.Pop();
 			if (!overallResult && context.ApplyOptimizations) break;
 
 			if (context.LocalResult.IsValid)
 				evaluatedProperties.Add(name);
-			context.Log(() => $"Property '{property.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Options.LogIndentLevel--;
-			context.Pop();
 		}
 
 		if (!overallResult)

@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Running;
 using Json.Schema.Benchmark.Suite;
 
 namespace Json.Schema.Benchmark;

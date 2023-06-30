@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.Tests.Suite;
 
-public class Validation
+public class OptimizedValidation
 {
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
@@ -42,7 +42,7 @@ public class Validation
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical
+			OutputFormat = OutputFormat.Flag
 		};
 		switch (draftFolder)
 		{
@@ -144,7 +144,6 @@ public class Validation
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = await collection.Schema.Evaluate(test.Data, options);
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
