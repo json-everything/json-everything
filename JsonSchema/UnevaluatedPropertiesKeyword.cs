@@ -118,24 +118,27 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = unevaluatedProperties.Select(property => Task.Run(async () =>
+		var tasks = unevaluatedProperties.Select(property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+			if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((string?)null, (bool?)null));
 
 			if (!obj.TryGetPropertyValue(property.Key, out var item))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return (null, null);
+				return Task.FromResult(((string?)null, (bool?)null));
 			}
 
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var branch = context.ParallelBranch(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			await branch.Evaluate(tokenSource.Token);
-			context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+			return Task.Run(async() =>
+			{
+				await branch.Evaluate(tokenSource.Token);
+				context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
-			return (property.Key, branch.LocalResult.IsValid);
-		}, tokenSource.Token)).ToArray();
+				return ((string?)property.Key, (bool?)branch.LocalResult.IsValid);
+			}, tokenSource.Token);
+		}).ToArray();
 
 		if (tasks.Any())
 		{

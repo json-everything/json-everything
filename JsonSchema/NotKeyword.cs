@@ -49,9 +49,10 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKe
 	public async Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
-		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), Schema);
-		await branch.Evaluate(token);
-		var result = branch.LocalResult.IsValid;
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		await context.Evaluate(token);
+		var result = context.LocalResult.IsValid;
+		context.Pop();
 		if (result)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);

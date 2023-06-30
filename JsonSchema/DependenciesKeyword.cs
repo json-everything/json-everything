@@ -67,9 +67,9 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = Requirements.Select(property => Task.Run(async () =>
+		var tasks = Requirements.Select(property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+			if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((string?)null, (bool?)null));
 
 			var localResult = true;
 
@@ -79,7 +79,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 			if (!obj.TryGetPropertyValue(name, out _))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return (null, null);
+				return Task.FromResult(((string?)null, (bool?)null));
 			}
 
 			context.Options.LogIndentLevel++;
@@ -87,34 +87,41 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 			{
 				context.Log(() => "Found schema requirement.");
 				var branch = context.ParallelBranch(context.EvaluationPath.Combine(name), requirements.Schema);
-				await branch.Evaluate(tokenSource.Token);
-				localResult = branch.LocalResult.IsValid;
-				context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+				return Task.Run(async () =>
+				{
+					await branch.Evaluate(tokenSource.Token);
+
+					localResult = branch.LocalResult.IsValid;
+					context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+
+					context.Options.LogIndentLevel--;
+
+					return ((string?)property.Key, (bool?)localResult);
+				}, tokenSource.Token);
 			}
+
+			context.Log(() => "Found property list requirement.");
+			var missingDependencies = new List<string>();
+			foreach (var dependency in requirements.Requirements!)
+			{
+				if (obj.TryGetPropertyValue(dependency, out _)) continue;
+
+				localResult = false;
+				missingDependencies.Add(dependency);
+			}
+
+			if (!missingDependencies.Any())
+				evaluatedProperties.Add(name);
 			else
 			{
-				context.Log(() => "Found property list requirement.");
-				var missingDependencies = new List<string>();
-				foreach (var dependency in requirements.Requirements!)
-				{
-					if (obj.TryGetPropertyValue(dependency, out _)) continue;
-
-					localResult = false;
-					missingDependencies.Add(dependency);
-				}
-
-				if (!missingDependencies.Any())
-					evaluatedProperties.Add(name);
-				else
-				{
-					context.Log(() => $"Missing properties [{string.Join(",", missingDependencies.Select(x => $"'{x}'"))}].");
-					localResult = false;
-				}
+				context.Log(() => $"Missing properties [{string.Join(",", missingDependencies.Select(x => $"'{x}'"))}].");
+				localResult = false;
 			}
+
 			context.Options.LogIndentLevel--;
 
-			return (property.Key, localResult);
-		}, tokenSource.Token)).ToArray();
+			return Task.FromResult(((string?)property.Key, (bool?)localResult));
+		}).ToArray();
 
 		if (tasks.Any())
 		{

@@ -85,20 +85,23 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		token.Register(tokenSource.Cancel);
 
 		var tasks = Patterns.SelectMany(p => obj.Where(kvp => p.Key.IsMatch(kvp.Key))
-			.Select(instanceProperty => Task.Run(async () =>
+			.Select(instanceProperty =>
 			{
-				if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+				if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((string?)null, (bool?)null));
 
 				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
 				var branch = context.ParallelBranch(context.InstanceLocation.Combine(instanceProperty.Key),
 					instanceProperty.Value ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{p.Key}")),
 					p.Value);
-				await branch.Evaluate(tokenSource.Token);
-				context.Log(() => $"Property '{instanceProperty.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+				return Task.Run(async () =>
+				{
+					await branch.Evaluate(tokenSource.Token);
+					context.Log(() => $"Property '{instanceProperty.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
-				return (instanceProperty.Key, branch.LocalResult.IsValid);
-			}, tokenSource.Token))).ToArray();
+					return ((string?)instanceProperty.Key, (bool?)branch.LocalResult.IsValid);
+				}, tokenSource.Token);
+			})).ToArray();
 
 		if (tasks.Any())
 		{
@@ -120,11 +123,12 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		{
 			foreach (var pattern in InvalidPatterns)
 			{
-				var branch = context.ParallelBranch(context.EvaluationPath.Combine(pattern), false);
-				branch.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
+				context.Push(context.EvaluationPath.Combine(pattern), false);
+				context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
 				overallResult = false;
-				branch.Log(() => $"Discovered invalid pattern '{pattern}'.");
-				if (!overallResult && context.ApplyOptimizations) break;
+				context.Log(() => $"Discovered invalid pattern '{pattern}'.");
+				context.Pop();
+				if (context.ApplyOptimizations) break;
 			}
 		}
 		context.Options.LogIndentLevel--;

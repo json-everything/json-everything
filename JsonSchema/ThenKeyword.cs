@@ -64,9 +64,10 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 			return;
 		}
 
-		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), Schema);
-		await branch.Evaluate(token);
-		var valid = branch.LocalResult.IsValid;
+		context.Push(context.EvaluationPath.Combine(Name), Schema);
+		await context.Evaluate(token);
+		var valid = context.LocalResult.IsValid;
+		context.Pop();
 		if (!valid)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);

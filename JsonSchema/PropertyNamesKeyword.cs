@@ -67,18 +67,21 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 		var overallResult = true;
 
 		var tasks = obj.Select(x => x.Key)
-			.Select(name => Task.Run(async () =>
+			.Select(name =>
 			{
-				if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+				if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((string?)null, (bool?)null));
 
 				context.Log(() => $"Evaluating property name '{name}'.");
 				var branch = context.ParallelBranch(context.InstanceLocation.Combine(name), name,
 					context.EvaluationPath.Combine(name), Schema);
-				await branch.Evaluate(tokenSource.Token);
-				context.Log(() => $"Property name '{name}' {branch.LocalResult.IsValid.GetValidityString()}.");
+				return Task.Run(async () =>
+				{
+					await branch.Evaluate(tokenSource.Token);
+					context.Log(() => $"Property name '{name}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
-				return (name, branch.LocalResult.IsValid);
-			}, tokenSource.Token)).ToArray();
+					return ((string?)name, (bool?)branch.LocalResult.IsValid);
+				}, tokenSource.Token);
+			}).ToArray();
 
 		if (tasks.Any())
 		{

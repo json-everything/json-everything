@@ -60,7 +60,6 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 	public Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
-		Console.WriteLine($"inside required - instance root: {JsonSerializer.Serialize(context.InstanceRoot)}");
 		var schemaValueType = context.LocalInstance.GetSchemaValueType();
 		if (schemaValueType != SchemaValueType.Object)
 		{

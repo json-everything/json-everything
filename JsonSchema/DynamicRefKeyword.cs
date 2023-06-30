@@ -94,9 +94,10 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), targetSchema);
-		await branch.Evaluate(token);
-		var result = branch.LocalResult.IsValid;
+		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
+		await context.Evaluate(token);
+		var result = context.LocalResult.IsValid;
+		context.Pop();
 		if (!result)
 			context.LocalResult.Fail();
 

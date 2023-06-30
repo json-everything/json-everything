@@ -85,11 +85,12 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
 		context.NavigatedReferences.Add(navigation);
-		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), targetSchema);
+		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
 		if (pointerFragment != null)
-			branch.LocalResult.SetSchemaReference(pointerFragment);
-		await branch.Evaluate(token);
-		var result = branch.LocalResult.IsValid;
+			context.LocalResult.SetSchemaReference(pointerFragment);
+		await context.Evaluate(token);
+		var result = context.LocalResult.IsValid;
+		context.Pop();
 		context.NavigatedReferences.Remove(navigation);
 		if (!result)
 			context.LocalResult.Fail();

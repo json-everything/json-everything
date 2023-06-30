@@ -153,7 +153,7 @@ public class EvaluationContext
 	/// <param name="instance">The data instance.</param>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
-	private void Push(in JsonPointer instanceLocation,
+	public void Push(in JsonPointer instanceLocation,
 		in JsonNode? instance,
 		in JsonPointer evaluationPath,
 		in JsonSchema subschema)
@@ -176,7 +176,7 @@ public class EvaluationContext
 	/// </summary>
 	/// <param name="evaluationPath">The location within the schema root.</param>
 	/// <param name="subschema">The subschema.</param>
-	private void Push(in JsonPointer evaluationPath,
+	public void Push(in JsonPointer evaluationPath,
 		in JsonSchema subschema)
 	{
 		_instanceLocations.Push(InstanceLocation);
@@ -210,40 +210,44 @@ public class EvaluationContext
 
 		var schemaKeyword = keywords.OfType<SchemaKeyword>().SingleOrDefault();
 		if (schemaKeyword != null)
-			await schemaKeyword.Evaluate(this, default);
+			await schemaKeyword.Evaluate(this, token);
 
 		var keywordTypesToProcess = GetKeywordsToProcess();
-
-		// The following creates a problem between the serial and parallel runners in that
-		// some of the serial runners push, which changes the state of the context.  This
-		// interferes with any other runners that expect the initial state of the context
-		// when they process.
-		// The only way I can think to resolve this is to go back to fully copying this object.
 
 		var filteredAndGrouped = keywords.GroupBy(x => x.Priority())
 			.OrderBy(x => x.Key);
 
 		foreach (var group in filteredAndGrouped)
 		{
-			// skip $schema
-			if (group.Key == long.MinValue) continue;
 			if (token.IsCancellationRequested) return;
 
 			var tokenSource = new CancellationTokenSource();
 			token.Register(tokenSource.Cancel);
 
-			var processable = group.Where(x => keywordTypesToProcess?.Contains(x.GetType()) ?? true);
+			var processable = group.Where(x => Options.ProcessCustomKeywords || (keywordTypesToProcess?.Contains(x.GetType()) ?? true));
 
-			var tasks = processable.Select(x => Task.Run(async () =>
+			var tasks = processable.Select(x =>
+			{
+				if (!tokenSource.Token.IsCancellationRequested)
 				{
-					if (!tokenSource.Token.IsCancellationRequested)
+					// I have no idea why this works, but without this, it seems that either the local
+					// instance or the instance root just randomly lose their data in a multi-threaded context.
+					// Simply touching the local instance at all before entering a secondary thread seems
+					// to stop the problem.  I'm leaving this in here for now, but feel free to comment this line
+					// and see the chaos that ensues.
+					Touch(LocalInstance);
+
+					var branch = new EvaluationContext(this);
+					// ReSharper disable once MethodSupportsCancellation
+					// We don't want to pass the token into Run() because it would throw a TaskCancelledException
+					return Task.Run(async () =>
 					{
-						Console.WriteLine($"starting {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
-						await x.Evaluate(this, tokenSource.Token);
-						Console.WriteLine($"returning from {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
-					}
-					return LocalResult.IsValid;
-				}, tokenSource.Token));
+						await x.Evaluate(branch, tokenSource.Token);
+						return branch.LocalResult.IsValid;
+					}, tokenSource.Token);
+				}
+				return Task.FromResult(LocalResult.IsValid);
+			});
 
 			if (ApplyOptimizations)
 			{
@@ -257,6 +261,15 @@ public class EvaluationContext
 		}
 	}
 
+	private static void Touch(JsonNode? node)
+	{
+		// This is the least processor-intensive way I could think to touch the node.
+		if (node is JsonObject obj)
+			_ = obj.Count;
+		else if (node is JsonArray arr)
+			_ = arr.Count;
+	}
+
 	private static bool RequiresAnnotationCollection(JsonSchema schema)
 	{
 		return schema.TryGetKeyword<UnevaluatedPropertiesKeyword>(UnevaluatedPropertiesKeyword.Name, out _) ||
@@ -266,7 +279,7 @@ public class EvaluationContext
 	/// <summary>
 	/// Pops the state from the stack to return to a previous layer of evaluation.
 	/// </summary>
-	private void Pop()
+	public void Pop()
 	{
 		_instanceLocations.Pop();
 		_localInstances.Pop();

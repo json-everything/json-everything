@@ -131,19 +131,22 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 		var tokenSource = new CancellationTokenSource();
 		token.Register(tokenSource.Cancel);
 
-		var tasks = indicesToEvaluate.Select(i => Task.Run(async () =>
+		var tasks = indicesToEvaluate.Select(i =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return (i, true);
+			if (tokenSource.Token.IsCancellationRequested) return Task.FromResult((i, true));
 
 			context.Log(() => $"Evaluating item at index {i}.");
 			var item = array[i];
 			var branch = context.ParallelBranch(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
 				context.EvaluationPath.Combine(Name), Schema);
-			await branch.Evaluate(tokenSource.Token);
-			context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
+			return Task.Run(async ()=>
+			{
+				await branch.Evaluate(tokenSource.Token);
+				context.Log(() => $"Item at index {i} {branch.LocalResult.IsValid.GetValidityString()}.");
 
-			return (i, branch.LocalResult.IsValid);
-		}, tokenSource.Token)).ToArray();
+				return (i, branch.LocalResult.IsValid);
+			}, tokenSource.Token);
+		}).ToArray();
 
 		if (tasks.Any())
 		{

@@ -25,9 +25,11 @@ public static class TaskExtensions
 		while (!token.IsCancellationRequested && list.Any())
 		{
 			var task = await Task.WhenAny(list);
-			var result = task.Result;
 			list.Remove(task);
 
+			if (task.IsCanceled || task.IsFaulted) continue;
+
+			var result = task.Result;
 			if (predicate(result)) return task;
 		}
 

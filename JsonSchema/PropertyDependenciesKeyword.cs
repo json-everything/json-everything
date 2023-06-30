@@ -63,9 +63,9 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		context.Options.LogIndentLevel++;
 		var overallResult = true;
 
-		var tasks = Dependencies.Select(property => Task.Run(async () =>
+		var tasks = Dependencies.Select(property =>
 		{
-			if (tokenSource.Token.IsCancellationRequested) return ((string?)null, (bool?)null);
+			if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((string?)null, (bool?)null));
 
 			context.Log(() => $"Evaluating property '{property.Key}'.");
 			var dependency = property.Value;
@@ -73,28 +73,31 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 			if (!obj.TryGetPropertyValue(name, out var value))
 			{
 				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				return (null, null);
+				return Task.FromResult(((string?)null, (bool?)null));
 			}
 
 			if (value.GetSchemaValueType() != SchemaValueType.String)
 			{
 				context.Log(() => $"Property '{property.Key}' is not a string. Skipping.");
-				return (null, null);
+				return Task.FromResult(((string?)null, (bool?)null));
 			}
 
 			var stringValue = value!.GetValue<string>();
 			if (!dependency.Schemas.TryGetValue(stringValue, out var schema))
 			{
 				context.Log(() => $"Property '{property.Key}' does not specify a requirement for value '{stringValue}'");
-				return (null, null);
+				return Task.FromResult(((string?)null, (bool?)null));
 			}
 
 			var branch = context.ParallelBranch(context.EvaluationPath.Combine(name, stringValue), schema);
-			await branch.Evaluate(tokenSource.Token);
-			context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
+			return Task.Run(async () =>
+			{
+				await branch.Evaluate(tokenSource.Token);
+				context.Log(() => $"Property '{property.Key}' {branch.LocalResult.IsValid.GetValidityString()}.");
 
-			return (property.Key, branch.LocalResult.IsValid);
-		}, tokenSource.Token)).ToArray();
+				return ((string?)property.Key, (bool?)branch.LocalResult.IsValid);
+			}, tokenSource.Token);
+		}).ToArray();
 
 		if (tasks.Any())
 		{

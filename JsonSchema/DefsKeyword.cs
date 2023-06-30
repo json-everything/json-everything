@@ -51,8 +51,9 @@ public class DefsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable
 	public Task Evaluate(EvaluationContext context, CancellationToken token)
 	{
 		context.EnterKeyword(Name);
-		var branch = context.ParallelBranch(context.EvaluationPath.Combine(Name), true);
-		branch.LocalResult.Ignore();
+		context.Push(context.EvaluationPath.Combine(Name), true);
+		context.LocalResult.Ignore();
+		context.Pop();
 		context.ExitKeyword(Name, true);
 
 		return Task.CompletedTask;

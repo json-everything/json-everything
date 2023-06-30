@@ -72,17 +72,20 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 		{
 			var array = (JsonArray)context.LocalInstance!;
 
-			tasks = array.Select(async (x, i) =>
+			tasks = array.Select((x, i) =>
 			{
-				if (tokenSource.Token.IsCancellationRequested) return (-1, false);
+				if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((JsonNode)(-1), false));
 
 				var branch = context.ParallelBranch(context.InstanceLocation.Combine(i),
 					x ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name),
 					Schema);
-				await branch.Evaluate(tokenSource.Token);
+				return Task.Run(async () =>
+				{
+					await branch.Evaluate(tokenSource.Token);
+					return ((JsonNode)i, branch.LocalResult.IsValid);
+				}, tokenSource.Token);
 
-				return ((JsonNode)i, branch.LocalResult.IsValid);
 			}).ToArray();
 		}
 		else
@@ -95,18 +98,22 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			}
 			var obj = (JsonObject)context.LocalInstance!;
 
-			tasks = obj.Select(kvp => Task.Run(async () =>
+			tasks = obj.Select(kvp =>
 			{
-				if (tokenSource.Token.IsCancellationRequested) return (-1, false);
+				if (tokenSource.Token.IsCancellationRequested) return Task.FromResult(((JsonNode)(-1), false));
 		
 				var branch = context.ParallelBranch(context.InstanceLocation.Combine(kvp.Key),
 					kvp.Value ?? JsonNull.SignalNode,
 					context.EvaluationPath.Combine(Name),
 					Schema);
-				await branch.Evaluate(tokenSource.Token);
+				return Task.Run(async () =>
+				{
+					await branch.Evaluate(tokenSource.Token);
+				
+					return ((JsonNode)kvp.Key!, branch.LocalResult.IsValid);
+				}, tokenSource.Token);
 
-				return ((JsonNode)kvp.Key!, branch.LocalResult.IsValid);
-			}, tokenSource.Token)).ToArray();
+			}).ToArray();
 		}
 
 		// no optimizations here; must run them all; interested in how many passed
