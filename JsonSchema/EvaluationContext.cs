@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -176,18 +177,11 @@ public class EvaluationContext
 
 		var keywordTypesToProcess = GetKeywordsToProcess();
 
-		// The following creates a problem between the serial and parallel runners in that
-		// some of the serial runners push, which changes the state of the context.  This
-		// interferes with any other runners that expect the initial state of the context
-		// when they process.
-		// The only way I can think to resolve this is to go back to fully copying this object.
-
 		var filteredAndGrouped = keywords.GroupBy(x => x.Priority())
 			.OrderBy(x => x.Key);
 
 		foreach (var group in filteredAndGrouped)
 		{
-			// skip $schema
 			if (token.IsCancellationRequested) return;
 
 			var tokenSource = new CancellationTokenSource();
@@ -195,33 +189,34 @@ public class EvaluationContext
 
 			var processable = group.Where(x => Options.ProcessCustomKeywords || (keywordTypesToProcess?.Contains(x.GetType()) ?? true));
 
-			var tasks = processable.Select(x => Task.Run(async () =>
+			var tasks = processable.Select(async x =>
 			{
 				if (!tokenSource.Token.IsCancellationRequested)
 				{
-					Console.WriteLine($"starting  {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
+					// I have no idea why this works, but without this line, it seems that either the local
+					// instance or the instance root just randomly lose their data in a multi-threaded context.
+					// and only if they're an object.
+					// Simply touching the local instance at all before entering a secondary thread seems
+					// to stop the problem.  I'm leaving this in here for now, but feel free to comment this line
+					// and see the chaos that ensues.
+					_ = LocalInstance is JsonObject obj ? obj.Count : 0;
+
 					var branch = new EvaluationContext(this);
-					await x.Evaluate(branch, tokenSource.Token);
-					Console.WriteLine($"returning {EvaluationPath}/{x.Keyword()} - instance root: {JsonSerializer.Serialize(InstanceRoot)} ({InstanceRoot?.GetHashCode() ?? 0})");
+					// ReSharper disable once MethodSupportsCancellation
+					// We don't want to pass the token into Run() because it would throw a TaskCancelledException
+					await Task.Run(() => x.Evaluate(branch, tokenSource.Token));
 				}
 				return LocalResult.IsValid;
-			}, tokenSource.Token));
+			});
 
-			try
+			if (ApplyOptimizations)
 			{
-				if (ApplyOptimizations)
-				{
-					await tasks.WhenAny(x => !x, tokenSource.Token);
-					tokenSource.Cancel();
-				}
-				else
-				{
-					await Task.WhenAll(tasks);
-				}
+				await tasks.WhenAny(x => !x, tokenSource.Token);
+				tokenSource.Cancel();
 			}
-			catch (AggregateException e)
+			else
 			{
-				throw e.InnerException!;
+				await Task.WhenAll(tasks);
 			}
 		}
 	}

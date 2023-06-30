@@ -1,5 +1,7 @@
+using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -117,6 +119,18 @@ public class SerializationTests
 
 		var json = JsonNode.Parse("{\"foo\":1, \"bar\":2, \"foo\":false}");
 
-		Assert.ThrowsAsync<JsonException>(() => schema.Evaluate(json));
+		AssertEx.ThrowsAggregate<JsonException>(() => schema.Evaluate(json));
+	}
+}
+
+public static class AssertEx
+{
+	public static T ThrowsAggregate<T>(AsyncTestDelegate func)
+		where T : Exception
+	{
+		var agg = Assert.ThrowsAsync<AggregateException>(func);
+		Assert.IsInstanceOf<T>(agg!.InnerException);
+
+		return (T)agg.InnerException!;
 	}
 }
