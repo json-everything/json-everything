@@ -4,6 +4,14 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [4.1.6](https://github.com/gregsdennis/json-everything/pull/473) {#release-schema-4.1.6}
+
+`schemaLocation` in the draft-next output formatting requires a pointer fragment, even if that fragment is empty (refers to the root).
+
+# [4.1.5](https://github.com/gregsdennis/json-everything/pull/473) {#release-schema-4.1.5}
+
+Republished, splitting language packs into their own Nuget packages.
+
 # [4.1.4](https://github.com/gregsdennis/json-everything/pull/473) {#release-schema-4.1.4}
 
 The JSON Schema spec states that the value of the `enum` keyword SHOULD contain unique values, but this isn't a hard requirement.  This change allows duplicate values.

@@ -97,7 +97,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
 		var path = Path.GetFullPath(fileName);
-		// For some reason, full *nix file paths (which start with '/' don't work quite right when
+		// For some reason, full *nix file paths (which start with '/') don't work quite right when
 		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
 		// first folder in the path is then interpreted as the host.  To account for this, we
 		// need to prepend with 'file://' instead.

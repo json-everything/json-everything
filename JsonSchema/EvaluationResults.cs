@@ -338,7 +338,10 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 			if (value.SchemaLocation != null!)
 			{
 				writer.WritePropertyName("schemaLocation");
-				JsonSerializer.Serialize(writer, value.SchemaLocation, options);
+				var schemaLocation = value.SchemaLocation.OriginalString;
+				if (string.IsNullOrEmpty(value.SchemaLocation.Fragment))
+					schemaLocation += "#"; // see https://github.com/json-schema-org/JSON-Schema-Test-Suite/pull/671
+				JsonSerializer.Serialize(writer, schemaLocation, options);
 			}
 
 			writer.WritePropertyName("instanceLocation");
