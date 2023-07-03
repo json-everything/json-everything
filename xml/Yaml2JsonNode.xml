@@ -39,5 +39,60 @@
             <returns></returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="T:Yaml2JsonNode.YamlSerializer">
+            <summary>
+            Provides common serializer functionality.
+            </summary>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlSerializer.Serialize``1(``0,System.Text.Json.JsonSerializerOptions,System.Action{YamlDotNet.Serialization.SerializerBuilder})">
+            <summary>
+            Serializes an object to a YAML string
+            </summary>
+            <typeparam name="T">The type of the object.</typeparam>
+            <param name="obj">The object.</param>
+            <param name="options">(optional) JSON serializer options.</param>
+            <param name="configure">(optional) YAML serializer configuration method.</param>
+            <returns>The YAML string.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlSerializer.Serialize(YamlDotNet.RepresentationModel.YamlStream,System.Action{YamlDotNet.Serialization.SerializerBuilder})">
+            <summary>
+            Serializes a YAML stream (a collection of documents) to a string.
+            </summary>
+            <param name="yaml">The stream.</param>
+            <param name="configure">(optional) YAML serializer configuration method.</param>
+            <returns>The YAML string.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlSerializer.Serialize(YamlDotNet.RepresentationModel.YamlDocument,System.Action{YamlDotNet.Serialization.SerializerBuilder})">
+            <summary>
+            Serializes a YAML document to a string.
+            </summary>
+            <param name="yaml">The document.</param>
+            <param name="configure">(optional) YAML serializer configuration method.</param>
+            <returns>The YAML string.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlSerializer.Serialize(YamlDotNet.RepresentationModel.YamlNode,System.Action{YamlDotNet.Serialization.SerializerBuilder})">
+            <summary>
+            Serializes a YAML node to a string
+            </summary>
+            <param name="yaml">The node.</param>
+            <param name="configure">(optional) YAML serializer configuration method.</param>
+            <returns>The YAML string.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlSerializer.Deserialize``1(System.String,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Deserializes the first YAML document found in text to an object.
+            </summary>
+            <typeparam name="T">The type of the object.</typeparam>
+            <param name="yamlText">The YAML text.</param>
+            <param name="options"></param>
+            <returns>The object or null.</returns>
+        </member>
+        <member name="M:Yaml2JsonNode.YamlSerializer.Parse(System.String)">
+            <summary>
+            Parses YAML text into a stream (collection of documents).
+            </summary>
+            <param name="yamlText">The YAML text.</param>
+            <returns>A YAML stream representing the content of the text.</returns>
+        </member>
     </members>
 </doc>
