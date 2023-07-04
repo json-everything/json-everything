@@ -55,9 +55,9 @@ Error message translations for JsonSchema.Net available in:
 <table>
 <thead>
 <tr>
-<th align="center" width="276">Discuss</th>
-<th align="center" width="276">Ask</th>
-<th align="center" width="276">Built with</th>
+<th width="276">Discuss</th>
+<th width="276">Ask</th>
+<th width="276">Built with</th>
 </tr>
 </thead>
 <tbody>
