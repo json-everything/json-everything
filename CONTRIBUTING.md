@@ -1,10 +1,6 @@
-# Local Setup
-
 ## Requirements
 
-These libraries run tests in .Net Core 3.1 and .Net 5, so you'll need those.
-
-You'll also need .Net 6 installed to support the auto-formatting hook below.
+These libraries run tests in .Net Core 3.1 and .Net 6, so you'll need those.
 
 There are definitely some C#8 features in the code.  All of the projects are configured to use the latest C# version.
 
@@ -14,35 +10,29 @@ I use Visual Studio Community with Resharper, and I try to keep everything updat
 
 Jetbrains Rider (comes with the Resharper stuff built-in), VS Code with your favorite extensions, or any basic text editor with a command line would work just fine.  You do you.
 
-## Code Style
+## Code Style & Releases
 
-Whatever code editor you use, please add the following pre-commit git hook:
+Please feel free to add any code contributions using your own coding style.  Trying to conform to someone else's style can be a headache and confusing, and I prefer working code over pretty code.  I find it's easier for contributors if I make my own style adjustments after a contribution rather than forcing conformance to my preferences.
 
-```sh
-#!/bin/sh
+Deployments to Nuget and [json-everything.net](https://json-everything.net) occur automatically upon merging with `master`, so I usually create a secondary branch where I can first update any package versions and release notes.
 
-LC_ALL=C
-# Select files to format
-FILES=$(git diff --cached --name-only --diff-filter=ACM "*.cs" | sed 's| |\\ |g')
-[ -z "$FILES" ] && exit 0
+For these reasons, you can expect your PRs to be retargeted to a branch other than `master`.
 
-# Format all selected files
-echo "$FILES" | cat | xargs | sed -e 's/ /,/g' | xargs dotnet format json-everything.sln --include
-
-# Add back the modified files to staging
-echo "$FILES" | xargs git add
-
-exit 0
-```
-
-This will run `dotnet format` on any changed files.
-
-I've added a build step that posts to a PR if the code isn't formatted correctly.  If you add the hook above, you _shouldn't_ have any problems, but in my experience, there are a few things that the check catches that the hook (which is intended to auto-fix issues) doesn't.
-
-# What Needs Doing?
+## What Needs Doing?
 
 Anything in the [issues](https://github.com/gregsdennis/json-everything/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) with a `help wanted` label is something that could benefit from a volunteer or two.
 
 Of primary focus is translating the [resource file](https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/Localization/Resources.resx) into additional languages for JsonSchema.Net.
 
 Outside of this, PRs are welcome.  For larger changes or changes to the API surface, it's preferred that there be some discussion in an issue before a PR is submitted, just to discuss the specifics of the change.  Mainly, I don't want you to feel like you've wasted your time if changes are requested or the PR is ultimately closed unmerged.
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->

@@ -3,6 +3,17 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/gregsdennis/json-everything.svg)](https://github.com/gregsdennis/json-everything/issues "Average time to resolve an issue")
 [![License](https://img.shields.io/github/license/gregsdennis/json-everything)](https://github.com/gregsdennis/json-everything/blob/master/LICENSE)
+[![All Contributors](https://img.shields.io/github/all-contributors/gregsdennis/json-everything?color=ee8449)](#contributors)
+
+## What is `json-everything`?
+
+The primary philosophy behind `json-everything` is to ensure that common JSON functionality has good support in the System.Text.Json space.
+
+The first step to that is checking whether there exist other projects that support a given function.
+
+If so, that effort likely won't be duplicated here. A bit farther down you'll find a list of other projects that are doing some cool things with JSON.
+
+Otherwise, it's open to consideration for this project.
 
 <table>
 <thead>
@@ -38,7 +49,9 @@
 </tbody>
 </table>
 
----
+## What's in the box?
+
+There are actually multiple boxes.  Each piece of functionality has been broken out into its own library, so you can pick an choose the one(s) that you need.
 
 <table>
 <tbody>
@@ -105,29 +118,6 @@
 </tbody>
 </table>
 
-
-Error message translations for JsonSchema.Net available in:
-
-- Spanish `es-es`
-- Norwegian `nb-no`
-- Swedish `sv-se`
-
-***NOTE** Each language pack is provided by its own Nuget package.*
-
-## What is `json-everything`?
-
-The primary philosophy behind `json-everything` is to ensure that common JSON functionality has good support in the System.Text.Json space.
-
-The first step to that is checking whether there exist other projects that support a given function.
-
-If so, that effort likely won't be duplicated here. A bit farther down you'll find a list of other projects that are doing some cool things with JSON.
-
-Otherwise, it's open to consideration for this project.
-
-## What's in the box?
-
-There are actually multiple boxes.  Each piece of functionality has been broken out into its own library, so you can pick an choose the one(s) that you need.
-
 - [JSON Schema (drafts 6 and higher)](https://json-schema.org)
   - Generation of schemas from .Net types supported in an additional library
   - Random instance data generation (powered by [Bogus](https://github.com/bchavez/Bogus))
@@ -144,11 +134,13 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 - Yaml2JsonNode
   - When you use YamlDotNet to parse YAML text, this library will convert it to `JsonNode` for you!  Then you can use that data wherever you already have support for `JsonNode` (like all of those ☝️).
 
-Please see
+Error message translations for JsonSchema.Net available in:
 
-- [json-everything.net](https://json-everything.net) for an online playground where you can experiment with these packages, all run in your client, powered by Blazor.
-- [docs.json-everything.net](https://docs.json-everything.net) for documentation.
-- [blog.json-everything.net](https://blog.json-everything.net) for a blog about all things JSON!
+- Spanish `es-es`
+- Norwegian `nb-no`
+- Swedish `sv-se`
+
+***NOTE** Each language pack is provided by its own Nuget package.*
 
 You can also view JSON Schema Test Suite results on [Bowtie](https://bowtie-json-schema.github.io/bowtie), which runs the test suite against multiple implementations across different platforms.
 
@@ -169,3 +161,10 @@ If you don't find what you're looking for here, please try one of these excellen
 If you use JSON to do something that is not covered by a library in this suite or one of the above projects, feel free to [create a feature issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=feature&template=Feature_request.md).
 
 If you have or know of another project that extends System.Text.Json to do cool things, I'd like to list it here, so please [create a general issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=question&template=Question.md) to let me know about it.
+
+## Contributors
+
+This repository follows the [All Contributors specification](https://allcontributors.org/).
+
+Please see the [CONTRIBUTING](./CONTRIBUTING.md) file for more information.
+
