@@ -38,16 +38,16 @@ Error message translations for JsonSchema.Net available in:
 <table>
 <thead>
 <tr>
-<th style="text-align:center" width="276">Playground</th>
-<th style="text-align:center" width="276">Documentation</th>
-<th style="text-align:center" width="276">Blog</th>
+<th width="276">Playground</th>
+<th width="276">Documentation</th>
+<th width="276">Blog</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center"><a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a></td>
-<td style="text-align:center"><a href="https://docs.json-everything.net"><img src="Resources/docs-icon.png" alt="Try it online" title="Try it online" height="50"><br>docs.json-everything.net</a></td>
-<td style="text-align:center"><a href="https://blog.json-everything.net"><img src="Resources/blog-icon.png" alt="Try it online" title="Try it online" height="50"><br>blog.json-everything.net</a></td>
+<td align="center"><a href="https://json-everything.net"><img src="Resources/json-logo-256.png" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a></td>
+<td align="center"><a href="https://docs.json-everything.net"><img src="Resources/docs-icon.png" alt="Try it online" title="Try it online" height="50"><br>docs.json-everything.net</a></td>
+<td align="center"><a href="https://blog.json-everything.net"><img src="Resources/blog-icon.png" alt="Try it online" title="Try it online" height="50"><br>blog.json-everything.net</a></td>
 </tr>
 </tbody>
 </table>
@@ -55,16 +55,16 @@ Error message translations for JsonSchema.Net available in:
 <table>
 <thead>
 <tr>
-<th style="text-align:center" width="276">Discuss</th>
-<th style="text-align:center" width="276">Ask</th>
-<th style="text-align:center" width="276">Built with</th>
+<th align="center" width="276">Discuss</th>
+<th align="center" width="276">Ask</th>
+<th align="center" width="276">Built with</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center"><a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a></td>
-<td style="text-align:center"><a href="https://stackoverflow.com/questions/tagged/json-everything"><img src="Resources/stackoverflow.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a></td>
-<td style="text-align:center"><a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"></a></td>
+<td align="center"><a href="https://join.slack.com/t/manateeopensource/shared_invite/enQtMzU4MjgzMjgyNzU3LWZjYzAzYzY3NjY1MjY3ODI0ZGJiZjc3Nzk1MDM5NTNlMjMyOTE0MzMxYWVjMjdiOGU1NDY5OGVhMGQ5YzY4Zjg"><img src="Resources/Slack.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a></td>
+<td align="center"><a href="https://stackoverflow.com/questions/tagged/json-everything"><img src="Resources/stackoverflow.png" alt="Discuss on Slack" title="Discuss on Slack" height="50"></a></td>
+<td align="center"><a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"></a></td>
 </tr>
 </tbody>
 </table>
