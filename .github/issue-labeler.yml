@@ -1,0 +1,35 @@
+"pkg:more":
+  - ^Json.More.Net$
+
+"pkg:schema":
+  - ^JsonSchema.Net$
+
+"pkg:schema-generation":
+  - ^JsonSchema.Net.Generation$
+
+"pkg:schema-datagen":
+  - ^JsonSchema.Net.DataGeneration$
+
+"pkg:schema-data":
+  - ^JsonSchema.Net.Data$
+
+"pkg:schema-openapi":
+  - ^JsonSchema.Net.OpenApi$
+
+"pkg:schema-unique-keys":
+  - ^JsonSchema.Net.UniqueKeys$
+
+"pkg:logic":
+  - ^JsonLogic$
+
+"pkg:pointer":
+  - ^JsonPointer.Net$
+
+"pkg:path":
+  - ^JsonPath.Net$
+
+"pkg:patch":
+  - ^JsonPatch.Net$
+
+"pkg:yaml":
+  - ^Yaml2JsonNode$

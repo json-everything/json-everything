@@ -5,7 +5,7 @@
 # file with configuration.  For more information, see:
 # https://github.com/actions/labeler
 
-name: Labeler
+name: PR Labeler
 on: [pull_request_target]
 
 jobs:
@@ -18,5 +18,5 @@ jobs:
     - uses: actions/labeler@v4
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        configuration-path: .github/label-config.yml
+        configuration-path: .github/pr-labeler.yml
         sync-labels: true
