@@ -1,5 +1,5 @@
-name: Bug Report
-description: Ideas and questions for [docs.json-everything.net](https://docs.json-everything.net)
+name: Documentation
+description: Ideas, questions, and corrections for [docs.json-everything.net](https://docs.json-everything.net)
 labels: ["documentation"]
 body:
   - type: markdown
