@@ -2,7 +2,7 @@
   - '### Nuget Package\s*Json\.More\.Net'
 
 "pkg:schema":
-  - '### Nuget Package\s*JsonSchema\.Net'
+  - '### Nuget Package\s*JsonSchema\.Net[^.]'
 
 "pkg:schema-generation":
   - '### Nuget Package\s*JsonSchema\.Net\.Generation'
