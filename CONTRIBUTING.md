@@ -1,3 +1,15 @@
+# Community Engagement
+
+Questions, suggestions, corrections.  All are welcome.
+
+Channels for community engagement (where I'll be looking) include:
+
+- Issues
+- Slack (link in the README)
+- StackOverflow (tag with `json-everything`)
+
+# Development
+
 ## Requirements
 
 These libraries run tests in .Net Core 3.1 and .Net 6, so you'll need those.
