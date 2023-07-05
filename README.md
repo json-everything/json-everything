@@ -50,7 +50,7 @@ Otherwise, it's open to consideration for this project.
 
 ## What's in the box?
 
-There are actually multiple boxes.  Each piece of functionality has been broken out into its own library, so you can pick an choose the one(s) that you need.
+There are actually multiple boxes.  Each piece of functionality has been broken out into its own library, so you can pick and choose the one(s) that you need.
 
 <table>
 <tbody>
@@ -123,7 +123,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
   - [OpenApi 3.1](https://www.openapis.org/) vocabulary extension
   - A vocabulary for accessing instance and external data
   - A vocabulary for validating item uniqueness based on specific item values
-- [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1) (please see issue #309 regarding future support)
+- [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)
 - [JSON Patch (RFC 6902)](https://tools.ietf.org/html/rfc6902)
 - [JsonLogic](https://jsonlogic.com) (.Net Standard 2.1)
 - [JSON Pointer (RFC 6901)](https://tools.ietf.org/html/rfc6901)
@@ -131,9 +131,9 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 - Json.More.Net
   - Just some general-use extensions that probably should be included in System.Text.Json(.Nodes) but aren't
 - Yaml2JsonNode
-  - When you use YamlDotNet to parse YAML text, this library will convert it to `JsonNode` for you!  Then you can use that data wherever you already have support for `JsonNode` (like all of those ☝️).
+  - When you use YamlDotNet to parse YAML text, this library will convert it to `JsonNode` (and back) for you!  Then you can use that data wherever you already have support for `JsonNode` (like all of those ☝️).
 
-Error message translations for JsonSchema.Net available in:
+Error message translations for _JsonSchema.Net_ available in:
 
 - Spanish `es-es`
 - Norwegian `nb-no`
@@ -143,7 +143,7 @@ Error message translations for JsonSchema.Net available in:
 
 You can also view JSON Schema Test Suite results on [Bowtie](https://bowtie-json-schema.github.io/bowtie), which runs the test suite against multiple implementations across different platforms.
 
-***DISCLAIMER** My library, `JsonSchema.Net` is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
+***DISCLAIMER** My library, _JsonSchema.Net_ is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
 
 ## System.Text.Json support by other projects
 
