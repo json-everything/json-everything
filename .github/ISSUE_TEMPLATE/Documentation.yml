@@ -1,0 +1,22 @@
+name: Bug Report
+description: Ideas and questions for [docs.json-everything.net](https://docs.json-everything.net)
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to help make this project better!
+  - type: textarea
+    id: question
+    attributes:
+      label: What's your idea or question?
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/gregsdennis/json-everything/blob/master/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

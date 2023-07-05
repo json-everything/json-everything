@@ -1,0 +1,56 @@
+name: Question
+description: Just have a question or need some guidance
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to help make this project better!
+  - type: dropdown
+    id: package
+    attributes:
+      label: Nuget Package
+      description: What package are you using
+      options:
+        - Json.More.Net
+        - JsonLogic
+        - JsonPath.Net
+        - JsonPatch.Net
+        - JsonPointer.Net
+        - JsonSchema.Net
+        - JsonSchema.Net (language pack)
+        - JsonSchema.Net.Data
+        - JsonSchema.Net.DataGeneration
+        - JsonSchema.Net.Generation
+        - JsonSchema.Net.OpenApi
+        - JsonSchema.Net.UniqueKeys
+        - Yaml2JsonNode
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package Version
+      description: What version of the package are you using?
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: What's your question?
+    validations:
+      required: true
+  - type: textarea
+    id: other-info
+    attributes:
+      label: Is there any other information you'd like to share regarding this bug?
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/gregsdennis/json-everything/blob/master/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

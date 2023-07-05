@@ -163,5 +163,5 @@ If you have or know of another project that extends System.Text.Json to do cool 
 
 ## Contributors
 
-Please see the [CODE OF CONDUCT](./CODE_OF_CONDUCT.md) and [CONTRIBUTING](./CONTRIBUTING.md) files for more information.
+Please see the [Code of Conduct](./CODE_OF_CONDUCT.md) and the [CONTRIBUTING](./CONTRIBUTING.md) file for more information.
 
