@@ -66,7 +66,7 @@ public class OutputTests
     {
       ""valid"": true,
       ""evaluationPath"": """",
-      ""schemaLocation"": ""https://test.com/schema"",
+      ""schemaLocation"": ""https://test.com/schema#"",
       ""instanceLocation"": """",
       ""annotations"": {
         ""properties"": [ ""passes"" ]
@@ -94,7 +94,7 @@ public class OutputTests
     {
       ""valid"": false,
       ""evaluationPath"": """",
-	  ""schemaLocation"": ""https://test.com/schema"",
+	  ""schemaLocation"": ""https://test.com/schema#"",
 	  ""instanceLocation"": """"
 	},
     {
@@ -119,7 +119,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""annotations"": {
     ""properties"": [
@@ -146,7 +146,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""details"": [
     {
@@ -175,7 +175,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""droppedAnnotations"": {
     ""properties"": [
@@ -204,7 +204,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""annotations"": {
     ""properties"": [
@@ -261,7 +261,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""details"": [
     {
@@ -319,7 +319,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""details"": [
     {
@@ -344,7 +344,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""details"": [
     {
@@ -369,7 +369,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": false,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""details"": [
     {
@@ -517,7 +517,7 @@ public class OutputTests
     {
       ""valid"": false,
       ""evaluationPath"": """",
-      ""schemaLocation"": ""https://json-schema.org/false"",
+      ""schemaLocation"": ""https://json-schema.org/false#"",
       ""instanceLocation"": """",
       ""errors"": {
         """": ""All values fail against the false schema""
@@ -695,7 +695,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""annotations"": {
     ""default"": ""default value""
@@ -722,7 +722,7 @@ public class OutputTests
 		var expected = @"{
   ""valid"": true,
   ""evaluationPath"": """",
-  ""schemaLocation"": ""https://test.com/schema"",
+  ""schemaLocation"": ""https://test.com/schema#"",
   ""instanceLocation"": """",
   ""annotations"": {
     ""title"": ""a title"",
