@@ -1,35 +1,35 @@
 "pkg:more":
-  - ^Json\.More\.Net$
+  - '### Nuget Package\s*Json\.More\.Net'
 
 "pkg:schema":
-  - ^JsonSchema\.Net$
+  - '### Nuget Package\s*JsonSchema\.Net'
 
 "pkg:schema-generation":
-  - ^JsonSchema\.Net\.Generation$
+  - '### Nuget Package\s*JsonSchema\.Net\.Generation'
 
 "pkg:schema-datagen":
-  - ^JsonSchema\.Net\.DataGeneration$
+  - '### Nuget Package\s*JsonSchema\.Net\.DataGeneration'
 
 "pkg:schema-data":
-  - ^JsonSchema\.Net\.Data$
+  - '### Nuget Package\s*JsonSchema\.Net\.Data'
 
 "pkg:schema-openapi":
-  - ^JsonSchema\.Net\.OpenApi$
+  - '### Nuget Package\s*JsonSchema\.Net\.OpenApi'
 
 "pkg:schema-unique-keys":
-  - ^JsonSchema\.Net\.UniqueKeys$
+  - '### Nuget Package\s*JsonSchema\.Net\.UniqueKeys'
 
 "pkg:logic":
-  - ^JsonLogic$
+  - '### Nuget Package\s*JsonLogic'
 
 "pkg:pointer":
-  - ^JsonPointer\.Net$
+  - '### Nuget Package\s*JsonPointer\.Net'
 
 "pkg:path":
-  - ^JsonPath\.Net$
+  - '### Nuget Package\s*JsonPath\.Net'
 
 "pkg:patch":
-  - ^JsonPatch\.Net$
+  - '### Nuget Package\s*JsonPatch\.Net'
 
 "pkg:yaml":
-  - ^Yaml2JsonNode$
+  - '### Nuget Package\s*Yaml2JsonNode'
