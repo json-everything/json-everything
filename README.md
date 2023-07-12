@@ -117,19 +117,19 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 </tbody>
 </table>
 
-- [JSON Schema (drafts 6 and higher)](https://json-schema.org)
+- JSON Schema, drafts 6 and higher ([Specification](https://json-schema.org))
   - Generation of schemas from .Net types supported in an additional library
   - Random instance data generation (powered by [Bogus](https://github.com/bchavez/Bogus))
   - [OpenApi 3.1](https://www.openapis.org/) vocabulary extension
   - A vocabulary for accessing instance and external data
   - A vocabulary for validating item uniqueness based on specific item values
-- [JSON Path (RFC in progress)](https://github.com/jsonpath-standard/internet-draft) (.Net Standard 2.1)
-- [JSON Patch (RFC 6902)](https://tools.ietf.org/html/rfc6902)
-- [JsonLogic](https://jsonlogic.com) (.Net Standard 2.1)
-- [JSON Pointer (RFC 6901)](https://tools.ietf.org/html/rfc6901)
-- [Relative JSON Pointer](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html)
+- JSON Path ([RFC in progress](https://github.com/jsonpath-standard/internet-draft)) (.Net Standard 2.1)
+- JSON Patch ([RFC 6902](https://tools.ietf.org/html/rfc6902))
+- JsonLogic ([Website](https://jsonlogic.com)) (.Net Standard 2.1)
+- JSON Pointer ([RFC 6901](https://tools.ietf.org/html/rfc6901))
+- Relative JSON Pointer ([Specification](https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html))
 - Json.More.Net
-  - Just some general-use extensions that probably should be included in System.Text.Json(.Nodes) but aren't
+  - Just some general-use extensions that probably should have been included in System.Text.Json(.Nodes) but weren't
 - Yaml2JsonNode
   - When you use YamlDotNet to parse YAML text, this library will convert it to `JsonNode` (and back) for you!  Then you can use that data wherever you already have support for `JsonNode` (like all of those ☝️).
 
