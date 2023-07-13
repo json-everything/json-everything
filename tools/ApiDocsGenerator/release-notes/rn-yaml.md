@@ -4,6 +4,12 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.2.3](https://github.com/gregsdennis/json-everything/pull/486) {#release-yaml-1.2.3}
+
+[#485](https://github.com/gregsdennis/json-everything/issues/485) - YamlDotNet doesn't report nulls properly (see also their [#716](https://github.com/aaubry/YamlDotNet/issues/716) and [#810](https://github.com/aaubry/YamlDotNet/issues/810)).  Thanks to [@nickcampau](https://github.com/nickcampau) for reporting.
+
+***NOTE** Nullability declaration of `.ToJsonNode()` has changed as this method can now return nulls.*
+
 # [1.2.2](https://github.com/gregsdennis/json-everything/pull/479) {#release-yaml-1.2.2}
 
 [#478](https://github.com/gregsdennis/json-everything/issues/478) - Converting numbers from YAML to JSON parses numbers against the machine's current culture, not the invariant culture.
