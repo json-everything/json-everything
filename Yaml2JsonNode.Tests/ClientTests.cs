@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
@@ -95,5 +96,39 @@ public class ClientTests
 		{
 			CultureInfo.CurrentCulture = culture;
 		}
+	}
+
+	[Test]
+	public void Issue485_YamlNullNotConvertingRight()
+	{
+		var yaml = @"nullVal: null
+altNullVal: ~
+implicitNullVal: 
+dblQuotedVal: ""null""
+quotedVal: 'null'
+rawVal: |
+  null
+rawValTrim: |-
+  null";
+		var yamlStream = new YamlStream();
+		yamlStream.Load(new StringReader(yaml));
+		var yamlDoc = yamlStream.Documents[0];
+
+		JsonNode expected = new JsonObject
+		{
+			["nullVal"] = null,
+			["altNullVal"] = null,
+			["implicitNullVal"] = null,
+			["dblQuotedVal"] = "null",
+			["quotedVal"] = "null",
+			["rawVal"] = "null\\n",
+			["rawValTrim"] = "null"
+		};
+
+		var actual = yamlDoc.ToJsonNode();
+
+		Console.WriteLine(actual.AsJsonString(new JsonSerializerOptions { WriteIndented = true }));
+
+		Assert.IsTrue(actual.IsEquivalentTo(expected));
 	}
 }
