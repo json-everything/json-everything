@@ -11,9 +11,9 @@
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-	  <PackageTags>json yaml system.text.json</PackageTags>
+	  <PackageTags>json yaml system.text.json yamldotnet yaml.net</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/yaml.md) and https://json-everything.net/json-more</PackageReleaseNotes>
+	  <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-yaml/</PackageReleaseNotes>
 	  <LangVersion>latest</LangVersion>
 	  <DocumentationFile>Yaml2JsonNode.xml</DocumentationFile>
 	  <PackageIcon>json-logo-256.png</PackageIcon>
