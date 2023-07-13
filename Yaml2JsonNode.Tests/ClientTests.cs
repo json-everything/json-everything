@@ -121,7 +121,7 @@ rawValTrim: |-
 			["implicitNullVal"] = null,
 			["dblQuotedVal"] = "null",
 			["quotedVal"] = "null",
-			["rawVal"] = "null\\n",
+			["rawVal"] = "null\n",
 			["rawValTrim"] = "null"
 		};
 
