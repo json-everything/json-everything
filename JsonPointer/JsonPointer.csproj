@@ -18,16 +18,16 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>JsonPointer.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
-	  <PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-pointer.md) and https://json-everything.net/json-pointer</PackageReleaseNotes>
+	<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-pointer/</PackageReleaseNotes>
     <DocumentationFile>JsonPointer.Net.xml</DocumentationFile>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	  <SignAssembly>true</SignAssembly>
-	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-		<Nullable>enable</Nullable>
-   </PropertyGroup>
+	<SignAssembly>true</SignAssembly>
+	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	<Nullable>enable</Nullable>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />

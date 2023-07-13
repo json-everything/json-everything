@@ -12,7 +12,7 @@
 		<PackageIcon>openapi.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema validation schema json openapi open-api api</PackageTags>
-		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-schema-openapi.md) and https://json-everything.net/json-schema</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-openapi/</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.OpenApi.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>

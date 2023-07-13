@@ -20,7 +20,7 @@
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageIcon>json-logo-256.png</PackageIcon>
-		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-schema-datageneration.md) and https://json-everything.net/json-schema</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-datageneration/</PackageReleaseNotes>
 		<DocumentationFile>JsonSchema.Net.DataGeneration.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

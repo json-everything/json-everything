@@ -18,7 +18,7 @@
     <PackageTags>json-patch jsonpatch json</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageReleaseNotes>https://gregsdennis.github.io/json-everything/release-notes/json-patch.html</PackageReleaseNotes>
+	<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-patch/</PackageReleaseNotes>
     <DocumentationFile>JsonPatch.Net.xml</DocumentationFile>
 	  <IncludeSymbols>true</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>

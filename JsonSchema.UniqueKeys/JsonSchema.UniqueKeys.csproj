@@ -12,7 +12,7 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema evaluation validation schema json</PackageTags>
-		<PackageReleaseNotes>Release notes can be found on [GitHub](https://github.com/gregsdennis/json-everything/blob/master/json-everything.net/wwwroot/md/release-notes/json-schema-unique-keys.md) and https://json-everything.net/json-schema</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-unique-keys/</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.UniqueKeys.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>

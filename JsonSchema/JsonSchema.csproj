@@ -18,7 +18,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>JsonSchema.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/</PackageReleaseNotes>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema/</PackageReleaseNotes>
     <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
