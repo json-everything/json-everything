@@ -15,7 +15,7 @@ public static class ApiDocGenerationService
 		var docs = await Task.WhenAll(allTypes.Select(async (x, i) =>
 		(
 			path: x.Name,
-			doc: await GenerateForType(x, $"{index}.{i:d2}")
+			doc: await Task.Run(() => GenerateForType(x, $"{index}.{i:d3}"))
 		)));
 
 		return docs;
