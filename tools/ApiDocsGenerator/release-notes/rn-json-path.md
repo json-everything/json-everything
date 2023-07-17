@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "8.07"
 ---
+# 0.6.3 (No PR) {#release-path-0.6.3}
+
+[Test Suite #41](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/41) - ANBF allows for whitespace between segments.
+
 # [0.6.2](https://github.com/gregsdennis/json-everything/pull/467) {#release-path-0.6.2}
 
 [#465](https://github.com/gregsdennis/json-everything/issues/465) - Exposes more of the JSON Path object model, while making the exposed API more consistent.

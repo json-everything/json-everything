@@ -96,12 +96,7 @@ internal static class PathParser
 		var isRecursive = false;
 		var isShorthand = false;
 
-		if (options.TolerateExtraWhitespace)
-		{
-			if (!source.ConsumeWhitespace(ref index))
-				throw new PathParseException(index, "Unexpected end of input");
-		}
-		else if (index == source.Length)
+		if (!source.ConsumeWhitespace(ref index))
 			throw new PathParseException(index, "Unexpected end of input");
 
 		if (source[index] == '[')
@@ -167,7 +162,7 @@ internal static class PathParser
 
 		var i = index;
 
-		if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref i) || i == source.Length)
+		if (!source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			segment = null;
 			return false;
