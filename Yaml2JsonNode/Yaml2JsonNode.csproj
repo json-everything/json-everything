@@ -7,7 +7,11 @@
 	  <Version>1.2.3</Version>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
 	  <FileVersion>1.2.3.0</FileVersion>
-	  <Description>Allows conversion of YamlDotNet's YAML models to JsonNodes.</Description>
+	  <Description>
+		Allows conversion of YamlDotNet's YAML models to JsonNodes.
+	
+		Read the full documentation at https://docs.json-everything.net/yaml/basics/.
+	  </Description>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>

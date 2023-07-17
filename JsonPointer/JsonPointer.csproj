@@ -10,7 +10,11 @@
     <PackageId>JsonPointer.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Product>JsonPointer.Net</Product>
-    <Description>JSON Pointer built on the System.Text.Json namespace.</Description>
+    <Description>
+		JSON Pointer built on the System.Text.Json namespace.
+	
+		Read the full documentation at https://docs.json-everything.net/pointer/basics/.
+	</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>

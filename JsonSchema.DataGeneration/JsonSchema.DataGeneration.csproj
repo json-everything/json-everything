@@ -11,7 +11,11 @@
 		<Authors>Greg Dennis</Authors>
 		<Company />
 		<Product>JsonSchema.Net</Product>
-		<Description>JSON Schema built on the System.Text.Json namespace.</Description>
+		<Description>
+			JSON Schema built on the System.Text.Json namespace.
+		
+			Read the full documentation at https://docs.json-everything.net/schema/schema-datagen/.
+		</Description>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema schema json generation</PackageTags>

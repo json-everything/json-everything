@@ -10,8 +10,12 @@
     <PackageId>JsonPatch.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Company>Greg Dennis</Company>
-		<AssemblyName>JsonPatch.Net</AssemblyName>
-    <Description>JSON Patch built on the System.Text.Json namespace.</Description>
+	<AssemblyName>JsonPatch.Net</AssemblyName>
+    <Description>
+		JSON Patch built on the System.Text.Json namespace.
+	
+		Read the full documentation at https://docs.json-everything.net/patch/basics/.
+	</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>

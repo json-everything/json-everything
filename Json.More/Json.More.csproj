@@ -7,7 +7,11 @@
     <Version>1.8.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.8.0.0</FileVersion>
-    <Description>Provides extended functionality for the System.Text.Json namespace.</Description>
+    <Description>
+		Provides extended functionality for the System.Text.Json namespace.
+	
+		Read the full documentation at https://docs.json-everything.net/more/json-more/.
+	</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>

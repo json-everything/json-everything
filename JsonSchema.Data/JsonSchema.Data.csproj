@@ -6,7 +6,11 @@
 		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
 		<RootNamespace>Json.Schema.Data</RootNamespace>
 		<Authors>Greg Dennis</Authors>
-		<Description>Extends JsonSchema.Net to provide the "data" keyword.</Description>
+		<Description>
+			Extends JsonSchema.Net to provide the "data" keyword.
+		
+			Learn about this JSON Schema vocabulary at https://docs.json-everything.net/schema/vocabs/data-2022/.
+		</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>

@@ -5,7 +5,11 @@
 		<AssemblyName>JsonSchema.Net.Generation</AssemblyName>
 		<RootNamespace>Json.Schema.Generation</RootNamespace>
 		<Authors>Greg Dennis</Authors>
-		<Description>Extends JsonSchema.Net to provide schema generation functionality.</Description>
+		<Description>
+			Extends JsonSchema.Net to provide schema generation functionality.
+		
+			Read the full documentation at https://docs.json-everything.net/schema/schema-generation/.
+		</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>

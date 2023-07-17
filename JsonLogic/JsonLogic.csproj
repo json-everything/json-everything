@@ -7,7 +7,11 @@
 		<AssemblyName>JsonLogic</AssemblyName>
 		<Authors>Greg Dennis</Authors>
 		<Company>Greg Dennis</Company>
-		<Description>JsonLogic built on the System.Text.Json namespace.</Description>
+		<Description>
+			JsonLogic built on the System.Text.Json namespace.
+		
+			Read the full documentation at https://docs.json-everything.net/logic/basics/.
+		</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>
