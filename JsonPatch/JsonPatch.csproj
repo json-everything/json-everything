@@ -12,7 +12,7 @@
     <Company>Greg Dennis</Company>
 	<AssemblyName>JsonPatch.Net</AssemblyName>
     <Description>
-		JSON Patch built on the System.Text.Json namespace.
+		[JSON Patch](https://tools.ietf.org/html/rfc6902) built on the System.Text.Json namespace.
 	
 		Read the full documentation at https://docs.json-everything.net/patch/basics/.
 	</Description>

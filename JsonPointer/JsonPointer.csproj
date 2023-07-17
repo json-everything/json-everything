@@ -11,7 +11,7 @@
     <Authors>Greg Dennis</Authors>
     <Product>JsonPointer.Net</Product>
     <Description>
-		JSON Pointer built on the System.Text.Json namespace.
+		[JSON Pointer](https://tools.ietf.org/html/rfc6901) built on the System.Text.Json namespace.
 	
 		Read the full documentation at https://docs.json-everything.net/pointer/basics/.
 	</Description>

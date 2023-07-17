@@ -9,6 +9,8 @@
 		<Company>Greg Dennis</Company>
 		<Description>
 			JSON Path built on the System.Text.Json namespace.
+
+			This library conforms to the [pending IETF standard](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-jsonpath).
 		
 			Read the full documentation at https://docs.json-everything.net/path/basics/.
 		</Description>

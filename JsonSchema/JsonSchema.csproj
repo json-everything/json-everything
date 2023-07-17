@@ -9,7 +9,7 @@
     <Company />
     <Product>JsonSchema.Net</Product>
     <Description>
-		JSON Schema built on the System.Text.Json namespace.
+		[JSON Schema](https://json-schema.org) built on the System.Text.Json namespace.
 
 		Read the full documentation at https://docs.json-everything.net/schema/basics/.
 	</Description>

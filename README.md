@@ -123,7 +123,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
   - [OpenApi 3.1](https://www.openapis.org/) vocabulary extension
   - A vocabulary for accessing instance and external data
   - A vocabulary for validating item uniqueness based on specific item values
-- JSON Path ([RFC in progress](https://github.com/jsonpath-standard/internet-draft)) (.Net Standard 2.1)
+- JSON Path ([RFC in progress](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-jsonpath)) (.Net Standard 2.1)
 - JSON Patch ([RFC 6902](https://tools.ietf.org/html/rfc6902))
 - JsonLogic ([Website](https://jsonlogic.com)) (.Net Standard 2.1)
 - JSON Pointer ([RFC 6901](https://tools.ietf.org/html/rfc6901))

@@ -7,7 +7,7 @@
 		<RootNamespace>Json.Schema.OpenApi</RootNamespace>
 		<Authors>Greg Dennis</Authors>
 		<Description>
-			Extends JsonSchema.Net to support OpenAPI v3.1's custom JSON Schema vocabulary.
+			Extends JsonSchema.Net to support [OpenAPI v3.1's JSON Schema vocabulary extension](https://spec.openapis.org/oas/latest.html#fixed-fields-19).
 
 			Read the full documentation at https://docs.json-everything.net/schema/vocabs/openapi/.
 		</Description>
