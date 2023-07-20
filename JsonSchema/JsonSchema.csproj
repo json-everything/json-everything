@@ -16,8 +16,8 @@
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json-schema validation schema json</PackageTags>
-    <Version>4.1.6</Version>
-    <FileVersion>4.1.6.0</FileVersion>
+    <Version>4.1.7</Version>
+    <FileVersion>4.1.7.0</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>JsonSchema.Net</AssemblyName>

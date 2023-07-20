@@ -200,7 +200,7 @@ public class EvaluationOptions
 
 	private static IEnumerable<IJsonSchemaKeyword> FilterBySpecVersion(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
 	{
-		if (version == SpecVersion.Unspecified) return keywords;
+		if (!Enum.IsDefined(typeof(SpecVersion), version) || version == SpecVersion.Unspecified) return keywords;
 
 		return keywords.Where(k => k.SupportsVersion(version));
 	}
