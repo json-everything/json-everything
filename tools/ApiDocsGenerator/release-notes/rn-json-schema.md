@@ -4,11 +4,15 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
-# [4.1.6](https://github.com/gregsdennis/json-everything/pull/473) {#release-schema-4.1.6}
+# [4.1.7](https://github.com/gregsdennis/json-everything/commit/21b1fe73393508d84c90d00cc8f22aeaa958a2b5) {#release-schema-4.1.7}
+
+Update keyword selection for custom drafts (support for upcoming OpenAPI project).
+
+# [4.1.6](https://github.com/gregsdennis/json-everything/commit/6adac438c32d5324f3b9826db758a5f8b73ffe0f) {#release-schema-4.1.6}
 
 `schemaLocation` in the draft-next output formatting requires a pointer fragment, even if that fragment is empty (refers to the root).
 
-# [4.1.5](https://github.com/gregsdennis/json-everything/pull/473) {#release-schema-4.1.5}
+# 4.1.5 (no PR) {#release-schema-4.1.5}
 
 Republished, splitting language packs into their own Nuget packages.
 
