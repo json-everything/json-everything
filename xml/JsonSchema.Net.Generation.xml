@@ -127,6 +127,11 @@
             <summary>
             Applies an `exclusiveMaximum` keyword.
             </summary>
+            <remarks>
+            The `value` parameter is provided in the constructor as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="P:Json.Schema.Generation.ExclusiveMaximumAttribute.Value">
             <summary>
@@ -138,11 +143,21 @@
             Creates a new <see cref="T:Json.Schema.Generation.ExclusiveMaximumAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
+            <remarks>
+            The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.ExclusiveMinimumAttribute">
             <summary>
             Applies an `exclusiveMinimum` keyword.
             </summary>
+            <remarks>
+            The `value` parameter is provided in the constructor as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="P:Json.Schema.Generation.ExclusiveMinimumAttribute.Value">
             <summary>
@@ -154,6 +169,11 @@
             Creates a new <see cref="T:Json.Schema.Generation.ExclusiveMinimumAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
+            <remarks>
+            The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.IfAttribute">
             <summary>
@@ -237,6 +257,12 @@
             <param name="propertyName">The name of the property.</param>
             <param name="value">The expected maximum value for the property.</param>
             <param name="group">The condition group.</param>
+            <remarks>
+            The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted
+            when applied as the `maximum` or `exclusiveMaximum` keywords.
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.IfMinAttribute">
             <summary>
@@ -268,6 +294,12 @@
             <param name="propertyName">The name of the property.</param>
             <param name="value">The expected minimum value for the property.</param>
             <param name="group">The condition group.</param>
+            <remarks>
+            The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted
+            when applied as the `minimum` or `exclusiveMinimum` keywords.
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.JsonExcludeAttribute">
             <summary>
@@ -317,6 +349,11 @@
             <summary>
             Applies a `maximum` keyword.
             </summary>
+            <remarks>
+            The `value` parameter is provided in the constructor as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="P:Json.Schema.Generation.MaximumAttribute.Value">
             <summary>
@@ -328,6 +365,11 @@
             Creates a new <see cref="T:Json.Schema.Generation.MaximumAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
+            <remarks>
+            The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.MaxItemsAttribute">
             <summary>
@@ -365,6 +407,11 @@
             <summary>
             Applies a `minimum` keyword.
             </summary>
+            <remarks>
+            The `value` parameter is provided in the constructor as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="P:Json.Schema.Generation.MinimumAttribute.Value">
             <summary>
@@ -376,6 +423,11 @@
             Creates a new <see cref="T:Json.Schema.Generation.MinimumAttribute"/> instance.
             </summary>
             <param name="value">The value.</param>
+            <remarks>
+            The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+            because `decimal` is not a valid attribute parameter type.
+            As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
+            </remarks>
         </member>
         <member name="T:Json.Schema.Generation.MinItemsAttribute">
             <summary>
