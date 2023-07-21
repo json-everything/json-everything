@@ -142,7 +142,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 				var item = array[i];
 				context.Push(context.InstanceLocation.Combine(i),
 					item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(i),
+					context.EvaluationPath.Combine(Name, i),
 					schema);
 				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;

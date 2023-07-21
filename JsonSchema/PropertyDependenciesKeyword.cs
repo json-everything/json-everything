@@ -80,7 +80,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 				continue;
 			}
 
-			context.Push(context.EvaluationPath.Combine(name, stringValue), schema);
+			context.Push(context.EvaluationPath.Combine(Name, name, stringValue), schema);
 			context.Evaluate();
 			var localResult = context.LocalResult.IsValid;
 			overallResult &= localResult;
