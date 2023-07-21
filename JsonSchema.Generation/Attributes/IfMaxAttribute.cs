@@ -35,6 +35,12 @@ public class IfMaxAttribute : ConditionalAttribute, IConditionAttribute
 	/// <param name="propertyName">The name of the property.</param>
 	/// <param name="value">The expected maximum value for the property.</param>
 	/// <param name="group">The condition group.</param>
+	/// <remarks>
+	/// The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
+	/// because `decimal` is not a valid attribute parameter type.
+	/// As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted
+	/// when applied as the `maximum` or `exclusiveMaximum` keywords.
+	/// </remarks>
 	public IfMaxAttribute(string propertyName, double value, object? group)
 	{
 		PropertyName = propertyName;
@@ -48,8 +54,8 @@ public class IfMaxAttribute : ConditionalAttribute, IConditionAttribute
 
 		if (PropertyType.IsNumber())
 		{
-			if (IsExclusive) return new ExclusiveMaximumIntent((decimal)Value);
-			return new MaximumIntent((decimal)Value);
+			if (IsExclusive) return new ExclusiveMaximumIntent(Value.ClampToDecimal());
+			return new MaximumIntent(Value.ClampToDecimal());
 		}
 
 		// ReSharper disable once CompareOfFloatsByEqualityOperator

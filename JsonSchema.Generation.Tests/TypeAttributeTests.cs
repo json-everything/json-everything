@@ -4,7 +4,7 @@ using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests;
 
-internal class TypeAttributeTests
+public class TypeAttributeTests
 {
 	// ReSharper disable once ClassNeverInstantiated.Local
 	// ReSharper disable UnusedMember.Local
