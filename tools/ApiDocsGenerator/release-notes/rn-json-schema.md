@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [4.1.8](https://github.com/gregsdennis/json-everything/pull/490) {#release-schema-4.1.8}
+
+Fixes several issues where keyword names were not reported in the evaluation path in the output.
+
 # [4.1.7](https://github.com/gregsdennis/json-everything/commit/21b1fe73393508d84c90d00cc8f22aeaa958a2b5) {#release-schema-4.1.7}
 
 Update keyword selection for custom drafts (support for upcoming OpenAPI project).
