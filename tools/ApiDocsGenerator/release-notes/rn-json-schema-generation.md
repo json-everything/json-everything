@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.3.1](https://github.com/gregsdennis/json-everything/pull/491) {#release-schemagen-3.3.1}
+
+[#488](https://github.com/gregsdennis/json-everything/issues/488) - `[Maximum(double.MaxValue)]` throws an overflow exception when attempting to convert to decimal.  This fix updates all min/max-related attributes.
+
 # [3.3.0](https://github.com/gregsdennis/json-everything/pull/466) {#release-schemagen-3.3.0}
 
 Added conditional schema generation using new attributes to define condition groups and then assigning other attributes to those groups.
