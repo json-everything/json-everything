@@ -75,7 +75,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 			if (requirements.Schema != null)
 			{
 				context.Log(() => "Found schema requirement.");
-				context.Push(context.EvaluationPath.Combine(name), requirements.Schema);
+				context.Push(context.EvaluationPath.Combine(Name, name), requirements.Schema);
 				context.Evaluate();
 				overallResult &= context.LocalResult.IsValid;
 				if (context.LocalResult.IsValid)

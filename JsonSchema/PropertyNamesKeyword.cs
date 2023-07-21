@@ -62,7 +62,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 		{
 			context.Log(() => $"Evaluating property name '{name}'.");
 			context.Push(context.InstanceLocation.Combine(name), name,
-				context.EvaluationPath.Combine(name), Schema);
+				context.EvaluationPath.Combine(Name, name), Schema);
 			context.Evaluate();
 			overallResult &= context.LocalResult.IsValid;
 			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
