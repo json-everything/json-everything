@@ -9,13 +9,15 @@ namespace Json.Pointer;
 /// </summary>
 public class PointerSegment : IEquatable<PointerSegment>
 {
+	private string _source;
+
 	/// <summary>
 	/// Gets the segment value.
 	/// </summary>
 	public string Value { get; private set; }
 
 #pragma warning disable CS8618
-	private PointerSegment() { }
+	private PointerSegment(){}
 #pragma warning restore CS8618
 
 	/// <summary>
@@ -31,6 +33,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 
 		return new PointerSegment
 		{
+			_source = source,
 			Value = Decode(source)
 		};
 	}
@@ -53,6 +56,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 		{
 			segment = new PointerSegment
 			{
+				_source = source,
 				Value = Decode(source)
 			};
 			return true;
@@ -75,6 +79,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 
 		return new PointerSegment
 		{
+			_source = Encode(value),
 			Value = value
 		};
 	}
@@ -140,7 +145,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <returns>The string representation.</returns>
 	public string ToString(JsonPointerStyle pointerStyle)
 	{
-		var str = Encode(Value);
+		var str = _source;
 
 		if (pointerStyle == JsonPointerStyle.UriEncoded)
 			str = HttpUtility.UrlEncode(str);
@@ -153,15 +158,18 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(PointerSegment? other)
 	{
-		return string.Equals(Value, other?.Value, StringComparison.InvariantCulture);
+		if (other is null) return false;
+		if (ReferenceEquals(this, other)) return true;
+
+		return string.Equals(Value, other.Value, StringComparison.InvariantCulture);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		return obj is PointerSegment other && Equals(other);
+		return Equals(obj as PointerSegment);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -14,14 +15,18 @@ namespace Json.Pointer;
 /// Represents a JSON Pointer IAW RFC 6901.
 /// </summary>
 [JsonConverter(typeof(JsonPointerJsonConverter))]
+[DebuggerDisplay("{_source}")]
 public class JsonPointer : IEquatable<JsonPointer>
 {
+	private string _source;
+
 	/// <summary>
 	/// The empty pointer.
 	/// </summary>
 	public static readonly JsonPointer Empty =
 		new()
 		{
+			_source = string.Empty,
 			Segments = Array.Empty<PointerSegment>()
 		};
 
@@ -30,7 +35,14 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	public PointerSegment[] Segments { get; private set; } = null!;
 
+	private JsonPointer(PointerSegment[] segments)
+	{
+		Segments = segments;
+		_source = ToString(JsonPointerStyle.Plain);
+	}
+#pragma warning disable CS8618
 	private JsonPointer() { }
+#pragma warning restore CS8618
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.
@@ -63,6 +75,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 
 		return new JsonPointer
 		{
+			_source = source,
 			Segments = segments
 		};
 	}
@@ -114,6 +127,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 
 		pointer = new JsonPointer
 		{
+			_source = source,
 			Segments = segments
 		};
 		return true;
@@ -127,10 +141,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
 	public static JsonPointer Create(params PointerSegment[] segments)
 	{
-		return new JsonPointer
-		{
-			Segments = segments.ToArray()
-		};
+		return new JsonPointer(segments);
 	}
 
 	/// <summary>
@@ -140,10 +151,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The JSON Pointer.</returns>
 	public static JsonPointer Create(IEnumerable<PointerSegment> segments)
 	{
-		return new JsonPointer
-		{
-			Segments = segments.ToArray()
-		};
+		return new JsonPointer(segments.ToArray());
 	}
 
 	/// <summary>
@@ -203,10 +211,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		Segments.CopyTo(segments, 0);
 		other.Segments.CopyTo(segments, Segments.Length);
 
-		return new JsonPointer
-		{
-			Segments = segments
-		};
+		return new JsonPointer(segments);
 	}
 
 	/// <summary>
@@ -220,10 +225,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		Segments.CopyTo(segments, 0);
 		additionalSegments.CopyTo(segments, Segments.Length);
 
-		return new JsonPointer
-		{
-			Segments = segments
-		};
+		return new JsonPointer(segments);
 	}
 
 	/// <summary>
@@ -334,17 +336,25 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The string representation.</returns>
 	public string ToString(JsonPointerStyle pointerStyle)
 	{
-		var sb = new StringBuilder();
-		if (pointerStyle == JsonPointerStyle.UriEncoded)
-			sb.Append("#");
-
-		foreach (var segment in Segments)
+		string BuildString(StringBuilder sb)
 		{
-			sb.Append("/");
-			sb.Append(segment.ToString(pointerStyle));
+			foreach (var segment in Segments)
+			{
+				sb.Append("/");
+				sb.Append(segment.ToString(pointerStyle));
+			}
+
+			return sb.ToString();
 		}
 
-		return sb.ToString();
+		if (pointerStyle != JsonPointerStyle.UriEncoded)
+		{
+			// ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+			_source ??= BuildString(new StringBuilder());
+			return _source;
+		}
+
+		return BuildString(new StringBuilder("#"));
 	}
 
 	/// <summary>Returns the string representation of this instance.</summary>
@@ -357,17 +367,20 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonPointer other)
+	public bool Equals(JsonPointer? other)
 	{
-		return Segments.SequenceEqual(other.Segments);
+		if (other is null) return false;
+		if (ReferenceEquals(this, other)) return true;
+
+		return string.Equals(_source, other._source, StringComparison.InvariantCulture);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		return obj is JsonPointer other && Equals(other);
+		return Equals(obj as JsonPointer);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>
