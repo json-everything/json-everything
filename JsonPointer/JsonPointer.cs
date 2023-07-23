@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -30,7 +31,9 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	public PointerSegment[] Segments { get; private set; } = null!;
 
+#pragma warning disable CS8618
 	private JsonPointer() { }
+#pragma warning restore CS8618
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.
@@ -129,7 +132,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	{
 		return new JsonPointer
 		{
-			Segments = segments.ToArray()
+			Segments = segments
 		};
 	}
 
@@ -334,17 +337,20 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The string representation.</returns>
 	public string ToString(JsonPointerStyle pointerStyle)
 	{
-		var sb = new StringBuilder();
-		if (pointerStyle == JsonPointerStyle.UriEncoded)
-			sb.Append("#");
-
-		foreach (var segment in Segments)
+		string BuildString(StringBuilder sb)
 		{
-			sb.Append("/");
-			sb.Append(segment.ToString(pointerStyle));
+			foreach (var segment in Segments)
+			{
+				sb.Append("/");
+				sb.Append(segment.ToString(pointerStyle));
+			}
+
+			return sb.ToString();
 		}
 
-		return sb.ToString();
+		return BuildString(pointerStyle != JsonPointerStyle.UriEncoded
+			? new StringBuilder()
+			: new StringBuilder("#"));
 	}
 
 	/// <summary>Returns the string representation of this instance.</summary>
@@ -357,17 +363,20 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonPointer other)
+	public bool Equals(JsonPointer? other)
 	{
+		if (other is null) return false;
+		if (ReferenceEquals(this, other)) return true;
+
 		return Segments.SequenceEqual(other.Segments);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		return obj is JsonPointer other && Equals(other);
+		return Equals(obj as JsonPointer);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>
