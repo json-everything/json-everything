@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Web;
 
@@ -9,7 +10,7 @@ namespace Json.Pointer;
 /// </summary>
 public class PointerSegment : IEquatable<PointerSegment>
 {
-	private string _source;
+	private string? _source;
 
 	/// <summary>
 	/// Gets the segment value.
@@ -79,16 +80,16 @@ public class PointerSegment : IEquatable<PointerSegment>
 
 		return new PointerSegment
 		{
-			_source = Encode(value),
 			Value = value
 		};
 	}
 
 	private static string Encode(string value)
 	{
+		if (value.All(c => c is not ('~' or '/'))) return value;
+
 		var builder = new StringBuilder();
-		var chars = value.AsSpan();
-		foreach (var ch in chars)
+		foreach (var ch in value)
 		{
 			switch (ch)
 			{
@@ -109,15 +110,16 @@ public class PointerSegment : IEquatable<PointerSegment>
 
 	private static string Decode(string source)
 	{
-		var builder = new StringBuilder();
-		var span = source.AsSpan();
-		for (int i = 0; i < span.Length; i++)
-		{
-			if (span[i] == '~')
-			{
-				if (i >= span.Length - 1) throw new PointerParseException("Segment cannot end with `~`");
+		if (source.All(c => c is not '~')) return source;
 
-				switch (span[i + 1])
+		var builder = new StringBuilder();
+		for (int i = 0; i < source.Length; i++)
+		{
+			if (source[i] == '~')
+			{
+				if (i >= source.Length - 1) throw new PointerParseException("Segment cannot end with `~`");
+
+				switch (source[i + 1])
 				{
 					case '0':
 						builder.Append('~');
@@ -128,13 +130,13 @@ public class PointerSegment : IEquatable<PointerSegment>
 						i++;
 						break;
 					default:
-						throw new PointerParseException($"Invalid escape sequence: `~{span[i + 1]}`");
+						throw new PointerParseException($"Invalid escape sequence: `~{source[i + 1]}`");
 				}
 
 				continue;
 			}
 
-			builder.Append(span[i]);
+			builder.Append(source[i]);
 		}
 
 		return builder.ToString();
@@ -145,6 +147,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <returns>The string representation.</returns>
 	public string ToString(JsonPointerStyle pointerStyle)
 	{
+		_source ??= Encode(Value);
 		var str = _source;
 
 		if (pointerStyle == JsonPointerStyle.UriEncoded)
