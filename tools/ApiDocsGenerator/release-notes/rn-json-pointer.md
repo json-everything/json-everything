@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "8.09"
 ---
+# [3.0.2](https://github.com/gregsdennis/json-everything/pull/492) {#release-pointer-3.0.2}
+
+Memory and performance improvements.
+
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/425) {#release-pointer-3.0.1}
 
 [#408](https://github.com/gregsdennis/json-everything/issues/408) - Fixed an issue where an empty string segment fails for array values.  Thanks to [@mbj2011](https://github.com/mbj2011) for finding and reporting this.
