@@ -106,20 +106,14 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 	{
 		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
 		if (ifConstraint == null)
-			return new KeywordConstraint
-			{
-				Keyword = Name,
-				Evaluator = KeywordConstraint.NoEvaluation
-			};
+			return new KeywordConstraint(Name, KeywordConstraint.NoEvaluation);
 
-		var subschemaConstraint = Schema.GetConstraint(evaluationPath.Combine(Name), schemaLocation, instanceLocation);
+		var subschemaConstraint = Schema.GetConstraint(evaluationPath.Combine(Name), instanceLocation);
 
-		return new KeywordConstraint
+		return new KeywordConstraint(Name, Evaluator)
 		{
 			KeywordDependencies = new[] { ifConstraint },
-			SubschemaDependencies = new[] { subschemaConstraint },
-			Keyword = Name,
-			Evaluator = Evaluator
+			SubschemaDependencies = new[] { subschemaConstraint }
 		};
 	}
 

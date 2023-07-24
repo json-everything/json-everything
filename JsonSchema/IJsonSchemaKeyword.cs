@@ -28,23 +28,30 @@ public interface IConstrainer
 
 public class SchemaConstraint
 {
-	public JsonPointer EvaluationPath { get; set; }
-	public Uri SchemaLocation { get; set; }
-	public JsonSchema LocalSchema { get; set; }
-	public JsonPointer InstanceLocation { get; set; }
+	public JsonPointer EvaluationPath { get; }
+	public Uri SchemaLocation { get; }
+	public JsonSchema LocalSchema { get; }
+	public JsonPointer InstanceLocation { get; }
+
+	public JsonPointer RelativeInstanceLocation { get; set; } = JsonPointer.Empty;
 	public KeywordConstraint[] Constraints { get; set; } = Array.Empty<KeywordConstraint>();
 
-	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance)
+	internal SchemaConstraint(JsonPointer evaluationPath, Uri schemaLocation, JsonSchema localSchema, JsonPointer instanceLocation)
 	{
-		var evaluation = new SchemaEvaluation
-		{
-			Constraint = this,
-			LocalInstance = localInstance,
-			Results = new EvaluationResults(EvaluationPath, SchemaLocation, InstanceLocation),
-			KeywordEvaluations = Constraints.Length == 0
+		EvaluationPath = evaluationPath;
+		SchemaLocation = schemaLocation;
+		LocalSchema = localSchema;
+		InstanceLocation = instanceLocation;
+	}
+
+	internal SchemaEvaluation BuildEvaluation(JsonNode? localInstance)
+	{
+		var evaluation = new SchemaEvaluation(localInstance,
+			new EvaluationResults(EvaluationPath, SchemaLocation, InstanceLocation),
+			Constraints.Length == 0
 				? Array.Empty<KeywordEvaluation>()
 				: new KeywordEvaluation[Constraints.Length]
-		};
+		);
 
 		if (LocalSchema.BoolValue.HasValue)
 		{
@@ -65,11 +72,17 @@ public class SchemaConstraint
 
 public class SchemaEvaluation
 {
-	public SchemaConstraint Constraint { get; set; }
-	public JsonNode? LocalInstance { get; set; }
-	public EvaluationResults Results { get; set; }
+	public JsonNode? LocalInstance { get; }
+	public EvaluationResults Results { get; }
 
-	public KeywordEvaluation[] KeywordEvaluations { get; set; }
+	public KeywordEvaluation[] KeywordEvaluations { get; }
+
+	internal SchemaEvaluation(JsonNode? localInstance, EvaluationResults results, KeywordEvaluation[] evaluations)
+	{
+		LocalInstance = localInstance;
+		Results = results;
+		KeywordEvaluations = evaluations;
+	}
 
 	public void Evaluate()
 	{
@@ -85,21 +98,21 @@ public class SchemaEvaluation
 
 public class KeywordConstraint
 {
-	public string? Keyword { get; set; }
+	public string? Keyword { get; }
+	public Action<KeywordEvaluation> Evaluator { get; }
 
 	public KeywordConstraint[] KeywordDependencies { get; set; } = Array.Empty<KeywordConstraint>(); // siblings
 	public SchemaConstraint[] SubschemaDependencies { get; set; } = Array.Empty<SchemaConstraint>(); // children
 
-	public Action<KeywordEvaluation> Evaluator { get; set; }
-
-	public KeywordEvaluation BuildEvaluation(SchemaEvaluation schemaEvaluation)
+	public KeywordConstraint(string keyword, Action<KeywordEvaluation> evaluator)
 	{
-		var evaluation = new KeywordEvaluation
-		{
-			Constraint = this,
-			LocalInstance = schemaEvaluation.LocalInstance,
-			Results = schemaEvaluation.Results
-		};
+		Keyword = keyword;
+		Evaluator = evaluator;
+	}
+
+	internal KeywordEvaluation BuildEvaluation(SchemaEvaluation schemaEvaluation)
+	{
+		var evaluation = new KeywordEvaluation(this, schemaEvaluation.LocalInstance, schemaEvaluation.Results);
 
 		if (KeywordDependencies.Length != 0)
 		{
@@ -119,8 +132,10 @@ public class KeywordConstraint
 			evaluation.SubschemaEvaluations = new SchemaEvaluation[SubschemaDependencies.Length];
 			for (int i = 0; i < SubschemaDependencies.Length; i++)
 			{
-				// TODO: local instance probably needs to update
-				var localEvaluation = SubschemaDependencies[i].BuildEvaluation(schemaEvaluation.LocalInstance);
+				var dependency = SubschemaDependencies[i];
+				if (!dependency.RelativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out var instance)) continue;
+
+				var localEvaluation = dependency.BuildEvaluation(instance);
 				evaluation.SubschemaEvaluations[i] = localEvaluation;
 				schemaEvaluation.Results.Details.Add(localEvaluation.Results);
 			}
@@ -140,16 +155,24 @@ public class KeywordConstraint
 
 public class KeywordEvaluation
 {
-	public static KeywordEvaluation Skip { get; } = new() { _evaluated = true };
-
 	private bool _evaluated;
 
-	public KeywordConstraint Constraint { get; set; }
-	public JsonNode? LocalInstance { get; set; }
-	public EvaluationResults Results { get; set; }
+	public static KeywordEvaluation Skip { get; } = new() { _evaluated = true };
+
+	public KeywordConstraint Constraint { get; }
+	public JsonNode? LocalInstance { get; }
+	public EvaluationResults Results { get; }
 
 	public KeywordEvaluation[] KeywordEvaluations { get; set; }
 	public SchemaEvaluation[] SubschemaEvaluations { get; set; }
+
+	internal KeywordEvaluation(KeywordConstraint constraint, JsonNode? localInstance, EvaluationResults results)
+	{
+		Constraint = constraint;
+		LocalInstance = localInstance;
+		Results = results;
+	}
+	private KeywordEvaluation(){}
 
 	public void Evaluate()
 	{

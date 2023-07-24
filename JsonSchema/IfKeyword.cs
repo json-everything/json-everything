@@ -86,13 +86,11 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 		JsonPointer instanceLocation,
 		IEnumerable<KeywordConstraint> localConstraints)
 	{
-		var subschemaDependency = Schema.GetConstraint(evaluationPath.Combine(Name), schemaLocation, instanceLocation);
+		var subschemaDependency = Schema.GetConstraint(evaluationPath.Combine(Name), instanceLocation);
 
-		return new KeywordConstraint
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			SubschemaDependencies = new[] { subschemaDependency },
-			Keyword = Name,
-			Evaluator = Evaluator
+			SubschemaDependencies = new[] { subschemaDependency }
 		};
 	}
 

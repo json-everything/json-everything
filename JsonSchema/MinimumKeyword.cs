@@ -92,11 +92,7 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>, IC
 		JsonPointer instanceLocation,
 		IEnumerable<KeywordConstraint> localConstraints)
 	{
-		return new KeywordConstraint
-		{
-			Keyword = Name,
-			Evaluator = Evaluator
-		};
+		return new KeywordConstraint(Name, Evaluator);
 	}
 
 	private void Evaluator(KeywordEvaluation evaluation)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -18,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(RefKeywordJsonConverter))]
-public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
+public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -118,6 +119,11 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	public override int GetHashCode()
 	{
 		return Reference.GetHashCode();
+	}
+
+	public KeywordConstraint GetConstraint(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, IEnumerable<KeywordConstraint> localConstraints)
+	{
+		throw new NotImplementedException();
 	}
 }
 

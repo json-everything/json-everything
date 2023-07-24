@@ -223,6 +223,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return results;
 	}
 
+	private SchemaConstraint? _constraint;
+
 	/// <summary>
 	/// Evaluates an instance against this schema.
 	/// </summary>
@@ -238,14 +240,12 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
-		var context = new EvaluationContext(options, BaseUri, root, this);
-
 		options.Log.Write(() => "Beginning evaluation.");
 
 
-		var constraint = GetConstraint(JsonPointer.Empty, BaseUri, JsonPointer.Empty);
+		_constraint ??= GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
 
-		var evaluation = constraint.BuildEvaluation(root);
+		var evaluation = _constraint.BuildEvaluation(root);
 		evaluation.Evaluate();
 
 
@@ -270,33 +270,22 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	}
 
 	public SchemaConstraint GetConstraint(JsonPointer evaluationPath,
-		Uri schemaLocation,
 		JsonPointer instanceLocation)
 	{
 		if (BoolValue.HasValue)
 		{
-			return new SchemaConstraint
-			{
-				EvaluationPath = evaluationPath,
-				SchemaLocation = schemaLocation,
-				LocalSchema = this,
-				InstanceLocation = instanceLocation
-			};
+			return new SchemaConstraint(evaluationPath, BaseUri, this, instanceLocation);
 		}
 
 		var localConstraints = new List<KeywordConstraint>();
 		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()).OfType<IConstrainer>())
 		{
-			var keywordConstraint = keyword.GetConstraint(evaluationPath, schemaLocation, instanceLocation, localConstraints);
+			var keywordConstraint = keyword.GetConstraint(evaluationPath, BaseUri, instanceLocation, localConstraints);
 			localConstraints.Add(keywordConstraint);
 		}
 
-		return new SchemaConstraint
+		return new SchemaConstraint(evaluationPath, BaseUri, this, instanceLocation)
 		{
-			EvaluationPath = evaluationPath,
-			SchemaLocation = schemaLocation,
-			LocalSchema = this,
-			InstanceLocation = instanceLocation,
 			Constraints = localConstraints.ToArray()
 		};
 	}

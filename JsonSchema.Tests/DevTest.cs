@@ -14,10 +14,17 @@ public class DevTest
 	public void Test()
 	{
 		var schema = new JsonSchemaBuilder()
-			.If(true)
-			.Then(new JsonSchemaBuilder().Minimum(10))
+			.Defs(
+				("foo", new JsonSchemaBuilder().Minimum(20))
+			)
+			.Properties(
+				("foo", new JsonSchemaBuilder().Minimum(20))
+			)
 			.Build();
-		var instance = 5;
+		var instance = new JsonObject
+		{
+			["foo"] = 15
+		};
 
 		var result = schema.Evaluate2(instance, new EvaluationOptions
 		{
@@ -25,6 +32,6 @@ public class DevTest
 			PreserveDroppedAnnotations = true
 		});
 
-		result.AssertValid();
+		result.AssertInvalid();
 	}
 }
