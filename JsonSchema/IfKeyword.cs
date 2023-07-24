@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -16,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(IfKeywordJsonConverter))]
-public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyword>
+public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -75,6 +79,28 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 	public override int GetHashCode()
 	{
 		return Schema.GetHashCode();
+	}
+
+	public KeywordConstraint GetConstraint(JsonPointer evaluationPath,
+		Uri schemaLocation,
+		JsonPointer instanceLocation,
+		IEnumerable<KeywordConstraint> localConstraints)
+	{
+		var subschemaDependency = Schema.GetConstraint(evaluationPath.Combine(Name), schemaLocation, instanceLocation);
+
+		return new KeywordConstraint
+		{
+			SubschemaDependencies = new[] { subschemaDependency },
+			Keyword = Name,
+			Evaluator = Evaluator
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var subSchemaEvaluation = evaluation.SubschemaEvaluations.Single();
+
+		evaluation.Results.SetAnnotation(Name, subSchemaEvaluation.Results.IsValid);
 	}
 }
 

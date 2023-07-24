@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -19,7 +23,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [DependsOnAnnotationsFrom(typeof(IfKeyword))]
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
-public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ThenKeyword>
+public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ThenKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -93,6 +97,46 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 	public override int GetHashCode()
 	{
 		return Schema.GetHashCode();
+	}
+
+	public KeywordConstraint GetConstraint(JsonPointer evaluationPath,
+		Uri schemaLocation,
+		JsonPointer instanceLocation,
+		IEnumerable<KeywordConstraint> localConstraints)
+	{
+		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
+		if (ifConstraint == null)
+			return new KeywordConstraint
+			{
+				Keyword = Name,
+				Evaluator = KeywordConstraint.NoEvaluation
+			};
+
+		var subschemaConstraint = Schema.GetConstraint(evaluationPath.Combine(Name), schemaLocation, instanceLocation);
+
+		return new KeywordConstraint
+		{
+			KeywordDependencies = new[] { ifConstraint },
+			SubschemaDependencies = new[] { subschemaConstraint },
+			Keyword = Name,
+			Evaluator = Evaluator
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.KeywordEvaluations.Length == 0)
+		{
+			// this should never trigger
+			return;
+		}
+
+		var ifEvaluation = evaluation.KeywordEvaluations[0];
+		if (!ifEvaluation.Results.IsValid) return;
+
+		var subSchemaEvaluation = evaluation.SubschemaEvaluations[0];
+		if (!subSchemaEvaluation.Results.IsValid)
+			evaluation.Results.Fail();
 	}
 }
 

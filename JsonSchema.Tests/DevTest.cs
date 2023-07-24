@@ -13,22 +13,18 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var filePath = "C:\\Folder\\Issue435_schema.json";
+		var schema = new JsonSchemaBuilder()
+			.If(true)
+			.Then(new JsonSchemaBuilder().Minimum(10))
+			.Build();
+		var instance = 5;
 
-		var withoutProtocol = new Uri(filePath);
-		var withProtocol = new Uri($"file:///{filePath}");
-		
-		var fragment = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
+		var result = schema.Evaluate2(instance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			PreserveDroppedAnnotations = true
+		});
 
-		var withoutProtocolResult = new Uri(withoutProtocol, fragment);
-		var fileUriResult = new Uri(withProtocol, fragment);
-
-		Console.WriteLine("File path: {0}", filePath);
-		Console.WriteLine();
-		Console.WriteLine("Without protocol: {0}", withoutProtocol);
-		Console.WriteLine("With protocol:    {0}", withProtocol);
-		Console.WriteLine();
-		Console.WriteLine("Combined, Without: {0}", withoutProtocolResult);
-		Console.WriteLine("Combined, With:    {0}", fileUriResult);
+		result.AssertValid();
 	}
 }

@@ -223,6 +223,84 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return results;
 	}
 
+	/// <summary>
+	/// Evaluates an instance against this schema.
+	/// </summary>
+	/// <param name="root">The root instance.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	public EvaluationResults Evaluate2(JsonNode? root, EvaluationOptions? options = null)
+	{
+		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
+
+		options.Log.Write(() => "Registering subschemas.");
+		// BaseUri may change if $id is present
+		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
+
+		var context = new EvaluationContext(options, BaseUri, root, this);
+
+		options.Log.Write(() => "Beginning evaluation.");
+
+
+		var constraint = GetConstraint(JsonPointer.Empty, BaseUri, JsonPointer.Empty);
+
+		var evaluation = constraint.BuildEvaluation(root);
+		evaluation.Evaluate();
+
+
+		options.Log.Write(() => "Transforming output.");
+		var results = evaluation.Results;
+		switch (options.OutputFormat)
+		{
+			case OutputFormat.Flag:
+				results.ToFlag();
+				break;
+			case OutputFormat.List:
+				results.ToList();
+				break;
+			case OutputFormat.Hierarchical:
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+
+		options.Log.Write(() => $"Evaluation complete: {results.IsValid.GetValidityString()}");
+		return results;
+	}
+
+	public SchemaConstraint GetConstraint(JsonPointer evaluationPath,
+		Uri schemaLocation,
+		JsonPointer instanceLocation)
+	{
+		if (BoolValue.HasValue)
+		{
+			return new SchemaConstraint
+			{
+				EvaluationPath = evaluationPath,
+				SchemaLocation = schemaLocation,
+				LocalSchema = this,
+				InstanceLocation = instanceLocation
+			};
+		}
+
+		var localConstraints = new List<KeywordConstraint>();
+		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()).OfType<IConstrainer>())
+		{
+			var keywordConstraint = keyword.GetConstraint(evaluationPath, schemaLocation, instanceLocation, localConstraints);
+			localConstraints.Add(keywordConstraint);
+		}
+
+		return new SchemaConstraint
+		{
+			EvaluationPath = evaluationPath,
+			SchemaLocation = schemaLocation,
+			LocalSchema = this,
+			InstanceLocation = instanceLocation,
+			Constraints = localConstraints.ToArray()
+		};
+	}
+
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
 		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineSpecVersion(schema, registry, SpecVersion.Unspecified), true);

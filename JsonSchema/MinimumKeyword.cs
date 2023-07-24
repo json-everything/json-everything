@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -18,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MinimumKeywordJsonConverter))]
-public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
+public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -82,6 +85,28 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 	public override int GetHashCode()
 	{
 		return Value.GetHashCode();
+	}
+
+	public KeywordConstraint GetConstraint(JsonPointer evaluationPath,
+		Uri schemaLocation,
+		JsonPointer instanceLocation,
+		IEnumerable<KeywordConstraint> localConstraints)
+	{
+		return new KeywordConstraint
+		{
+			Keyword = Name,
+			Evaluator = Evaluator
+		};
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+
+		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		if (Value > number)
+			evaluation.Results.Fail(Name, ErrorMessages.Minimum, ("received", number), ("limit", Value));
 	}
 }
 

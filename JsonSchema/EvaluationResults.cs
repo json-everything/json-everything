@@ -47,7 +47,7 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public IReadOnlyList<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
+	public List<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
 
 	/// <summary>
 	/// Gets whether there are nested results.
@@ -105,6 +105,13 @@ public class EvaluationResults
 			_ignoredAnnotations = new HashSet<string>(context.Options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
 			_backgroundAnnotations = new HashSet<string>(context.Options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
 		}
+	}
+
+	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation)
+	{
+		EvaluationPath = evaluationPath;
+		_currentUri = schemaLocation;
+		InstanceLocation = instanceLocation;
 	}
 
 	private EvaluationResults(EvaluationResults other)
