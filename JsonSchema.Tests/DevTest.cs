@@ -16,19 +16,19 @@ public class DevTest
 		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(10)),
 				("next", new JsonSchemaBuilder().Ref("#"))
 			)
 			.Build();
 		var instance = new JsonObject
 		{
-			["value"] = 1,
+			["value"] = 11,
 			["next"] = new JsonObject
 			{
-				["value"] = 2,
+				["value"] = 12,
 				["next"] = new JsonObject
 				{
-					["value"] = 3,
+					["value"] = 13,
 					["next"] = new JsonObject
 					{
 						["value"] = 4

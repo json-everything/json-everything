@@ -244,7 +244,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 
 		_constraint ??= GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
-		PopulateConstraint(_constraint, new ConstraintBuilderContext { SchemaRegistry = options.SchemaRegistry });
+		PopulateConstraint(_constraint, new ConstraintBuilderContext(options));
 
 		var evaluation = _constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);
 		evaluation.Evaluate();

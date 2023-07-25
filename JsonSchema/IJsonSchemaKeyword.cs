@@ -20,7 +20,8 @@ public interface IJsonSchemaKeyword
 
 public interface IConstrainer
 {
-	KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+	KeywordConstraint GetConstraint(
+		SchemaConstraint schemaConstraint,
 		IEnumerable<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context);
 }
@@ -28,8 +29,8 @@ public interface IConstrainer
 public class SchemaConstraint
 {
 	private readonly JsonSchema _localSchema;
-	
-	public JsonPointer EvaluationPath { get; }
+	private readonly JsonPointer _evaluationPath;
+
 	public Uri SchemaLocation { get; }
 	public JsonPointer InstanceLocation { get; }
 
@@ -40,7 +41,7 @@ public class SchemaConstraint
 
 	internal SchemaConstraint(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, JsonSchema localSchema)
 	{
-		EvaluationPath = evaluationPath;
+		_evaluationPath = evaluationPath;
 		SchemaLocation = schemaLocation;
 		InstanceLocation = instanceLocation;
 		_localSchema = localSchema;
@@ -53,8 +54,8 @@ public class SchemaConstraint
 
 		if (InstanceLocation != JsonPointer.Empty)
 			instanceLocation = instanceLocation.Combine(InstanceLocation);
-		if (EvaluationPath != JsonPointer.Empty)
-			evaluationPath = evaluationPath.Combine(EvaluationPath);
+		if (_evaluationPath != JsonPointer.Empty)
+			evaluationPath = evaluationPath.Combine(_evaluationPath);
 
 		var evaluation = new SchemaEvaluation(localInstance,
 			new EvaluationResults(evaluationPath, SchemaLocation, instanceLocation),
@@ -90,7 +91,7 @@ public class SchemaEvaluation
 	public JsonNode? LocalInstance { get; }
 	public EvaluationResults Results { get; }
 
-	public KeywordEvaluation[] KeywordEvaluations { get; }
+	internal KeywordEvaluation[] KeywordEvaluations { get; }
 
 	internal SchemaEvaluation(JsonNode? localInstance, EvaluationResults results, KeywordEvaluation[] evaluations)
 	{
@@ -174,12 +175,13 @@ public class KeywordEvaluation
 
 	internal static KeywordEvaluation Skip { get; } = new() { _evaluated = true };
 
-	public KeywordConstraint Constraint { get; }
 	public JsonNode? LocalInstance { get; }
 	public EvaluationResults Results { get; }
 
 	public KeywordEvaluation[] KeywordEvaluations { get; set; }
 	public SchemaEvaluation[] SubschemaEvaluations { get; set; }
+
+	internal KeywordConstraint Constraint { get; }
 
 	internal KeywordEvaluation(KeywordConstraint constraint, JsonNode? localInstance, EvaluationResults results)
 	{
@@ -192,8 +194,6 @@ public class KeywordEvaluation
 	public void Evaluate()
 	{
 		if (_evaluated) return;
-
-		//Results.Details.Add(Results);
 
 		foreach (var evaluation in SubschemaEvaluations)
 		{
@@ -208,8 +208,11 @@ public class KeywordEvaluation
 
 public class ConstraintBuilderContext
 {
-	public SchemaRegistry SchemaRegistry { get; set; }
+	public EvaluationOptions Options { get; }
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
 
-	internal ConstraintBuilderContext(){}
+	internal ConstraintBuilderContext(EvaluationOptions options)
+	{
+		Options = options;
+	}
 }

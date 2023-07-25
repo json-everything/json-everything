@@ -135,7 +135,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 		JsonSchema? targetSchema = null;
-		var targetBase = context.SchemaRegistry.Get(newBaseUri) ??
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
 		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
@@ -171,7 +171,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 		};
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation)
 	{
 		var subSchemaEvaluation = evaluation.SubschemaEvaluations.Single();
 
