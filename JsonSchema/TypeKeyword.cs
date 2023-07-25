@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -20,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(TypeKeywordJsonConverter))]
-public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
+public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -135,6 +136,54 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 	public override int GetHashCode()
 	{
 		return (int)Type;
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		bool isValid;
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		switch (schemaValueType)
+		{
+			case SchemaValueType.Object:
+				isValid = Type.HasFlag(SchemaValueType.Object);
+				break;
+			case SchemaValueType.Array:
+				isValid = Type.HasFlag(SchemaValueType.Array);
+				break;
+			case SchemaValueType.String:
+				isValid = Type.HasFlag(SchemaValueType.String);
+				break;
+			case SchemaValueType.Integer:
+				isValid = Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number);
+				break;
+			case SchemaValueType.Number:
+				if (Type.HasFlag(SchemaValueType.Number))
+					isValid = true;
+				else if (Type.HasFlag(SchemaValueType.Integer))
+				{
+					var number = evaluation.LocalInstance!.AsValue().GetNumber();
+					isValid = number == Math.Truncate(number!.Value);
+				}
+				else
+					isValid = false;
+				break;
+			case SchemaValueType.Boolean:
+				isValid = Type.HasFlag(SchemaValueType.Boolean);
+				break;
+			case SchemaValueType.Null:
+				isValid = Type.HasFlag(SchemaValueType.Null);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+		var expected = Type.ToString().ToLower();
+		if (!isValid)
+			evaluation.Results.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
 	}
 }
 

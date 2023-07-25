@@ -244,8 +244,9 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 
 		_constraint ??= GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
+		PopulateConstraint(_constraint, new ConstraintBuilderContext { SchemaRegistry = options.SchemaRegistry });
 
-		var evaluation = _constraint.BuildEvaluation(root);
+		var evaluation = _constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);
 		evaluation.Evaluate();
 
 
@@ -269,25 +270,33 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return results;
 	}
 
-	public SchemaConstraint GetConstraint(JsonPointer evaluationPath,
-		JsonPointer instanceLocation)
+	public SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation, ConstraintBuilderContext context)
 	{
-		if (BoolValue.HasValue)
-		{
-			return new SchemaConstraint(evaluationPath, BaseUri, this, instanceLocation);
-		}
 
+		if (_constraint != null) return new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this) { Source = _constraint };
+
+		var schemaConstraint = GetConstraint(evaluationPath, instanceLocation);
+		if (!BoolValue.HasValue) 
+			PopulateConstraint(schemaConstraint, context);
+
+		return schemaConstraint;
+	}
+
+	private SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation)
+	{
+		return new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this);
+	}
+
+	private void PopulateConstraint(SchemaConstraint schemaConstraint, ConstraintBuilderContext context)
+	{
 		var localConstraints = new List<KeywordConstraint>();
 		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()).OfType<IConstrainer>())
 		{
-			var keywordConstraint = keyword.GetConstraint(evaluationPath, BaseUri, instanceLocation, localConstraints);
+			var keywordConstraint = keyword.GetConstraint(schemaConstraint, localConstraints, context);
 			localConstraints.Add(keywordConstraint);
 		}
 
-		return new SchemaConstraint(evaluationPath, BaseUri, this, instanceLocation)
-		{
-			Constraints = localConstraints.ToArray()
-		};
+		schemaConstraint.Constraints = localConstraints.ToArray();
 	}
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
@@ -468,7 +477,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 					(newResolvable, var segmentsConsumed) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToReadOnlyList());
 					i += segmentsConsumed;
 					break;
-				case JsonSchema { _keywords: { } } schema:
+				case JsonSchema { _keywords: not null } schema:
 					schema._keywords.TryGetValue(segment.Value, out var k);
 					newResolvable = k;
 					break;

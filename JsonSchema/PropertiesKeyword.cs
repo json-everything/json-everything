@@ -128,14 +128,9 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 		return Properties.GetStringDictionaryHashCode();
 	}
 
-	public KeywordConstraint GetConstraint(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, IEnumerable<KeywordConstraint> localConstraints)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		var subschemaConstraints = Properties.Select(x =>
-		{
-			var constraint = x.Value.GetConstraint(evaluationPath.Combine(Name, x.Key), instanceLocation.Combine(x.Key));
-			constraint.RelativeInstanceLocation = JsonPointer.Create(x.Key);
-			return constraint;
-		}).ToArray();
+		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(JsonPointer.Create(Name, x.Key), JsonPointer.Create(x.Key), context)).ToArray();
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

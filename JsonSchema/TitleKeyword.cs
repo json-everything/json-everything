@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -17,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Metadata202012Id)]
 [Vocabulary(Vocabularies.MetadataNextId)]
 [JsonConverter(typeof(TitleKeywordJsonConverter))]
-public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
+public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -72,6 +74,16 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 	public override int GetHashCode()
 	{
 		return Value.GetHashCode();
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		evaluation.Results.SetAnnotation(Name, Value);
 	}
 }
 

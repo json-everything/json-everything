@@ -14,16 +14,27 @@ public class DevTest
 	public void Test()
 	{
 		var schema = new JsonSchemaBuilder()
-			.Defs(
-				("foo", new JsonSchemaBuilder().Minimum(20))
-			)
+			.Type(SchemaValueType.Object)
 			.Properties(
-				("foo", new JsonSchemaBuilder().Minimum(20))
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("next", new JsonSchemaBuilder().Ref("#"))
 			)
 			.Build();
 		var instance = new JsonObject
 		{
-			["foo"] = 15
+			["value"] = 1,
+			["next"] = new JsonObject
+			{
+				["value"] = 2,
+				["next"] = new JsonObject
+				{
+					["value"] = 3,
+					["next"] = new JsonObject
+					{
+						["value"] = 4
+					}
+				}
+			}
 		};
 
 		var result = schema.Evaluate2(instance, new EvaluationOptions

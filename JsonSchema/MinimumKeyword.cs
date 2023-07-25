@@ -87,10 +87,7 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>, IC
 		return Value.GetHashCode();
 	}
 
-	public KeywordConstraint GetConstraint(JsonPointer evaluationPath,
-		Uri schemaLocation,
-		JsonPointer instanceLocation,
-		IEnumerable<KeywordConstraint> localConstraints)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
 	}

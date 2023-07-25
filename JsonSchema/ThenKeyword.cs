@@ -99,16 +99,13 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 		return Schema.GetHashCode();
 	}
 
-	public KeywordConstraint GetConstraint(JsonPointer evaluationPath,
-		Uri schemaLocation,
-		JsonPointer instanceLocation,
-		IEnumerable<KeywordConstraint> localConstraints)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
 		if (ifConstraint == null)
-			return new KeywordConstraint(Name, KeywordConstraint.NoEvaluation);
+			return KeywordConstraint.Skip;
 
-		var subschemaConstraint = Schema.GetConstraint(evaluationPath.Combine(Name), instanceLocation);
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

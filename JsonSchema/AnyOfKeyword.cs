@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -20,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(AnyOfKeywordJsonConverter))]
-public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<AnyOfKeyword>
+public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<AnyOfKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -99,6 +100,22 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 	public override int GetHashCode()
 	{
 		return Schemas.GetUnorderedCollectionHashCode();
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Empty, context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			SubschemaDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.SubschemaEvaluations.All(x => !x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 }
 
