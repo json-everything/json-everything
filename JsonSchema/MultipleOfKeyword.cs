@@ -64,7 +64,17 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+
+		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		if (number % Value != 0)
+			evaluation.Results.Fail(Name, ErrorMessages.MultipleOf, ("received", number), ("divisor", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

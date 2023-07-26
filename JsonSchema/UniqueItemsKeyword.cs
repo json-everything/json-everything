@@ -84,7 +84,26 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!Value || evaluation.LocalInstance is not JsonArray array) return;
+
+		var duplicates = new List<(int, int)>();
+		for (int i = 0; i < array.Count - 1; i++)
+		for (int j = i + 1; j < array.Count; j++)
+		{
+			if (array[i].IsEquivalentTo(array[j]))
+				duplicates.Add((i, j));
+		}
+
+		if (duplicates.Any())
+		{
+			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
+			evaluation.Results.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
+		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

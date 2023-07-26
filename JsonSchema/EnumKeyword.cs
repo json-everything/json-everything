@@ -89,7 +89,13 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
+			evaluation.Results.Fail(Name, ErrorMessages.Enum, ("received", evaluation.LocalInstance), ("values", Values));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

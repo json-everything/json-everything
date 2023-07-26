@@ -57,7 +57,13 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => e.LocalInstance.IsEquivalentTo(Value));
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!evaluation.LocalInstance.IsEquivalentTo(Value))
+			evaluation.Results.Fail(Name, ErrorMessages.Const, ("value", Value.AsJsonString()));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

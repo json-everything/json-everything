@@ -100,7 +100,54 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		//if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
+		//{
+		//	context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
+		//	return;
+		//}
+
+		var requireValidation = context.Options.RequireFormatValidation;
+
+		//if (!requireValidation)
+		//{
+		//	var vocabRequirements = context.MetaSchemaVocabs;
+		//	if (vocabRequirements != null)
+		//	{
+		//		foreach (var formatAssertionId in _formatAssertionIds)
+		//		{
+		//			if (vocabRequirements.ContainsKey(formatAssertionId))
+		//			{
+		//				// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
+		//				// for why we don't take the vocab value.
+		//				// tl;dr - This implementation understands the assertion vocab, so we apply it,
+		//				// even when the meta-schema says we're not required to.
+		//				requireValidation = true;
+		//				break;
+		//			}
+		//		}
+		//	}
+		//}
+
+		return new KeywordConstraint(Name, requireValidation
+			? AssertionEvaluator
+			: AnnotationEvaluator);
+	}
+
+	private void AssertionEvaluator(KeywordEvaluation evaluation)
+	{
+		if (Value.Validate(evaluation.LocalInstance, out var errorMessage)) return;
+
+		if (Value is UnknownFormat)
+			evaluation.Results.Fail(Name, errorMessage);
+		else if (errorMessage == null)
+			evaluation.Results.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
+		else
+			evaluation.Results.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+	}
+
+	private void AnnotationEvaluator(KeywordEvaluation evaluation)
+	{
+		evaluation.Results.SetAnnotation(Name, Value.Key);
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

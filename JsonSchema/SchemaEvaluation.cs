@@ -26,8 +26,5 @@ public class SchemaEvaluation
 		{
 			keyword.Evaluate();
 		}
-
-		if (!KeywordEvaluations.All(x => x.Results.IsValid))
-			Results.Fail();
 	}
 }

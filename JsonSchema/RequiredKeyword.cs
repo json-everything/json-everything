@@ -90,7 +90,17 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonObject obj) return;
+
+		var missing = Properties.Except(obj.Select(x => x.Key)).ToArray();
+		if (missing.Length != 0)
+			evaluation.Results.Fail(Name, ErrorMessages.Required, ("missing", missing));
+
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

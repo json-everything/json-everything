@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -77,11 +79,29 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		subschemaConstraint.InstanceLocator = evaluation =>
+		{
+			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
+
+			var properties = obj.Select(x => x.Key);
+
+			return properties.Select(x => JsonPointer.Create(x));
+		};
+		subschemaConstraint.UseLocatorAsInstance = true;
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

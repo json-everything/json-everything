@@ -115,7 +115,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocationGenerator = evaluation =>
+		subschemaConstraint.InstanceLocator = evaluation =>
 		{
 			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
 
@@ -132,14 +132,16 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		var minimum = 1;
+		if (evaluation.LocalInstance is not JsonArray) return;
+		
+		uint minimum = 1;
 		if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
-			minimum = minContainsAnnotation!.GetValue<int>();
-		int? maximum = null;
-		if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var maxContainsAnnotation))
-			maximum = maxContainsAnnotation!.GetValue<int>();
+			minimum = minContainsAnnotation!.GetValue<uint>();
+		uint? maximum = null;
+		if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
+			maximum = maxContainsAnnotation!.GetValue<uint>();
 
-		var actual = evaluation.ChildEvaluations.Count(x => !x.Results.IsValid);
+		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
 		if (actual < minimum)
 			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
 		else if (actual > maximum)

@@ -73,9 +73,10 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not SchemaValueType.String) return;
 
-		var number = evaluation.LocalInstance!.GetValue<string>().Length;
-		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.MinLength, ("received", number), ("limit", Value));
+		var str = evaluation.LocalInstance!.GetValue<string>();
+		var length = new StringInfo(str).LengthInTextElements;
+		if (Value > length)
+			evaluation.Results.Fail(Name, ErrorMessages.MinLength, ("received", length), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

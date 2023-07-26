@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -71,11 +73,28 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Else
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
+		if (ifConstraint == null)
+			return KeywordConstraint.Skip;
+
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			SiblingDependencies = new[] { ifConstraint },
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!evaluation.Results.TryGetAnnotation(IfKeyword.Name, out var ifAnnotation) || ifAnnotation!.GetValue<bool>()) return;
+
+		var subSchemaEvaluation = evaluation.ChildEvaluations[0];
+		if (!subSchemaEvaluation.Results.IsValid)
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

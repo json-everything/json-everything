@@ -73,7 +73,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 
 		var number = obj.Count;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.MinProperties, ("received", number), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

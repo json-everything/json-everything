@@ -14,10 +14,11 @@ public class SchemaConstraint
 	public JsonPointer RelativeInstanceLocation { get; }
 
 	public KeywordConstraint[] Constraints { get; set; } = Array.Empty<KeywordConstraint>();
-	public Func<KeywordEvaluation, IEnumerable<JsonPointer>>? InstanceLocationGenerator { get; set; }
+	public Func<KeywordEvaluation, IEnumerable<JsonPointer>>? InstanceLocator { get; set; }
 
 	internal JsonPointer BaseSchemaOffset { get; set; } = JsonPointer.Empty;
 	internal SchemaConstraint? Source { get; set; }
+	internal bool UseLocatorAsInstance { get; set; }
 
 	internal SchemaConstraint(JsonPointer relativeEvaluationPath, Uri schemaBaseUri, JsonPointer relativeInstanceLocation, JsonSchema localSchema)
 	{

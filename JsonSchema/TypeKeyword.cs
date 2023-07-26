@@ -115,51 +115,22 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, Evaluator);
+		return new KeywordConstraint(Name, e => Evaluator(e, Type));
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, SchemaValueType expectedType)
 	{
-		bool isValid;
-		// TODO: calc this in the constraint
-		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		switch (schemaValueType)
+		var instanceType = evaluation.LocalInstance.GetSchemaValueType();
+		if (expectedType.HasFlag(instanceType)) return;
+		if (instanceType == SchemaValueType.Integer && expectedType.HasFlag(SchemaValueType.Number)) return;
+		if (instanceType == SchemaValueType.Number)
 		{
-			case SchemaValueType.Object:
-				isValid = Type.HasFlag(SchemaValueType.Object);
-				break;
-			case SchemaValueType.Array:
-				isValid = Type.HasFlag(SchemaValueType.Array);
-				break;
-			case SchemaValueType.String:
-				isValid = Type.HasFlag(SchemaValueType.String);
-				break;
-			case SchemaValueType.Integer:
-				isValid = Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number);
-				break;
-			case SchemaValueType.Number:
-				if (Type.HasFlag(SchemaValueType.Number))
-					isValid = true;
-				else if (Type.HasFlag(SchemaValueType.Integer))
-				{
-					var number = evaluation.LocalInstance!.AsValue().GetNumber();
-					isValid = number == Math.Truncate(number!.Value);
-				}
-				else
-					isValid = false;
-				break;
-			case SchemaValueType.Boolean:
-				isValid = Type.HasFlag(SchemaValueType.Boolean);
-				break;
-			case SchemaValueType.Null:
-				isValid = Type.HasFlag(SchemaValueType.Null);
-				break;
-			default:
-				throw new ArgumentOutOfRangeException();
+			var number = evaluation.LocalInstance!.AsValue().GetNumber();
+			if (number == Math.Truncate(number!.Value) && expectedType.HasFlag(SchemaValueType.Integer)) return;
 		}
-		var expected = Type.ToString().ToLower();
-		if (!isValid)
-			evaluation.Results.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
+
+		var expected = expectedType.ToString().ToLower();
+		evaluation.Results.Fail(Name, ErrorMessages.Type, ("received", instanceType), ("expected", expected));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

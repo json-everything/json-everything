@@ -116,11 +116,35 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraints = Patterns.Select(pattern =>
+		{
+			var subschemaConstraint = pattern.Value.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+			subschemaConstraint.InstanceLocator = evaluation =>
+			{
+				if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
+
+				var properties = obj.Select(x => x.Key).Where(x => pattern.Key.IsMatch(x));
+
+				return properties.Select(x => JsonPointer.Create(x));
+			};
+
+			return subschemaConstraint;
+		}).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		else
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

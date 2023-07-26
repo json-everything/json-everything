@@ -86,7 +86,17 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not SchemaValueType.String) return;
+
+		var str = evaluation.LocalInstance!.GetValue<string>();
+		if (!Value.IsMatch(str))
+			evaluation.Results.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

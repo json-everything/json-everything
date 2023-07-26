@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -76,11 +77,21 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Empty, context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
+		if (actual != 1)
+			evaluation.Results.Fail(Name, ErrorMessages.OneOf, ("count", actual));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

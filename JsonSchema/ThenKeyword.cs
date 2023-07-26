@@ -90,8 +90,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		var ifEvaluation = evaluation.SiblingEvaluations[0];
-		if (!ifEvaluation.Results.IsValid) return;
+		if (!evaluation.Results.TryGetAnnotation(IfKeyword.Name, out var ifAnnotation) || !ifAnnotation!.GetValue<bool>()) return;
 
 		var subSchemaEvaluation = evaluation.ChildEvaluations[0];
 		if (!subSchemaEvaluation.Results.IsValid)

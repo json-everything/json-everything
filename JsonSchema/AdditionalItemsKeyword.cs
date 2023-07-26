@@ -95,9 +95,10 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var itemsConstraint = localConstraints.GetKeywordConstraint<ItemsKeyword>();
+		if (itemsConstraint == null) return KeywordConstraint.Skip;
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocationGenerator = evaluation =>
+		subschemaConstraint.InstanceLocator = evaluation =>
 		{
 			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
 
@@ -114,10 +115,9 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 
 		var constraint = new KeywordConstraint(Name, Evaluator)
 		{
+			SiblingDependencies = new[] { itemsConstraint },
 			ChildDependencies = new[] { subschemaConstraint }
 		};
-		if (itemsConstraint != null)
-			constraint.SiblingDependencies = new[] { itemsConstraint };
 		return constraint;
 	}
 

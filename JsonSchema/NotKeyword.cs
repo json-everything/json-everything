@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -56,11 +58,20 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKe
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.ChildEvaluations[0].Results.IsValid)
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

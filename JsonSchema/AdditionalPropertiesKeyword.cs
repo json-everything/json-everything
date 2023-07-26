@@ -135,7 +135,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocationGenerator = evaluation =>
+		subschemaConstraint.InstanceLocator = evaluation =>
 		{
 			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
 

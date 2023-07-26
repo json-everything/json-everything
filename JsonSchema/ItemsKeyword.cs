@@ -172,16 +172,28 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 
 		if (SingleSchema != null)
 		{
+			var prefixItemsConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PrefixItemsKeyword.Name);
+
 			var subschemaConstraint = SingleSchema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
-			subschemaConstraint.InstanceLocationGenerator = evaluation =>
+			subschemaConstraint.InstanceLocator = evaluation =>
 			{
 				if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
 
 				if (array.Count == 0) return Array.Empty<JsonPointer>();
 
-				return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
+				var startIndex = 0;
+
+				var prefixItemsEvaluation = evaluation.GetKeywordEvaluation<PrefixItemsKeyword>();
+				if (prefixItemsEvaluation != null)
+					startIndex = prefixItemsEvaluation.ChildEvaluations.Length;
+
+				if (array.Count <= startIndex) return Array.Empty<JsonPointer>();
+
+				return Enumerable.Range(startIndex, array.Count - startIndex).Select(x => JsonPointer.Create(x));
 			};
 
+			if (prefixItemsConstraint != null)
+				constraint.SiblingDependencies = new[] { prefixItemsConstraint };
 			constraint.ChildDependencies = new[] { subschemaConstraint };
 		}
 		else // ArraySchema
@@ -200,9 +212,11 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
+		if (evaluation.LocalInstance is not JsonArray array) return;
+
 		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 		{
-			if (evaluation.ChildEvaluations.Length == evaluation.LocalInstance.AsArray().Count)
+			if (evaluation.ChildEvaluations.Length == array.Count)
 				evaluation.Results.SetAnnotation(Name, true);
 			else
 				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length);

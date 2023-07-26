@@ -42,7 +42,7 @@ public class ConstraintsRunner
 	public JsonNode Instance { get; set; }
 
 	[Benchmark]
-	public void Test()
+	public void Constraints()
 	{
 		for (int i = 0; i < RunCount; i++)
 		{
@@ -51,7 +51,7 @@ public class ConstraintsRunner
 	}
 
 	[Benchmark]
-	public void Test_Legacy()
+	public void Legacy()
 	{
 		for (int i = 0; i < RunCount; i++)
 		{

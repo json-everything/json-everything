@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -43,12 +44,15 @@ public class KeywordConstraint
 			var subschemaEvaluations = new List<SchemaEvaluation>();
 			foreach (var dependency in ChildDependencies)
 			{
-				if (dependency.InstanceLocationGenerator != null)
+				if (dependency.InstanceLocator != null)
 				{
-					var relativeInstanceLocations = dependency.InstanceLocationGenerator(evaluation).ToArray();
+					var relativeInstanceLocations = dependency.InstanceLocator(evaluation).ToArray();
 					foreach (var relativeInstanceLocation in relativeInstanceLocations)
 					{
-						if (!relativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out var instance)) continue;
+						JsonNode? instance;
+						if (dependency.UseLocatorAsInstance)
+							instance = relativeInstanceLocation.Segments[0].Value;
+						else if (!relativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out instance)) continue;
 
 						var templatedInstanceLocation = instanceLocation.Combine(relativeInstanceLocation);
 						var localEvaluation = dependency.BuildEvaluation(instance, templatedInstanceLocation, evaluationPath);

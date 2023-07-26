@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -98,7 +99,27 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraints = ArraySchemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Create(i), context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) return;
+
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+		{
+			if (evaluation.ChildEvaluations.Length == array.Count)
+				evaluation.Results.SetAnnotation(Name, true);
+			else
+				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length);
+		}
+		else
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
