@@ -83,23 +83,17 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			KeywordDependencies = new[] { ifConstraint },
-			SubschemaDependencies = new[] { subschemaConstraint }
+			SiblingDependencies = new[] { ifConstraint },
+			ChildDependencies = new[] { subschemaConstraint }
 		};
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.KeywordEvaluations.Length == 0)
-		{
-			// this should never trigger
-			return;
-		}
-
-		var ifEvaluation = evaluation.KeywordEvaluations[0];
+		var ifEvaluation = evaluation.SiblingEvaluations[0];
 		if (!ifEvaluation.Results.IsValid) return;
 
-		var subSchemaEvaluation = evaluation.SubschemaEvaluations[0];
+		var subSchemaEvaluation = evaluation.ChildEvaluations[0];
 		if (!subSchemaEvaluation.Results.IsValid)
 			evaluation.Results.Fail();
 	}

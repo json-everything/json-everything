@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -101,16 +102,15 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SubschemaDependencies = subschemaConstraints
+			ChildDependencies = subschemaConstraints
 		};
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not SchemaValueType.Object) return;
-
-		if (!evaluation.SubschemaEvaluations.All(x => x.Results.IsValid))
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		else
 			evaluation.Results.Fail();
 	}
 

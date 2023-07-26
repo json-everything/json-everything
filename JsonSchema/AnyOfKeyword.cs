@@ -108,13 +108,13 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SubschemaDependencies = subschemaConstraints
+			ChildDependencies = subschemaConstraints
 		};
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.SubschemaEvaluations.All(x => !x.Results.IsValid))
+		if (evaluation.ChildEvaluations.All(x => !x.Results.IsValid))
 			evaluation.Results.Fail();
 	}
 }

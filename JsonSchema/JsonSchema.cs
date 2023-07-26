@@ -231,7 +231,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public EvaluationResults Evaluate2(JsonNode? root, EvaluationOptions? options = null)
+	public EvaluationResults EvaluateUsingConstraints(JsonNode? root, EvaluationOptions? options = null)
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
@@ -243,8 +243,11 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		options.Log.Write(() => "Beginning evaluation.");
 
 
-		_constraint ??= GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
-		PopulateConstraint(_constraint, new ConstraintBuilderContext(options));
+		if (_constraint == null)
+		{
+			_constraint = GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
+			PopulateConstraint(_constraint, new ConstraintBuilderContext(options));
+		}
 
 		var evaluation = _constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);
 		evaluation.Evaluate();

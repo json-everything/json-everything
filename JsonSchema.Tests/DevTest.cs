@@ -31,7 +31,7 @@ public class DevTest
 			["other"] = 13
 		};
 
-		var result = schema.Evaluate2(instance, new EvaluationOptions
+		var result = schema.EvaluateUsingConstraints(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			PreserveDroppedAnnotations = true

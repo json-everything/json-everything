@@ -132,43 +132,38 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 	{
 		var propertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PropertiesKeyword.Name);
 		var patternPropertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PatternPropertiesKeyword.Name);
-		var keywordConstraints = propertiesConstraint != null
-			? patternPropertiesConstraint != null
-				? new[] { propertiesConstraint, patternPropertiesConstraint }
-				: new[] { propertiesConstraint }
-			: patternPropertiesConstraint != null
-				? new[] { patternPropertiesConstraint }
-				: Array.Empty<KeywordConstraint>();
+		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocationGenerator = evaluation =>
 		{
-			// TODO: json node value type checks
-			// TODO: simplify this process
-			var properties = evaluation.LocalInstance.AsObject().Select(x => x.Key);
-			var propertiesEvaluation = evaluation.KeywordEvaluations.FirstOrDefault(x => x.Constraint.Keyword == PropertiesKeyword.Name);
+			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
+
+			var properties = obj.Select(x => x.Key);
+			
+			var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
 			if (propertiesEvaluation != null)
-				properties = properties.Except(propertiesEvaluation.SubschemaEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
-			var patternPropertiesEvaluation = evaluation.KeywordEvaluations.FirstOrDefault(x => x.Constraint.Keyword == PatternPropertiesKeyword.Name);
+				properties = properties.Except(propertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
+
+			var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
 			if (patternPropertiesEvaluation != null)
-				properties = properties.Except(patternPropertiesEvaluation.SubschemaEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
+				properties = properties.Except(patternPropertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
 
 			return properties.Select(x => JsonPointer.Create(x));
 		};
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			KeywordDependencies = keywordConstraints,
-			SubschemaDependencies = new[] { subschemaConstraint }
+			SiblingDependencies = keywordConstraints,
+			ChildDependencies = new[] { subschemaConstraint }
 		};
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not SchemaValueType.Object) return;
-
-		if (!evaluation.SubschemaEvaluations.All(x => x.Results.IsValid))
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		else
 			evaluation.Results.Fail();
 	}
 

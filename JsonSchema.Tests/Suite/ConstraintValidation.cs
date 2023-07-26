@@ -136,7 +136,7 @@ public class ConstraintValidation
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
-		var result = collection.Schema.Evaluate2(test.Data, options);
+		var result = collection.Schema.EvaluateUsingConstraints(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 

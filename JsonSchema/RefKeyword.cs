@@ -100,12 +100,12 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		var newUri = new Uri(schemaConstraint.SchemaLocation, Reference);
+		var newUri = new Uri(schemaConstraint.SchemaBaseUri, Reference);
 		var fragment = newUri.Fragment;
 
-		var navigation = (newUri.OriginalString, schemaConstraint.InstanceLocation);
+		var navigation = (newUri.OriginalString, InstanceLocation: schemaConstraint.RelativeInstanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
-			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.InstanceLocation}`");
+			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
 
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
@@ -138,17 +138,17 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
 		context.NavigatedReferences.Pop();
 		if (pointerFragment != null)
-			subschemaConstraint.RelativeSchemaLocation = pointerFragment;
+			subschemaConstraint.BaseSchemaOffset = pointerFragment;
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SubschemaDependencies = new[] { subschemaConstraint }
+			ChildDependencies = new[] { subschemaConstraint }
 		};
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		var subSchemaEvaluation = evaluation.SubschemaEvaluations.Single();
+		var subSchemaEvaluation = evaluation.ChildEvaluations.Single();
 
 		if (!subSchemaEvaluation.Results.IsValid)
 			evaluation.Results.Fail();

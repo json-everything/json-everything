@@ -19,27 +19,19 @@ public class ConstraintsRunner
 		Schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("value", new JsonSchemaBuilder()
-					.Type(SchemaValueType.Integer)
-					.Minimum(10)),
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(10)),
 				("next", new JsonSchemaBuilder().Ref("#"))
 			)
+			.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Build();
 		Instance = new JsonObject
 		{
 			["value"] = 11,
 			["next"] = new JsonObject
 			{
-				["value"] = 12,
-				["next"] = new JsonObject
-				{
-					["value"] = 13,
-					["next"] = new JsonObject
-					{
-						["value"] = 4
-					}
-				}
-			}
+				["value"] = 12
+			},
+			["other"] = 13
 		};
 	}
 
@@ -54,7 +46,7 @@ public class ConstraintsRunner
 	{
 		for (int i = 0; i < RunCount; i++)
 		{
-			_ = Schema.Evaluate2(Instance);
+			_ = Schema.EvaluateUsingConstraints(Instance);
 		}
 	}
 
