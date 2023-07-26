@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -167,7 +168,47 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var constraint = new KeywordConstraint(Name, Evaluator);
+
+		if (SingleSchema != null)
+		{
+			var subschemaConstraint = SingleSchema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+			subschemaConstraint.InstanceLocationGenerator = evaluation =>
+			{
+				if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
+
+				if (array.Count == 0) return Array.Empty<JsonPointer>();
+
+				return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
+			};
+
+			constraint.ChildDependencies = new[] { subschemaConstraint };
+		}
+		else // ArraySchema
+		{
+			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
+			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
+				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
+
+			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Create(i), context)).ToArray();
+
+			constraint.ChildDependencies = subschemaConstraints;
+		}
+
+		return constraint;
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+		{
+			if (evaluation.ChildEvaluations.Length == evaluation.LocalInstance.AsArray().Count)
+				evaluation.Results.SetAnnotation(Name, true);
+			else
+				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length);
+		}
+		else
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

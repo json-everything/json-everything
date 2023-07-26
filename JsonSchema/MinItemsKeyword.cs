@@ -64,7 +64,16 @@ public class MinItemsKeyword : IJsonSchemaKeyword, IEquatable<MinItemsKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) return;
+
+		var number = array.Count;
+		if (Value > number)
+			evaluation.Results.Fail(Name, ErrorMessages.MaxItems, ("received", number), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -64,7 +64,16 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxProperties
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonObject obj) return;
+
+		var number = obj.Count;
+		if (Value < number)
+			evaluation.Results.Fail(Name, ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

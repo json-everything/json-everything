@@ -62,7 +62,9 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
 	}

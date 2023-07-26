@@ -103,13 +103,9 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 
 			var startIndex = 0;
 
-			// TODO: I might not have annotations at this point (probably not?)
-			if (evaluation.Results.TryGetAnnotation(ItemsKeyword.Name, out var itemsAnnotation))
-			{
-				if (itemsAnnotation.IsEquivalentTo(true)) return Array.Empty<JsonPointer>();
-
-				startIndex = itemsAnnotation!.GetValue<int>();
-			}
+			var itemsEvaluation = evaluation.GetKeywordEvaluation<ItemsKeyword>();
+			if (itemsEvaluation != null)
+				startIndex = itemsEvaluation.ChildEvaluations.Length;
 
 			if (array.Count <= startIndex) return Array.Empty<JsonPointer>();
 

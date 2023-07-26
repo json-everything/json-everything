@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Schema;
@@ -64,7 +65,17 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not SchemaValueType.String) return;
+
+		var number = evaluation.LocalInstance!.GetValue<string>().Length;
+		if (Value > number)
+			evaluation.Results.Fail(Name, ErrorMessages.MinLength, ("received", number), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

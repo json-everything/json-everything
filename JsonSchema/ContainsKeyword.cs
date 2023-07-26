@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -109,11 +112,38 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		subschemaConstraint.InstanceLocationGenerator = evaluation =>
+		{
+			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
+
+			if (array.Count == 0) return Array.Empty<JsonPointer>();
+
+			return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
+		};
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var minimum = 1;
+		if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
+			minimum = minContainsAnnotation!.GetValue<int>();
+		int? maximum = null;
+		if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var maxContainsAnnotation))
+			maximum = maxContainsAnnotation!.GetValue<int>();
+
+		var actual = evaluation.ChildEvaluations.Count(x => !x.Results.IsValid);
+		if (actual < minimum)
+			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
+		else if (actual > maximum)
+			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

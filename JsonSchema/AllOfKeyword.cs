@@ -77,6 +77,22 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Empty, context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
@@ -100,22 +116,6 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 	public override int GetHashCode()
 	{
 		return Schemas.GetUnorderedCollectionHashCode();
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
-	{
-		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Empty, context)).ToArray();
-
-		return new KeywordConstraint(Name, Evaluator)
-		{
-			ChildDependencies = subschemaConstraints
-		};
-	}
-
-	private static void Evaluator(KeywordEvaluation evaluation)
-	{
-		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
-			evaluation.Results.Fail();
 	}
 }
 

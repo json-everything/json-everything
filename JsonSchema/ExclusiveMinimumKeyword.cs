@@ -64,7 +64,17 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+
+		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		if (Value >= number)
+			evaluation.Results.Fail(Name, ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -64,7 +65,16 @@ public class MaxItemsKeyword : IJsonSchemaKeyword, IEquatable<MaxItemsKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) return;
+
+		var number = array.Count;
+		if (Value < number)
+			evaluation.Results.Fail(Name, ErrorMessages.MaxItems, ("received", number), ("limit", Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

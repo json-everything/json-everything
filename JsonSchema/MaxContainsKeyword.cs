@@ -52,7 +52,7 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
