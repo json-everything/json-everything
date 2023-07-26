@@ -293,7 +293,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	private void PopulateConstraint(SchemaConstraint schemaConstraint, ConstraintBuilderContext context)
 	{
 		var localConstraints = new List<KeywordConstraint>();
-		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()).OfType<IConstrainer>())
+		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()))
 		{
 			var keywordConstraint = keyword.GetConstraint(schemaConstraint, localConstraints, context);
 			localConstraints.Add(keywordConstraint);

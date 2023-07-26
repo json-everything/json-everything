@@ -12,10 +12,7 @@ public interface IJsonSchemaKeyword
 	/// </summary>
 	/// <param name="context">Contextual details for the evaluation process.</param>
 	void Evaluate(EvaluationContext context);
-}
 
-public interface IConstrainer
-{
 	KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context);
