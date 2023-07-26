@@ -25,7 +25,7 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
 [DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>, IConstrainer
+public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

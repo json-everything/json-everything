@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -87,6 +90,47 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		var itemsConstraint = localConstraints.GetKeywordConstraint<ItemsKeyword>();
+
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		subschemaConstraint.InstanceLocationGenerator = evaluation =>
+		{
+			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
+
+			var startIndex = 0;
+
+			// TODO: I might not have annotations at this point (probably not?)
+			if (evaluation.Results.TryGetAnnotation(ItemsKeyword.Name, out var itemsAnnotation))
+			{
+				if (itemsAnnotation.IsEquivalentTo(true)) return Array.Empty<JsonPointer>();
+
+				startIndex = itemsAnnotation!.GetValue<int>();
+			}
+
+			if (array.Count <= startIndex) return Array.Empty<JsonPointer>();
+
+			return Enumerable.Range(startIndex, array.Count - startIndex).Select(x => JsonPointer.Create(x));
+		};
+
+		var constraint = new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+		if (itemsConstraint != null)
+			constraint.SiblingDependencies = new[] { itemsConstraint };
+		return constraint;
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		else
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

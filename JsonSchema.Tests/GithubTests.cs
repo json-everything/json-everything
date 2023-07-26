@@ -525,6 +525,13 @@ public class GithubTests
 		{
 			throw new NotImplementedException();
 		}
+
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+			IReadOnlyList<KeywordConstraint> localConstraints,
+			ConstraintBuilderContext context)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[Test]

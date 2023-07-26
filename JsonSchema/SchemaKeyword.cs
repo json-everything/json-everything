@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -70,6 +71,13 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		if (!results.IsValid)
 			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		return KeywordConstraint.Skip;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

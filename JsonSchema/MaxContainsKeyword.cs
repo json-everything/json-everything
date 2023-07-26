@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -45,6 +46,13 @@ public class MaxContainsKeyword : IJsonSchemaKeyword, IEquatable<MaxContainsKeyw
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
 		context.ExitKeyword(Name);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

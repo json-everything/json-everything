@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -35,6 +36,13 @@ public class VocabularyTests
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
 					("provided", date),
 					("value", Date));
+		}
+
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+			IReadOnlyList<KeywordConstraint> localConstraints,
+			ConstraintBuilderContext context)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool Equals(MinDateKeyword? other)
@@ -99,6 +107,13 @@ public class VocabularyTests
 					("value", Date));
 		}
 
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+			IReadOnlyList<KeywordConstraint> localConstraints,
+			ConstraintBuilderContext context)
+		{
+			throw new NotImplementedException();
+		}
+
 		public bool Equals(NonVocabMinDateKeyword? other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -160,6 +175,13 @@ public class VocabularyTests
 				context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
 					("provided", date),
 					("value", Date));
+		}
+
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+			IReadOnlyList<KeywordConstraint> localConstraints,
+			ConstraintBuilderContext context)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool Equals(MaxDateKeyword? other)
@@ -451,6 +473,13 @@ public class VocabularyTests
 			}
 			else
 				_postDraft6Keyword!.Evaluate(context);
+		}
+
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+			IReadOnlyList<KeywordConstraint> localConstraints,
+			ConstraintBuilderContext context)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool Equals(Draft4ExclusiveMinimumKeyword? other)

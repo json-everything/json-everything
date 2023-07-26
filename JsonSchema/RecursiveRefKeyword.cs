@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -97,6 +98,13 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 			context.LocalResult.Fail();
 
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

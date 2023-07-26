@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -48,6 +49,13 @@ public class IdKeyword : IIdKeyword, IEquatable<IdKeyword>
 		context.EnterKeyword(Name);
 		context.Log(() => "Nothing to do");
 		context.ExitKeyword(Name, true);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		return KeywordConstraint.Skip;
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

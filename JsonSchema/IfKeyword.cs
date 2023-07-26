@@ -20,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(IfKeywordJsonConverter))]
-public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyword>, IConstrainer
+public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

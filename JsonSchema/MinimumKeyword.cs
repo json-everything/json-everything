@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MinimumKeywordJsonConverter))]
-public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>, IConstrainer
+public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

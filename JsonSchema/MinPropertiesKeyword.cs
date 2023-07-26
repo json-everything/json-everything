@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -57,6 +58,13 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 		if (Value > number)
 			context.LocalResult.Fail(Name, ErrorMessages.MinProperties, ("received", number), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

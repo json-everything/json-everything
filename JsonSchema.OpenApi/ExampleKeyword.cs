@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -40,6 +41,13 @@ public class ExampleKeyword : IJsonSchemaKeyword, IEquatable<ExampleKeyword>
 		context.EnterKeyword(Name);
 		context.LocalResult.SetAnnotation(Name, Value);
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

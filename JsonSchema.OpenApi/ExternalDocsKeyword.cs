@@ -72,6 +72,13 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, _json));
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>

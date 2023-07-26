@@ -95,6 +95,13 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
+	}
+
 	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)
 	{
 		if (segments.Count < 2) return (null, 0);

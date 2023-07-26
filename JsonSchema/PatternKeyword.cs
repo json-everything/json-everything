@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -79,6 +80,13 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 		if (!Value.IsMatch(str))
 			context.LocalResult.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

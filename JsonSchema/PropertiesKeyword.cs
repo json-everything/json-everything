@@ -22,7 +22,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertiesKeywordJsonConverter))]
-public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<PropertiesKeyword>, IConstrainer
+public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<PropertiesKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

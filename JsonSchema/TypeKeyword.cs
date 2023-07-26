@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(TypeKeywordJsonConverter))]
-public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>, IConstrainer
+public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

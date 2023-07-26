@@ -14,22 +14,15 @@ public class DevTest
 	public void Test()
 	{
 		var schema = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(10)),
-				("next", new JsonSchemaBuilder().Ref("#"))
-			)
-			.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
-			.Build();
-		var instance = new JsonObject
-		{
-			["value"] = 11,
-			["next"] = new JsonObject
+			.Type(SchemaValueType.Array)
+			.Items(new JsonSchema[]
 			{
-				["value"] = 12
-			},
-			["other"] = 13
-		};
+				new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(10),
+				new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(20)
+			})
+			.AdditionalItems(new JsonSchemaBuilder().Type(SchemaValueType.String))
+			.Build();
+		var instance = new JsonArray { 15, 25, 1 };
 
 		var result = schema.EvaluateUsingConstraints(instance, new EvaluationOptions
 		{

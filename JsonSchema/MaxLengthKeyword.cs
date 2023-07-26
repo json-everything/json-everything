@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -57,6 +58,13 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 		if (Value < length)
 			context.LocalResult.Fail(Name, ErrorMessages.MaxLength, ("received", length), ("limit", Value));
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

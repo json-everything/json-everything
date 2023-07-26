@@ -22,7 +22,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [DependsOnAnnotationsFrom(typeof(IfKeyword))]
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
-public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ThenKeyword>, IConstrainer
+public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ThenKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

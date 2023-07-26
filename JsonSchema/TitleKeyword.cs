@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Metadata202012Id)]
 [Vocabulary(Vocabularies.MetadataNextId)]
 [JsonConverter(typeof(TitleKeywordJsonConverter))]
-public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>, IConstrainer
+public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

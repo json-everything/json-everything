@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(AnyOfKeywordJsonConverter))]
-public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<AnyOfKeyword>, IConstrainer
+public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<AnyOfKeyword>
 {
 	/// <summary>
 	/// The JSON name of the keyword.

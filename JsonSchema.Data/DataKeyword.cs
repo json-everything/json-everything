@@ -101,6 +101,13 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		context.ExitKeyword(Name);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		ConstraintBuilderContext context)
+	{
+		throw new NotImplementedException();
+	}
+
 	/// <summary>
 	/// Provides a simple data fetch method that supports `http`, `https`, and `file` URI schemes.
 	/// </summary>
