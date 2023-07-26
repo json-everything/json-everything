@@ -56,6 +56,23 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 		context.ExitKeyword(Name, true);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			SubschemaDependencies = new[] { subschemaDependency }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var subSchemaEvaluation = evaluation.SubschemaEvaluations.Single();
+
+		evaluation.Results.SetAnnotation(Name, subSchemaEvaluation.Results.IsValid);
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
@@ -79,23 +96,6 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 	public override int GetHashCode()
 	{
 		return Schema.GetHashCode();
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
-	{
-		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
-
-		return new KeywordConstraint(Name, Evaluator)
-		{
-			SubschemaDependencies = new[] { subschemaDependency }
-		};
-	}
-
-	private static void Evaluator(KeywordEvaluation evaluation)
-	{
-		var subSchemaEvaluation = evaluation.SubschemaEvaluations.Single();
-
-		evaluation.Results.SetAnnotation(Name, subSchemaEvaluation.Results.IsValid);
 	}
 }
 

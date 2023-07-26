@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -24,7 +25,7 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
 [DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
+public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>, IConstrainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -125,6 +126,50 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 		if (!overallResult)
 			context.LocalResult.Fail();
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
+	}
+
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		var propertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PropertiesKeyword.Name);
+		var patternPropertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PatternPropertiesKeyword.Name);
+		var keywordConstraints = propertiesConstraint != null
+			? patternPropertiesConstraint != null
+				? new[] { propertiesConstraint, patternPropertiesConstraint }
+				: new[] { propertiesConstraint }
+			: patternPropertiesConstraint != null
+				? new[] { patternPropertiesConstraint }
+				: Array.Empty<KeywordConstraint>();
+
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		subschemaConstraint.InstanceLocationGenerator = evaluation =>
+		{
+			// TODO: json node value type checks
+			// TODO: simplify this process
+			var properties = evaluation.LocalInstance.AsObject().Select(x => x.Key);
+			var propertiesEvaluation = evaluation.KeywordEvaluations.FirstOrDefault(x => x.Constraint.Keyword == PropertiesKeyword.Name);
+			if (propertiesEvaluation != null)
+				properties = properties.Except(propertiesEvaluation.SubschemaEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
+			var patternPropertiesEvaluation = evaluation.KeywordEvaluations.FirstOrDefault(x => x.Constraint.Keyword == PatternPropertiesKeyword.Name);
+			if (patternPropertiesEvaluation != null)
+				properties = properties.Except(patternPropertiesEvaluation.SubschemaEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
+
+			return properties.Select(x => JsonPointer.Create(x));
+		};
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			KeywordDependencies = keywordConstraints,
+			SubschemaDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not SchemaValueType.Object) return;
+
+		if (!evaluation.SubschemaEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

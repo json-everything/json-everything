@@ -19,22 +19,16 @@ public class DevTest
 				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(10)),
 				("next", new JsonSchemaBuilder().Ref("#"))
 			)
+			.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Build();
 		var instance = new JsonObject
 		{
 			["value"] = 11,
 			["next"] = new JsonObject
 			{
-				["value"] = 12,
-				["next"] = new JsonObject
-				{
-					["value"] = 13,
-					["next"] = new JsonObject
-					{
-						["value"] = 4
-					}
-				}
-			}
+				["value"] = 12
+			},
+			["other"] = 13
 		};
 
 		var result = schema.Evaluate2(instance, new EvaluationOptions

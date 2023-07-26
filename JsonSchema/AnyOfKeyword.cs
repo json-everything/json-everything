@@ -102,7 +102,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 		return Schemas.GetUnorderedCollectionHashCode();
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), JsonPointer.Empty, context)).ToArray();
 

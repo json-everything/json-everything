@@ -62,6 +62,21 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>, IC
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+
+		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		if (Value > number)
+			evaluation.Results.Fail(Name, ErrorMessages.Minimum, ("received", number), ("limit", Value));
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
@@ -85,21 +100,6 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>, IC
 	public override int GetHashCode()
 	{
 		return Value.GetHashCode();
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
-	{
-		return new KeywordConstraint(Name, Evaluator);
-	}
-
-	private void Evaluator(KeywordEvaluation evaluation)
-	{
-		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
-
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
-		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.Minimum, ("received", number), ("limit", Value));
 	}
 }
 

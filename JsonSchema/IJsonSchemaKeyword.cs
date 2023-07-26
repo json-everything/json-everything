@@ -20,9 +20,8 @@ public interface IJsonSchemaKeyword
 
 public interface IConstrainer
 {
-	KeywordConstraint GetConstraint(
-		SchemaConstraint schemaConstraint,
-		IEnumerable<KeywordConstraint> localConstraints,
+	KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context);
 }
 
@@ -34,9 +33,10 @@ public class SchemaConstraint
 	public Uri SchemaLocation { get; }
 	public JsonPointer InstanceLocation { get; }
 
-	public JsonPointer RelativeSchemaLocation { get; set; } = JsonPointer.Empty;
 	public KeywordConstraint[] Constraints { get; set; } = Array.Empty<KeywordConstraint>();
+	public Func<KeywordEvaluation, IEnumerable<JsonPointer>>? InstanceLocationGenerator { get; set; }
 
+	internal JsonPointer RelativeSchemaLocation { get; set; } = JsonPointer.Empty;
 	internal SchemaConstraint? Source { get; set; }
 
 	internal SchemaConstraint(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, JsonSchema localSchema)
@@ -47,7 +47,7 @@ public class SchemaConstraint
 		_localSchema = localSchema;
 	}
 
-	internal SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath)
+	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath)
 	{
 		if (Source != null)
 			Constraints = Source.Constraints;
@@ -58,6 +58,7 @@ public class SchemaConstraint
 			evaluationPath = evaluationPath.Combine(_evaluationPath);
 
 		var evaluation = new SchemaEvaluation(localInstance,
+			InstanceLocation,
 			new EvaluationResults(evaluationPath, SchemaLocation, instanceLocation),
 			Constraints.Length == 0
 				? Array.Empty<KeywordEvaluation>()
@@ -86,16 +87,18 @@ public class SchemaConstraint
 
 public class SchemaEvaluation
 {
-	internal static SchemaEvaluation Skip { get; } = new(null, new EvaluationResults(JsonPointer.Empty, new Uri("schema://nope"), JsonPointer.Empty), Array.Empty<KeywordEvaluation>());
+	internal static SchemaEvaluation Skip { get; } = new(null, JsonPointer.Empty, new EvaluationResults(JsonPointer.Empty, new Uri("schema://nope"), JsonPointer.Empty), Array.Empty<KeywordEvaluation>());
 
 	public JsonNode? LocalInstance { get; }
+	public JsonPointer RelativeInstanceLocation { get; }
 	public EvaluationResults Results { get; }
 
 	internal KeywordEvaluation[] KeywordEvaluations { get; }
 
-	internal SchemaEvaluation(JsonNode? localInstance, EvaluationResults results, KeywordEvaluation[] evaluations)
+	internal SchemaEvaluation(JsonNode? localInstance, JsonPointer relativeInstanceLocation, EvaluationResults results, KeywordEvaluation[] evaluations)
 	{
 		LocalInstance = localInstance;
+		RelativeInstanceLocation = relativeInstanceLocation;
 		Results = results;
 		KeywordEvaluations = evaluations;
 	}
@@ -147,20 +150,32 @@ public class KeywordConstraint
 
 		if (SubschemaDependencies.Length != 0)
 		{
-			evaluation.SubschemaEvaluations = new SchemaEvaluation[SubschemaDependencies.Length];
-			for (int i = 0; i < SubschemaDependencies.Length; i++)
+			var subschemaEvaluations = new List<SchemaEvaluation>();
+			foreach (var dependency in SubschemaDependencies)
 			{
-				var dependency = SubschemaDependencies[i];
-				if (!dependency.InstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out var instance))
+				if (dependency.InstanceLocationGenerator != null)
 				{
-					evaluation.SubschemaEvaluations[i] = SchemaEvaluation.Skip;
-					continue;
-				}
+					var instanceLocations = dependency.InstanceLocationGenerator(evaluation).ToArray();
+					foreach (var relativeInstanceLocation in instanceLocations)
+					{
+						if (!relativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out var instance)) continue;
 
-				var localEvaluation = dependency.BuildEvaluation(instance, instanceLocation, evaluationPath);
-				evaluation.SubschemaEvaluations[i] = localEvaluation;
-				schemaEvaluation.Results.Details.Add(localEvaluation.Results);
+						var templatedInstanceLocation = instanceLocation.Combine(relativeInstanceLocation);
+						var localEvaluation = dependency.BuildEvaluation(instance, templatedInstanceLocation, evaluationPath);
+						subschemaEvaluations.Add(localEvaluation);
+						schemaEvaluation.Results.Details.Add(localEvaluation.Results);
+					}
+				}
+				else
+				{
+					if (!dependency.InstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out var instance)) continue;
+
+					var localEvaluation = dependency.BuildEvaluation(instance, instanceLocation, evaluationPath);
+					subschemaEvaluations.Add(localEvaluation);
+					schemaEvaluation.Results.Details.Add(localEvaluation.Results);
+				}
 			}
+			evaluation.SubschemaEvaluations = subschemaEvaluations.ToArray();
 		}
 		else
 			evaluation.SubschemaEvaluations = Array.Empty<SchemaEvaluation>();

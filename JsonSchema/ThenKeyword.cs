@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
@@ -74,32 +73,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ThenKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as ThenKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schema.GetHashCode();
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
 		if (ifConstraint == null)
@@ -128,6 +102,31 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 		var subSchemaEvaluation = evaluation.SubschemaEvaluations[0];
 		if (!subSchemaEvaluation.Results.IsValid)
 			evaluation.Results.Fail();
+	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	/// <param name="other">An object to compare with this object.</param>
+	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+	public bool Equals(ThenKeyword? other)
+	{
+		if (ReferenceEquals(null, other)) return false;
+		if (ReferenceEquals(this, other)) return true;
+		return Equals(Schema, other.Schema);
+	}
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	/// <param name="obj">The object to compare with the current object.</param>
+	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+	public override bool Equals(object obj)
+	{
+		return Equals(obj as ThenKeyword);
+	}
+
+	/// <summary>Serves as the default hash function.</summary>
+	/// <returns>A hash code for the current object.</returns>
+	public override int GetHashCode()
+	{
+		return Schema.GetHashCode();
 	}
 }
 

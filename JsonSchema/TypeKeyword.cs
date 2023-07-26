@@ -113,32 +113,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>, IConstra
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(TypeKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Type == other.Type;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as TypeKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return (int)Type;
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
 	}
@@ -146,6 +121,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>, IConstra
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
 		bool isValid;
+		// TODO: calc this in the constraint
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
 		switch (schemaValueType)
 		{
@@ -184,6 +160,31 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>, IConstra
 		var expected = Type.ToString().ToLower();
 		if (!isValid)
 			evaluation.Results.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
+	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	/// <param name="other">An object to compare with this object.</param>
+	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+	public bool Equals(TypeKeyword? other)
+	{
+		if (ReferenceEquals(null, other)) return false;
+		if (ReferenceEquals(this, other)) return true;
+		return Type == other.Type;
+	}
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	/// <param name="obj">The object to compare with the current object.</param>
+	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+	public override bool Equals(object obj)
+	{
+		return Equals(obj as TypeKeyword);
+	}
+
+	/// <summary>Serves as the default hash function.</summary>
+	/// <returns>A hash code for the current object.</returns>
+	public override int GetHashCode()
+	{
+		return (int)Type;
 	}
 }
 

@@ -51,6 +51,16 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>, IConst
 		context.ExitKeyword(Name, true);
 	}
 
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	{
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		evaluation.Results.SetAnnotation(Name, Value);
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
@@ -74,16 +84,6 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>, IConst
 	public override int GetHashCode()
 	{
 		return Value.GetHashCode();
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
-	{
-		return new KeywordConstraint(Name, Evaluator);
-	}
-
-	private void Evaluator(KeywordEvaluation evaluation)
-	{
-		evaluation.Results.SetAnnotation(Name, Value);
 	}
 }
 

@@ -98,32 +98,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(RefKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Reference, other.Reference);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as RefKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Reference.GetHashCode();
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IEnumerable<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var newUri = new Uri(schemaConstraint.SchemaLocation, Reference);
 		var fragment = newUri.Fragment;
@@ -136,7 +111,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 
 		JsonSchema? targetSchema = null;
 		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
@@ -152,7 +127,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 			if (targetBase is JsonSchema targetBaseSchema &&
-			    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+				targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 				targetSchema = anchorDefinition.Schema;
 		}
 
@@ -177,6 +152,31 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>, IConstrain
 
 		if (!subSchemaEvaluation.Results.IsValid)
 			evaluation.Results.Fail();
+	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	/// <param name="other">An object to compare with this object.</param>
+	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+	public bool Equals(RefKeyword? other)
+	{
+		if (ReferenceEquals(null, other)) return false;
+		if (ReferenceEquals(this, other)) return true;
+		return Equals(Reference, other.Reference);
+	}
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	/// <param name="obj">The object to compare with the current object.</param>
+	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+	public override bool Equals(object obj)
+	{
+		return Equals(obj as RefKeyword);
+	}
+
+	/// <summary>Serves as the default hash function.</summary>
+	/// <returns>A hash code for the current object.</returns>
+	public override int GetHashCode()
+	{
+		return Reference.GetHashCode();
 	}
 }
 
