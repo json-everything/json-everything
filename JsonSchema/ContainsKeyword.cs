@@ -145,11 +145,17 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 		if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
 			maximum = maxContainsAnnotation!.GetValue<uint>();
 
-		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
+		var validIndices = evaluation.ChildEvaluations
+			.Where(x => x.Results.IsValid)
+			.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
+			.ToArray();
+		var actual = validIndices.Length;
 		if (actual < minimum)
 			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
 		else if (actual > maximum)
 			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
+		else
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

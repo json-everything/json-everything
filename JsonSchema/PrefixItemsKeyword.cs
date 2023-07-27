@@ -120,7 +120,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 			if (evaluation.ChildEvaluations.Length == array.Count)
 				evaluation.Results.SetAnnotation(Name, true);
 			else
-				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length);
+				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length - 1);
 		}
 		else
 			evaluation.Results.Fail();

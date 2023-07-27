@@ -183,7 +183,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 				return;
 			}
 
-			startIndex = Math.Max(startIndex, itemsAnnotation!.GetValue<int>());
+			startIndex = Math.Max(startIndex, itemsAnnotation!.GetValue<int>() + 1);
 		}
 
 		var prefixItemsAnnotations = evaluation.Results.GetAllAnnotations(PrefixItemsKeyword.Name);
@@ -195,18 +195,17 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 				return;
 			}
 
-			startIndex = Math.Max(startIndex, prefixItemsAnnotation!.GetValue<int>());
+			startIndex = Math.Max(startIndex, prefixItemsAnnotation!.GetValue<int>() + 1);
 		}
 
-		// TODO: handle CONTAINS only if in 2020-12+
-
-		if (array.Count <= startIndex)
+		var indicesToEvaluate = Enumerable.Range(startIndex, array.Count - startIndex);
+		if (context.EvaluatingAs is SpecVersion.Draft202012 or SpecVersion.DraftNext or SpecVersion.Unspecified)
 		{
-			evaluation.MarkAsSkipped();
-			return;
+			var containsAnnotations = evaluation.Results.GetAllAnnotations(ContainsKeyword.Name);
+			indicesToEvaluate = indicesToEvaluate.Except(containsAnnotations.SelectMany(x => x!.AsArray()).Select(x => x!.GetValue<int>()));
 		}
 
-		var childEvaluations = Enumerable.Range(startIndex, array.Count - startIndex)
+		var childEvaluations = indicesToEvaluate
 			.Select(i => (Index: i, Constraint: Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Create(i), context)))
 			.Select(x => x.Constraint.BuildEvaluation(array[x.Index], evaluation.Results.InstanceLocation.Combine(x.Index), evaluation.Results.EvaluationPath))
 			.ToArray();

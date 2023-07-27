@@ -222,7 +222,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			if (evaluation.ChildEvaluations.Any(x => ReferenceEquals(x.LocalInstance, lastItem)))
 				evaluation.Results.SetAnnotation(Name, true);
 			else
-				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length);
+				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length - 1);
 		}
 		else
 			evaluation.Results.Fail();

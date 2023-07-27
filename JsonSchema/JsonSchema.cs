@@ -237,7 +237,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
-		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
 
 		options.Log.Write(() => "Beginning evaluation.");
@@ -246,7 +246,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		if (_constraint == null)
 		{
 			_constraint = GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
-			PopulateConstraint(_constraint, new ConstraintBuilderContext(options));
+			var context = new ConstraintBuilderContext(options, evaluatingAs);
+			PopulateConstraint(_constraint, context);
 		}
 
 		var evaluation = _constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);

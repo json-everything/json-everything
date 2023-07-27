@@ -5,12 +5,14 @@ namespace Json.Schema;
 
 public class ConstraintBuilderContext
 {
-	// TODO: This should just be the schema registry
 	public EvaluationOptions Options { get; }
+
+	internal SpecVersion EvaluatingAs { get; }
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
 
-	internal ConstraintBuilderContext(EvaluationOptions options)
+	internal ConstraintBuilderContext(EvaluationOptions options, SpecVersion evaluatingAs)
 	{
 		Options = options;
+		EvaluatingAs = evaluatingAs;
 	}
 }
