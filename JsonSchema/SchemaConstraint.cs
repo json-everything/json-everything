@@ -16,6 +16,7 @@ public class SchemaConstraint
 	public KeywordConstraint[] Constraints { get; set; } = Array.Empty<KeywordConstraint>();
 	public Func<KeywordEvaluation, IEnumerable<JsonPointer>>? InstanceLocator { get; set; }
 
+	internal Guid Id { get; } = Guid.NewGuid();
 	internal JsonPointer BaseSchemaOffset { get; set; } = JsonPointer.Empty;
 	internal SchemaConstraint? Source { get; set; }
 	internal bool UseLocatorAsInstance { get; set; }
@@ -44,7 +45,7 @@ public class SchemaConstraint
 			Constraints.Length == 0
 				? Array.Empty<KeywordEvaluation>()
 				: new KeywordEvaluation[Constraints.Length]
-		);
+		) { Id = Id };
 
 		if (BaseSchemaOffset != JsonPointer.Empty)
 			evaluation.Results.SetSchemaReference(BaseSchemaOffset);

@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -145,11 +146,81 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEq
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, e => Evaluator(e, context));
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	{
+		static bool CheckAnnotation<T>(EvaluationResults results)
+			where T : IJsonSchemaKeyword
+		{
+			var annotations = results.GetAllAnnotations(typeof(T).Keyword());
+			return annotations.Any(x => x.IsEquivalentTo(true));
+		}
+
+		if (evaluation.LocalInstance is not JsonArray array)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
+
+		if (CheckAnnotation<AdditionalItemsKeyword>(evaluation.Results) ||
+		    CheckAnnotation<UnevaluatedItemsKeyword>(evaluation.Results))
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
+
+		var startIndex = 0;
+		var itemsAnnotations = evaluation.Results.GetAllAnnotations(ItemsKeyword.Name);
+		foreach (var itemsAnnotation in itemsAnnotations)
+		{
+			if (itemsAnnotation.IsEquivalentTo(true))
+			{
+				evaluation.MarkAsSkipped();
+				return;
+			}
+
+			startIndex = Math.Max(startIndex, itemsAnnotation!.GetValue<int>());
+		}
+
+		var prefixItemsAnnotations = evaluation.Results.GetAllAnnotations(PrefixItemsKeyword.Name);
+		foreach (var prefixItemsAnnotation in prefixItemsAnnotations)
+		{
+			if (prefixItemsAnnotation.IsEquivalentTo(true))
+			{
+				evaluation.MarkAsSkipped();
+				return;
+			}
+
+			startIndex = Math.Max(startIndex, prefixItemsAnnotation!.GetValue<int>());
+		}
+
+		// TODO: handle CONTAINS only if in 2020-12+
+
+		if (array.Count <= startIndex)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
+
+		var childEvaluations = Enumerable.Range(startIndex, array.Count - startIndex)
+			.Select(i => (Index: i, Constraint: Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Create(i), context)))
+			.Select(x => x.Constraint.BuildEvaluation(array[x.Index], evaluation.Results.InstanceLocation.Combine(x.Index), evaluation.Results.EvaluationPath))
+			.ToArray();
+
+		evaluation.ChildEvaluations = childEvaluations;
+		foreach (var childEvaluation in childEvaluations)
+		{
+			childEvaluation.Evaluate();
+		}
+
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.SetAnnotation(Name, true);
+		else
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

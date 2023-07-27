@@ -216,7 +216,10 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 
 		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 		{
-			if (evaluation.ChildEvaluations.Length == array.Count)
+			var lastItem = array.Last();
+			// can't check by count because items may not have evaluated all of the items
+			// check that the last item was evaluated instead
+			if (evaluation.ChildEvaluations.Any(x => ReferenceEquals(x.LocalInstance, lastItem)))
 				evaluation.Results.SetAnnotation(Name, true);
 			else
 				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length);

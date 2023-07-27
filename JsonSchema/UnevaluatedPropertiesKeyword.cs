@@ -139,11 +139,59 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, e => Evaluator(e, context));
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	{
+		static IEnumerable<string> GetAnnotation<T>(EvaluationResults results)
+			where T : IJsonSchemaKeyword
+		{
+			return results.GetAllAnnotations(typeof(T).Keyword())
+				.SelectMany(x => x!.AsArray())
+				.Select(x => x!.GetValue<string>());
+		}
+
+		if (evaluation.LocalInstance is not JsonObject obj)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
+
+		var propertiesAnnotations = GetAnnotation<PropertiesKeyword>(evaluation.Results);
+		var patternPropertiesAnnotations = GetAnnotation<PatternPropertiesKeyword>(evaluation.Results);
+		var additionalPropertiesAnnotations = GetAnnotation<AdditionalPropertiesKeyword>(evaluation.Results);
+		var unevaluatedPropertiesAnnotations = GetAnnotation<UnevaluatedPropertiesKeyword>(evaluation.Results);
+		var properties = obj.Select(x => x.Key)
+			.Except(propertiesAnnotations)
+			.Except(patternPropertiesAnnotations)
+			.Except(additionalPropertiesAnnotations)
+			.Except(unevaluatedPropertiesAnnotations)
+			.ToArray();
+
+		if (properties.Length == 0)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
+
+		var childEvaluations = properties
+			.Select(x => (Name: x, Constraint: Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Create(x), context)))
+			.Select(x => x.Constraint.BuildEvaluation(obj[x.Name], evaluation.Results.InstanceLocation.Combine(x.Name), evaluation.Results.EvaluationPath))
+			.ToArray();
+
+		evaluation.ChildEvaluations = childEvaluations;
+		foreach (var childEvaluation in childEvaluations)
+		{
+			childEvaluation.Evaluate();
+		}
+
+		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.SetAnnotation(Name, properties.Select(x => (JsonNode)x!).ToJsonArray());
+		else
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -72,7 +72,11 @@ public class MinimumKeyword : IJsonSchemaKeyword, IEquatable<MinimumKeyword>
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber();
 		if (Value > number)

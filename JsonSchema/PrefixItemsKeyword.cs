@@ -109,7 +109,11 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.LocalInstance is not JsonArray array) return;
+		if (evaluation.LocalInstance is not JsonArray array)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 		{

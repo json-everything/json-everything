@@ -145,7 +145,11 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.LocalInstance is not JsonObject obj) return;
+		if (evaluation.LocalInstance is not JsonObject obj)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var existingProperties = obj.Select(x => x.Key).ToArray();
 

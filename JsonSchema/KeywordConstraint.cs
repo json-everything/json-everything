@@ -16,6 +16,8 @@ public class KeywordConstraint
 	public KeywordConstraint[] SiblingDependencies { get; set; } = Array.Empty<KeywordConstraint>();
 	public SchemaConstraint[] ChildDependencies { get; set; } = Array.Empty<SchemaConstraint>();
 
+	internal Guid Id { get; } = Guid.NewGuid();
+
 	public KeywordConstraint(string keyword, Action<KeywordEvaluation> evaluator)
 	{
 		Keyword = keyword;
@@ -24,15 +26,14 @@ public class KeywordConstraint
 
 	internal KeywordEvaluation BuildEvaluation(SchemaEvaluation schemaEvaluation, JsonPointer instanceLocation, JsonPointer evaluationPath)
 	{
-		var evaluation = new KeywordEvaluation(this, schemaEvaluation.LocalInstance, schemaEvaluation.Results);
+		var evaluation = new KeywordEvaluation(this, schemaEvaluation.LocalInstance, schemaEvaluation.Results) { Id = Id };
 
 		if (SiblingDependencies.Length != 0)
 		{
 			evaluation.SiblingEvaluations = new KeywordEvaluation[SiblingDependencies.Length];
 			for (int i = 0; i < SiblingDependencies.Length; i++)
 			{
-				var dependency = schemaEvaluation.KeywordEvaluations
-					.FirstOrDefault(x => x.Constraint.Keyword == SiblingDependencies[i].Keyword);
+				var dependency = schemaEvaluation.FindEvaluation(SiblingDependencies[i].Id);
 				evaluation.SiblingEvaluations[i] = dependency ?? KeywordEvaluation.Skip;
 			}
 		}
@@ -58,7 +59,6 @@ public class KeywordConstraint
 						var localEvaluation = dependency.BuildEvaluation(instance, templatedInstanceLocation, evaluationPath);
 						localEvaluation.RelativeInstanceLocation = relativeInstanceLocation;
 						subschemaEvaluations.Add(localEvaluation);
-						schemaEvaluation.Results.Details.Add(localEvaluation.Results);
 					}
 				}
 				else
@@ -67,7 +67,6 @@ public class KeywordConstraint
 
 					var localEvaluation = dependency.BuildEvaluation(instance, instanceLocation, evaluationPath);
 					subschemaEvaluations.Add(localEvaluation);
-					schemaEvaluation.Results.Details.Add(localEvaluation.Results);
 				}
 			}
 			evaluation.ChildEvaluations = subschemaEvaluations.ToArray();

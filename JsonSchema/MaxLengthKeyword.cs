@@ -70,7 +70,11 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not SchemaValueType.String) return;
+		if (schemaValueType is not SchemaValueType.String)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		var length = new StringInfo(str).LengthInTextElements;

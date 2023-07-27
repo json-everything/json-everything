@@ -70,7 +70,11 @@ public class MultipleOfKeyword : IJsonSchemaKeyword, IEquatable<MultipleOfKeywor
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber();
 		if (number % Value != 0)

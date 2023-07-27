@@ -69,7 +69,11 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MaxProperties
 
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.LocalInstance is not JsonObject obj) return;
+		if (evaluation.LocalInstance is not JsonObject obj)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var number = obj.Count;
 		if (Value < number)

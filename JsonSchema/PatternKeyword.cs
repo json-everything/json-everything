@@ -92,7 +92,11 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not SchemaValueType.String) return;
+		if (schemaValueType is not SchemaValueType.String)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		if (!Value.IsMatch(str))

@@ -89,7 +89,11 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (!Value || evaluation.LocalInstance is not JsonArray array) return;
+		if (!Value || evaluation.LocalInstance is not JsonArray array)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var duplicates = new List<(int, int)>();
 		for (int i = 0; i < array.Count - 1; i++)

@@ -132,7 +132,11 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.LocalInstance is not JsonArray) return;
+		if (evaluation.LocalInstance is not JsonArray)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 		
 		uint minimum = 1;
 		if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))

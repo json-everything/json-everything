@@ -47,7 +47,7 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public List<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
+	public IReadOnlyList<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
 
 	/// <summary>
 	/// Gets whether there are nested results.

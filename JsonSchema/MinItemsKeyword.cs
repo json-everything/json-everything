@@ -69,7 +69,11 @@ public class MinItemsKeyword : IJsonSchemaKeyword, IEquatable<MinItemsKeyword>
 
 	private void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.LocalInstance is not JsonArray array) return;
+		if (evaluation.LocalInstance is not JsonArray array)
+		{
+			evaluation.MarkAsSkipped();
+			return;
+		}
 
 		var number = array.Count;
 		if (Value > number)
