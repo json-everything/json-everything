@@ -100,7 +100,6 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		var missing = Properties.Except(obj.Select(x => x.Key)).ToArray();
 		if (missing.Length != 0)
 			evaluation.Results.Fail(Name, ErrorMessages.Required, ("missing", missing));
-
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

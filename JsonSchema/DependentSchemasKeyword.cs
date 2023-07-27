@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -21,6 +23,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
 public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DependentSchemasKeyword>
 {
+	private static readonly JsonPointer[] _emptyPointerArray = new[] { JsonPointer.Empty };
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -92,7 +96,37 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraints = Schemas.Select(requirement =>
+		{
+			var subschemaConstraint = requirement.Value.GetConstraint(JsonPointer.Create(Name, requirement.Key), JsonPointer.Empty, context);
+			subschemaConstraint.InstanceLocator = evaluation =>
+			{
+				if (evaluation.LocalInstance is not JsonObject obj ||
+				    !obj.ContainsKey(requirement.Key))
+					return Array.Empty<JsonPointer>();
+
+				return _emptyPointerArray;
+			};
+
+			return subschemaConstraint;
+		}).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var failedProperties = evaluation.ChildEvaluations
+			.Where(x => !x.Results.IsValid)
+			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
+			.ToArray();
+		if (failedProperties.Length == 0)
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
+		else
+			evaluation.Results.Fail(Name, ErrorMessages.DependentSchemas, ("failed", failedProperties));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

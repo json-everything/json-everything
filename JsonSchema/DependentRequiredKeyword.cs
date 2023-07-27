@@ -104,7 +104,27 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonObject obj) return;
+
+		var existingProperties = obj.Select(x => x.Key).ToArray();
+
+		var missing = new Dictionary<string, string[]>();
+		foreach (var requirement in Requirements)
+		{
+			if (!existingProperties.Contains(requirement.Key)) continue;
+
+			var missingProperties = requirement.Value.Except(existingProperties).ToArray();
+			if (missingProperties.Length != 0)
+				missing[requirement.Key] = missingProperties;
+		}
+
+		if (missing.Count != 0)
+			evaluation.Results.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
