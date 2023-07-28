@@ -107,7 +107,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 		var anchorName = Reference.OriginalString.Split('#').Last();
 
-		var targetSchemas = new List<JsonSchema>();
+		JsonSchema? targetSchema = null;
 		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
 		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
@@ -126,26 +126,18 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 			    context.EvaluatingAs == SpecVersion.Draft202012 &&
 			    (!targetBaseSchema.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
 
-			foreach (var registeredAnchor in schemaRoot.NewAnchors)
-			{
-				if (!registeredAnchor.IsDynamic) break;
-				if (registeredAnchor.Anchor != anchorName) break;
-
-				targetSchemas.Add(registeredAnchor.Schema);
-			}
-
+			targetSchema = anchor.Schema;
 			break;
 		}
 
-		if (targetSchemas.Count == 0)
+		if (targetSchema == null)
 		{
-			JsonSchema? targetSchema = null;
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 			{
 				if (targetBase == null)
 					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-				targetSchema = targetBase.FindSubschema(pointerFragment!, null!);
+				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 			}
 			else
 			{
@@ -158,28 +150,23 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 					targetSchema = anchorDefinition.Schema;
 			}
 
-			if (targetSchema != null)
-				targetSchemas.Add(targetSchema);
-			else
+			if (targetSchema == null)
 				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		var subschemaConstraints = targetSchemas.Select(x => x.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context)).ToArray();
-		// TODO: add location information for each subschema
-		//if (pointerFragment != null)
-		//	subschemaConstraint.BaseSchemaOffset = pointerFragment;
-
-		return new KeywordConstraint(Name, Evaluator)
-		{
-			ChildDependencies = subschemaConstraints
-		};
+		return new KeywordConstraint(Name, e => Evaluator(e, targetSchema, context));
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, JsonSchema target, ConstraintBuilderContext context)
 	{
-		var subSchemaEvaluation = evaluation.ChildEvaluations.Single(x => x.HasBeenEvaluated);
+		var childEvaluation = target
+			.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context)
+			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name));
+		evaluation.ChildEvaluations = new[] { childEvaluation };
 
-		if (!subSchemaEvaluation.Results.IsValid)
+		childEvaluation.Evaluate();
+
+		if (!childEvaluation.Results.IsValid)
 			evaluation.Results.Fail();
 	}
 

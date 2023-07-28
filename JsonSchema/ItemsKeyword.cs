@@ -212,7 +212,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.LocalInstance is not JsonArray array) return;
+		if (evaluation.LocalInstance is not JsonArray array || array.Count == 0) return;
 
 		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 		{

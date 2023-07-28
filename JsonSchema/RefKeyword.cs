@@ -118,7 +118,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-			targetSchema = targetBase.FindSubschema(pointerFragment!, null!);
+			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 		}
 		else
 		{
