@@ -47,4 +47,36 @@ public class ReferenceTests
 		
 		Assert.Throws<JsonSchemaException>(()=>baseSchema.Evaluate(baseData));
 	}
+
+	[Test]
+	public void RefIntoMiddleOfResourceToFindDynamicRef()
+	{
+		var refSchema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("schema:ref")
+			.Defs(
+				("foo", new JsonSchemaBuilder().DynamicRef("#detached")),
+				("detached", new JsonSchemaBuilder()
+					.DynamicAnchor("detached")
+					.Type(SchemaValueType.Integer)
+				)
+			)
+			.Build();
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("schema:local")
+			.Ref("schema:ref#/$defs/foo");
+
+		var options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.List
+		};
+		options.SchemaRegistry.Register(refSchema);
+
+		var instance = "string";
+		var result = schema.Evaluate(instance, options);
+
+		result.AssertInvalid();
+
+	}
 }

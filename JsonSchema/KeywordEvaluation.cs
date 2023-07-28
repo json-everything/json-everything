@@ -8,7 +8,7 @@ public class KeywordEvaluation
 	private bool _evaluated;
 	private bool _skipped;
 
-	internal static KeywordEvaluation Skip { get; } = new() { _evaluated = true };
+	internal static KeywordEvaluation Skip { get; } = new() { _skipped = true };
 
 	public JsonNode? LocalInstance { get; }
 	public EvaluationResults Results { get; }
@@ -34,14 +34,14 @@ public class KeywordEvaluation
 
 	internal void Evaluate()
 	{
-		if (_evaluated) return;
+		if (_evaluated || _skipped) return;
 
 		foreach (var evaluation in ChildEvaluations)
 		{
 			evaluation.Evaluate();
 		}
 
-		Constraint.Evaluator(this);
+		Constraint.Evaluator(this); // this can change _skipped
 
 		if (!_skipped)
 		{

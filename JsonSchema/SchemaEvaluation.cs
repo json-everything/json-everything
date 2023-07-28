@@ -10,6 +10,7 @@ public class SchemaEvaluation
 	public JsonNode? LocalInstance { get; }
 	public JsonPointer RelativeInstanceLocation { get; internal set; }
 	public EvaluationResults Results { get; }
+	public bool HasBeenEvaluated { get; private set; }
 
 	internal Guid Id { get; set; }
 	internal KeywordEvaluation[] KeywordEvaluations { get; }
@@ -24,10 +25,14 @@ public class SchemaEvaluation
 
 	internal void Evaluate()
 	{
+		if (HasBeenEvaluated) return;
+
 		foreach (var keyword in KeywordEvaluations)
 		{
 			keyword.Evaluate();
 		}
+
+		HasBeenEvaluated = true;
 	}
 
 	internal KeywordEvaluation? FindEvaluation(Guid id)

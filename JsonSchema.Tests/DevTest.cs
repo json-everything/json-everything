@@ -14,15 +14,28 @@ public class DevTest
 	public void Test()
 	{
 		var schema = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Array)
-			.Items(new JsonSchema[]
-			{
-				new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(10),
-				new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(20)
-			})
-			.AdditionalItems(new JsonSchemaBuilder().Type(SchemaValueType.String))
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("next", new JsonSchemaBuilder().Ref("#"))
+			)
 			.Build();
-		var instance = new JsonArray { 15, 25, 1 };
+		var instance = new JsonObject
+		{
+			["value"] = 1,
+			["next"] = new JsonObject
+			{
+				["value"] = 2,
+				["next"] = new JsonObject
+				{
+					["value"] = 3,
+					["next"] = new JsonObject
+					{
+						["value"] = 4
+					}
+				}
+			}
+		};
 
 		var result = schema.EvaluateUsingConstraints(instance, new EvaluationOptions
 		{
@@ -30,6 +43,6 @@ public class DevTest
 			PreserveDroppedAnnotations = true
 		});
 
-		result.AssertInvalid();
+		result.AssertValid();
 	}
 }

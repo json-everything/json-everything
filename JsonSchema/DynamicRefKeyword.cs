@@ -101,11 +101,86 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+		var anchorName = Reference.OriginalString.Split('#').Last();
+
+		var targetSchemas = new List<JsonSchema>();
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
+		foreach (var uri in context.Scope.Reverse())
+		{
+			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
+			if (scopeRoot == null)
+				throw new Exception("This shouldn't happen");
+
+			if (scopeRoot is not JsonSchema schemaRoot)
+				throw new Exception("Does OpenAPI use anchors?");
+
+			if (!schemaRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
+
+			if (targetBase is JsonSchema targetBaseSchema &&
+			    context.EvaluatingAs == SpecVersion.Draft202012 &&
+			    (!targetBaseSchema.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
+
+			foreach (var registeredAnchor in schemaRoot.NewAnchors)
+			{
+				if (!registeredAnchor.IsDynamic) break;
+				if (registeredAnchor.Anchor != anchorName) break;
+
+				targetSchemas.Add(registeredAnchor.Schema);
+			}
+
+			break;
+		}
+
+		if (targetSchemas.Count == 0)
+		{
+			JsonSchema? targetSchema = null;
+			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+			{
+				if (targetBase == null)
+					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
+				targetSchema = targetBase.FindSubschema(pointerFragment!, null!);
+			}
+			else
+			{
+				var anchorFragment = newUri.Fragment.Substring(1);
+				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
+
+				if (targetBase is JsonSchema targetBaseSchema &&
+				    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+					targetSchema = anchorDefinition.Schema;
+			}
+
+			if (targetSchema != null)
+				targetSchemas.Add(targetSchema);
+			else
+				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
+		}
+
+		var subschemaConstraints = targetSchemas.Select(x => x.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context)).ToArray();
+		// TODO: add location information for each subschema
+		//if (pointerFragment != null)
+		//	subschemaConstraint.BaseSchemaOffset = pointerFragment;
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var subSchemaEvaluation = evaluation.ChildEvaluations.Single(x => x.HasBeenEvaluated);
+
+		if (!subSchemaEvaluation.Results.IsValid)
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

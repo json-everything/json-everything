@@ -73,6 +73,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	public SpecVersion DeclaredVersion { get; private set; }
 
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
+	internal List<(string Anchor, JsonSchema Schema, bool IsDynamic)> NewAnchors { get; } = new();
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
 	private JsonSchema(bool value)
@@ -223,7 +224,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return results;
 	}
 
-	private SchemaConstraint? _constraint;
+	private List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
 	/// <summary>
 	/// Evaluates an instance against this schema.
@@ -243,14 +244,12 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		options.Log.Write(() => "Beginning evaluation.");
 
 
-		if (_constraint == null)
-		{
-			_constraint = GetConstraint(JsonPointer.Empty, JsonPointer.Empty);
-			var context = new ConstraintBuilderContext(options, evaluatingAs);
-			PopulateConstraint(_constraint, context);
-		}
+		var context = new ConstraintBuilderContext(options, evaluatingAs, BaseUri);
+		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, context.Scope);
+		if (!BoolValue.HasValue)
+			PopulateConstraint(constraint, context);
 
-		var evaluation = _constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);
+		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);
 		evaluation.Evaluate();
 
 
@@ -274,33 +273,60 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return results;
 	}
 
+	private bool IsDynamic()
+	{
+		if (BoolValue.HasValue) return false;
+		if (Keywords!.Any(x => x is DynamicRefKeyword)) return true;
+
+		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
+	}
+
 	public SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation, ConstraintBuilderContext context)
 	{
+		SchemaConstraint? scopedConstraint;
+		if (IsDynamic())
+			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(context.Scope));
+		else
+			scopedConstraint = _constraints.SingleOrDefault().Constraint;
+		if (scopedConstraint != null)
+			return new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this)
+			{
+				Source = scopedConstraint
+			};
 
-		if (_constraint != null) return new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this) { Source = _constraint };
-
-		var schemaConstraint = GetConstraint(evaluationPath, instanceLocation);
+		var constraint = BuildConstraint(evaluationPath, instanceLocation, context.Scope);
 		if (!BoolValue.HasValue) 
-			PopulateConstraint(schemaConstraint, context);
+			PopulateConstraint(constraint, context);
 
-		return schemaConstraint;
+		return constraint;
 	}
 
-	private SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation)
+	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation, DynamicScope scope)
 	{
-		return new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this);
+		var constraint = new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this);
+		_constraints.Add((new DynamicScope(scope), constraint));
+
+		return constraint;
 	}
 
-	private void PopulateConstraint(SchemaConstraint schemaConstraint, ConstraintBuilderContext context)
+	private void PopulateConstraint(SchemaConstraint constraint, ConstraintBuilderContext context)
 	{
+		var dynamicScopeChanged = false;
+		if (context.Scope.LocalScope != BaseUri)
+		{
+			dynamicScopeChanged = true;
+			context.Scope.Push(BaseUri);
+		}
 		var localConstraints = new List<KeywordConstraint>();
 		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()))
 		{
-			var keywordConstraint = keyword.GetConstraint(schemaConstraint, localConstraints, context);
+			var keywordConstraint = keyword.GetConstraint(constraint!, localConstraints, context);
 			localConstraints.Add(keywordConstraint);
 		}
 
-		schemaConstraint.Constraints = localConstraints.ToArray();
+		constraint!.Constraints = localConstraints.ToArray();
+		if (dynamicScopeChanged)
+			context.Scope.Pop();
 	}
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
@@ -377,6 +403,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 				{
 					schema.BaseUri = currentBaseUri;
 					resourceRoot.Anchors[idKeyword.Id.OriginalString.Substring(1)] = (schema, false);
+					resourceRoot.NewAnchors.Add((idKeyword.Id.OriginalString.Substring(1), schema, false));
 				}
 				else
 				{
@@ -395,10 +422,16 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 			}
 
 			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword))
+			{
 				resourceRoot.Anchors[anchorKeyword!.Anchor] = (schema, false);
+				resourceRoot.NewAnchors.Add((anchorKeyword!.Anchor, schema, false));
+			}
 
 			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword))
+			{
 				resourceRoot.Anchors[dynamicAnchorKeyword!.Value] = (schema, true);
+				resourceRoot.NewAnchors.Add((dynamicAnchorKeyword!.Value, schema, true));
+			}
 
 			schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
 			if (recursiveAnchorKeyword is { Value: true })
