@@ -57,7 +57,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

@@ -14,35 +14,24 @@ public class DevTest
 	public void Test()
 	{
 		var schema = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-				("next", new JsonSchemaBuilder().Ref("#"))
-			)
+			.Ref(MetaSchemas.Draft6Id)
 			.Build();
 		var instance = new JsonObject
 		{
-			["value"] = 1,
-			["next"] = new JsonObject
+			["items"] = new JsonObject
 			{
-				["value"] = 2,
-				["next"] = new JsonObject
-				{
-					["value"] = 3,
-					["next"] = new JsonObject
-					{
-						["value"] = 4
-					}
-				}
+				["minLength"] = -1
 			}
 		};
 
-		var result = schema.EvaluateUsingConstraints(instance, new EvaluationOptions
+		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			PreserveDroppedAnnotations = true
-		});
+		};
 
-		result.AssertValid();
+		var result = schema.EvaluateUsingConstraints(instance, options);
+
+		result.AssertInvalid();
 	}
 }

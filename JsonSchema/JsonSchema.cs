@@ -244,7 +244,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 
 		var context = new ConstraintBuilderContext(options, evaluatingAs, BaseUri);
-		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, context.Scope);
+		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
 
@@ -280,28 +280,28 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
 	}
 
-	public SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation, ConstraintBuilderContext context)
+	public SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, ConstraintBuilderContext context)
 	{
 		var scopedConstraint = CheckScopedConstraints(context.Scope);
 		if (scopedConstraint != null)
-			return new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this)
+			return new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, BaseUri, this)
 			{
 				Source = scopedConstraint
 			};
 
-		var constraint = BuildConstraint(evaluationPath, instanceLocation, context.Scope);
+		var constraint = BuildConstraint(evaluationPath, baseInstanceLocation, relativeInstanceLocation, context.Scope);
 		if (!BoolValue.HasValue) 
 			PopulateConstraint(constraint, context);
 
 		return constraint;
 	}
 
-	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer instanceLocation, DynamicScope scope)
+	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, DynamicScope scope)
 	{
 		var scopedConstraint = CheckScopedConstraints(scope);
 		if (scopedConstraint != null) return scopedConstraint;
 
-		var constraint = new SchemaConstraint(evaluationPath, BaseUri, instanceLocation, this);
+		var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, BaseUri, this);
 		_constraints.Add((new DynamicScope(scope), constraint));
 
 		return constraint;

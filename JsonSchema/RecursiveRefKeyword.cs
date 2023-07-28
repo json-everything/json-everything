@@ -157,7 +157,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 	private static void Evaluator(KeywordEvaluation evaluation, JsonSchema target, ConstraintBuilderContext context)
 	{
 		var childEvaluation = target
-			.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context)
+			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name));
 		evaluation.ChildEvaluations = new[] { childEvaluation };
 

@@ -98,7 +98,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(JsonPointer.Create(Name, x.Key), JsonPointer.Create(x.Key), context)).ToArray();
+		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(JsonPointer.Create(Name, x.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(x.Key), context)).ToArray();
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

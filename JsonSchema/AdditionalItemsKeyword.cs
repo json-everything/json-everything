@@ -97,7 +97,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 		var itemsConstraint = localConstraints.GetKeywordConstraint<ItemsKeyword>();
 		if (itemsConstraint == null) return KeywordConstraint.Skip;
 
-		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocator = evaluation =>
 		{
 			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();

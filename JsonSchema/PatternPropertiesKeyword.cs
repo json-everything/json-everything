@@ -120,7 +120,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	{
 		var subschemaConstraints = Patterns.Select(pattern =>
 		{
-			var subschemaConstraint = pattern.Value.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+			var subschemaConstraint = pattern.Value.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{
 				if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();

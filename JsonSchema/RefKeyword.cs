@@ -103,7 +103,8 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		var newUri = new Uri(schemaConstraint.SchemaBaseUri, Reference);
 		var fragment = newUri.Fragment;
 
-		var navigation = (newUri.OriginalString, InstanceLocation: schemaConstraint.RelativeInstanceLocation);
+		var instanceLocation = schemaConstraint.BaseInstanceLocation.Combine(schemaConstraint.RelativeInstanceLocation);
+		var navigation = (newUri.OriginalString, InstanceLocation: instanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
 			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
 
@@ -135,7 +136,7 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
 		context.NavigatedReferences.Push(navigation);
-		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), JsonPointer.Empty, context);
+		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		context.NavigatedReferences.Pop();
 		if (pointerFragment != null)
 			subschemaConstraint.BaseSchemaOffset = pointerFragment;
