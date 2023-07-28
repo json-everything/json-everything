@@ -23,8 +23,6 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
 public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DependentSchemasKeyword>
 {
-	private static readonly JsonPointer[] _emptyPointerArray = new[] { JsonPointer.Empty };
-
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -105,7 +103,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 				    !obj.ContainsKey(requirement.Key))
 					return Array.Empty<JsonPointer>();
 
-				return _emptyPointerArray;
+				return JsonPointers.SingleEmptyPointerArray;
 			};
 
 			return subschemaConstraint;

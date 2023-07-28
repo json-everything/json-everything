@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -99,7 +100,43 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		var subschemaConstraints = Dependencies.SelectMany(property =>
+		{
+			var propertyConstraint = property.Value.Schemas.Select(requirement =>
+			{
+				var requirementConstraint = requirement.Value.GetConstraint(JsonPointer.Create(Name, property.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+				requirementConstraint.InstanceLocator = evaluation =>
+				{
+					if (evaluation.LocalInstance is not JsonObject obj ||
+					    !obj.TryGetValue(property.Key, out var value, out _) ||
+					    !value.IsEquivalentTo(requirement.Key))
+						return Array.Empty<JsonPointer>();
+
+					return JsonPointers.SingleEmptyPointerArray;
+				};
+
+				return requirementConstraint;
+			});
+
+			return propertyConstraint;
+		}).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation)
+	{
+		var failedProperties = evaluation.ChildEvaluations
+			.Where(x => !x.Results.IsValid)
+			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
+			.ToArray();
+		if (failedProperties.Length == 0)
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
+		else
+			evaluation.Results.Fail(Name, ErrorMessages.DependentSchemas, ("failed", failedProperties));
 	}
 
 	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)

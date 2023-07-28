@@ -101,7 +101,8 @@ public static partial class MetaSchemas
 				),
 				(RecursiveRefKeyword.Name, new JsonSchemaBuilder()
 					.Comment("\"$recursiveRef\" has been replaced by \"$dynamicRef\".")
-					.Ref("meta/core#/$defs/uriReferenceString")
+					.Type(SchemaValueType.String)
+					.Format(Formats.UriReference)
 					.Deprecated(true)
 				)
 			);

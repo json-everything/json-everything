@@ -162,11 +162,13 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		var propertiesAnnotations = GetAnnotation<PropertiesKeyword>(evaluation.Results);
 		var patternPropertiesAnnotations = GetAnnotation<PatternPropertiesKeyword>(evaluation.Results);
+		var containsAnnotations = GetAnnotation<ContainsKeyword>(evaluation.Results);
 		var additionalPropertiesAnnotations = GetAnnotation<AdditionalPropertiesKeyword>(evaluation.Results);
 		var unevaluatedPropertiesAnnotations = GetAnnotation<UnevaluatedPropertiesKeyword>(evaluation.Results);
 		var properties = obj.Select(x => x.Key)
 			.Except(propertiesAnnotations)
 			.Except(patternPropertiesAnnotations)
+			.Except(containsAnnotations)
 			.Except(additionalPropertiesAnnotations)
 			.Except(unevaluatedPropertiesAnnotations)
 			.ToArray();

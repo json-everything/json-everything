@@ -238,7 +238,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
 		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
+		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
 
 		options.Log.Write(() => "Beginning evaluation.");
 
@@ -275,7 +275,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	private bool IsDynamic()
 	{
 		if (BoolValue.HasValue) return false;
-		if (Keywords!.Any(x => x is DynamicRefKeyword)) return true;
+		if (Keywords!.Any(x => x is DynamicRefKeyword or RecursiveRefKeyword)) return true;
 
 		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
 	}
@@ -319,6 +319,18 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 	private void PopulateConstraint(SchemaConstraint constraint, ConstraintBuilderContext context)
 	{
+		if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
+		{
+			// base URI doesn't change for $ref schemas in draft 6/7
+			var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
+			if (refKeyword != null)
+			{
+				var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
+				constraint.Constraints = new[] { refConstraint };
+				return;
+			}
+		}
+
 		var dynamicScopeChanged = false;
 		if (context.Scope.LocalScope != BaseUri)
 		{

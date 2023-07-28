@@ -117,45 +117,76 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocator = evaluation =>
 		{
-			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
+			if (evaluation.LocalInstance is JsonArray array)
+			{
+				if (array.Count == 0) return Array.Empty<JsonPointer>();
 
-			if (array.Count == 0) return Array.Empty<JsonPointer>();
+				return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
+			}
 
-			return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
+			if (evaluation.LocalInstance is JsonObject obj &&
+			    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
+				return obj.Select(x => JsonPointer.Create(x.Key));
+
+			return Array.Empty<JsonPointer>();
 		};
 
-		return new KeywordConstraint(Name, Evaluator)
+		return new KeywordConstraint(Name, e => Evaluator(e, context.EvaluatingAs))
 		{
 			ChildDependencies = new[] { subschemaConstraint }
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, SpecVersion evaluatingAs)
 	{
-		if (evaluation.LocalInstance is not JsonArray)
+		if (evaluation.LocalInstance is JsonArray)
 		{
-			evaluation.MarkAsSkipped();
+			uint minimum = 1;
+			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
+				minimum = minContainsAnnotation!.GetValue<uint>();
+			uint? maximum = null;
+			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
+				maximum = maxContainsAnnotation!.GetValue<uint>();
+
+			var validIndices = evaluation.ChildEvaluations
+				.Where(x => x.Results.IsValid)
+				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
+				.ToArray();
+			var actual = validIndices.Length;
+			if (actual < minimum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
+			else if (actual > maximum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
+			else
+				evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 			return;
 		}
-		
-		uint minimum = 1;
-		if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
-			minimum = minContainsAnnotation!.GetValue<uint>();
-		uint? maximum = null;
-		if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
-			maximum = maxContainsAnnotation!.GetValue<uint>();
 
-		var validIndices = evaluation.ChildEvaluations
-			.Where(x => x.Results.IsValid)
-			.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
-			.ToArray();
-		var actual = validIndices.Length;
-		if (actual < minimum)
-			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
-		else if (actual > maximum)
-			evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
-		else
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
+		if (evaluation.LocalInstance is JsonObject &&
+		    evaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
+		{
+			uint minimum = 1;
+			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
+				minimum = minContainsAnnotation!.GetValue<uint>();
+			uint? maximum = null;
+			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
+				maximum = maxContainsAnnotation!.GetValue<uint>();
+
+			var validProperties = evaluation.ChildEvaluations
+				.Where(x => x.Results.IsValid)
+				.Select(x => x.RelativeInstanceLocation.Segments[0].Value)
+				.ToArray();
+			var actual = validProperties.Length;
+			if (actual < minimum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
+			else if (actual > maximum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
+			else
+				evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validProperties));
+			return;
+		}
+
+		evaluation.MarkAsSkipped();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
