@@ -237,7 +237,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
-		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		// TODO: remove options.EvaluatingAs
+		var evaluatingAs = options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
 
 		options.Log.Write(() => "Beginning evaluation.");
@@ -338,7 +339,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 			context.Scope.Push(BaseUri);
 		}
 		var localConstraints = new List<KeywordConstraint>();
-		foreach (var keyword in Keywords!.OrderBy(x => x.Priority()))
+		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this), context.EvaluatingAs);
+		foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 		{
 			var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
 			localConstraints.Add(keywordConstraint);
