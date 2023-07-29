@@ -38,6 +38,16 @@ public class RelativeJsonPointerIdentifier : IDataResourceIdentifier
 		return Target.TryEvaluate(context.LocalInstance, out value);
 	}
 
+	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
+	{
+		if (evaluation.LocalInstance == null)
+		{
+			value = null;
+			return false;
+		}
+		return Target.TryEvaluate(evaluation.LocalInstance, out value);
+	}
+
 	/// <summary>Returns a string that represents the current object.</summary>
 	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()

@@ -299,7 +299,7 @@ public class OutputTests
               ""schemaLocation"": ""https://test.com/schema#/$defs/minimum"",
               ""instanceLocation"": ""/multi"",
               ""errors"": {
-                ""minimum"": ""3.5 is less than or equal to 5""
+                ""minimum"": ""3.5 should be at least 5""
               }
             }
           ]

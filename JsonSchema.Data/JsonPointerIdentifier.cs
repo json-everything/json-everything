@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -31,6 +32,11 @@ public class JsonPointerIdentifier : IDataResourceIdentifier
 	public bool TryResolve(EvaluationContext context, out JsonNode? value)
 	{
 		return Target.TryEvaluate(context.InstanceRoot, out value);
+	}
+
+	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
+	{
+		return Target.TryEvaluate(evaluation.LocalInstance!.Root, out value);
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>

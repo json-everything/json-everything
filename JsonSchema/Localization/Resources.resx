@@ -175,10 +175,10 @@
     <value>Cannot validate current schema against meta-schema [[uri]]</value>
   </data>
   <data name="Error_Minimum" xml:space="preserve">
-    <value>[[received]] should be a least [[limit]]</value>
+    <value>[[received]] should be at least [[limit]]</value>
   </data>
   <data name="Error_MinItems" xml:space="preserve">
-    <value>Value should have a least [[limit]] items</value>
+    <value>Value should have at least [[limit]] items</value>
   </data>
   <data name="Error_MinLength" xml:space="preserve">
     <value>Value should be at least [[limit]] characters</value>

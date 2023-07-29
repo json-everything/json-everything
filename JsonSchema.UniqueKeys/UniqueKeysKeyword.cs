@@ -114,7 +114,38 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) return;
+
+		var collections = new List<List<(bool, JsonNode?)>>();
+		foreach (var item in array)
+		{
+			var values = Keys.Select(x => (x.TryEvaluate(item, out var resolved), resolved));
+			collections.Add(values.ToList());
+		}
+
+		var matchedIndexPairs = new List<(int, int)>();
+		for (int i = 0; i < collections.Count; i++)
+		{
+			for (int j = i + 1; j < collections.Count; j++)
+			{
+				var a = collections[i];
+				var b = collections[j];
+
+				if (a.SequenceEqual(b, MaybeJsonNodeComparer.Instance)) 
+					matchedIndexPairs.Add((i, j));
+			}
+		}
+
+		if (matchedIndexPairs.Any())
+		{
+			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
+			evaluation.Results.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
+		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

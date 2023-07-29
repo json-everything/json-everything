@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema.Data;
 
@@ -105,7 +106,37 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		throw new NotImplementedException();
+		return new KeywordConstraint(Name, e => Evaluator(e, context));
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	{
+		var data = new Dictionary<string, JsonNode>();
+		var failedReferences = new List<IDataResourceIdentifier>();
+		foreach (var reference in References)
+		{
+			if (!reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved))
+				failedReferences.Add(reference.Value);
+
+			data.Add(reference.Key, resolved!);
+		}
+
+		if (failedReferences.Any())
+			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
+
+		var json = JsonSerializer.Serialize(data);
+		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
+
+		var schemaEvaluation = subschema
+			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
+			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name));
+
+		evaluation.ChildEvaluations = new[] { schemaEvaluation };
+
+		schemaEvaluation.Evaluate();
+
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>
@@ -196,7 +227,18 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		foreach (var kvp in value.References)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			switch (kvp.Value)
+			{
+				case JsonPointerIdentifier jp:
+					JsonSerializer.Serialize(writer, jp.Target, options);
+					break;
+				case RelativeJsonPointerIdentifier rjp:
+					JsonSerializer.Serialize(writer, rjp.Target, options);
+					break;
+				case UriIdentifier uri:
+					JsonSerializer.Serialize(writer, uri.Target, options);
+					break;
+			}
 		}
 		writer.WriteEndObject();
 	}

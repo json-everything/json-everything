@@ -72,6 +72,58 @@ public class UriIdentifier : IDataResourceIdentifier
 		return true;
 	}
 
+	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
+	{
+		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
+		var baseUri = parts[0];
+		var fragment = parts.Length > 1 ? parts[1] : null;
+
+		JsonNode? data;
+		if (!string.IsNullOrEmpty(baseUri))
+		{
+			bool wasResolved;
+			if (Uri.TryCreate(baseUri, UriKind.Absolute, out var newUri))
+				wasResolved = Download(newUri, out data);
+			else
+			{
+				var localScope = new Uri(evaluation.Results.SchemaLocation.OriginalString.Split(new[] { '#' }, StringSplitOptions.None)[0]);
+				var uriFolder = localScope.OriginalString.EndsWith("/")
+					? localScope
+					: localScope.GetParentUri();
+				var newBaseUri = new Uri(uriFolder, baseUri);
+				wasResolved = Download(newBaseUri, out data);
+			}
+
+			if (!wasResolved)
+				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
+		}
+		else
+		{
+			var root = evaluation.Results;
+			while (root.Parent != null)
+			{
+				root = root.Parent;
+			}
+
+			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
+			data = JsonSerializer.SerializeToNode(rootSchema);
+		}
+
+		if (!string.IsNullOrEmpty(fragment))
+		{
+			fragment = $"#{fragment}";
+			if (!JsonPointer.TryParse(fragment, out var pointer))
+				throw new JsonSchemaException($"Unrecognized fragment type `{Target}`");
+
+			if (!pointer!.TryEvaluate(data, out var resolved))
+				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
+			data = resolved;
+		}
+
+		value = data;
+		return true;
+	}
+
 	private static bool Download(Uri uri, out JsonNode? node)
 	{
 		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out node))

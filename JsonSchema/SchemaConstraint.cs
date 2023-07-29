@@ -31,7 +31,7 @@ public class SchemaConstraint
 		_localSchema = localSchema;
 	}
 
-	internal SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath)
+	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath)
 	{
 		if (Source != null)
 			Constraints = Source.Constraints;

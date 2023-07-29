@@ -23,7 +23,7 @@ public class SchemaEvaluation
 		KeywordEvaluations = evaluations;
 	}
 
-	internal void Evaluate()
+	public void Evaluate()
 	{
 		if (HasBeenEvaluated) return;
 

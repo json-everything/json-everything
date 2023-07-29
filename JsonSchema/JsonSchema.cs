@@ -281,16 +281,16 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
 	}
 
-	public SchemaConstraint GetConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, ConstraintBuilderContext context)
+	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, ConstraintBuilderContext context)
 	{
 		var scopedConstraint = CheckScopedConstraints(context.Scope);
 		if (scopedConstraint != null)
-			return new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, BaseUri, this)
+			return new SchemaConstraint(relativeEvaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, BaseUri, this)
 			{
 				Source = scopedConstraint
 			};
 
-		var constraint = BuildConstraint(evaluationPath, baseInstanceLocation, relativeInstanceLocation, context.Scope);
+		var constraint = BuildConstraint(relativeEvaluationPath, baseInstanceLocation, relativeInstanceLocation, context.Scope);
 		if (!BoolValue.HasValue) 
 			PopulateConstraint(constraint, context);
 
