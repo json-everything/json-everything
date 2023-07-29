@@ -107,11 +107,18 @@ public class EvaluationResults
 		}
 	}
 
-	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation)
+	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		EvaluationPath = evaluationPath;
 		_currentUri = schemaLocation;
 		InstanceLocation = instanceLocation;
+
+		IncludeDroppedAnnotations = options.PreserveDroppedAnnotations;
+		if (options.IgnoredAnnotations != null)
+		{
+			_ignoredAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+			_backgroundAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+		}
 	}
 
 	private EvaluationResults(EvaluationResults other)

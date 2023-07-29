@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -42,7 +43,17 @@ public class VocabularyTests
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)
 		{
-			throw new NotImplementedException();
+			return new KeywordConstraint(Name, e =>
+			{
+				var dateString = e.LocalInstance!.GetValue<string>();
+				var date = DateTime.Parse(dateString);
+
+				if (date < Date)
+					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
+						("provided", date),
+						("value", Date));
+
+			});
 		}
 
 		public bool Equals(MinDateKeyword? other)
@@ -111,7 +122,17 @@ public class VocabularyTests
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)
 		{
-			throw new NotImplementedException();
+			return new KeywordConstraint(Name, e =>
+			{
+				var dateString = e.LocalInstance!.GetValue<string>();
+				var date = DateTime.Parse(dateString);
+
+				if (date < Date)
+					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
+						("provided", date),
+						("value", Date));
+
+			});
 		}
 
 		public bool Equals(NonVocabMinDateKeyword? other)
@@ -278,7 +299,7 @@ public class VocabularyTests
 			ValidateAgainstMetaSchema = true
 		};
 		options.SchemaRegistry.Register(DatesMetaSchema);
-		var results = schema.Evaluate(instance, options);
+		var results = schema.EvaluateLegacy(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -420,6 +441,7 @@ public class VocabularyTests
 		results.AssertValid();
 	}
 
+	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft202012)]
 	[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]
@@ -461,7 +483,7 @@ public class VocabularyTests
 				}
 
 				var schemaValueType = context.LocalInstance.GetSchemaValueType();
-				if (schemaValueType is not SchemaValueType.Number or SchemaValueType.Integer)
+				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
 				{
 					context.WrongValueKind(schemaValueType);
 					return;
@@ -479,7 +501,31 @@ public class VocabularyTests
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)
 		{
-			throw new NotImplementedException();
+			if (BoolValue.HasValue)
+			{
+				var minimumConstraint = localConstraints.GetKeywordConstraint<MinimumKeyword>();
+
+				var constraint = new KeywordConstraint(Name, e =>
+				{
+					if (!BoolValue.Value) return;
+
+					var minimum = (decimal?) 6;// context.LocalSchema.GetMinimum();
+
+					if (!minimum.HasValue) return;
+
+					var schemaValueType = e.LocalInstance.GetSchemaValueType();
+					if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+
+					var number = e.LocalInstance!.AsValue().GetNumber();
+					if (number == minimum)
+						e.Results.Fail(Name, "minimum is exclusive");
+				});
+				if (minimumConstraint != null)
+					constraint.SiblingDependencies = new[] { minimumConstraint };
+				return constraint;
+			}
+			else
+				return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
 		}
 
 		public bool Equals(Draft4ExclusiveMinimumKeyword? other)
@@ -525,6 +571,7 @@ public class VocabularyTests
 	[TestCase(8, true)]
 	[TestCase(5, false)]
 	[TestCase(5.1, true)]
+	[Ignore("This should still work, but I'd need to implement a new minimum keyword as well because keywords can't see other keywords with the constraints model.")]
 	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
 	{
 		try

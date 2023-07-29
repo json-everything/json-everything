@@ -121,9 +121,9 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			.Where(x => !x.Results.IsValid)
 			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
 			.ToArray();
-		if (failedProperties.Length == 0)
-			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
-		else
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
+		
+		if (failedProperties.Length != 0)
 			evaluation.Results.Fail(Name, ErrorMessages.DependentSchemas, ("failed", failedProperties));
 	}
 

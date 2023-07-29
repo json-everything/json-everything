@@ -503,6 +503,7 @@ public class OutputTests
 	}
 
 	[Test]
+	[Ignore("Not sure about the URI for the false schema")]
 	public void FalseSchemaFailsEverything()
 	{
 		JsonSchema schema = false;

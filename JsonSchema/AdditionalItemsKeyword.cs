@@ -123,9 +123,9 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 
 	private static void Evaluator(KeywordEvaluation evaluation)
 	{
-		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
-			evaluation.Results.SetAnnotation(Name, true);
-		else
+		evaluation.Results.SetAnnotation(Name, true);
+
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();
 	}
 

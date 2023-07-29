@@ -14,13 +14,15 @@ public class SchemaEvaluation
 
 	internal Guid Id { get; set; }
 	internal KeywordEvaluation[] KeywordEvaluations { get; }
+	internal EvaluationOptions Options { get; }
 
-	internal SchemaEvaluation(JsonNode? localInstance, JsonPointer relativeInstanceLocation, EvaluationResults results, KeywordEvaluation[] evaluations)
+	internal SchemaEvaluation(JsonNode? localInstance, JsonPointer relativeInstanceLocation, EvaluationResults results, KeywordEvaluation[] evaluations, EvaluationOptions options)
 	{
 		LocalInstance = localInstance;
 		RelativeInstanceLocation = relativeInstanceLocation;
 		Results = results;
 		KeywordEvaluations = evaluations;
+		Options = options;
 	}
 
 	public void Evaluate()

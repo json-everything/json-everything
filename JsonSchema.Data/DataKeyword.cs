@@ -129,7 +129,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 		var schemaEvaluation = subschema
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
-			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name));
+			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name), context.Options);
 
 		evaluation.ChildEvaluations = new[] { schemaEvaluation };
 

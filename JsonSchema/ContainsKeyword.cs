@@ -152,13 +152,13 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
+			
 			var actual = validIndices.Length;
 			if (actual < minimum)
 				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
 			else if (actual > maximum)
 				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
-			else
-				evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
 			return;
 		}
 
@@ -176,13 +176,13 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 				.Where(x => x.Results.IsValid)
 				.Select(x => x.RelativeInstanceLocation.Segments[0].Value)
 				.ToArray();
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validProperties));
+			
 			var actual = validProperties.Length;
 			if (actual < minimum)
 				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
 			else if (actual > maximum)
 				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
-			else
-				evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validProperties));
 			return;
 		}
 

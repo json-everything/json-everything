@@ -31,7 +31,7 @@ public class SchemaConstraint
 		_localSchema = localSchema;
 	}
 
-	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath)
+	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath, EvaluationOptions options)
 	{
 		if (Source != null)
 			Constraints = Source.Constraints;
@@ -43,10 +43,11 @@ public class SchemaConstraint
 
 		var evaluation = new SchemaEvaluation(localInstance,
 			RelativeInstanceLocation,
-			new EvaluationResults(evaluationPath, SchemaBaseUri, instanceLocation),
+			new EvaluationResults(evaluationPath, SchemaBaseUri, instanceLocation, options),
 			Constraints.Length == 0
 				? Array.Empty<KeywordEvaluation>()
-				: new KeywordEvaluation[Constraints.Length]
+				: new KeywordEvaluation[Constraints.Length],
+			options
 		) { Id = Id };
 
 		if (BaseSchemaOffset != JsonPointer.Empty)
@@ -55,7 +56,7 @@ public class SchemaConstraint
 		if (_localSchema.BoolValue.HasValue)
 		{
 			if (!_localSchema.BoolValue.Value)
-				evaluation.Results.Fail();
+				evaluation.Results.Fail(string.Empty, "All values fail against the false schema");
 
 			return evaluation;
 		}

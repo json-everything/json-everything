@@ -56,7 +56,7 @@ public class KeywordConstraint
 						else if (!relativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out instance)) continue;
 
 						var templatedInstanceLocation = instanceLocation.Combine(relativeInstanceLocation);
-						var localEvaluation = dependency.BuildEvaluation(instance, templatedInstanceLocation, evaluationPath);
+						var localEvaluation = dependency.BuildEvaluation(instance, templatedInstanceLocation, evaluationPath, schemaEvaluation.Options);
 						localEvaluation.RelativeInstanceLocation = relativeInstanceLocation;
 						subschemaEvaluations.Add(localEvaluation);
 					}
@@ -65,7 +65,7 @@ public class KeywordConstraint
 				{
 					if (!dependency.RelativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out var instance)) continue;
 
-					var localEvaluation = dependency.BuildEvaluation(instance, instanceLocation, evaluationPath);
+					var localEvaluation = dependency.BuildEvaluation(instance, instanceLocation, evaluationPath, schemaEvaluation.Options);
 					subschemaEvaluations.Add(localEvaluation);
 				}
 			}

@@ -115,14 +115,12 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 			return;
 		}
 
-		if (evaluation.ChildEvaluations.All(x => x.Results.IsValid))
-		{
-			if (evaluation.ChildEvaluations.Length == array.Count)
-				evaluation.Results.SetAnnotation(Name, true);
-			else
-				evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length - 1);
-		}
+		if (evaluation.ChildEvaluations.Length == array.Count)
+			evaluation.Results.SetAnnotation(Name, true);
 		else
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length - 1);
+
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();
 	}
 

@@ -249,7 +249,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
 
-		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty);
+		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
 		evaluation.Evaluate();
 
 
@@ -283,9 +283,11 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, ConstraintBuilderContext context)
 	{
+		var baseUri = BoolValue.HasValue ? context.Scope.LocalScope : BaseUri;
+	
 		var scopedConstraint = CheckScopedConstraints(context.Scope);
 		if (scopedConstraint != null)
-			return new SchemaConstraint(relativeEvaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, BaseUri, this)
+			return new SchemaConstraint(relativeEvaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this)
 			{
 				Source = scopedConstraint
 			};
@@ -302,7 +304,9 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		var scopedConstraint = CheckScopedConstraints(scope);
 		if (scopedConstraint != null) return scopedConstraint;
 
-		var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, BaseUri, this);
+		var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
+
+		var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
 		_constraints.Add((new DynamicScope(scope), constraint));
 
 		return constraint;
@@ -339,7 +343,8 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 			context.Scope.Push(BaseUri);
 		}
 		var localConstraints = new List<KeywordConstraint>();
-		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this), context.EvaluatingAs);
+		var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
+		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this), version);
 		foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 		{
 			var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
