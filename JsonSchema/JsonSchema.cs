@@ -189,7 +189,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
+	public EvaluationResults EvaluateLegacy(JsonNode? root, EvaluationOptions? options = null)
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
@@ -231,7 +231,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public EvaluationResults EvaluateUsingConstraints(JsonNode? root, EvaluationOptions? options = null)
+	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 

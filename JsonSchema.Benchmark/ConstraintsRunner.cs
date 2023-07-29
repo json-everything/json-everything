@@ -46,7 +46,7 @@ public class ConstraintsRunner
 	{
 		for (int i = 0; i < RunCount; i++)
 		{
-			_ = Schema.EvaluateUsingConstraints(Instance);
+			_ = Schema.Evaluate(Instance);
 		}
 	}
 
@@ -55,7 +55,7 @@ public class ConstraintsRunner
 	{
 		for (int i = 0; i < RunCount; i++)
 		{
-			_ = Schema.Evaluate(Instance);
+			_ = Schema.EvaluateLegacy(Instance);
 		}
 	}
 }

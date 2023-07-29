@@ -158,7 +158,7 @@ public class TestSuiteRunner
 
 		for (int i = 0; i < n; i++)
 		{
-			_ = collection.Schema.Evaluate(test.Data, collection.Options);
+			_ = collection.Schema.EvaluateLegacy(test.Data, collection.Options);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class TestSuiteRunner
 
 		for (int i = 0; i < n; i++)
 		{
-			_ = collection.Schema.EvaluateUsingConstraints(test.Data, collection.Options);
+			_ = collection.Schema.Evaluate(test.Data, collection.Options);
 		}
 	}
 

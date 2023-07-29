@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -77,7 +78,25 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return KeywordConstraint.Skip;
+		if (!context.Options.ValidateAgainstMetaSchema)
+			return KeywordConstraint.Skip;
+
+		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
+		if (metaSchema == null)
+			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
+
+		var metaSchemaConstraint = metaSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation.Combine(Name), JsonPointer.Empty, context);
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { metaSchemaConstraint }
+		};
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation)
+	{
+		if (!evaluation.ChildEvaluations[0].Results.IsValid)
+			evaluation.Results.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

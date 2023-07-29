@@ -30,7 +30,7 @@ public class DevTest
 			PreserveDroppedAnnotations = true
 		};
 
-		var result = schema.EvaluateUsingConstraints(instance, options);
+		var result = schema.Evaluate(instance, options);
 
 		result.AssertInvalid();
 	}

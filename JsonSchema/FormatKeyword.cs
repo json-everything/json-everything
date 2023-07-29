@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -100,33 +101,29 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		//if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-		//{
-		//	context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
-		//	return;
-		//}
+		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
+			return new KeywordConstraint(Name, e => e.Results.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key)));
 
 		var requireValidation = context.Options.RequireFormatValidation;
 
-		//if (!requireValidation)
-		//{
-		//	var vocabRequirements = context.MetaSchemaVocabs;
-		//	if (vocabRequirements != null)
-		//	{
-		//		foreach (var formatAssertionId in _formatAssertionIds)
-		//		{
-		//			if (vocabRequirements.ContainsKey(formatAssertionId))
-		//			{
-		//				// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
-		//				// for why we don't take the vocab value.
-		//				// tl;dr - This implementation understands the assertion vocab, so we apply it,
-		//				// even when the meta-schema says we're not required to.
-		//				requireValidation = true;
-		//				break;
-		//			}
-		//		}
-		//	}
-		//}
+		if (!requireValidation)
+		{
+			var vocabs = context.SchemaVocabs[context.Scope.LocalScope];
+			if (vocabs != null)
+			{
+				foreach (var formatAssertionId in _formatAssertionIds)
+				{
+					if (vocabs.All(v => v.Id != formatAssertionId)) continue;
+
+					// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
+					// for why we don't take the vocab value.
+					// tl;dr - This implementation understands the assertion vocab, so we apply it,
+					// even when the meta-schema says we're not required to.
+					requireValidation = true;
+					break;
+				}
+			}
+		}
 
 		return new KeywordConstraint(Name, requireValidation
 			? AssertionEvaluator

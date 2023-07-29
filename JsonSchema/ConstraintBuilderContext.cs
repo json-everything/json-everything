@@ -7,10 +7,10 @@ namespace Json.Schema;
 
 public class ConstraintBuilderContext
 {
-	private readonly Dictionary<Uri, Vocabulary[]?> _schemaVocabs = new();
 
 	public EvaluationOptions Options { get; }
 	public DynamicScope Scope { get; }
+	public Dictionary<Uri, Vocabulary[]?> SchemaVocabs { get; } = new();
 
 	internal SpecVersion EvaluatingAs { get; }
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
@@ -32,9 +32,9 @@ public class ConstraintBuilderContext
 
 	private bool TryGetVocab(JsonSchema schema, out Vocabulary[]? vocab)
 	{
-		if (_schemaVocabs.TryGetValue(schema.BaseUri, out vocab)) return true;
+		if (SchemaVocabs.TryGetValue(schema.BaseUri, out vocab)) return true;
 
-		_schemaVocabs[schema.BaseUri] = null;
+		SchemaVocabs[schema.BaseUri] = null;
 
 		var schemaKeyword = (SchemaKeyword?)schema.Keywords?.FirstOrDefault(x => x is SchemaKeyword);
 		if (schemaKeyword == null) return false;
@@ -44,7 +44,7 @@ public class ConstraintBuilderContext
 		if (vocabKeyword == null) return false;
 
 		vocab = vocabKeyword.Vocabulary.Keys.Select(x => Options.VocabularyRegistry.Get(x)!).ToArray();
-		_schemaVocabs[schema.BaseUri] = vocab;
+		SchemaVocabs[schema.BaseUri] = vocab;
 		return true;
 	}
 }

@@ -113,11 +113,11 @@ public class Suite
 
 		if (test.Error)
 		{
-			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.EvaluateUsingConstraints(test.Data, options));
+			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.Evaluate(test.Data, options));
 			return;
 		}
 
-		var result = collection.Schema.EvaluateUsingConstraints(test.Data, options);
+		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
