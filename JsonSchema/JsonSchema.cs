@@ -344,7 +344,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		}
 		var localConstraints = new List<KeywordConstraint>();
 		var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this), version);
+		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
 		foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 		{
 			var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);

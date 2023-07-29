@@ -82,6 +82,37 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
+		var overallResult = true;
+		var violations = new List<Uri>();
+		var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
+		switch (context.Options.EvaluatingAs)
+		{
+			case SpecVersion.Unspecified:
+			case SpecVersion.Draft201909:
+				vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
+				break;
+			case SpecVersion.Draft202012:
+				vocabularies[new Uri(Vocabularies.Core202012Id)] = true;
+				break;
+			case SpecVersion.DraftNext:
+				vocabularies[new Uri(Vocabularies.CoreNextId)] = true;
+				break;
+		}
+		foreach (var kvp in vocabularies)
+		{
+			var isKnown = context.Options.VocabularyRegistry.IsKnown(kvp.Key);
+			var isValid = !kvp.Value || isKnown;
+			if (!isValid)
+				violations.Add(kvp.Key);
+			overallResult &= isValid;
+		}
+
+		if (!overallResult)
+			return new KeywordConstraint(Name, e =>
+			{
+				e.Results.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
+			});
+
 		return KeywordConstraint.Skip;
 	}
 

@@ -7,7 +7,6 @@ namespace Json.Schema;
 
 public class ConstraintBuilderContext
 {
-
 	public EvaluationOptions Options { get; }
 	public DynamicScope Scope { get; }
 	public Dictionary<Uri, Vocabulary[]?> SchemaVocabs { get; } = new();
@@ -22,11 +21,13 @@ public class ConstraintBuilderContext
 		Scope = new DynamicScope(initialScope);
 	}
 
-	internal IEnumerable<IJsonSchemaKeyword> GetKeywordsToProcess(JsonSchema schema)
+	internal IEnumerable<IJsonSchemaKeyword> GetKeywordsToProcess(JsonSchema schema, EvaluationOptions options)
 	{
-		if (!TryGetVocab(schema, out var vocab) || vocab == null) return schema.Keywords!;
+		if (options.ProcessCustomKeywords ||
+		    !TryGetVocab(schema, out var vocab) ||
+		    vocab == null) return schema.Keywords!;
 
-		var vocabKeywordTypes = vocab.SelectMany(x => x.Keywords);
+		var vocabKeywordTypes = vocab.SelectMany(x => x?.Keywords ?? Array.Empty<Type>());
 		return schema.Keywords!.Where(x => vocabKeywordTypes.Contains(x.GetType()));
 	}
 

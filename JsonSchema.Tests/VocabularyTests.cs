@@ -282,7 +282,7 @@ public class VocabularyTests
 	public void TearDown()
 	{
 		SchemaKeywordRegistry.Unregister<MinDateKeyword>();
-		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>();
+		SchemaKeywordRegistry.Unregister<NonVocabMinDateKeyword>();
 		SchemaKeywordRegistry.Unregister<MaxDateKeyword>();
 	}
 
@@ -296,10 +296,11 @@ public class VocabularyTests
 
 		var options = new EvaluationOptions
 		{
-			ValidateAgainstMetaSchema = true
+			ValidateAgainstMetaSchema = true,
+			OutputFormat = OutputFormat.List
 		};
 		options.SchemaRegistry.Register(DatesMetaSchema);
-		var results = schema.EvaluateLegacy(instance, options);
+		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -355,7 +356,11 @@ public class VocabularyTests
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
 		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
 
-		var results = schema.Evaluate(instance, new EvaluationOptions { ProcessCustomKeywords = true });
+		var results = schema.Evaluate(instance, new EvaluationOptions
+		{
+			ProcessCustomKeywords = true,
+			OutputFormat = OutputFormat.List
+		});
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
@@ -393,7 +398,8 @@ public class VocabularyTests
 
 		var options = new EvaluationOptions
 		{
-			ValidateAgainstMetaSchema = true
+			ValidateAgainstMetaSchema = true,
+			OutputFormat = OutputFormat.List
 		};
 		options.SchemaRegistry.Register(DatesMetaSchema);
 		options.VocabularyRegistry.Register(DatesVocabulary);
@@ -415,7 +421,7 @@ public class VocabularyTests
 			.MinDate(DateTime.Now.AddDays(-1));
 
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
-		var results = DatesMetaSchema.Evaluate(schemaAsJson);
+		var results = DatesMetaSchema.Evaluate(schemaAsJson, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
 		Console.WriteLine(schemaAsJson);
 		Console.WriteLine();
