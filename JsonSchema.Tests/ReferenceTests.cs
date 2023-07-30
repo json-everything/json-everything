@@ -28,6 +28,7 @@ public class ReferenceTests
 
 		SchemaRegistry.Global.Register(refSchema);
 		SchemaRegistry.Global.Register(baseSchema);
+		SchemaRegistry.Global.Register(hashSchema);
 
 		// in previous versions, this would still validate the instance, but since adding
 		// static analysis, the ref with the # in it is checked early
