@@ -20,10 +20,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </summary>
 	public OutputFormat? OutputFormat { get; set; }
 	/// <summary>
-	/// Gets or sets a log which will output processing information.
-	/// </summary>
-	public ILog? Log { get; set; }
-	/// <summary>
 	/// Specifies whether the `format` keyword should be required to provide
 	/// validation results.  Default is false, which just produces annotations
 	/// for drafts 2019-09 and prior or follows the behavior set forth by the
@@ -74,7 +70,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 
 		var validatingConverter = (IValidatingJsonConverter)converter;
 		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
-		validatingConverter.Log = Log;
 		validatingConverter.RequireFormatValidation = RequireFormatValidation ?? false;
 
 		_cache[typeToConvert] = converter;
@@ -86,7 +81,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 internal interface IValidatingJsonConverter
 {
 	public OutputFormat OutputFormat { get; set; }
-	public ILog? Log { get; set; }
 	public bool RequireFormatValidation { get; set; }
 }
 
@@ -96,7 +90,6 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
 
 	public OutputFormat OutputFormat { get; set; } = OutputFormat.Flag;
-	public ILog? Log { get; set; } = null;
 	public bool RequireFormatValidation { get; set; }
 
 	public ValidatingJsonConverter(JsonSchema schema, Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory)
@@ -113,7 +106,6 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat,
-			Log = Log!,
 			RequireFormatValidation = RequireFormatValidation
 		});
 

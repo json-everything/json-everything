@@ -41,65 +41,6 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 		Requirements = values ?? throw new ArgumentNullException(nameof(values));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
-
-		var overallResult = true;
-		var missingDependencies = new Dictionary<string, List<string>>();
-		foreach (var property in Requirements)
-		{
-			context.Options.LogIndentLevel++;
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			var dependencies = property.Value;
-			var name = property.Key;
-			if (!obj.TryGetPropertyValue(name, out _))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			if (!missingDependencies.TryGetValue(name, out var list))
-				list = missingDependencies[name] = new List<string>();
-			foreach (var dependency in dependencies)
-			{
-				if (obj.TryGetPropertyValue(dependency, out _)) continue;
-
-				overallResult = false;
-				if (context.ApplyOptimizations) break;
-				list.Add(dependency);
-			}
-
-			if (list.Any())
-				context.Log(() => $"Missing properties: [{string.Join(",", list.Select(x => $"'{x}'"))}].");
-			else
-				context.Log(() => "All dependencies found.");
-			context.Options.LogIndentLevel--;
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-
-		if (!overallResult)
-		{
-			var missing = JsonSerializer.Serialize(missingDependencies);
-			context.LocalResult.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
-		}
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

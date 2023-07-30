@@ -41,26 +41,6 @@ public class MaxItemsKeyword : IJsonSchemaKeyword, IEquatable<MaxItemsKeyword>
 		Value = value;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var number = ((JsonArray)context.LocalInstance!).Count;
-		if (Value < number)
-			context.LocalResult.Fail(Name, ErrorMessages.MaxItems, ("received", number), ("limit", Value));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

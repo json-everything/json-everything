@@ -41,18 +41,6 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 		Value = value;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		if (!Value.IsEquivalentTo(context.LocalInstance))
-			context.LocalResult.Fail(Name, ErrorMessages.Const, ("value", Value.AsJsonString()));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

@@ -51,32 +51,6 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<Any
 		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var overallResult = false;
-		for (var i = 0; i < Schemas.Count; i++)
-		{
-			var i1 = i;
-			context.Log(() => $"Processing {Name}[{i1}]...");
-			var schema = Schemas[i];
-			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			context.Evaluate();
-			overallResult |= context.LocalResult.IsValid;
-			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (overallResult && context.ApplyOptimizations) break;
-		}
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context)).ToArray();

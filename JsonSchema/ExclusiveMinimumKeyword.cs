@@ -40,26 +40,6 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<ExclusiveM
 		Value = value;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var number = context.LocalInstance!.AsValue().GetNumber();
-		if (Value >= number)
-			context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

@@ -41,17 +41,6 @@ public class DefaultKeyword : IJsonSchemaKeyword, IEquatable<DefaultKeyword>
 		Value = value;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value);
-		context.ExitKeyword(Name, true);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

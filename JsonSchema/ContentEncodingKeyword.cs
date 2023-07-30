@@ -38,24 +38,6 @@ public class ContentEncodingKeyword : IJsonSchemaKeyword, IEquatable<ContentEnco
 		Value = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.String)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		context.LocalResult.SetAnnotation(Name, Value);
-		context.ExitKeyword(Name, true);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

@@ -42,54 +42,6 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		Schemas = values ?? throw new ArgumentNullException(nameof(values));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
-
-		var overallResult = true;
-		var evaluatedProperties = new List<string>();
-		foreach (var property in Schemas)
-		{
-			context.Options.LogIndentLevel++;
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			var schema = property.Value;
-			var name = property.Key;
-			if (!obj.TryGetPropertyValue(name, out _))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			context.Push(context.EvaluationPath.Combine(name), schema);
-			context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			if (!overallResult && context.ApplyOptimizations) break;
-
-			if (context.LocalResult.IsValid)
-				evaluatedProperties.Add(name);
-			context.Log(() => $"Property '{property.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Options.LogIndentLevel--;
-			context.Pop();
-		}
-
-		if (!overallResult)
-			context.LocalResult.Fail(Name, ErrorMessages.DependentSchemas, ("failed", evaluatedProperties));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

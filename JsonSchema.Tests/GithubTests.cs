@@ -521,11 +521,6 @@ public class GithubTests
 			throw new NotImplementedException();
 		}
 
-		public void Evaluate(EvaluationContext context)
-		{
-			throw new NotImplementedException();
-		}
-
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)

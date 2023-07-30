@@ -58,64 +58,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		InvalidPatterns = invalidPatterns;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		var evaluatedProperties = new List<string>();
-		foreach (var entry in Patterns)
-		{
-			var schema = entry.Value;
-			var pattern = entry.Key;
-			foreach (var instanceProperty in obj.Where(p => pattern.IsMatch(p.Key)))
-			{
-				context.Log(() => $"Validating property '{instanceProperty.Key}'.");
-				context.Push(context.InstanceLocation.Combine(instanceProperty.Key),
-					instanceProperty.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name, PointerSegment.Create($"{pattern}")),
-					schema);
-				context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Property '{instanceProperty.Key}' {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-				evaluatedProperties.Add(instanceProperty.Key);
-			}
-		}
-		if (InvalidPatterns?.Any() ?? false)
-		{
-			foreach (var pattern in InvalidPatterns)
-			{
-				context.Push(context.EvaluationPath.Combine(Name, pattern), false);
-				context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", pattern));
-				overallResult = false;
-				context.Log(() => $"Discovered invalid pattern '{pattern}'.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-		}
-		context.Options.LogIndentLevel--;
-
-		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaConstraints = Patterns.Select(pattern =>

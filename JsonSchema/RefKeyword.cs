@@ -42,62 +42,6 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 		Reference = value;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-
-		var newUri = new Uri(context.Scope.LocalScope, Reference);
-		var fragment = newUri.Fragment;
-
-		var navigation = (newUri.OriginalString, context.InstanceLocation);
-		if (context.NavigatedReferences.Contains(navigation))
-			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
-
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-
-		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-
-		if (JsonPointer.TryParse(fragment, out var pointerFragment))
-		{
-			if (targetBase == null)
-				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-
-			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
-		}
-		else
-		{
-			var anchorFragment = fragment.Substring(1);
-			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
-				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-
-			if (targetBase is JsonSchema targetBaseSchema &&
-			    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-				targetSchema = anchorDefinition.Schema;
-		}
-
-		if (targetSchema == null)
-			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
-
-		context.NavigatedReferences.Add(navigation);
-		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
-		if (pointerFragment != null)
-			context.LocalResult.SetSchemaReference(pointerFragment);
-		context.Evaluate();
-		var result = context.LocalResult.IsValid;
-		context.Pop();
-		context.NavigatedReferences.Remove(navigation);
-		if (!result)
-			context.LocalResult.Fail();
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var newUri = new Uri(schemaConstraint.SchemaBaseUri, Reference);

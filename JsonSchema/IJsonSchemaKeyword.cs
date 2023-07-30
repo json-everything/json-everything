@@ -7,12 +7,6 @@ namespace Json.Schema;
 /// </summary>
 public interface IJsonSchemaKeyword
 {
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	void Evaluate(EvaluationContext context);
-
 	KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context);

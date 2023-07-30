@@ -66,42 +66,6 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		References = references;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	/// <exception cref="JsonException">
-	/// Thrown when the formed schema contains values that are invalid for the associated
-	/// keywords.
-	/// </exception>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var data = new Dictionary<string, JsonNode>();
-		var failedReferences = new List<IDataResourceIdentifier>();
-		foreach (var reference in References)
-		{
-			if (!reference.Value.TryResolve(context, out var resolved))
-				failedReferences.Add(reference.Value);
-
-			data.Add(reference.Key, resolved!);
-		}
-
-		if (failedReferences.Any())
-			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
-
-		var json = JsonSerializer.Serialize(data);
-		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
-
-		context.Push(context.EvaluationPath.Combine(Name), subschema);
-		context.Evaluate();
-		var result = context.LocalResult.IsValid;
-		context.Pop();
-		if (!result)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

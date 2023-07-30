@@ -40,17 +40,6 @@ public class AnchorKeyword : IJsonSchemaKeyword, IEquatable<AnchorKeyword>
 		Anchor = anchor ?? throw new ArgumentNullException(nameof(anchor));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		context.Log(() => "Nothing to do");
-		context.ExitKeyword(Name, true);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

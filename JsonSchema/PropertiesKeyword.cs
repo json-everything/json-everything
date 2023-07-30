@@ -45,57 +45,6 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 		Properties = values ?? throw new ArgumentNullException(nameof(values));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
-
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		var evaluatedProperties = new List<string>();
-		foreach (var property in Properties)
-		{
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			var schema = property.Value;
-			var name = property.Key;
-			if (!obj.TryGetPropertyValue(name, out var item))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			context.Push(context.InstanceLocation.Combine(name),
-				item,
-				context.EvaluationPath.Combine(Name, name),
-				schema);
-			context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			evaluatedProperties.Add(name);
-			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-		context.Options.LogIndentLevel--;
-		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(JsonPointer.Create(Name, x.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(x.Key), context)).ToArray();

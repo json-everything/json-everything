@@ -44,41 +44,6 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		foreach (var name in obj.Select(p => p.Key))
-		{
-			context.Log(() => $"Evaluating property name '{name}'.");
-			context.Push(context.InstanceLocation.Combine(name), name,
-				context.EvaluationPath.Combine(Name, name), Schema);
-			context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Log(() => $"Property name '{name}' {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-		context.Options.LogIndentLevel--;
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);

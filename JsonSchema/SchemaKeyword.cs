@@ -42,38 +42,6 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		Schema = schema ?? throw new ArgumentNullException(nameof(schema));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
-		if (metaSchema == null)
-			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
-
-		if (metaSchema.TryGetKeyword<VocabularyKeyword>(VocabularyKeyword.Name, out var vocabularyKeyword))
-			context.UpdateMetaSchemaVocabs(vocabularyKeyword!.Vocabulary);
-
-		if (!context.Options.ValidateAgainstMetaSchema)
-		{
-			context.ExitKeyword(Name, true);
-			return;
-		}
-
-		context.Log(() => "Validating against meta-schema.");
-		using var document = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema));
-		var schemaAsJson = document.RootElement;
-		var newOptions = EvaluationOptions.From(context.Options);
-		newOptions.ValidateAgainstMetaSchema = false;
-		var results = metaSchema.Evaluate(schemaAsJson, newOptions);
-
-		if (!results.IsValid)
-			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

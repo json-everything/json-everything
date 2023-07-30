@@ -94,19 +94,6 @@ public class EvaluationResults
 			? _annotations!.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
 			: null;
 
-	internal EvaluationResults(EvaluationContext context)
-	{
-		EvaluationPath = context.EvaluationPath;
-		_currentUri = context.Scope.LocalScope;
-		InstanceLocation = context.InstanceLocation;
-		IncludeDroppedAnnotations = context.Options.PreserveDroppedAnnotations;
-		if (context.Options.IgnoredAnnotations != null)
-		{
-			_ignoredAnnotations = new HashSet<string>(context.Options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-			_backgroundAnnotations = new HashSet<string>(context.Options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-		}
-	}
-
 	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		EvaluationPath = evaluationPath;

@@ -73,18 +73,6 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 			throw new ArgumentException("`enum` requires unique values");
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		if (!Values.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance))
-			context.LocalResult.Fail(Name, ErrorMessages.Enum, ("received", context.LocalInstance), ("values", Values));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

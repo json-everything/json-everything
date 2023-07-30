@@ -58,58 +58,6 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 		Keys = references;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var array = (JsonArray)context.LocalInstance!;
-		var collections = new List<List<(bool, JsonNode?)>>();
-		foreach (var item in array)
-		{
-			var values = Keys.Select(x => (x.TryEvaluate(item, out var resolved), resolved));
-			collections.Add(values.ToList());
-		}
-
-		var matchedIndexPairs = new List<(int, int)>();
-		for (int i = 0; i < collections.Count; i++)
-		{
-			for (int j = i + 1; j < collections.Count; j++)
-			{
-				var a = collections[i];
-				var b = collections[j];
-
-				if (a.SequenceEqual(b, MaybeJsonNodeComparer.Instance))
-				{
-					if (context.Options.OutputFormat == OutputFormat.Flag)
-					{
-						context.LocalResult.Fail(Name, $"Found duplicate items at indices {i} and {j}");
-						context.ExitKeyword(Name);
-						return;
-					}
-					matchedIndexPairs.Add((i, j));
-				}
-			}
-		}
-
-		if (matchedIndexPairs.Any())
-		{
-			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
-		}
-
-		context.ExitKeyword(Name);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

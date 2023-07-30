@@ -132,37 +132,7 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	[Benchmark]
-	[Arguments(1)]
-	[Arguments(10)]
-	public int RunSuite_Constraints(int n)
-	{
-		int i = 0;
-		var collections = GetAllTests();
-
-		foreach (var collection in collections)
-		{
-			foreach (var test in collection.Tests)
-			{
-				Benchmark_Constraints(collection, test, n);
-				i++;
-			}
-		}
-
-		return i;
-	}
-
 	private void Benchmark(TestCollection collection, TestCase test, int n)
-	{
-		if (!InstanceIsDeserializable(test.Data)) return;
-
-		for (int i = 0; i < n; i++)
-		{
-			_ = collection.Schema.EvaluateLegacy(test.Data, collection.Options);
-		}
-	}
-
-	private void Benchmark_Constraints(TestCollection collection, TestCase test, int n)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 

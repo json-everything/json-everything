@@ -28,17 +28,6 @@ public class VocabularyTests
 			Date = date;
 		}
 
-		public void Evaluate(EvaluationContext context)
-		{
-			var dateString = context.LocalInstance!.GetValue<string>();
-			var date = DateTime.Parse(dateString);
-
-			if (date < Date)
-				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
-					("provided", date),
-					("value", Date));
-		}
-
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)
@@ -105,17 +94,6 @@ public class VocabularyTests
 		public NonVocabMinDateKeyword(DateTime date)
 		{
 			Date = date;
-		}
-
-		public void Evaluate(EvaluationContext context)
-		{
-			var dateString = context.LocalInstance!.GetValue<string>();
-			var date = DateTime.Parse(dateString);
-
-			if (date < Date)
-				context.LocalResult.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
-					("provided", date),
-					("value", Date));
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
@@ -185,17 +163,6 @@ public class VocabularyTests
 		public MaxDateKeyword(DateTime date)
 		{
 			Date = date;
-		}
-
-		public void Evaluate(EvaluationContext context)
-		{
-			var dateString = context.LocalInstance!.GetValue<string>();
-			var date = DateTime.Parse(dateString);
-
-			if (date > Date)
-				context.LocalResult.Fail(Name, "[[provided:O]] must be on or before [[value:O]]",
-					("provided", date),
-					("value", Date));
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
@@ -468,39 +435,6 @@ public class VocabularyTests
 		public Draft4ExclusiveMinimumKeyword(decimal value)
 		{
 			_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
-		}
-
-		public void Evaluate(EvaluationContext context)
-		{
-			if (BoolValue.HasValue)
-			{
-				if (!BoolValue.Value)
-				{
-					context.NotApplicable(() => "exclusiveMinimum does nothing when false");
-					return;
-				}
-
-				var minimum = context.LocalSchema.GetMinimum();
-
-				if (!minimum.HasValue)
-				{
-					context.NotApplicable(() => "minimum not defined");
-					return;
-				}
-
-				var schemaValueType = context.LocalInstance.GetSchemaValueType();
-				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
-				{
-					context.WrongValueKind(schemaValueType);
-					return;
-				}
-
-				var number = context.LocalInstance!.AsValue().GetNumber();
-				if (number == minimum) 
-					context.LocalResult.Fail(Name, "minimum is exclusive");
-			}
-			else
-				_postDraft6Keyword!.Evaluate(context);
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,

@@ -50,42 +50,6 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		Properties = values.ToReadOnlyList();
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
-
-		context.Options.LogIndentLevel++;
-		var notFound = new List<string>();
-		foreach (var property in Properties)
-		{
-			var property1 = property;
-			context.Log(() => $"Checking for property '{property1}'");
-			if (!obj.TryGetPropertyValue(property, out _))
-				notFound.Add(property);
-			if (notFound.Count != 0 && context.ApplyOptimizations) break;
-		}
-		if (notFound.Any())
-			context.Log(() => $"Missing properties: [{string.Join(",", notFound.Select(x => $"'{x}'"))}]");
-		context.Options.LogIndentLevel--;
-
-		if (notFound.Count != 0)
-			context.LocalResult.Fail(Name, ErrorMessages.Required, ("missing", notFound));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

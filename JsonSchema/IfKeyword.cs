@@ -40,21 +40,6 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Evaluate();
-		var valid = context.LocalResult.IsValid;
-		context.Pop();
-		context.LocalResult.SetAnnotation(Name, valid);
-		context.ExitKeyword(Name, true);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);

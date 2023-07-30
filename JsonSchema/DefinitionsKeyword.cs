@@ -37,19 +37,6 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEq
 		Definitions = values ?? throw new ArgumentNullException(nameof(values));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		context.Push(context.EvaluationPath.Combine(Name), true);
-		context.LocalResult.Ignore();
-		context.Pop();
-		context.ExitKeyword(Name, true);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

@@ -38,64 +38,6 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		Dependencies = dependencies;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
-
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		foreach (var property in Dependencies)
-		{
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			var dependency = property.Value;
-			var name = property.Key;
-			if (!obj.TryGetPropertyValue(name, out var value))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			if (value.GetSchemaValueType() != SchemaValueType.String)
-			{
-				context.Log(() => $"Property '{property.Key}' is not a string. Skipping.");
-				continue;
-			}
-
-			var stringValue = value!.GetValue<string>();
-			if (!dependency.Schemas.TryGetValue(stringValue, out var schema))
-			{
-				context.Log(() => $"Property '{property.Key}' does not specify a requirement for value '{stringValue}'");
-				continue;
-			}
-
-			context.Push(context.EvaluationPath.Combine(Name, name, stringValue), schema);
-			context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-		context.Options.LogIndentLevel--;
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

@@ -9,7 +9,6 @@ namespace Json.Schema;
 /// </summary>
 public class EvaluationOptions
 {
-	private ILog? _log;
 	private HashSet<Type>? _ignoredAnnotationTypes;
 
 	/// <summary>
@@ -43,20 +42,6 @@ public class EvaluationOptions
 	/// automatically check the global registry as well.
 	/// </summary>
 	public VocabularyRegistry VocabularyRegistry { get; } = new();
-
-	/// <summary>
-	/// Gets or sets the indent level for the log.
-	/// </summary>
-	public int LogIndentLevel { get; set; }
-
-	/// <summary>
-	/// Gets or sets a log which will output processing information.
-	/// </summary>
-	public ILog Log
-	{
-		get => _log ?? NullLog.Instance;
-		set => _log = value;
-	}
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should be required to provide
@@ -127,8 +112,6 @@ public class EvaluationOptions
 			ValidateAgainstMetaSchema = other.ValidateAgainstMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
 			ProcessCustomKeywords = other.ProcessCustomKeywords,
-			LogIndentLevel = other.LogIndentLevel,
-			Log = other._log ?? Default.Log,
 			OnlyKnownFormats = other.OnlyKnownFormats,
 			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations,
 			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null

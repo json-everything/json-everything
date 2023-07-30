@@ -55,33 +55,6 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 
 	internal static PatternKeyword InvalidRegex(string pattern) => new(pattern);
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		if (InvalidPattern != null)
-		{
-			context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
-			context.ExitKeyword(Name, false);
-			return;
-		}
-
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.String)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var str = context.LocalInstance!.GetValue<string>();
-		if (!Value.IsMatch(str))
-			context.LocalResult.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

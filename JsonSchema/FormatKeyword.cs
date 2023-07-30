@@ -48,55 +48,6 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		Value = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value.Key);
-
-		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-		{
-			context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
-			return;
-		}
-
-		var requireValidation = context.Options.RequireFormatValidation;
-		if (!requireValidation)
-		{
-			var vocabRequirements = context.MetaSchemaVocabs;
-			if (vocabRequirements != null)
-			{
-				foreach (var formatAssertionId in _formatAssertionIds)
-				{
-					if (vocabRequirements.ContainsKey(formatAssertionId))
-					{
-						// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
-						// for why we don't take the vocab value.
-						// tl;dr - This implementation understands the assertion vocab, so we apply it,
-						// even when the meta-schema says we're not required to.
-						requireValidation = true;
-						break;
-					}
-				}
-			}
-		}
-
-		if (requireValidation && !Value.Validate(context.LocalInstance, out var errorMessage))
-		{
-			if (Value is UnknownFormat)
-				context.LocalResult.Fail(Name, errorMessage);
-			else if (errorMessage == null)
-				context.LocalResult.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
-			else
-				context.LocalResult.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
-		}
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

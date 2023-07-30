@@ -23,17 +23,6 @@ public class JsonPointerIdentifier : IDataResourceIdentifier
 		Target = target;
 	}
 
-	/// <summary>
-	/// Attempts to resolve the reference.
-	/// </summary>
-	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
-	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(EvaluationContext context, out JsonNode? value)
-	{
-		return Target.TryEvaluate(context.InstanceRoot, out value);
-	}
-
 	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
 		return Target.TryEvaluate(evaluation.LocalInstance!.Root, out value);

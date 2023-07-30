@@ -676,7 +676,6 @@ public class OutputTests
   }
 }");
 
-		EvaluationOptions.Default.Log = null!;
 		var result = MetaSchemas.Draft202012.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		//result.ToBasic();

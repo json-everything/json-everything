@@ -94,17 +94,6 @@ public class XmlKeyword : IJsonSchemaKeyword, IEquatable<XmlKeyword>
 		_json = json;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(_Name);
-		context.LocalResult.SetAnnotation(_Name, _json);
-		context.ExitKeyword(_Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

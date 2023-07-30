@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -74,94 +73,6 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 	public ItemsKeyword(IEnumerable<JsonSchema> values)
 	{
 		ArraySchemas = values.ToReadOnlyList();
-	}
-
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var array = (JsonArray)context.LocalInstance!;
-		var overallResult = true;
-		if (SingleSchema != null)
-		{
-			context.Options.LogIndentLevel++;
-			int startIndex;
-			if (!context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name, out var annotation))
-				startIndex = 0;
-			else
-			{
-				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation.AsJsonString()}");
-				if (annotation!.AsValue().TryGetValue(out bool _))
-				{
-					context.ExitKeyword(Name, true);
-					return;
-				}
-
-				startIndex = (int)annotation;
-			}
-
-			for (int i = startIndex; i < array.Count; i++)
-			{
-				var i1 = i;
-				context.Log(() => $"Evaluating item at index {i1}.");
-				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), SingleSchema);
-				context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-			context.Options.LogIndentLevel--;
-
-			context.LocalResult.SetAnnotation(Name, true);
-		}
-		else // array
-		{
-			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
-			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
-				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
-
-			context.Options.LogIndentLevel++;
-			var maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
-			for (int i = 0; i < maxEvaluations; i++)
-			{
-				var i1 = i;
-				context.Log(() => $"Evaluating item at index {i1}.");
-				var schema = ArraySchemas[i];
-				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(i),
-					item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name, i),
-					schema);
-				context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-			context.Options.LogIndentLevel--;
-
-			if (maxEvaluations == array.Count)
-				context.LocalResult.SetAnnotation(Name, true);
-			else
-				context.LocalResult.SetAnnotation(Name, maxEvaluations);
-		}
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,

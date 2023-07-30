@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -39,57 +38,6 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEqu
 	public AdditionalItemsKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
-	}
-
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		if (!context.LocalResult.TryGetAnnotation(ItemsKeyword.Name, out var annotation))
-		{
-			context.NotApplicable(() => $"No annotations from {ItemsKeyword.Name}.");
-			return;
-		}
-		context.Log(() => $"Annotation from {ItemsKeyword.Name}: {annotation}.");
-		if (annotation!.GetValue<object>() is bool)
-		{
-			context.ExitKeyword(Name, context.LocalResult.IsValid);
-			return;
-		}
-
-		var startIndex = (int)annotation.AsValue().GetInteger()!;
-		var array = (JsonArray)context.LocalInstance!;
-		for (int i = startIndex; i < array.Count; i++)
-		{
-			var i1 = i;
-			context.Log(() => $"Evaluating item at index {i1}.");
-			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(Name), Schema);
-			context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-		context.Options.LogIndentLevel--;
-		context.LocalResult.SetAnnotation(Name, true);
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)

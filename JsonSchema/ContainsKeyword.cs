@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -45,71 +44,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 	public ContainsKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
-	}
-
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		// verify this logic
-		if (schemaValueType != SchemaValueType.Array &&
-		    schemaValueType != SchemaValueType.Object)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var validIndices = new List<JsonNode>();
-		if (schemaValueType == SchemaValueType.Array)
-		{
-			var array = (JsonArray)context.LocalInstance!;
-			for (int i = 0; i < array.Count; i++)
-			{
-				context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), Schema);
-				context.Evaluate();
-				if (context.LocalResult.IsValid)
-					validIndices.Add(i);
-				context.Pop();
-			}
-		}
-		else
-		{
-			if (context.Options.EvaluatingAs != SpecVersion.Unspecified &&
-			    context.Options.EvaluatingAs < SpecVersion.DraftNext)
-			{
-				context.WrongValueKind(schemaValueType);
-				return;
-			}
-			var obj = (JsonObject)context.LocalInstance!;
-			foreach (var kvp in obj)
-			{
-				context.Push(context.InstanceLocation.Combine(kvp.Key), kvp.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), Schema);
-				context.Evaluate();
-				if (context.LocalResult.IsValid)
-					validIndices.Add(kvp.Key!);
-				context.Pop();
-			}
-		}
-
-		context.LocalResult.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation);
-		context.LocalResult.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation);
-		var min = minContainsAnnotation?.GetValue<uint>() ?? 1;
-		var max = maxContainsAnnotation?.GetValue<uint>() ?? uint.MaxValue;
-		var validCount = validIndices.Count;
-
-		if (validCount < min)
-			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooFew, ("received", validCount), ("minimum", min));
-		else if (validCount > max)
-			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooMany, ("received", validCount), ("maximum", max));
-		else
-			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)

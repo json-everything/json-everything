@@ -64,55 +64,6 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 		Type = types.Aggregate((x, y) => x | y);
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		bool isValid;
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		switch (schemaValueType)
-		{
-			case SchemaValueType.Object:
-				isValid = Type.HasFlag(SchemaValueType.Object);
-				break;
-			case SchemaValueType.Array:
-				isValid = Type.HasFlag(SchemaValueType.Array);
-				break;
-			case SchemaValueType.String:
-				isValid = Type.HasFlag(SchemaValueType.String);
-				break;
-			case SchemaValueType.Integer:
-				isValid = Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number);
-				break;
-			case SchemaValueType.Number:
-				if (Type.HasFlag(SchemaValueType.Number))
-					isValid = true;
-				else if (Type.HasFlag(SchemaValueType.Integer))
-				{
-					var number = context.LocalInstance!.AsValue().GetNumber();
-					isValid = number == Math.Truncate(number!.Value);
-				}
-				else
-					isValid = false;
-				break;
-			case SchemaValueType.Boolean:
-				isValid = Type.HasFlag(SchemaValueType.Boolean);
-				break;
-			case SchemaValueType.Null:
-				isValid = Type.HasFlag(SchemaValueType.Null);
-				break;
-			default:
-				throw new ArgumentOutOfRangeException();
-		}
-		var expected = Type.ToString().ToLower();
-		if (!isValid)
-			context.LocalResult.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
 		return new KeywordConstraint(Name, (e, _) => Evaluator(e, Type));

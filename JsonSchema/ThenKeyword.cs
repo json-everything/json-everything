@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -41,36 +40,6 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 	public ThenKeyword(JsonSchema value)
 	{
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
-	}
-
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
-		{
-			context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
-			return;
-		}
-
-		context.Log(() => $"Annotation for {IfKeyword.Name} is {annotation.AsJsonString()}.");
-		var ifResult = annotation!.GetValue<bool>();
-		if (!ifResult)
-		{
-			context.NotApplicable(() => $"{Name} does not apply.");
-			return;
-		}
-
-		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Evaluate();
-		var valid = context.LocalResult.IsValid;
-		context.Pop();
-		if (!valid)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
 	}
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)

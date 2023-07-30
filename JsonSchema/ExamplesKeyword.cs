@@ -51,17 +51,6 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 		Values = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Values.ToJsonArray());
-		context.ExitKeyword(Name, true);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

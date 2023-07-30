@@ -40,7 +40,6 @@ public class SlackTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
-			Log = new TestLog(),
 			OutputFormat = OutputFormat.Hierarchical
 		});
 

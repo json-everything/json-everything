@@ -42,44 +42,6 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		Value = value;
 	}
 
-	/// <summary>
-	/// Performs evaluation for the keyword.
-	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
-	{
-		context.EnterKeyword(Name);
-		var scheamValueType = context.LocalInstance.GetSchemaValueType();
-		if (scheamValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(scheamValueType);
-			return;
-		}
-
-		if (!Value)
-		{
-			context.ExitKeyword(Name, true);
-			return;
-		}
-
-		var array = (JsonArray)context.LocalInstance!;
-		var duplicates = new List<(int, int)>();
-		for (int i = 0; i < array.Count - 1; i++)
-			for (int j = i + 1; j < array.Count; j++)
-			{
-				if (array[i].IsEquivalentTo(array[j]))
-					duplicates.Add((i, j));
-			}
-
-		if (duplicates.Any())
-		{
-			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
-		}
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)

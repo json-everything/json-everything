@@ -183,46 +183,6 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		return false;
 	}
 
-	/// <summary>
-	/// Evaluates an instance against this schema.
-	/// </summary>
-	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public EvaluationResults EvaluateLegacy(JsonNode? root, EvaluationOptions? options = null)
-	{
-		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
-
-		options.Log.Write(() => "Registering subschemas.");
-		// BaseUri may change if $id is present
-		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
-
-		var context = new EvaluationContext(options, BaseUri, root, this);
-
-		options.Log.Write(() => "Beginning evaluation.");
-		context.Evaluate();
-
-		options.Log.Write(() => "Transforming output.");
-		var results = context.LocalResult;
-		switch (options.OutputFormat)
-		{
-			case OutputFormat.Flag:
-				results.ToFlag();
-				break;
-			case OutputFormat.List:
-				results.ToList();
-				break;
-			case OutputFormat.Hierarchical:
-				break;
-			default:
-				throw new ArgumentOutOfRangeException();
-		}
-
-		options.Log.Write(() => $"Evaluation complete: {results.IsValid.GetValidityString()}");
-		return results;
-	}
-
 	private List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
 	/// <summary>
@@ -235,13 +195,10 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
-		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
 		// TODO: remove options.EvaluatingAs
 		var evaluatingAs = options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
-
-		options.Log.Write(() => "Beginning evaluation.");
 
 
 		var context = new ConstraintBuilderContext(options, evaluatingAs, BaseUri);
@@ -253,7 +210,6 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		evaluation.Evaluate(context);
 
 
-		options.Log.Write(() => "Transforming output.");
 		var results = evaluation.Results;
 		switch (options.OutputFormat)
 		{
@@ -269,7 +225,6 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 				throw new ArgumentOutOfRangeException();
 		}
 
-		options.Log.Write(() => $"Evaluation complete: {results.IsValid.GetValidityString()}");
 		return results;
 	}
 
