@@ -23,7 +23,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
-public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
+public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -135,48 +135,6 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 	
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ItemsKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (SingleSchema != null)
-		{
-			if (other.SingleSchema == null) return false;
-			return Equals(SingleSchema, other.SingleSchema);
-		}
-
-		if (ArraySchemas != null)
-		{
-			if (other.ArraySchemas == null) return false;
-			return ArraySchemas.ContentsEqual(other.ArraySchemas);
-		}
-
-		throw new InvalidOperationException("Either SingleSchema or ArraySchemas should be populated.");
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as ItemsKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = SingleSchema?.GetHashCode() ?? 0;
-			hashCode = (hashCode * 397) ^ (ArraySchemas?.GetUnorderedCollectionHashCode() ?? 0);
-			return hashCode;
-		}
 	}
 }
 

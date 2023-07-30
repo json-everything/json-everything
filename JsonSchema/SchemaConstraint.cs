@@ -56,7 +56,7 @@ public class SchemaConstraint
 		if (_localSchema.BoolValue.HasValue)
 		{
 			if (!_localSchema.BoolValue.Value)
-				evaluation.Results.Fail(string.Empty, "All values fail against the false schema");
+				evaluation.Results.Fail(string.Empty, ErrorMessages.FalseSchema);
 
 			return evaluation;
 		}

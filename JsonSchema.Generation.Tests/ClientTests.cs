@@ -117,7 +117,7 @@ public class ClientTests
 
 		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, new JsonSerializerOptions { WriteIndented = true }));
 		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, new JsonSerializerOptions { WriteIndented = true }));
-		Assert.AreEqual(simpleValueSettingsSchema1, simpleValueSettingsSchema2);
+		AssertEqual(simpleValueSettingsSchema1, simpleValueSettingsSchema2);
 	}
 
 	[AttributeUsage(AttributeTargets.Property)]

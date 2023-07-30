@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.More;
 using Json.Pointer;
 using Json.Schema.Tests;
 using NUnit.Framework;
@@ -28,7 +29,10 @@ public class SpecExampleTests
 		var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 		Console.WriteLine(JsonSerializer.Serialize(onlineSchema, options));
 		Console.WriteLine(JsonSerializer.Serialize(MetaSchemas.DocumentSchema, options));
-		Assert.AreEqual(onlineSchema, MetaSchemas.DocumentSchema);
+
+		var asNode = JsonSerializer.SerializeToNode(MetaSchemas.DocumentSchema);
+		var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema);
+		Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 	}
 
 	[Test]

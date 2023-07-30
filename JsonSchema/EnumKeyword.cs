@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(EnumKeywordJsonConverter))]
-public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
+public class EnumKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -84,34 +84,6 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 	{
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
 			evaluation.Results.Fail(Name, ErrorMessages.Enum, ("received", evaluation.LocalInstance), ("values", Values));
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(EnumKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		// Don't need ContentsEqual here because that method considers counts.
-		// We know that with a hash set, all counts are 1.
-		return Values.Count == other.Values.Count &&
-			   Values.All(x => other.Values.Contains(x, JsonNodeEqualityComparer.Instance));
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as EnumKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Values.GetUnorderedCollectionHashCode(element => element?.GetEquivalenceHashCode() ?? 0);
 	}
 }
 

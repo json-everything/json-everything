@@ -16,7 +16,7 @@ namespace Json.Schema;
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [JsonConverter(typeof(UnrecognizedKeywordJsonConverter))]
-public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKeyword>
+public class UnrecognizedKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The name or key of the keyword.
@@ -44,34 +44,6 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword, IEquatable<UnrecognizedKe
 		ConstraintBuilderContext context)
 	{
 		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, Value));
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(UnrecognizedKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Name == other.Name && Value.IsEquivalentTo(other.Value);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as UnrecognizedKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			return (Name.GetHashCode() * 397) ^ (Value?.GetHashCode() ?? 0);
-		}
 	}
 }
 

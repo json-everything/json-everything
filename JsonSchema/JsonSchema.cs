@@ -16,9 +16,9 @@ namespace Json.Schema;
 /// </summary>
 [JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
+public class JsonSchema : IBaseDocument
 {
-	private Dictionary<string, IJsonSchemaKeyword>? _keywords;
+	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -533,52 +533,6 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 		var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
 		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonSchema? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-
-		if (BoolValue.HasValue) return BoolValue == other.BoolValue;
-		if (other.BoolValue.HasValue) return false;
-		if (_keywords!.Count != other._keywords!.Count) return false;
-
-		if (_keywords != null)
-		{
-			var byKeyword = _keywords.Join(other._keywords!,
-					tk => tk.Key,
-					ok => ok.Key,
-					(tk, ok) => new { ThisKeyword = tk, OtherKeyword = ok })
-				.ToArray();
-			if (byKeyword.Length != _keywords.Count) return false;
-			if (!byKeyword.All(k => k.ThisKeyword.Value.Equals(k.OtherKeyword.Value))) return false;
-		}
-
-		return true;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as JsonSchema);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = Keywords?.GetUnorderedCollectionHashCode() ?? 0;
-			hashCode = (hashCode * 397) ^ BoolValue.GetHashCode();
-			return hashCode;
-		}
 	}
 }
 

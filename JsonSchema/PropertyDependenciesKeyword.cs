@@ -16,7 +16,7 @@ namespace Json.Schema;
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
-public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector, IEquatable<PropertyDependenciesKeyword>
+public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -88,39 +88,6 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		if (!property.Schemas.TryGetValue(segments[1].Value, out var schema)) return (null, 0);
 
 		return (schema, 2);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(PropertyDependenciesKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (Dependencies.Count != other.Dependencies.Count) return false;
-		var byKey = Dependencies.Join(other.Dependencies,
-				td => td.Key,
-				od => od.Key,
-				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToArray();
-		if (byKey.Length != Dependencies.Count) return false;
-
-		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object? obj)
-	{
-		return Equals(obj as PropertyDependenciesKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Dependencies.GetStringDictionaryHashCode();
 	}
 }
 

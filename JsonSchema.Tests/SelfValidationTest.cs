@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -64,15 +65,14 @@ public class SelfValidationTest
 			try
 			{
 				Console.WriteLine("Asserting schema equality");
-				Assert.AreEqual(onlineSchema, schema);
+				var asNode = JsonSerializer.SerializeToNode(schema);
+				var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema);
+				Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 
 				Console.WriteLine("Validating local against online");
 				onlineValidation.AssertValid();
 				Console.WriteLine("Validating online against local");
 				localValidation.AssertValid();
-
-				Console.WriteLine("Asserting json equality");
-				Assert.AreEqual(onlineSchema, schema);
 			}
 			catch (Exception)
 			{
@@ -108,6 +108,8 @@ public class SelfValidationTest
 		Console.WriteLine(json);
 		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json);
 
-		Assert.AreEqual(schema, returnTrip);
+		var asNode = JsonSerializer.SerializeToNode(schema);
+		var onlineAsNode = JsonSerializer.SerializeToNode(returnTrip);
+		Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 	}
 }
