@@ -22,16 +22,19 @@ public class ReferenceTests
 	{
 		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"));
 		var refSchema = JsonSchema.FromFile(GetFile("ref_schema"));
+		var hashSchema = JsonSchema.FromFile(GetFile("schema_with_#_in_uri"));
 
 		var baseData = JsonNode.Parse(GetResource("base_data"));
 
 		SchemaRegistry.Global.Register(refSchema);
 		SchemaRegistry.Global.Register(baseSchema);
 
-		var res = baseSchema.EvaluateLegacy(baseData);
-
-		res.AssertValid();
+		// in previous versions, this would still validate the instance, but since adding
+		// static analysis, the ref with the # in it is checked early
+		// and since it can't resolve, it now throws.
+		Assert.Throws<JsonSchemaException>(() => baseSchema.Evaluate(baseData));
 	}
+
 	[Test]
 	public void MultipleHashInUriThrowsException()
 	{
