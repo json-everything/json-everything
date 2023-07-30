@@ -40,12 +40,12 @@ public class TitleKeyword : IJsonSchemaKeyword
 		Value = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		evaluation.Results.SetAnnotation(Name, Value);
 	}

@@ -42,7 +42,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
 		if (ifConstraint == null)
@@ -57,7 +57,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.Results.TryGetAnnotation(IfKeyword.Name, out var ifAnnotation) || ifAnnotation!.GetValue<bool>())
 		{

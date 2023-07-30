@@ -40,7 +40,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		var subschemaConstraints = Dependencies.SelectMany(property =>
 		{
@@ -69,7 +69,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)

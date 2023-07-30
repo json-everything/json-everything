@@ -50,7 +50,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
 			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key)));
@@ -81,7 +81,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 			: AnnotationEvaluator);
 	}
 
-	private void AssertionEvaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void AssertionEvaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (Value.Validate(evaluation.LocalInstance, out var errorMessage)) return;
 
@@ -93,7 +93,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 			evaluation.Results.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
 	}
 
-	private void AnnotationEvaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void AnnotationEvaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		evaluation.Results.SetAnnotation(Name, Value.Key);
 	}

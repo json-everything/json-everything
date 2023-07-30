@@ -40,7 +40,7 @@ public class ContentEncodingKeyword : IJsonSchemaKeyword
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, Value));
 	}

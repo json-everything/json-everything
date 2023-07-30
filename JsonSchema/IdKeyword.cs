@@ -42,7 +42,7 @@ public class IdKeyword : IIdKeyword
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		return KeywordConstraint.Skip;
 	}

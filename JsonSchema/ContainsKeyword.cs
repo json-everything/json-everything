@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -46,7 +45,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocator = evaluation =>
@@ -71,7 +70,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (evaluation.LocalInstance is JsonArray)
 		{

@@ -44,7 +44,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		var subschemaConstraints = Requirements
 			.Where(x => x.Value.Schema != null)
@@ -69,7 +69,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		};
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (evaluation.LocalInstance is not JsonObject obj)
 		{

@@ -201,7 +201,7 @@ public class JsonSchema : IBaseDocument
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
 
 
-		var context = new ConstraintBuilderContext(options, evaluatingAs, BaseUri);
+		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
 		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
@@ -236,7 +236,7 @@ public class JsonSchema : IBaseDocument
 		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
 	}
 
-	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, ConstraintBuilderContext context)
+	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, EvaluationContext context)
 	{
 		var baseUri = BoolValue.HasValue ? context.Scope.LocalScope : BaseUri;
 	
@@ -280,7 +280,7 @@ public class JsonSchema : IBaseDocument
 		return scopedConstraint;
 	}
 
-	private void PopulateConstraint(SchemaConstraint constraint, ConstraintBuilderContext context)
+	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
 		if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 		{

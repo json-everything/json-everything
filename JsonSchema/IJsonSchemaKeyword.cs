@@ -9,5 +9,5 @@ public interface IJsonSchemaKeyword
 {
 	KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context);
+		EvaluationContext context);
 }

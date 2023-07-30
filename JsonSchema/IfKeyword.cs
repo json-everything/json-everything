@@ -40,7 +40,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 
@@ -50,7 +50,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var subSchemaEvaluation = evaluation.ChildEvaluations.Single();
 

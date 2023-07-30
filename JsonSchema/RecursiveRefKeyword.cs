@@ -35,7 +35,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 		Reference = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
@@ -89,7 +89,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 		return new KeywordConstraint(Name, (e, c) => Evaluator(e, c, targetSchema));
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context, JsonSchema target)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context, JsonSchema target)
 	{
 		var childEvaluation = target
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)

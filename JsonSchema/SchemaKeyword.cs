@@ -44,7 +44,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		if (!context.Options.ValidateAgainstMetaSchema)
 			return KeywordConstraint.Skip;
@@ -63,7 +63,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 		};
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.ChildEvaluations[0].Results.IsValid)
 			evaluation.Results.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));

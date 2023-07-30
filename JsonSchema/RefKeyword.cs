@@ -42,7 +42,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		Reference = value;
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var newUri = new Uri(schemaConstraint.SchemaBaseUri, Reference);
 		var fragment = newUri.Fragment;
@@ -91,7 +91,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var subSchemaEvaluation = evaluation.ChildEvaluations.Single();
 

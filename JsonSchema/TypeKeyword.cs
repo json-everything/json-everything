@@ -64,7 +64,7 @@ public class TypeKeyword : IJsonSchemaKeyword
 		Type = types.Aggregate((x, y) => x | y);
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, (e, _) => Evaluator(e, Type));
 	}

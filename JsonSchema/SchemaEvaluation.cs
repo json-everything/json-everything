@@ -25,7 +25,7 @@ public class SchemaEvaluation
 		Options = options;
 	}
 
-	public void Evaluate(ConstraintBuilderContext context)
+	public void Evaluate(EvaluationContext context)
 	{
 		if (HasBeenEvaluated) return;
 

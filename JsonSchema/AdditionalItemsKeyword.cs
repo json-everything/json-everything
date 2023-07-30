@@ -40,7 +40,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		Schema = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var itemsConstraint = localConstraints.GetKeywordConstraint<ItemsKeyword>();
 		if (itemsConstraint == null) return KeywordConstraint.Skip;
@@ -69,7 +69,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		return constraint;
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		evaluation.Results.SetAnnotation(Name, true);
 

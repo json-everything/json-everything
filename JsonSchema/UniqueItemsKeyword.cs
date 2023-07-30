@@ -44,12 +44,12 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!Value || evaluation.LocalInstance is not JsonArray array)
 		{

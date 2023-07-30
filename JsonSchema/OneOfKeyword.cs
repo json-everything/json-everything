@@ -51,7 +51,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 		Schemas = values.ToReadOnlyList();
 	}
 
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context)).ToArray();
 
@@ -61,7 +61,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
 		if (actual != 1)

@@ -44,7 +44,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
-		ConstraintBuilderContext context)
+		EvaluationContext context)
 	{
 		_allVocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
 		switch (context.EvaluatingAs)
@@ -64,7 +64,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var violations = new List<Uri>();
 		var overallResult = true;

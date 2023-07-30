@@ -5,16 +5,48 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
-public class ConstraintBuilderContext
+/// <summary>
+/// Provides contextual data for generating constraints and performing evaluations.
+/// </summary>
+public class EvaluationContext
 {
+	/// <summary>
+	/// Gets the evaluation options.
+	/// </summary>
+	/// <remarks>
+	/// This may be different per run, so it's important this not be captured by constraints.
+	/// </remarks>
 	public EvaluationOptions Options { get; }
+	
+	/// <summary>
+	/// Gets the dynamic scope.
+	/// </summary>
+	/// <remarks>
+	/// The dynamic scope is the collection of URIs that evaluation has passed through to get
+	/// to the current location.  This is important when processing references.
+	/// </remarks>
 	public DynamicScope Scope { get; }
+	
+	/// <summary>
+	/// The vocabularies defined by the schema in the local scope.
+	/// </summary>
+	/// <remarks>
+	/// Due to historic evolution of JSON Schema, some keywords (particularly `format`) require
+	/// knowledge of the active vocabularies in order to process correctly.
+	/// </remarks>
 	public Dictionary<Uri, Vocabulary[]?> SchemaVocabs { get; } = new();
-
-	internal SpecVersion EvaluatingAs { get; }
+	
+	/// <summary>
+	/// Gets the spec version that the schema is currently being evaluated under.
+	/// </summary>
+	/// <remarks>
+	/// This property is informed by the `$schema` keyword and <see cref="EvaluationOptions.EvaluateAs"/>,
+	/// taking `$schema` as priority.
+	/// </remarks>
+	public SpecVersion EvaluatingAs { get; }
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
 
-	internal ConstraintBuilderContext(EvaluationOptions options, SpecVersion evaluatingAs, Uri initialScope)
+	internal EvaluationContext(EvaluationOptions options, SpecVersion evaluatingAs, Uri initialScope)
 	{
 		Options = options;
 		EvaluatingAs = evaluatingAs;

@@ -32,7 +32,7 @@ public class KeywordEvaluation
 		_skipped = true;
 	}
 
-	internal void Evaluate(ConstraintBuilderContext context)
+	internal void Evaluate(EvaluationContext context)
 	{
 		if (_evaluated || _skipped) return;
 

@@ -421,7 +421,7 @@ public class GithubTests
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 			IReadOnlyList<KeywordConstraint> localConstraints,
-			ConstraintBuilderContext context)
+			EvaluationContext context)
 		{
 			throw new NotImplementedException();
 		}

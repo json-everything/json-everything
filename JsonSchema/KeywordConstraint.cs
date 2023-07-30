@@ -11,14 +11,14 @@ public class KeywordConstraint
 	public static KeywordConstraint Skip { get; } = new(string.Empty, (_, _) => { });
 
 	public string? Keyword { get; }
-	public Action<KeywordEvaluation, ConstraintBuilderContext> Evaluator { get; }
+	public Action<KeywordEvaluation, EvaluationContext> Evaluator { get; }
 
 	public KeywordConstraint[] SiblingDependencies { get; set; } = Array.Empty<KeywordConstraint>();
 	public SchemaConstraint[] ChildDependencies { get; set; } = Array.Empty<SchemaConstraint>();
 
 	internal Guid Id { get; } = Guid.NewGuid();
 
-	public KeywordConstraint(string keyword, Action<KeywordEvaluation, ConstraintBuilderContext> evaluator)
+	public KeywordConstraint(string keyword, Action<KeywordEvaluation, EvaluationContext> evaluator)
 	{
 		Keyword = keyword;
 		Evaluator = evaluator;
