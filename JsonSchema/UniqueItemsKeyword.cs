@@ -87,7 +87,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword, IEquatable<UniqueItemsKeyw
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (!Value || evaluation.LocalInstance is not JsonArray array)
 		{

@@ -60,7 +60,7 @@ public class ConstKeyword : IJsonSchemaKeyword, IEquatable<ConstKeyword>
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (!evaluation.LocalInstance.IsEquivalentTo(Value))
 			evaluation.Results.Fail(Name, ErrorMessages.Const, ("value", Value.AsJsonString()));

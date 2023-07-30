@@ -141,7 +141,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IE
 		};
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (evaluation.LocalInstance is not JsonObject obj)
 		{

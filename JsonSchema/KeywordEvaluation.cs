@@ -32,16 +32,16 @@ public class KeywordEvaluation
 		_skipped = true;
 	}
 
-	internal void Evaluate()
+	internal void Evaluate(ConstraintBuilderContext context)
 	{
 		if (_evaluated || _skipped) return;
 
 		foreach (var evaluation in ChildEvaluations)
 		{
-			evaluation.Evaluate();
+			evaluation.Evaluate(context);
 		}
 
-		Constraint.Evaluator(this); // this can change _skipped
+		Constraint.Evaluator(this, context); // this can change _skipped
 
 		if (!_skipped)
 		{

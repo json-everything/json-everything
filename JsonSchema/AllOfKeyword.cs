@@ -87,7 +87,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<All
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

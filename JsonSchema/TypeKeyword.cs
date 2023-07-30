@@ -115,7 +115,7 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => Evaluator(e, Type));
+		return new KeywordConstraint(Name, (e, _) => Evaluator(e, Type));
 	}
 
 	private void Evaluator(KeywordEvaluation evaluation, SchemaValueType expectedType)

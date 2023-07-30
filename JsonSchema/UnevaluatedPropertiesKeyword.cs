@@ -141,7 +141,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => Evaluator(e, context));
+		return new KeywordConstraint(Name, Evaluator);
 	}
 
 	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
@@ -187,7 +187,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		evaluation.ChildEvaluations = childEvaluations;
 		foreach (var childEvaluation in childEvaluations)
 		{
-			childEvaluation.Evaluate();
+			childEvaluation.Evaluate(context);
 		}
 
 		evaluation.Results.SetAnnotation(Name, properties.Select(x => (JsonNode)x!).ToJsonArray());

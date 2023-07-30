@@ -131,13 +131,13 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 			return Array.Empty<JsonPointer>();
 		};
 
-		return new KeywordConstraint(Name, e => Evaluator(e, context.EvaluatingAs))
+		return new KeywordConstraint(Name, Evaluator)
 		{
 			ChildDependencies = new[] { subschemaConstraint }
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, SpecVersion evaluatingAs)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (evaluation.LocalInstance is JsonArray)
 		{
@@ -163,7 +163,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 		}
 
 		if (evaluation.LocalInstance is JsonObject &&
-		    evaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
+		    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
 		{
 			uint minimum = 1;
 			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))

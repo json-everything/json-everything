@@ -56,7 +56,7 @@ public class TitleKeyword : IJsonSchemaKeyword, IEquatable<TitleKeyword>
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		evaluation.Results.SetAnnotation(Name, Value);
 	}

@@ -154,17 +154,17 @@ public class DynamicRefKeyword : IJsonSchemaKeyword, IEquatable<DynamicRefKeywor
 				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		return new KeywordConstraint(Name, e => Evaluator(e, targetSchema, context));
+		return new KeywordConstraint(Name, (e, c) => Evaluator(e, c, targetSchema));
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation, JsonSchema target, ConstraintBuilderContext context)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context, JsonSchema target)
 	{
 		var childEvaluation = target
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name), context.Options);
 		evaluation.ChildEvaluations = new[] { childEvaluation };
 
-		childEvaluation.Evaluate();
+		childEvaluation.Evaluate(context);
 
 		if (!childEvaluation.Results.IsValid)
 			evaluation.Results.Fail();

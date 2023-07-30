@@ -106,7 +106,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => Evaluator(e, context));
+		return new KeywordConstraint(Name, Evaluator);
 	}
 
 	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
@@ -133,7 +133,7 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 
 		evaluation.ChildEvaluations = new[] { schemaEvaluation };
 
-		schemaEvaluation.Evaluate();
+		schemaEvaluation.Evaluate(context);
 
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

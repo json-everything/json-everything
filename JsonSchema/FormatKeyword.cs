@@ -102,7 +102,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 		ConstraintBuilderContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-			return new KeywordConstraint(Name, e => e.Results.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key)));
+			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key)));
 
 		var requireValidation = context.Options.RequireFormatValidation;
 
@@ -130,7 +130,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 			: AnnotationEvaluator);
 	}
 
-	private void AssertionEvaluator(KeywordEvaluation evaluation)
+	private void AssertionEvaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (Value.Validate(evaluation.LocalInstance, out var errorMessage)) return;
 
@@ -142,7 +142,7 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 			evaluation.Results.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
 	}
 
-	private void AnnotationEvaluator(KeywordEvaluation evaluation)
+	private void AnnotationEvaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		evaluation.Results.SetAnnotation(Name, Value.Key);
 	}

@@ -87,7 +87,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
 		if (actual != 1)

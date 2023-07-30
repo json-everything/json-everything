@@ -107,7 +107,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (evaluation.LocalInstance is not JsonArray array)
 		{

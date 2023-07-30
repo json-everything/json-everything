@@ -68,7 +68,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword, IEquatable<MinLengthKeyword>
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not SchemaValueType.String)

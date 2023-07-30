@@ -134,7 +134,7 @@ public class TestSuiteRunner
 
 	[Benchmark]
 	[Arguments(1)]
-	[Arguments(100)]
+	[Arguments(10)]
 	public int RunSuite_Constraints(int n)
 	{
 		int i = 0;

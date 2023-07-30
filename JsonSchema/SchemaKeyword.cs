@@ -95,7 +95,7 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 		};
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (!evaluation.ChildEvaluations[0].Results.IsValid)
 			evaluation.Results.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));

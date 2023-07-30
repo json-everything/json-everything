@@ -26,6 +26,8 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 	/// </summary>
 	public const string Name = "$vocabulary";
 
+	private Dictionary<Uri, bool> _allVocabularies;
+
 	/// <summary>
 	/// The collection of vocabulary requirements.
 	/// </summary>
@@ -82,23 +84,29 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		var overallResult = true;
-		var violations = new List<Uri>();
-		var vocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
-		switch (context.Options.EvaluatingAs)
+		_allVocabularies = Vocabulary.ToDictionary(x => x.Key, x => x.Value);
+		switch (context.EvaluatingAs)
 		{
 			case SpecVersion.Unspecified:
 			case SpecVersion.Draft201909:
-				vocabularies[new Uri(Vocabularies.Core201909Id)] = true;
+				_allVocabularies[new Uri(Vocabularies.Core201909Id)] = true;
 				break;
 			case SpecVersion.Draft202012:
-				vocabularies[new Uri(Vocabularies.Core202012Id)] = true;
+				_allVocabularies[new Uri(Vocabularies.Core202012Id)] = true;
 				break;
 			case SpecVersion.DraftNext:
-				vocabularies[new Uri(Vocabularies.CoreNextId)] = true;
+				_allVocabularies[new Uri(Vocabularies.CoreNextId)] = true;
 				break;
 		}
-		foreach (var kvp in vocabularies)
+
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
+	{
+		var violations = new List<Uri>();
+		var overallResult = true;
+		foreach (var kvp in _allVocabularies)
 		{
 			var isKnown = context.Options.VocabularyRegistry.IsKnown(kvp.Key);
 			var isValid = !kvp.Value || isKnown;
@@ -108,12 +116,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword, IEquatable<VocabularyKeywor
 		}
 
 		if (!overallResult)
-			return new KeywordConstraint(Name, e =>
-			{
-				e.Results.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
-			});
-
-		return KeywordConstraint.Skip;
+			evaluation.Results.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

@@ -93,7 +93,7 @@ public class RequiredKeyword : IJsonSchemaKeyword, IEquatable<RequiredKeyword>
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (evaluation.LocalInstance is not JsonObject obj) return;
 

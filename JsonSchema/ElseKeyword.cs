@@ -88,7 +88,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Else
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (!evaluation.Results.TryGetAnnotation(IfKeyword.Name, out var ifAnnotation) || ifAnnotation!.GetValue<bool>())
 		{

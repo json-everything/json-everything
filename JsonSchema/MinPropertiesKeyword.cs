@@ -67,7 +67,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword, IEquatable<MinProperties
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (evaluation.LocalInstance is not JsonObject obj)
 		{

@@ -25,13 +25,13 @@ public class SchemaEvaluation
 		Options = options;
 	}
 
-	public void Evaluate()
+	public void Evaluate(ConstraintBuilderContext context)
 	{
 		if (HasBeenEvaluated) return;
 
 		foreach (var keyword in KeywordEvaluations)
 		{
-			keyword.Evaluate();
+			keyword.Evaluate(context);
 		}
 
 		HasBeenEvaluated = true;

@@ -28,7 +28,7 @@ public class ReferenceTests
 		SchemaRegistry.Global.Register(refSchema);
 		SchemaRegistry.Global.Register(baseSchema);
 
-		var res = baseSchema.Evaluate(baseData);
+		var res = baseSchema.EvaluateLegacy(baseData);
 
 		res.AssertValid();
 	}

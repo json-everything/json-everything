@@ -76,7 +76,7 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, _json));
+		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, _json));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

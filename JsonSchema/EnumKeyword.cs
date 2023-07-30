@@ -92,7 +92,7 @@ public class EnumKeyword : IJsonSchemaKeyword, IEquatable<EnumKeyword>
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation)
+	private void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
 			evaluation.Results.Fail(Name, ErrorMessages.Enum, ("received", evaluation.LocalInstance), ("values", Values));

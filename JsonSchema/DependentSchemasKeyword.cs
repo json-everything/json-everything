@@ -115,7 +115,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)

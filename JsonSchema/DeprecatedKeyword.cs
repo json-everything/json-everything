@@ -52,7 +52,7 @@ public class DeprecatedKeyword : IJsonSchemaKeyword, IEquatable<DeprecatedKeywor
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, Value));
+		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, Value));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

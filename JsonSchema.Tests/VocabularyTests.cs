@@ -43,7 +43,7 @@ public class VocabularyTests
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)
 		{
-			return new KeywordConstraint(Name, e =>
+			return new KeywordConstraint(Name, (e, _) =>
 			{
 				var dateString = e.LocalInstance!.GetValue<string>();
 				var date = DateTime.Parse(dateString);
@@ -122,7 +122,7 @@ public class VocabularyTests
 			IReadOnlyList<KeywordConstraint> localConstraints,
 			ConstraintBuilderContext context)
 		{
-			return new KeywordConstraint(Name, e =>
+			return new KeywordConstraint(Name, (e, _) =>
 			{
 				var dateString = e.LocalInstance!.GetValue<string>();
 				var date = DateTime.Parse(dateString);
@@ -511,7 +511,7 @@ public class VocabularyTests
 			{
 				var minimumConstraint = localConstraints.GetKeywordConstraint<MinimumKeyword>();
 
-				var constraint = new KeywordConstraint(Name, e =>
+				var constraint = new KeywordConstraint(Name, (e, _) =>
 				{
 					if (!BoolValue.Value) return;
 

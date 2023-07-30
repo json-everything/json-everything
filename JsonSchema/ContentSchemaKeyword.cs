@@ -60,7 +60,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquat
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(Schema)));
+		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(Schema)));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

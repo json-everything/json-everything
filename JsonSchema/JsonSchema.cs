@@ -250,7 +250,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 			PopulateConstraint(constraint, context);
 
 		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
-		evaluation.Evaluate();
+		evaluation.Evaluate(context);
 
 
 		options.Log.Write(() => "Transforming output.");
@@ -301,15 +301,18 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 
 	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, DynamicScope scope)
 	{
-		var scopedConstraint = CheckScopedConstraints(scope);
-		if (scopedConstraint != null) return scopedConstraint;
+		lock (_constraints)
+		{
+			var scopedConstraint = CheckScopedConstraints(scope);
+			if (scopedConstraint != null) return scopedConstraint;
 
-		var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
+			var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
 
-		var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
-		_constraints.Add((new DynamicScope(scope), constraint));
-
-		return constraint;
+			var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
+			_constraints.Add((new DynamicScope(scope), constraint));
+		
+			return constraint;
+		}
 	}
 
 	private SchemaConstraint? CheckScopedConstraints(DynamicScope scope)

@@ -66,7 +66,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword, IEquatable<ExamplesKeyword>
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		ConstraintBuilderContext context)
 	{
-		return new KeywordConstraint(Name, e => e.Results.SetAnnotation(Name, Values.ToJsonArray()));
+		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, Values.ToJsonArray()));
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

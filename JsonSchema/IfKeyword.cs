@@ -65,7 +65,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<IfKeyw
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		var subSchemaEvaluation = evaluation.ChildEvaluations.Single();
 

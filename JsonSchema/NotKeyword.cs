@@ -68,7 +68,7 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<NotKe
 		};
 	}
 
-	private static void Evaluator(KeywordEvaluation evaluation)
+	private static void Evaluator(KeywordEvaluation evaluation, ConstraintBuilderContext context)
 	{
 		if (evaluation.ChildEvaluations[0].Results.IsValid)
 			evaluation.Results.Fail();
