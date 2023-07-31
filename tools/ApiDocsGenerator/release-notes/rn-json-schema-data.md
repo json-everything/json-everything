@@ -4,6 +4,10 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "8.04"
 ---
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/316) {#release-schemadata-4.0.0}
+
+Updated in accordance with JsonSchema.Net v5.
+
 # 3.1.0 ([#326](https://github.com/gregsdennis/json-everything/pull/326) / [#389](https://github.com/gregsdennis/json-everything/pull/389) / [#392](https://github.com/gregsdennis/json-everything/pull/392)) {#release-schemadata-3.1.0}
 
 Updated to use JsonSchema.Net v4.
