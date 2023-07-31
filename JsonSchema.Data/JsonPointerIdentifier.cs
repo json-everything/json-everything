@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Schema.Data;

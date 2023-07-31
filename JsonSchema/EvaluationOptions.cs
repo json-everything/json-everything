@@ -171,8 +171,10 @@ public class EvaluationOptions
 
 	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
 	{
+		// ReSharper disable once PossibleMultipleEnumeration
 		var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
 
+		// ReSharper disable once PossibleMultipleEnumeration
 		return refKeyword != null ? new[] { refKeyword } : FilterBySpecVersion(keywords, version);
 	}
 

@@ -44,6 +44,7 @@ public class EvaluationContext
 	/// taking `$schema` as priority.
 	/// </remarks>
 	public SpecVersion EvaluatingAs { get; }
+
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
 
 	internal EvaluationContext(EvaluationOptions options, SpecVersion evaluatingAs, Uri initialScope)
