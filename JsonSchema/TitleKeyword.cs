@@ -52,7 +52,7 @@ public class TitleKeyword : IJsonSchemaKeyword
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		return KeywordConstraint.SetAnnotation(Name, Value);
+		return KeywordConstraint.SimpleAnnotation(Name, Value);
 	}
 }
 

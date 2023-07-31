@@ -5,12 +5,25 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Represents any evaluation-time work (i.e. any work that requires the instance) for schemas.
+/// </summary>
 public class SchemaEvaluation
 {
+	private bool _hasBeenEvaluated;
+
+	/// <summary>
+	/// Gets the local instance.
+	/// </summary>
 	public JsonNode? LocalInstance { get; }
+	/// <summary>
+	/// Gets the relative instance location.  (The base location can be found in <see cref="Results"/>.
+	/// </summary>
 	public JsonPointer RelativeInstanceLocation { get; internal set; }
+	/// <summary>
+	/// Gets the local evaluation results.
+	/// </summary>
 	public EvaluationResults Results { get; }
-	public bool HasBeenEvaluated { get; private set; }
 
 	internal Guid Id { get; set; }
 	internal KeywordEvaluation[] KeywordEvaluations { get; }
@@ -25,16 +38,20 @@ public class SchemaEvaluation
 		Options = options;
 	}
 
+	/// <summary>
+	/// Processes the evaluation.
+	/// </summary>
+	/// <param name="context">The evaluation context.</param>
 	public void Evaluate(EvaluationContext context)
 	{
-		if (HasBeenEvaluated) return;
+		if (_hasBeenEvaluated) return;
 
 		foreach (var keyword in KeywordEvaluations)
 		{
 			keyword.Evaluate(context);
 		}
 
-		HasBeenEvaluated = true;
+		_hasBeenEvaluated = true;
 	}
 
 	internal KeywordEvaluation? FindEvaluation(Guid id)

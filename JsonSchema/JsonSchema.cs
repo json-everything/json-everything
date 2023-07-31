@@ -19,6 +19,7 @@ namespace Json.Schema;
 public class JsonSchema : IBaseDocument
 {
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
+	private List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -183,8 +184,6 @@ public class JsonSchema : IBaseDocument
 		return false;
 	}
 
-	private List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
-
 	/// <summary>
 	/// Evaluates an instance against this schema.
 	/// </summary>
@@ -236,6 +235,25 @@ public class JsonSchema : IBaseDocument
 		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
 	}
 
+	/// <summary>
+	/// Builds a constraint for the schema.
+	/// </summary>
+	/// <param name="relativeEvaluationPath">
+	/// The relative evaluation path in JSON Pointer form.  Generally this will be a keyword name,
+	/// but may have other segments, such as in the case of `properties` which also has the property name.
+	/// </param>
+	/// <param name="baseInstanceLocation">The base location within the instance that is being evaluated.</param>
+	/// <param name="relativeInstanceLocation">
+	/// The location relative to <paramref name="baseInstanceLocation"/> within the instance that
+	/// is being evaluated.
+	/// </param>
+	/// <param name="context">The evaluation context.</param>
+	/// <returns>A schema constraint.</returns>
+	/// <remarks>
+	/// The constraint returned by this method is cached by the <see cref="JsonSchema"/> object.
+	/// Different evaluation paths to this schema object may result in different constraints, so
+	/// a new constraint is saved for each dynamic scope.
+	/// </remarks>
 	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, EvaluationContext context)
 	{
 		var baseUri = BoolValue.HasValue ? context.Scope.LocalScope : BaseUri;
@@ -273,10 +291,14 @@ public class JsonSchema : IBaseDocument
 	private SchemaConstraint? CheckScopedConstraints(DynamicScope scope)
 	{
 		SchemaConstraint? scopedConstraint;
+		// ReSharper disable InconsistentlySynchronizedField
+		// We only need to worry about synchronization when potentially adding new constraints
+		// which only happens in BuildConstrain().
 		if (IsDynamic())
 			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(scope));
 		else
 			scopedConstraint = _constraints.SingleOrDefault().Constraint;
+		// ReSharper restore InconsistentlySynchronizedField
 		return scopedConstraint;
 	}
 
@@ -394,7 +416,7 @@ public class JsonSchema : IBaseDocument
 					schema.IsResourceRoot = true;
 					schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
 					resourceRoot = schema;
-					schema.BaseUri = new Uri(currentBaseUri, idKeyword!.Id);
+					schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
 					registry.RegisterSchema(schema.BaseUri, schema);
 				}
 			}

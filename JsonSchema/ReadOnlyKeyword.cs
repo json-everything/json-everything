@@ -51,7 +51,7 @@ public class ReadOnlyKeyword : IJsonSchemaKeyword
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SetAnnotation(Name, Value);
+		return KeywordConstraint.SimpleAnnotation(Name, Value);
 	}
 }
 

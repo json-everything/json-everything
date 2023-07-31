@@ -65,7 +65,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SetAnnotation(Name, Values.ToJsonArray());
+		return KeywordConstraint.SimpleAnnotation(Name, Values.ToJsonArray());
 	}
 }
 

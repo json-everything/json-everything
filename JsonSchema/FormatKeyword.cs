@@ -87,8 +87,8 @@ public class FormatKeyword : IJsonSchemaKeyword
 		}
 
 		return requireValidation
-			? KeywordConstraint.SetAnnotation(Name, Value.Key)
-			: new KeywordConstraint(Name, AssertionEvaluator);
+			? new KeywordConstraint(Name, AssertionEvaluator)
+			: KeywordConstraint.SimpleAnnotation(Name, Value.Key);
 	}
 
 	private void AssertionEvaluator(KeywordEvaluation evaluation, EvaluationContext context)
