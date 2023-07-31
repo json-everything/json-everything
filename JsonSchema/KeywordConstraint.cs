@@ -24,6 +24,11 @@ public class KeywordConstraint
 		Evaluator = evaluator;
 	}
 
+	public static KeywordConstraint SetAnnotation(string keywordName, JsonNode? value)
+	{
+		return new KeywordConstraint(keywordName, (e, _) => e.Results.SetAnnotation(keywordName, value));
+	}
+
 	internal KeywordEvaluation BuildEvaluation(SchemaEvaluation schemaEvaluation, JsonPointer instanceLocation, JsonPointer evaluationPath)
 	{
 		var evaluation = new KeywordEvaluation(this, schemaEvaluation.LocalInstance, schemaEvaluation.Results) { Id = Id };

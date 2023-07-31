@@ -48,6 +48,16 @@ public class FormatKeyword : IJsonSchemaKeyword
 		Value = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
+	/// <summary>
+	/// Builds a constraint object for a keyword.
+	/// </summary>
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
@@ -76,9 +86,9 @@ public class FormatKeyword : IJsonSchemaKeyword
 			}
 		}
 
-		return new KeywordConstraint(Name, requireValidation
-			? AssertionEvaluator
-			: AnnotationEvaluator);
+		return requireValidation
+			? KeywordConstraint.SetAnnotation(Name, Value.Key)
+			: new KeywordConstraint(Name, AssertionEvaluator);
 	}
 
 	private void AssertionEvaluator(KeywordEvaluation evaluation, EvaluationContext context)
@@ -91,11 +101,6 @@ public class FormatKeyword : IJsonSchemaKeyword
 			evaluation.Results.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
 		else
 			evaluation.Results.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
-	}
-
-	private void AnnotationEvaluator(KeywordEvaluation evaluation, EvaluationContext context)
-	{
-		evaluation.Results.SetAnnotation(Name, Value.Key);
 	}
 }
 

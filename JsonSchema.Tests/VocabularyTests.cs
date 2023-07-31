@@ -17,7 +17,7 @@ public class VocabularyTests
 	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MinDateJsonConverter))]
 	[Vocabulary("http://mydates.com/vocabulary")]
-	public class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
+	public class MinDateKeyword : IJsonSchemaKeyword
 	{
 		internal const string Name = "minDate";
 
@@ -44,23 +44,6 @@ public class VocabularyTests
 
 			});
 		}
-
-		public bool Equals(MinDateKeyword? other)
-		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Date.Equals(other.Date);
-		}
-
-		public override bool Equals(object? obj)
-		{
-			return Equals(obj as MinDateKeyword);
-		}
-
-		public override int GetHashCode()
-		{
-			return Date.GetHashCode();
-		}
 	}
 
 	private class MinDateJsonConverter : JsonConverter<MinDateKeyword>
@@ -85,7 +68,7 @@ public class VocabularyTests
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft7 | SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(NonVocabMinDateJsonConverter))]
-	public class NonVocabMinDateKeyword : IJsonSchemaKeyword, IEquatable<NonVocabMinDateKeyword>
+	public class NonVocabMinDateKeyword : IJsonSchemaKeyword
 	{
 		internal const string Name = "minDate-nv";
 
@@ -112,23 +95,6 @@ public class VocabularyTests
 
 			});
 		}
-
-		public bool Equals(NonVocabMinDateKeyword? other)
-		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Date.Equals(other.Date);
-		}
-
-		public override bool Equals(object? obj)
-		{
-			return Equals(obj as NonVocabMinDateKeyword);
-		}
-
-		public override int GetHashCode()
-		{
-			return Date.GetHashCode();
-		}
 	}
 
 	private class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>
@@ -154,7 +120,7 @@ public class VocabularyTests
 	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MaxDateJsonConverter))]
 	[Vocabulary("http://mydates.com/vocabulary")]
-	public class MaxDateKeyword : IJsonSchemaKeyword, IEquatable<MaxDateKeyword>
+	public class MaxDateKeyword : IJsonSchemaKeyword
 	{
 		internal const string Name = "maxDate";
 
@@ -170,23 +136,6 @@ public class VocabularyTests
 			EvaluationContext context)
 		{
 			throw new NotImplementedException();
-		}
-
-		public bool Equals(MaxDateKeyword? other)
-		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Date.Equals(other.Date);
-		}
-
-		public override bool Equals(object? obj)
-		{
-			return Equals(obj as MaxDateKeyword);
-		}
-
-		public override int GetHashCode()
-		{
-			return Date.GetHashCode();
 		}
 	}
 
@@ -418,7 +367,7 @@ public class VocabularyTests
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft202012)]
 	[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]
-	public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword, IEquatable<Draft4ExclusiveMinimumKeyword>
+	public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword
 	{
 		internal const string Name = "exclusiveMinimum";
 
@@ -466,23 +415,6 @@ public class VocabularyTests
 			}
 			else
 				return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
-		}
-
-		public bool Equals(Draft4ExclusiveMinimumKeyword? other)
-		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return BoolValue.Equals(other.BoolValue);
-		}
-
-		public override bool Equals(object? obj)
-		{
-			return Equals(obj as Draft4ExclusiveMinimumKeyword);
-		}
-
-		public override int GetHashCode()
-		{
-			return BoolValue.GetHashCode();
 		}
 	}
 

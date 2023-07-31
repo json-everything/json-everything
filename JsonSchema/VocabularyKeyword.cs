@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -37,11 +36,23 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 	/// Creates a new <see cref="VocabularyKeyword"/>.
 	/// </summary>
 	/// <param name="values">The collection of vocabulary requirements.</param>
+#pragma warning disable CS8618
 	public VocabularyKeyword(IReadOnlyDictionary<Uri, bool> values)
 	{
 		Vocabulary = values ?? throw new ArgumentNullException(nameof(values));
 	}
+#pragma warning restore CS8618
 
+	/// <summary>
+	/// Builds a constraint object for a keyword.
+	/// </summary>
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
