@@ -20,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(TypeKeywordJsonConverter))]
-public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
+public class TypeKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -64,77 +64,33 @@ public class TypeKeyword : IJsonSchemaKeyword, IEquatable<TypeKeyword>
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		bool isValid;
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		switch (schemaValueType)
+		return new KeywordConstraint(Name, (e, _) => Evaluator(e, Type));
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, SchemaValueType expectedType)
+	{
+		var instanceType = evaluation.LocalInstance.GetSchemaValueType();
+		if (expectedType.HasFlag(instanceType)) return;
+		if (instanceType == SchemaValueType.Integer && expectedType.HasFlag(SchemaValueType.Number)) return;
+		if (instanceType == SchemaValueType.Number)
 		{
-			case SchemaValueType.Object:
-				isValid = Type.HasFlag(SchemaValueType.Object);
-				break;
-			case SchemaValueType.Array:
-				isValid = Type.HasFlag(SchemaValueType.Array);
-				break;
-			case SchemaValueType.String:
-				isValid = Type.HasFlag(SchemaValueType.String);
-				break;
-			case SchemaValueType.Integer:
-				isValid = Type.HasFlag(SchemaValueType.Integer) || Type.HasFlag(SchemaValueType.Number);
-				break;
-			case SchemaValueType.Number:
-				if (Type.HasFlag(SchemaValueType.Number))
-					isValid = true;
-				else if (Type.HasFlag(SchemaValueType.Integer))
-				{
-					var number = context.LocalInstance!.AsValue().GetNumber();
-					isValid = number == Math.Truncate(number!.Value);
-				}
-				else
-					isValid = false;
-				break;
-			case SchemaValueType.Boolean:
-				isValid = Type.HasFlag(SchemaValueType.Boolean);
-				break;
-			case SchemaValueType.Null:
-				isValid = Type.HasFlag(SchemaValueType.Null);
-				break;
-			default:
-				throw new ArgumentOutOfRangeException();
+			var number = evaluation.LocalInstance!.AsValue().GetNumber();
+			if (number == Math.Truncate(number!.Value) && expectedType.HasFlag(SchemaValueType.Integer)) return;
 		}
-		var expected = Type.ToString().ToLower();
-		if (!isValid)
-			context.LocalResult.Fail(Name, ErrorMessages.Type, ("received", schemaValueType), ("expected", expected));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(TypeKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Type == other.Type;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as TypeKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return (int)Type;
+		var expected = expectedType.ToString().ToLower();
+		evaluation.Results.Fail(Name, ErrorMessages.Type, ("received", instanceType), ("expected", expected));
 	}
 }
 

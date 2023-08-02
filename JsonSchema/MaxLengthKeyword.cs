@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -18,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MaxLengthKeywordJsonConverter))]
-public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
+public class MaxLengthKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -40,48 +41,35 @@ public class MaxLengthKeyword : IJsonSchemaKeyword, IEquatable<MaxLengthKeyword>
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.String)
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not SchemaValueType.String)
 		{
-			context.WrongValueKind(schemaValueType);
+			evaluation.MarkAsSkipped();
 			return;
 		}
 
-		var length = new StringInfo(context.LocalInstance!.GetValue<string>()).LengthInTextElements;
+		var str = evaluation.LocalInstance!.GetValue<string>();
+		var length = new StringInfo(str).LengthInTextElements;
 		if (Value < length)
-			context.LocalResult.Fail(Name, ErrorMessages.MaxLength, ("received", length), ("limit", Value));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(MaxLengthKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Value == other.Value;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as MaxLengthKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return (int)Value;
+			evaluation.Results.Fail(Name, ErrorMessages.MaxLength, ("received", length), ("limit", Value));
 	}
 }
 

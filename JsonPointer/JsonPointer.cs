@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Web;
+using Json.More;
 
 namespace Json.Pointer;
 
@@ -320,7 +321,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 					break;
 				case JsonObject obj:
 					segmentValue = segment.Value;
-					if (!obj.TryGetPropertyValue(segmentValue, out var found)) return false;
+					if (!obj.TryGetValue(segmentValue, out var found, out _)) return false;
 					current = found;
 					break;
 				default:

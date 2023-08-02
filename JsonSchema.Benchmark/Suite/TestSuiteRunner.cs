@@ -113,7 +113,9 @@ public class TestSuiteRunner
 	}
 
 	[Benchmark]
-	public int RunSuite()
+	[Arguments(1)]
+	[Arguments(10)]
+	public int RunSuite_Legacy(int n)
 	{
 		int i = 0;
 		var collections = GetAllTests();
@@ -122,7 +124,7 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				Benchmark(collection, test);
+				Benchmark(collection, test, n);
 				i++;
 			}
 		}
@@ -130,11 +132,14 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private static void Benchmark(TestCollection collection, TestCase test)
+	private void Benchmark(TestCollection collection, TestCase test, int n)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		_ = collection.Schema.Evaluate(test.Data, collection.Options);
+		for (int i = 0; i < n; i++)
+		{
+			_ = collection.Schema.Evaluate(test.Data, collection.Options);
+		}
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)

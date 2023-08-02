@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using NUnit.Framework;
+using Json.More;
 
 namespace Json.Schema.Generation.Tests;
 
@@ -9,11 +10,25 @@ internal static class AssertionExtensions
 	public static void AssertEqual(JsonSchema expected, JsonSchema actual)
 	{
 		Console.WriteLine("Expected");
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
+		var expectedAsNode = JsonSerializer.SerializeToNode(expected, new JsonSerializerOptions { WriteIndented = true });
+		Console.WriteLine(expectedAsNode);
 		Console.WriteLine();
 		Console.WriteLine("Actual");
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
-		Assert.AreEqual(expected, actual);
+		var actualAsNode = JsonSerializer.SerializeToNode(actual, new JsonSerializerOptions { WriteIndented = true });
+		Console.WriteLine(actualAsNode);
+		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
+	}
+
+	public static void AssertEqual(IJsonSchemaKeyword expected, IJsonSchemaKeyword actual)
+	{
+		Console.WriteLine("Expected");
+		var expectedAsNode = JsonSerializer.SerializeToNode(expected, new JsonSerializerOptions { WriteIndented = true });
+		Console.WriteLine(expectedAsNode);
+		Console.WriteLine();
+		Console.WriteLine("Actual");
+		var actualAsNode = JsonSerializer.SerializeToNode(actual, new JsonSerializerOptions { WriteIndented = true });
+		Console.WriteLine(actualAsNode);
+		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
 	}
 
 	public static void VerifyGeneration<T>(JsonSchema expected, SchemaGeneratorConfiguration? config = null)

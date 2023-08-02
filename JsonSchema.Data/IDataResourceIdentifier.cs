@@ -8,10 +8,11 @@ namespace Json.Schema.Data;
 public interface IDataResourceIdentifier
 {
 	/// <summary>
-	/// Attempts to resolve the reference.
+	/// Resolves a resource.
 	/// </summary>
-	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
-	/// <returns>true if resolution is successful; false otherwise.</returns>
-	bool TryResolve(EvaluationContext context, out JsonNode? value);
+	/// <param name="evaluation">The evaluation being process.  This will help identify.</param>
+	/// <param name="registry">The schema registry.</param>
+	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
+	/// <returns>True if resolution was successful; false otherwise.</returns>
+	bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value);
 }

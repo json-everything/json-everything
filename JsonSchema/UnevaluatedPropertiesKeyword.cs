@@ -6,14 +6,12 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
-// ReSharper disable AccessToModifiedClosure
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `unevaluatedProperties`.
 /// </summary>
-[SchemaPriority(30)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
@@ -27,7 +25,7 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(ContainsKeyword))]
 [DependsOnAnnotationsFrom(typeof(UnevaluatedPropertiesKeyword))]
 [JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
-public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<UnevaluatedPropertiesKeyword>
+public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -49,119 +47,70 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		static IEnumerable<string> GetAnnotation<T>(EvaluationResults results)
+			where T : IJsonSchemaKeyword
 		{
-			context.WrongValueKind(schemaValueType);
+			return results.GetAllAnnotations(typeof(T).Keyword())
+				.SelectMany(x => x!.AsArray())
+				.Select(x => x!.GetValue<string>());
+		}
+
+		if (evaluation.LocalInstance is not JsonObject obj)
+		{
+			evaluation.MarkAsSkipped();
 			return;
 		}
 
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		var evaluatedProperties = new List<string>();
-		var annotations = context.LocalResult.GetAllAnnotations(PropertiesKeyword.Name).ToList();
-		if (!annotations.Any())
-			context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
-		else
+		var propertiesAnnotations = GetAnnotation<PropertiesKeyword>(evaluation.Results);
+		var patternPropertiesAnnotations = GetAnnotation<PatternPropertiesKeyword>(evaluation.Results);
+		var containsAnnotations = GetAnnotation<ContainsKeyword>(evaluation.Results);
+		var additionalPropertiesAnnotations = GetAnnotation<AdditionalPropertiesKeyword>(evaluation.Results);
+		var unevaluatedPropertiesAnnotations = GetAnnotation<UnevaluatedPropertiesKeyword>(evaluation.Results);
+		var properties = obj.Select(x => x.Key)
+			.Except(propertiesAnnotations)
+			.Except(patternPropertiesAnnotations)
+			.Except(containsAnnotations)
+			.Except(additionalPropertiesAnnotations)
+			.Except(unevaluatedPropertiesAnnotations)
+			.ToArray();
+
+		if (properties.Length == 0)
 		{
-			context.Log(() => $"Annotation from {PropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
-		}
-		annotations = context.LocalResult.GetAllAnnotations(PatternPropertiesKeyword.Name).ToList();
-		if (!annotations.Any())
-			context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
-		else
-		{
-			context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
-		}
-		annotations = context.LocalResult.GetAllAnnotations(AdditionalPropertiesKeyword.Name).ToList();
-		if (!annotations.Any())
-			context.Log(() => $"No annotation from {AdditionalPropertiesKeyword.Name}.");
-		else
-		{
-			context.Log(() => $"Annotation from {AdditionalPropertiesKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
-		}
-		annotations = context.LocalResult.GetAllAnnotations(ContainsKeyword.Name).ToList();
-		if (!annotations.Any())
-			context.Log(() => $"No annotation from {ContainsKeyword.Name}.");
-		else
-		{
-			context.Log(() => $"Annotation from {ContainsKeyword.Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
-		}
-		annotations = context.LocalResult.GetAllAnnotations(Name).ToList();
-		if (!annotations.Any())
-			context.Log(() => $"No annotation from {Name}.");
-		else
-		{
-			context.Log(() => $"Annotation from {Name}: {annotations.ToJsonArray().AsJsonString()}");
-			evaluatedProperties.AddRange(annotations.SelectMany(x => x!.AsArray().Select(j => j!.GetValue<string>())));
+			evaluation.MarkAsSkipped();
+			return;
 		}
 
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
+		var childEvaluations = properties
+			.Select(x => (Name: x, Constraint: Schema.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Create(x), context)))
+			.Select(x => x.Constraint.BuildEvaluation(obj[x.Name], evaluation.Results.InstanceLocation.Combine(x.Name), evaluation.Results.EvaluationPath, context.Options))
+			.ToArray();
 
-		var unevaluatedProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
-		evaluatedProperties.Clear();
-		foreach (var property in unevaluatedProperties)
+		evaluation.ChildEvaluations = childEvaluations;
+		foreach (var childEvaluation in childEvaluations)
 		{
-			if (!obj.TryGetPropertyValue(property.Key, out var item))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			context.Push(context.InstanceLocation.Combine(PointerSegment.Create($"{property.Key}")), item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(Name), Schema);
-			context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-			if (localResult)
-				evaluatedProperties.Add(property.Key);
+			childEvaluation.Evaluate(context);
 		}
-		context.Options.LogIndentLevel--;
 
-		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
+		evaluation.Results.SetAnnotation(Name, properties.Select(x => (JsonNode)x!).ToJsonArray());
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(UnevaluatedPropertiesKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as UnevaluatedPropertiesKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schema.GetHashCode();
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 }
 

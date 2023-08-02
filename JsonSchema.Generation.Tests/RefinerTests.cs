@@ -3,6 +3,8 @@ using System.Text.Json;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
 
+using static Json.Schema.Generation.Tests.AssertionExtensions;
+
 namespace Json.Schema.Generation.Tests;
 
 public class RefinerTests
@@ -54,7 +56,7 @@ public class RefinerTests
 
 		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
 		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
-		Assert.AreEqual(expected, actual);
+		AssertEqual(expected, actual);
 	}
 
 	[Test]
@@ -76,6 +78,6 @@ public class RefinerTests
 
 		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
 		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
-		Assert.AreEqual(expected, actual);
+		AssertEqual(expected, actual);
 	}
 }

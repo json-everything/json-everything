@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,12 +8,11 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `definitions`.
 /// </summary>
-[SchemaPriority(long.MinValue + 1)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [JsonConverter(typeof(DefinitionsKeywordJsonConverter))]
-public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<DefinitionsKeyword>
+public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -38,49 +36,20 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEq
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		context.Push(context.EvaluationPath.Combine(Name), true);
-		context.LocalResult.Ignore();
-		context.Pop();
-		context.ExitKeyword(Name, true);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(DefinitionsKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (Definitions.Count != other.Definitions.Count) return false;
-		var byKey = Definitions.Join(other.Definitions,
-				td => td.Key,
-				od => od.Key,
-				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToArray();
-		if (byKey.Length != Definitions.Count) return false;
-
-		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as DefinitionsKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Definitions.GetStringDictionaryHashCode();
+		return KeywordConstraint.Skip;
 	}
 }
 

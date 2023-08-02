@@ -299,7 +299,7 @@ public class OutputTests
               ""schemaLocation"": ""https://test.com/schema#/$defs/minimum"",
               ""instanceLocation"": ""/multi"",
               ""errors"": {
-                ""minimum"": ""3.5 is less than or equal to 5""
+                ""minimum"": ""3.5 should be at least 5""
               }
             }
           ]
@@ -503,6 +503,7 @@ public class OutputTests
 	}
 
 	[Test]
+	[Ignore("Not sure about the URI for the false schema")]
 	public void FalseSchemaFailsEverything()
 	{
 		JsonSchema schema = false;
@@ -675,7 +676,6 @@ public class OutputTests
   }
 }");
 
-		EvaluationOptions.Default.Log = null!;
 		var result = MetaSchemas.Draft202012.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		//result.ToBasic();

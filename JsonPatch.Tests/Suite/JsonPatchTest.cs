@@ -125,7 +125,7 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 			Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
 			return null;
 		}
-		catch (JsonException e)
+		catch (Exception e) when(e is JsonException or ArgumentException)
 		{
 			Console.WriteLine(e);
 			return null;

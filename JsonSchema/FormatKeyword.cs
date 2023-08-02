@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -19,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.FormatAnnotationNextId)]
 [Vocabulary(Vocabularies.FormatAssertionNextId)]
 [JsonConverter(typeof(FormatKeywordJsonConverter))]
-public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
+public class FormatKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -47,77 +49,58 @@ public class FormatKeyword : IJsonSchemaKeyword, IEquatable<FormatKeyword>
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, Value.Key);
-
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-		{
-			context.LocalResult.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key));
-			return;
-		}
+			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key)));
 
 		var requireValidation = context.Options.RequireFormatValidation;
+
 		if (!requireValidation)
 		{
-			var vocabRequirements = context.MetaSchemaVocabs;
-			if (vocabRequirements != null)
+			var vocabs = context.Dialect[context.Scope.LocalScope];
+			if (vocabs != null)
 			{
 				foreach (var formatAssertionId in _formatAssertionIds)
 				{
-					if (vocabRequirements.ContainsKey(formatAssertionId))
-					{
-						// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
-						// for why we don't take the vocab value.
-						// tl;dr - This implementation understands the assertion vocab, so we apply it,
-						// even when the meta-schema says we're not required to.
-						requireValidation = true;
-						break;
-					}
+					if (vocabs.All(v => v.Id != formatAssertionId)) continue;
+
+					// See https://github.com/json-schema-org/json-schema-spec/pull/1027#discussion_r530068335
+					// for why we don't take the vocab value.
+					// tl;dr - This implementation understands the assertion vocab, so we apply it,
+					// even when the meta-schema says we're not required to.
+					requireValidation = true;
+					break;
 				}
 			}
 		}
 
-		if (requireValidation && !Value.Validate(context.LocalInstance, out var errorMessage))
-		{
-			if (Value is UnknownFormat)
-				context.LocalResult.Fail(Name, errorMessage);
-			else if (errorMessage == null)
-				context.LocalResult.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
-			else
-				context.LocalResult.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
-		}
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		return requireValidation
+			? new KeywordConstraint(Name, AssertionEvaluator)
+			: KeywordConstraint.SimpleAnnotation(Name, Value.Key);
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(FormatKeyword? other)
+	private void AssertionEvaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Value.Key, other.Value.Key);
-	}
+		if (Value.Validate(evaluation.LocalInstance, out var errorMessage)) return;
 
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as FormatKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Value.GetHashCode();
+		if (Value is UnknownFormat)
+			evaluation.Results.Fail(Name, errorMessage);
+		else if (errorMessage == null)
+			evaluation.Results.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
+		else
+			evaluation.Results.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
 	}
 }
 

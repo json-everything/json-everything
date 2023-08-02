@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `oneOf`.
 /// </summary>
-[SchemaPriority(20)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
@@ -20,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(OneOfKeywordJsonConverter))]
-public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<OneOfKeyword>
+public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -51,54 +51,30 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<One
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var validCount = 0;
-		for (var i = 0; i < Schemas.Count; i++)
+		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			var i1 = i;
-			context.Log(() => $"Processing {Name}[{i1}]...");
-			var schema = Schemas[i];
-			context.Push(context.EvaluationPath.Combine(Name, i), schema);
-			context.Evaluate();
-			validCount += context.LocalResult.IsValid ? 1 : 0;
-			context.Log(() => $"{Name}[{i1}] {context.LocalResult.IsValid.GetValidityString()}.");
-			context.Pop();
-			if (validCount > 1 && context.ApplyOptimizations) break;
-		}
-
-		if (validCount != 1)
-			context.LocalResult.Fail(Name, ErrorMessages.OneOf, ("count", validCount));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+			ChildDependencies = subschemaConstraints
+		};
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(OneOfKeyword? other)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Schemas.ContentsEqual(other.Schemas);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as OneOfKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schemas.GetUnorderedCollectionHashCode();
+		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
+		if (actual != 1)
+			evaluation.Results.Fail(Name, ErrorMessages.OneOf, ("count", actual));
 	}
 }
 

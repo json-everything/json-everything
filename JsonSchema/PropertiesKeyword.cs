@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -20,7 +22,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertiesKeywordJsonConverter))]
-public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEquatable<PropertiesKeyword>
+public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -44,87 +46,31 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IEqu
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
+		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(JsonPointer.Create(Name, x.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(x.Key), context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
-
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		var evaluatedProperties = new List<string>();
-		foreach (var property in Properties)
-		{
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			var schema = property.Value;
-			var name = property.Key;
-			if (!obj.TryGetPropertyValue(name, out var item))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			context.Push(context.InstanceLocation.Combine(name),
-				item,
-				context.EvaluationPath.Combine(Name, name),
-				schema);
-			context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			evaluatedProperties.Add(name);
-			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-		context.Options.LogIndentLevel--;
-		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+			ChildDependencies = subschemaConstraints
+		};
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(PropertiesKeyword? other)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (Properties.Count != other.Properties.Count) return false;
-		var byKey = Properties.Join(other.Properties,
-				td => td.Key,
-				od => od.Key,
-				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToArray();
-		if (byKey.Length != Properties.Count) return false;
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
 
-		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as PropertiesKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Properties.GetStringDictionaryHashCode();
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 }
 

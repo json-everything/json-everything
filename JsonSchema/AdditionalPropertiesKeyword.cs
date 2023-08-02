@@ -5,13 +5,13 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `additionalProperties`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
@@ -24,7 +24,7 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
 [DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<AdditionalPropertiesKeyword>
+public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -46,110 +46,52 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer,
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
+		var propertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PropertiesKeyword.Name);
+		var patternPropertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PatternPropertiesKeyword.Name);
+		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
+
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+		subschemaConstraint.InstanceLocator = evaluation =>
 		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
+			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
 
-		context.Options.LogIndentLevel++;
-		var overallResult = true;
-		List<string> evaluatedProperties;
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
+			var properties = obj.Select(x => x.Key);
+			
+			var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
+			if (propertiesEvaluation != null)
+				properties = properties.Except(propertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
 
-		if (context.Options.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
+			var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
+			if (patternPropertiesEvaluation != null)
+				properties = properties.Except(patternPropertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
+
+			return properties.Select(x => JsonPointer.Create(x));
+		};
+
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			evaluatedProperties = new List<string>();
-			if (context.LocalSchema.TryGetKeyword<PropertiesKeyword>(PropertiesKeyword.Name, out var propertiesKeyword))
-				evaluatedProperties.AddRange(propertiesKeyword!.Properties.Keys);
-			if (context.LocalSchema.TryGetKeyword<PatternPropertiesKeyword>(PatternPropertiesKeyword.Name, out var patternPropertiesKeyword))
-				evaluatedProperties.AddRange(obj
-					.Select(x => x.Key)
-					.Where(x => patternPropertiesKeyword!.Patterns.Any(p => p.Key.IsMatch(x))));
-		}
-		else
-		{
-			if (!context.LocalResult.TryGetAnnotation(PropertiesKeyword.Name, out var annotation))
-			{
-				context.Log(() => $"No annotation from {PropertiesKeyword.Name}.");
-				evaluatedProperties = new List<string>();
-			}
-			else
-			{
-				// ReSharper disable once AccessToModifiedClosure
-				context.Log(() => $"Annotation from {PropertiesKeyword.Name}: {annotation.AsJsonString()}");
-				evaluatedProperties = annotation!.AsArray().Select(x => x!.GetValue<string>()).ToList();
-			}
-			if (!context.LocalResult.TryGetAnnotation(PatternPropertiesKeyword.Name, out annotation))
-				context.Log(() => $"No annotation from {PatternPropertiesKeyword.Name}.");
-			else
-			{
-				context.Log(() => $"Annotation from {PatternPropertiesKeyword.Name}: {annotation.AsJsonString()}");
-				evaluatedProperties.AddRange(annotation!.AsArray().Select(x => x!.GetValue<string>()));
-			}
-		}
-		var additionalProperties = obj.Where(p => !evaluatedProperties.Contains(p.Key)).ToArray();
-		evaluatedProperties.Clear();
-		foreach (var property in additionalProperties)
-		{
-			if (!obj.TryGetPropertyValue(property.Key, out var item))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
-
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			context.Push(context.InstanceLocation.Combine(property.Key), item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(Name), Schema);
-			context.Evaluate();
-			var localResult = context.LocalResult.IsValid;
-			overallResult &= localResult;
-			context.Log(() => $"Property '{property.Key}' {localResult.GetValidityString()}.");
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-			if (localResult)
-				evaluatedProperties.Add(property.Key);
-		}
-		context.Options.LogIndentLevel--;
-
-		context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(evaluatedProperties));
-
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+			SiblingDependencies = keywordConstraints,
+			ChildDependencies = new[] { subschemaConstraint }
+		};
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(AdditionalPropertiesKeyword? other)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema);
-	}
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
 
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as AdditionalPropertiesKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schema.GetHashCode();
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 }
 

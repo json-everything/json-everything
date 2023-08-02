@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -18,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(RefKeywordJsonConverter))]
-public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
+public class RefKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -40,25 +42,30 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-
-		var newUri = new Uri(context.Scope.LocalScope, Reference);
+		var newUri = new Uri(schemaConstraint.SchemaBaseUri, Reference);
 		var fragment = newUri.Fragment;
 
-		var navigation = (newUri.OriginalString, context.InstanceLocation);
+		var instanceLocation = schemaConstraint.BaseInstanceLocation.Combine(schemaConstraint.RelativeInstanceLocation);
+		var navigation = (newUri.OriginalString, InstanceLocation: instanceLocation);
 		if (context.NavigatedReferences.Contains(navigation))
-			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{context.InstanceLocation}`");
+			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
 
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 		JsonSchema? targetSchema = null;
 		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
@@ -74,50 +81,31 @@ public class RefKeyword : IJsonSchemaKeyword, IEquatable<RefKeyword>
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 			if (targetBase is JsonSchema targetBaseSchema &&
-			    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+				targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 				targetSchema = anchorDefinition.Schema;
 		}
 
 		if (targetSchema == null)
 			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
-		context.NavigatedReferences.Add(navigation);
-		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
+		context.NavigatedReferences.Push(navigation);
+		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+		context.NavigatedReferences.Pop();
 		if (pointerFragment != null)
-			context.LocalResult.SetSchemaReference(pointerFragment);
-		context.Evaluate();
-		var result = context.LocalResult.IsValid;
-		context.Pop();
-		context.NavigatedReferences.Remove(navigation);
-		if (!result)
-			context.LocalResult.Fail();
+			subschemaConstraint.BaseSchemaOffset = pointerFragment;
 
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { subschemaConstraint }
+		};
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(RefKeyword? other)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Reference, other.Reference);
-	}
+		var subSchemaEvaluation = evaluation.ChildEvaluations.Single();
 
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as RefKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Reference.GetHashCode();
+		if (!subSchemaEvaluation.Results.IsValid)
+			evaluation.Results.Fail();
 	}
 }
 

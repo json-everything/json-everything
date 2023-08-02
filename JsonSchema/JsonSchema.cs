@@ -16,9 +16,10 @@ namespace Json.Schema;
 /// </summary>
 [JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
+public class JsonSchema : IBaseDocument
 {
-	private Dictionary<string, IJsonSchemaKeyword>? _keywords;
+	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
+	private List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -193,18 +194,22 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
-		options.Log.Write(() => "Registering subschemas.");
 		// BaseUri may change if $id is present
-		options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, options.EvaluatingAs, true);
+		// TODO: remove options.EvaluatingAs
+		var evaluatingAs = options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
 
-		var context = new EvaluationContext(options, BaseUri, root, this);
 
-		options.Log.Write(() => "Beginning evaluation.");
-		context.Evaluate();
+		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
+		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
+		if (!BoolValue.HasValue)
+			PopulateConstraint(constraint, context);
 
-		options.Log.Write(() => "Transforming output.");
-		var results = context.LocalResult;
+		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
+		evaluation.Evaluate(context);
+
+
+		var results = evaluation.Results;
 		switch (options.OutputFormat)
 		{
 			case OutputFormat.Flag:
@@ -219,8 +224,116 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 				throw new ArgumentOutOfRangeException();
 		}
 
-		options.Log.Write(() => $"Evaluation complete: {results.IsValid.GetValidityString()}");
 		return results;
+	}
+
+	private bool IsDynamic()
+	{
+		if (BoolValue.HasValue) return false;
+		if (Keywords!.Any(x => x is DynamicRefKeyword or RecursiveRefKeyword)) return true;
+
+		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
+	}
+
+	/// <summary>
+	/// Builds a constraint for the schema.
+	/// </summary>
+	/// <param name="relativeEvaluationPath">
+	/// The relative evaluation path in JSON Pointer form.  Generally this will be a keyword name,
+	/// but may have other segments, such as in the case of `properties` which also has the property name.
+	/// </param>
+	/// <param name="baseInstanceLocation">The base location within the instance that is being evaluated.</param>
+	/// <param name="relativeInstanceLocation">
+	/// The location relative to <paramref name="baseInstanceLocation"/> within the instance that
+	/// is being evaluated.
+	/// </param>
+	/// <param name="context">The evaluation context.</param>
+	/// <returns>A schema constraint.</returns>
+	/// <remarks>
+	/// The constraint returned by this method is cached by the <see cref="JsonSchema"/> object.
+	/// Different evaluation paths to this schema object may result in different constraints, so
+	/// a new constraint is saved for each dynamic scope.
+	/// </remarks>
+	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, EvaluationContext context)
+	{
+		var baseUri = BoolValue.HasValue ? context.Scope.LocalScope : BaseUri;
+	
+		var scopedConstraint = CheckScopedConstraints(context.Scope);
+		if (scopedConstraint != null)
+			return new SchemaConstraint(relativeEvaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this)
+			{
+				Source = scopedConstraint
+			};
+
+		var constraint = BuildConstraint(relativeEvaluationPath, baseInstanceLocation, relativeInstanceLocation, context.Scope);
+		if (!BoolValue.HasValue) 
+			PopulateConstraint(constraint, context);
+
+		return constraint;
+	}
+
+	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, DynamicScope scope)
+	{
+		lock (_constraints)
+		{
+			var scopedConstraint = CheckScopedConstraints(scope);
+			if (scopedConstraint != null) return scopedConstraint;
+
+			var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
+
+			var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
+			_constraints.Add((new DynamicScope(scope), constraint));
+		
+			return constraint;
+		}
+	}
+
+	private SchemaConstraint? CheckScopedConstraints(DynamicScope scope)
+	{
+		SchemaConstraint? scopedConstraint;
+		// ReSharper disable InconsistentlySynchronizedField
+		// We only need to worry about synchronization when potentially adding new constraints
+		// which only happens in BuildConstrain().
+		if (IsDynamic())
+			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(scope));
+		else
+			scopedConstraint = _constraints.SingleOrDefault().Constraint;
+		// ReSharper restore InconsistentlySynchronizedField
+		return scopedConstraint;
+	}
+
+	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
+	{
+		if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
+		{
+			// base URI doesn't change for $ref schemas in draft 6/7
+			var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
+			if (refKeyword != null)
+			{
+				var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
+				constraint.Constraints = new[] { refConstraint };
+				return;
+			}
+		}
+
+		var dynamicScopeChanged = false;
+		if (context.Scope.LocalScope != BaseUri)
+		{
+			dynamicScopeChanged = true;
+			context.Scope.Push(BaseUri);
+		}
+		var localConstraints = new List<KeywordConstraint>();
+		var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
+		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
+		foreach (var keyword in keywords.OrderBy(x => x.Priority()))
+		{
+			var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
+			localConstraints.Add(keywordConstraint);
+		}
+
+		constraint.Constraints = localConstraints.ToArray();
+		if (dynamicScopeChanged)
+			context.Scope.Pop();
 	}
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
@@ -303,7 +416,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 					schema.IsResourceRoot = true;
 					schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
 					resourceRoot = schema;
-					schema.BaseUri = new Uri(currentBaseUri, idKeyword!.Id);
+					schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
 					registry.RegisterSchema(schema.BaseUri, schema);
 				}
 			}
@@ -315,10 +428,14 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 			}
 
 			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword))
+			{
 				resourceRoot.Anchors[anchorKeyword!.Anchor] = (schema, false);
+			}
 
 			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword))
+			{
 				resourceRoot.Anchors[dynamicAnchorKeyword!.Value] = (schema, true);
+			}
 
 			schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
 			if (recursiveAnchorKeyword is { Value: true })
@@ -401,7 +518,7 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 					(newResolvable, var segmentsConsumed) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToReadOnlyList());
 					i += segmentsConsumed;
 					break;
-				case JsonSchema { _keywords: { } } schema:
+				case JsonSchema { _keywords: not null } schema:
 					schema._keywords.TryGetValue(segment.Value, out var k);
 					newResolvable = k;
 					break;
@@ -438,52 +555,6 @@ public class JsonSchema : IEquatable<JsonSchema>, IBaseDocument
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 		var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
 		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonSchema? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-
-		if (BoolValue.HasValue) return BoolValue == other.BoolValue;
-		if (other.BoolValue.HasValue) return false;
-		if (_keywords!.Count != other._keywords!.Count) return false;
-
-		if (_keywords != null)
-		{
-			var byKeyword = _keywords.Join(other._keywords!,
-					tk => tk.Key,
-					ok => ok.Key,
-					(tk, ok) => new { ThisKeyword = tk, OtherKeyword = ok })
-				.ToArray();
-			if (byKeyword.Length != _keywords.Count) return false;
-			if (!byKeyword.All(k => k.ThisKeyword.Value.Equals(k.OtherKeyword.Value))) return false;
-		}
-
-		return true;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as JsonSchema);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = Keywords?.GetUnorderedCollectionHashCode() ?? 0;
-			hashCode = (hashCode * 397) ^ BoolValue.GetHashCode();
-			return hashCode;
-		}
 	}
 }
 

@@ -4,6 +4,30 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/494) {#release-schema-5.0.0}
+
+New architecture for keyword evaluation that uses static analysis to save some evaluation work, thus reducing execution times and memory allocations significantly.
+
+## Breaking Changes {#release-schema-5.0.0-breaks}
+
+- `IJsonSchemaKeyword.Evaluate()` removed, replaced by `IJsonSchemaKeyword.GetConstraint()`.  All keywords updated.
+- `EvaluationContext` completely reworked; now carries a lot less information.
+- `IEquatable<T>` no longer required for keyword implementations.  Equality methods removed from all keywords and from `JsonSchema`.
+- `EvaluationResults.Ignore()` removed as keyword evaluations can be skipped using other means.
+- `[SchemaPriority]` attribute removed as priorities are now calculated based on usage of `[DependsOnAnnotationsFrom]` attribute.
+
+## Additions {#release-schema-5.0.0-adds}
+
+- `IJsonSchemaKeyword.GetConstraint()`
+- `SchemaConstraint`
+- `SchemaEvaluation`
+- `KeywordConstraint`
+- `KeywordEvaluation`
+
+## Other Changes {#release-schema-5.0.0-other}
+
+- Updated English language resource file for clearer error messages.
+
 # [4.1.8](https://github.com/gregsdennis/json-everything/pull/490) {#release-schema-4.1.8}
 
 Fixes several issues where keyword names were not reported in the evaluation path in the output.

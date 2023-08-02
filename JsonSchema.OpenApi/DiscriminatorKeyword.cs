@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -15,7 +14,7 @@ namespace Json.Schema.OpenApi;
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [Vocabulary(Vocabularies.OpenApiId)]
 [JsonConverter(typeof(DiscriminatorKeywordJsonConverter))]
-public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<DiscriminatorKeyword>
+public class DiscriminatorKeyword : IJsonSchemaKeyword
 {
 	internal const string Name = "discriminator";
 
@@ -65,81 +64,20 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword, IEquatable<Discriminator
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		context.LocalResult.SetAnnotation(Name, _json);
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(DiscriminatorKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (PropertyName != other.PropertyName) return false;
-		if ((Mapping == null) != (other.Mapping == null)) return false;
-		if ((Extensions == null) != (other.Extensions == null)) return false;
-
-		bool keysMatch;
-		bool valuesMatch;
-		if (Mapping != null)
-		{
-			keysMatch = Mapping.Count == other.Mapping!.Count &&
-			            !Mapping.Keys.Except(other.Mapping.Keys).Any();
-			if (!keysMatch) return false;
-
-			valuesMatch = Mapping.Join(other.Mapping,
-					x => x.Key,
-					y => y.Key,
-					(x, y) => x.Value == y.Value)
-				.All(x => x);
-
-			if (!valuesMatch) return false;
-		}
-
-		if (Extensions != null)
-		{
-			keysMatch = Extensions.Count == other.Extensions!.Count &&
-			            !Extensions.Keys.Except(other.Extensions.Keys).Any();
-			if (!keysMatch) return false;
-
-			valuesMatch = Extensions.Join(other.Extensions,
-					x => x.Key,
-					y => y.Key,
-					(x, y) => x.Value.IsEquivalentTo(y.Value))
-				.All(x => x);
-
-			if (!valuesMatch) return false;
-		}
-
-		return true;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as DiscriminatorKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = PropertyName.GetHashCode();
-			hashCode = (hashCode * 397) ^ (Mapping != null ? Mapping.GetStringDictionaryHashCode() : 0);
-			hashCode = (hashCode * 397) ^ (Extensions != null ? Extensions.GetStringDictionaryHashCode() : 0);
-			return hashCode;
-		}
+		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, _json));
 	}
 }
 

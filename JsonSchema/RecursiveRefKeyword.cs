@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -13,7 +14,7 @@ namespace Json.Schema;
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Core201909Id)]
 [JsonConverter(typeof(RecursiveRefKeywordJsonConverter))]
-public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKeyword>
+public class RecursiveRefKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -35,19 +36,23 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
 		JsonSchema? targetSchema = null;
 		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
 		foreach (var uri in context.Scope.Reverse())
 		{
@@ -69,9 +74,11 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 
 		if (targetSchema == null)
 		{
-
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 			{
+				if (targetBase == null)
+					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+
 				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
 			}
 			else
@@ -81,7 +88,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 				if (targetBase is JsonSchema targetBaseSchema &&
-				    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
+					targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
 					targetSchema = anchorDefinition.Schema;
 			}
 
@@ -89,39 +96,20 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword, IEquatable<RecursiveRefKe
 				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 		}
 
-		context.Push(context.EvaluationPath.Combine(Name), targetSchema);
-		context.Evaluate();
-		var result = context.LocalResult.IsValid;
-		context.Pop();
-		if (!result)
-			context.LocalResult.Fail();
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		return new KeywordConstraint(Name, (e, c) => Evaluator(e, c, targetSchema));
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(RecursiveRefKeyword? other)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context, JsonSchema target)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Reference, other.Reference);
-	}
+		var childEvaluation = target
+			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)
+			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name), context.Options);
+		evaluation.ChildEvaluations = new[] { childEvaluation };
 
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as RecursiveRefKeyword);
-	}
+		childEvaluation.Evaluate(context);
 
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Reference.GetHashCode();
+		if (!childEvaluation.Results.IsValid)
+			evaluation.Results.Fail();
 	}
 }
 

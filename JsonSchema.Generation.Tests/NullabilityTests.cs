@@ -142,7 +142,7 @@ public class NullabilityTests
 			.OfType<PropertiesKeyword>()
 			.First();
 
-		Assert.AreEqual(expected, actual);
+		AssertEqual(expected, actual);
 	}
 
 	public static IEnumerable<TestCaseData> TypeCases

@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `items`.
 /// </summary>
-[SchemaPriority(5)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
@@ -23,7 +22,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
-public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector, IEquatable<ItemsKeyword>
+public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -76,133 +75,75 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
+		var constraint = new KeywordConstraint(Name, Evaluator);
 
-		var array = (JsonArray)context.LocalInstance!;
-		var overallResult = true;
 		if (SingleSchema != null)
 		{
-			context.Options.LogIndentLevel++;
-			int startIndex;
-			if (!context.LocalResult.TryGetAnnotation(PrefixItemsKeyword.Name, out var annotation))
-				startIndex = 0;
-			else
+			var prefixItemsConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PrefixItemsKeyword.Name);
+
+			var subschemaConstraint = SingleSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+			subschemaConstraint.InstanceLocator = evaluation =>
 			{
-				context.Log(() => $"Annotation from {PrefixItemsKeyword.Name}: {annotation.AsJsonString()}");
-				if (annotation!.AsValue().TryGetValue(out bool _))
-				{
-					context.ExitKeyword(Name, true);
-					return;
-				}
+				if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
 
-				startIndex = (int)annotation;
-			}
+				if (array.Count == 0) return Array.Empty<JsonPointer>();
 
-			for (int i = startIndex; i < array.Count; i++)
-			{
-				var i1 = i;
-				context.Log(() => $"Evaluating item at index {i1}.");
-				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(i), item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), SingleSchema);
-				context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-			context.Options.LogIndentLevel--;
+				var startIndex = 0;
 
-			context.LocalResult.SetAnnotation(Name, true);
+				var prefixItemsEvaluation = evaluation.GetKeywordEvaluation<PrefixItemsKeyword>();
+				if (prefixItemsEvaluation != null)
+					startIndex = prefixItemsEvaluation.ChildEvaluations.Length;
+
+				if (array.Count <= startIndex) return Array.Empty<JsonPointer>();
+
+				return Enumerable.Range(startIndex, array.Count - startIndex).Select(x => JsonPointer.Create(x));
+			};
+
+			if (prefixItemsConstraint != null)
+				constraint.SiblingDependencies = new[] { prefixItemsConstraint };
+			constraint.ChildDependencies = new[] { subschemaConstraint };
 		}
-		else // array
+		else // ArraySchema
 		{
 			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
 			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
 				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
 
-			context.Options.LogIndentLevel++;
-			var maxEvaluations = Math.Min(ArraySchemas!.Count, array.Count);
-			for (int i = 0; i < maxEvaluations; i++)
-			{
-				var i1 = i;
-				context.Log(() => $"Evaluating item at index {i1}.");
-				var schema = ArraySchemas[i];
-				var item = array[i];
-				context.Push(context.InstanceLocation.Combine(i),
-					item ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name, i),
-					schema);
-				context.Evaluate();
-				overallResult &= context.LocalResult.IsValid;
-				context.Log(() => $"Item at index {i1} {context.LocalResult.IsValid.GetValidityString()}.");
-				context.Pop();
-				if (!overallResult && context.ApplyOptimizations) break;
-			}
-			context.Options.LogIndentLevel--;
+			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(i), context)).ToArray();
 
-			if (maxEvaluations == array.Count)
-				context.LocalResult.SetAnnotation(Name, true);
-			else
-				context.LocalResult.SetAnnotation(Name, maxEvaluations);
+			constraint.ChildDependencies = subschemaConstraints;
 		}
 
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+		return constraint;
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ItemsKeyword? other)
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (SingleSchema != null)
-		{
-			if (other.SingleSchema == null) return false;
-			return Equals(SingleSchema, other.SingleSchema);
-		}
+		if (evaluation.LocalInstance is not JsonArray array || array.Count == 0) return;
 
-		if (ArraySchemas != null)
-		{
-			if (other.ArraySchemas == null) return false;
-			return ArraySchemas.ContentsEqual(other.ArraySchemas);
-		}
-
-		throw new InvalidOperationException("Either SingleSchema or ArraySchemas should be populated.");
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as ItemsKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = SingleSchema?.GetHashCode() ?? 0;
-			hashCode = (hashCode * 397) ^ (ArraySchemas?.GetUnorderedCollectionHashCode() ?? 0);
-			return hashCode;
-		}
+		var lastItem = array.Last();
+		// can't check by count because items may not have evaluated all of the items
+		// check that the last item was evaluated instead
+		if (evaluation.ChildEvaluations.Any(x => ReferenceEquals(x.LocalInstance, lastItem)))
+			evaluation.Results.SetAnnotation(Name, true);
+		else
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length - 1);
+	
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 }
 

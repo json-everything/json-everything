@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `contains`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
@@ -23,7 +23,7 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(MinContainsKeyword))]
 [DependsOnAnnotationsFrom(typeof(MaxContainsKeyword))]
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
-public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ContainsKeyword>
+public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -45,93 +45,90 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		// verify this logic
-		if (schemaValueType != SchemaValueType.Array &&
-		    schemaValueType != SchemaValueType.Object)
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+		subschemaConstraint.InstanceLocator = evaluation =>
 		{
-			context.WrongValueKind(schemaValueType);
+			if (evaluation.LocalInstance is JsonArray array)
+			{
+				if (array.Count == 0) return Array.Empty<JsonPointer>();
+
+				return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
+			}
+
+			if (evaluation.LocalInstance is JsonObject obj &&
+			    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
+				return obj.Select(x => JsonPointer.Create(x.Key));
+
+			return Array.Empty<JsonPointer>();
+		};
+
+		return new KeywordConstraint(Name, Evaluator)
+		{
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		if (evaluation.LocalInstance is JsonArray)
+		{
+			uint minimum = 1;
+			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
+				minimum = minContainsAnnotation!.GetValue<uint>();
+			uint? maximum = null;
+			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
+				maximum = maxContainsAnnotation!.GetValue<uint>();
+
+			var validIndices = evaluation.ChildEvaluations
+				.Where(x => x.Results.IsValid)
+				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
+				.ToArray();
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
+			
+			var actual = validIndices.Length;
+			if (actual < minimum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
+			else if (actual > maximum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
 			return;
 		}
 
-		var validIndices = new List<JsonNode>();
-		if (schemaValueType == SchemaValueType.Array)
+		if (evaluation.LocalInstance is JsonObject &&
+		    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
 		{
-			var array = (JsonArray)context.LocalInstance!;
-			for (int i = 0; i < array.Count; i++)
-			{
-				context.Push(context.InstanceLocation.Combine(i), array[i] ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), Schema);
-				context.Evaluate();
-				if (context.LocalResult.IsValid)
-					validIndices.Add(i);
-				context.Pop();
-			}
-		}
-		else
-		{
-			if (context.Options.EvaluatingAs != SpecVersion.Unspecified &&
-			    context.Options.EvaluatingAs < SpecVersion.DraftNext)
-			{
-				context.WrongValueKind(schemaValueType);
-				return;
-			}
-			var obj = (JsonObject)context.LocalInstance!;
-			foreach (var kvp in obj)
-			{
-				context.Push(context.InstanceLocation.Combine(kvp.Key), kvp.Value ?? JsonNull.SignalNode,
-					context.EvaluationPath.Combine(Name), Schema);
-				context.Evaluate();
-				if (context.LocalResult.IsValid)
-					validIndices.Add(kvp.Key!);
-				context.Pop();
-			}
+			uint minimum = 1;
+			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
+				minimum = minContainsAnnotation!.GetValue<uint>();
+			uint? maximum = null;
+			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
+				maximum = maxContainsAnnotation!.GetValue<uint>();
+
+			var validProperties = evaluation.ChildEvaluations
+				.Where(x => x.Results.IsValid)
+				.Select(x => x.RelativeInstanceLocation.Segments[0].Value)
+				.ToArray();
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validProperties));
+			
+			var actual = validProperties.Length;
+			if (actual < minimum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooFew, ("received", actual), ("minimum", minimum));
+			else if (actual > maximum)
+				evaluation.Results.Fail(Name, ErrorMessages.ContainsTooMany, ("received", actual), ("maximum", maximum));
+			return;
 		}
 
-		context.LocalResult.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation);
-		context.LocalResult.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation);
-		var min = minContainsAnnotation?.GetValue<uint>() ?? 1;
-		var max = maxContainsAnnotation?.GetValue<uint>() ?? uint.MaxValue;
-		var validCount = validIndices.Count;
-
-		if (validCount < min)
-			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooFew, ("received", validCount), ("minimum", min));
-		else if (validCount > max)
-			context.LocalResult.Fail(Name, ErrorMessages.ContainsTooMany, ("received", validCount), ("maximum", max));
-		else
-			context.LocalResult.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ContainsKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as ContainsKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schema.GetHashCode();
+		evaluation.MarkAsSkipped();
 	}
 }
 

@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -9,7 +10,6 @@ namespace Json.Schema;
 /// Handles `$schema`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(long.MinValue)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(SchemaKeywordJsonConverter))]
-public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
+public class SchemaKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -41,60 +41,40 @@ public class SchemaKeyword : IJsonSchemaKeyword, IEquatable<SchemaKeyword>
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
+		if (!context.Options.ValidateAgainstMetaSchema)
+			return KeywordConstraint.Skip;
+
 		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
 		if (metaSchema == null)
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
-		if (metaSchema.TryGetKeyword<VocabularyKeyword>(VocabularyKeyword.Name, out var vocabularyKeyword))
-			context.UpdateMetaSchemaVocabs(vocabularyKeyword!.Vocabulary);
+		context.Options.ValidateAgainstMetaSchema = false;
+		var metaSchemaConstraint = metaSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation.Combine(Name), JsonPointer.Empty, context);
+		context.Options.ValidateAgainstMetaSchema = true;
 
-		if (!context.Options.ValidateAgainstMetaSchema)
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			context.ExitKeyword(Name, true);
-			return;
-		}
-
-		context.Log(() => "Validating against meta-schema.");
-		using var document = JsonDocument.Parse(JsonSerializer.Serialize(context.LocalSchema));
-		var schemaAsJson = document.RootElement;
-		var newOptions = EvaluationOptions.From(context.Options);
-		newOptions.ValidateAgainstMetaSchema = false;
-		var results = metaSchema.Evaluate(schemaAsJson, newOptions);
-
-		if (!results.IsValid)
-			context.LocalResult.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
+			ChildDependencies = new[] { metaSchemaConstraint }
+		};
 	}
 
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(SchemaKeyword? other)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as SchemaKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schema.GetHashCode();
+		if (!evaluation.ChildEvaluations[0].Results.IsValid)
+			evaluation.Results.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
 	}
 }
 

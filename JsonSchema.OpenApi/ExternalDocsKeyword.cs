@@ -14,11 +14,11 @@ namespace Json.Schema.OpenApi;
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [Vocabulary(Vocabularies.OpenApiId)]
 [JsonConverter(typeof(ExternalDocsKeywordJsonConverter))]
-public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKeyword>
+public class ExternalDocsKeyword : IJsonSchemaKeyword
 {
 	internal const string Name = "externalDocs";
 
-	private JsonNode? _json;
+	private readonly JsonNode? _json;
 
 	/// <summary>
 	/// The URL for the target documentation. This MUST be in the form of a URL.
@@ -60,66 +60,20 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword, IEquatable<ExternalDocsKe
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-
-		// todo ??? 
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ExternalDocsKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (Url != other.Url) return false;
-		if (Description == null) return other.Description == null;
-		if ((Extensions == null) != (other.Extensions == null)) return false;
-
-		if (Extensions != null)
-		{
-			var keysMatch = Extensions.Count == other.Extensions!.Count &&
-			                !Extensions.Keys.Except(other.Extensions.Keys).Any();
-			if (!keysMatch) return false;
-
-			var mapsMatch = Extensions.Join(other.Extensions,
-					x => x.Key,
-					y => y.Key,
-					(x, y) => x.Value == y.Value)
-				.All(x => x);
-
-			return mapsMatch;
-		}
-
-		return true;
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as ExternalDocsKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			var hashCode = Url.GetHashCode();
-			hashCode = (hashCode * 397) ^ (Description != null ? Description.GetHashCode() : 0);
-			hashCode = (hashCode * 397) ^ (Extensions != null ? Extensions.GetStringDictionaryHashCode() : 0);
-			return hashCode;
-		}
+		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, _json));
 	}
 }
 

@@ -25,12 +25,13 @@ public class UriIdentifier : IDataResourceIdentifier
 	}
 
 	/// <summary>
-	/// Attempts to resolve the reference.
+	/// Resolves a resource.
 	/// </summary>
-	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
-	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(EvaluationContext context, out JsonNode? value)
+	/// <param name="evaluation">The evaluation being process.  This will help identify.</param>
+	/// <param name="registry">The schema registry.</param>
+	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
+	/// <returns>True if resolution was successful; false otherwise.</returns>
+	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
 		var baseUri = parts[0];
@@ -44,9 +45,10 @@ public class UriIdentifier : IDataResourceIdentifier
 				wasResolved = Download(newUri, out data);
 			else
 			{
-				var uriFolder = context.Scope.LocalScope.OriginalString.EndsWith("/")
-					? context.Scope.LocalScope
-					: context.Scope.LocalScope.GetParentUri();
+				var localScope = new Uri(evaluation.Results.SchemaLocation.OriginalString.Split(new[] { '#' }, StringSplitOptions.None)[0]);
+				var uriFolder = localScope.OriginalString.EndsWith("/")
+					? localScope
+					: localScope.GetParentUri();
 				var newBaseUri = new Uri(uriFolder, baseUri);
 				wasResolved = Download(newBaseUri, out data);
 			}
@@ -55,7 +57,16 @@ public class UriIdentifier : IDataResourceIdentifier
 				throw new JsonSchemaException($"Cannot resolve value at `{Target}`");
 		}
 		else
-			data = JsonSerializer.SerializeToNode(context.SchemaRoot);
+		{
+			var root = evaluation.Results;
+			while (root.Parent != null)
+			{
+				root = root.Parent;
+			}
+
+			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
+			data = JsonSerializer.SerializeToNode(rootSchema);
+		}
 
 		if (!string.IsNullOrEmpty(fragment))
 		{

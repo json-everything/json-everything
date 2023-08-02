@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -18,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(PatternKeywordJsonConverter))]
-public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
+public class PatternKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -55,55 +56,34 @@ public class PatternKeyword : IJsonSchemaKeyword, IEquatable<PatternKeyword>
 	internal static PatternKeyword InvalidRegex(string pattern) => new(pattern);
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		if (InvalidPattern != null)
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
+		if (schemaValueType is not SchemaValueType.String)
 		{
-			context.LocalResult.Fail(Name, ErrorMessages.InvalidPattern, ("pattern", Value.ToString()));
-			context.ExitKeyword(Name, false);
+			evaluation.MarkAsSkipped();
 			return;
 		}
 
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.String)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
-
-		var str = context.LocalInstance!.GetValue<string>();
+		var str = evaluation.LocalInstance!.GetValue<string>();
 		if (!Value.IsMatch(str))
-			context.LocalResult.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(PatternKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Value.ToString() == other.Value.ToString();
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as PatternKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Value.GetHashCode();
+			evaluation.Results.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
 	}
 }
 

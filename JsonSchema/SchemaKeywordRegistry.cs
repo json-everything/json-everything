@@ -46,7 +46,7 @@ public static class SchemaKeywordRegistry
 	/// </summary>
 	/// <typeparam name="T">The keyword type.</typeparam>
 	public static void Register<T>()
-		where T : IJsonSchemaKeyword, IEquatable<T>
+		where T : IJsonSchemaKeyword
 	{
 		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
 		if (keyword == null)

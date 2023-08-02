@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Handles `dependentRequired`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
@@ -20,7 +18,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(DependentRequiredKeywordJsonConverter))]
-public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<DependentRequiredKeyword>
+public class DependentRequiredKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -42,104 +40,44 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword, IEquatable<Dependent
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Object)
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		if (evaluation.LocalInstance is not JsonObject obj)
 		{
-			context.WrongValueKind(schemaValueType);
+			evaluation.MarkAsSkipped();
 			return;
 		}
 
-		var obj = (JsonObject)context.LocalInstance!;
-		if (!obj.VerifyJsonObject()) return;
+		var existingProperties = obj.Select(x => x.Key).ToArray();
 
-		var overallResult = true;
-		var missingDependencies = new Dictionary<string, List<string>>();
-		foreach (var property in Requirements)
+		var missing = new Dictionary<string, string[]>();
+		foreach (var requirement in Requirements)
 		{
-			context.Options.LogIndentLevel++;
-			context.Log(() => $"Evaluating property '{property.Key}'.");
-			var dependencies = property.Value;
-			var name = property.Key;
-			if (!obj.TryGetPropertyValue(name, out _))
-			{
-				context.Log(() => $"Property '{property.Key}' does not exist. Skipping.");
-				continue;
-			}
+			if (!existingProperties.Contains(requirement.Key)) continue;
 
-			if (!missingDependencies.TryGetValue(name, out var list))
-				list = missingDependencies[name] = new List<string>();
-			foreach (var dependency in dependencies)
-			{
-				if (obj.TryGetPropertyValue(dependency, out _)) continue;
-
-				overallResult = false;
-				if (context.ApplyOptimizations) break;
-				list.Add(dependency);
-			}
-
-			if (list.Any())
-				context.Log(() => $"Missing properties: [{string.Join(",", list.Select(x => $"'{x}'"))}].");
-			else
-				context.Log(() => "All dependencies found.");
-			context.Options.LogIndentLevel--;
-			if (!overallResult && context.ApplyOptimizations) break;
+			var missingProperties = requirement.Value.Except(existingProperties).ToArray();
+			if (missingProperties.Length != 0)
+				missing[requirement.Key] = missingProperties;
 		}
 
-		if (!overallResult)
-		{
-			var missing = JsonSerializer.Serialize(missingDependencies);
-			context.LocalResult.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
-		}
-
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(DependentRequiredKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (Requirements.Count != other.Requirements.Count) return false;
-		var byKey = Requirements.Join(other.Requirements,
-				td => td.Key,
-				od => od.Key,
-				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToArray();
-		if (byKey.Length != Requirements.Count) return false;
-
-		return byKey.All(g => g.ThisDef.ContentsEqual(g.OtherDef));
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as DependentRequiredKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Requirements.Aggregate(0, (current, obj) =>
-		{
-			unchecked
-			{
-				var hashCode = current;
-				hashCode = (hashCode * 397) ^ (obj.Key?.GetHashCode() ?? 0);
-				hashCode = (hashCode * 397) ^ (obj.Value != null ? obj.Value.GetCollectionHashCode() : 0);
-				return hashCode;
-			}
-		});
+		if (missing.Count != 0)
+			evaluation.Results.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
 	}
 }
 

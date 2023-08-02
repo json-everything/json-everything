@@ -19,7 +19,7 @@ public class LocalizationTests
 
 		var message = results.Errors!["minimum"];
 
-		Assert.AreEqual("5 is less than or equal to 10", message);
+		Assert.AreEqual("5 should be at least 10", message);
 	}
 
 	[Test]

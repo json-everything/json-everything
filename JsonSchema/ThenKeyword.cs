@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -9,7 +11,6 @@ namespace Json.Schema;
 /// Handles `then`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(10)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
@@ -19,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [DependsOnAnnotationsFrom(typeof(IfKeyword))]
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
-public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<ThenKeyword>
+public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -41,58 +42,41 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer, IEquatable<Then
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		if (!context.LocalResult.TryGetAnnotation(IfKeyword.Name, out var annotation))
+		var ifConstraint = localConstraints.FirstOrDefault(x => x.Keyword == IfKeyword.Name);
+		if (ifConstraint == null)
+			return KeywordConstraint.Skip;
+
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			context.NotApplicable(() => $"No annotation found for {IfKeyword.Name}.");
+			SiblingDependencies = new[] { ifConstraint },
+			ChildDependencies = new[] { subschemaConstraint }
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		if (!evaluation.Results.TryGetAnnotation(IfKeyword.Name, out var ifAnnotation) || !ifAnnotation!.GetValue<bool>())
+		{
+			evaluation.MarkAsSkipped();
 			return;
 		}
 
-		context.Log(() => $"Annotation for {IfKeyword.Name} is {annotation.AsJsonString()}.");
-		var ifResult = annotation!.GetValue<bool>();
-		if (!ifResult)
-		{
-			context.NotApplicable(() => $"{Name} does not apply.");
-			return;
-		}
-
-		context.Push(context.EvaluationPath.Combine(Name), Schema);
-		context.Evaluate();
-		var valid = context.LocalResult.IsValid;
-		context.Pop();
-		if (!valid)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(ThenKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as ThenKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Schema.GetHashCode();
+		var subSchemaEvaluation = evaluation.ChildEvaluations[0];
+		if (!subSchemaEvaluation.Results.IsValid)
+			evaluation.Results.Fail();
 	}
 }
 

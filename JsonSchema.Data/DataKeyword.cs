@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema.Data;
 
@@ -16,13 +16,12 @@ namespace Json.Schema.Data;
 /// Represents the `data` keyword.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(int.MinValue)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.DataId)]
 [JsonConverter(typeof(DataKeywordJsonConverter))]
-public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
+public class DataKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -66,21 +65,29 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	/// <exception cref="JsonException">
-	/// Thrown when the formed schema contains values that are invalid for the associated
-	/// keywords.
-	/// </exception>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
+		return new KeywordConstraint(Name, Evaluator);
+	}
+
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
 		var data = new Dictionary<string, JsonNode>();
 		var failedReferences = new List<IDataResourceIdentifier>();
 		foreach (var reference in References)
 		{
-			if (!reference.Value.TryResolve(context, out var resolved))
+			if (!reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved))
 				failedReferences.Add(reference.Value);
 
 			data.Add(reference.Key, resolved!);
@@ -92,13 +99,16 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
 
-		context.Push(context.EvaluationPath.Combine(Name), subschema);
-		context.Evaluate();
-		var result = context.LocalResult.IsValid;
-		context.Pop();
-		if (!result)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name);
+		var schemaEvaluation = subschema
+			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
+			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name), context.Options);
+
+		evaluation.ChildEvaluations = new[] { schemaEvaluation };
+
+		schemaEvaluation.Evaluate(context);
+
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 
 	/// <summary>
@@ -122,39 +132,6 @@ public class DataKeyword : IJsonSchemaKeyword, IEquatable<DataKeyword>
 			default:
 				throw new FormatException($"URI scheme '{uri.Scheme}' is not supported.  Only HTTP(S) and local file system URIs are allowed.");
 		}
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(DataKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		if (References.Count != other.References.Count) return false;
-		var byKey = References.Join(other.References,
-				td => td.Key,
-				od => od.Key,
-				(td, od) => new { ThisDef = td.Value, OtherDef = od.Value })
-			.ToList();
-		if (byKey.Count != References.Count) return false;
-
-		return byKey.All(g => Equals(g.ThisDef, g.OtherDef));
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as DataKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return References.GetHashCode();
 	}
 }
 
@@ -189,7 +166,18 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		foreach (var kvp in value.References)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			switch (kvp.Value)
+			{
+				case JsonPointerIdentifier jp:
+					JsonSerializer.Serialize(writer, jp.Target, options);
+					break;
+				case RelativeJsonPointerIdentifier rjp:
+					JsonSerializer.Serialize(writer, rjp.Target, options);
+					break;
+				case UriIdentifier uri:
+					JsonSerializer.Serialize(writer, uri.Target, options);
+					break;
+			}
 		}
 		writer.WriteEndObject();
 	}

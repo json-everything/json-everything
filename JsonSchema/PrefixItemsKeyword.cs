@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -17,7 +17,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PrefixItemsKeywordJsonConverter))]
-public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatable<PrefixItemsKeyword>
+public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 {
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -54,70 +54,42 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IEquatab
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
+		var subschemaConstraints = ArraySchemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(i), context)).ToArray();
+
+		return new KeywordConstraint(Name, Evaluator)
 		{
-			context.WrongValueKind(schemaValueType);
+			ChildDependencies = subschemaConstraints
+		};
+	}
+
+	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		if (evaluation.LocalInstance is not JsonArray array)
+		{
+			evaluation.MarkAsSkipped();
 			return;
 		}
 
-		var array = (JsonArray)context.LocalInstance!;
-		var overallResult = true;
-		var maxEvaluations = Math.Min(ArraySchemas.Count, array.Count);
-		for (int i = 0; i < maxEvaluations; i++)
-		{
-			var schema = ArraySchemas[i];
-			var item = array[i];
-			context.Push(context.InstanceLocation.Combine(i),
-				item ?? JsonNull.SignalNode,
-				context.EvaluationPath.Combine(Name, i),
-				schema);
-			context.Evaluate();
-			overallResult &= context.LocalResult.IsValid;
-			context.Pop();
-			if (!overallResult && context.ApplyOptimizations) break;
-		}
-
-		if (maxEvaluations == array.Count)
-			context.LocalResult.SetAnnotation(Name, true);
+		if (evaluation.ChildEvaluations.Length == array.Count)
+			evaluation.Results.SetAnnotation(Name, true);
 		else
-			context.LocalResult.SetAnnotation(Name, maxEvaluations);
+			evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Length - 1);
 
-		if (!overallResult)
-			context.LocalResult.Fail();
-		context.ExitKeyword(Name, context.LocalResult.IsValid);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(PrefixItemsKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-
-		return ArraySchemas.ContentsEqual(other.ArraySchemas);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as PrefixItemsKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return ArraySchemas.GetUnorderedCollectionHashCode();
+		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
+			evaluation.Results.Fail();
 	}
 }
 

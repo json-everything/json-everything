@@ -13,13 +13,12 @@ namespace Json.Schema.UniqueKeys;
 /// Represents the `data` keyword.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(int.MinValue)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.UniqueKeysId)]
 [JsonConverter(typeof(UniqueKeysKeywordJsonConverter))]
-public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeyword>
+public class UniqueKeysKeyword : IJsonSchemaKeyword
 {
 	private class MaybeJsonNodeComparer : IEqualityComparer<(bool resolved, JsonNode? node)>
 	{
@@ -59,20 +58,26 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 	}
 
 	/// <summary>
-	/// Performs evaluation for the keyword.
+	/// Builds a constraint object for a keyword.
 	/// </summary>
-	/// <param name="context">Contextual details for the evaluation process.</param>
-	public void Evaluate(EvaluationContext context)
+	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
+	/// <param name="localConstraints">
+	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	/// Will contain the constraints for keyword dependencies.
+	/// </param>
+	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
+	/// <returns>A constraint object.</returns>
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+		IReadOnlyList<KeywordConstraint> localConstraints,
+		EvaluationContext context)
 	{
-		context.EnterKeyword(Name);
-		var schemaValueType = context.LocalInstance.GetSchemaValueType();
-		if (schemaValueType != SchemaValueType.Array)
-		{
-			context.WrongValueKind(schemaValueType);
-			return;
-		}
+		return new KeywordConstraint(Name, Evaluator);
+	}
 
-		var array = (JsonArray)context.LocalInstance!;
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) return;
+
 		var collections = new List<List<(bool, JsonNode?)>>();
 		foreach (var item in array)
 		{
@@ -88,52 +93,16 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword, IEquatable<UniqueKeysKeywor
 				var a = collections[i];
 				var b = collections[j];
 
-				if (a.SequenceEqual(b, MaybeJsonNodeComparer.Instance))
-				{
-					if (context.Options.OutputFormat == OutputFormat.Flag)
-					{
-						context.LocalResult.Fail(Name, $"Found duplicate items at indices {i} and {j}");
-						context.ExitKeyword(Name);
-						return;
-					}
+				if (a.SequenceEqual(b, MaybeJsonNodeComparer.Instance)) 
 					matchedIndexPairs.Add((i, j));
-				}
 			}
 		}
 
 		if (matchedIndexPairs.Any())
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			context.LocalResult.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
+			evaluation.Results.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
 		}
-
-		context.ExitKeyword(Name);
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(UniqueKeysKeyword? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-
-		return Keys.SequenceEqual(other.Keys);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as UniqueKeysKeyword);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		return Keys.GetHashCode();
 	}
 }
 

@@ -23,19 +23,20 @@ public class RelativeJsonPointerIdentifier : IDataResourceIdentifier
 	}
 
 	/// <summary>
-	/// Attempts to resolve the reference.
+	/// Resolves a resource.
 	/// </summary>
-	/// <param name="context">The schema evaluation context.</param>
-	/// <param name="value">If return is true, the value at the indicated location.</param>
-	/// <returns>true if resolution is successful; false otherwise.</returns>
-	public bool TryResolve(EvaluationContext context, out JsonNode? value)
+	/// <param name="evaluation">The evaluation being process.  This will help identify.</param>
+	/// <param name="registry">The schema registry.</param>
+	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
+	/// <returns>True if resolution was successful; false otherwise.</returns>
+	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
-		if (context.LocalInstance == null)
+		if (evaluation.LocalInstance == null)
 		{
 			value = null;
 			return false;
 		}
-		return Target.TryEvaluate(context.LocalInstance, out value);
+		return Target.TryEvaluate(evaluation.LocalInstance, out value);
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>

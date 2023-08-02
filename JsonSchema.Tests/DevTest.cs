@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Json.More;
+﻿using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -13,22 +8,25 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var filePath = "C:\\Folder\\Issue435_schema.json";
+		var schema = new JsonSchemaBuilder()
+			.Ref(MetaSchemas.Draft6Id)
+			.Build();
+		var instance = new JsonObject
+		{
+			["items"] = new JsonObject
+			{
+				["minLength"] = -1
+			}
+		};
 
-		var withoutProtocol = new Uri(filePath);
-		var withProtocol = new Uri($"file:///{filePath}");
-		
-		var fragment = new Uri("#/$defs/DerivedType", UriKind.RelativeOrAbsolute);
+		var options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			PreserveDroppedAnnotations = true
+		};
 
-		var withoutProtocolResult = new Uri(withoutProtocol, fragment);
-		var fileUriResult = new Uri(withProtocol, fragment);
+		var result = schema.Evaluate(instance, options);
 
-		Console.WriteLine("File path: {0}", filePath);
-		Console.WriteLine();
-		Console.WriteLine("Without protocol: {0}", withoutProtocol);
-		Console.WriteLine("With protocol:    {0}", withProtocol);
-		Console.WriteLine();
-		Console.WriteLine("Combined, Without: {0}", withoutProtocolResult);
-		Console.WriteLine("Combined, With:    {0}", fileUriResult);
+		result.AssertInvalid();
 	}
 }
