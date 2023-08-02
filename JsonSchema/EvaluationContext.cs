@@ -34,7 +34,7 @@ public class EvaluationContext
 	/// Due to historic evolution of JSON Schema, some keywords (particularly `format`) require
 	/// knowledge of the active vocabularies in order to process correctly.
 	/// </remarks>
-	public Dictionary<Uri, Vocabulary[]?> SchemaVocabs { get; } = new();
+	public Dictionary<Uri, Vocabulary[]?> Dialect { get; } = new();
 	
 	/// <summary>
 	/// Gets the spec version that the schema is currently being evaluated under.
@@ -66,9 +66,9 @@ public class EvaluationContext
 
 	private bool TryGetVocab(JsonSchema schema, out Vocabulary[]? vocab)
 	{
-		if (SchemaVocabs.TryGetValue(schema.BaseUri, out vocab)) return true;
+		if (Dialect.TryGetValue(schema.BaseUri, out vocab)) return true;
 
-		SchemaVocabs[schema.BaseUri] = null;
+		Dialect[schema.BaseUri] = null;
 
 		var schemaKeyword = (SchemaKeyword?)schema.Keywords?.FirstOrDefault(x => x is SchemaKeyword);
 		if (schemaKeyword == null) return false;
@@ -78,7 +78,7 @@ public class EvaluationContext
 		if (vocabKeyword == null) return false;
 
 		vocab = vocabKeyword.Vocabulary.Keys.Select(x => Options.VocabularyRegistry.Get(x)!).ToArray();
-		SchemaVocabs[schema.BaseUri] = vocab;
+		Dialect[schema.BaseUri] = vocab;
 		return true;
 	}
 }

@@ -69,7 +69,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 
 		if (!requireValidation)
 		{
-			var vocabs = context.SchemaVocabs[context.Scope.LocalScope];
+			var vocabs = context.Dialect[context.Scope.LocalScope];
 			if (vocabs != null)
 			{
 				foreach (var formatAssertionId in _formatAssertionIds)

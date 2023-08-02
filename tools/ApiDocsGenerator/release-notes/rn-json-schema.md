@@ -13,6 +13,7 @@ New architecture for keyword evaluation that uses static analysis to save some e
 - `IJsonSchemaKeyword.Evaluate()` removed, replaced by `IJsonSchemaKeyword.GetConstraint()`.  All keywords updated.
 - `EvaluationContext` completely reworked; now carries a lot less information.
 - `IEquatable<T>` no longer required for keyword implementations.  Equality methods removed from all keywords and from `JsonSchema`.
+- `EvaluationResults.Ignore()` removed as keyword evaluations can be skipped using other means.
 
 ## Additions {#release-schema-5.0.0-adds}
 

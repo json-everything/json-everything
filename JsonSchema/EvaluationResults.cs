@@ -268,7 +268,7 @@ public class EvaluationResults
 	/// Marks the result as invalid.
 	/// </summary>
 	/// <param name="keyword">The keyword that failed validation.</param>
-	/// <param name="message">(optional) An error message.</param>
+	/// <param name="message">An error message.</param>
 	/// <remarks>
 	/// For better support for customization, consider using the overload that takes parameters.
 	/// </remarks>
@@ -292,19 +292,6 @@ public class EvaluationResults
 		IsValid = false;
 		_errors ??= new();
 		_errors[keyword] = message.ReplaceTokens(parameters);
-	}
-
-	/// <summary>
-	/// Marks the result of this keyword to be excluded from output.
-	/// </summary>
-	/// <remarks>
-	/// This is used for keywords like `$defs` which don't actually have any
-	/// annotation or assertion behavior and exist solely to house data.
-	/// </remarks>
-	public void Ignore()
-	{
-		IsValid = true;
-		Exclude = true;
 	}
 
 	internal void AddNestedResult(EvaluationResults results)
