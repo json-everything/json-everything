@@ -8,7 +8,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `$recursiveAnchor`.
 /// </summary>
-[SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Core201909Id)]

@@ -8,7 +8,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `$defs`.
 /// </summary>
-[SchemaPriority(long.MinValue + 1)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]

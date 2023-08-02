@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `anyOf`.
 /// </summary>
-[SchemaPriority(20)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]

@@ -10,24 +10,52 @@ namespace Json.Schema;
 /// </summary>
 public static class KeywordExtensions
 {
+	static KeywordExtensions()
+	{
+		_keywordEvaluationGroups = new Dictionary<Type, int>();
+
+		var allTypes = GetAllKeywordTypes().ToList();
+
+		var allDependencies = allTypes.ToDictionary(x => x, x => x.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType));
+
+		_keywordEvaluationGroups[typeof(SchemaKeyword)] = -2;
+		_keywordEvaluationGroups[typeof(IdKeyword)] = -1;
+		_keywordEvaluationGroups[typeof(UnevaluatedItemsKeyword)] = int.MaxValue;
+		_keywordEvaluationGroups[typeof(UnevaluatedPropertiesKeyword)] = int.MaxValue;
+
+		allTypes.Remove(typeof(SchemaKeyword));
+		allTypes.Remove(typeof(IdKeyword));
+		allTypes.Remove(typeof(UnevaluatedItemsKeyword));
+		allTypes.Remove(typeof(UnevaluatedPropertiesKeyword));
+
+		allTypes.Remove(typeof(UnrecognizedKeyword));
+
+		var groupId = 0;
+		while (allTypes.Count != 0)
+		{
+			var groupKeywords = allTypes.Where(x => allDependencies[x].All(d => !allTypes.Contains(d))).ToArray();
+
+			foreach (var groupKeyword in groupKeywords)
+			{
+				_keywordEvaluationGroups[groupKeyword] = groupId;
+				allTypes.Remove(groupKeyword);
+			}
+
+			groupId++;
+		}
+	}
+
+	private static IEnumerable<Type> GetAllKeywordTypes() =>
+		typeof(IJsonSchemaKeyword).Assembly
+			.GetTypes()
+			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
+			            !t.IsAbstract &&
+			            !t.IsInterface);
+
 	private static readonly Dictionary<Type, string> _keywordNames =
-		typeof(IJsonSchemaKeyword).Assembly
-			.GetTypes()
-			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-						!t.IsAbstract &&
-						!t.IsInterface &&
-						t != typeof(UnrecognizedKeyword))
+		GetAllKeywordTypes()
+			.Where(t => t != typeof(UnrecognizedKeyword))
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
-	private static readonly Type[] _keywordDependencies =
-		typeof(IJsonSchemaKeyword).Assembly
-			.GetTypes()
-			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-						!t.IsAbstract &&
-						!t.IsInterface &&
-						t != typeof(UnrecognizedKeyword))
-			.SelectMany(t => t.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType))
-			.Distinct()
-			.ToArray();
 
 	/// <summary>
 	/// Gets the keyword string.
@@ -78,13 +106,7 @@ public static class KeywordExtensions
 		return name;
 	}
 
-	private static readonly Dictionary<Type, long> _priorities =
-		typeof(IJsonSchemaKeyword).Assembly
-			.GetTypes()
-			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-						!t.IsAbstract &&
-						!t.IsInterface)
-			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaPriorityAttribute>()?.ActualPriority ?? 0);
+	private static readonly Dictionary<Type, int> _keywordEvaluationGroups;
 
 	/// <summary>
 	/// Gets the keyword priority.
@@ -96,22 +118,25 @@ public static class KeywordExtensions
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
 		var keywordType = keyword.GetType();
-		if (!_priorities.TryGetValue(keywordType, out var priority))
+
+		if (!_keywordEvaluationGroups.TryGetValue(keywordType, out var priority))
 		{
-			var priorityAttribute = keywordType.GetCustomAttribute<SchemaPriorityAttribute>();
-			priority = priorityAttribute?.ActualPriority ?? 0;
-			_priorities[keywordType] = priority;
+			var keywordDependencies = keywordType.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType);
+			var dependencyPriorities = _keywordEvaluationGroups.Join(keywordDependencies,
+				eg => eg.Key,
+				kd => kd,
+				(eg, _) => eg)
+				.ToArray();
+			priority = dependencyPriorities.Length == 0
+				? 0
+				: dependencyPriorities.Max(x => x.Value);
 		}
 
 		return priority;
 	}
 
 	private static readonly Dictionary<Type, SpecVersion> _versionDeclarations =
-		typeof(IJsonSchemaKeyword).Assembly
-			.GetTypes()
-			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-						!t.IsAbstract &&
-						!t.IsInterface)
+		GetAllKeywordTypes()
 			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaSpecVersionAttribute>()
 				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version));
 
@@ -170,6 +195,6 @@ public static class KeywordExtensions
 	{
 		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
 
-		return _keywordDependencies.Contains(keywordType);
+		return _keywordEvaluationGroups.Where(x => x.Value > 0).Any(x => x.Key == keywordType);
 	}
 }

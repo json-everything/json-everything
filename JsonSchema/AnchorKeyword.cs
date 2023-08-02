@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// Handles `$anchor`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(long.MinValue + 2)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]

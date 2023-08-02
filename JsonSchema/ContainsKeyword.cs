@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `contains`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
@@ -21,8 +20,8 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(MinContainsKeyword))]
-[DependsOnAnnotationsFrom(typeof(MaxContainsKeyword))]
+[DependsOnAnnotationsFrom<MinContainsKeyword>]
+[DependsOnAnnotationsFrom<MaxContainsKeyword>]
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
 public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 {

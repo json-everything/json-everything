@@ -362,7 +362,6 @@ public class VocabularyTests
 		results.AssertValid();
 	}
 
-	[SchemaPriority(10)]
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft202012)]
 	[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]

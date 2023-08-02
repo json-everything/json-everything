@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// Handles `$vocabulary`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(long.MinValue)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]

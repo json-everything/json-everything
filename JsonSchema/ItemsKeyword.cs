@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `items`.
 /// </summary>
-[SchemaPriority(5)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
@@ -21,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
+[DependsOnAnnotationsFrom<PrefixItemsKeyword>]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
 public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector
 {

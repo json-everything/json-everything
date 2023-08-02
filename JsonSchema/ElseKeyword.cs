@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// Handles `else`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(10)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
@@ -19,7 +18,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(IfKeyword))]
+[DependsOnAnnotationsFrom<IfKeyword>]
 [JsonConverter(typeof(ElseKeywordJsonConverter))]
 public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 {

@@ -8,7 +8,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `contentSchema`.
 /// </summary>
-[SchemaPriority(20)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]

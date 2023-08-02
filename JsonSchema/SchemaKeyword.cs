@@ -10,7 +10,6 @@ namespace Json.Schema;
 /// Handles `$schema`.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(long.MinValue)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]

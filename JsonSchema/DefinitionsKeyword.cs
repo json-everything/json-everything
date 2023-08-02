@@ -8,7 +8,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `definitions`.
 /// </summary>
-[SchemaPriority(long.MinValue + 1)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]

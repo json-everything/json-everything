@@ -12,7 +12,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `dependencies`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]

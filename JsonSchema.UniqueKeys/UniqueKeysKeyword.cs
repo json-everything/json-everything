@@ -13,7 +13,6 @@ namespace Json.Schema.UniqueKeys;
 /// Represents the `data` keyword.
 /// </summary>
 [SchemaKeyword(Name)]
-[SchemaPriority(int.MinValue)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]

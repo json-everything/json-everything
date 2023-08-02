@@ -14,6 +14,7 @@ New architecture for keyword evaluation that uses static analysis to save some e
 - `EvaluationContext` completely reworked; now carries a lot less information.
 - `IEquatable<T>` no longer required for keyword implementations.  Equality methods removed from all keywords and from `JsonSchema`.
 - `EvaluationResults.Ignore()` removed as keyword evaluations can be skipped using other means.
+- `[SchemaPriority]` attribute removed as priorities are now calculated based on usage of `[DependsOnAnnotationsFrom]` attribute.
 
 ## Additions {#release-schema-5.0.0-adds}
 
@@ -22,6 +23,7 @@ New architecture for keyword evaluation that uses static analysis to save some e
 - `SchemaEvaluation`
 - `KeywordConstraint`
 - `KeywordEvaluation`
+- `[DependsOnAnnotationsFrom<T>]` (generic of `[DependsOnAnnotationsFrom(typeof(T))]` which exists in v4)
 
 ## Other Changes {#release-schema-5.0.0-other}
 

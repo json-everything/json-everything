@@ -8,7 +8,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `$dynamicAnchor`.
 /// </summary>
-[SchemaPriority(long.MinValue + 3)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]

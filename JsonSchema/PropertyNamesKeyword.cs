@@ -11,7 +11,6 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `propertyNames`.
 /// </summary>
-[SchemaPriority(10)]
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
