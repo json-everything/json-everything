@@ -38,25 +38,17 @@
             The value can be null, a primitive, an array or an object.
             </param>
         </member>
-        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Evaluate(Json.Schema.EvaluationContext)">
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.GetConstraint(Json.Schema.SchemaConstraint,System.Collections.Generic.IReadOnlyList{Json.Schema.KeywordConstraint},Json.Schema.EvaluationContext)">
             <summary>
-            Performs evaluation for the keyword.
+            Builds a constraint object for a keyword.
             </summary>
-            <param name="context">Contextual details for the evaluation process.</param>
-        </member>
-        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Equals(Json.Schema.OpenApi.DiscriminatorKeyword)">
-            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-            <param name="other">An object to compare with this object.</param>
-            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <param name="obj">The object to compare with the current object.</param>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.DiscriminatorKeyword.GetHashCode">
-            <summary>Serves as the default hash function.</summary>
-            <returns>A hash code for the current object.</returns>
+            <param name="schemaConstraint">The <see cref="T:Json.Schema.SchemaConstraint"/> for the schema object that houses this keyword.</param>
+            <param name="localConstraints">
+            The set of other <see cref="T:Json.Schema.KeywordConstraint"/>s that have been processed prior to this one.
+            Will contain the constraints for keyword dependencies.
+            </param>
+            <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
+            <returns>A constraint object.</returns>
         </member>
         <member name="T:Json.Schema.OpenApi.ExampleKeyword">
             <summary>
@@ -74,25 +66,17 @@
             </summary>
             <param name="value">The example value.</param>
         </member>
-        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Evaluate(Json.Schema.EvaluationContext)">
+        <member name="M:Json.Schema.OpenApi.ExampleKeyword.GetConstraint(Json.Schema.SchemaConstraint,System.Collections.Generic.IReadOnlyList{Json.Schema.KeywordConstraint},Json.Schema.EvaluationContext)">
             <summary>
-            Performs evaluation for the keyword.
+            Builds a constraint object for a keyword.
             </summary>
-            <param name="context">Contextual details for the evaluation process.</param>
-        </member>
-        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Equals(Json.Schema.OpenApi.ExampleKeyword)">
-            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-            <param name="other">An object to compare with this object.</param>
-            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.ExampleKeyword.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <param name="obj">The object to compare with the current object.</param>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.ExampleKeyword.GetHashCode">
-            <summary>Serves as the default hash function.</summary>
-            <returns>A hash code for the current object.</returns>
+            <param name="schemaConstraint">The <see cref="T:Json.Schema.SchemaConstraint"/> for the schema object that houses this keyword.</param>
+            <param name="localConstraints">
+            The set of other <see cref="T:Json.Schema.KeywordConstraint"/>s that have been processed prior to this one.
+            Will contain the constraints for keyword dependencies.
+            </param>
+            <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
+            <returns>A constraint object.</returns>
         </member>
         <member name="T:Json.Schema.OpenApi.ExternalDocsKeyword">
             <summary>
@@ -128,25 +112,17 @@
             The value can be null, a primitive, an array or an object.
             </param>
         </member>
-        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Evaluate(Json.Schema.EvaluationContext)">
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.GetConstraint(Json.Schema.SchemaConstraint,System.Collections.Generic.IReadOnlyList{Json.Schema.KeywordConstraint},Json.Schema.EvaluationContext)">
             <summary>
-            Performs evaluation for the keyword.
+            Builds a constraint object for a keyword.
             </summary>
-            <param name="context">Contextual details for the evaluation process.</param>
-        </member>
-        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Equals(Json.Schema.OpenApi.ExternalDocsKeyword)">
-            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-            <param name="other">An object to compare with this object.</param>
-            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <param name="obj">The object to compare with the current object.</param>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.ExternalDocsKeyword.GetHashCode">
-            <summary>Serves as the default hash function.</summary>
-            <returns>A hash code for the current object.</returns>
+            <param name="schemaConstraint">The <see cref="T:Json.Schema.SchemaConstraint"/> for the schema object that houses this keyword.</param>
+            <param name="localConstraints">
+            The set of other <see cref="T:Json.Schema.KeywordConstraint"/>s that have been processed prior to this one.
+            Will contain the constraints for keyword dependencies.
+            </param>
+            <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
+            <returns>A constraint object.</returns>
         </member>
         <member name="T:Json.Schema.OpenApi.Formats">
             <summary>
@@ -375,25 +351,17 @@
             The value can be null, a primitive, an array or an object.
             </param>
         </member>
-        <member name="M:Json.Schema.OpenApi.XmlKeyword.Evaluate(Json.Schema.EvaluationContext)">
+        <member name="M:Json.Schema.OpenApi.XmlKeyword.GetConstraint(Json.Schema.SchemaConstraint,System.Collections.Generic.IReadOnlyList{Json.Schema.KeywordConstraint},Json.Schema.EvaluationContext)">
             <summary>
-            Performs evaluation for the keyword.
+            Builds a constraint object for a keyword.
             </summary>
-            <param name="context">Contextual details for the evaluation process.</param>
-        </member>
-        <member name="M:Json.Schema.OpenApi.XmlKeyword.Equals(Json.Schema.OpenApi.XmlKeyword)">
-            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-            <param name="other">An object to compare with this object.</param>
-            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.XmlKeyword.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <param name="obj">The object to compare with the current object.</param>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-        </member>
-        <member name="M:Json.Schema.OpenApi.XmlKeyword.GetHashCode">
-            <summary>Serves as the default hash function.</summary>
-            <returns>A hash code for the current object.</returns>
+            <param name="schemaConstraint">The <see cref="T:Json.Schema.SchemaConstraint"/> for the schema object that houses this keyword.</param>
+            <param name="localConstraints">
+            The set of other <see cref="T:Json.Schema.KeywordConstraint"/>s that have been processed prior to this one.
+            Will contain the constraints for keyword dependencies.
+            </param>
+            <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
+            <returns>A constraint object.</returns>
         </member>
     </members>
 </doc>
