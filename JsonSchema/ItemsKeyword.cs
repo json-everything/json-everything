@@ -20,7 +20,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom<PrefixItemsKeyword>]
+[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
 public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector
 {

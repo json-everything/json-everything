@@ -19,11 +19,11 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom<PropertiesKeyword>]
-[DependsOnAnnotationsFrom<PatternPropertiesKeyword>]
-[DependsOnAnnotationsFrom<AdditionalPropertiesKeyword>]
-[DependsOnAnnotationsFrom<ContainsKeyword>]
-[DependsOnAnnotationsFrom<UnevaluatedPropertiesKeyword>]
+[DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(AdditionalPropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(ContainsKeyword))]
+[DependsOnAnnotationsFrom(typeof(UnevaluatedPropertiesKeyword))]
 [JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
 public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 {

@@ -23,7 +23,6 @@ New architecture for keyword evaluation that uses static analysis to save some e
 - `SchemaEvaluation`
 - `KeywordConstraint`
 - `KeywordEvaluation`
-- `[DependsOnAnnotationsFrom<T>]` (generic of `[DependsOnAnnotationsFrom(typeof(T))]` which exists in v4)
 
 ## Other Changes {#release-schema-5.0.0-other}
 
