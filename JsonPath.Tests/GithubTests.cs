@@ -40,4 +40,13 @@ public class GithubTests
 
 		Assert.AreEqual(5, results.Matches!.Count);
 	}
+
+	[Test]
+	public void Issue495_TryParseEmptyString()
+	{
+		var success = JsonPath.TryParse(string.Empty, out var path);
+
+		Assert.False(success);
+		Assert.Null(path);
+	}
 }
