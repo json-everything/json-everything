@@ -80,8 +80,13 @@ public class JsonPath
 	/// <returns>True if successful; otherwise false.</returns>
 	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPath? path, PathParsingOptions? options = null)
 	{
-		options ??= new PathParsingOptions();
+		if (source.Length == 0)
+		{
+			path = null;
+			return false;
+		}
 
+		options ??= new PathParsingOptions();
 		if (!options.TolerateExtraWhitespace && (char.IsWhiteSpace(source[0]) || char.IsWhiteSpace(source[^1])))
 		{
 			path = null;

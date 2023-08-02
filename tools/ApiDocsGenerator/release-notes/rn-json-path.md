@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "8.07"
 ---
+# [0.6.4](https://github.com/gregsdennis/json-everything/pull/496) {#release-path-0.6.4}
+
+[#495](https://github.com/gregsdennis/json-everything/issues/495) - `.TryParse()` with empty string throws exception.  Thanks to [@ben-wckdrzr](https://github.com/ben-wckdrzr) for reporting this.
+
 # [0.6.3](https://github.com/gregsdennis/json-everything/commit/2b6e2599e5513069cc1dbb3523d267d241966111) {#release-path-0.6.3}
 
 [Test Suite #41](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/41) - ANBF allows for whitespace between segments.
