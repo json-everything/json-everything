@@ -56,14 +56,22 @@ public static class YamlConverter
 	/// <param name="json"></param>
 	/// <returns></returns>
 	/// <exception cref="NotSupportedException"></exception>
-	public static YamlNode ToYamlNode(this JsonNode json)
+	public static YamlNode? ToYamlNode(this JsonNode json)
 	{
 		return json switch
 		{
+			null => new YamlScalarNode("null"),
 			JsonObject obj => obj.ToYamlMapping(),
 			JsonArray arr => arr.ToYamlSequence(),
 			JsonValue val => val.ToYamlScalar(),
 			_ => throw new NotSupportedException("This isn't a supported JsonNode")
+			{
+				Data =
+				{
+					["node"] = json,
+					["type"] = json.GetType()
+				}
+			}
 		};
 	}
 
