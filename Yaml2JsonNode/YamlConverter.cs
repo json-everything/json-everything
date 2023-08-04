@@ -56,7 +56,7 @@ public static class YamlConverter
 	/// <param name="json"></param>
 	/// <returns></returns>
 	/// <exception cref="NotSupportedException"></exception>
-	public static YamlNode? ToYamlNode(this JsonNode json)
+	public static YamlNode ToYamlNode(this JsonNode json)
 	{
 		return json switch
 		{
