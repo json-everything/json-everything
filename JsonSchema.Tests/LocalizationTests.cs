@@ -85,26 +85,28 @@ public class LocalizationTests
 
 		string RunWithCulture(CultureInfo culture)
 		{
-			try
+			var results = schema.Evaluate(instance, new EvaluationOptions
 			{
-				ErrorMessages.Culture = culture;
-				
-				var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+				OutputFormat = OutputFormat.Hierarchical,
+				Culture = culture
+			});
 
-				return results.Errors!["minimum"];
-			}
-			finally
-			{
-				ErrorMessages.Culture = null!;
-			}
+			return results.Errors!["minimum"];
 		}
 
-		var messages = await Task.WhenAll(
-			Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("es"))),
-			Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("en-us")))
-		);
+		try
+		{
+			var messages = await Task.WhenAll(
+				Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("es"))),
+				Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("en-us")))
+			);
 
-		Assert.AreEqual("5 es menor o igual que 10", messages[0]);
-		Assert.AreEqual("This is a custom error message with 5 and 10", messages[1]);
+			Assert.AreEqual("5 es menor o igual que 10", messages[0]);
+			Assert.AreEqual("5 should be at least 10", messages[1]);
+		}
+		finally
+		{
+			ErrorMessages.Culture = null;
+		}
 	}
 }

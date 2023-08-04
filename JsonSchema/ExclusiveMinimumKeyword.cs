@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -64,7 +65,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber();
 		if (Value >= number)
-			evaluation.Results.Fail(Name, ErrorMessages.ExclusiveMinimum, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMinimum(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -87,8 +88,6 @@ internal class ExclusiveMinimumKeywordJsonConverter : JsonConverter<ExclusiveMin
 
 public static partial class ErrorMessages
 {
-	private static string? _exclusiveMinimum;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="ExclusiveMinimumKeyword"/>.
 	/// </summary>
@@ -97,9 +96,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the value provided in the JSON instance
 	///   - [[limit]] - the lower limit in the schema
 	/// </remarks>
-	public static string ExclusiveMinimum
+	public static string? ExclusiveMinimum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ExclusiveMinimumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string GetExclusiveMinimum(CultureInfo? culture)
 	{
-		get => _exclusiveMinimum ?? Get();
-		set => _exclusiveMinimum = value;
+		return ExclusiveMinimum ?? Get(culture);
 	}
 }

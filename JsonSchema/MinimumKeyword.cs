@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -68,7 +69,7 @@ public class MinimumKeyword : IJsonSchemaKeyword
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber();
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.Minimum, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinimum(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -91,8 +92,6 @@ internal class MinimumKeywordJsonConverter : JsonConverter<MinimumKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _minimum;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
 	/// </summary>
@@ -101,9 +100,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the value provided in the JSON instance
 	///   - [[limit]] - the lower limit in the schema
 	/// </remarks>
-	public static string Minimum
+	public static string? Minimum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinimumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture"></param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string GetMinimum(CultureInfo? culture)
 	{
-		get => _minimum ?? Get();
-		set => _minimum = value;
+		return Minimum ?? Get(culture);
 	}
 }

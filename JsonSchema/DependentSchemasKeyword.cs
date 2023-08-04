@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -85,7 +86,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
 		
 		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.DependentSchemas, ("failed", failedProperties));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture), ("failed", failedProperties));
 	}
 }
 
@@ -114,8 +115,6 @@ internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSch
 
 public static partial class ErrorMessages
 {
-	private static string? _dependentSchemas;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="DependentSchemasKeyword"/>.
 	/// </summary>
@@ -123,9 +122,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[value]] - the value in the schema
 	/// </remarks>
-	public static string DependentSchemas
+	public static string? DependentSchemas { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="DependentSchemasKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string GetDependentSchemas(CultureInfo? culture)
 	{
-		get => _dependentSchemas ?? Get();
-		set => _dependentSchemas = value;
+		return DependentSchemas ?? Get(culture);
 	}
 }

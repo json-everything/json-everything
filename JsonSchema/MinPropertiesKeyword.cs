@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -67,7 +68,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 
 		var number = obj.Count;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.MinProperties, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinProperties(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -94,8 +95,6 @@ internal class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKe
 
 public static partial class ErrorMessages
 {
-	private static string? _minProperties;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MinPropertiesKeyword"/>.
 	/// </summary>
@@ -104,9 +103,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the number of properties provided in the JSON instance
 	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
-	public static string MinProperties
+	public static string? MinProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string GetMinProperties(CultureInfo? culture)
 	{
-		get => _minProperties ?? Get();
-		set => _minProperties = value;
+		return MinProperties ?? Get(culture);
 	}
 }

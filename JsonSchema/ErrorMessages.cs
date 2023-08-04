@@ -26,11 +26,14 @@ public static partial class ErrorMessages
 	/// </summary>
 	public static CultureInfo? Culture { get; set; }
 
-	private static string Get([CallerMemberName] string? key = null)
+	private static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
 	{
 		if (key == null) throw new ArgumentNullException(nameof(key), "Cannot get a null-keyed resource");
 
-		return _resourceManager.GetString($"Error_{key}", Culture ?? CultureInfo.CurrentCulture) ??
+		if (key.StartsWith("Get"))
+			key = key.Substring(3);
+
+		return _resourceManager.GetString($"Error_{key}", culture ?? Culture ?? CultureInfo.CurrentCulture) ??
 			   throw new KeyNotFoundException($"Could not find error message with key '{key}'");
 	}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -75,10 +76,10 @@ public class TypeKeyword : IJsonSchemaKeyword
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		return new KeywordConstraint(Name, (e, _) => Evaluator(e, Type));
+		return new KeywordConstraint(Name, (e, c) => Evaluator(e, c, Type));
 	}
 
-	private void Evaluator(KeywordEvaluation evaluation, SchemaValueType expectedType)
+	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context, SchemaValueType expectedType)
 	{
 		var instanceType = evaluation.LocalInstance.GetSchemaValueType();
 		if (expectedType.HasFlag(instanceType)) return;
@@ -90,7 +91,7 @@ public class TypeKeyword : IJsonSchemaKeyword
 		}
 
 		var expected = expectedType.ToString().ToLower();
-		evaluation.Results.Fail(Name, ErrorMessages.Type, ("received", instanceType), ("expected", expected));
+		evaluation.Results.Fail(Name, ErrorMessages.GetType(context.Options.Culture), ("received", instanceType), ("expected", expected));
 	}
 }
 
@@ -111,8 +112,6 @@ internal class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _type;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="TypeKeyword"/>.
 	/// </summary>
@@ -121,9 +120,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the type of value provided in the JSON instance
 	///   - [[expected]] - the type(s) required by the schema
 	/// </remarks>
-	public static string Type
+	public static string? Type { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="TypeKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the type of value provided in the JSON instance
+	///   - [[expected]] - the type(s) required by the schema
+	/// </remarks>
+	public static string GetType(CultureInfo? culture)
 	{
-		get => _type ?? Get();
-		set => _type = value;
+		return Type ?? Get(culture);
 	}
 }

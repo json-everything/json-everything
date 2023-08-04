@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Json.Schema;
@@ -81,6 +82,11 @@ public class EvaluationOptions
 	/// </summary>
 	public IEnumerable<Type>? IgnoredAnnotations => _ignoredAnnotationTypes;
 
+	/// <summary>
+	/// Gets or sets the culture for error messages.  Overrides <see cref="ErrorMessages.Culture"/>.
+	/// </summary>
+	public CultureInfo? Culture { get; set; }
+
 	internal SpecVersion EvaluatingAs { get; set; }
 
 	static EvaluationOptions()
@@ -114,6 +120,7 @@ public class EvaluationOptions
 			ProcessCustomKeywords = other.ProcessCustomKeywords,
 			OnlyKnownFormats = other.OnlyKnownFormats,
 			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations,
+			Culture = other.Culture,
 			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null
 				? null
 				: new HashSet<Type>(other._ignoredAnnotationTypes)

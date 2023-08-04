@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -63,7 +64,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 		EvaluationContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.UnknownFormat, ("format", Value.Key)));
+			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.GetUnknownFormat(context.Options.Culture), ("format", Value.Key)));
 
 		var requireValidation = context.Options.RequireFormatValidation;
 
@@ -98,9 +99,9 @@ public class FormatKeyword : IJsonSchemaKeyword
 		if (Value is UnknownFormat)
 			evaluation.Results.Fail(Name, errorMessage);
 		else if (errorMessage == null)
-			evaluation.Results.Fail(Name, ErrorMessages.Format, ("format", Value.Key));
+			evaluation.Results.Fail(Name, ErrorMessages.GetFormat(context.Options.Culture), ("format", Value.Key));
 		else
-			evaluation.Results.Fail(Name, ErrorMessages.FormatWithDetail, ("format", Value.Key), ("detail", errorMessage));
+			evaluation.Results.Fail(Name, ErrorMessages.GetFormatWithDetail(context.Options.Culture), ("format", Value.Key), ("detail", errorMessage));
 	}
 }
 
@@ -124,8 +125,6 @@ internal class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _unknownFormat;
-
 	/// <summary>
 	/// Gets or sets the error message for an unknown format.
 	/// </summary>
@@ -133,13 +132,20 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[format]] - the format key
 	/// </remarks>
-	public static string UnknownFormat
-	{
-		get => _unknownFormat ?? Get();
-		set => _unknownFormat = value;
-	}
+	public static string? UnknownFormat { get; set; }
 
-	private static string? _format;
+	/// <summary>
+	/// Gets the error message for an unknown format.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string GetUnknownFormat(CultureInfo? culture)
+	{
+		return UnknownFormat ?? Get(culture);
+	}
 
 	/// <summary>
 	/// Gets or sets the error message for the <see cref="FormatKeyword"/>.
@@ -148,13 +154,20 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[format]] - the format key
 	/// </remarks>
-	public static string Format
-	{
-		get => _format ?? Get();
-		set => _format = value;
-	}
+	public static string? Format { get; set; }
 
-	private static string? _formatWithDetail;
+	/// <summary>
+	/// Gets the error message for <see cref="FormatKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string GetFormat(CultureInfo? culture)
+	{
+		return Format ?? Get(culture);
+	}
 
 	/// <summary>
 	/// Gets or sets the error message for the <see cref="FormatKeyword"/> with
@@ -163,11 +176,21 @@ public static partial class ErrorMessages
 	/// <remarks>
 	///	Available tokens are:
 	///   - [[format]] - the format key
-	///   - [[detail]] - the format key
+	///   - [[detail]] - the detail
 	/// </remarks>
-	public static string FormatWithDetail
+	public static string? FormatWithDetail { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="FormatKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	///   - [[detail]] - the detail
+	/// </remarks>
+	public static string GetFormatWithDetail(CultureInfo? culture)
 	{
-		get => _formatWithDetail ?? Get();
-		set => _formatWithDetail = value;
+		return FormatWithDetail ?? Get(culture);
 	}
 }
