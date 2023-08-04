@@ -60,10 +60,18 @@ public static class YamlConverter
 	{
 		return json switch
 		{
+			null => new YamlScalarNode("null"),
 			JsonObject obj => obj.ToYamlMapping(),
 			JsonArray arr => arr.ToYamlSequence(),
 			JsonValue val => val.ToYamlScalar(),
 			_ => throw new NotSupportedException("This isn't a supported JsonNode")
+			{
+				Data =
+				{
+					["node"] = json,
+					["type"] = json.GetType()
+				}
+			}
 		};
 	}
 

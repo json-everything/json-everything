@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 	  <PackageId>Yaml2JsonNode</PackageId>
 	  <Authors>Greg Dennis</Authors>
-	  <Version>1.2.3</Version>
+	  <Version>1.2.4</Version>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <FileVersion>1.2.3.0</FileVersion>
+	  <FileVersion>1.2.4.0</FileVersion>
 	  <Description>
 		Allows conversion of YamlDotNet's YAML models to JsonNodes.
 	

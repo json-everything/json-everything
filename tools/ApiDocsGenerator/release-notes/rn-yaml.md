@@ -4,6 +4,10 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.2.4](https://github.com/gregsdennis/json-everything/pull/486) {#release-yaml-1.2.4}
+
+Fixed an issue with converting nulls to `YamlNode`.
+
 # [1.2.3](https://github.com/gregsdennis/json-everything/pull/486) {#release-yaml-1.2.3}
 
 [#485](https://github.com/gregsdennis/json-everything/issues/485) - YamlDotNet doesn't report nulls properly (see also their [#716](https://github.com/aaubry/YamlDotNet/issues/716) and [#810](https://github.com/aaubry/YamlDotNet/issues/810)).  Thanks to [@nickcampau](https://github.com/nickcampau) for reporting.
