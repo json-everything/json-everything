@@ -69,7 +69,7 @@ public class MaxLengthKeyword : IJsonSchemaKeyword
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		var length = new StringInfo(str).LengthInTextElements;
 		if (Value < length)
-			evaluation.Results.Fail(Name, ErrorMessages.MaxLength, ("received", length), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxLength(context.Options.Culture), ("received", length), ("limit", Value));
 	}
 }
 
@@ -96,8 +96,6 @@ internal class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _maxLength;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MaxLengthKeyword"/>.
 	/// </summary>
@@ -106,9 +104,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the length of the JSON string
 	///   - [[limit]] - the upper limit specified in the schema
 	/// </remarks>
-	public static string MaxLength
+	public static string? MaxLength { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MaxLengthKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string GetMaxLength(CultureInfo? culture)
 	{
-		get => _maxLength ?? Get();
-		set => _maxLength = value;
+		return MaxLength ?? Get(culture);
 	}
 }

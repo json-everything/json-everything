@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -74,7 +75,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	{
 		var actual = evaluation.ChildEvaluations.Count(x => x.Results.IsValid);
 		if (actual != 1)
-			evaluation.Results.Fail(Name, ErrorMessages.OneOf, ("count", actual));
+			evaluation.Results.Fail(Name, ErrorMessages.GetOneOf(context.Options.Culture), ("count", actual));
 	}
 }
 
@@ -105,8 +106,6 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _oneOf;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
 	/// </summary>
@@ -114,9 +113,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[count]] - the number of subschemas that passed validation
 	/// </remarks>
-	public static string OneOf
+	public static string? OneOf { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="OneOfKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[count]] - the number of subschemas that passed validation
+	/// </remarks>
+	public static string GetOneOf(CultureInfo? culture)
 	{
-		get => _oneOf ?? Get();
-		set => _oneOf = value;
+		return OneOf ?? Get(culture);
 	}
 }

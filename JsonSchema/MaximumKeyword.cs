@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -68,7 +69,7 @@ public class MaximumKeyword : IJsonSchemaKeyword
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber();
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.Maximum, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaximum(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -91,8 +92,6 @@ internal class MaximumKeywordJsonConverter : JsonConverter<MaximumKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _maximum;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
 	/// </summary>
@@ -101,9 +100,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the value provided in the JSON instance
 	///   - [[limit]] - the upper limit in the schema
 	/// </remarks>
-	public static string Maximum
+	public static string? Maximum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinimumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string GetMaximum(CultureInfo? culture)
 	{
-		get => _maximum ?? Get();
-		set => _maximum = value;
+		return Maximum ?? Get(culture);
 	}
 }

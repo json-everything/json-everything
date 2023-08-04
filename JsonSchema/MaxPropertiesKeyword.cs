@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -67,7 +68,7 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword
 
 		var number = obj.Count;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.MaxProperties, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxProperties(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -94,8 +95,6 @@ internal class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKe
 
 public static partial class ErrorMessages
 {
-	private static string? _maxProperties;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MaxPropertiesKeyword"/>.
 	/// </summary>
@@ -104,9 +103,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the number of properties provided in the JSON instance
 	///   - [[limit]] - the upper limit specified in the schema
 	/// </remarks>
-	public static string MaxProperties
+	public static string? MaxProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MaxPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string GetMaxProperties(CultureInfo? culture)
 	{
-		get => _maxProperties ?? Get();
-		set => _maxProperties = value;
+		return MaxProperties ?? Get(culture);
 	}
 }

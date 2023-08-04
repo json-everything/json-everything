@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -67,7 +68,7 @@ public class MinItemsKeyword : IJsonSchemaKeyword
 
 		var number = array.Count;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.MaxItems, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -94,8 +95,6 @@ internal class MinItemsKeywordJsonConverter : JsonConverter<MinItemsKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _minItems;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MinItemsKeyword"/>.
 	/// </summary>
@@ -104,9 +103,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the number of items provided in the JSON instance
 	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
-	public static string MinItems
+	public static string? MinItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string GetMinItems(CultureInfo? culture)
 	{
-		get => _minItems ?? Get();
-		set => _minItems = value;
+		return MinItems ?? Get(culture);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -73,7 +74,7 @@ public class RequiredKeyword : IJsonSchemaKeyword
 
 		var missing = Properties.Except(obj.Select(x => x.Key)).ToArray();
 		if (missing.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.Required, ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetRequired(context.Options.Culture), ("missing", missing));
 	}
 }
 
@@ -103,8 +104,6 @@ internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _required;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="RequiredKeyword"/>.
 	/// </summary>
@@ -112,9 +111,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[missing]] - the properties missing from the JSON instance
 	/// </remarks>
-	public static string Required
+	public static string? Required { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="RequiredKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string GetRequired(CultureInfo? culture)
 	{
-		get => _required ?? Get();
-		set => _required = value;
+		return Required ?? Get(culture);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -78,7 +79,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 		if (duplicates.Any())
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			evaluation.Results.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture), ("duplicates", pairs));
 		}
 	}
 }
@@ -102,8 +103,6 @@ internal class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsKeywor
 
 public static partial class ErrorMessages
 {
-	private static string? _uniqueItems;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="UniqueItemsKeyword"/>.
 	/// </summary>
@@ -111,9 +110,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[duplicates]] - the indices of duplicate pairs as a comma-delimited list of "(x, y)" items
 	/// </remarks>
-	public static string UniqueItems
+	public static string? UniqueItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="UniqueItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[duplicates]] - the indices of duplicate pairs as a comma-delimited list of "(x, y)" items
+	/// </remarks>
+	public static string GetUniqueItems(CultureInfo? culture)
 	{
-		get => _uniqueItems ?? Get();
-		set => _uniqueItems = value;
+		return UniqueItems ?? Get(culture);
 	}
 }

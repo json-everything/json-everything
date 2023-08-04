@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -61,7 +62,7 @@ public class ConstKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.LocalInstance.IsEquivalentTo(Value))
-			evaluation.Results.Fail(Name, ErrorMessages.Const, ("value", Value.AsJsonString()));
+			evaluation.Results.Fail(Name, ErrorMessages.GetConst(context.Options.Culture), ("value", Value.AsJsonString()));
 	}
 }
 
@@ -82,8 +83,6 @@ internal class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _const;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="ConstKeyword"/>.
 	/// </summary>
@@ -91,9 +90,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[value]] - the value in the schema
 	/// </remarks>
-	public static string Const
+	public static string? Const { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ConstKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string GetConst(CultureInfo? culture)
 	{
-		get => _const ?? Get();
-		set => _const = value;
+		return Const ?? Get(culture);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -88,7 +89,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 		}
 
 		if (!overallResult)
-			evaluation.Results.Fail(Name, ErrorMessages.UnknownVocabularies, ("vocabs", $"[{string.Join(", ", violations)}]"));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUnknownVocabularies(context.Options.Culture), ("vocabs", $"[{string.Join(", ", violations)}]"));
 	}
 }
 
@@ -117,8 +118,6 @@ internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _unknownVocabularies;
-
 	/// <summary>
 	/// Gets or sets the error message for when a vocabulary is unknown but required.
 	/// </summary>
@@ -126,9 +125,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[vocabs]] - the URI IDs of the missing vocabularies as a comma-delimited list
 	/// </remarks>
-	public static string UnknownVocabularies
+	public static string? UnknownVocabularies { get; set; }
+
+	/// <summary>
+	/// Gets or sets the error message for when a vocabulary is unknown but required.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[vocabs]] - the URI IDs of the missing vocabularies as a comma-delimited list
+	/// </remarks>
+	public static string GetUnknownVocabularies(CultureInfo? culture)
 	{
-		get => _unknownVocabularies ?? Get();
-		set => _unknownVocabularies = value;
+		return UnknownVocabularies ?? Get(culture);
 	}
 }

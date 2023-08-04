@@ -69,7 +69,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		var length = new StringInfo(str).LengthInTextElements;
 		if (Value > length)
-			evaluation.Results.Fail(Name, ErrorMessages.MinLength, ("received", length), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinLength(context.Options.Culture), ("received", length), ("limit", Value));
 	}
 }
 
@@ -96,8 +96,6 @@ internal class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _minLength;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MinLengthKeyword"/>.
 	/// </summary>
@@ -106,9 +104,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the length of the JSON string
 	///   - [[limit]] - the lower limit specified in the schema
 	/// </remarks>
-	public static string MinLength
+	public static string? MinLength { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinLengthKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string GetMinLength(CultureInfo? culture)
 	{
-		get => _minLength ?? Get();
-		set => _minLength = value;
+		return MinLength ?? Get(culture);
 	}
 }

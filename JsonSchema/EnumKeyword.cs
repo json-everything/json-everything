@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -93,7 +94,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
-			evaluation.Results.Fail(Name, ErrorMessages.Enum, ("received", evaluation.LocalInstance), ("values", Values));
+			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture), ("received", evaluation.LocalInstance), ("values", Values));
 	}
 }
 
@@ -121,8 +122,6 @@ internal class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _enum;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="EnumKeyword"/>.
 	/// </summary>
@@ -135,9 +134,23 @@ public static partial class ErrorMessages
 	/// may be any JSON type and could be quite large.  They are provided to support
 	/// custom messages.
 	/// </remarks>
-	public static string Enum
+	public static string? Enum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="EnumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[values]] - the available values in the schema
+	///
+	/// The default messages are static and do not use these tokens as enum values
+	/// may be any JSON type and could be quite large.  They are provided to support
+	/// custom messages.
+	/// </remarks>
+	public static string GetEnum(CultureInfo? culture)
 	{
-		get => _enum ?? Get();
-		set => _enum = value;
+		return Enum ?? Get(culture);
 	}
 }

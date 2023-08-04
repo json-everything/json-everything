@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -67,7 +68,7 @@ public class MaxItemsKeyword : IJsonSchemaKeyword
 
 		var number = array.Count;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.MaxItems, ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture), ("received", number), ("limit", Value));
 	}
 }
 
@@ -94,8 +95,6 @@ internal class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _maxItems;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MaxItemsKeyword"/>.
 	/// </summary>
@@ -104,9 +103,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the number of items provided in the JSON instance
 	///   - [[limit]] - the upper limit specified in the schema
 	/// </remarks>
-	public static string MaxItems
+	public static string? MaxItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MaxItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string GetMaxItems(CultureInfo? culture)
 	{
-		get => _maxItems ?? Get();
-		set => _maxItems = value;
+		return MaxItems ?? Get(culture);
 	}
 }

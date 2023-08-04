@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -77,7 +78,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword
 		}
 
 		if (missing.Count != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture), ("missing", missing));
 	}
 }
 
@@ -106,8 +107,6 @@ internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRe
 
 public static partial class ErrorMessages
 {
-	private static string? _dependentRequired;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="DependentRequiredKeyword"/>.
 	/// </summary>
@@ -115,9 +114,18 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[missing]] - the value in the schema
 	/// </remarks>
-	public static string DependentRequired
+	public static string? DependentRequired { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="DependentRequiredKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the value in the schema
+	/// </remarks>
+	public static string GetDependentRequired(CultureInfo? culture)
 	{
-		get => _dependentRequired ?? Get();
-		set => _dependentRequired = value;
+		return DependentRequired ?? Get(culture);
 	}
 }

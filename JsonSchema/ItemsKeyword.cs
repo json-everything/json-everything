@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -186,6 +187,7 @@ public static partial class ErrorMessages
 	/// with an array of schemas in a draft 2020-12 or later schema.
 	/// </summary>
 	/// <remarks>No tokens are supported.</remarks>
+	[Obsolete("Invalid use of array-form `items` will result in an exception now.")]
 	public static string InvalidItemsForm
 	{
 		get => _invalidItemsForm ?? Get();

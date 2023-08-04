@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -83,7 +84,7 @@ public class PatternKeyword : IJsonSchemaKeyword
 
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		if (!Value.IsMatch(str))
-			evaluation.Results.Fail(Name, ErrorMessages.Pattern, ("received", str), ("pattern", Value.ToString()));
+			evaluation.Results.Fail(Name, ErrorMessages.GetPattern(context.Options.Culture), ("received", str), ("pattern", Value.ToString()));
 	}
 }
 
@@ -124,28 +125,32 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[pattern]] - the regular expression
 	/// </remarks>
+	[Obsolete("Unsupported patterns will now throw exceptions.")]
 	public static string InvalidPattern
 	{
 		get => _invalidPattern ?? Get();
 		set => _invalidPattern = value;
 	}
 
-	private static string? _pattern;
-
 	/// <summary>
-	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
+	/// Gets or sets the error message for <see cref="PatternKeyword"/>.
 	/// </summary>
 	/// <remarks>
 	///	Available tokens are:
-	///   - [[received]] - the value provided in the JSON instance
-	///   - [[pattern]] - the number of subschemas that passed validation
-	///
-	/// The default messages are static and do not use these tokens as string values
-	/// could be quite large.  They are provided to support custom messages.
+	///   - [[pattern]] - the regular expression
 	/// </remarks>
-	public static string Pattern
+	public static string? Pattern { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PatternKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[pattern]] - the regular expression
+	/// </remarks>
+	public static string GetPattern(CultureInfo? culture)
 	{
-		get => _pattern ?? Get();
-		set => _pattern = value;
+		return Pattern ?? Get(culture);
 	}
 }

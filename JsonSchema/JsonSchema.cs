@@ -553,7 +553,7 @@ public class JsonSchema : IBaseDocument
 	private string ToDebugString()
 	{
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
-		var idKeyword = Keywords!.OfType<IdKeyword>().SingleOrDefault();
+		var idKeyword = Keywords!.OfType<IIdKeyword>().SingleOrDefault();
 		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
 	}
 }

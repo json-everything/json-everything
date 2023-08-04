@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -68,7 +69,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber();
 		if (number % Value != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.MultipleOf, ("received", number), ("divisor", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMultipleOf(context.Options.Culture), ("received", number), ("divisor", Value));
 	}
 }
 
@@ -91,8 +92,6 @@ internal class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _multipleOf;
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MultipleOfKeyword"/>.
 	/// </summary>
@@ -101,9 +100,19 @@ public static partial class ErrorMessages
 	///   - [[received]] - the value provided in the JSON instance
 	///   - [[divisor]] - the required divisor
 	/// </remarks>
-	public static string MultipleOf
+	public static string? MultipleOf { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MultipleOfKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[divisor]] - the required divisor
+	/// </remarks>
+	public static string GetMultipleOf(CultureInfo? culture)
 	{
-		get => _multipleOf ?? Get();
-		set => _multipleOf = value;
+		return MultipleOf ?? Get(culture);
 	}
 }

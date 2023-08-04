@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -70,6 +72,41 @@ public class LocalizationTests
 		finally
 		{
 			ErrorMessages.Minimum = null!;
+		}
+	}
+
+	[Test]
+	public async Task DifferentCulturesInParallel()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Number)
+			.Minimum(10);
+		var instance = JsonNode.Parse("5");
+
+		string RunWithCulture(CultureInfo culture)
+		{
+			var results = schema.Evaluate(instance, new EvaluationOptions
+			{
+				OutputFormat = OutputFormat.Hierarchical,
+				Culture = culture
+			});
+
+			return results.Errors!["minimum"];
+		}
+
+		try
+		{
+			var messages = await Task.WhenAll(
+				Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("es"))),
+				Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("en-us")))
+			);
+
+			Assert.AreEqual("5 es menor o igual que 10", messages[0]);
+			Assert.AreEqual("5 should be at least 10", messages[1]);
+		}
+		finally
+		{
+			ErrorMessages.Culture = null;
 		}
 	}
 }

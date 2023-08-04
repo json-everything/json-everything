@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -74,7 +75,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.ChildEvaluations[0].Results.IsValid)
-			evaluation.Results.Fail(Name, ErrorMessages.MetaSchemaValidation, ("uri", Schema.OriginalString));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMetaSchemaValidation(context.Options.Culture), ("uri", Schema.OriginalString));
 	}
 }
 
@@ -100,8 +101,6 @@ internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _metaSchemaValidation;
-
 	/// <summary>
 	/// Gets or sets the error message for when the schema cannot be validated
 	/// against the meta-schema.
@@ -110,9 +109,19 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[uri]] - the URI of the meta-schema
 	/// </remarks>
-	public static string MetaSchemaValidation
+	public static string? MetaSchemaValidation { get; set; }
+
+	/// <summary>
+	/// Gets or sets the error message for when the schema cannot be validated
+	/// against the meta-schema.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the URI of the meta-schema
+	/// </remarks>
+	public static string GetMetaSchemaValidation(CultureInfo? culture)
 	{
-		get => _metaSchemaValidation ?? Get();
-		set => _metaSchemaValidation = value;
+		return MetaSchemaValidation ?? Get(culture);
 	}
 }

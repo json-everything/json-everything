@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -99,7 +100,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		}
 
 		if (missing.Count != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.DependentRequired, ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture), ("missing", missing));
 
 		
 		var failedProperties = evaluation.ChildEvaluations
@@ -109,7 +110,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
 
 		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.DependentSchemas, ("failed", failedProperties));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture), ("failed", failedProperties));
 	}
 }
 
@@ -252,6 +253,7 @@ public static partial class ErrorMessages
 	///	Available tokens are:
 	///   - [[properties]] - the properties which failed to match the requirements
 	/// </remarks>
+	[Obsolete("Use " + nameof(DependentRequired) + " or " + nameof(DependentSchemas) + " to set the appropriate message.")]
 	public static string Dependencies
 	{
 		get => _dependencies ?? Get();
