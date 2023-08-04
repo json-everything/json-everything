@@ -101,7 +101,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 		if (matchedIndexPairs.Any())
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			evaluation.Results.Fail(Name, ErrorMessages.UniqueItems, ("duplicates", pairs));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture), ("duplicates", pairs));
 		}
 	}
 }

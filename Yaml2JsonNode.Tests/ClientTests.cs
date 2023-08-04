@@ -19,7 +19,7 @@ public class ClientTests
 		var yamlText = YamlSerializer.Serialize(yaml: yaml);
 
 		var jsonRoundTripped = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
-		var jsonRoundText = jsonRoundTripped.ToJsonString();
+		var jsonRoundText = jsonRoundTripp!ed.ToJsonString();
 
 		Console.WriteLine("# jsonText:");
 		Console.WriteLine(jsonText);
