@@ -4,6 +4,10 @@ title: JsonSchema.Net.UniqueKeys
 icon: fas fa-tag
 order: "8.05"
 ---
+# [3.0.1](https://github.com/gregsdennis/json-everything/pull/499) {#release-schemadata-3.0.1}
+
+Update error message usage IAW JsonSchema.Net v5.1.0.
+
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/316) {#release-schemadata-3.0.0}
 
 Updated in accordance with JsonSchema.Net v5.

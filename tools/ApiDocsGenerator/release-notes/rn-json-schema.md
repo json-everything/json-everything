@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.1.0](https://github.com/gregsdennis/json-everything/pull/499) {#release-schema-5.1.0}
+
+[#493](https://github.com/gregsdennis/json-everything/issues/493) - Add support for reporting error messages in multiple cultures in parallel.  Thanks to [@m-adamkiewicz](https://github.com/m-adamkiewicz) for the suggestion.
+
 # [5.0.0](https://github.com/gregsdennis/json-everything/pull/494) {#release-schema-5.0.0}
 
 New architecture for keyword evaluation that uses static analysis to save some evaluation work, thus reducing execution times and memory allocations significantly.
