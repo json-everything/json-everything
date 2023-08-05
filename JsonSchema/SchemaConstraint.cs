@@ -14,17 +14,18 @@ namespace Json.Schema;
 public class SchemaConstraint
 {
 	private readonly Guid _id = Guid.NewGuid();
-	private readonly JsonSchema _localSchema;
 	private readonly JsonPointer _relativeEvaluationPath;
 
 	/// <summary>
 	/// Gets the schema's base URI.
 	/// </summary>
 	public Uri SchemaBaseUri { get; }
+
 	/// <summary>
 	/// Gets the base location within the instance that is being evaluated.
 	/// </summary>
 	public JsonPointer BaseInstanceLocation { get; }
+
 	/// <summary>
 	/// Gets the location relative to <see cref="BaseInstanceLocation"/> within the instance that
 	/// is being evaluated.
@@ -35,6 +36,7 @@ public class SchemaConstraint
 	/// Gets the set of keyword constraints.
 	/// </summary>
 	public KeywordConstraint[] Constraints { get; internal set; } = Array.Empty<KeywordConstraint>();
+
 	/// <summary>
 	/// Defines a method to identify relative instance locations at evaluation time.
 	/// </summary>
@@ -44,6 +46,11 @@ public class SchemaConstraint
 	/// JSON Pointers to those locations at evaluation time.
 	/// </remarks>
 	public Func<KeywordEvaluation, IEnumerable<JsonPointer>>? InstanceLocator { get; set; }
+
+	/// <summary>
+	/// Gets the local <see cref="JsonSchema"/>.
+	/// </summary>
+	public JsonSchema LocalSchema { get; }
 
 	internal JsonPointer BaseSchemaOffset { get; set; } = JsonPointer.Empty;
 	internal SchemaConstraint? Source { get; set; }
@@ -55,7 +62,7 @@ public class SchemaConstraint
 		SchemaBaseUri = schemaBaseUri;
 		BaseInstanceLocation = baseInstanceLocation;
 		RelativeInstanceLocation = relativeInstanceLocation;
-		_localSchema = localSchema;
+		LocalSchema = localSchema;
 	}
 
 	/// <summary>
@@ -88,9 +95,9 @@ public class SchemaConstraint
 		if (BaseSchemaOffset != JsonPointer.Empty)
 			evaluation.Results.SetSchemaReference(BaseSchemaOffset);
 
-		if (_localSchema.BoolValue.HasValue)
+		if (LocalSchema.BoolValue.HasValue)
 		{
-			if (!_localSchema.BoolValue.Value)
+			if (!LocalSchema.BoolValue.Value)
 				evaluation.Results.Fail(string.Empty, ErrorMessages.FalseSchema);
 
 			return evaluation;
@@ -102,20 +109,5 @@ public class SchemaConstraint
 		}
 
 		return evaluation;
-	}
-
-	/// <summary>
-	/// Gets the local schema object.
-	/// </summary>
-	/// <param name="options">Evaluation options.</param>
-	/// <returns>The local <see cref="JsonSchema"/> object represented by this constraint.</returns>
-	/// <remarks>
-	/// This method can lead to inefficiencies.  It is provided as a last resort to access the schema directly.
-	/// </remarks>
-	public JsonSchema GetLocalSchema(EvaluationOptions options)
-	{
-		var baseSchema = options.SchemaRegistry.Get(SchemaBaseUri);
-
-		return baseSchema!.FindSubschema(BaseSchemaOffset, options)!;
 	}
 }

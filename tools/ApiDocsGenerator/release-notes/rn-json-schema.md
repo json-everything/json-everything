@@ -4,11 +4,21 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.1.3](https://github.com/gregsdennis/json-everything/commit/d3a3838882747bb1130860df43cf8ce1fbc48e24) {#release-schema-5.1.3}
+
+Just expose the local schema that you're already storing, you doof.
+
+Adds `SchemaConstraint.LocalSchema`.  Removed method since it didn't actually work.  Bad idea.
+
 # [5.1.2](https://github.com/gregsdennis/json-everything/commit/d3a3838882747bb1130860df43cf8ce1fbc48e24) {#release-schema-5.1.2}
+
+This one, too.
 
 Fixing 👇.  Test your code, folks!
 
 # [5.1.1](https://github.com/gregsdennis/json-everything/commit/db49b4c2c062c0ab6f258f5fe6e355d947157e83) (unlisted) {#release-schema-5.1.1}
+
+Just ignore this.
 
 Added `SchemaConstraint.GetLocalSchema()` for accessing the local schema.  (To be used as a last resort, but may be necessary.)
 
