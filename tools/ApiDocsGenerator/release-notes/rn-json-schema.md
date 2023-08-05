@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.1.2](https://github.com/gregsdennis/json-everything/commit/db49b4c2c062c0ab6f258f5fe6e355d947157e83) {#release-schema-5.1.2}
+
+Fixing 👇.  Test your code, folks!
+
 # [5.1.1](https://github.com/gregsdennis/json-everything/commit/db49b4c2c062c0ab6f258f5fe6e355d947157e83) {#release-schema-5.1.1}
 
 Added `SchemaConstraint.GetLocalSchema()` for accessing the local schema.  (To be used as a last resort, but may be necessary.)

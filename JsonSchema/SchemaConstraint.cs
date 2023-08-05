@@ -116,6 +116,6 @@ public class SchemaConstraint
 	{
 		var baseSchema = options.SchemaRegistry.Get(SchemaBaseUri);
 
-		return baseSchema!.FindSubschema(BaseInstanceLocation, options)!;
+		return baseSchema!.FindSubschema(BaseSchemaOffset, options)!;
 	}
 }
