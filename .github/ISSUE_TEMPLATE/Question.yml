@@ -6,6 +6,8 @@ body:
     attributes:
       value: |
         Thanks for taking the time to help make this project better!
+
+        Please be sure that you've consulted the [documentation](https://docs.json-everything.net) as many questions already have answers there.
   - type: dropdown
     id: package
     attributes:
