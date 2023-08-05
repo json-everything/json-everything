@@ -103,4 +103,19 @@ public class SchemaConstraint
 
 		return evaluation;
 	}
+
+	/// <summary>
+	/// Gets the local schema object.
+	/// </summary>
+	/// <param name="options">Evaluation options.</param>
+	/// <returns>The local <see cref="JsonSchema"/> object represented by this constraint.</returns>
+	/// <remarks>
+	/// This method can lead to inefficiencies.  It is provided as a last resort to access the schema directly.
+	/// </remarks>
+	public JsonSchema GetLocalSchema(EvaluationOptions options)
+	{
+		var baseSchema = options.SchemaRegistry.Get(SchemaBaseUri);
+
+		return baseSchema!.FindSubschema(BaseInstanceLocation, options)!;
+	}
 }

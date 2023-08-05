@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.1.1](commit) {#release-schema-5.1.1}
+
+Added `SchemaConstraint.GetLocalSchema()` for accessing the local schema.  (To be used as a last resort, but may be necessary.)
+
 # [5.1.0](https://github.com/gregsdennis/json-everything/pull/499) {#release-schema-5.1.0}
 
 [#493](https://github.com/gregsdennis/json-everything/issues/493) - Add support for reporting error messages in multiple cultures in parallel.  Thanks to [@m-adamkiewicz](https://github.com/m-adamkiewicz) for the suggestion.
