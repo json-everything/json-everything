@@ -35,4 +35,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="release-notes\rn-json-schema-codegeneration.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
