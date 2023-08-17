@@ -16,15 +16,17 @@ public class CSharpCodeWriter : ICodeWriter
 			.Distinct()
 			.GroupBy(x => x.Name)
 			.ToArray();
-		var duplicates = allModels.Where(x => x.Key != null && x.Count() != 1);
+		var duplicateNames = allModels.Where(x => x.Key != null && x.Count() != 1);
 
-		if (duplicates.Any())
+		// ReSharper disable PossibleMultipleEnumeration
+		if (duplicateNames.Any())
 		{
-			var names = string.Join(",", duplicates.Select(x => x.Key));
-			throw new SchemaConversionException($"Found duplicate definitions for the names [{names}]");
+			var names = string.Join(",", duplicateNames.Select(x => x.Key));
+			// ReSharper restore PossibleMultipleEnumeration
+			throw new SchemaConversionException($"Found multiple definitions for the names [{names}]");
 		}
 
-		foreach (var singleModel in allModels)
+		foreach (var singleModel in allModels.Where(x => x.Key != null))
 		{
 			WriteDeclaration(builder, singleModel.Single());
 		}
@@ -38,12 +40,28 @@ public class CSharpCodeWriter : ICodeWriter
 			case EnumModel:
 				yield break;
 			case ArrayModel arrayModel:
-				yield return arrayModel.Items;
+				foreach (var item in CollectModels(arrayModel.Items))
+				{
+					yield return item;
+				}
 				yield break;
 			case ObjectModel objectModel:
 				foreach (var propertyModel in objectModel.Properties)
 				{
-					yield return propertyModel.Type;
+					foreach (var property in CollectModels(propertyModel.Type))
+					{
+						yield return property;
+					}
+				}
+				yield break;
+			case DictionaryModel dictionaryModel:
+				foreach (var key in CollectModels(dictionaryModel.Keys))
+				{
+					yield return key;
+				}
+				foreach (var item in CollectModels(dictionaryModel.Items))
+				{
+					yield return item;
 				}
 				yield break;
 		}
@@ -146,7 +164,7 @@ public class CSharpCodeWriter : ICodeWriter
 
 	private static void WriteUsage(StringBuilder builder, ArrayModel model)
 	{
-		builder.Append(model.Items.Name);
+		WriteUsage(builder, model.Items);
 		builder.Append("[]");
 	}
 
@@ -184,8 +202,7 @@ public class CSharpCodeWriter : ICodeWriter
 
 	private static void WriteUsage(StringBuilder builder, DictionaryModel model)
 	{
-		builder.Append(model.Items.Name);
-		builder.Append("<");
+		builder.Append("Dictionary<");
 		WriteUsage(builder, model.Keys);
 		builder.Append(", ");
 		WriteUsage(builder, model.Items);

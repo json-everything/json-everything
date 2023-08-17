@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace Json.Schema.CodeGeneration.Model;
 
-public static class ModelGenerator
+internal static class ModelGenerator
 {
 	private const string _baseId = "schema:json-everything:codegen:base";
-	private const string _derivedId = "schema:json-everything:codegen:derived";
+	private const string _abstractId = "schema:json-everything:codegen:abstract";
 	private const string _stringId = "schema:json-everything:codegen:string";
 	private const string _integerId = "schema:json-everything:codegen:integer";
 	private const string _numberId = "schema:json-everything:codegen:number";
@@ -29,9 +26,9 @@ public static class ModelGenerator
 				(TitleKeyword.Name, true) // TODO: this needs to have a pattern
 			);
 
-	private static readonly JsonSchema _derivedRequirements =
+	private static readonly JsonSchema _abstractRequirements =
 		new JsonSchemaBuilder()
-			.Id(_derivedId)
+			.Id(_abstractId)
 			.OneOf(
 				new JsonSchemaBuilder().Ref(_stringId),
 				new JsonSchemaBuilder().Ref(_integerId),
@@ -95,7 +92,7 @@ public static class ModelGenerator
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("array")),
-				(ItemsKeyword.Name, new JsonSchemaBuilder().Ref(_derivedId))
+				(ItemsKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId))
 			)
 			.Required(TypeKeyword.Name, ItemsKeyword.Name);
 
@@ -108,7 +105,7 @@ public static class ModelGenerator
 				(PropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder()
-						.Ref(_derivedId))
+						.Ref(_abstractId))
 				),
 				(AdditionalPropertiesKeyword.Name, false)
 			)
@@ -121,8 +118,8 @@ public static class ModelGenerator
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
 				(PropertiesKeyword.Name, false),
-				(PropertyNamesKeyword.Name, new JsonSchemaBuilder().Ref(_derivedId)), // TODO: should this be specific to naming things?
-				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Ref(_derivedId))
+				(PropertyNamesKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId)), // TODO: should this be specific to naming things?
+				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId))
 			)
 			.Required(TypeKeyword.Name, AdditionalPropertiesKeyword.Name);
 	
@@ -136,7 +133,7 @@ public static class ModelGenerator
 			PreserveDroppedAnnotations = true
 		};
 		_options.SchemaRegistry.Register(_baseRequirements);
-		_options.SchemaRegistry.Register(_derivedRequirements);
+		_options.SchemaRegistry.Register(_abstractRequirements);
 		_options.SchemaRegistry.Register(_stringRequirements);
 		_options.SchemaRegistry.Register(_integerRequirements);
 		_options.SchemaRegistry.Register(_numberRequirements);
@@ -153,14 +150,14 @@ public static class ModelGenerator
 
 		var name = schema.GetTitle();
 
-		var derivedResults = _derivedRequirements.Evaluate(json, _options);
-		if (!derivedResults.IsValid)
+		var abstractResults = _abstractRequirements.Evaluate(json, _options);
+		if (!abstractResults.IsValid)
 		{
 #if DEBUG
-			Console.WriteLine(JsonSerializer.Serialize(derivedResults, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+			Console.WriteLine(JsonSerializer.Serialize(abstractResults, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
 #endif
 
-			derivedResults.TryGetAnnotation(OneOfKeyword.Name, out var validCountNode);
+			abstractResults.TryGetAnnotation(OneOfKeyword.Name, out var validCountNode);
 
 			var validCount = validCountNode?.GetValue<int>();
 			if (validCount is null or 0)
@@ -169,7 +166,7 @@ public static class ModelGenerator
 			throw new SchemaConversionException("This schema matches multiple supported forms.");
 		}
 
-		var validSubschemaId = derivedResults.Details.Single(x => x.IsValid).Details[0].SchemaLocation;
+		var validSubschemaId = abstractResults.Details.Single(x => x.IsValid).Details[0].SchemaLocation;
 		switch (validSubschemaId.OriginalString)
 		{
 			case _stringId:
@@ -186,15 +183,15 @@ public static class ModelGenerator
 			case _arrayId:
 				var itemsSchema = schema.GetItems()!;
 				var items = GenerateCodeModel(itemsSchema);
-				return new ArrayModel(items) { Name = name };
+				return new ArrayModel(name, items);
 			case _objectId:
 				var propertiesList = schema.GetProperties()!;
 				var properties = propertiesList.Select(kvp => new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value), true, true));
-				return new ObjectModel(name!, properties) { Name = name };
+				return new ObjectModel(name!, properties);
 			case _dictionaryId:
 				var additionalPropertiesSchema = schema.GetAdditionalProperties()!;
 				var additionalProperties = GenerateCodeModel(additionalPropertiesSchema);
-				return new DictionaryModel(additionalProperties) { Name = name };
+				return new DictionaryModel(name, additionalProperties);
 		}
 
 		throw new SchemaConversionException("This schema is not in a supported form.");
