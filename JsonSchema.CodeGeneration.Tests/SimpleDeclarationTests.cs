@@ -1,5 +1,3 @@
-using Json.Schema.CodeGeneration.Language;
-
 namespace Json.Schema.CodeGeneration.Tests;
 
 public class SimpleDeclarationTests
@@ -9,9 +7,8 @@ public class SimpleDeclarationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String);
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 
-		Assert.AreEqual(string.Empty, code);
+		VerifyCSharp(schema, string.Empty);
 	}
 
 	[Test]
@@ -20,7 +17,6 @@ public class SimpleDeclarationTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Title("MyEnum")
 			.Enum("Zero", "One", "Two");
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 		var expected = @"public enum MyEnum
 {
 	Zero = 0,
@@ -29,7 +25,7 @@ public class SimpleDeclarationTests
 }
 ";
 
-		Assert.AreEqual(expected, code);
+		VerifyCSharp(schema, expected);
 	}
 
 	[Test]
@@ -39,9 +35,8 @@ public class SimpleDeclarationTests
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.String));
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 
-		Assert.AreEqual(string.Empty, code);
+		VerifyCSharp(schema, string.Empty);
 	}
 
 	[Test]
@@ -52,13 +47,12 @@ public class SimpleDeclarationTests
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.String));
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 		var expected = @"public class MyArray : List<string>
 {
 }
 ";
 
-		Assert.AreEqual(expected, code);
+		VerifyCSharp(schema, expected);
 	}
 
 	[Test]
@@ -72,7 +66,6 @@ public class SimpleDeclarationTests
 				("Beta", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
 				("Gamma", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
 			);
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 		var expected = @"public class MyObject
 {
 	public double Alpha { get; set; }
@@ -81,7 +74,7 @@ public class SimpleDeclarationTests
 }
 ";
 
-		Assert.AreEqual(expected, code);
+		VerifyCSharp(schema, expected);
 	}
 
 	[Test]
@@ -91,9 +84,8 @@ public class SimpleDeclarationTests
 			.Type(SchemaValueType.Object)
 			.AdditionalProperties(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer));
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 
-		Assert.AreEqual(string.Empty, code);
+		VerifyCSharp(schema, string.Empty);
 	}
 
 	[Test]
@@ -104,12 +96,11 @@ public class SimpleDeclarationTests
 			.Type(SchemaValueType.Object)
 			.AdditionalProperties(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Number));
-		var code = schema.GenerateCode(CodeWriters.CSharp);
 		var expected = @"public class MyDictionary : Dictionary<string, double>
 {
 }
 ";
 
-		Assert.AreEqual(expected, code);
+		VerifyCSharp(schema, expected);
 	}
 }

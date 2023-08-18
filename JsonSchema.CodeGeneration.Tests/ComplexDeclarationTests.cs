@@ -1,5 +1,3 @@
-using Json.Schema.CodeGeneration.Language;
-
 namespace Json.Schema.CodeGeneration.Tests;
 
 public class ComplexDeclarationTests
@@ -24,9 +22,18 @@ public class ComplexDeclarationTests
 				)
 			);
 
-		var code = schema.GenerateCode(CodeWriters.CSharp);
+		var expected = @"public class Complex
+{
+	public Dictionary<string, FooBar> ObjectDictionary { get; set; }
+}
+public class FooBar
+{
+	public bool Foo { get; set; }
+	public string Bar { get; set; }
+}
+";
 
-		Console.WriteLine(code);
+		VerifyCSharp(schema, expected);
 	}
 
 	[Test]
@@ -48,21 +55,28 @@ public class ComplexDeclarationTests
 					)
 				),
 				("SingleObject", new JsonSchemaBuilder()
+					.Title("FooBar")
 					.Type(SchemaValueType.Object)
-					.AdditionalProperties(new JsonSchemaBuilder()
-						.Title("FooBar")
-						.Type(SchemaValueType.Object)
-						.Properties(
-							("Foo", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
-							("Bar", new JsonSchemaBuilder().Type(SchemaValueType.String))
-						)
+					.Properties(
+						("Foo", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
+						("Bar", new JsonSchemaBuilder().Type(SchemaValueType.String))
 					)
 				)
 			);
 
-		var code = schema.GenerateCode(CodeWriters.CSharp);
+		var expected = @"public class Complex
+{
+	public Dictionary<string, FooBar> ObjectDictionary { get; set; }
+	public FooBar SingleObject { get; set; }
+}
+public class FooBar
+{
+	public bool Foo { get; set; }
+	public string Bar { get; set; }
+}
+";
 
-		Console.WriteLine(code);
+		VerifyCSharp(schema, expected);
 	}
 
 	[Test]
@@ -72,9 +86,6 @@ public class ComplexDeclarationTests
 			.Type(SchemaValueType.String)
 			.MinLength(42);
 
-		var code = schema.GenerateCode(CodeWriters.CSharp);
-
-		Console.WriteLine(code);
-		Assert.AreEqual(string.Empty, code);
+		VerifyCSharp(schema, string.Empty);
 	}
 }

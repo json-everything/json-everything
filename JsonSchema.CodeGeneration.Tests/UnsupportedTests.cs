@@ -1,22 +1,7 @@
-using Json.Schema.CodeGeneration.Language;
-using Json.Schema.CodeGeneration.Model;
-
 namespace Json.Schema.CodeGeneration.Tests;
 
 public class UnsupportedTests
 {
-	private static void VerifyFailure(JsonSchema schema)
-	{
-		var ex = Assert.Throws<SchemaConversionException>(() =>
-		{
-			var actual = schema.GenerateCode(CodeWriters.CSharp);
-
-			Console.WriteLine(actual);
-		});
-
-		Console.WriteLine(ex);
-	}
-
 	[Test]
 	public void DifferentTypesWithSameName()
 	{
