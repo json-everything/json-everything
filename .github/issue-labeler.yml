@@ -10,6 +10,9 @@
 "pkg:schema-datagen":
   - '### Nuget Package\s*JsonSchema\.Net\.DataGeneration'
 
+"pkg:schema-codegen":
+  - '### Nuget Package\s*JsonSchema\.Net\.CodeGeneration'
+
 "pkg:schema-data":
   - '### Nuget Package\s*JsonSchema\.Net\.Data'
 
