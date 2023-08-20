@@ -5,7 +5,7 @@ public class UnsupportedTests
 	[Test]
 	public void DifferentTypesWithSameName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Host")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -28,7 +28,7 @@ public class UnsupportedTests
 	[Test]
 	public void DifferentButSimilarObjectTypesWithSameName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Host")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -58,7 +58,7 @@ public class UnsupportedTests
 	[Test]
 	public void DifferentButSimilarEnumTypesWithSameName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Host")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -78,7 +78,7 @@ public class UnsupportedTests
 	[Test]
 	public void DifferentButSimilarArrayTypesWithSameName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Host")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -100,7 +100,7 @@ public class UnsupportedTests
 	[Test]
 	public void DifferentButSimilarDictionaryTypesWithSameName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Host")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -124,7 +124,7 @@ public class UnsupportedTests
 	// I edited the cases to get some overlap for this test, then I undid the edit
 	public void MultipleMatches()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Host")
 			.Type(SchemaValueType.Object)
 			// part of custom object, which disallows additionalProperties
@@ -133,6 +133,20 @@ public class UnsupportedTests
 			)
 			// part of dictionary, which disallows properties
 			.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void NamelessObject()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
+				("Beta", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Gamma", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+			);
 
 		VerifyFailure(schema);
 	}

@@ -5,7 +5,7 @@ public class ComplexDeclarationTests
 	[Test]
 	public void ObjectNestedInObjectIsAlsoWritten()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Complex")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -39,7 +39,7 @@ public class FooBar
 	[Test]
 	public void DuplicateObjectIsNotWrittenTwice()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("Complex")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -82,7 +82,7 @@ public class FooBar
 	[Test]
 	public void StringSchemaAllowsOtherKeywords()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.MinLength(42);
 

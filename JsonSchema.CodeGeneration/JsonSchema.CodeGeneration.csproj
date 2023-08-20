@@ -50,4 +50,8 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Humanizer.Core" Version="2.11.10" />
+	</ItemGroup>
+
 </Project>

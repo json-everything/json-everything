@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using Json.Schema.CodeGeneration.Model;
 
 namespace Json.Schema.CodeGeneration.Language;
@@ -14,7 +15,8 @@ internal class CSharpCodeWriter : ICodeWriter
 	{
 		var allModels = CollectModels(model)
 			.Distinct()
-			.GroupBy(x => x.Name)
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+			.GroupBy(x => x.Name.Underscore().Pascalize())
 			.ToArray();
 		var duplicateNames = allModels.Where(x => x.Key != null && x.Count() != 1);
 
@@ -86,7 +88,8 @@ internal class CSharpCodeWriter : ICodeWriter
 
 		if (model.Name != null)
 		{
-			builder.Append(model.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+			builder.Append(model.Name.Underscore().Pascalize());
 			return;
 		}
 
@@ -143,13 +146,15 @@ internal class CSharpCodeWriter : ICodeWriter
 		void WriteValue(EnumValue value)
 		{
 			builder.Append("\t");
-			builder.Append(value.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+			builder.Append(value.Name.Underscore().Pascalize());
 			builder.Append(" = ");
 			builder.Append(value.Value);
 		}
 
 		builder.Append("public enum ");
-		builder.AppendLine(model.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+		builder.AppendLine(model.Name.Underscore().Pascalize());
 		builder.AppendLine("{");
 		for (var i = 0; i < model.Values.Length - 1; i++)
 		{
@@ -171,7 +176,8 @@ internal class CSharpCodeWriter : ICodeWriter
 	private static void WriteDeclaration(StringBuilder builder, ArrayModel model)
 	{
 		builder.Append("public class ");
-		builder.Append(model.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+		builder.Append(model.Name.Underscore().Pascalize());
 		builder.Append(" : List<");
 		WriteUsage(builder, model.Items);
 		builder.AppendLine(">");
@@ -182,14 +188,16 @@ internal class CSharpCodeWriter : ICodeWriter
 	private static void WriteDeclaration(StringBuilder builder, ObjectModel model)
 	{
 		builder.Append("public class ");
-		builder.AppendLine(model.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+		builder.AppendLine(model.Name.Underscore().Pascalize());
 		builder.AppendLine("{");
 		foreach (var property in model.Properties)
 		{
 			builder.Append("\tpublic ");
 			WriteUsage(builder, property.Type);
 			builder.Append(" ");
-			builder.Append(property.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+			builder.Append(property.Name.Underscore().Pascalize());
 			builder.Append(" { ");
 			if (property.CanRead)
 				builder.Append("get; ");
@@ -212,7 +220,8 @@ internal class CSharpCodeWriter : ICodeWriter
 	private static void WriteDeclaration(StringBuilder builder, DictionaryModel model)
 	{
 		builder.Append("public class ");
-		builder.Append(model.Name);
+			// TODO: workaround for .Pascalize() not handling dashes (https://github.com/Humanizr/Humanizer/issues/1282)
+		builder.Append(model.Name.Underscore().Pascalize());
 		builder.Append(" : Dictionary<");
 		WriteUsage(builder, model.Keys);
 		builder.Append(", ");

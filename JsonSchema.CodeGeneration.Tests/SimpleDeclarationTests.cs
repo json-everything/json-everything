@@ -5,7 +5,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void String()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String);
 
 		VerifyCSharp(schema, string.Empty);
@@ -14,7 +14,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamedStringIgnoresName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("NamedString")
 			.Type(SchemaValueType.String);
 
@@ -24,7 +24,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void Integer()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Integer);
 
 		VerifyCSharp(schema, string.Empty);
@@ -33,7 +33,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamedIntegerIgnoresName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("NamedInteger")
 			.Type(SchemaValueType.Integer);
 
@@ -43,7 +43,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void Number()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number);
 
 		VerifyCSharp(schema, string.Empty);
@@ -52,7 +52,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamedNumberIgnoresName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("NamedNumber")
 			.Type(SchemaValueType.Number);
 
@@ -62,7 +62,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void Boolean()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Boolean);
 
 		VerifyCSharp(schema, string.Empty);
@@ -71,7 +71,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamedBooleanIgnoresName()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("NamedBoolean")
 			.Type(SchemaValueType.Boolean);
 
@@ -81,7 +81,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void Enum()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("MyEnum")
 			.Enum("Zero", "One", "Two");
 		var expected = @"public enum MyEnum
@@ -98,7 +98,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamelessArray()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.String));
@@ -109,7 +109,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamedArray()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("MyArray")
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
@@ -125,7 +125,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void Object()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("MyObject")
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -147,7 +147,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamelessDictionary()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.AdditionalProperties(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer));
@@ -158,7 +158,7 @@ public class SimpleDeclarationTests
 	[Test]
 	public void NamedDictionary()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder()
 			.Title("MyDictionary")
 			.Type(SchemaValueType.Object)
 			.AdditionalProperties(new JsonSchemaBuilder()
