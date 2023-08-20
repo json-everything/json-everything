@@ -12,6 +12,73 @@ public class SimpleDeclarationTests
 	}
 
 	[Test]
+	public void NamedStringIgnoresName()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Title("NamedString")
+			.Type(SchemaValueType.String);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
+	public void Integer()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Integer);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
+	public void NamedIntegerIgnoresName()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Title("NamedInteger")
+			.Type(SchemaValueType.Integer);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
+	public void Number()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Number);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
+	public void NamedNumberIgnoresName()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Title("NamedNumber")
+			.Type(SchemaValueType.Number);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
+	public void Boolean()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Boolean);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
+	public void NamedBooleanIgnoresName()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Title("NamedBoolean")
+			.Type(SchemaValueType.Boolean);
+
+		VerifyCSharp(schema, string.Empty);
+	}
+
+	[Test]
 	public void Enum()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
