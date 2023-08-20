@@ -10,6 +10,9 @@
 "pkg:schema-datagen":
   - JsonSchema.DataGeneration/**/*
 
+"pkg:schema-codegen":
+  - JsonSchema.CodeGeneration/**/*
+
 "pkg:schema-data":
   - JsonSchema.Data/**/*
 
