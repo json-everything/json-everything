@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Json.Schema.CodeGeneration.Model;
 
-public class EnumModel : TypeModel
+internal class EnumModel : TypeModel
 {
 	public EnumValue[] Values { get; }
 

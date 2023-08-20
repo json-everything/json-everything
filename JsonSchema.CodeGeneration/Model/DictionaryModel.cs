@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.CodeGeneration.Model;
 
-public class DictionaryModel : TypeModel
+internal class DictionaryModel : TypeModel
 {
 	public TypeModel Keys { get; } // could use propertyNames to declare a key type
 	public TypeModel Items { get; }

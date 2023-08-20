@@ -44,7 +44,7 @@ public class JsonSchema : IBaseDocument
 	/// </summary>
 	/// <param name="keyword">The keyword name.</param>
 	/// <returns>The keyword implementation if it exists in the schema.</returns>
-	public IJsonSchemaKeyword? this[string keyword] => _keywords?[keyword];
+	public IJsonSchemaKeyword? this[string keyword] => _keywords?.TryGetValue(keyword, out var k) ?? false ? k : null;
 
 	/// <summary>
 	/// For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.

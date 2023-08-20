@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
-order: "8.03"
+order: "8.04"
 ---
 # 1.1.0 (no PR) {#release-schemadatagen-1.1.0}
 

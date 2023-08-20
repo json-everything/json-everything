@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.CodeGeneration.Model;
 
-public class PropertyModel
+internal class PropertyModel
 {
 	public string Name { get; }
 	public TypeModel Type { get; }

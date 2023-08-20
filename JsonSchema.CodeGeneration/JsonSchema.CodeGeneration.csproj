@@ -11,20 +11,20 @@
 	  <Company />
 	  <Product>JsonSchema.Net</Product>
 	  <Description>
-		  JSON Schema C# code generation built on the System.Text.Json namespace.
+		  Code generation from JSON Schema built on the System.Text.Json namespace.
 
 		  Read the full documentation at https://docs.json-everything.net/schema/schema-codegen/.
 	  </Description>
 	  <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 	  <PackageTags>json-schema schema json generation codegen</PackageTags>
-	  <Version>1.0.0</Version>
-	  <FileVersion>1.0.0.0</FileVersion>
+	  <Version>0.1.0</Version>
+	  <FileVersion>0.1.0.0</FileVersion>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageIcon>json-logo-256.png</PackageIcon>
 	  <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-codegeneration/</PackageReleaseNotes>
-	  <!-- DocumentationFile>JsonSchema.Net.CodeGeneration.xml</-DocumentationFile -->
+	  <DocumentationFile>JsonSchema.Net.CodeGeneration.xml</DocumentationFile>
 	  <IncludeSymbols>true</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  <PublishRepositoryUrl>true</PublishRepositoryUrl>

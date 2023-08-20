@@ -6,7 +6,7 @@ using Json.Schema.CodeGeneration.Model;
 
 namespace Json.Schema.CodeGeneration.Language;
 
-public class CSharpCodeWriter : ICodeWriter
+internal class CSharpCodeWriter : ICodeWriter
 {
 	internal CSharpCodeWriter(){}
 
@@ -23,7 +23,7 @@ public class CSharpCodeWriter : ICodeWriter
 		{
 			var names = string.Join(",", duplicateNames.Select(x => x.Key));
 			// ReSharper restore PossibleMultipleEnumeration
-			throw new SchemaConversionException($"Found multiple definitions for the names [{names}]");
+			throw new UnsupportedSchemaException($"Found multiple definitions for the names [{names}]");
 		}
 
 		foreach (var singleModel in allModels.Where(x => x.Key != null))

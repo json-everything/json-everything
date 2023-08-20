@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Json.Schema.CodeGeneration.Model;
 
-public class ObjectModel : TypeModel
+internal class ObjectModel : TypeModel
 {
 	public PropertyModel[] Properties { get; }
 

@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net.OpenApi
 icon: fas fa-tag
-order: "8.06"
+order: "8.07"
 ---
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/316) {#release-schemadata-2.0.0}
 

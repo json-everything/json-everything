@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.CodeGeneration.Model;
 
-public class ArrayModel : TypeModel
+internal class ArrayModel : TypeModel
 {
 	public TypeModel Items { get; }
 

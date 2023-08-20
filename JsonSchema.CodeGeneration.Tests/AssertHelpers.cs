@@ -1,5 +1,4 @@
 using Json.Schema.CodeGeneration.Language;
-using Json.Schema.CodeGeneration.Model;
 
 namespace Json.Schema.CodeGeneration.Tests;
 
@@ -15,7 +14,7 @@ public static class AssertHelpers
 
 	public static void VerifyFailure(JsonSchema schema)
 	{
-		var ex = Assert.Throws<SchemaConversionException>(() =>
+		var ex = Assert.Throws<UnsupportedSchemaException>(() =>
 		{
 			var actual = schema.GenerateCode(CodeWriters.CSharp);
 

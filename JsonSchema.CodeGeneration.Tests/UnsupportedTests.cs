@@ -118,4 +118,22 @@ public class UnsupportedTests
 
 		VerifyFailure(schema);
 	}
+
+	[Test]
+	[Ignore("This doesn't really test multiple cases because the cases are currently mutually exclusive.")]
+	// I edited the cases to get some overlap for this test, then I undid the edit
+	public void MultipleMatches()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Title("Host")
+			.Type(SchemaValueType.Object)
+			// part of custom object, which disallows additionalProperties
+			.Properties(
+				("Foo", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			// part of dictionary, which disallows properties
+			.AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer));
+
+		VerifyFailure(schema);
+	}
 }

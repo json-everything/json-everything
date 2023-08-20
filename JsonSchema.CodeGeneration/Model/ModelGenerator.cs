@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Schema.CodeGeneration.Model;
 
@@ -43,6 +44,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _stringRequirements =
 		new JsonSchemaBuilder()
 			.Id(_stringId)
+			.Title("string")
 			.Type(SchemaValueType.Object)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("string"))
@@ -52,6 +54,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _integerRequirements =
 		new JsonSchemaBuilder()
 			.Id(_integerId)
+			.Title("integer")
 			.Type(SchemaValueType.Object)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("integer"))
@@ -61,6 +64,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _numberRequirements =
 		new JsonSchemaBuilder()
 			.Id(_numberId)
+			.Title("number")
 			.Type(SchemaValueType.Object)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("number"))
@@ -70,6 +74,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _booleanRequirements =
 		new JsonSchemaBuilder()
 			.Id(_booleanId)
+			.Title("boolean")
 			.Type(SchemaValueType.Object)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("boolean"))
@@ -79,6 +84,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _enumMetaSchema =
 		new JsonSchemaBuilder()
 			.Id(_enumId)
+			.Title("enumeration")
 			.Ref(_baseId)
 			.Properties(
 				(EnumKeyword.Name, true) // TODO: these values need to have a pattern
@@ -89,6 +95,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _arrayMetaSchema =
 		new JsonSchemaBuilder()
 			.Id(_arrayId)
+			.Title("array")
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("array")),
@@ -99,6 +106,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _objectMetaSchema =
 		new JsonSchemaBuilder()
 			.Id(_objectId)
+			.Title("custom-object")
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
@@ -114,6 +122,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _dictionaryMetaSchema =
 		new JsonSchemaBuilder()
 			.Id(_dictionaryId)
+			.Title("dictionary")
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
@@ -161,9 +170,10 @@ internal static class ModelGenerator
 
 			var validCount = validCountNode?.GetValue<int>();
 			if (validCount is null or 0)
-				throw new SchemaConversionException("This schema is not in a supported form.");
+				throw new UnsupportedSchemaException("This schema is not in a supported form.");
 
-			throw new SchemaConversionException("This schema matches multiple supported forms.");
+			var validSubschemas = abstractResults.GetAllAnnotations(TitleKeyword.Name).ToJsonArray();
+			throw new UnsupportedSchemaException($"This schema matches multiple supported forms: {validSubschemas.AsJsonString()}.");
 		}
 
 		var validSubschemaId = abstractResults.Details.Single(x => x.IsValid).Details[0].SchemaLocation;
@@ -194,6 +204,6 @@ internal static class ModelGenerator
 				return new DictionaryModel(name, additionalProperties);
 		}
 
-		throw new SchemaConversionException("This schema is not in a supported form.");
+		throw new UnsupportedSchemaException("This schema is not in a supported form.");
 	}
 }
