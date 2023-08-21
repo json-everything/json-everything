@@ -23,8 +23,14 @@ internal static class ModelGenerator
 		new JsonSchemaBuilder()
 			.Id(_baseId)
 			.Type(SchemaValueType.Object)
+			.Defs(
+				("convertible-string", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String)
+					.Pattern(@"^[a-zA-Z_-][a-zA-Z0-9 _-]*[a-zA-Z0-9_-]$")
+				)
+			)
 			.Properties(
-				(TitleKeyword.Name, true) // TODO: this needs to have a pattern
+				(TitleKeyword.Name, new JsonSchemaBuilder().Ref("#/$defs/convertible-string"))
 			);
 
 	private static readonly JsonSchema _abstractRequirements =
@@ -87,7 +93,10 @@ internal static class ModelGenerator
 			.Title("enumeration")
 			.Ref(_baseId)
 			.Properties(
-				(EnumKeyword.Name, true) // TODO: these values need to have a pattern
+				(EnumKeyword.Name, new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder().Ref(_baseId + "#/$defs/convertible-string"))
+				)
 			)
 			.Required(TitleKeyword.Name, EnumKeyword.Name)
 			.UnevaluatedProperties(false);
@@ -112,6 +121,7 @@ internal static class ModelGenerator
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
 				(PropertiesKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
+					.PropertyNames(new JsonSchemaBuilder().Ref(_baseId + "#/$defs/convertible-string"))
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.Ref(_abstractId))
 				),
@@ -127,7 +137,10 @@ internal static class ModelGenerator
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
 				(PropertiesKeyword.Name, false),
-				(PropertyNamesKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId)), // TODO: should this be specific to naming things?
+				(PropertyNamesKeyword.Name, new JsonSchemaBuilder()
+					.Properties((TypeKeyword.Name, new JsonSchemaBuilder().Const("string")))
+					.Required(TypeKeyword.Name)
+				),
 				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId))
 			)
 			.Required(TypeKeyword.Name, AdditionalPropertiesKeyword.Name);

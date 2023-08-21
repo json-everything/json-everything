@@ -11,13 +11,15 @@ public class NamingTests
 			.Properties(
 				("foo", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
 				("foo-bar", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-				("bar_baz", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+				("bar_baz", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("just-a-letter", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			);
 		var expected = @"public class MyObject
 {
 	public int Foo { get; set; }
 	public int FooBar { get; set; }
 	public int BarBaz { get; set; }
+	public int JustALetter { get; set; }
 }
 ";
 

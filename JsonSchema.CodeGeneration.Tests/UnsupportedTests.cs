@@ -150,4 +150,79 @@ public class UnsupportedTests
 
 		VerifyFailure(schema);
 	}
+
+	[Test]
+	public void BadTypeName_Dot()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("Dots.do not work")
+			.Enum("One", "Two", "Three");
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void BadEnumValueNames()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyEnum")
+			.Enum("On.e", "Tw/o", "Thr:ee");
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void BadTypeName_Colon()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("Colons:do not work")
+			.Enum("One", "Two", "Three");
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void BadTypeName_Slash()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("Slashes/do not work")
+			.Enum("One", "Two", "Three");
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void BadTypeName_Backslash()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("Backslashes\\do not work")
+			.Enum("One", "Two", "Three");
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void BadTypeName_Newline()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("Newlines\ndo not work")
+			.Enum("One", "Two", "Three");
+
+		VerifyFailure(schema);
+	}
+
+	[Test]
+	public void BadObjectPropertyNames()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alp.ha", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
+				("Be\ta", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Ga:mma", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+			);
+
+		VerifyFailure(schema);
+	}
 }
