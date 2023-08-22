@@ -65,6 +65,11 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 <td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img></a></td>
 </tr>
 <tr>
+<td>JsonSchema.Net.CodeGeneration</td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.CodeGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></td>
+<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></a></td>
+</tr>
+<tr>
 <td>JsonSchema.Net.DataGeneration</td>
 <td><a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.DataGeneration.svg?svg=true"></img></td>
 <td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a></td>
@@ -119,6 +124,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 
 - JSON Schema, drafts 6 and higher ([Specification](https://json-schema.org))
   - Generation of schemas from .Net types supported in an additional library
+  - Generation of C# code from schemas (more languages to follow)
   - Random instance data generation (powered by [Bogus](https://github.com/bchavez/Bogus))
   - [OpenApi 3.1](https://www.openapis.org/) vocabulary extension
   - A vocabulary for accessing instance and external data
