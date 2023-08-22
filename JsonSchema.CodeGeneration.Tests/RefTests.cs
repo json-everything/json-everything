@@ -72,4 +72,25 @@ public class RefTests
 
 		VerifyCSharp(schema, expected, options);
 	}
+
+	[Test]
+	public void LinkedList()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("LinkedListNode")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Next", new JsonSchemaBuilder().Ref("#"))
+			);
+
+		var expected = @"public class LinkedListNode
+{
+	public int Value { get; set; }
+	public LinkedListNode Next { get; set; }
+}
+";
+
+		VerifyCSharp(schema, expected);
+	}
 }

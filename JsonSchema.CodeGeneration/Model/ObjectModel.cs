@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Json.Schema.CodeGeneration.Model;
@@ -11,6 +12,20 @@ internal class ObjectModel : TypeModel
 		: base(name)
 	{
 		Properties = properties.ToArray();
+	}
+
+	internal override void FillPlaceholders(GenerationCache cache)
+	{
+		foreach (var property in Properties)
+		{
+			if (property.Type is not PlaceholderModel placeholder) continue;
+
+			var entry = cache.FirstOrDefault(x => x.Id == placeholder.Id);
+			if (entry == null)
+				throw new ArgumentOutOfRangeException(nameof(cache), "Placeholder was generated but not stored");
+
+			property.Type = entry.Model;
+		}
 	}
 
 	public override bool Equals(TypeModel? other)

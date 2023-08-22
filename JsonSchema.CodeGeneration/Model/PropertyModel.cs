@@ -3,7 +3,7 @@
 internal class PropertyModel
 {
 	public string Name { get; }
-	public TypeModel Type { get; }
+	public TypeModel Type { get; set; }
 	public bool CanRead { get; }
 	public bool CanWrite { get; }
 

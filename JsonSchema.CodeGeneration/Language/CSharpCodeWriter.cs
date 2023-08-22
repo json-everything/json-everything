@@ -35,37 +35,34 @@ internal class CSharpCodeWriter : ICodeWriter
 
 	private static IEnumerable<TypeModel> CollectModels(TypeModel model)
 	{
-		yield return model;
-		switch (model)
+		var found = new List<TypeModel>();
+		var toCheck = new Queue<TypeModel>();
+		toCheck.Enqueue(model);
+		while (toCheck.Count != 0)
 		{
-			case EnumModel:
-				yield break;
-			case ArrayModel arrayModel:
-				foreach (var item in CollectModels(arrayModel.Items))
-				{
-					yield return item;
-				}
-				yield break;
-			case ObjectModel objectModel:
-				foreach (var propertyModel in objectModel.Properties)
-				{
-					foreach (var property in CollectModels(propertyModel.Type))
+			var current = toCheck.Dequeue();
+			if (found.Contains(current)) continue;
+
+			found.Add(current);
+			switch (current)
+			{
+				case ArrayModel arrayModel:
+					toCheck.Enqueue(arrayModel.Items);
+					break;
+				case ObjectModel objectModel:
+					foreach (var propertyModel in objectModel.Properties)
 					{
-						yield return property;
+						toCheck.Enqueue(propertyModel.Type);
 					}
-				}
-				yield break;
-			case DictionaryModel dictionaryModel:
-				foreach (var key in CollectModels(dictionaryModel.Keys))
-				{
-					yield return key;
-				}
-				foreach (var item in CollectModels(dictionaryModel.Items))
-				{
-					yield return item;
-				}
-				yield break;
+					break;
+				case DictionaryModel dictionaryModel:
+					toCheck.Enqueue(dictionaryModel.Keys);
+					toCheck.Enqueue(dictionaryModel.Items); 
+					break;
+			}
 		}
+
+		return found;
 	}
 
 	private static void WriteUsage(StringBuilder builder, TypeModel model)

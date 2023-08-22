@@ -34,6 +34,10 @@ public class TypeModel : IEquatable<TypeModel>
 		return new TypeModel(name, true);
 	}
 
+	internal virtual void FillPlaceholders(GenerationCache cache)
+	{
+	}
+
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
@@ -61,5 +65,16 @@ public class TypeModel : IEquatable<TypeModel>
 		{
 			return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ IsSimple.GetHashCode();
 		}
+	}
+}
+
+internal class PlaceholderModel : TypeModel
+{
+	public Guid Id { get; }
+
+	public PlaceholderModel(Guid id)
+		: base(null)
+	{
+		Id = id;
 	}
 }

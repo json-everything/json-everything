@@ -21,7 +21,10 @@ public static class CodeGenExtensions
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 		options.SchemaRegistry.Register(schema);
 
-		var model = schema.GenerateCodeModel(options);
+		var generationCache = new GenerationCache();
+		var model = schema.GenerateCodeModel(options, generationCache);
+
+		generationCache.FillPlaceholders();
 
 		var sb = new StringBuilder();
 

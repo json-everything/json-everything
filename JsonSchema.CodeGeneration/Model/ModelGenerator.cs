@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -184,8 +185,14 @@ internal static class ModelGenerator
 		_options.SchemaRegistry.Register(_dictionaryMetaSchema);
 	}
 
-	public static TypeModel GenerateCodeModel(this JsonSchema schema, EvaluationOptions options)
+	public static TypeModel GenerateCodeModel(this JsonSchema schema, EvaluationOptions options, GenerationCache cache)
 	{
+		var generated = cache.FirstOrDefault(x => x.Schema == schema);
+		if (generated != null) return generated.Model;
+
+		generated = new GenerationCacheItem(schema);
+		cache.Add(generated);
+
 		var json = JsonSerializer.SerializeToNode(schema);
 
 		var abstractResults = _abstractRequirements.Evaluate(json, _options);
@@ -206,6 +213,7 @@ internal static class ModelGenerator
 			throw new UnsupportedSchemaException($"This schema matches multiple supported forms: {validSubschemas.AsJsonString()}.");
 		}
 
+		TypeModel? typeModel = null;
 		var name = schema.GetTitle();
 		var validSubschemaId = abstractResults.Details.Single(x => x.IsValid).Details[0].SchemaLocation;
 		switch (validSubschemaId.OriginalString)
@@ -213,7 +221,8 @@ internal static class ModelGenerator
 			case _refId:
 				var refKeyword = (RefKeyword) schema[RefKeyword.Name]!;
 				var targetSchema = ResolveRef(schema.BaseUri, refKeyword.Reference, options);
-				return GenerateCodeModel(targetSchema, options);
+				typeModel = GenerateCodeModel(targetSchema, options, cache);
+				break;
 			case _stringId:
 				return CommonModels.String;
 			case _integerId:
@@ -224,25 +233,33 @@ internal static class ModelGenerator
 				return CommonModels.Boolean;
 			case _enumId:
 				var values = schema.GetEnum()!;
-				return new EnumModel(name!, values.Select(x => x!.GetValue<string>()));
+				typeModel = new EnumModel(name!, values.Select(x => x!.GetValue<string>()));
+				break;
 			case _arrayId:
 				var itemsSchema = schema.GetItems()!;
-				var items = GenerateCodeModel(itemsSchema, options);
-				return new ArrayModel(name, items);
+				var items = GenerateCodeModel(itemsSchema, options, cache);
+				typeModel = new ArrayModel(name, items);
+				break;
 			case _objectId:
 				var propertiesList = schema.GetProperties()!;
-				var properties = propertiesList.Select(kvp => new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value, options), true, true));
-				return new ObjectModel(name!, properties);
+				var properties = propertiesList.Select(kvp => new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value, options, cache), true, true));
+				typeModel = new ObjectModel(name!, properties);
+				break;
 			case _dictionaryId:
 				var additionalPropertiesSchema = schema.GetAdditionalProperties()!;
-				var additionalProperties = GenerateCodeModel(additionalPropertiesSchema, options);
-				return new DictionaryModel(name, additionalProperties);
+				var additionalProperties = GenerateCodeModel(additionalPropertiesSchema, options, cache);
+				typeModel = new DictionaryModel(name, additionalProperties);
+				break;
 		}
 
-		throw new UnsupportedSchemaException("This basically shouldn't happen because of the earlier validation.");
+		if (typeModel == null)
+			throw new UnsupportedSchemaException("This basically shouldn't happen because of the earlier validation.");
+
+		generated.Model = typeModel;
+		return typeModel;
 	}
 
-	internal static readonly Regex AnchorPattern = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
+	private  static readonly Regex _anchorPattern = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
 
 	private static JsonSchema ResolveRef(Uri baseUri, Uri reference, EvaluationOptions options)
 	{
@@ -270,7 +287,7 @@ internal static class ModelGenerator
 		else
 		{
 			var anchorFragment = fragment.Substring(1);
-			if (!AnchorPattern.IsMatch(anchorFragment))
+			if (!_anchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 			if (targetBase is JsonSchema targetBaseSchema)
@@ -281,5 +298,30 @@ internal static class ModelGenerator
 			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
 		return targetSchema;
+	}
+}
+
+internal class GenerationCacheItem
+{
+	public Guid Id { get; }
+	public JsonSchema Schema { get; }
+	public TypeModel Model { get; set; }
+
+	public GenerationCacheItem(JsonSchema schema)
+	{
+		Schema = schema;
+		Id = Guid.NewGuid();
+		Model = new PlaceholderModel(Id);
+	}
+}
+
+internal class GenerationCache : List<GenerationCacheItem>
+{
+	public void FillPlaceholders()
+	{
+		foreach (var item in this)
+		{
+			item.Model.FillPlaceholders(this);
+		}
 	}
 }
