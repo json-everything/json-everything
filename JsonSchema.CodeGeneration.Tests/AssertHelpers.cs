@@ -4,19 +4,19 @@ namespace Json.Schema.CodeGeneration.Tests;
 
 public static class AssertHelpers
 {
-	public static void VerifyCSharp(JsonSchema schema, string expected)
+	public static void VerifyCSharp(JsonSchema schema, string expected, EvaluationOptions? options = null)
 	{
-		var code = schema.GenerateCode(CodeWriters.CSharp);
+		var code = schema.GenerateCode(CodeWriters.CSharp, options);
 
 		Console.WriteLine(code);
 		Assert.AreEqual(expected, code);
 	}
 
-	public static void VerifyFailure(JsonSchema schema)
+	public static void VerifyFailure(JsonSchema schema, EvaluationOptions? options = null)
 	{
 		var ex = Assert.Throws<UnsupportedSchemaException>(() =>
 		{
-			var actual = schema.GenerateCode(CodeWriters.CSharp);
+			var actual = schema.GenerateCode(CodeWriters.CSharp, options);
 
 			Console.WriteLine(actual);
 		});

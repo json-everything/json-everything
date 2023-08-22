@@ -14,10 +14,14 @@ public static class CodeGenExtensions
 	/// </summary>
 	/// <param name="schema">The JSON Schema object.</param>
 	/// <param name="codeWriter">The writer for the output language.</param>
+	/// <param name="options">Evaluation options.</param>
 	/// <returns></returns>
-	public static string GenerateCode(this JsonSchema schema, ICodeWriter codeWriter)
+	public static string GenerateCode(this JsonSchema schema, ICodeWriter codeWriter, EvaluationOptions? options = null)
 	{
-		var model = schema.GenerateCodeModel();
+		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
+		options.SchemaRegistry.Register(schema);
+
+		var model = schema.GenerateCodeModel(options);
 
 		var sb = new StringBuilder();
 

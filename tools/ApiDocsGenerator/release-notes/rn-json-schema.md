@@ -4,13 +4,15 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
-# [5.1.4](https://github.com/gregsdennis/json-everything/pull/505) {#release-schema-5.1.4}
+# [5.2.0](https://github.com/gregsdennis/json-everything/pull/505) {#release-schema-5.2.0}
+
+Added `JsonSchema.GetAnchor()`.
+
+`oneOf` now produces an annotation of the number of successful validations (not required by the spec).
 
 Fixed bug in keyword access extensions.  These methods should return null if the keyword is not found, but instead would throw exceptions.
 
 [#504](https://github.com/gregsdennis/json-everything/issues/504) - Fixed bug for `JsonSchema.GetKeyword()` and `JsonSchema[string]`.  These should return null if the keyword doesn't exist but would throw exceptions.
-
-`oneOf` now produces an annotation of the number of successful validations (not required by the spec).
 
 # [5.1.3](https://github.com/gregsdennis/json-everything/commit/fe728123a712a43bad6f8a51a625e41f9d459925) {#release-schema-5.1.3}
 

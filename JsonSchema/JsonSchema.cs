@@ -19,7 +19,7 @@ namespace Json.Schema;
 public class JsonSchema : IBaseDocument
 {
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
-	private List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
+	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -540,6 +540,18 @@ public class JsonSchema : IBaseDocument
 
 		return resolvable as JsonSchema;
 	}
+
+	/// <summary>
+	/// Gets a defined anchor.
+	/// </summary>
+	/// <param name="anchorName">The name of the anchor (excluding the `#`)</param>
+	/// <returns>The associated subschema, if the anchor exists, or null.</returns>
+	public JsonSchema? GetAnchor(string anchorName) =>
+		Anchors.TryGetValue(anchorName, out var anchorDefinition)
+			? anchorDefinition.IsDynamic
+				? null
+				: anchorDefinition.Schema
+			: null;
 
 	/// <summary>
 	/// Implicitly converts a boolean value into one of the boolean schemas. 
