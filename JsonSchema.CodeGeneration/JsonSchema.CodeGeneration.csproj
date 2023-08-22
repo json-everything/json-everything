@@ -17,7 +17,7 @@
 	  </Description>
 	  <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-	  <PackageTags>json-schema schema json generation codegen</PackageTags>
+	  <PackageTags>json-schema schema json code generation codegen</PackageTags>
 	  <Version>0.1.0</Version>
 	  <FileVersion>0.1.0.0</FileVersion>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
