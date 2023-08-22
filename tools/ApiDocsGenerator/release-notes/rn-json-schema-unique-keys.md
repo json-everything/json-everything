@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net.UniqueKeys
 icon: fas fa-tag
-order: "8.05"
+order: "8.06"
 ---
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/499) {#release-schemadata-3.0.1}
 

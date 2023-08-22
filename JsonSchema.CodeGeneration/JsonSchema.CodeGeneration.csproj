@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFramework>netstandard2.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <RootNamespace>Json.Schema.CodeGeneration</RootNamespace>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <PackageId>JsonSchema.Net.CodeGeneration</PackageId>
+	  <Authors>Greg Dennis</Authors>
+	  <Company />
+	  <Product>JsonSchema.Net</Product>
+	  <Description>
+		  Code generation from JSON Schema built on the System.Text.Json namespace.
+
+		  Read the full documentation at https://docs.json-everything.net/schema/schema-codegen/.
+	  </Description>
+	  <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+	  <PackageTags>json-schema schema json code generation codegen</PackageTags>
+	  <Version>0.1.0</Version>
+	  <FileVersion>0.1.0.0</FileVersion>
+	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageIcon>json-logo-256.png</PackageIcon>
+	  <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-codegeneration/</PackageReleaseNotes>
+	  <DocumentationFile>JsonSchema.Net.CodeGeneration.xml</DocumentationFile>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <SignAssembly>true</SignAssembly>
+	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-codegeneration.md" Link="release-notes.md" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\Resources\json-logo-256.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Humanizer.Core" Version="2.11.10" />
+	</ItemGroup>
+
+</Project>

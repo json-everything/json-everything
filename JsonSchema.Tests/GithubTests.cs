@@ -624,19 +624,27 @@ public class GithubTests
 			}
 		};
 
+		// verify it runs once
+		var result = schema.Evaluate(instance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.List,
+			RequireFormatValidation = true
+		});
+		result.AssertValid();
+
+		// run in parallel
 		var numberOfMessages = 100;
 		var jsonMessages = new List<JsonNode?>();
 		for (int j = 0; j < numberOfMessages; j++)
 		{
 			jsonMessages.Add(instance.Copy());
 		}
-
 		Parallel.ForEach(jsonMessages, json =>
 		{
-			EvaluationResults result;
+			EvaluationResults r;
 			try
 			{
-				result = schema.Evaluate(json, new EvaluationOptions
+				r = schema.Evaluate(json, new EvaluationOptions
 				{
 					OutputFormat = OutputFormat.List,
 					RequireFormatValidation = true
@@ -648,7 +656,7 @@ public class GithubTests
 				throw;
 			}
 
-			result.AssertValid();
+			r.AssertValid();
 		});
 	}
 
@@ -847,5 +855,24 @@ public class GithubTests
 		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
 		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue506_ReffingIntoAdditionalProperties()
+	{
+		IBaseDocument schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.AdditionalProperties(new JsonSchemaBuilder()
+				.Title("DictTemplate")
+				.Type(SchemaValueType.Object)
+				.Properties(
+					("Enabled", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+				)
+			).Build();
+
+		var pointer = Pointer.JsonPointer.Parse("/additionalProperties");
+		var subSchema = schema.FindSubschema(pointer, EvaluationOptions.Default);
+
+		Assert.IsNotNull(subSchema);
 	}
 }

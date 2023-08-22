@@ -23,6 +23,7 @@ body:
         - JsonSchema.Net (language pack)
         - JsonSchema.Net.Data
         - JsonSchema.Net.DataGeneration
+        - JsonSchema.Net.CodeGeneration
         - JsonSchema.Net.Generation
         - JsonSchema.Net.OpenApi
         - JsonSchema.Net.UniqueKeys
