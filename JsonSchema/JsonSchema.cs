@@ -480,23 +480,20 @@ public class JsonSchema : IBaseDocument
 
 	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
-		object resolvable = this;
-		for (var i = 0; i < pointer.Segments.Length; i++)
+		object? CheckResolvable(object localResolvable, ref int i, string pointerSegment)
 		{
-			var segment = pointer.Segments[i];
-			object? newResolvable = null;
-
 			int index;
-			switch (resolvable)
+			object? newResolvable = null;
+			switch (localResolvable)
 			{
 				case ISchemaContainer container and ISchemaCollector collector:
-					if (container.Schema != null)
+					if (container.Schema != null!)
 					{
 						newResolvable = container.Schema;
 						i--;
 					}
-					else if (int.TryParse(segment.Value, out index) &&
-							 index >= 0 && index < collector.Schemas.Count)
+					else if (int.TryParse(pointerSegment, out index) &&
+					         index >= 0 && index < collector.Schemas.Count)
 						newResolvable = collector.Schemas[index];
 
 					break;
@@ -506,12 +503,12 @@ public class JsonSchema : IBaseDocument
 					i--;
 					break;
 				case ISchemaCollector collector:
-					if (int.TryParse(segment.Value, out index) &&
-						index >= 0 && index < collector.Schemas.Count)
+					if (int.TryParse(pointerSegment, out index) &&
+					    index >= 0 && index < collector.Schemas.Count)
 						newResolvable = collector.Schemas[index];
 					break;
 				case IKeyedSchemaCollector keyedCollector:
-					if (keyedCollector.Schemas.TryGetValue(segment.Value, out var subschema))
+					if (keyedCollector.Schemas.TryGetValue(pointerSegment, out var subschema))
 						newResolvable = subschema;
 					break;
 				case ICustomSchemaCollector customCollector:
@@ -519,7 +516,7 @@ public class JsonSchema : IBaseDocument
 					i += segmentsConsumed;
 					break;
 				case JsonSchema { _keywords: not null } schema:
-					schema._keywords.TryGetValue(segment.Value, out var k);
+					schema._keywords.TryGetValue(pointerSegment, out var k);
 					newResolvable = k;
 					break;
 			}
@@ -527,18 +524,33 @@ public class JsonSchema : IBaseDocument
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
 				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1));
+				i += newPointer.Segments.Length;
 				newPointer.TryEvaluate(unrecognized.Value, out var value);
 				var asSchema = FromText(value?.ToString() ?? "null");
-				var hostSchema = (JsonSchema)resolvable;
+				var hostSchema = (JsonSchema)localResolvable;
 				asSchema.BaseUri = hostSchema.BaseUri;
 				PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry, options.EvaluatingAs);
 				return asSchema;
 			}
 
-			resolvable = newResolvable!;
+			return newResolvable;
 		}
 
-		return resolvable as JsonSchema;
+		object? resolvable = this;
+		for (var i = 0; i < pointer.Segments.Length; i++)
+		{
+			var segment = pointer.Segments[i];
+
+			resolvable = CheckResolvable(resolvable, ref i, segment.Value);
+			if (resolvable == null) return null;
+		}
+
+		if (resolvable is JsonSchema target) return target;
+
+		var count = pointer.Segments.Length;
+		// These parameters don't really matter.  This extra check only captures the case where the
+		// last segment of the pointer is an ISchemaContainer.
+		return CheckResolvable(resolvable, ref count, null!) as JsonSchema;
 	}
 
 	/// <summary>
