@@ -14,7 +14,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	background: rgb(27, 27, 30);
-	color: rgb(175, 176, 177);
+	color: rgb(216, 216, 216);
 }
 
 main {
@@ -243,9 +243,39 @@ a.navbar-brand {
 	height: 1rem;
 }
 
+/*--- TOOLTIPS ---*/
+
+.tooltip-icon {
+}
+
+.tooltip-text {
+	visibility: hidden;
+	position: absolute;
+	z-index: 1;
+	max-width: 400px;
+	font-size: 14px;
+	background-color: #271a3b;
+	border-radius: 5px;
+	padding: 10px;
+}
+
+.tooltip-text p:last-child {
+	margin-bottom: auto;
+}
+
+.tooltip-icon:hover .tooltip-text {
+	visibility: visible;
+}
 /*--- DOCS ---*/
 .docs-pane {
 	margin: 2em auto;
+	max-width: 1080px;
+	overflow: hidden;
+	width: 100%;
+}
+
+.docs-snippet {
+	margin: auto;
 	max-width: 1080px;
 	overflow: hidden;
 	width: 100%;
@@ -301,48 +331,4 @@ blockquote {
 .markdown-anchor {
 	fill: rgb(175, 176, 177);
 }
-
-/*--- RADZEN OVERRIDES ---*/
-
-.radzen-menulistitem {
-	background-color: rgba(0, 0, 0, 0.2);
-}
-
-.rz-panel-menu {
-	background: linear-gradient(to right, #1d1f27, #351556);
-	color: rgb(175, 176, 177);
-}
-
-	.rz-panel-menu .rz-navigation-item-wrapper:hover {
-		background-color: rgba(255, 255, 255, 0.2);
-	}
-
-	.rz-panel-menu .rz-navigation-menu .rz-navigation-item .rz-navigation-item-link {
-		background-color: rgba(0, 0, 0, 0.2);
-	}
-
-	.rz-panel-menu .rz-navigation-menu .rz-navigation-item-wrapper {
-		background-color: transparent;
-	}
-
-		.rz-panel-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover {
-			background-color: rgba(255, 255, 255, 0.2);
-		}
-
-	.rz-panel-menu .rz-navigation-menu .rz-navigation-item-active, .rz-panel-menu .rz-navigation-menu .rz-navigation-item-wrapper-active {
-		background-color: rgba(255, 255, 255, 0.2);
-	}
-
-	.rz-panel-menu .rz-navigation-item-active, .rz-panel-menu .rz-navigation-item-wrapper-active {
-		background-color: transparent;
-	}
-
-	.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-wrapper {
-		background-color: transparent;
-		text-indent: 1em;
-	}
-
-		.rz-panel-menu .rz-navigation-menu .rz-navigation-menu .rz-navigation-item-wrapper:hover {
-			background-color: rgba(255, 255, 255, 0.2);
-		}
 

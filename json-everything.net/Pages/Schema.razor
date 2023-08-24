@@ -13,6 +13,7 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
 
 @inject DataManager DataManager;
@@ -22,7 +23,6 @@
 
 <div class="row mx-3 fill-remaining">
 	<div class="mh-100 scroll">
-		<Banner Title="@Banner.AnnouncementTitle" Content="@Banner.DocsMessage"/>
 		<div class="navbar me-2">
 			<div class="align-items-center hstack mx-2">
 				<h1 class="display-4">JSON Schema</h1>
@@ -42,17 +42,6 @@
 				}
 			</div>
 		</div>
-		<!--
-		<div class="banner-container">
-			<div class="announcement-border text-center px-3 py-1 div-hcenter">
-				<div>
-					<strong>Announcement!</strong>
-					View JSON Schema Test Suite results on <a href="https://bowtie-json-schema.github.io/bowtie/">Bowtie</a>
-					and compare with other JSON Schema implementations across multiple platforms!
-				</div>
-			</div>
-		</div>
-		-->
 		<div class="vstack gap-3 mt-4 me-3">
 			<div>
 				<div class="row">
@@ -69,7 +58,14 @@
 									</InputSelect>
 								</label>
 								<label class="my-2">
-									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
+									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)
+									<span class="tooltip-icon">
+										ⓘ
+										<span class="tooltip-text">
+											<MarkdownSpan Content="@HelpContent.SchemaVersion"></MarkdownSpan>
+										</span>
+									</span>
+									<br />
 									<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
 										@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
 										{
@@ -79,7 +75,14 @@
 									</InputSelect>
 								</label>
 								<label class="my-2">
-									Output format<br/>
+									Output format
+									<span class="tooltip-icon">
+										ⓘ
+										<span class="tooltip-text">
+											<MarkdownSpan Content="@HelpContent.SchemaOutputFormat"></MarkdownSpan>
+										</span>
+									</span>
+									<br />
 									<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
 										@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
 										{
@@ -88,7 +91,14 @@
 									</InputSelect>
 								</label>
 								<label class="my-2">
-									Output structure<br/>
+									Output structure
+									<span class="tooltip-icon">
+										ⓘ
+										<span class="tooltip-text">
+											<MarkdownSpan Content="@HelpContent.SchemaOutputStructure"></MarkdownSpan>
+										</span>
+									</span>
+									<br />
 									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
 										<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
 										<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
@@ -97,12 +107,26 @@
 								<label class="my-2">
 									<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
 									Preserve dropped annotations
+									<span class="tooltip-icon">
+										ⓘ
+										<span class="tooltip-text">
+											<MarkdownSpan Content="@HelpContent.SchemaDroppedAnnotations"></MarkdownSpan>
+										</span>
+									</span>
 								</label>
 								<label class="my-2">
 									<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
 									Validate <span class="font-monospace">format</span>
+									<span class="tooltip-icon">
+										ⓘ
+										<span class="tooltip-text">
+											<MarkdownSpan Content="@HelpContent.SchemaValidateFormat"></MarkdownSpan>
+										</span>
+									</span>
 								</label>
 								<button class="btn btn-primary" @onclick="Run">Run</button>
+								<hr/>
+								<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
 							</EditForm>
 						</div>
 					</div>
@@ -143,9 +167,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="ms-4">
-			<Docs Page="playground/schema"/>
-		</div>
 	</div>
 </div>
 
@@ -164,6 +185,7 @@
 		LibraryVersion.GetFor<UniqueKeysKeyword>(),
 		LibraryVersion.GetFor<DiscriminatorKeyword>(),
 		LibraryVersion.GetFor<ISchemaRefiner>(),
+		LibraryVersion.GetFor<ICodeWriter>(),
 		LibraryVersion.GetFor<Bound>()
 	};
 
@@ -208,10 +230,20 @@
 			_schemaEditor.SetLanguage(language);
 			Task.Run(() => DataManager.Set("schema-input-language", language));
 			
-			SchemaEditorLabel = value == SchemaOperations.GenerateSchema ? "Classes" : "Schema";
+			SchemaEditorLabel = value == SchemaOperations.GenerateSchema ? "Classes (C#)" : "Schema";
+
+			HelpSummary = value switch
+			{
+				SchemaOperations.Evaluate => HelpContent.SchemaEvaluate,
+				SchemaOperations.GenerateSchema => HelpContent.SchemaGenerateSchema,
+				SchemaOperations.GenerateCode => HelpContent.SchemaGenerateCode,
+				SchemaOperations.GenerateData => HelpContent.SchemaGenerateData,
+				_ => HelpContent.SchemaEvaluate
+			};
 		}
 	}
 
+	private string HelpSummary { get; set; } = HelpContent.SchemaEvaluate;
 	private string SchemaEditorLabel { get; set; } = "Schema";
 
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
@@ -440,6 +472,7 @@ namespace JsonEverythingTemp
 
 		Operation = language == "json" ? SchemaOperations.Evaluate : SchemaOperations.GenerateSchema;
 		SchemaEditorLabel = language == "json" ? "Classes" : "Schema";
+		HelpSummary = language == "json" ? HelpContent.SchemaEvaluate : HelpContent.SchemaGenerateSchema;
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -1,0 +1,42 @@
+﻿@using Markdig
+@using JsonEverythingNet.Services
+@using Markdig.SyntaxHighlighting
+
+@{
+#pragma warning disable CS8625
+}
+
+<div class="docs-snippet">
+	@((MarkupString)_value)
+</div>
+
+@{
+#pragma warning restore CS8625
+}
+
+@code{
+
+	[Parameter]
+	public string? Content { get; set; }
+
+	private string _value = "";
+
+	protected override async Task OnInitializedAsync()
+	{
+		await UpdateView();
+	}
+
+	private async Task UpdateView()
+	{
+		if (string.IsNullOrEmpty(Content)) return;
+
+		var pipeline = new MarkdownPipelineBuilder()
+			.UseAdvancedExtensions()
+			.UseSyntaxHighlighting(StyleSheets.Custom)
+			.Build();
+		var html = Markdown.ToHtml(Content, pipeline);
+		html = html.Replace("<table>", "<table class=\"table\">");
+
+		_value = html;
+	}
+}
