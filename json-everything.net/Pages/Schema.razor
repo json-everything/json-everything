@@ -56,18 +56,18 @@
 		<div class="vstack gap-3 mt-4 me-3">
 			<div>
 				<div class="row">
-					<div class="col-5">
-						<label class="w-100">
-							@SchemaEditorLabel
-							<div class="editor-input">
-								<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
-							</div>
-						</label>
-					</div>
-					<div class="col mx-3">
+					<div class="col-2">
 						<div class="vstack gap-3">
 							<EditForm Model="_options" class="vstack">
+								<label class="my-2">
+									What do you want to do?<br/>
+									<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
+										@foreach (SchemaOperations operation in Enum.GetValues(typeof(SchemaOperations)))
+										{
+											<option value="@operation">@GetDescription(operation)</option>
+										}
+									</InputSelect>
+								</label>
 								<label class="my-2">
 									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
 									<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
@@ -102,38 +102,46 @@
 									<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
 									Validate <span class="font-monospace">format</span>
 								</label>
-								<button class="btn btn-primary" @onclick="Validate">Validate</button>
-								<hr/>
-								<label class="my-2">
-									Input Language<br/>
-									<InputSelect @bind-Value="InputLanguage" DisplayName="Output format" class="form-control">
-										<option value="json">JSON</option>
-										<option value="csharp">C#</option>
-									</InputSelect>
-								</label>
-								<button class="btn btn-primary" @onclick="Generate">@GenerateButtonText</button>
+								<button class="btn btn-primary" @onclick="Run">Run</button>
 							</EditForm>
 						</div>
 					</div>
-					<div class="col-5">
-						<label class="w-100">
-							Instance
-							<div class="editor-input">
-								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
+					<div class="col-10">
+						<div>
+							<div class="row">
+								<div class="col-6">
+									<label class="w-100">
+										@SchemaEditorLabel
+										<div class="editor-input">
+											<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
+								<div class="col-6">
+									<label class="w-100">
+										Instance
+										<div class="editor-input">
+											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
 							</div>
-						</label>
+						</div>
+						
+						<div class="row">
+							<label class="mb-4">
+								Results
+								<div class="editor-input">
+									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									              CssClass="h-100 mb-2"/>
+								</div>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<label class="mb-4">
-				Results
-				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-					              CssClass="h-100 mb-2"/>
-				</div>
-			</label>
 		</div>
 		<div class="ms-4">
 			<Docs Page="playground/schema"/>
@@ -142,10 +150,7 @@
 </div>
 
 @code {
-	private const string _generateDataText = "Generate Data";
-	private const string _generateSchemaText = "Generate Schema";
-
-#pragma warning disable CS8618
+	#pragma warning disable CS8618
 	private MonacoEditor _schemaEditor;
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
@@ -162,10 +167,18 @@
 		LibraryVersion.GetFor<Bound>()
 	};
 
-	private string _inputLanguage = "json";
 	private IEnumerable<MetadataReference> _references;
+	private SchemaOperations _operation = SchemaOperations.Evaluate;
 
 #pragma warning restore CS8618
+
+	public enum SchemaOperations
+	{
+		Evaluate,
+		GenerateSchema,
+		GenerateCode,
+		GenerateData
+	}
 
 	private class SchemaOptionsModel
 	{
@@ -184,24 +197,18 @@
 		};
 	}
 
-	private string GenerateButtonText { get; set; } = _generateDataText;
-
-	private string InputLanguage
+	public SchemaOperations Operation
 	{
-		get => _inputLanguage;
+		get => _operation;
 		set
 		{
-			_inputLanguage = value;
-			GenerateButtonText = value switch {
-				"json" => _generateDataText,
-				"csharp" => _generateSchemaText,
-				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
-			_schemaEditor.SetLanguage(_inputLanguage);
-			SchemaEditorLabel = value switch {
-				"json" => "Schema",
-				"csharp" => "Class Definition",
-				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
-			Task.Run(() => DataManager.Set("schema-input-language", value));
+			_operation = value;
+
+			var language = value == SchemaOperations.GenerateSchema ? "csharp" : "json";
+			_schemaEditor.SetLanguage(language);
+			Task.Run(() => DataManager.Set("schema-input-language", language));
+			
+			SchemaEditorLabel = value == SchemaOperations.GenerateSchema ? "Classes" : "Schema";
 		}
 	}
 
@@ -221,11 +228,40 @@
 		_ => "Draft 2020-12"
 	};
 
-	private async Task Validate()
+	private static string GetDescription(SchemaOperations operation) => operation switch
+	{
+		SchemaOperations.Evaluate => "Evaluate JSON",
+		SchemaOperations.GenerateSchema => "Generate a Schema",
+		SchemaOperations.GenerateCode => "Generate Code",
+		SchemaOperations.GenerateData => "Generate Data",
+		_ => "Evaluate JSON"
+	};
+
+	private async Task Run()
 	{
 		await HandleSchemaChanged();
 		await HandleInstanceChanged();
 
+		switch (Operation)
+		{
+			case SchemaOperations.Evaluate:
+				await Validate();
+				break;
+			case SchemaOperations.GenerateSchema:
+				await GenerateSchema();
+				break;
+			case SchemaOperations.GenerateCode:
+				break;
+			case SchemaOperations.GenerateData:
+				await GenerateData();
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	private async Task Validate()
+	{
 		await _outputEditor.SetLanguageAsync("json");
 	
 		JsonSchema schema;
@@ -271,30 +307,13 @@
 		{
 			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue(e.Message);
-			return;
-		}
-	}
-
-	private async Task Generate()
-	{
-		await HandleSchemaChanged();
-		await HandleInstanceChanged();
-
-		await _outputEditor.SetLanguageAsync("json");
-
-		switch (_inputLanguage)
-		{
-			case "json":
-				await GenerateData();
-				break;
-			case "csharp":
-				await GenerateSchema();
-				break;
 		}
 	}
 
 	private async Task GenerateData()
 	{
+		await _outputEditor.SetLanguageAsync("json");
+
 		JsonSchema schema;
 		try
 		{
@@ -323,6 +342,8 @@
 
 	private async Task GenerateSchema()
 	{
+		await _outputEditor.SetLanguageAsync("json");
+
 		try
 		{
 			var source = await _schemaEditor.GetValue();
@@ -414,7 +435,11 @@ namespace JsonEverythingTemp
 
 	private async Task LoadSavedSettings()
 	{
-		InputLanguage = await DataManager.Get("schema-input-language") ?? "json";
+		var language = await DataManager.Get("schema-input-language") ?? "json";
+		await _schemaEditor.SetLanguageAsync(language);
+
+		Operation = language == "json" ? SchemaOperations.Evaluate : SchemaOperations.GenerateSchema;
+		SchemaEditorLabel = language == "json" ? "Classes" : "Schema";
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
