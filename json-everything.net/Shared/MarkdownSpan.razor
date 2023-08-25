@@ -17,16 +17,26 @@
 @code{
 
 	[Parameter]
-	public string? Content { get; set; }
-
-	private string _value = "";
-
-	protected override async Task OnInitializedAsync()
+	public string? Content
 	{
-		await UpdateView();
+		get => _content;
+		set
+		{
+			_content = value;
+			UpdateView();
+		}
 	}
 
-	private async Task UpdateView()
+	private string _value = "";
+	private string? _content;
+
+	protected override Task OnInitializedAsync()
+	{
+		UpdateView();
+		return Task.CompletedTask;
+	}
+
+	private void UpdateView()
 	{
 		if (string.IsNullOrEmpty(Content)) return;
 

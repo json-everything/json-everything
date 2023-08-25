@@ -57,74 +57,76 @@
 										}
 									</InputSelect>
 								</label>
-								<label class="my-2">
-									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)
-									<span class="tooltip-icon">
-										ⓘ
-										<span class="tooltip-text">
-											<MarkdownSpan Content="@HelpContent.SchemaVersion"></MarkdownSpan>
+								<div class="vstack @EvaluationOptionsVisibility">
+									<label class="my-2">
+										Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaVersion"></MarkdownSpan>
+											</span>
 										</span>
-									</span>
-									<br />
-									<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
-										@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
-										{
-											if (version == SpecVersion.Unspecified) continue;
-											<option value="@version">@GetDescription(version)</option>
-										}
-									</InputSelect>
-								</label>
-								<label class="my-2">
-									Output format
-									<span class="tooltip-icon">
-										ⓘ
-										<span class="tooltip-text">
-											<MarkdownSpan Content="@HelpContent.SchemaOutputFormat"></MarkdownSpan>
+										<br />
+										<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
+											@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
+											{
+												if (version == SpecVersion.Unspecified) continue;
+												<option value="@version">@GetDescription(version)</option>
+											}
+										</InputSelect>
+									</label>
+									<label class="my-2">
+										Output format
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaOutputFormat"></MarkdownSpan>
+											</span>
 										</span>
-									</span>
-									<br />
-									<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
-										@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
-										{
-											<option value="@format">@format</option>
-										}
-									</InputSelect>
-								</label>
-								<label class="my-2">
-									Output structure
-									<span class="tooltip-icon">
-										ⓘ
-										<span class="tooltip-text">
-											<MarkdownSpan Content="@HelpContent.SchemaOutputStructure"></MarkdownSpan>
+										<br />
+										<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
+											@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
+											{
+												<option value="@format">@format</option>
+											}
+										</InputSelect>
+									</label>
+									<label class="my-2">
+										Output structure
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaOutputStructure"></MarkdownSpan>
+											</span>
 										</span>
-									</span>
-									<br />
-									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
-										<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
-										<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
-									</InputSelect>
-								</label>
-								<label class="my-2">
-									<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
-									Preserve dropped annotations
-									<span class="tooltip-icon">
-										ⓘ
-										<span class="tooltip-text">
-											<MarkdownSpan Content="@HelpContent.SchemaDroppedAnnotations"></MarkdownSpan>
+										<br />
+										<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
+											<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
+											<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
+										</InputSelect>
+									</label>
+									<label class="my-2">
+										<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
+										Preserve dropped annotations
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaDroppedAnnotations"></MarkdownSpan>
+											</span>
 										</span>
-									</span>
-								</label>
-								<label class="my-2">
-									<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
-									Validate <span class="font-monospace">format</span>
-									<span class="tooltip-icon">
-										ⓘ
-										<span class="tooltip-text">
-											<MarkdownSpan Content="@HelpContent.SchemaValidateFormat"></MarkdownSpan>
+									</label>
+									<label class="my-2">
+										<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
+										Validate <span class="font-monospace">format</span>
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaValidateFormat"></MarkdownSpan>
+											</span>
 										</span>
-									</span>
-								</label>
-								<button class="btn btn-primary" @onclick="Run">Run</button>
+									</label>
+								</div>
+								<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
 								<hr/>
 								<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
 							</EditForm>
@@ -226,25 +228,28 @@
 		{
 			_operation = value;
 
-			var language = value == SchemaOperations.GenerateSchema ? "csharp" : "json";
-			_schemaEditor.SetLanguage(language);
-			Task.Run(() => DataManager.Set("schema-input-language", language));
-			
-			SchemaEditorLabel = value == SchemaOperations.GenerateSchema ? "Classes (C#)" : "Schema";
-
-			HelpSummary = value switch
+			switch (value)
 			{
-				SchemaOperations.Evaluate => HelpContent.SchemaEvaluate,
-				SchemaOperations.GenerateSchema => HelpContent.SchemaGenerateSchema,
-				SchemaOperations.GenerateCode => HelpContent.SchemaGenerateCode,
-				SchemaOperations.GenerateData => HelpContent.SchemaGenerateData,
-				_ => HelpContent.SchemaEvaluate
-			};
+				case SchemaOperations.GenerateSchema:
+					ConfigureForSchemaGen();
+					break;
+				case SchemaOperations.GenerateCode:
+					ConfigureForCodeGen();
+					break;
+				case SchemaOperations.GenerateData:
+					ConfigureForDataGen();
+					break;
+			case SchemaOperations.Evaluate:
+			default:
+					ConfigureForEvaluation();
+					break;
+			}
 		}
 	}
 
 	private string HelpSummary { get; set; } = HelpContent.SchemaEvaluate;
 	private string SchemaEditorLabel { get; set; } = "Schema";
+	private string EvaluationOptionsVisibility { get; set; } = "visible";
 
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
@@ -268,6 +273,54 @@
 		SchemaOperations.GenerateData => "Generate Data",
 		_ => "Evaluate JSON"
 	};
+
+	private void ConfigureForEvaluation()
+	{
+		_schemaEditor.SetLanguage("json");
+		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+			
+		SchemaEditorLabel = "Schema";
+
+		HelpSummary = HelpContent.SchemaEvaluate;
+
+		EvaluationOptionsVisibility = "";
+	}
+
+	private void ConfigureForCodeGen()
+	{
+		_schemaEditor.SetLanguage("json");
+		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+			
+		SchemaEditorLabel = "Schema";
+
+		HelpSummary = HelpContent.SchemaGenerateCode;
+
+		EvaluationOptionsVisibility = "d-none";
+	}
+
+	private void ConfigureForSchemaGen()
+	{
+		_schemaEditor.SetLanguage("csharp");
+		Task.Run(() => DataManager.Set("schema-input-language", "csharp"));
+			
+		SchemaEditorLabel = "Classes (C#)";
+
+		HelpSummary = HelpContent.SchemaGenerateSchema;
+
+		EvaluationOptionsVisibility = "d-none";
+	}
+
+	private void ConfigureForDataGen()
+	{
+		_schemaEditor.SetLanguage("json");
+		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+			
+		SchemaEditorLabel = "Schema";
+
+		HelpSummary = HelpContent.SchemaGenerateData;
+
+		EvaluationOptionsVisibility = "d-none";
+	}
 
 	private async Task Run()
 	{
