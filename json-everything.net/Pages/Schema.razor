@@ -13,6 +13,8 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using Json.Schema.CodeGeneration
+@using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
 
 @inject DataManager DataManager;
@@ -22,7 +24,6 @@
 
 <div class="row mx-3 fill-remaining">
 	<div class="mh-100 scroll">
-		<Banner Title="@Banner.AnnouncementTitle" Content="@Banner.DocsMessage"/>
 		<div class="navbar me-2">
 			<div class="align-items-center hstack mx-2">
 				<h1 class="display-4">JSON Schema</h1>
@@ -42,110 +43,138 @@
 				}
 			</div>
 		</div>
-		<!--
-		<div class="banner-container">
-			<div class="announcement-border text-center px-3 py-1 div-hcenter">
-				<div>
-					<strong>Announcement!</strong>
-					View JSON Schema Test Suite results on <a href="https://bowtie-json-schema.github.io/bowtie/">Bowtie</a>
-					and compare with other JSON Schema implementations across multiple platforms!
-				</div>
-			</div>
-		</div>
-		-->
 		<div class="vstack gap-3 mt-4 me-3">
 			<div>
 				<div class="row">
-					<div class="col-5">
-						<label class="w-100">
-							@SchemaEditorLabel
-							<div class="editor-input">
-								<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
-							</div>
-						</label>
-					</div>
-					<div class="col mx-3">
+					<div class="col-2">
 						<div class="vstack gap-3">
 							<EditForm Model="_options" class="vstack">
 								<label class="my-2">
-									Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)<br/>
-									<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
-										@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
+									What do you want to do?<br/>
+									<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
+										@foreach (SchemaOperations operation in Enum.GetValues(typeof(SchemaOperations)))
 										{
-											if (version == SpecVersion.Unspecified) continue;
-											<option value="@version">@GetDescription(version)</option>
+											<option value="@operation">@GetDescription(operation)</option>
 										}
 									</InputSelect>
 								</label>
-								<label class="my-2">
-									Output format<br/>
-									<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
-										@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
-										{
-											<option value="@format">@format</option>
-										}
-									</InputSelect>
-								</label>
-								<label class="my-2">
-									Output structure<br/>
-									<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
-										<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
-										<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
-									</InputSelect>
-								</label>
-								<label class="my-2">
-									<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
-									Preserve dropped annotations
-								</label>
-								<label class="my-2">
-									<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
-									Validate <span class="font-monospace">format</span>
-								</label>
-								<button class="btn btn-primary" @onclick="Validate">Validate</button>
+								<div class="vstack @EvaluationOptionsVisibility">
+									<label class="my-2">
+										Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaVersion"></MarkdownSpan>
+											</span>
+										</span>
+										<br />
+										<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
+											@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
+											{
+												if (version == SpecVersion.Unspecified) continue;
+												<option value="@version">@GetDescription(version)</option>
+											}
+										</InputSelect>
+									</label>
+									<label class="my-2">
+										Output format
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaOutputFormat"></MarkdownSpan>
+											</span>
+										</span>
+										<br />
+										<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
+											@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
+											{
+												<option value="@format">@format</option>
+											}
+										</InputSelect>
+									</label>
+									<label class="my-2">
+										Output structure
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaOutputStructure"></MarkdownSpan>
+											</span>
+										</span>
+										<br />
+										<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
+											<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
+											<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
+										</InputSelect>
+									</label>
+									<label class="my-2">
+										<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
+										Preserve dropped annotations
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaDroppedAnnotations"></MarkdownSpan>
+											</span>
+										</span>
+									</label>
+									<label class="my-2">
+										<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
+										Validate <span class="font-monospace">format</span>
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaValidateFormat"></MarkdownSpan>
+											</span>
+										</span>
+									</label>
+								</div>
+								<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
 								<hr/>
-								<label class="my-2">
-									Input Language<br/>
-									<InputSelect @bind-Value="InputLanguage" DisplayName="Output format" class="form-control">
-										<option value="json">JSON</option>
-										<option value="csharp">C#</option>
-									</InputSelect>
-								</label>
-								<button class="btn btn-primary" @onclick="Generate">@GenerateButtonText</button>
+								<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
 							</EditForm>
 						</div>
 					</div>
-					<div class="col-5">
-						<label class="w-100">
-							Instance
-							<div class="editor-input">
-								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
+					<div class="col-10">
+						<div>
+							<div class="row">
+								<div class="col-6">
+									<label class="w-100">
+										@SchemaEditorLabel
+										<div class="editor-input">
+											<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
+								<div class="col-6">
+									<label class="w-100">
+										Instance
+										<div class="editor-input">
+											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
 							</div>
-						</label>
+						</div>
+						
+						<div class="row">
+							<label class="mb-4">
+								Results
+								<div class="editor-input">
+									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									              CssClass="h-100 mb-2"/>
+								</div>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<label class="mb-4">
-				Results
-				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-					              CssClass="h-100 mb-2"/>
-				</div>
-			</label>
-		</div>
-		<div class="ms-4">
-			<Docs Page="playground/schema"/>
 		</div>
 	</div>
 </div>
 
 @code {
-	private const string _generateDataText = "Generate Data";
-	private const string _generateSchemaText = "Generate Schema";
-
-#pragma warning disable CS8618
+	#pragma warning disable CS8618
 	private MonacoEditor _schemaEditor;
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
@@ -159,13 +188,22 @@
 		LibraryVersion.GetFor<UniqueKeysKeyword>(),
 		LibraryVersion.GetFor<DiscriminatorKeyword>(),
 		LibraryVersion.GetFor<ISchemaRefiner>(),
+		LibraryVersion.GetFor<ICodeWriter>(),
 		LibraryVersion.GetFor<Bound>()
 	};
 
-	private string _inputLanguage = "json";
 	private IEnumerable<MetadataReference> _references;
+	private SchemaOperations _operation = SchemaOperations.Evaluate;
 
 #pragma warning restore CS8618
+
+	public enum SchemaOperations
+	{
+		Evaluate,
+		GenerateSchema,
+		GenerateCode,
+		GenerateData
+	}
 
 	private class SchemaOptionsModel
 	{
@@ -184,28 +222,35 @@
 		};
 	}
 
-	private string GenerateButtonText { get; set; } = _generateDataText;
-
-	private string InputLanguage
+	public SchemaOperations Operation
 	{
-		get => _inputLanguage;
+		get => _operation;
 		set
 		{
-			_inputLanguage = value;
-			GenerateButtonText = value switch {
-				"json" => _generateDataText,
-				"csharp" => _generateSchemaText,
-				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
-			_schemaEditor.SetLanguage(_inputLanguage);
-			SchemaEditorLabel = value switch {
-				"json" => "Schema",
-				"csharp" => "Class Definition",
-				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)};
-			Task.Run(() => DataManager.Set("schema-input-language", value));
+			_operation = value;
+
+			switch (value)
+			{
+				case SchemaOperations.GenerateSchema:
+					ConfigureForSchemaGen();
+					break;
+				case SchemaOperations.GenerateCode:
+					ConfigureForCodeGen();
+					break;
+				case SchemaOperations.GenerateData:
+					ConfigureForDataGen();
+					break;
+			case SchemaOperations.Evaluate:
+			default:
+					ConfigureForEvaluation();
+					break;
+			}
 		}
 	}
 
+	private string HelpSummary { get; set; } = HelpContent.SchemaEvaluate;
 	private string SchemaEditorLabel { get; set; } = "Schema";
+	private string EvaluationOptionsVisibility { get; set; } = "visible";
 
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
@@ -221,11 +266,89 @@
 		_ => "Draft 2020-12"
 	};
 
-	private async Task Validate()
+	private static string GetDescription(SchemaOperations operation) => operation switch
+	{
+		SchemaOperations.Evaluate => "Evaluate JSON",
+		SchemaOperations.GenerateSchema => "Generate a Schema",
+		SchemaOperations.GenerateCode => "Generate Code",
+		SchemaOperations.GenerateData => "Generate Data",
+		_ => "Evaluate JSON"
+	};
+
+	private void ConfigureForEvaluation()
+	{
+		_schemaEditor.SetLanguage("json");
+		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+			
+		SchemaEditorLabel = "Schema";
+
+		HelpSummary = HelpContent.SchemaEvaluate;
+
+		EvaluationOptionsVisibility = "";
+	}
+
+	private void ConfigureForCodeGen()
+	{
+		_schemaEditor.SetLanguage("json");
+		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+			
+		SchemaEditorLabel = "Schema";
+
+		HelpSummary = HelpContent.SchemaGenerateCode;
+
+		EvaluationOptionsVisibility = "d-none";
+	}
+
+	private void ConfigureForSchemaGen()
+	{
+		_schemaEditor.SetLanguage("csharp");
+		Task.Run(() => DataManager.Set("schema-input-language", "csharp"));
+			
+		SchemaEditorLabel = "Classes (C#)";
+
+		HelpSummary = HelpContent.SchemaGenerateSchema;
+
+		EvaluationOptionsVisibility = "d-none";
+	}
+
+	private void ConfigureForDataGen()
+	{
+		_schemaEditor.SetLanguage("json");
+		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+			
+		SchemaEditorLabel = "Schema";
+
+		HelpSummary = HelpContent.SchemaGenerateData;
+
+		EvaluationOptionsVisibility = "d-none";
+	}
+
+	private async Task Run()
 	{
 		await HandleSchemaChanged();
 		await HandleInstanceChanged();
 
+		switch (Operation)
+		{
+			case SchemaOperations.Evaluate:
+				await Validate();
+				break;
+			case SchemaOperations.GenerateSchema:
+				await GenerateSchema();
+				break;
+			case SchemaOperations.GenerateCode:
+				await GenerateCode();
+				break;
+			case SchemaOperations.GenerateData:
+				await GenerateData();
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	private async Task Validate()
+	{
 		await _outputEditor.SetLanguageAsync("json");
 	
 		JsonSchema schema;
@@ -271,30 +394,13 @@
 		{
 			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue(e.Message);
-			return;
-		}
-	}
-
-	private async Task Generate()
-	{
-		await HandleSchemaChanged();
-		await HandleInstanceChanged();
-
-		await _outputEditor.SetLanguageAsync("json");
-
-		switch (_inputLanguage)
-		{
-			case "json":
-				await GenerateData();
-				break;
-			case "csharp":
-				await GenerateSchema();
-				break;
 		}
 	}
 
 	private async Task GenerateData()
 	{
+		await _outputEditor.SetLanguageAsync("json");
+
 		JsonSchema schema;
 		try
 		{
@@ -321,8 +427,39 @@
 		}
 	}
 
+	private async Task GenerateCode()
+	{
+		await _outputEditor.SetLanguageAsync("csharp");
+
+		JsonSchema schema;
+		try
+		{
+			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
+			return;
+		}
+
+		try
+		{
+			var generatedCode = schema.GenerateCode(CodeWriters.CSharp);
+
+			await _outputEditor.SetValue(generatedCode);
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetValue(e.Message);
+		}
+	}
+
 	private async Task GenerateSchema()
 	{
+		await _outputEditor.SetLanguageAsync("json");
+
 		try
 		{
 			var source = await _schemaEditor.GetValue();
@@ -358,10 +495,10 @@ namespace JsonEverythingTemp
 										"Roslyn doesn't seem to be giving that information out (or I don't know how to " +
 										"interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
 										"know what these mean, please drop a line in a GitHub issue.");
-				await _instanceEditor.SetValue("Compilation error");
+				await _outputEditor.SetValue("Compilation error");
 				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
 				//	.Select(x => GetErrorDetails(source, x)));
-				//await _instanceEditor.SetValue(errors);
+				//await _outputEditor.SetValue(errors);
 				return;
 			}
 
@@ -370,13 +507,12 @@ namespace JsonEverythingTemp
 
 			JsonSchema schema = new JsonSchemaBuilder().FromType(type);
 
-			await _instanceEditor.SetValue(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+			await _outputEditor.SetValue(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
 		}
 		catch (Exception e)
 		{
 			await _outputEditor.SetLanguageAsync("text");
-			await _instanceEditor.SetValue(e.Message);
-			throw;
+			await _outputEditor.SetValue(e.Message);
 		}
 	}
 
@@ -414,7 +550,12 @@ namespace JsonEverythingTemp
 
 	private async Task LoadSavedSettings()
 	{
-		InputLanguage = await DataManager.Get("schema-input-language") ?? "json";
+		var language = await DataManager.Get("schema-input-language") ?? "json";
+		await _schemaEditor.SetLanguageAsync(language);
+
+		Operation = language == "json" ? SchemaOperations.Evaluate : SchemaOperations.GenerateSchema;
+		SchemaEditorLabel = language == "json" ? "Classes" : "Schema";
+		HelpSummary = language == "json" ? HelpContent.SchemaEvaluate : HelpContent.SchemaGenerateSchema;
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

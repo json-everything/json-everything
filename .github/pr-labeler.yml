@@ -37,11 +37,8 @@
 "pkg:yaml":
   - Yaml2JsonNode/**/*
 
-"documentation":
-  - json-everything.net/wwwroot/md/**/*
-
 "build pipeline":
   - .github/workflows/**/*
 
 "json-everything.net":
-  - any: ['json-everything.net/**/*', '!json-everything.net/wwwroot/md/**/*']
+  - any: ['json-everything.net/**/*']
