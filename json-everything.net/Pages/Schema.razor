@@ -13,6 +13,7 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using Json.Schema.CodeGeneration
 @using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
 
@@ -336,6 +337,7 @@
 				await GenerateSchema();
 				break;
 			case SchemaOperations.GenerateCode:
+				await GenerateCode();
 				break;
 			case SchemaOperations.GenerateData:
 				await GenerateData();
@@ -425,6 +427,35 @@
 		}
 	}
 
+	private async Task GenerateCode()
+	{
+		await _outputEditor.SetLanguageAsync("csharp");
+
+		JsonSchema schema;
+		try
+		{
+			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
+			return;
+		}
+
+		try
+		{
+			var generatedCode = schema.GenerateCode(CodeWriters.CSharp);
+
+			await _outputEditor.SetValue(generatedCode);
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetValue(e.Message);
+		}
+	}
+
 	private async Task GenerateSchema()
 	{
 		await _outputEditor.SetLanguageAsync("json");
@@ -464,10 +495,10 @@ namespace JsonEverythingTemp
 										"Roslyn doesn't seem to be giving that information out (or I don't know how to " +
 										"interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
 										"know what these mean, please drop a line in a GitHub issue.");
-				await _instanceEditor.SetValue("Compilation error");
+				await _outputEditor.SetValue("Compilation error");
 				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
 				//	.Select(x => GetErrorDetails(source, x)));
-				//await _instanceEditor.SetValue(errors);
+				//await _outputEditor.SetValue(errors);
 				return;
 			}
 
@@ -476,13 +507,12 @@ namespace JsonEverythingTemp
 
 			JsonSchema schema = new JsonSchemaBuilder().FromType(type);
 
-			await _instanceEditor.SetValue(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+			await _outputEditor.SetValue(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
 		}
 		catch (Exception e)
 		{
 			await _outputEditor.SetLanguageAsync("text");
-			await _instanceEditor.SetValue(e.Message);
-			throw;
+			await _outputEditor.SetValue(e.Message);
 		}
 	}
 

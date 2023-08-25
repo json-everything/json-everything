@@ -14,8 +14,8 @@ Ensure the options are as desired and click ""Run"".";
 	public const string SchemaGenerateSchema = @"
 ## Generating a Schema
 
-Enter your C# classes.  The playground will generate a schema for the first type it
-encounters.
+Enter your C# classes in the editor on the left.  The playground will generate a schema for
+the first type it encounters, so supporting classes need to be placed at the bottom of the code.
 
 There is no need to add a namespace, however you may need to add `using` statements depending
 on the types you expect to use.  A few are included by default:
@@ -40,11 +40,16 @@ particular is wrong.  If you know, please feel free to raise an issue.*";
 	public const string SchemaGenerateCode = @"
 ## Generating C# Code
 
-The schema to be used for evaluation will go in the editor on the left.
+The schema for which you want to generate code will be placed in the editor on the left.
 
-The JSON data to evaluate will go in the editor on the right.
+The editor on the right is unused.
 
-Ensure the options are as desired and click ""Run"".";
+Click ""Run"".
+
+Your code (or an error message) will be output in the bottom editor.
+
+Please be sure to read the [documentation](https://docs.json-everything.net/schema/schema-codegen/)
+to see what is supported.";
 
 	public const string SchemaGenerateData = @"
 ## Generating Random Data
