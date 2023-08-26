@@ -145,6 +145,48 @@ public class SimpleDeclarationTests
 	}
 
 	[Test]
+	public void ObjectWithReadOnlyProp()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Number)
+					.ReadOnly(true)
+				)
+			);
+		var expected = @"public class MyObject
+{
+	public double Alpha { get; }
+}
+";
+
+		VerifyCSharp(schema, expected);
+	}
+
+	[Test]
+	public void ObjectWithWriteOnlyProp()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Number)
+					.WriteOnly(true)
+				)
+			);
+		var expected = @"public class MyObject
+{
+	public double Alpha { set; }
+}
+";
+
+		VerifyCSharp(schema, expected);
+	}
+
+	[Test]
 	public void NamelessDictionary()
 	{
 		var schema = new JsonSchemaBuilder()

@@ -16,13 +16,13 @@ public class NamingTests
 			);
 		var expected = @"public class MyObject
 {
-	[JsonProperty(""foo"")]
+	[JsonPropertyName(""foo"")]
 	public int Foo { get; set; }
-	[JsonProperty(""foo-bar"")]
+	[JsonPropertyName(""foo-bar"")]
 	public int FooBar { get; set; }
-	[JsonProperty(""bar_baz"")]
+	[JsonPropertyName(""bar_baz"")]
 	public int BarBaz { get; set; }
-	[JsonProperty(""just-a-letter"")]
+	[JsonPropertyName(""just-a-letter"")]
 	public int JustALetter { get; set; }
 }
 ";

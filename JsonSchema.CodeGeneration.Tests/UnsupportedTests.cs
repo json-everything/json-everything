@@ -225,4 +225,26 @@ public class UnsupportedTests
 
 		VerifyFailure(schema);
 	}
+
+	[Test]
+	public void ObjectWithBothReadOnlyAndWriteOnlyProp()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Number)
+					.ReadOnly(true)
+					.WriteOnly(true)
+				)
+			);
+		var expected = @"public class MyObject
+{
+	public double Alpha { set; }
+}
+";
+
+		VerifyFailure(schema);
+	}
 }

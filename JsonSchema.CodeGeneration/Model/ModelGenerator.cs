@@ -140,6 +140,13 @@ internal static class ModelGenerator
 					.Type(SchemaValueType.Object)
 					.PropertyNames(new JsonSchemaBuilder().Ref(_baseId + "#/$defs/convertible-string"))
 					.AdditionalProperties(new JsonSchemaBuilder()
+						.Not(new JsonSchemaBuilder()
+							.Properties(
+								(ReadOnlyKeyword.Name, new JsonSchemaBuilder().Const(true)),
+								(WriteOnlyKeyword.Name, new JsonSchemaBuilder().Const(true))
+							)
+							.Required(ReadOnlyKeyword.Name, WriteOnlyKeyword.Name)
+						)
 						.Ref(_abstractId))
 				),
 				(AdditionalPropertiesKeyword.Name, false)
@@ -168,7 +175,7 @@ internal static class ModelGenerator
 	{
 		_options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical,
+			OutputFormat = OutputFormat.List,
 			PreserveDroppedAnnotations = true,
 			EvaluateAs = SpecVersion.Draft202012
 		};
@@ -196,13 +203,12 @@ internal static class ModelGenerator
 		var json = JsonSerializer.SerializeToNode(schema);
 
 		var abstractResults = _abstractRequirements.Evaluate(json, _options);
+#if DEBUG
+		// this appears in local test runs and is quite useful
+		//Console.WriteLine(JsonSerializer.Serialize(abstractResults, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
+#endif
 		if (!abstractResults.IsValid)
 		{
-#if DEBUG
-			// this appears in local test runs and is quite useful
-			Console.WriteLine(JsonSerializer.Serialize(abstractResults, new JsonSerializerOptions{Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
-#endif
-
 			abstractResults.TryGetAnnotation(OneOfKeyword.Name, out var validCountNode);
 
 			var validCount = validCountNode?.GetValue<int>();
@@ -215,7 +221,10 @@ internal static class ModelGenerator
 
 		TypeModel? typeModel = null;
 		var name = schema.GetTitle();
-		var validSubschemaId = abstractResults.Details.Single(x => x.IsValid).Details[0].SchemaLocation;
+		var validSubschemaResult = abstractResults.Details.Single(x => x.IsValid &&
+		                                                               x.InstanceLocation == JsonPointer.Empty &&
+		                                                               x.EvaluationPath.Segments.Length == 3); // e.g. /oneof/7/$ref
+		var validSubschemaId = validSubschemaResult.SchemaLocation;
 		switch (validSubschemaId.OriginalString)
 		{
 			case _refId:
@@ -242,7 +251,14 @@ internal static class ModelGenerator
 				break;
 			case _objectId:
 				var propertiesList = schema.GetProperties()!;
-				var properties = propertiesList.Select(kvp => new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value, options, cache), true, true));
+				var properties = propertiesList.Select(kvp =>
+				{
+					kvp.Value.TryGetKeyword<WriteOnlyKeyword>(out var writeOnlyKeyword);
+					kvp.Value.TryGetKeyword<ReadOnlyKeyword>(out var readOnlyKeyword);
+					var canRead = !(writeOnlyKeyword?.Value ?? false);
+					var canWrite = !(readOnlyKeyword?.Value ?? false);
+					return new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value, options, cache), canRead, canWrite);
+				});
 				typeModel = new ObjectModel(name!, properties);
 				break;
 			case _dictionaryId:
