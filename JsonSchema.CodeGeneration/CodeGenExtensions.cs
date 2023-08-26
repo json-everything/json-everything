@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using Json.Schema.CodeGeneration.Language;
 using Json.Schema.CodeGeneration.Model;
 
@@ -28,8 +31,57 @@ public static class CodeGenExtensions
 
 		var sb = new StringBuilder();
 
-		codeWriter.Write(sb, model);
+		var allModels = CollectModels(model)
+			.Distinct()
+			.GroupBy(x => codeWriter.TransformName(x.Name))
+			.ToArray();
+		var duplicateNames = allModels.Where(x => x.Key != null && x.Count() != 1);
+
+		// ReSharper disable PossibleMultipleEnumeration
+		if (duplicateNames.Any())
+		{
+			var names = string.Join(",", duplicateNames.Select(x => x.Key));
+			// ReSharper restore PossibleMultipleEnumeration
+			throw new UnsupportedSchemaException($"Found multiple definitions for the names [{names}]");
+		}
+
+		foreach (var singleModel in allModels.Where(x => x.Key != null))
+		{
+			codeWriter.Write(sb, singleModel.Single());
+		}
 
 		return sb.ToString();
+	}
+
+	private static IEnumerable<TypeModel> CollectModels(TypeModel model)
+	{
+		var found = new List<TypeModel>();
+		var toCheck = new Queue<TypeModel>();
+		toCheck.Enqueue(model);
+		while (toCheck.Count != 0)
+		{
+			var current = toCheck.Dequeue();
+			if (found.Contains(current)) continue;
+
+			found.Add(current);
+			switch (current)
+			{
+				case ArrayModel arrayModel:
+					toCheck.Enqueue(arrayModel.Items);
+					break;
+				case ObjectModel objectModel:
+					foreach (var propertyModel in objectModel.Properties)
+					{
+						toCheck.Enqueue(propertyModel.Type);
+					}
+					break;
+				case DictionaryModel dictionaryModel:
+					toCheck.Enqueue(dictionaryModel.Keys);
+					toCheck.Enqueue(dictionaryModel.Items);
+					break;
+			}
+		}
+
+		return found;
 	}
 }

@@ -27,6 +27,9 @@ public class JsonPointer : IEquatable<JsonPointer>
 			Segments = Array.Empty<PointerSegment>()
 		};
 
+	private string? _uriEncoded;
+	private string? _plain;
+
 	/// <summary>
 	/// Gets the collection of pointer segments.
 	/// </summary>
@@ -349,9 +352,9 @@ public class JsonPointer : IEquatable<JsonPointer>
 			return sb.ToString();
 		}
 
-		return BuildString(pointerStyle != JsonPointerStyle.UriEncoded
-			? new StringBuilder()
-			: new StringBuilder("#"));
+		return pointerStyle != JsonPointerStyle.UriEncoded
+			? _plain ??= BuildString(new StringBuilder())
+			: _uriEncoded ??= BuildString(new StringBuilder("#"));
 	}
 
 	/// <summary>Returns the string representation of this instance.</summary>

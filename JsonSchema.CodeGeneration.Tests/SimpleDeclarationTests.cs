@@ -92,7 +92,11 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "1";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
@@ -119,7 +123,11 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "[\"one\", \"two\", \"three\"]";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
@@ -138,6 +146,52 @@ public class SimpleDeclarationTests
 	public double Alpha { get; set; }
 	public int Beta { get; set; }
 	public bool Gamma { get; set; }
+}
+";
+
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": true }";
+
+		VerifyDeserialization(code, json);
+	}
+
+	[Test]
+	public void ObjectWithReadOnlyProp()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Number)
+					.ReadOnly(true)
+				)
+			);
+		var expected = @"public class MyObject
+{
+	public double Alpha { get; }
+}
+";
+
+		VerifyCSharp(schema, expected);
+	}
+
+	[Test]
+	public void ObjectWithWriteOnlyProp()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Number)
+					.WriteOnly(true)
+				)
+			);
+		var expected = @"public class MyObject
+{
+	public double Alpha { set; }
 }
 ";
 
@@ -168,6 +222,10 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": 4.5 }";
+
+		VerifyDeserialization(code, json);
 	}
 }

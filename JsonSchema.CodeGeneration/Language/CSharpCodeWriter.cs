@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Humanizer;
 using Json.Schema.CodeGeneration.Model;
@@ -9,63 +7,14 @@ namespace Json.Schema.CodeGeneration.Language;
 
 internal class CSharpCodeWriter : ICodeWriter
 {
-	private static string? Transform(string? original) => original?.Underscore().Pascalize();
+	public string? TransformName(string? original) => original?.Underscore().Pascalize();
 
 	public void Write(StringBuilder builder, TypeModel model)
 	{
-		var allModels = CollectModels(model)
-			.Distinct()
-			.GroupBy(x => Transform(x.Name))
-			.ToArray();
-		var duplicateNames = allModels.Where(x => x.Key != null && x.Count() != 1);
-
-		// ReSharper disable PossibleMultipleEnumeration
-		if (duplicateNames.Any())
-		{
-			var names = string.Join(",", duplicateNames.Select(x => x.Key));
-			// ReSharper restore PossibleMultipleEnumeration
-			throw new UnsupportedSchemaException($"Found multiple definitions for the names [{names}]");
-		}
-
-		foreach (var singleModel in allModels.Where(x => x.Key != null))
-		{
-			WriteDeclaration(builder, singleModel.Single());
-		}
+		WriteDeclaration(builder, model);
 	}
 
-	private static IEnumerable<TypeModel> CollectModels(TypeModel model)
-	{
-		var found = new List<TypeModel>();
-		var toCheck = new Queue<TypeModel>();
-		toCheck.Enqueue(model);
-		while (toCheck.Count != 0)
-		{
-			var current = toCheck.Dequeue();
-			if (found.Contains(current)) continue;
-
-			found.Add(current);
-			switch (current)
-			{
-				case ArrayModel arrayModel:
-					toCheck.Enqueue(arrayModel.Items);
-					break;
-				case ObjectModel objectModel:
-					foreach (var propertyModel in objectModel.Properties)
-					{
-						toCheck.Enqueue(propertyModel.Type);
-					}
-					break;
-				case DictionaryModel dictionaryModel:
-					toCheck.Enqueue(dictionaryModel.Keys);
-					toCheck.Enqueue(dictionaryModel.Items); 
-					break;
-			}
-		}
-
-		return found;
-	}
-
-	private static void WriteUsage(StringBuilder builder, TypeModel model)
+	private void WriteUsage(StringBuilder builder, TypeModel model)
 	{
 		if (model.IsSimple)
 		{
@@ -84,7 +33,7 @@ internal class CSharpCodeWriter : ICodeWriter
 
 		if (model.Name != null)
 		{
-			builder.Append(Transform(model.Name));
+			builder.Append(TransformName(model.Name));
 			return;
 		}
 
@@ -102,7 +51,7 @@ internal class CSharpCodeWriter : ICodeWriter
 		}
 	}
 
-	private static void WriteDeclaration(StringBuilder builder, TypeModel model)
+	private void WriteDeclaration(StringBuilder builder, TypeModel model)
 	{
 		if (model.Name == null) return;
 		if (model.IsSimple) return;
@@ -136,18 +85,18 @@ internal class CSharpCodeWriter : ICodeWriter
 		}
 	}
 
-	private static void WriteDeclaration(StringBuilder builder, EnumModel model)
+	private void WriteDeclaration(StringBuilder builder, EnumModel model)
 	{
 		void WriteValue(EnumValue value)
 		{
 			builder.Append("\t");
-			builder.Append(Transform(value.Name));
+			builder.Append(TransformName(value.Name));
 			builder.Append(" = ");
 			builder.Append(value.Value);
 		}
 
 		builder.Append("public enum ");
-		builder.AppendLine(Transform(model.Name));
+		builder.AppendLine(TransformName(model.Name));
 		builder.AppendLine("{");
 		for (var i = 0; i < model.Values.Length - 1; i++)
 		{
@@ -160,16 +109,16 @@ internal class CSharpCodeWriter : ICodeWriter
 		builder.AppendLine("}");
 	}
 
-	private static void WriteUsage(StringBuilder builder, ArrayModel model)
+	private void WriteUsage(StringBuilder builder, ArrayModel model)
 	{
 		WriteUsage(builder, model.Items);
 		builder.Append("[]");
 	}
 
-	private static void WriteDeclaration(StringBuilder builder, ArrayModel model)
+	private void WriteDeclaration(StringBuilder builder, ArrayModel model)
 	{
 		builder.Append("public class ");
-		builder.Append(Transform(model.Name));
+		builder.Append(TransformName(model.Name));
 		builder.Append(" : List<");
 		WriteUsage(builder, model.Items);
 		builder.AppendLine(">");
@@ -177,17 +126,24 @@ internal class CSharpCodeWriter : ICodeWriter
 		builder.AppendLine("}");
 	}
 
-	private static void WriteDeclaration(StringBuilder builder, ObjectModel model)
+	private void WriteDeclaration(StringBuilder builder, ObjectModel model)
 	{
 		builder.Append("public class ");
-		builder.AppendLine(Transform(model.Name));
+		builder.AppendLine(TransformName(model.Name));
 		builder.AppendLine("{");
 		foreach (var property in model.Properties)
 		{
+			var propertyName = TransformName(property.Name);
+			if (propertyName != property.Name)
+			{
+				builder.Append("\t[JsonPropertyName(\"");
+				builder.Append(property.Name);
+				builder.AppendLine("\")]");
+			}
 			builder.Append("\tpublic ");
 			WriteUsage(builder, property.Type);
 			builder.Append(" ");
-			builder.Append(Transform(property.Name));
+			builder.Append(TransformName(property.Name));
 			builder.Append(" { ");
 			if (property.CanRead)
 				builder.Append("get; ");
@@ -198,7 +154,7 @@ internal class CSharpCodeWriter : ICodeWriter
 		builder.AppendLine("}");
 	}
 
-	private static void WriteUsage(StringBuilder builder, DictionaryModel model)
+	private void WriteUsage(StringBuilder builder, DictionaryModel model)
 	{
 		builder.Append("Dictionary<");
 		WriteUsage(builder, model.Keys);
@@ -207,10 +163,10 @@ internal class CSharpCodeWriter : ICodeWriter
 		builder.Append(">");
 	}
 
-	private static void WriteDeclaration(StringBuilder builder, DictionaryModel model)
+	private void WriteDeclaration(StringBuilder builder, DictionaryModel model)
 	{
 		builder.Append("public class ");
-		builder.Append(Transform(model.Name));
+		builder.Append(TransformName(model.Name));
 		builder.Append(" : Dictionary<");
 		WriteUsage(builder, model.Keys);
 		builder.Append(", ");

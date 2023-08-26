@@ -16,14 +16,27 @@ public class NamingTests
 			);
 		var expected = @"public class MyObject
 {
+	[JsonPropertyName(""foo"")]
 	public int Foo { get; set; }
+	[JsonPropertyName(""foo-bar"")]
 	public int FooBar { get; set; }
+	[JsonPropertyName(""bar_baz"")]
 	public int BarBaz { get; set; }
+	[JsonPropertyName(""just-a-letter"")]
 	public int JustALetter { get; set; }
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = @"{
+  ""foo"": 42,
+  ""foo-bar"": 43,
+  ""bar_baz"": 44,
+  ""just-a-letter"": 45
+}";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
