@@ -239,11 +239,6 @@ public class UnsupportedTests
 					.WriteOnly(true)
 				)
 			);
-		var expected = @"public class MyObject
-{
-	public double Alpha { set; }
-}
-";
 
 		VerifyFailure(schema);
 	}

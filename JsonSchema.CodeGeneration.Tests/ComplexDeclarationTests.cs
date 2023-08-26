@@ -33,7 +33,24 @@ public class FooBar
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = @"{
+  ""Alpha"": {
+    ""Foo"": false,
+    ""Bar"": ""a string""
+  },
+  ""Beta"": {
+    ""Foo"": true,
+    ""Bar"": ""another string""
+  },
+  ""Gamma"": {
+    ""Foo"": false,
+    ""Bar"": ""a different string""
+  }
+}";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
@@ -76,7 +93,30 @@ public class FooBar
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = @"{
+  ""ObjectDictionary"": {
+    ""Alpha"": {
+      ""Foo"": false,
+      ""Bar"": ""a string""
+    },
+    ""Beta"": {
+      ""Foo"": true,
+      ""Bar"": ""another string""
+    },
+    ""Gamma"": {
+      ""Foo"": false,
+      ""Bar"": ""a different string""
+    }
+  },
+  ""SingleObject"": {
+    ""Foo"": true,
+    ""Bar"": ""a single object""
+  }
+}";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]

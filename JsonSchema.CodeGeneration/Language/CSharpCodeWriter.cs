@@ -7,8 +7,6 @@ namespace Json.Schema.CodeGeneration.Language;
 
 internal class CSharpCodeWriter : ICodeWriter
 {
-	public bool IncludeDataAnnotations { get; set; }
-
 	public string? TransformName(string? original) => original?.Underscore().Pascalize();
 
 	public void Write(StringBuilder builder, TypeModel model)

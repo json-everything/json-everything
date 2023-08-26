@@ -92,7 +92,11 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "1";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
@@ -119,7 +123,11 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "[\"one\", \"two\", \"three\"]";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
@@ -141,7 +149,11 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": true }";
+
+		VerifyDeserialization(code, json);
 	}
 
 	[Test]
@@ -210,6 +222,10 @@ public class SimpleDeclarationTests
 }
 ";
 
-		VerifyCSharp(schema, expected);
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": 4.5 }";
+
+		VerifyDeserialization(code, json);
 	}
 }
