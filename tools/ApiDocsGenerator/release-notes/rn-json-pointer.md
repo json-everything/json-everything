@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "8.10"
 ---
+# [3.0.3](https://github.com/gregsdennis/json-everything/pull/509) {#release-pointer-3.0.3}
+
+Improved performance for `JsonPointer.ToString()` by caching the string representation so that it's only generated once.
+
 # [3.0.2](https://github.com/gregsdennis/json-everything/pull/492) {#release-pointer-3.0.2}
 
 Memory and performance improvements.
