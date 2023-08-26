@@ -15,7 +15,8 @@ namespace JsonEverythingNet.Services
 				{
 					AlwaysConsumeMouseWheel = false
 				},
-				ScrollBeyondLastLine = false
+				ScrollBeyondLastLine = false,
+				TabSize = 2
 			};
 
 		public static StandaloneEditorConstructionOptions Readonly()

@@ -240,8 +240,8 @@
 				case SchemaOperations.GenerateData:
 					ConfigureForDataGen();
 					break;
-			case SchemaOperations.Evaluate:
-			default:
+				case SchemaOperations.Evaluate:
+				default:
 					ConfigureForEvaluation();
 					break;
 			}
@@ -278,6 +278,7 @@
 	private void ConfigureForEvaluation()
 	{
 		_schemaEditor.SetLanguage("json");
+		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		Task.Run(() => DataManager.Set("schema-input-language", "json"));
 			
 		SchemaEditorLabel = "Schema";
@@ -290,6 +291,7 @@
 	private void ConfigureForCodeGen()
 	{
 		_schemaEditor.SetLanguage("json");
+		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		Task.Run(() => DataManager.Set("schema-input-language", "json"));
 			
 		SchemaEditorLabel = "Schema";
@@ -302,6 +304,7 @@
 	private void ConfigureForSchemaGen()
 	{
 		_schemaEditor.SetLanguage("csharp");
+		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 4 });
 		Task.Run(() => DataManager.Set("schema-input-language", "csharp"));
 			
 		SchemaEditorLabel = "Classes (C#)";
@@ -314,6 +317,7 @@
 	private void ConfigureForDataGen()
 	{
 		_schemaEditor.SetLanguage("json");
+		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		Task.Run(() => DataManager.Set("schema-input-language", "json"));
 			
 		SchemaEditorLabel = "Schema";
