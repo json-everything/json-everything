@@ -36,17 +36,19 @@ public class FooBar
 		var code = VerifyCSharp(schema, expected);
 
 		var json = @"{
-  ""Alpha"": {
-    ""Foo"": false,
-    ""Bar"": ""a string""
-  },
-  ""Beta"": {
-    ""Foo"": true,
-    ""Bar"": ""another string""
-  },
-  ""Gamma"": {
-    ""Foo"": false,
-    ""Bar"": ""a different string""
+  ""ObjectDictionary"": {
+    ""Alpha"": {
+      ""Foo"": false,
+      ""Bar"": ""a string""
+    },
+    ""Beta"": {
+      ""Foo"": true,
+      ""Bar"": ""another string""
+    },
+    ""Gamma"": {
+      ""Foo"": false,
+      ""Bar"": ""a different string""
+    }
   }
 }";
 
