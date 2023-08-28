@@ -83,8 +83,6 @@ public class EvaluationResults
 	/// </summary>
 	public EvaluationResults? Parent { get; private set; }
 
-	internal bool Exclude { get; private set; }
-
 	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
 
 	internal bool IncludeDroppedAnnotations { get; }
@@ -101,10 +99,10 @@ public class EvaluationResults
 		InstanceLocation = instanceLocation;
 
 		IncludeDroppedAnnotations = options.PreserveDroppedAnnotations;
-		if (options.IgnoredAnnotations != null)
+		if (options.OutputFiltering.IgnoredAnnotations != null)
 		{
-			_ignoredAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-			_backgroundAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+			_ignoredAnnotations = new HashSet<string>(options.OutputFiltering.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+			_backgroundAnnotations = new HashSet<string>(options.OutputFiltering.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
 		}
 	}
 
@@ -311,8 +309,6 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
-		if (value.Exclude) return;
-
 		writer.WriteStartObject();
 
 		writer.WriteBoolean("valid", value.IsValid);
@@ -421,8 +417,6 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
-		if (value.Exclude) return;
-
 		writer.WriteStartObject();
 
 		writer.WriteBoolean("valid", value.IsValid);
