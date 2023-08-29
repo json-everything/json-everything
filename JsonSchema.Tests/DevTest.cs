@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -8,25 +9,14 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var schema = new JsonSchemaBuilder()
-			.Ref(MetaSchemas.Draft6Id)
-			.Build();
-		var instance = new JsonObject
-		{
-			["items"] = new JsonObject
-			{
-				["minLength"] = -1
-			}
-		};
+		var text = "\"https://example.com/schema\"";
 
-		var options = new EvaluationOptions
-		{
-			OutputFormat = OutputFormat.Hierarchical,
-			PreserveDroppedAnnotations = true
-		};
+		var schema = JsonSerializer.Deserialize<JsonSchema>(text)!;
 
-		var result = schema.Evaluate(instance, options);
+		Assert.AreEqual(1, schema.Keywords.Count);
 
-		result.AssertInvalid();
+		var backToText = JsonSerializer.Serialize(schema);
+
+		Assert.AreEqual(text, backToText);
 	}
 }

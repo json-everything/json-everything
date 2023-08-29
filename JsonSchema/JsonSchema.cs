@@ -75,6 +75,7 @@ public class JsonSchema : IBaseDocument
 
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
 	internal JsonSchema? RecursiveAnchor { get; set; }
+	internal bool IsImplicitReference { get; private set; }
 
 	private JsonSchema(bool value)
 	{
@@ -128,6 +129,19 @@ public class JsonSchema : IBaseDocument
 	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
 	{
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
+	}
+
+	/// <summary>
+	/// Creates an implicit reference schema.
+	/// </summary>
+	/// <param name="reference">The IRI reference.</param>
+	/// <returns>A JSON Schema with only a single keyword: `$ref`.</returns>
+	public static JsonSchema ImplicitRef(Uri reference)
+	{
+		return new JsonSchema(new[] { new RefKeyword(reference) })
+		{
+			IsImplicitReference = true
+		};
 	}
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
@@ -566,12 +580,21 @@ public class JsonSchema : IBaseDocument
 			: null;
 
 	/// <summary>
-	/// Implicitly converts a boolean value into one of the boolean schemas. 
+	/// Implicitly converts a boolean value into one of the boolean schemas.
 	/// </summary>
 	/// <param name="value">The boolean value.</param>
 	public static implicit operator JsonSchema(bool value)
 	{
 		return value ? True : False;
+	}
+
+	/// <summary>
+	/// Implicitly converts an IRI reference into a string schema.
+	/// </summary>
+	/// <param name="reference">The IRI reference.</param>
+	public static implicit operator JsonSchema(Uri reference)
+	{
+		return JsonSchema.ImplicitRef(reference);
 	}
 
 	private string ToDebugString()
@@ -588,6 +611,15 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 	{
 		if (reader.TokenType == JsonTokenType.True) return JsonSchema.True;
 		if (reader.TokenType == JsonTokenType.False) return JsonSchema.False;
+
+		if (reader.TokenType == JsonTokenType.String)
+		{
+			var value = reader.GetString();
+			if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri))
+				throw new JsonException("String JSON Schema must be an IRI reference");
+
+			return JsonSchema.ImplicitRef(uri);
+		}
 
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("JSON Schema must be true, false, or an object");
@@ -645,6 +677,13 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 		if (value.BoolValue == false)
 		{
 			writer.WriteBooleanValue(false);
+			return;
+		}
+
+		if (value.IsImplicitReference)
+		{
+			var reference = value.GetRef()!;
+			writer.WriteStringValue(reference.OriginalString);
 			return;
 		}
 
