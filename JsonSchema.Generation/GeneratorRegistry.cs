@@ -22,6 +22,7 @@ public static class GeneratorRegistry
 			new DateTimeSchemaGenerator(),
 			new GuidSchemaGenerator(),
 			new JsonPointerSchemaGenerator(),
+			new JsonNodeSchemaGenerator(),
 			new JsonArraySchemaGenerator(),
 			new JsonObjectSchemaGenerator(),
 			new JsonValueSchemaGenerator(),

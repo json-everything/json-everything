@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.3.2](https://github.com/gregsdennis/json-everything/pull/513) {#release-schemagen-3.3.2}
+
+[#512](https://github.com/gregsdennis/json-everything/issues/512) - There was no support for `JsonNode`, explicitly.  Instead it would attempt to generate via reflection.  This update adds that support and just generates a `true` schema.  Thanks to [@ashek-simeon](https://github.com/ashek-simeon) for reporting and recommending a solution.
+
 # [3.3.1](https://github.com/gregsdennis/json-everything/pull/491) {#release-schemagen-3.3.1}
 
 [#488](https://github.com/gregsdennis/json-everything/issues/488) - `[Maximum(double.MaxValue)]` throws an overflow exception when attempting to convert to decimal.  This fix updates all min/max-related attributes.
