@@ -49,11 +49,9 @@ public class JsonNodeBaseDocument : IBaseDocument
 	{
 		return _foundSubschemas.GetOrAdd(pointer, jsonPointer =>
 		{
-			if (_foundSubschemas.TryGetValue(jsonPointer, out var schema)) return schema;
-
 			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
 
-			schema = location.Deserialize<JsonSchema>();
+			var schema = location.Deserialize<JsonSchema>();
 			if (schema != null)
 				JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
 
