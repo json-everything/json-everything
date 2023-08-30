@@ -7,7 +7,7 @@ public static class HelpContent
 
 The schema to be used for evaluation will go in the editor on the left.
 
-The JSON data to evaluate will go in the editor on the right.
+The JSON data to evaluate (the ""instance"") will go in the editor on the right.
 
 Ensure the options are as desired and click ""Run"".";
 
