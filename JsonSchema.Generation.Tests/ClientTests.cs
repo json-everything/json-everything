@@ -270,4 +270,19 @@ public class ClientTests
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions{WriteIndented = true}));
 	}
+
+	private class Issue512_Type
+	{
+		public IList<JsonNode> Foo { get; set; }
+	}
+
+	[Test]
+	public void Issue512_IListOfJsonNodeThrows()
+	{
+		var schema = new JsonSchemaBuilder()
+			.FromType<Issue512_Type>()
+			.Build();
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+	}
 }
