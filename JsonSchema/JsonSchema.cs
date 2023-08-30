@@ -132,13 +132,27 @@ public class JsonSchema : IBaseDocument
 	}
 
 	/// <summary>
-	/// Creates an implicit reference schema.
+	/// Creates an implicit reference string schema.
 	/// </summary>
 	/// <param name="reference">The IRI reference.</param>
 	/// <returns>A JSON Schema with only a single keyword: `$ref`.</returns>
 	public static JsonSchema ImplicitRef(Uri reference)
 	{
 		return new JsonSchema(new[] { new RefKeyword(reference) })
+		{
+			IsImplicitReference = true
+		};
+	}
+
+	/// <summary>
+	/// Creates an implicit reference string schema.
+	/// </summary>
+	/// <param name="reference">The IRI reference.</param>
+	/// <returns>A JSON Schema with only a single keyword: `$ref`.</returns>
+	/// <exception cref="UriFormatException">String is not a valid IRI reference.</exception>
+	public static JsonSchema ImplicitRef(string reference)
+	{
+		return new JsonSchema(new[] { new RefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)) })
 		{
 			IsImplicitReference = true
 		};
@@ -594,7 +608,7 @@ public class JsonSchema : IBaseDocument
 	/// <param name="reference">The IRI reference.</param>
 	public static implicit operator JsonSchema(Uri reference)
 	{
-		return JsonSchema.ImplicitRef(reference);
+		return ImplicitRef(reference);
 	}
 
 	private string ToDebugString()

@@ -9,11 +9,9 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var text = "\"https://example.com/schema\"";
+		var text = "{\"type\":\"array\",\"items\":\"https://example.com/schema\"}";
 
 		var schema = JsonSerializer.Deserialize<JsonSchema>(text)!;
-
-		Assert.AreEqual(1, schema.Keywords.Count);
 
 		var backToText = JsonSerializer.Serialize(schema);
 

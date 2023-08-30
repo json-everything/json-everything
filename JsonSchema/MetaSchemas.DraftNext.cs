@@ -10,40 +10,40 @@ public static partial class MetaSchemas
 	/// <summary>
 	/// The Draft 2020-12 meta-schema ID.
 	/// </summary>
-	public static readonly Uri DraftNextId = new Uri(DraftNextIdValue);
+	public static readonly Uri DraftNextId = new(DraftNextIdValue);
 
 	/// <summary>
 	/// The Draft 2020-12 Core meta-schema ID.
 	/// </summary>
-	public static readonly Uri CoreNextId = new Uri("https://json-schema.org/draft/next/meta/core");
+	public static readonly Uri CoreNextId = new("https://json-schema.org/draft/next/meta/core");
 	/// <summary>
 	/// The Draft 2020-12 Unevaluated meta-schema ID.
 	/// </summary>
-	public static readonly Uri UnevaluatedNextId = new Uri("https://json-schema.org/draft/next/meta/unevaluated");
+	public static readonly Uri UnevaluatedNextId = new("https://json-schema.org/draft/next/meta/unevaluated");
 	/// <summary>
 	/// The Draft 2020-12 Applicator meta-schema ID.
 	/// </summary>
-	public static readonly Uri ApplicatorNextId = new Uri("https://json-schema.org/draft/next/meta/applicator");
+	public static readonly Uri ApplicatorNextId = new("https://json-schema.org/draft/next/meta/applicator");
 	/// <summary>
 	/// The Draft 2020-12 Validation meta-schema ID.
 	/// </summary>
-	public static readonly Uri ValidationNextId = new Uri("https://json-schema.org/draft/next/meta/validation");
+	public static readonly Uri ValidationNextId = new("https://json-schema.org/draft/next/meta/validation");
 	/// <summary>
 	/// The Draft 2020-12 Metadata meta-schema ID.
 	/// </summary>
-	public static readonly Uri MetadataNextId = new Uri("https://json-schema.org/draft/next/meta/meta-data");
+	public static readonly Uri MetadataNextId = new("https://json-schema.org/draft/next/meta/meta-data");
 	/// <summary>
 	/// The Draft 2020-12 Format-Annotation meta-schema ID.
 	/// </summary>
-	public static readonly Uri FormatAnnotationNextId = new Uri("https://json-schema.org/draft/next/meta/format-annotation");
+	public static readonly Uri FormatAnnotationNextId = new("https://json-schema.org/draft/next/meta/format-annotation");
 	/// <summary>
 	/// The Draft 2020-12 Format-Assertion meta-schema ID.
 	/// </summary>
-	public static readonly Uri FormatAssertionNextId = new Uri("https://json-schema.org/draft/next/meta/format-assertion");
+	public static readonly Uri FormatAssertionNextId = new("https://json-schema.org/draft/next/meta/format-assertion");
 	/// <summary>
 	/// The Draft 2020-12 Content meta-schema ID.
 	/// </summary>
-	public static readonly Uri ContentNextId = new Uri("https://json-schema.org/draft/next/meta/content");
+	public static readonly Uri ContentNextId = new("https://json-schema.org/draft/next/meta/content");
 
 	/// <summary>
 	/// The Draft 2020-12 meta-schema.
@@ -64,15 +64,16 @@ public static partial class MetaSchemas
 			.DynamicAnchor("meta")
 			.Title("Core and Validation specifications meta-schema")
 			.AllOf(
-				new JsonSchemaBuilder().Ref("meta/core"),
-				new JsonSchemaBuilder().Ref("meta/applicator"),
-				new JsonSchemaBuilder().Ref("meta/unevaluated"),
-				new JsonSchemaBuilder().Ref("meta/validation"),
-				new JsonSchemaBuilder().Ref("meta/meta-data"),
-				new JsonSchemaBuilder().Ref("meta/format-annotation"),
-				new JsonSchemaBuilder().Ref("meta/content")
+				JsonSchema.ImplicitRef("meta/core"),
+				JsonSchema.ImplicitRef("meta/applicator"),
+				JsonSchema.ImplicitRef("meta/unevaluated"),
+				JsonSchema.ImplicitRef("meta/validation"),
+				JsonSchema.ImplicitRef("meta/meta-data"),
+				JsonSchema.ImplicitRef("meta/format-annotation"),
+				JsonSchema.ImplicitRef("meta/content")
 			)
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Comment("This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.")
 			.Properties(
 				(DefinitionsKeyword.Name, new JsonSchemaBuilder()
@@ -88,7 +89,7 @@ public static partial class MetaSchemas
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.AnyOf(
 							new JsonSchemaBuilder().DynamicRef("#meta"),
-							new JsonSchemaBuilder().Ref("meta/validation#/$defs/stringArray")
+							JsonSchema.ImplicitRef("meta/validation#/$defs/stringArray")
 						)
 					)
 					.Deprecated(true)
@@ -117,33 +118,22 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.CoreNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Core vocabulary meta-schema")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(IdKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/iriReferenceString")
 					.Comment("Non-empty fragments not allowed.")
 					.Pattern("^[^#]*#?$")
 				),
-				(SchemaKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/iriString")
-				),
-				(RefKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/iriReferenceString")
-				),
-				(AnchorKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/anchorString")
-				),
-				(DynamicRefKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/iriReferenceString")
-				),
-				(DynamicAnchorKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/anchorString")
-				),
+				(SchemaKeyword.Name, JsonSchema.ImplicitRef("#/$defs/iriString")),
+				(RefKeyword.Name, JsonSchema.ImplicitRef("#/$defs/iriReferenceString")),
+				(AnchorKeyword.Name, JsonSchema.ImplicitRef("#/$defs/anchorString")),
+				(DynamicRefKeyword.Name, JsonSchema.ImplicitRef("#/$defs/iriReferenceString")),
+				(DynamicAnchorKeyword.Name, JsonSchema.ImplicitRef("#/$defs/anchorString")),
 				(VocabularyKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
-					.PropertyNames(new JsonSchemaBuilder()
-						.Ref("#/$defs/iriString")
-					)
+					.PropertyNames(JsonSchema.ImplicitRef("#/$defs/iriString"))
 					.AdditionalProperties(new JsonSchemaBuilder()
 						.Type(SchemaValueType.Boolean)
 					)
@@ -178,7 +168,8 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.UnevaluatedNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Unevaluated applicator vocabulary meta-schema")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(UnevaluatedItemsKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
@@ -198,11 +189,10 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.ApplicatorNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Applicator vocabulary meta-schema")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
-				(PrefixItemsKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/schemaArray")
-				),
+				(PrefixItemsKeyword.Name, JsonSchema.ImplicitRef("#/$defs/schemaArray")),
 				(ItemsKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
 				),
@@ -259,15 +249,9 @@ public static partial class MetaSchemas
 				(ElseKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
 				),
-				(AllOfKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/schemaArray")
-				),
-				(AnyOfKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/schemaArray")
-				),
-				(OneOfKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/schemaArray")
-				),
+				(AllOfKeyword.Name, JsonSchema.ImplicitRef("#/$defs/schemaArray")),
+				(AnyOfKeyword.Name, JsonSchema.ImplicitRef("#/$defs/schemaArray")),
+				(OneOfKeyword.Name, JsonSchema.ImplicitRef("#/$defs/schemaArray")),
 				(NotKeyword.Name, new JsonSchemaBuilder()
 					.DynamicRef("#meta")
 				)
@@ -292,7 +276,8 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.ValidationNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Validation vocabulary meta-schema")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder()
 					.AnyOf(
@@ -325,42 +310,26 @@ public static partial class MetaSchemas
 				(ExclusiveMinimumKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
 				),
-				(MaxLengthKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeInteger")
-				),
-				(MinLengthKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeIntegerDefault0")
-				),
+				(MaxLengthKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeInteger")),
+				(MinLengthKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeIntegerDefault0")),
 				(PatternKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.Regex)
 				),
-				(MaxItemsKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeInteger")
-				),
-				(MinItemsKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeIntegerDefault0")
-				),
+				(MaxItemsKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeInteger")),
+				(MinItemsKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeIntegerDefault0")),
 				(UniqueItemsKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
 					.Default(false)
 				),
-				(MaxContainsKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeInteger")
-				),
+				(MaxContainsKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeInteger")),
 				(MinContainsKeyword.Name, new JsonSchemaBuilder()
 					.Ref("#/$defs/nonNegativeInteger")
 					.Default(1)
 				),
-				(MaxPropertiesKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeInteger")
-				),
-				(MinPropertiesKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/nonNegativeIntegerDefault0")
-				),
-				(RequiredKeyword.Name, new JsonSchemaBuilder()
-					.Ref("#/$defs/stringArray")
-				),
+				(MaxPropertiesKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeInteger")),
+				(MinPropertiesKeyword.Name, JsonSchema.ImplicitRef("#/$defs/nonNegativeIntegerDefault0")),
+				(RequiredKeyword.Name, JsonSchema.ImplicitRef("#/$defs/stringArray")),
 				(DependentRequiredKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.Object)
 					.AdditionalProperties(new JsonSchemaBuilder()
@@ -406,7 +375,8 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.MetadataNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Meta-data vocabulary meta-schema")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(TitleKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
@@ -443,7 +413,8 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.FormatAnnotationNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Format vocabulary meta-schema for annotation results")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(FormatKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
@@ -460,7 +431,8 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.FormatAssertionNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Format vocabulary meta-schema for assertion results")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(FormatKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
@@ -477,7 +449,8 @@ public static partial class MetaSchemas
 			.Vocabulary((Vocabularies.ContentNextId, true))
 			.DynamicAnchor("meta")
 			.Title("Content vocabulary meta-schema")
-			.Type(SchemaValueType.Object | SchemaValueType.Boolean)
+			.Type(SchemaValueType.Object | SchemaValueType.Boolean | SchemaValueType.String)
+			.Format(Formats.IriReference)
 			.Properties(
 				(ContentMediaTypeKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)

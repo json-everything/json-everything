@@ -38,6 +38,15 @@ public class SelfValidationTest
 			new TestCaseData(MetaSchemas.FormatAssertion202012) { TestName = nameof(MetaSchemas.FormatAssertion202012) },
 			new TestCaseData(MetaSchemas.Content202012) { TestName = nameof(MetaSchemas.Content202012) },
 			new TestCaseData(MetaSchemas.Unevaluated202012) { TestName = nameof(MetaSchemas.Unevaluated202012) },
+
+			new TestCaseData(MetaSchemas.DraftNext) { TestName = nameof(MetaSchemas.DraftNext) },
+			new TestCaseData(MetaSchemas.CoreNext) { TestName = nameof(MetaSchemas.CoreNext) },
+			new TestCaseData(MetaSchemas.ApplicatorNext) { TestName = nameof(MetaSchemas.ApplicatorNext) },
+			new TestCaseData(MetaSchemas.MetadataNext) { TestName = nameof(MetaSchemas.MetadataNext) },
+			new TestCaseData(MetaSchemas.FormatAnnotationNext) { TestName = nameof(MetaSchemas.FormatAnnotationNext) },
+			new TestCaseData(MetaSchemas.FormatAssertionNext) { TestName = nameof(MetaSchemas.FormatAssertionNext) },
+			new TestCaseData(MetaSchemas.ContentNext) { TestName = nameof(MetaSchemas.ContentNext) },
+			new TestCaseData(MetaSchemas.UnevaluatedNext) { TestName = nameof(MetaSchemas.UnevaluatedNext) },
 		};
 
 	[TestCaseSource(nameof(TestData))]
