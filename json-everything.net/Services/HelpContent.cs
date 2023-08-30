@@ -30,12 +30,12 @@ on the types you expect to use.  A few are included by default:
 
 When you're done, click ""Run"".
 
-If the C# is valid, you will receive a JSON Schema in the right editor.  Otherwise, you will
+If the C# is valid, you will receive a JSON Schema in the results editor.  Otherwise, you will
 receive an error that says ""compilation error.""
 
-***NOTE** The playground will output the error to the console, including the serialized details.
-I haven't yet figured out how to interpret these details to provide any insight into what in
-particular is wrong.  If you know, please feel free to raise an issue.*";
+***NOTE** The playground will output the compilation error to the console, including the
+serialized details. I haven't yet figured out how to interpret these details to provide any
+insight into what in particular is wrong.  If you know, please feel free to raise an issue.*";
 
 	public const string SchemaGenerateCode = @"
 ## Generating C# Code
