@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -12,7 +12,7 @@ namespace Json.Schema;
 public class JsonNodeBaseDocument : IBaseDocument
 {
 	private readonly JsonNode _node;
-	private readonly Dictionary<JsonPointer, JsonSchema?> _foundSubschemas;
+	private readonly ConcurrentDictionary<JsonPointer, JsonSchema?> _foundSubschemas;
 
 	/// <summary>
 	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
@@ -34,7 +34,7 @@ public class JsonNodeBaseDocument : IBaseDocument
 	public JsonNodeBaseDocument(JsonNode node, Uri baseUri)
 	{
 		_node = node;
-		_foundSubschemas = new Dictionary<JsonPointer, JsonSchema?>();
+		_foundSubschemas = new ConcurrentDictionary<JsonPointer, JsonSchema?>();
 
 		BaseUri = baseUri;
 	}
@@ -47,16 +47,15 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// <returns>A JSON Schema, if found.</returns>
 	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
-		if (_foundSubschemas.TryGetValue(pointer, out var schema)) return schema;
+		return _foundSubschemas.GetOrAdd(pointer, jsonPointer =>
+		{
+			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
 
-		if (!pointer.TryEvaluate(_node, out var location)) return null;
+			var schema = location.Deserialize<JsonSchema>();
+			if (schema != null)
+				JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
 
-		schema = location.Deserialize<JsonSchema>();
-		if (schema != null) 
-			JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
-
-		_foundSubschemas[pointer] = schema;
-
-		return schema;
+			return schema;
+		});
 	}
 }
