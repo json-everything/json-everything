@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.2.1](https://github.com/gregsdennis/json-everything/pull/514) {#release-schema-5.2.1}
+
+[#511](https://github.com/gregsdennis/json-everything/pull/511) - `JsonNodeBaseDocument` had some concurrency issues.  Thanks to [@Fresa](https://github.com/Fresa) for finding and fixing this issue.
+
 # [5.2.0](https://github.com/gregsdennis/json-everything/pull/505) {#release-schema-5.2.0}
 
 Added `JsonSchema.GetAnchor()`.
