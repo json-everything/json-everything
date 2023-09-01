@@ -4,7 +4,7 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "8.08"
 ---
-# [0.6.5](https://github.com/gregsdennis/json-everything/pull/???) {#release-path-0.6.5}
+# [0.6.5](https://github.com/gregsdennis/json-everything/pull/515) {#release-path-0.6.5}
 
 Update `.AsJsonPointer()` to allow `$[1,"1"]` pattern discussed in https://blog.json-everything.net/posts/paths-and-pointers-correction/.
 
