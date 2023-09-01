@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "8.08"
 ---
+# [0.6.5](https://github.com/gregsdennis/json-everything/pull/515) {#release-path-0.6.5}
+
+Update `.AsJsonPointer()` to allow `$[1,"1"]` pattern discussed in https://blog.json-everything.net/posts/paths-and-pointers-correction/.
+
 # [0.6.4](https://github.com/gregsdennis/json-everything/pull/496) {#release-path-0.6.4}
 
 [#495](https://github.com/gregsdennis/json-everything/issues/495) - `.TryParse()` with empty string throws exception.  Thanks to [@ben-wckdrzr](https://github.com/ben-wckdrzr) for reporting this.

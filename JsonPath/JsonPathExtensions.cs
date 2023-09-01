@@ -16,20 +16,30 @@ public static class JsonPathExtensions
 	/// <exception cref="InvalidOperationException">Thrown if the path is not singular.</exception>
 	public static string AsJsonPointer(this JsonPath path)
 	{
-		if (!path.IsSingular)
-			throw new InvalidOperationException("Only a Singular Path can be written as a JSON Pointer");
-
 		return string.Concat(path.Segments.Select(x =>
 		{
-			var segment = x.Selectors[0] switch
+			if (x.Selectors.Length == 1 && !x.IsRecursive)
 			{
-				IndexSelector index => $"/{index}",
-				NameSelector name => $"/{PointerEncode(name.Name)}",
-				// ReSharper disable once NotResolvedInText
-				_ => throw new ArgumentOutOfRangeException("selector", "Selector is not of the right type for conversion to JSON Pointer.  This shouldn't happen.")
-			};
+				var segment = x.Selectors[0] switch
+				{
+					IndexSelector index => $"/{index}",
+					NameSelector name => $"/{PointerEncode(name.Name)}",
+					// ReSharper disable once NotResolvedInText
+					_ => null
+				};
+				if (segment != null) return segment;
+			}
 
-			return segment;
+			if (x.Selectors.Length == 2)
+			{
+				var index = x.Selectors.OfType<IndexSelector>().FirstOrDefault();
+				var name = x.Selectors.OfType<NameSelector>().FirstOrDefault();
+
+				if (index != null && name != null && name.Name == index.Index.ToString())
+					return $"/{PointerEncode(name.Name)}";
+			}
+
+			throw new InvalidOperationException("This path cannot be represented as a JSON Pointer");
 		}));
 	}
 

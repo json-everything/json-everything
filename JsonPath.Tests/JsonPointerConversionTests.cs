@@ -114,4 +114,24 @@ public class JsonPointerTests
 
 		Assert.Throws<InvalidOperationException>(() => path.AsJsonPointer());
 	}
+
+	[Test]
+	public void MultipleSelectorsButSameValue_IndexFirst()
+	{
+		var path = JsonPath.Parse("$[1,'1']");
+
+		var asPointer = path.AsJsonPointer();
+
+		Assert.AreEqual("/1", asPointer);
+	}
+
+	[Test]
+	public void MultipleSelectorsButSameValue_NameFirst()
+	{
+		var path = JsonPath.Parse("$['1',1]");
+
+		var asPointer = path.AsJsonPointer();
+
+		Assert.AreEqual("/1", asPointer);
+	}
 }
