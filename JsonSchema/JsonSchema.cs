@@ -130,6 +130,34 @@ public class JsonSchema : IBaseDocument
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
+	/// <summary>
+	/// Evaluates an instance by automatically determining the schema to use by examining
+	/// the instance's `$schema` key.
+	/// </summary>
+	/// <param name="root">The root instance.</param>
+	/// <param name="options">The options to use for this evaluation.</param>
+	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
+	/// <exception cref="ArgumentException">
+	/// Throw when the instance doesn't have a `$schema` key, when the value under `$schema` is not
+	/// an absolute URI, or when the URI is not associated with a registered schema.
+	/// </exception>
+	// TODO: Not quite ready to release this.  Is it a good practice?  https://github.com/orgs/json-schema-org/discussions/473
+	internal static EvaluationResults AutoEvaluate(JsonNode? root, EvaluationOptions? options = null)
+	{
+		string? schemaId = null;
+		(root as JsonObject)?[SchemaKeyword.Name]?.AsValue().TryGetValue(out schemaId);
+		if (schemaId == null || !Uri.TryCreate(schemaId, UriKind.Absolute, out var schemaUri))
+			throw new ArgumentException("JSON must contain `$schema` with an absolute URI.", nameof(root));
+
+		options ??= EvaluationOptions.Default;
+
+		var schema = options.SchemaRegistry.Get(schemaUri) as JsonSchema;
+		if (schema == null)
+			throw new ArgumentException($"Schema URI {schemaId} unrecognized", nameof(root));
+
+		return schema.Evaluate(root, options);
+	}
+
 	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
 
 	/// <summary>
