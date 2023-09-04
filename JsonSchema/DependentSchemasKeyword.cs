@@ -97,7 +97,7 @@ internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSch
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options)!;
+		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		return new DependentSchemasKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, DependentSchemasKeyword value, JsonSerializerOptions options)

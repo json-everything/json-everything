@@ -82,13 +82,7 @@ internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 {
 	public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		using var document = JsonDocument.ParseValue(ref reader);
-
-		if (document.RootElement.ValueKind != JsonValueKind.Array)
-			throw new JsonException("Expected array");
-
-		return new RequiredKeyword(document.RootElement.EnumerateArray()
-			.Select(e => e.GetString()!));
+		return new RequiredKeyword(options.Read<IEnumerable<string>>(ref reader) ?? throw new JsonException("Expected array"));
 	}
 	public override void Write(Utf8JsonWriter writer, RequiredKeyword value, JsonSerializerOptions options)
 	{

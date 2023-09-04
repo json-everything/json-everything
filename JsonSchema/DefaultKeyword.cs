@@ -62,7 +62,7 @@ internal class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 {
 	public override DefaultKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read<JsonNode>(ref reader);
 
 		return new DefaultKeyword(node);
 	}

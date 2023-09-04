@@ -876,20 +876,24 @@ public class GithubTests
 		Assert.IsNotNull(subSchema);
 	}
 
-	[Test]
-	public void IssueTBD_IncorrectJsonExceptionpointer()
-	{
-
-		var schemaStr = @"{
+	[TestCase(@"{""additionalItems"":""not-a-schema""}", 0, 33)]
+	[TestCase(@"{""additionalProperties"":""not-a-schema""}", 0, 38)]
+	[TestCase(@"{""allOf"":[""not-a-schema""]}", 0, 24)]
+	[TestCase(@"{""anyOf"":[""not-a-schema""]}", 0, 24)]
+	[TestCase(@"{
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""required"": [ { ""abc"": null } ]
   ""properties"": {
       ""abc"": { ""$ref"": ""mySchema.json"" }
   },
   ""additionalProperties"": false
-}";
+}", 2, 17)]
+	public void Issue517_IncorrectJsonExceptionpointer(string schemaStr, long expectedLineNumber, long expectedBytePositionInLine)
+	{
+		// Reminder: per the JsonException documentation, expectedLineNumber & expectedBytePositionInLine are 0-based
 		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr));
 		Assert.IsNotNull(exception);
-		Assert.AreEqual(2L, exception?.LineNumber);
+		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
+		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
 	}
 }

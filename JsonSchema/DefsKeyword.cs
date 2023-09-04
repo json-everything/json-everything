@@ -64,7 +64,7 @@ internal class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options)!;
+		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		return new DefsKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, DefsKeyword value, JsonSerializerOptions options)

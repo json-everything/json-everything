@@ -88,11 +88,11 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
+			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
 			return new OneOfKeyword(schemas);
 		}
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 		return new OneOfKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, OneOfKeyword value, JsonSerializerOptions options)

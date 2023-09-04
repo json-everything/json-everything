@@ -154,11 +154,11 @@ internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
+			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
 			return new ItemsKeyword(schemas);
 		}
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 		return new ItemsKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)
