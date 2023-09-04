@@ -875,4 +875,21 @@ public class GithubTests
 
 		Assert.IsNotNull(subSchema);
 	}
+
+	[Test]
+	public void IssueTBD_IncorrectJsonExceptionpointer()
+	{
+
+		var schemaStr = @"{
+  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
+  ""required"": [ { ""abc"": null } ]
+  ""properties"": {
+      ""abc"": { ""$ref"": ""mySchema.json"" }
+  },
+  ""additionalProperties"": false
+}";
+		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr));
+		Assert.IsNotNull(exception);
+		Assert.AreEqual(2L, exception?.LineNumber);
+	}
 }
