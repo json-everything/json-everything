@@ -875,4 +875,17 @@ public class GithubTests
 
 		Assert.IsNotNull(subSchema);
 	}
+
+	[Test]
+	public void Issue516_UnrecognizedKeywordsViaBuilder()
+	{
+		var builder = new JsonSchemaBuilder();
+		builder.Add(new UnrecognizedKeyword("foo", null));
+		builder.Add(new UnrecognizedKeyword("bar", null));
+		var actual = builder.Build();
+
+		var text = "{\"foo\":null,\"bar\":null}";
+
+		Assert.AreEqual(text, JsonSerializer.Serialize(actual));
+	}
 }
