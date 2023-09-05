@@ -94,7 +94,6 @@ public class EnumStringConverter<T> : JsonConverter<T>
 					values.Add(immediate);
 					reader.Read();
 				}
-				// end of the array should be left unread - the first thing the parent converter will do is call Read() again
 
 				return values.Aggregate(Aggregator);
 			}

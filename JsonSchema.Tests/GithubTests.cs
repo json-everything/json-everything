@@ -882,9 +882,9 @@ public class GithubTests
 	[TestCase(@"{""anyOf"":[""not-a-schema""]}", 0, 24)]
 	[TestCase(@"{""contains"":""not-a-schema""}", 0, 26)]
 	[TestCase(@"{""contentSchema"":""not-a-schema""}", 0, 31)]
-	[TestCase(@"{""definitions"":{""myDef"":""not-a-schema""}", 0, 38)]
-	[TestCase(@"{""$defs"":{""myDef"":""not-a-schema""}", 0, 32)]
-	[TestCase(@"{""dependencies"":{""myDef"":""not-a-schema""}", 0, 39)]
+	[TestCase(@"{""definitions"":{""myDef"":""not-a-schema""}}", 0, 38)]
+	[TestCase(@"{""$defs"":{""myDef"":""not-a-schema""}}", 0, 32)]
+	[TestCase(@"{""dependencies"":{""myDep"":""not-a-schema""}}", 0, 39)]
 	[TestCase(@"{
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""required"": [ { ""abc"": null } ]
@@ -893,11 +893,14 @@ public class GithubTests
   },
   ""additionalProperties"": false
 }", 2, 17)]
-	public void Issue517_IncorrectJsonExceptionpointer(string schemaStr, long expectedLineNumber, long expectedBytePositionInLine)
+	public void Issue517_IncorrectJsonExceptionLineAndBytePosition(string schemaStr, int expectedLineNumber, int expectedBytePositionInLine)
 	{
 		// Reminder: per the JsonException documentation, expectedLineNumber & expectedBytePositionInLine are 0-based
 		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr));
 		Assert.IsNotNull(exception);
+		TestContext.Out.WriteLine("Expected error");
+		TestContext.Out.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
+		TestContext.Out.WriteLine(new string('-', (int)expectedBytePositionInLine - 1) + '^');
 		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
 		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
 	}
