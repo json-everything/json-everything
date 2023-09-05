@@ -880,6 +880,11 @@ public class GithubTests
 	[TestCase(@"{""additionalProperties"":""not-a-schema""}", 0, 38)]
 	[TestCase(@"{""allOf"":[""not-a-schema""]}", 0, 24)]
 	[TestCase(@"{""anyOf"":[""not-a-schema""]}", 0, 24)]
+	[TestCase(@"{""contains"":""not-a-schema""}", 0, 26)]
+	[TestCase(@"{""contentSchema"":""not-a-schema""}", 0, 31)]
+	[TestCase(@"{""definitions"":{""myDef"":""not-a-schema""}", 0, 38)]
+	[TestCase(@"{""$defs"":{""myDef"":""not-a-schema""}", 0, 32)]
+	[TestCase(@"{""dependencies"":{""myDef"":""not-a-schema""}", 0, 39)]
 	[TestCase(@"{
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""required"": [ { ""abc"": null } ]
