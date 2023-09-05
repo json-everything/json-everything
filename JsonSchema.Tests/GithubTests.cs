@@ -876,6 +876,19 @@ public class GithubTests
 		Assert.IsNotNull(subSchema);
 	}
 
+	[Test]
+	public void Issue516_UnrecognizedKeywordsViaBuilder()
+	{
+		var builder = new JsonSchemaBuilder();
+		builder.Add(new UnrecognizedKeyword("foo", null));
+		builder.Add(new UnrecognizedKeyword("bar", null));
+		var actual = builder.Build();
+
+		var text = "{\"foo\":null,\"bar\":null}";
+
+		Assert.AreEqual(text, JsonSerializer.Serialize(actual));
+	}
+
 	[TestCase(@"{""additionalItems"":""not-a-schema""}", 0, 33)]
 	[TestCase(@"{""additionalProperties"":""not-a-schema""}", 0, 38)]
 	[TestCase(@"{""allOf"":[""not-a-schema""]}", 0, 24)]
@@ -903,5 +916,5 @@ public class GithubTests
 		TestContext.Out.WriteLine(new string('-', (int)expectedBytePositionInLine - 1) + '^');
 		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
 		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
-	}
+  }
 }
