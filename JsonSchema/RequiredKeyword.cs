@@ -83,7 +83,7 @@ internal class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
 {
 	public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		return new RequiredKeyword(options.Read<IEnumerable<string>>(ref reader) ?? throw new JsonException("Expected array"));
+		return new RequiredKeyword(options.Read<string[]>(ref reader) ?? throw new JsonException("Expected array"));
 	}
 	public override void Write(Utf8JsonWriter writer, RequiredKeyword value, JsonSerializerOptions options)
 	{
