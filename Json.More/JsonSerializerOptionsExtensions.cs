@@ -35,33 +35,4 @@ public static class JsonSerializerOptionsExtensions
 	{
 		return options.GetConverter<T>().Read(ref reader, typeof(T), options);
 	}
-
-	/// <summary>
-	/// Read and convert the JSON to an arbitrary type.
-	/// </summary>
-	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
-	/// <param name="reader">The <see cref="Utf8JsonReader"/> to read from.</param>
-	/// <param name="arbitraryType">The <see cref="Type"/> to convert to.</param>
-	/// <returns>The value that was converted.</returns>
-	public static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType)
-	{
-		var converter = (IArbitraryDeserializer)Activator.CreateInstance(typeof(ArbitraryDeserializer<>).MakeGenericType(arbitraryType));
-		return converter.Read(ref reader, options);
-	}
-
-
-	private interface IArbitraryDeserializer
-	{
-		object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options);
-	}
-
-	private class ArbitraryDeserializer<T> : IArbitraryDeserializer
-	{
-		public object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options)
-		{
-			var converter = (JsonConverter<T>)options.GetConverter(typeof(T));
-
-			return converter.Read(ref reader, typeof(T), options);
-		}
-	}
 }
