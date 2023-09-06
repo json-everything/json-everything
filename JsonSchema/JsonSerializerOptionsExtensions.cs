@@ -8,7 +8,6 @@ namespace Json.Schema;
 // TODO: .NET 5+ would have these methods marked with `RequiresUnreferencedCodeAttribute` to warn against tree trimming
 internal static class JsonSerializerOptionsExtensions
 {
-	private static ConcurrentDictionary<Type, ArbitraryDeserializerBase> _deserializerCache = new ConcurrentDictionary<Type, ArbitraryDeserializerBase>();
 
 	/// <summary>
 	/// Read and convert the JSON to an arbitrary type.
@@ -19,13 +18,20 @@ internal static class JsonSerializerOptionsExtensions
 	/// <returns>The value that was converted.</returns>
 	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType)
 	{
-		var converter = _deserializerCache.GetOrAdd(arbitraryType, t => (ArbitraryDeserializerBase)Activator.CreateInstance(typeof(ArbitraryDeserializer<>).MakeGenericType(t)));
+		var converter = ArbitraryDeserializerBase.GetConverter(arbitraryType);
 		return converter.Read(ref reader, options);
 	}
 
 
 	private abstract class ArbitraryDeserializerBase
 	{
+		private static ConcurrentDictionary<Type, ArbitraryDeserializerBase> _deserializerCache = new ConcurrentDictionary<Type, ArbitraryDeserializerBase>();
+
+		public static ArbitraryDeserializerBase GetConverter(Type arbitraryType)
+		{
+			return _deserializerCache.GetOrAdd(arbitraryType, t => (ArbitraryDeserializerBase)Activator.CreateInstance(typeof(ArbitraryDeserializer<>).MakeGenericType(t)));
+		}
+
 		public abstract object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options);
 	}
 
