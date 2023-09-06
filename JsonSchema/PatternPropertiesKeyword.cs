@@ -107,7 +107,7 @@ internal class PatternPropertiesKeywordJsonConverter : JsonConverter<PatternProp
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var patternProps = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options)!;
+		var patternProps = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		var schemas = new Dictionary<Regex, JsonSchema>();
 		var invalidProps = new List<string>();
 		foreach (var prop in patternProps)

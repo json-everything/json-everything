@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -89,7 +90,7 @@ internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRe
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var requirements = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref reader, options);
+		var requirements = options.Read<Dictionary<string, List<string>>>(ref reader);
 		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)

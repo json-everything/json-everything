@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -100,7 +101,7 @@ internal class PropertyDependencyJsonConverter : JsonConverter<PropertyDependenc
 {
 	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schemas = JsonSerializer.Deserialize<Dictionary<string, JsonSchema>>(ref reader, options);
+		var schemas = options.Read<Dictionary<string, JsonSchema>>(ref reader);
 
 		return new PropertyDependency(schemas!);
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -83,11 +84,11 @@ internal class AnyOfKeywordJsonConverter : JsonConverter<AnyOfKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize<List<JsonSchema>>(ref reader, options)!;
+			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
 			return new AnyOfKeyword(schemas);
 		}
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 		return new AnyOfKeyword(schema);
 	}
 	public override void Write(Utf8JsonWriter writer, AnyOfKeyword value, JsonSerializerOptions options)

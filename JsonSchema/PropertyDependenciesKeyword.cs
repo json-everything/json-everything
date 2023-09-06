@@ -105,7 +105,7 @@ internal class PropertyDependenciesKeywordJsonConverter : JsonConverter<Property
 {
 	public override PropertyDependenciesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var dependencies = JsonSerializer.Deserialize<Dictionary<string, PropertyDependency>>(ref reader, options);
+		var dependencies = options.Read<Dictionary<string, PropertyDependency>>(ref reader);
 
 		return new PropertyDependenciesKeyword(dependencies!);
 	}
