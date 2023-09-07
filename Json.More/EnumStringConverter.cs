@@ -130,7 +130,7 @@ public class EnumStringConverter<T> : JsonConverter<T>
 			writer.WriteStartArray();
 			foreach (var name in WriteValues.Keys)
 			{
-				if (value.HasFlag(name))
+				if (value.HasFlag(name) && !name.Equals(default(T)))
 					writer.WriteStringValue(WriteValues[name]);
 			}
 			writer.WriteEndArray();
