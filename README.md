@@ -123,10 +123,10 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 </table>
 
 - JSON Schema, drafts 6 and higher ([Specification](https://json-schema.org))
-  - Generation of schemas from .Net types supported in an additional library
+  - Generation of schemas from .Net types
   - Generation of C# code from schemas (more languages to follow)
   - Random instance data generation (powered by [Bogus](https://github.com/bchavez/Bogus))
-  - [OpenApi 3.1](https://www.openapis.org/) vocabulary extension
+  - [OpenApi 3.1](https://www.openapis.org/) vocabulary extension (used by my OpenAPI library [Graeae](https://github.com/gregsdennis/Graeae))
   - A vocabulary for accessing instance and external data
   - A vocabulary for validating item uniqueness based on specific item values
 - JSON Path ([RFC in progress](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-jsonpath)) (.Net Standard 2.1)
@@ -141,7 +141,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 
 Error message translations for _JsonSchema.Net_ available in:
 
-- Spanish `es-es`
+- Spanish `es`
 - Norwegian `nb-no`
 - Swedish `sv-se`
 
