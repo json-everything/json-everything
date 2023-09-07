@@ -99,7 +99,7 @@ internal class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 {
 	public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var type = JsonSerializer.Deserialize<SchemaValueType>(ref reader, options);
+		var type = options.Read<SchemaValueType>(ref reader);
 
 		return new TypeKeyword(type);
 	}

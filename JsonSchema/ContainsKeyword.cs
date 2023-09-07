@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -137,7 +138,7 @@ internal class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
 {
 	public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize<JsonSchema>(ref reader, options)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 
 		return new ContainsKeyword(schema);
 	}

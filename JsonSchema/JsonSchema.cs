@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -637,7 +638,7 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
 					{
-						var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+						var node = options.Read<JsonNode>(ref reader);
 						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
 						keywords.Add(unrecognizedKeyword);
 						break;
@@ -648,7 +649,7 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = (IJsonSchemaKeyword)JsonSerializer.Deserialize(ref reader, keywordType, options)! ??
+						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
 										 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
 					keywords.Add(implementation);
 					break;

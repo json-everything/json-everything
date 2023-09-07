@@ -102,7 +102,7 @@ internal class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 {
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = JsonSerializer.Deserialize<JsonArray>(ref reader);
+		var array = options.Read<JsonArray>(ref reader);
 		if (array is null)
 			throw new JsonException("Expected an array, but received null");
 

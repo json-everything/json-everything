@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -62,7 +63,7 @@ internal class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 {
 	public override DefaultKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read<JsonNode>(ref reader);
 
 		return new DefaultKeyword(node);
 	}

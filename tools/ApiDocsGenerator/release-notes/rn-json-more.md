@@ -4,6 +4,11 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.9.0](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.9.0}
+
+- Added `JsonSerializerOptionsExtensions` to help create custom converters that need to further call the serializer.  Thanks to [@mdekrey](https://github.com/mdekrey) for putting this together.
+- Fixed `EnumStringConverter`'s flag enum serialization to exclude named default values when other values are present.
+
 # [1.8.0](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.8.0}
 
 - `EnumStringConverter<T>` now supports reading and writing dictionary keys.

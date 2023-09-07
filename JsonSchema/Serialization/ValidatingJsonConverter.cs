@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.Serialization;
 
@@ -101,7 +102,7 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var readerCopy = reader;
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref readerCopy, options);
+		var node = options.Read<JsonNode?>(ref readerCopy);
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{
@@ -112,6 +113,7 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 		var newOptions = _optionsFactory(options);
 
 		if (validation.IsValid)
+			// TODO: this does not use the options reader because at least one test failed with a NotSupportedException
 			return JsonSerializer.Deserialize<T>(ref reader, newOptions);
 
 		throw new JsonException("JSON does not meet schema requirements")
