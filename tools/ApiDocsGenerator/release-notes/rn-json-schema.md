@@ -6,7 +6,8 @@ order: "8.01"
 ---
 # [5.2.2](https://github.com/gregsdennis/json-everything/pull/518) {#release-schema-5.2.2}
 
-[#516](https://github.com/gregsdennis/json-everything/pull/516) - `JsonSchemaBuilder.Build()` throws an exception when multiple unrecognized keywords have been added.  Thanks to [@mdekrey](https://github.com/mdekrey) for finding this and suggesting the fix.
+[#516](https://github.com/gregsdennis/json-everything/issues/516) - `JsonSchemaBuilder.Build()` throws an exception when multiple unrecognized keywords have been added.  Thanks to [@mdekrey](https://github.com/mdekrey) for finding this and suggesting the fix.
+[#517](https://github.com/gregsdennis/json-everything/issues/517) - Deserialization of `JsonSchema` does not correctly report line numbers and positions in source JSON text.  Thanks to [@mdekrey](https://github.com/mdekrey) for finding this and implementing the fix.
 
 # [5.2.1](https://github.com/gregsdennis/json-everything/pull/514) {#release-schema-5.2.1}
 
