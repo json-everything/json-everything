@@ -452,6 +452,24 @@
             Provides a static instance of this class wrapped in a <see cref="T:System.Text.Json.Nodes.JsonNode"/>.
             </summary>
         </member>
+        <member name="T:Json.More.JsonSerializerOptionsExtensions">
+            <summary>
+            Provides extension functionality for <see cref="T:System.Text.Json.JsonSerializerOptions"/>.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Json.More.JsonSerializerOptionsExtensions.GetConverter``1(System.Text.Json.JsonSerializerOptions)" -->
+        <member name="M:Json.More.JsonSerializerOptionsExtensions.Read``1(System.Text.Json.JsonSerializerOptions,System.Text.Json.Utf8JsonReader@)">
+            <summary>
+            Read and convert the JSON to T.
+            </summary>
+            <remarks>
+            A converter may throw any Exception, but should throw <cref>JsonException</cref> when the JSON is invalid.
+            </remarks>
+            <typeparam name="T">The <see cref="T:System.Type"/> to convert.</typeparam>
+            <param name="options">The <see cref="T:System.Text.Json.JsonSerializerOptions"/> being used.</param>
+            <param name="reader">The <see cref="T:System.Text.Json.Utf8JsonReader"/> to read from.</param>
+            <returns>The value that was converted.</returns>
+        </member>
         <member name="T:Json.More.TypeExtensions">
             <summary>
             Provides informative methods for types.
