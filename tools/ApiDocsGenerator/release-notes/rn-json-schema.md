@@ -4,6 +4,13 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.2.3](https://github.com/gregsdennis/json-everything/pull/521) {#release-schema-5.2.3}
+
+Unrecognized keywords were not being processed (no annotations produced) for schemas that included a `$schema` keyword.
+
+> If you're also using _JsonSchema.Net.Data_, you'll need to update to v4.0.1 of that library.
+{: .prompt-warning }
+
 # [5.2.2](https://github.com/gregsdennis/json-everything/pull/518) {#release-schema-5.2.2}
 
 [#516](https://github.com/gregsdennis/json-everything/issues/516) - `JsonSchemaBuilder.Build()` throws an exception when multiple unrecognized keywords have been added.  Thanks to [@mdekrey](https://github.com/mdekrey) for finding this and suggesting the fix.

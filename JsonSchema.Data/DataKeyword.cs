@@ -137,7 +137,7 @@ public class DataKeyword : IJsonSchemaKeyword
 
 internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 {
-	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Select(GetKeyword).ToArray();
+	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Where(x => x != typeof(UnrecognizedKeyword)).Select(GetKeyword).ToArray();
 
 	private static string GetKeyword(Type keywordType)
 	{
