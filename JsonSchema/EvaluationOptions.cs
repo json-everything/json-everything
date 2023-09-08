@@ -65,9 +65,17 @@ public class EvaluationOptions
 
 	/// <summary>
 	/// Specifies whether custom keywords that aren't defined in vocabularies
-	/// should be processed.  Only applies to vocab-enabled JSON Schema versions
-	/// (e.g. draft 2019-09 &amp; 20200-12).  Default is false.
+	/// should be processed.  Default is false.
 	/// </summary>
+	/// <remarks>
+	/// Custom keywords are those which have associated <see cref="IJsonSchemaKeyword"/>
+	/// implementations.  Unrecognized keywords, for which annotations should
+	/// be collected, are not considered "custom."
+	/// 
+	/// Only applies to vocab-enabled JSON Schema versions
+	/// (e.g. draft 2019-09 &amp;amp; 20200-12).
+	/// annotations.
+	/// </remarks>
 	public bool ProcessCustomKeywords { get; set; }
 
 	/// <summary>

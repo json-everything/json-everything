@@ -12,7 +12,9 @@ namespace Json.Schema;
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
+[Vocabulary(Vocabularies.Core201909Id)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
+[Vocabulary(Vocabularies.Core202012Id)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [JsonConverter(typeof(UnrecognizedKeywordJsonConverter))]
 public class UnrecognizedKeyword : IJsonSchemaKeyword
