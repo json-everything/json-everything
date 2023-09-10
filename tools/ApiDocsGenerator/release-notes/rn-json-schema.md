@@ -4,6 +4,12 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.2.5](https://github.com/gregsdennis/json-everything/pull/522) {#release-schema-5.2.5}
+
+Found an issue with constraint generation in parallel processing scenarios.  Constraints should only need to be generated once.  Thanks to [@MODUSCarstenScholling](https://github.com/MODUSCarstenScholling) for providing data to replicate the issue.
+
+Also updates _Json.More.Net_ reference to v1.9.0.
+
 # [5.2.4](https://github.com/gregsdennis/json-everything/commit/825e59424e55600da5be3f52c86b7ef68be91bba) {#release-schema-5.2.4}
 
 `minItmes` was using the `maxItems` error message.  Classic copy/paste error.

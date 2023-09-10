@@ -13,8 +13,8 @@
     <repository type="git" url="https://github.com/gregsdennis/json-everything" />
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="Json.More.Net" version="1.8.0" exclude="Build,Analyzers" />
-        <dependency id="JsonPointer.Net" version="3.0.1" exclude="Build,Analyzers" />
+        <dependency id="Json.More.Net" version="1.9.0" exclude="Build,Analyzers" />
+        <dependency id="JsonPointer.Net" version="3.0.3" exclude="Build,Analyzers" />
         <dependency id="JetBrains.Annotations" version="2021.2.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
