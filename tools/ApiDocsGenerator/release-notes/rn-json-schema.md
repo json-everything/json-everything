@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.2.4](https://github.com/gregsdennis/json-everything/commit/825e59424e55600da5be3f52c86b7ef68be91bba) {#release-schema-5.2.4}
+
+`minItmes` was using the `maxItems` error message.  Classic copy/paste error.
+
 # [5.2.3](https://github.com/gregsdennis/json-everything/pull/521) {#release-schema-5.2.3}
 
 Unrecognized keywords were not being processed (no annotations produced) for schemas that included a `$schema` keyword.
