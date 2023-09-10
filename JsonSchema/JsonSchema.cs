@@ -322,7 +322,7 @@ public class JsonSchema : IBaseDocument
 		SchemaConstraint? scopedConstraint;
 		// ReSharper disable InconsistentlySynchronizedField
 		// We only need to worry about synchronization when potentially adding new constraints
-		// which only happens in BuildConstrain().
+		// which only happens in BuildConstraint().
 		if (IsDynamic())
 			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(scope));
 		else
@@ -333,36 +333,42 @@ public class JsonSchema : IBaseDocument
 
 	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
-		if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
+		if (constraint.Constraints.Length != 0) return;
+		lock (constraint)
 		{
-			// base URI doesn't change for $ref schemas in draft 6/7
-			var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
-			if (refKeyword != null)
+			if (constraint.Constraints.Length != 0) return;
+
+			if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 			{
-				var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
-				constraint.Constraints = new[] { refConstraint };
-				return;
+				// base URI doesn't change for $ref schemas in draft 6/7
+				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
+				if (refKeyword != null)
+				{
+					var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
+					constraint.Constraints = new[] { refConstraint };
+					return;
+				}
 			}
-		}
 
-		var dynamicScopeChanged = false;
-		if (context.Scope.LocalScope != BaseUri)
-		{
-			dynamicScopeChanged = true;
-			context.Scope.Push(BaseUri);
-		}
-		var localConstraints = new List<KeywordConstraint>();
-		var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-		var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
-		foreach (var keyword in keywords.OrderBy(x => x.Priority()))
-		{
-			var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
-			localConstraints.Add(keywordConstraint);
-		}
+			var dynamicScopeChanged = false;
+			if (context.Scope.LocalScope != BaseUri)
+			{
+				dynamicScopeChanged = true;
+				context.Scope.Push(BaseUri);
+			}
+			var localConstraints = new List<KeywordConstraint>();
+			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
+			var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
+			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
+			{
+				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
+				localConstraints.Add(keywordConstraint);
+			}
 
-		constraint.Constraints = localConstraints.ToArray();
-		if (dynamicScopeChanged)
-			context.Scope.Pop();
+			constraint.Constraints = localConstraints.ToArray();
+			if (dynamicScopeChanged)
+				context.Scope.Pop();
+		}
 	}
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
@@ -398,7 +404,7 @@ public class JsonSchema : IBaseDocument
 
 				var metaSchema = registry.Get(metaSchemaId) as JsonSchema;
 				if (metaSchema == null)
-					throw new JsonSchemaException("Cannot resolve custom meta-schema.  Make sure meta-schemas are registered in the global registry.");
+					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
 
 				if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
 				    newMetaSchemaKeyword!.Schema == metaSchemaId)
