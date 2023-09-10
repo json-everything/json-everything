@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -109,8 +108,6 @@ public class SchemaConstraint
 		{
 			evaluation.KeywordEvaluations[i] = Constraints[i].BuildEvaluation(evaluation, instanceLocation, evaluationPath);
 		}
-		if (evaluation.KeywordEvaluations.Any(x => x == null))
-			Debugger.Break();
 
 		return evaluation;
 	}
