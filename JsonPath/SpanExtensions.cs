@@ -100,9 +100,9 @@ internal static class SpanExtensions
 					end = i;
 					var allowDash = true;
 					while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
-												 span[end].In('e', '.', '-')))
+												 span[end].In('e', '.', '-', '+')))
 					{
-						if (!allowDash && span[end] == '-') break;
+						if (!allowDash && span[end] is '-' or '+') break;
 						allowDash = span[end] == 'e';
 						end++;
 					}
