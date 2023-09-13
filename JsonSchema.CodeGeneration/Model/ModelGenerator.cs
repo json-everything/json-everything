@@ -30,7 +30,7 @@ internal static class ModelGenerator
 				("convertible-string", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					// support everything that will be transformed away
-					.Pattern(@"^[a-zA-Z_-][a-zA-Z0-9 _-]*$")
+					.Pattern("^[a-zA-Z_-][a-zA-Z0-9 _-]*$")
 				)
 			)
 			.Properties(
@@ -203,7 +203,7 @@ internal static class ModelGenerator
 
 		var abstractResults = _abstractRequirements.Evaluate(json, _options);
 #if DEBUG
-		// this appears in local test runs and is quite useful
+		// this appears in local test runs and can be quite useful
 		//Console.WriteLine(JsonSerializer.Serialize(abstractResults, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 #endif
 		if (!abstractResults.IsValid)
@@ -212,7 +212,13 @@ internal static class ModelGenerator
 
 			var validCount = validCountNode?.GetValue<int>();
 			if (validCount is null or 0)
-				throw new UnsupportedSchemaException("This schema is not in a supported form.");
+				throw new UnsupportedSchemaException("This schema does not match a supported form.")
+				{
+					Data =
+					{
+						["results"] = abstractResults
+					}
+				};
 
 			var validSubschemas = abstractResults.GetAllAnnotations(TitleKeyword.Name).ToJsonArray();
 			throw new UnsupportedSchemaException($"This schema matches multiple supported forms: {validSubschemas.AsJsonString()}.");
