@@ -320,7 +320,7 @@ internal static class PathParser
 
 		while (index < source.Length && !done)
 		{
-			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index) || index == source.Length) return false;
+			if (!source.ConsumeWhitespace(ref index) || index == source.Length) return false;
 
 			ISelector? selector = null;
 
@@ -333,7 +333,7 @@ internal static class PathParser
 
 			selectors.Add(selector);
 
-			if (options.TolerateExtraWhitespace && !source.ConsumeWhitespace(ref index) || index == source.Length) return false;
+			if (!source.ConsumeWhitespace(ref index) || index == source.Length) return false;
 
 			switch (source[index])
 			{
