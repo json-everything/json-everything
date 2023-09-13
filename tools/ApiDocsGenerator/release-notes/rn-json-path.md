@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "8.08"
 ---
+# [0.6.7](https://github.com/gregsdennis/json-everything/pull/526) {#release-path-0.6.7}
+
+Whitespace between multiple selectors inside brackets was supported for `.Parse()` but not `.TryParse()`.  Thanks to [@Andrej-Peplinski](https://github.com/Andrej-Peplinski) for reporting this.
+
 # [0.6.6](https://github.com/gregsdennis/json-everything/pull/524) {#release-path-0.6.6}
 
 Adds support for `+` in number literals, e.g. `+24` and `1e+5`.
