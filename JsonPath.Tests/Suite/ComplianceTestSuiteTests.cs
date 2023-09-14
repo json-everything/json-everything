@@ -61,8 +61,17 @@ public class ComplianceTestSuiteTests
 			Console.WriteLine($"Error: {exception!.Message}");
 			return;
 		}
-
+		
 		var path = JsonPath.Parse(testCase.Selector);
+		Evaluate(path, testCase);
+
+		var success = JsonPath.TryParse(testCase.Selector, out path);
+		Assert.True(success);
+		Evaluate(path!, testCase);
+	}
+
+	private static void Evaluate(JsonPath path, ComplianceTestCase testCase)
+	{
 		var actual = path.Evaluate(testCase.Document);
 
 		var actualValues = actual.Matches!.Select(m => m.Value).ToJsonArray();
