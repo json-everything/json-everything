@@ -68,10 +68,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
 
-			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(member.Name);
-			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
-			if (nameAttribute != null)
-				name = nameAttribute.Name;
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolvingMethod(member) 
+				?? SchemaGeneratorConfiguration.Current.PropertyNamingMethod(member.Name);
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{

@@ -11,6 +11,7 @@ namespace Json.Schema.Generation;
 public class SchemaGeneratorConfiguration
 {
 	private PropertyNamingMethod? _propertyNamingMethod;
+	private PropertyNameResolvingMethod? _propertyNameResolvingMethods;
 
 	/// <summary>
 	/// A collection of refiners.
@@ -39,6 +40,19 @@ public class SchemaGeneratorConfiguration
 		get => _propertyNamingMethod ??= PropertyNamingMethods.AsDeclared;
 		set => _propertyNamingMethod = value;
 	}
+
+	/// <summary>
+	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvingMethods.ByJsonPropertyName"/>.
+	/// </summary>
+	/// <remarks>
+	/// This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
+	/// </remarks>
+	public PropertyNameResolvingMethod PropertyNameResolvingMethod
+	{
+		get => _propertyNameResolvingMethods ??= PropertyNameResolvingMethods.ByJsonPropertyName;
+		set => _propertyNameResolvingMethods = value;
+	}
+
 	/// <summary>
 	/// Gets or sets whether to include `null` in the `type` keyword.
 	/// Default is <see cref="Nullability.Disabled"/> which means that it will
