@@ -4,6 +4,12 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.4.0](https://github.com/gregsdennis/json-everything/pull/528) {#release-schemagen-3.4.0}
+
+[@juwens](https://github.com/juwens) added `PropertyNameResolver` for property naming that takes the entire `MemberInfo` (instead of just the member name) so that additional information can be used to determine a name for the JSON property.
+
+`SchemaGenerationConfiguration.PropertyNamingMethod` has been deprecated.
+
 # [3.3.2](https://github.com/gregsdennis/json-everything/pull/513) {#release-schemagen-3.3.2}
 
 [#512](https://github.com/gregsdennis/json-everything/issues/512) - There was no support for `JsonNode`, explicitly.  Instead it would attempt to generate via reflection.  This update adds that support and just generates a `true` schema.  Thanks to [@ashek-simeon](https://github.com/ashek-simeon) for reporting and recommending a solution.
