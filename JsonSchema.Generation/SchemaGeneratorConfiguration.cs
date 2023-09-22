@@ -11,7 +11,7 @@ namespace Json.Schema.Generation;
 public class SchemaGeneratorConfiguration
 {
 	private PropertyNamingMethod? _propertyNamingMethod;
-	private PropertyNameResolvingMethod? _propertyNameResolvingMethods;
+	private PropertyNameResolver? _propertyNameResolver;
 
 	/// <summary>
 	/// A collection of refiners.
@@ -35,22 +35,40 @@ public class SchemaGeneratorConfiguration
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;string, string&gt;`.
 	/// </remarks>
-	public PropertyNamingMethod PropertyNamingMethod
+	[Obsolete($"Use {nameof(PropertyNameResolver)} instead.")]
+	public PropertyNamingMethod? PropertyNamingMethod
 	{
-		get => _propertyNamingMethod ??= PropertyNamingMethods.AsDeclared;
+		get => _propertyNamingMethod;
 		set => _propertyNamingMethod = value;
 	}
 
 	/// <summary>
-	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvingMethods.ByJsonPropertyName"/>.
+	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.ByJsonPropertyName"/>.
 	/// </summary>
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
 	/// </remarks>
-	public PropertyNameResolvingMethod PropertyNameResolvingMethod
+	public PropertyNameResolver PropertyNameResolver
 	{
-		get => _propertyNameResolvingMethods ??= PropertyNameResolvingMethods.ByJsonPropertyName;
-		set => _propertyNameResolvingMethods = value;
+		get
+		{
+			// upwards compatibility: this field was actively set, this is only used logic.
+			if (_propertyNameResolver is PropertyNameResolver resolver)
+			{
+				return resolver;
+			}
+
+			// backwards compatibility: if the old property was actively set in existing code existing code, code will use it
+			if (PropertyNamingMethod is PropertyNamingMethod method)
+			{
+				return new PropertyNameResolver(x => method(x.Name));
+			}
+
+			// if neither property was actively set, the behavior is as it was before. Prefer JsonPropertyName and Fallback to AsDeclared
+			return PropertyNameResolvers.ByJsonPropertyName;
+		}
+
+		set => _propertyNameResolver = value;
 	}
 
 	/// <summary>
