@@ -110,7 +110,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var conditionGroups = context.Type.GetCustomAttributes()
 			.OfType<IConditionAttribute>()
 			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
-			.GroupBy(x => x.Item1.ConditionGroup)
+			.GroupBy(x => x.Attribute.ConditionGroup)
 			.ToList();
 
 		if (!conditionGroups.Any()) return;
@@ -161,7 +161,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			context.Intents.Add(new UnevaluatedPropertiesIntent());
 	}
 
-	private static IEnumerable<(IConditionAttribute, MemberInfo)> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
+	private static IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
 	{
 		var member = members.FirstOrDefault(x => x.Name == condition.PropertyName);
 		if (member == null) yield break;
