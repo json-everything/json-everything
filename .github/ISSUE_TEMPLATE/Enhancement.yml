@@ -44,7 +44,7 @@ body:
   - type: textarea
     id: alternatives
     attributes:
-      label: Describe alternatives you've considered
+      label: Describe alternatives you've considered.
     validations:
       required: false
   - type: textarea
