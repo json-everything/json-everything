@@ -10,7 +10,7 @@ body:
     id: package
     attributes:
       label: Nuget Package
-      description: What package are you using
+      description: What package are you using?
       options:
         - Json.More.Net
         - JsonLogic
@@ -58,19 +58,19 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: A clear and concise description of the bug
-    validations:
-      required: true
-  - type: textarea
-    id: reproduction
-    attributes:
-      label: Please add test code or steps to reproduce the behavior
+      label: A clear and concise description of the bug.
     validations:
       required: true
   - type: textarea
     id: expectation
     attributes:
       label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Please add test code or steps to reproduce the behavior.
     validations:
       required: true
   - type: textarea

@@ -9,19 +9,19 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Describe the functionality that isn't covered by this suite
+      label: Describe the functionality that isn't covered by this suite.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Describe alternatives you've considered
+      label: Describe alternatives you've considered.
     validations:
       required: false
   - type: textarea
     id: other-info
     attributes:
-      label: Is there any other information you'd like to share regarding this bug?
+      label: Is there any other information you'd like to share regarding this functionality?
     validations:
       required: false
   - type: checkboxes

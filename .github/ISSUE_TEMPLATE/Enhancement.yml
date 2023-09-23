@@ -50,7 +50,7 @@ body:
   - type: textarea
     id: other-info
     attributes:
-      label: Is there any other information you'd like to share regarding this bug?
+      label: Is there any other information you'd like to share regarding this enhancement?
     validations:
       required: false
   - type: checkboxes

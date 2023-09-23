@@ -40,15 +40,9 @@ body:
   - type: textarea
     id: question
     attributes:
-      label: What's your question?
+      label: How can I help?  Please provide as much context as possible.
     validations:
       required: true
-  - type: textarea
-    id: other-info
-    attributes:
-      label: Is there any other information you'd like to share regarding this bug?
-    validations:
-      required: false
   - type: checkboxes
     id: terms
     attributes:
@@ -57,3 +51,4 @@ body:
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true
+s
