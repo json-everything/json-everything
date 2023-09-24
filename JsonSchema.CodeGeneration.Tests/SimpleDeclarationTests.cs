@@ -157,6 +157,33 @@ public class SimpleDeclarationTests
 	}
 
 	[Test]
+	public void ClosedObject()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("MyObject")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Alpha", new JsonSchemaBuilder().Type(SchemaValueType.Number)),
+				("Beta", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Gamma", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+			)
+			.AdditionalProperties(false);
+		var expected = @"public sealed class MyObject
+{
+	public double Alpha { get; set; }
+	public int Beta { get; set; }
+	public bool Gamma { get; set; }
+}
+";
+
+		var code = VerifyCSharp(schema, expected);
+
+		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": true }";
+
+		VerifyDeserialization(code, json);
+	}
+
+	[Test]
 	public void ObjectWithReadOnlyProp()
 	{
 		var schema = new JsonSchemaBuilder()

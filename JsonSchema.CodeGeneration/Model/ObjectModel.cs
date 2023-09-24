@@ -7,11 +7,13 @@ namespace Json.Schema.CodeGeneration.Model;
 internal class ObjectModel : TypeModel
 {
 	public PropertyModel[] Properties { get; }
+	public bool IsOpen { get; }
 
-	public ObjectModel(string name, IEnumerable<PropertyModel> properties)
+	public ObjectModel(string name, IEnumerable<PropertyModel> properties, bool isOpen)
 		: base(name)
 	{
 		Properties = properties.ToArray();
+		IsOpen = isOpen;
 	}
 
 	internal override void FillPlaceholders(GenerationCache cache)

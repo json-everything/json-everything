@@ -128,7 +128,10 @@ internal class CSharpCodeWriter : ICodeWriter
 
 	private void WriteDeclaration(StringBuilder builder, ObjectModel model)
 	{
-		builder.Append("public class ");
+		builder.Append("public ");
+		if (!model.IsOpen)
+			builder.Append("sealed ");
+		builder.Append("class ");
 		builder.AppendLine(TransformName(model.Name));
 		builder.AppendLine("{");
 		foreach (var property in model.Properties)

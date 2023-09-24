@@ -19,7 +19,8 @@ internal static class ModelGenerator
 	private const string _booleanId = "schema:json-everything:codegen:boolean";
 	private const string _enumId = "schema:json-everything:codegen:enum";
 	private const string _arrayId = "schema:json-everything:codegen:array";
-	private const string _objectId = "schema:json-everything:codegen:object";
+	private const string _openObjectId = "schema:json-everything:codegen:openObject";
+	private const string _closedObjectId = "schema:json-everything:codegen:closedObject";
 	private const string _dictionaryId = "schema:json-everything:codegen:dictionary";
 
 	private static readonly JsonSchema _baseRequirements =
@@ -49,7 +50,8 @@ internal static class ModelGenerator
 				new JsonSchemaBuilder().Ref(_booleanId),
 				new JsonSchemaBuilder().Ref(_enumId),
 				new JsonSchemaBuilder().Ref(_arrayId),
-				new JsonSchemaBuilder().Ref(_objectId),
+				new JsonSchemaBuilder().Ref(_openObjectId),
+				new JsonSchemaBuilder().Ref(_closedObjectId),
 				new JsonSchemaBuilder().Ref(_dictionaryId)
 			);
 
@@ -128,9 +130,9 @@ internal static class ModelGenerator
 			)
 			.Required(TypeKeyword.Name, ItemsKeyword.Name);
 
-	private static readonly JsonSchema _objectMetaSchema =
+	private static readonly JsonSchema _openObjectMetaSchema =
 		new JsonSchemaBuilder()
-			.Id(_objectId)
+			.Id(_openObjectId)
 			.Title("custom-object")
 			.Ref(_baseId)
 			.Properties(
@@ -151,6 +153,30 @@ internal static class ModelGenerator
 				(AdditionalPropertiesKeyword.Name, false)
 			)
 			.Required(TitleKeyword.Name, TypeKeyword.Name, PropertiesKeyword.Name);
+
+	private static readonly JsonSchema _closedObjectMetaSchema =
+		new JsonSchemaBuilder()
+			.Id(_closedObjectId)
+			.Title("custom-object")
+			.Ref(_baseId)
+			.Properties(
+				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
+				(PropertiesKeyword.Name, new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object)
+					.PropertyNames(new JsonSchemaBuilder().Ref(_baseId + "#/$defs/convertible-string"))
+					.AdditionalProperties(new JsonSchemaBuilder()
+						.Not(new JsonSchemaBuilder()
+							.Properties(
+								(ReadOnlyKeyword.Name, new JsonSchemaBuilder().Const(true)),
+								(WriteOnlyKeyword.Name, new JsonSchemaBuilder().Const(true))
+							)
+							.Required(ReadOnlyKeyword.Name, WriteOnlyKeyword.Name)
+						)
+						.Ref(_abstractId))
+				),
+				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Const(false))
+			)
+			.Required(TitleKeyword.Name, TypeKeyword.Name, PropertiesKeyword.Name, AdditionalPropertiesKeyword.Name);
 
 	private static readonly JsonSchema _dictionaryMetaSchema =
 		new JsonSchemaBuilder()
@@ -187,7 +213,8 @@ internal static class ModelGenerator
 		_options.SchemaRegistry.Register(_booleanRequirements);
 		_options.SchemaRegistry.Register(_enumMetaSchema);
 		_options.SchemaRegistry.Register(_arrayMetaSchema);
-		_options.SchemaRegistry.Register(_objectMetaSchema);
+		_options.SchemaRegistry.Register(_openObjectMetaSchema);
+		_options.SchemaRegistry.Register(_closedObjectMetaSchema);
 		_options.SchemaRegistry.Register(_dictionaryMetaSchema);
 	}
 
@@ -248,7 +275,8 @@ internal static class ModelGenerator
 				var items = GenerateCodeModel(itemsSchema, options, cache);
 				typeModel = new ArrayModel(name, items);
 				break;
-			case _objectId:
+			case _openObjectId:
+			{
 				var propertiesList = schema.GetProperties()!;
 				var properties = propertiesList.Select(kvp =>
 				{
@@ -258,8 +286,23 @@ internal static class ModelGenerator
 					var canWrite = !(readOnlyKeyword?.Value ?? false);
 					return new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value, options, cache), canRead, canWrite);
 				});
-				typeModel = new ObjectModel(name!, properties);
+				typeModel = new ObjectModel(name!, properties, true);
 				break;
+			}
+			case _closedObjectId:
+			{
+				var propertiesList = schema.GetProperties()!;
+				var properties = propertiesList.Select(kvp =>
+				{
+					kvp.Value.TryGetKeyword<WriteOnlyKeyword>(out var writeOnlyKeyword);
+					kvp.Value.TryGetKeyword<ReadOnlyKeyword>(out var readOnlyKeyword);
+					var canRead = !(writeOnlyKeyword?.Value ?? false);
+					var canWrite = !(readOnlyKeyword?.Value ?? false);
+					return new PropertyModel(kvp.Key, GenerateCodeModel(kvp.Value, options, cache), canRead, canWrite);
+				});
+				typeModel = new ObjectModel(name!, properties, false);
+				break;
+			}
 			case _dictionaryId:
 				var additionalPropertiesSchema = schema.GetAdditionalProperties()!;
 				var additionalProperties = GenerateCodeModel(additionalPropertiesSchema, options, cache);
