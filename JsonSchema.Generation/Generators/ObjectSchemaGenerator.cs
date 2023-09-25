@@ -69,6 +69,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(member);
+			name ??= member.Name;
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{

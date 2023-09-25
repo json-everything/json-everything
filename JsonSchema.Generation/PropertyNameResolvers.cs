@@ -10,7 +10,7 @@ namespace Json.Schema.Generation;
 /// </summary>
 /// <param name="input">The property.</param>
 /// <returns>The property name</returns>
-public delegate string PropertyNameResolver(MemberInfo input);
+public delegate string? PropertyNameResolver(MemberInfo input);
 
 /// <summary>
 /// Defines a set of predefined property name resolution methods.
