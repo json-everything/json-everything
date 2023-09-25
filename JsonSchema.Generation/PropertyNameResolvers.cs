@@ -13,14 +13,6 @@ namespace Json.Schema.Generation;
 public delegate string PropertyNameResolver(MemberInfo input);
 
 /// <summary>
-/// Declares a property name resolution which is used to provide a property name or null (if a name cannot be resolved).
-/// Use this to combine combine (null-coalescing operator) two or more logics into one <see cref="PropertyNameResolver"/>
-/// </summary>
-/// <param name="input">The property.</param>
-/// <returns>The property name or null, if no name was resolved.</returns>
-internal delegate string? PartialPropertyNameResolver(MemberInfo input);
-
-/// <summary>
 /// Defines a set of predefined property name resolution methods.
 /// </summary>
 public static class PropertyNameResolvers
@@ -58,18 +50,7 @@ public static class PropertyNameResolvers
 	/// </summary>
 	public static readonly PropertyNameResolver UpperKebabCase = x => x.Name.Kebaberize().ToUpperInvariant();
 	/// <summary>
-	/// Property name is read from <see cref="JsonPropertyNameAttribute"/>, falls back to <see cref="AsDeclared"/> if attribute is absent.
+	/// Property name is read from <see cref="JsonPropertyNameAttribute"/>.
 	/// </summary>
-	public static readonly PropertyNameResolver ByJsonPropertyName = x => PartialPropertyNameResolvers.ByJsonPropertyName(x) ?? AsDeclared(x);
-}
-
-/// <summary>
-/// Defines a set of predefined property name resolution methods.
-/// </summary>
-internal static class PartialPropertyNameResolvers
-{
-	/// <summary>
-	/// Property name is read from <see cref="JsonPropertyNameAttribute"/>, returns null if attribute is missing.
-	/// </summary>
-	internal static readonly PartialPropertyNameResolver ByJsonPropertyName = x => x.GetCustomAttributes<JsonPropertyNameAttribute>().FirstOrDefault()?.Name;
+	public static readonly PropertyNameResolver ByJsonPropertyName = x => x.GetCustomAttributes<JsonPropertyNameAttribute>().FirstOrDefault()?.Name /* TODO: what do we do with the nullable here? */;
 }
