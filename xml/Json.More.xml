@@ -378,7 +378,7 @@
         </member>
         <member name="M:Json.More.JsonNodeExtensions.Copy(System.Text.Json.Nodes.JsonNode)">
             <summary>
-            Creates a copy of a node by passing it through the serializer.
+            Creates a deep copy of a node.
             </summary>
             <param name="source">A node.</param>
             <returns>A duplicate of the node.</returns>
