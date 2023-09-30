@@ -184,7 +184,7 @@ public static class JsonNodeExtensions
 	}
 
 	/// <summary>
-	/// Creates a copy of a node by passing it through the serializer.
+	/// Creates a deep copy of a node.
 	/// </summary>
 	/// <param name="source">A node.</param>
 	/// <returns>A duplicate of the node.</returns>
@@ -194,7 +194,41 @@ public static class JsonNodeExtensions
 	/// </remarks>
 	public static JsonNode? Copy(this JsonNode? source)
 	{
-		return source.Deserialize<JsonNode?>();
+		JsonNode CopyObject(JsonObject obj)
+		{
+			var newObj = new JsonObject(obj.Options);
+			foreach (var kvp in obj)
+			{
+				newObj[kvp.Key] = kvp.Value.Copy();
+			}
+
+			return newObj;
+		}
+
+		JsonNode CopyArray(JsonArray arr)
+		{
+			var newArr = new JsonArray(arr.Options);
+			foreach (var item in arr)
+			{
+				newArr.Add(item.Copy());
+			}
+
+			return newArr;
+		}
+
+		JsonNode? CopyValue(JsonValue val)
+		{
+			return JsonValue.Create(val.GetValue<object>());
+		}
+
+		return source switch
+		{
+			null => null,
+			JsonObject obj => CopyObject(obj),
+			JsonArray arr => CopyArray(arr),
+			JsonValue val => CopyValue(val),
+			_ => throw new ArgumentOutOfRangeException(nameof(source))
+		};
 	}
 
 	/// <summary>
