@@ -4,6 +4,10 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "8.12"
 ---
+# [1.9.0](https://github.com/gregsdennis/json-everything/commit/2a1fa87a2a75b56f0b912b70b194f8399acb6d7b) {#release-more-1.9.1}
+
+`JsonNodeExtensions.Copy()` now performs a direct deep copy of the node rather than utilizing the serializer.
+
 # [1.9.0](https://github.com/gregsdennis/json-everything/pull/418) {#release-more-1.9.0}
 
 - Added `JsonSerializerOptionsExtensions` to help create custom converters that need to further call the serializer.  Thanks to [@mdekrey](https://github.com/mdekrey) for putting this together.
