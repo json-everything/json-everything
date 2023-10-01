@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.2.6](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.2.6}
+
+Fixed an issue where subschemas that declared different `$schema` from their parent couldn't use features that were undefined by parent dialect but defined by the subschema dialect.
+
 # [5.2.5](https://github.com/gregsdennis/json-everything/pull/522) {#release-schema-5.2.5}
 
 Found an issue with constraint generation in parallel processing scenarios.  Constraints should only need to be generated once.  Thanks to [@MODUSCarstenScholling](https://github.com/MODUSCarstenScholling) for providing data to replicate the issue.

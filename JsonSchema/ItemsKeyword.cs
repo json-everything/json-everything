@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -120,8 +119,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 		}
 		else // ArraySchema
 		{
-			if (context.Options.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
-			    context.Options.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
+			if (context.EvaluatingAs.HasFlag(SpecVersion.Draft202012) ||
+			    context.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
 				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
 
 			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(i), context)).ToArray();

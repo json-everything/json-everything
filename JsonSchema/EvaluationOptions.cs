@@ -95,8 +95,6 @@ public class EvaluationOptions
 	/// </summary>
 	public CultureInfo? Culture { get; set; }
 
-	internal SpecVersion EvaluatingAs { get; set; }
-
 	static EvaluationOptions()
 	{
 		// It's necessary to call this from here because
@@ -174,14 +172,12 @@ public class EvaluationOptions
 		_ignoredAnnotationTypes?.Remove(typeof(T));
 	}
 
-	internal IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)
+	internal static IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)
 	{
-		var evaluatingAs = declaredVersion == SpecVersion.Unspecified ? EvaluatingAs : declaredVersion;
+		if (declaredVersion is SpecVersion.Draft6 or SpecVersion.Draft7)
+			return DisallowSiblingRef(keywords, declaredVersion);
 
-		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
-			return DisallowSiblingRef(keywords, evaluatingAs);
-
-		return AllowSiblingRef(keywords, evaluatingAs);
+		return AllowSiblingRef(keywords, declaredVersion);
 	}
 
 	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)

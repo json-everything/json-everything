@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -37,15 +34,9 @@ public class SlackTests
 		var schema = JsonSchema.FromText(json);
 		var instance = JsonNode.Parse(json);
 
-		var result = schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
-		});
-
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			WriteIndented = true
 		}));
 	}
 
