@@ -10,6 +10,8 @@ namespace Json.Schema;
 /// </summary>
 public class EvaluationContext
 {
+	private readonly Stack<SpecVersion> _evaluatingAs = new();
+
 	/// <summary>
 	/// Gets the evaluation options.
 	/// </summary>
@@ -43,14 +45,14 @@ public class EvaluationContext
 	/// This property is informed by the `$schema` keyword and <see cref="EvaluationOptions.EvaluateAs"/>,
 	/// taking `$schema` as priority.
 	/// </remarks>
-	public SpecVersion EvaluatingAs { get; }
+	public SpecVersion EvaluatingAs { get; private set; }
 
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
 
 	internal EvaluationContext(EvaluationOptions options, SpecVersion evaluatingAs, Uri initialScope)
 	{
 		Options = options;
-		EvaluatingAs = evaluatingAs;
+		PushEvaluatingAs(evaluatingAs);
 		Scope = new DynamicScope(initialScope);
 	}
 
@@ -80,5 +82,17 @@ public class EvaluationContext
 		vocab = vocabKeyword.Vocabulary.Keys.Select(x => Options.VocabularyRegistry.Get(x)!).ToArray();
 		Dialect[schema.BaseUri] = vocab;
 		return true;
+	}
+
+	internal void PushEvaluatingAs(SpecVersion version)
+	{
+		_evaluatingAs.Push(version);
+		EvaluatingAs = version;
+	}
+
+	internal void PopEvaluatingAs()
+	{ 
+		_evaluatingAs.Pop();
+		EvaluatingAs = _evaluatingAs.Peek();
 	}
 }

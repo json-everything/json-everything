@@ -225,7 +225,7 @@ public class JsonSchema : IBaseDocument
 
 		// BaseUri may change if $id is present
 		// TODO: remove options.EvaluatingAs
-		var evaluatingAs = options.EvaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
 
 
@@ -355,10 +355,11 @@ public class JsonSchema : IBaseDocument
 			{
 				dynamicScopeChanged = true;
 				context.Scope.Push(BaseUri);
+				context.PushEvaluatingAs(DeclaredVersion);
 			}
 			var localConstraints = new List<KeywordConstraint>();
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = context.Options.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
+			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
 			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 			{
 				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
@@ -367,13 +368,16 @@ public class JsonSchema : IBaseDocument
 
 			constraint.Constraints = localConstraints.ToArray();
 			if (dynamicScopeChanged)
+			{
 				context.Scope.Pop();
+				context.PopEvaluatingAs();
+			}
 		}
 	}
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, DetermineSpecVersion(schema, registry, SpecVersion.Unspecified), true);
+		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, selfRegister: true);
 	}
 
 	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
@@ -424,9 +428,10 @@ public class JsonSchema : IBaseDocument
 		return candidates.Any() ? candidates.Max() : SpecVersion.DraftNext;
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs, bool selfRegister = false)
+	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs = SpecVersion.Unspecified, bool selfRegister = false)
 	{
 		if (schema.BoolValue.HasValue) return;
+		evaluatingAs = DetermineSpecVersion(schema, registry, evaluatingAs);
 		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
 			schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
 		{
@@ -449,7 +454,7 @@ public class JsonSchema : IBaseDocument
 				else
 				{
 					schema.IsResourceRoot = true;
-					schema.DeclaredVersion = DetermineSpecVersion(schema, registry, evaluatingAs);
+					schema.DeclaredVersion = evaluatingAs;
 					resourceRoot = schema;
 					schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
 					registry.RegisterSchema(schema.BaseUri, schema);
@@ -564,7 +569,7 @@ public class JsonSchema : IBaseDocument
 				var asSchema = FromText(value?.ToString() ?? "null");
 				var hostSchema = (JsonSchema)localResolvable;
 				asSchema.BaseUri = hostSchema.BaseUri;
-				PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry, options.EvaluatingAs);
+				PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry);
 				return asSchema;
 			}
 
