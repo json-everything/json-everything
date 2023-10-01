@@ -4,6 +4,7 @@ using Json.Patch;
 using Json.Path;
 using Json.Pointer;
 using Json.Schema;
+using Json.Schema.CodeGeneration;
 using Json.Schema.Data;
 using Json.Schema.DataGeneration;
 using Json.Schema.Generation.Generators;
@@ -27,12 +28,13 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs<DiscriminatorKeyword>("9.04", outputDir, "api");
 			await GenerateAndSaveDocs<ISchemaGenerator>("9.05", outputDir, "api");
 			await GenerateAndSaveDocs<NumberRange>("9.06", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPath>("9.07", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPatch>("9.08", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPointer>("9.09", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonLogic), "9.10", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonNull), "9.11", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(YamlConverter), "9.12", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(CodeGenExtensions), "9.07", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPath>("9.08", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPatch>("9.09", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPointer>("9.10", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonLogic), "9.11", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonNull), "9.12", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(YamlConverter), "9.13", outputDir, "api");
 		}
 
 		private static void CopyReleaseNotes(params string[] outputDir)
