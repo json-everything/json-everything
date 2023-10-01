@@ -1,12 +1,28 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
 
 public class CrossDraftTests
 {
-	[Test]
-	public void Test()
+	public static IEnumerable<TestCaseData> ArrayItemsIsAllowedForDraft7Cases
+	{
+		get
+		{
+			yield return new TestCaseData((JsonNode)new JsonObject
+			{
+				["foo"] = new JsonArray { "string", 42 }
+			}, true);
+			yield return new TestCaseData((JsonNode)new JsonObject
+			{
+				["foo"] = new JsonArray { "string", "other string" }
+			}, false);
+		}
+	}
+
+	[TestCaseSource(nameof(ArrayItemsIsAllowedForDraft7Cases))]
+	public void ArrayItemsIsAllowedForDraft7(JsonNode instance, bool valid)
 	{
 		var schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft202012Id)
@@ -28,10 +44,6 @@ public class CrossDraftTests
 				)
 			)
 			.Build();
-		var instance = new JsonObject
-		{
-			["foo"] = new JsonArray { "string", 42 }
-		};
 
 		var options = new EvaluationOptions
 		{
@@ -40,6 +52,9 @@ public class CrossDraftTests
 
 		var result = schema.Evaluate(instance, options);
 
-		result.AssertValid();
+		if (valid)
+			result.AssertValid();
+		else
+			result.AssertInvalid();
 	}
 }
