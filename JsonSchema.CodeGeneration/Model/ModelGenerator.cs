@@ -11,7 +11,7 @@ namespace Json.Schema.CodeGeneration.Model;
 internal static class ModelGenerator
 {
 	private const string _baseId = "schema:json-everything:codegen:base";
-	private const string _abstractId = "schema:json-everything:codegen:abstract";
+	private const string _supportedId = "schema:json-everything:codegen:supported";
 	private const string _refId = "schema:json-everything:codegen:ref";
 	private const string _stringId = "schema:json-everything:codegen:string";
 	private const string _integerId = "schema:json-everything:codegen:integer";
@@ -36,12 +36,14 @@ internal static class ModelGenerator
 			)
 			.Properties(
 				(TitleKeyword.Name, new JsonSchemaBuilder().Ref("#/$defs/convertible-string")),
+				(IdKeyword.Name, true),
+				(SchemaKeyword.Name, true),
 				(DefsKeyword.Name, true)
 			);
 
-	private static readonly JsonSchema _abstractRequirements =
+	private static readonly JsonSchema _supportedRequirements =
 		new JsonSchemaBuilder()
-			.Id(_abstractId)
+			.Id(_supportedId)
 			.OneOf(
 				new JsonSchemaBuilder().Ref(_refId),
 				new JsonSchemaBuilder().Ref(_stringId),
@@ -126,14 +128,14 @@ internal static class ModelGenerator
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("array")),
-				(ItemsKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId))
+				(ItemsKeyword.Name, new JsonSchemaBuilder().Ref(_supportedId))
 			)
 			.Required(TypeKeyword.Name, ItemsKeyword.Name);
 
 	private static readonly JsonSchema _openObjectMetaSchema =
 		new JsonSchemaBuilder()
 			.Id(_openObjectId)
-			.Title("custom-object")
+			.Title("custom-object-open")
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
@@ -148,7 +150,7 @@ internal static class ModelGenerator
 							)
 							.Required(ReadOnlyKeyword.Name, WriteOnlyKeyword.Name)
 						)
-						.Ref(_abstractId))
+						.Ref(_supportedId))
 				),
 				(AdditionalPropertiesKeyword.Name, false)
 			)
@@ -157,7 +159,7 @@ internal static class ModelGenerator
 	private static readonly JsonSchema _closedObjectMetaSchema =
 		new JsonSchemaBuilder()
 			.Id(_closedObjectId)
-			.Title("custom-object")
+			.Title("custom-object-closed")
 			.Ref(_baseId)
 			.Properties(
 				(TypeKeyword.Name, new JsonSchemaBuilder().Const("object")),
@@ -172,7 +174,7 @@ internal static class ModelGenerator
 							)
 							.Required(ReadOnlyKeyword.Name, WriteOnlyKeyword.Name)
 						)
-						.Ref(_abstractId))
+						.Ref(_supportedId))
 				),
 				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Const(false))
 			)
@@ -190,7 +192,7 @@ internal static class ModelGenerator
 					.Properties((TypeKeyword.Name, new JsonSchemaBuilder().Const("string")))
 					.Required(TypeKeyword.Name)
 				),
-				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Ref(_abstractId))
+				(AdditionalPropertiesKeyword.Name, new JsonSchemaBuilder().Ref(_supportedId))
 			)
 			.Required(TypeKeyword.Name, AdditionalPropertiesKeyword.Name);
 	
@@ -205,7 +207,7 @@ internal static class ModelGenerator
 			EvaluateAs = SpecVersion.Draft202012
 		};
 		_options.SchemaRegistry.Register(_baseRequirements);
-		_options.SchemaRegistry.Register(_abstractRequirements);
+		_options.SchemaRegistry.Register(_supportedRequirements);
 		_options.SchemaRegistry.Register(_refSchemaRequirements);
 		_options.SchemaRegistry.Register(_stringRequirements);
 		_options.SchemaRegistry.Register(_integerRequirements);
@@ -228,26 +230,32 @@ internal static class ModelGenerator
 
 		var json = JsonSerializer.SerializeToNode(schema);
 
-		var abstractResults = _abstractRequirements.Evaluate(json, _options);
+		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG
 		// this appears in local test runs and is quite useful
-		//Console.WriteLine(JsonSerializer.Serialize(abstractResults, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
+		//Console.WriteLine(JsonSerializer.Serialize(supportedResults, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 #endif
-		if (!abstractResults.IsValid)
+		if (!supportedResults.IsValid)
 		{
-			abstractResults.TryGetAnnotation(OneOfKeyword.Name, out var validCountNode);
+			supportedResults.TryGetAnnotation(OneOfKeyword.Name, out var validCountNode);
 
 			var validCount = validCountNode?.GetValue<int>();
 			if (validCount is null or 0)
-				throw new UnsupportedSchemaException("This schema is not in a supported form.");
+				throw new UnsupportedSchemaException("This schema is not in a supported form.")
+				{
+					Data = { ["validation"] = supportedResults }
+				};
 
-			var validSubschemas = abstractResults.GetAllAnnotations(TitleKeyword.Name).ToJsonArray();
-			throw new UnsupportedSchemaException($"This schema matches multiple supported forms: {validSubschemas.AsJsonString()}.");
+			var validSubschemas = supportedResults.GetAllAnnotations(TitleKeyword.Name).ToJsonArray();
+			throw new UnsupportedSchemaException($"This schema matches multiple supported forms: {validSubschemas.AsJsonString()}.")
+			{
+				Data = { ["validation"] = supportedResults }
+			};
 		}
 
 		TypeModel? typeModel = null;
 		var name = schema.GetTitle();
-		var validSubschemaResult = abstractResults.Details.Single(x => x.IsValid &&
+		var validSubschemaResult = supportedResults.Details.Single(x => x.IsValid &&
 		                                                               x.InstanceLocation == JsonPointer.Empty &&
 		                                                               x.EvaluationPath.Segments.Length == 3); // e.g. /oneof/7/$ref
 		var validSubschemaId = validSubschemaResult.SchemaLocation;
