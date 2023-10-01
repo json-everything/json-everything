@@ -4,7 +4,7 @@ title: JsonSchema.Net.CodeGeneration
 icon: fas fa-tag
 order: "8.03"
 ---
-# [0.1.2](https://github.com/gregsdennis/json-everything/pull/509) {#release-schemacodegen-0.1.2}
+# [0.1.3](https://github.com/gregsdennis/json-everything/pull/535) {#release-schemacodegen-0.1.3}
 
 Added evaluation results from supported-pattern recognition process.
 
