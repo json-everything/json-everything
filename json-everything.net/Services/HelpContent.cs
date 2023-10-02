@@ -93,4 +93,60 @@ This option will include these annotations under a `droppedAnnotations` property
 	public const string SchemaValidateFormat = @"
 Allows you to specify whether the `format` keyword should be asserted.  Typically this is an
 annotation-only keyword, meaning that it will appear in the output, but it will not be validated.";
+
+	public const string PathExtraWhitespace = @"
+JSON Path only permits whitespace in specific locations.  This option will allow whitespace everywhere.
+";
+
+	public const string PathJsonLiterals = @"
+JSON Path doesn't allow composite JSON literals such as arrays and objects in filter expressions.
+This option will allow these kinds of values.  For example,
+
+```
+$[?@.foo=={""key"":""value""}]
+```
+
+to find all elements where `@.foo` is the JSON object `{""key"":""value""}`.
+
+Composite JSON literals are only valid for equality checks, not comparisons.
+
+JSON literals MUST use double quotes `""`, not single quotes `'`.";
+
+	public const string PathJsonInOperator = @"
+JSON Path does not support the `in` operator in expressions.  For example,
+
+```
+$[?@.foo in [""a"",""b"",""c""]]
+```
+
+to find all elements where `@.foo` is either `""a""`, `""b""`, or `""c""`.  Or
+
+```
+$[?!(5 in @.bar)]
+```
+
+to find all elements where `@.bar` does not contain a `5`.
+";
+
+	public const string PathMathOperators = @"
+JSON Path only defines equality and comparison operators.  This enables other math operators.
+Unless otherwise specified, these are only valid for numeric values.  If an incompatible value is
+encountered during evaluation, the node will not be selected.
+
+- `+` - addition (numbers) & concatenation (strings)
+- `-` - subtraction
+- `*` - multiplication
+- `/` - division
+";
+
+	public const string PathRelativeStart = @"
+JSON Path requires paths to start with `$`.  However, during development of the specification,
+a use case was raised for allowing paths to start with `@`.  This option allows such paths.
+For example, `@.foo` would be valid as a complete path.
+";
+
+	public const string PathEvaluate = @"
+By default, _JsonPath.Net_ operates per the specification.  The above options allow
+the library to deviate from the specification in useful ways.
+";
 }
