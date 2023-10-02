@@ -185,7 +185,8 @@
 		JsonPath path;
 		try
 		{
-			path = JsonPath.Parse(_input.Path!);
+			var options = _options.ToEvaluationOptions();
+			path = JsonPath.Parse(_input.Path!, options);
 		}
 		catch (Exception e)
 		{
