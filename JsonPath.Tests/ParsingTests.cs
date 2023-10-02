@@ -68,7 +68,7 @@ public class ParsingTests
 		Console.WriteLine(JsonPath.Parse(path));
 	}
 
-	public static IEnumerable<TestCaseData> OptionalCases =>
+	public static IEnumerable<TestCaseData> OptionalMathCases =>
 		new[]
 		{
 			new TestCaseData("$[?(@.foo==(4+5))]"),
@@ -77,14 +77,51 @@ public class ParsingTests
 			new TestCaseData("$[?(@.foo==2-(4+5))]"),
 		};
 
-	[TestCaseSource(nameof(OptionalCases))]
-	public void ParseWithOptions(string path)
+	[TestCaseSource(nameof(OptionalMathCases))]
+	public void ParseMathWithOptions(string path)
 	{
 		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowMathOperations = true}));
 	}
 
-	[TestCaseSource(nameof(OptionalCases))]
-	public void ParseWithoutOptions(string path)
+	[TestCaseSource(nameof(OptionalMathCases))]
+	public void ParseMathWithoutOptions(string path)
+	{
+		Assert.Throws<PathParseException>(() => JsonPath.Parse(path));
+	}
+
+	public static IEnumerable<TestCaseData> OptionalJsonLiteralCases =>
+		new[]
+		{
+			new TestCaseData("$[?@.foo==[1,2,3]]"),
+			new TestCaseData("$[?@.foo=={\"bar\":\"object\"}]"),
+		};
+
+	[TestCaseSource(nameof(OptionalJsonLiteralCases))]
+	public void ParseLiteralWithOptions(string path)
+	{
+		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowJsonConstructs = true}));
+	}
+
+	[TestCaseSource(nameof(OptionalJsonLiteralCases))]
+	public void ParseLiteralWithoutOptions(string path)
+	{
+		Assert.Throws<PathParseException>(() => JsonPath.Parse(path));
+	}
+
+	public static IEnumerable<TestCaseData> OptionalInOpCases =>
+		new[]
+		{
+			new TestCaseData("$[?5 in @.foo]"),
+		};
+
+	[TestCaseSource(nameof(OptionalInOpCases))]
+	public void ParseInOpWithOptions(string path)
+	{
+		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowInOperator = true}));
+	}
+
+	[TestCaseSource(nameof(OptionalInOpCases))]
+	public void ParseInOpWithoutOptions(string path)
 	{
 		Assert.Throws<PathParseException>(() => JsonPath.Parse(path));
 	}
