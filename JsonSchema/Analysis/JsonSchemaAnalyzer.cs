@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -21,12 +20,13 @@ public static class JsonSchemaAnalyzer
 				continue;
 			}
 
-			foreach (var rule in GetRules())
+			foreach (var rule in JsonSchemaAnalyzerRules.DefinedRules)
 			{
 				var diagnostics = rule.Run(target!);
 				foreach (var diagnostic in diagnostics)
 				{
-					diagnostic.Location = location.Combine(diagnostic.Location);
+					diagnostic.RuleId = rule.Id;
+					diagnostic.Location = location;
 					yield return diagnostic;
 				}
 			}
@@ -53,20 +53,22 @@ public static class JsonSchemaAnalyzer
 					}
 					break;
 				case ISchemaCollector collector:
+					int i = 0;
 					foreach (var subschema in collector.Schemas)
 					{
-						local = JsonPointer.Create(keywordName);
+						local = JsonPointer.Create(keywordName, i);
 						foreach (var location in GetSubschemaLocations(subschema))
 						{
 							yield return local.Combine(location);
 						}
+						i++;
 					}
 					break;
 				case IKeyedSchemaCollector collector:
-					foreach (var subschema in collector.Schemas.Values)
+					foreach (var subschema in collector.Schemas)
 					{
-						local = JsonPointer.Create(keywordName);
-						foreach (var location in GetSubschemaLocations(subschema))
+						local = JsonPointer.Create(keywordName, subschema.Key);
+						foreach (var location in GetSubschemaLocations(subschema.Value))
 						{
 							yield return local.Combine(location);
 						}
@@ -86,15 +88,4 @@ public static class JsonSchemaAnalyzer
 		}
 	}
 
-	private static readonly IRule[] _definedRules =
-		typeof(JsonSchemaAnalyzerRules)
-			.GetFields()
-			.Where(x => x.IsPublic && x.FieldType == typeof(IRule))
-			.Select(x => (IRule)x.GetValue(null))
-			.ToArray();
-
-	private static IEnumerable<IRule> GetRules()
-	{
-		return _definedRules;
-	}
 }

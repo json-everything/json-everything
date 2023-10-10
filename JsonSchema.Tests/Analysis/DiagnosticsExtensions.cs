@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Json.Pointer;
 using Json.Schema.Analysis;
 
@@ -9,8 +10,8 @@ public static class DiagnosticsExtensions
 {
 	public static void Output(this IEnumerable<Diagnostic> diagnostics)
 	{
-		Console.WriteLine("| Level | Message | Location |");
-		Console.WriteLine("|:------|:--------|:---------|");
+		Console.WriteLine("| Level | Message | Location | Keyword | Rule |");
+		Console.WriteLine("|:------|:--------|:---------|:--------|:-----|");
 
 		foreach (var diagnostic in diagnostics)
 		{
@@ -18,7 +19,7 @@ public static class DiagnosticsExtensions
 			if (diagnostic.Location.Equals(JsonPointer.Empty))
 				location = "(root)";
 
-			Console.WriteLine($"| {diagnostic.Level} | {diagnostic.Message} | {location} |");
+			Console.WriteLine($"| {diagnostic.Level} | {diagnostic.Message} | {location} | {diagnostic.Target} | {diagnostic.RuleId.Split(':').Last()} |");
 		}
 	}
 }

@@ -8,6 +8,8 @@ public class PredicateRule : IRule
 {
 	public Func<JsonNode, IEnumerable<Diagnostic>> Runner { get; set; }
 
+	public string Id { get; }
+
 	public IEnumerable<Diagnostic> Run(JsonNode schema)
 	{
 		return Runner(schema);

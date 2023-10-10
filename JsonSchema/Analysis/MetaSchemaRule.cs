@@ -1,25 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Json.Pointer;
 
 namespace Json.Schema.Analysis;
 
 public class MetaSchemaRule : IRule
 {
-	private static readonly EvaluationOptions _options = new()
-	{
-		OutputFormat = OutputFormat.Hierarchical
-	};
+	private static readonly EvaluationOptions _options;
 
-	public JsonSchema MetaSchema { get; set; }
+	public string Id { get; }
+	public JsonSchema MetaSchema { get; }
+
+	static MetaSchemaRule()
+	{
+		_options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
+		foreach (var metaSchema in JsonSchemaAnalyzerRules.DefinedMetaSchemas)
+		{
+			_options.SchemaRegistry.Register(metaSchema);
+		}
+	}
+
+	public MetaSchemaRule(JsonSchema metaSchema)
+	{
+		MetaSchema = metaSchema;
+		Id = metaSchema.BaseUri.OriginalString;
+	}
 
 	public IEnumerable<Diagnostic> Run(JsonNode schema)
 	{
 		var validation = MetaSchema.Evaluate(schema, _options);
 
-		var allAnnotations = FindDiagnostics(validation);
+		var diagnostics = FindDiagnostics(validation);
 
-		return allAnnotations;
+		return diagnostics;
 	}
 
 	private static IEnumerable<Diagnostic> FindDiagnostics(EvaluationResults root)
@@ -27,12 +43,17 @@ public class MetaSchemaRule : IRule
 		if (!root.IsValid) yield break;
 
 		if (root.HasAnnotations &&
-		    root.TryGetAnnotation("x-diagnostic-message", out var message))
+		    root.TryGetAnnotation(Diagnostic.MessageKeyword, out var message))
+		{
+			var target = root.TryGetAnnotation(Diagnostic.TargetKeyword, out var targetAnnotation)
+				? targetAnnotation!.GetValue<string>()
+				: null;
 			yield return new Diagnostic
 			{
-				Location = JsonPointer.Empty,
+				Target = target,
 				Message = message!.GetValue<string>()
 			};
+		}
 
 		if (!root.HasDetails) yield break;
 

@@ -5,5 +5,7 @@ namespace Json.Schema.Analysis;
 
 public interface IRule
 {
+	string Id { get; }
+
 	IEnumerable<Diagnostic> Run(JsonNode schema);
 }
