@@ -68,10 +68,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
 
-			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(member.Name);
-			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
-			if (nameAttribute != null)
-				name = nameAttribute.Name;
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(member);
+			name ??= member.Name;
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
@@ -113,7 +111,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var conditionGroups = context.Type.GetCustomAttributes()
 			.OfType<IConditionAttribute>()
 			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
-			.GroupBy(x => x.ConditionGroup)
+			.GroupBy(x => x.Attribute.ConditionGroup)
 			.ToList();
 
 		if (!conditionGroups.Any()) return;
@@ -164,7 +162,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			context.Intents.Add(new UnevaluatedPropertiesIntent());
 	}
 
-	private static IEnumerable<IConditionAttribute> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
+	private static IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
 	{
 		var member = members.FirstOrDefault(x => x.Name == condition.PropertyName);
 		if (member == null) yield break;
@@ -184,24 +182,24 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				var values = Enum.GetValues(memberType);
 				foreach (var value in values)
 				{
-					yield return new IfAttribute(ifEnumAttribute.PropertyName, ifEnumAttribute.UseNumbers ? value : value.ToString(), value);
+					yield return (new IfAttribute(ifEnumAttribute.PropertyName, ifEnumAttribute.UseNumbers ? value : value.ToString(), value), member);
 				}
 
 				yield break;
 		}
-		yield return condition;
+		yield return (condition, member);
 	}
 
-	private static IfIntent GenerateIf(IEnumerable<IConditionAttribute> conditions)
+	private static IfIntent GenerateIf(IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> conditions)
 	{
 		var properties = new Dictionary<string, SchemaGenerationContextBase>();
 		var required = new List<string>();
 		foreach (var condition in conditions)
 		{
-			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(condition.PropertyName);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(condition.Member);
 			if (!properties.TryGetValue(name, out var context))
 				properties[name] = context = new AdHocGenerationContext();
-			switch (condition)
+			switch (condition.Attribute)
 			{
 				case IfAttribute ifAtt:
 					context.Intents.Add(new ConstIntent(ifAtt.Value));
@@ -240,7 +238,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var properties = prebuiltMemberContexts;
 		foreach (var consequence in applicable.GroupBy(x => x.member))
 		{
-			var name = SchemaGeneratorConfiguration.Current.PropertyNamingMethod(consequence.Key.Name);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(consequence.Key);
 			if (properties.TryGetValue(name, out var localContext))
 				localContext = new MemberGenerationContext(localContext, new List<Attribute>());
 			else

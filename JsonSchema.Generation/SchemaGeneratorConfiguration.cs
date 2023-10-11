@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using JetBrains.Annotations;
 using Json.Schema.Generation.Generators;
 
@@ -11,7 +12,6 @@ namespace Json.Schema.Generation;
 public class SchemaGeneratorConfiguration
 {
 	private PropertyNamingMethod? _propertyNamingMethod;
-
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
@@ -34,11 +34,21 @@ public class SchemaGeneratorConfiguration
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;string, string&gt;`.
 	/// </remarks>
-	public PropertyNamingMethod PropertyNamingMethod
+	[Obsolete($"Use {nameof(PropertyNameResolver)} instead.")]
+	public PropertyNamingMethod? PropertyNamingMethod
 	{
-		get => _propertyNamingMethod ??= PropertyNamingMethods.AsDeclared;
+		get => x => PropertyNameResolver(new DummyInfo(x));
 		set => _propertyNamingMethod = value;
 	}
+
+	/// <summary>
+	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.ByJsonPropertyName"/>.
+	/// </summary>
+	/// <remarks>
+	/// This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
+	/// </remarks>
+	public PropertyNameResolver PropertyNameResolver { get; set; } = PropertyNameResolvers.AsDeclared;
+
 	/// <summary>
 	/// Gets or sets whether to include `null` in the `type` keyword.
 	/// Default is <see cref="Nullability.Disabled"/> which means that it will
@@ -69,4 +79,27 @@ public class SchemaGeneratorConfiguration
 	[field: ThreadStatic]
 	public static SchemaGeneratorConfiguration Current { get; internal set; }
 #pragma warning restore CS8618
+
+	/// <summary>
+	/// A shim while <see cref="PropertyNamingMethod"/> is not yet removed.
+	/// Makes it Possible to call <see cref="PropertyNameResolver"/> from <see cref="PropertyNamingMethod"/>.
+	/// </summary>
+	private sealed class DummyInfo : MemberInfo
+	{
+		public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();
+
+		public override object[] GetCustomAttributes(Type attributeType, bool inherit) => Array.Empty<object>();
+
+		public override bool IsDefined(Type attributeType, bool inherit) => false;
+
+		public override Type DeclaringType { get; } = typeof(DummyInfo);
+		public override MemberTypes MemberType { get; } = MemberTypes.Property;
+		public override string Name { get; }
+		public override Type? ReflectedType { get; } = null;
+
+		public DummyInfo(string name)
+		{
+			Name = name;
+		}
+	}
 }

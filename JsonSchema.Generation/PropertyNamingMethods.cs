@@ -1,4 +1,5 @@
-﻿using Humanizer;
+﻿using System;
+using Humanizer;
 
 namespace Json.Schema.Generation;
 
@@ -12,6 +13,7 @@ public delegate string PropertyNamingMethod(string input);
 /// <summary>
 /// Defines a set of predefined property naming methods.
 /// </summary>
+[Obsolete($"Use {nameof(PropertyNameResolvers)} instead.")]
 public static class PropertyNamingMethods
 {
 	/// <summary>
