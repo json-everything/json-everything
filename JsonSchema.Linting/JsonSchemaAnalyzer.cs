@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Json.Pointer;
 
-namespace Json.Schema.Analysis;
+namespace Json.Schema.Linting;
 
 public static class JsonSchemaAnalyzer
 {

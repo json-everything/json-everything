@@ -1,4 +1,4 @@
-﻿namespace Json.Schema.Analysis;
+﻿namespace Json.Schema.Linting;
 
 public static partial class JsonSchemaAnalyzerRules
 {

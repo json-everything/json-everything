@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using Json.Schema.Analysis;
-using NUnit.Framework;
-
-namespace Json.Schema.Tests.Analysis;
+﻿namespace Json.Schema.Linting.Tests;
 
 public class EnumTests
 {

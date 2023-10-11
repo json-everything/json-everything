@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Json.Pointer;
-using Json.Schema.Analysis;
+﻿using Json.Pointer;
 
-namespace Json.Schema.Tests.Analysis;
+namespace Json.Schema.Linting.Tests;
 
 public static class DiagnosticsExtensions
 {
