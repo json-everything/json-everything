@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using JetBrains.Annotations;
 using Json.Schema.Generation.Generators;
 
@@ -10,7 +11,26 @@ namespace Json.Schema.Generation;
 /// </summary>
 public class SchemaGeneratorConfiguration
 {
-	private PropertyNamingMethod? _propertyNamingMethod;
+	private PropertyNameResolver? _propertyNameResolver;
+
+	private sealed class DummyInfo : MemberInfo
+	{
+		public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();
+
+		public override object[] GetCustomAttributes(Type attributeType, bool inherit) => Array.Empty<object>();
+
+		public override bool IsDefined(Type attributeType, bool inherit) => false;
+
+		public override Type DeclaringType { get; } = typeof(DummyInfo);
+		public override MemberTypes MemberType { get; } = MemberTypes.Property;
+		public override string Name { get; }
+		public override Type? ReflectedType { get; } = null;
+
+		public DummyInfo(string name)
+		{
+			Name = name;
+		}
+	}
 
 	/// <summary>
 	/// A collection of refiners.
@@ -27,25 +47,41 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public PropertyOrder PropertyOrder { get; set; }
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
-	/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethod.AsDeclared"/>.
+	/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethods.AsDeclared"/>.
 	/// </summary>
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;string, string&gt;`.
 	/// </remarks>
-	public PropertyNamingMethod PropertyNamingMethod
+	[Obsolete($"Use {nameof(PropertyNameResolver)} instead.")]
+	public PropertyNamingMethod? PropertyNamingMethod
 	{
-		get => _propertyNamingMethod ??= PropertyNamingMethods.AsDeclared;
-		set => _propertyNamingMethod = value;
+		get => x => PropertyNameResolver(new DummyInfo(x));
+		set
+		{
+			var method = value ?? PropertyNamingMethods.AsDeclared;
+			PropertyNameResolver = x => method(x.Name);
+		}
 	}
+
+	/// <summary>
+	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.AsDeclared"/>.
+	/// </summary>
+	/// <remarks>
+	/// This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
+	/// </remarks>
+	public PropertyNameResolver? PropertyNameResolver
+	{
+		get => _propertyNameResolver ??= PropertyNameResolvers.AsDeclared;
+		set => _propertyNameResolver = value;
+	}
+
 	/// <summary>
 	/// Gets or sets whether to include `null` in the `type` keyword.
 	/// Default is <see cref="Nullability.Disabled"/> which means that it will
 	/// not ever be included.
 	/// </summary>
 	public Nullability Nullability { get; set; }
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
 	/// <summary>
 	/// Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
