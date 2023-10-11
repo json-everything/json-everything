@@ -161,6 +161,8 @@ If you don't find what you're looking for here, please try one of these excellen
   - JSON Merge Patch
   - JSON Path
   - JMES Path
+- [Corvus.JsonSchema](https://github.com/corvus-dotnet/Corvus.JsonSchema) by [@mwadams](https://github.com/mwadams)
+  - JSON Schema with a C# code generation focus
 - (more to come)
 
 If you use JSON to do something that is not covered by a library in this suite or one of the above projects, feel free to [create a feature issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=feature&template=Feature_request.md).
