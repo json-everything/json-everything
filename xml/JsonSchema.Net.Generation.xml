@@ -1649,6 +1649,58 @@
             Indicates that `null` will be applied to both reference types and <see cref="T:System.Nullable`1"/> types.
             </summary>
         </member>
+        <member name="T:Json.Schema.Generation.PropertyNameResolver">
+            <summary>
+            Declares a property name resolution which is used to provide a property name.
+            </summary>
+            <param name="input">The property.</param>
+            <returns>The property name</returns>
+        </member>
+        <member name="T:Json.Schema.Generation.PropertyNameResolvers">
+            <summary>
+            Defines a set of predefined property name resolution methods.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.AsDeclared">
+            <summary>
+            Makes no changes. Properties are generated with the name of the property in code.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.CamelCase">
+            <summary>
+            Property names to camel case (e.g. `camelCase`).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.PascalCase">
+            <summary>
+            Property names to pascal case (e.g. `PascalCase`).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.SnakeCase">
+            <summary>
+            Property names to snake case (e.g. `Snake_Case`).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.LowerSnakeCase">
+            <summary>
+            Property names to lower snake case (e.g. `lower_snake_case`).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.UpperSnakeCase">
+            <summary>
+            Property names to upper snake case (e.g. `UPPER_SNAKE_CASE`).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.KebabCase">
+            <summary>
+            Property names to kebab case (e.g. `Kebab-Case`).
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Generation.PropertyNameResolvers.UpperKebabCase">
+            <summary>
+            Property names to upper kebab case (e.g. `UPPER-KEBAB-CASE`).
+            </summary>
+        </member>
         <member name="T:Json.Schema.Generation.PropertyNamingMethod">
             <summary>
             Declares a property naming method which is used to alter property names.
@@ -1822,10 +1874,18 @@
         </member>
         <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNamingMethod">
             <summary>
-            Gets or sets the property naming method.  Default is <see cref="!:PropertyNamingMethod.AsDeclared"/>.
+            Gets or sets the property naming method.  Default is <see cref="F:Json.Schema.Generation.PropertyNamingMethods.AsDeclared"/>.
             </summary>
             <remarks>
             This can be replaced with any `Func&lt;string, string&gt;`.
+            </remarks>
+        </member>
+        <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.PropertyNameResolver">
+            <summary>
+            Gets or sets the property name resolving method. Default is <see cref="F:Json.Schema.Generation.PropertyNameResolvers.AsDeclared"/>.
+            </summary>
+            <remarks>
+            This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
             </remarks>
         </member>
         <member name="P:Json.Schema.Generation.SchemaGeneratorConfiguration.Nullability">
