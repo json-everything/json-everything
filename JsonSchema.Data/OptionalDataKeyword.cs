@@ -19,13 +19,14 @@ namespace Json.Schema.Data;
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
 [Vocabulary(Vocabularies.DataId)]
-[JsonConverter(typeof(DataKeywordJsonConverter))]
-public class DataKeyword : IJsonSchemaKeyword
+[JsonConverter(typeof(OptionalDataKeywordJsonConverter))]
+public class OptionalDataKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
-	public const string Name = "data";
+	public const string Name = "optionalData";
+
 
 	/// <summary>
 	/// The collection of keywords and references.
@@ -36,7 +37,7 @@ public class DataKeyword : IJsonSchemaKeyword
 	/// Creates an instance of the <see cref="DataKeyword"/> class.
 	/// </summary>
 	/// <param name="references">The collection of keywords and references.</param>
-	public DataKeyword(IReadOnlyDictionary<string, IDataResourceIdentifier> references)
+	public OptionalDataKeyword(IReadOnlyDictionary<string, IDataResourceIdentifier> references)
 	{
 		References = references;
 	}
@@ -61,17 +62,12 @@ public class DataKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var data = new Dictionary<string, JsonNode>();
-		var failedReferences = new List<IDataResourceIdentifier>();
 		foreach (var reference in References)
 		{
-			if (!reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved))
-				failedReferences.Add(reference.Value);
+			if (!reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved)) continue;
 
 			data.Add(reference.Key, resolved!);
 		}
-
-		if (failedReferences.Any())
-			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
 
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
@@ -112,7 +108,7 @@ public class DataKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
+internal class OptionalDataKeywordJsonConverter : JsonConverter<OptionalDataKeyword>
 {
 	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Where(x => x != typeof(UnrecognizedKeyword)).Select(GetKeyword).ToArray();
 
@@ -122,7 +118,7 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		return (string)field!.GetValue(null);
 	}
 
-	public override DataKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override OptionalDataKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
@@ -133,10 +129,10 @@ internal class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		if (references.Keys.Intersect(_coreKeywords).Any())
 			throw new JsonException("Core keywords are explicitly disallowed.");
 
-		return new DataKeyword(references);
+		return new OptionalDataKeyword(references);
 	}
 
-	public override void Write(Utf8JsonWriter writer, DataKeyword value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, OptionalDataKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DataKeyword.Name);
 		writer.WriteStartObject();

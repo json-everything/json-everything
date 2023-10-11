@@ -79,7 +79,7 @@ public class Suite
 		if (!Directory.Exists(remotesFilePath))
 			throw new Exception("cannot find remotes path");
 
-		DataKeyword.Fetch = uri =>
+		ExternalDataRegistry.Fetch = uri =>
 		{
 			var filePath = uri.OriginalString.Replace("http://localhost:1234", remotesPath);
 			var text = File.ReadAllText(filePath);

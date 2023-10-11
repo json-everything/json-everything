@@ -35,6 +35,30 @@ public static class JsonSchemaBuilderExtensions
 		return builder;
 	}
 
+	/// <summary>
+	/// Adds a `data` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="data">The collection of keywords and references.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder OptionalData(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, string> data)
+	{
+		builder.Add(new OptionalDataKeyword(data.ToDictionary(x => x.Key, x => CreateResourceIdentifier(x.Value))));
+		return builder;
+	}
+
+	/// <summary>
+	/// Adds a `data` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="data">The collection of keywords and references.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder OptionalData(this JsonSchemaBuilder builder, params (string name, string reference)[] data)
+	{
+		builder.Add(new OptionalDataKeyword(data.ToDictionary(x => x.name, x => CreateResourceIdentifier(x.reference))));
+		return builder;
+	}
+
 	internal static IDataResourceIdentifier CreateResourceIdentifier(string identifier)
 	{
 		if (identifier[0] != '#' && JsonPointer.TryParse(identifier, out var jp)) return new JsonPointerIdentifier(jp!);

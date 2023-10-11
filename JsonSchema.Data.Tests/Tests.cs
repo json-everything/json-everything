@@ -8,7 +8,7 @@ namespace Json.Schema.Data.Tests;
 public class Tests
 {
 	private static JsonSchema InstanceRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://json-everything.net/meta/data-2022")
+		.Schema("https://json-everything.net/meta/data-2023")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
@@ -18,7 +18,7 @@ public class Tests
 		);
 
 	private static JsonSchema InstanceRelativeRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://json-everything.net/meta/data-2022")
+		.Schema("https://json-everything.net/meta/data-2023")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
@@ -33,7 +33,7 @@ public class Tests
 		);
 
 	private static JsonSchema ExternalRef { get; } = new JsonSchemaBuilder()
-		.Schema("https://json-everything.net/meta/data-2022")
+		.Schema("https://json-everything.net/meta/data-2023")
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("foo", new JsonSchemaBuilder()
@@ -117,7 +117,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":5}");
+			ExternalDataRegistry.Fetch = _ => JsonNode.Parse("{\"minValue\":5}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -128,7 +128,7 @@ public class Tests
 		}
 		finally
 		{
-			DataKeyword.Fetch = null!;
+			ExternalDataRegistry.Fetch = null!;
 		}
 	}
 
@@ -137,7 +137,7 @@ public class Tests
 	{
 		try
 		{
-			DataKeyword.Fetch = _ => JsonNode.Parse("{\"minValue\":15}");
+			ExternalDataRegistry.Fetch = _ => JsonNode.Parse("{\"minValue\":15}");
 
 			var instanceData = "{\"foo\":10}";
 			var instance = JsonDocument.Parse(instanceData).RootElement;
@@ -148,7 +148,7 @@ public class Tests
 		}
 		finally
 		{
-			DataKeyword.Fetch = null!;
+			ExternalDataRegistry.Fetch = null!;
 		}
 	}
 }

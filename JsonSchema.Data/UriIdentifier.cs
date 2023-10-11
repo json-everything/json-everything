@@ -85,17 +85,17 @@ public class UriIdentifier : IDataResourceIdentifier
 
 	private static bool Download(Uri uri, out JsonNode? node)
 	{
-		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out node))
+		if (ExternalDataRegistry.Registry.TryGetValue(uri, out node))
 			// protect against the off-hand that someone registered a null.
 			return node != null;
 
-		if (DataKeyword.Fetch == null)
+		if (ExternalDataRegistry.Fetch == null)
 		{
 			node = null;
 			return false;
 		}
 
-		node = DataKeyword.Fetch(uri);
+		node = ExternalDataRegistry.Fetch(uri);
 		return true;
 	}
 
