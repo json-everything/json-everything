@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
@@ -20,6 +20,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\JsonPath\JsonPath.csproj" />
 		<ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
+		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
 	</ItemGroup>
 
 </Project>

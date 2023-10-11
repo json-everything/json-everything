@@ -35,6 +35,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JsonSchema.Data\JsonSchema.Data.csproj" />
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 

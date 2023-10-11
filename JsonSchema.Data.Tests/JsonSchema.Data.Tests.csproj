@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JsonSchema.Data\JsonSchema.Data.csproj" />
+		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -5,21 +5,12 @@ namespace Json.Schema.Linting;
 
 public class MetaSchemaRule : IRule
 {
-	private static readonly EvaluationOptions _options;
 
 	public string Id { get; }
 	public JsonSchema MetaSchema { get; }
 
 	static MetaSchemaRule()
 	{
-		_options = new EvaluationOptions
-		{
-			OutputFormat = OutputFormat.Hierarchical
-		};
-		foreach (var metaSchema in JsonSchemaAnalyzerRules.DefinedMetaSchemas)
-		{
-			_options.SchemaRegistry.Register(metaSchema);
-		}
 	}
 
 	public MetaSchemaRule(JsonSchema metaSchema)
@@ -30,7 +21,7 @@ public class MetaSchemaRule : IRule
 
 	public IEnumerable<Diagnostic> Run(JsonNode schema)
 	{
-		var validation = MetaSchema.Evaluate(schema, _options);
+		var validation = MetaSchema.Evaluate(schema, JsonSchemaAnalyzerRules.EvaluationOptions);
 
 		var diagnostics = FindDiagnostics(validation);
 
