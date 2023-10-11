@@ -68,12 +68,10 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
 
-			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(member);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
 			if (nameAttribute != null)
 				name = nameAttribute.Name;
-
-			name ??= member.Name;
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
@@ -242,7 +240,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var properties = prebuiltMemberContexts;
 		foreach (var consequence in applicable.GroupBy(x => x.member))
 		{
-			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(consequence.Key);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(consequence.Key);
 			if (properties.TryGetValue(name, out var localContext))
 				localContext = new MemberGenerationContext(localContext, new List<Attribute>());
 			else
