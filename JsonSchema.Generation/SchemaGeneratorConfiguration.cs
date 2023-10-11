@@ -11,7 +11,25 @@ namespace Json.Schema.Generation;
 /// </summary>
 public class SchemaGeneratorConfiguration
 {
-	private PropertyNamingMethod? _propertyNamingMethod;
+	private sealed class DummyInfo : MemberInfo
+	{
+		public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();
+
+		public override object[] GetCustomAttributes(Type attributeType, bool inherit) => Array.Empty<object>();
+
+		public override bool IsDefined(Type attributeType, bool inherit) => false;
+
+		public override Type DeclaringType { get; } = typeof(DummyInfo);
+		public override MemberTypes MemberType { get; } = MemberTypes.Property;
+		public override string Name { get; }
+		public override Type? ReflectedType { get; } = null;
+
+		public DummyInfo(string name)
+		{
+			Name = name;
+		}
+	}
+
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
@@ -27,9 +45,8 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public PropertyOrder PropertyOrder { get; set; }
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
-	/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethod.AsDeclared"/>.
+	/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethods.AsDeclared"/>.
 	/// </summary>
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;string, string&gt;`.
@@ -38,11 +55,15 @@ public class SchemaGeneratorConfiguration
 	public PropertyNamingMethod? PropertyNamingMethod
 	{
 		get => x => PropertyNameResolver(new DummyInfo(x));
-		set => _propertyNamingMethod = value;
+		set
+		{
+			var method = value ?? PropertyNamingMethods.AsDeclared;
+			PropertyNameResolver = x => method(x.Name);
+		}
 	}
 
 	/// <summary>
-	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.ByJsonPropertyName"/>.
+	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.AsDeclared"/>.
 	/// </summary>
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
@@ -55,7 +76,6 @@ public class SchemaGeneratorConfiguration
 	/// not ever be included.
 	/// </summary>
 	public Nullability Nullability { get; set; }
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
 	/// <summary>
 	/// Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
@@ -79,27 +99,4 @@ public class SchemaGeneratorConfiguration
 	[field: ThreadStatic]
 	public static SchemaGeneratorConfiguration Current { get; internal set; }
 #pragma warning restore CS8618
-
-	/// <summary>
-	/// A shim while <see cref="PropertyNamingMethod"/> is not yet removed.
-	/// Makes it Possible to call <see cref="PropertyNameResolver"/> from <see cref="PropertyNamingMethod"/>.
-	/// </summary>
-	private sealed class DummyInfo : MemberInfo
-	{
-		public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();
-
-		public override object[] GetCustomAttributes(Type attributeType, bool inherit) => Array.Empty<object>();
-
-		public override bool IsDefined(Type attributeType, bool inherit) => false;
-
-		public override Type DeclaringType { get; } = typeof(DummyInfo);
-		public override MemberTypes MemberType { get; } = MemberTypes.Property;
-		public override string Name { get; }
-		public override Type? ReflectedType { get; } = null;
-
-		public DummyInfo(string name)
-		{
-			Name = name;
-		}
-	}
 }

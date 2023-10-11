@@ -9,13 +9,13 @@ namespace Json.Schema.Generation.Tests;
 
 public class PropertyNameResolverTests
 {
-	class Target
+	class TargetWithJsonPropertyName
 	{
 		[JsonPropertyName("JsonName")]
 		public string PropertyThatNeeds_Changing { get; set; }
 	}
 
-	class TargetWithOutJsonPropertyName
+	class TargetWithoutJsonPropertyName
 	{
 		public string PropertyThatNeeds_Changing { get; set; }
 	}
@@ -24,16 +24,22 @@ public class PropertyNameResolverTests
 	{
 		get
 		{
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.AsDeclared, "PropertyThatNeeds_Changing");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.CamelCase, "propertyThatNeedsChanging");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.PascalCase, "PropertyThatNeedsChanging");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.KebabCase, "property-that-needs-changing");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.UpperKebabCase, "PROPERTY-THAT-NEEDS-CHANGING");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.SnakeCase, "property_that_needs_changing");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.UpperSnakeCase, "PROPERTY_THAT_NEEDS_CHANGING");
-			yield return new TestCaseData(typeof(Target), PropertyNameResolvers.ByJsonPropertyName, "JsonName");
-			yield return new TestCaseData(typeof(Target), new PropertyNameResolver(static x => "CustomName"), "CustomName");
-			yield return new TestCaseData(typeof(TargetWithOutJsonPropertyName), PropertyNameResolvers.ByJsonPropertyName, "PropertyThatNeeds_Changing");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.AsDeclared, "PropertyThatNeeds_Changing");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.CamelCase, "propertyThatNeedsChanging");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.PascalCase, "PropertyThatNeedsChanging");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.KebabCase, "property-that-needs-changing");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.UpperKebabCase, "PROPERTY-THAT-NEEDS-CHANGING");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.SnakeCase, "property_that_needs_changing");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.UpperSnakeCase, "PROPERTY_THAT_NEEDS_CHANGING");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), new PropertyNameResolver(static x => "CustomName"), "CustomName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.AsDeclared, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.CamelCase, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.PascalCase, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.KebabCase, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.UpperKebabCase, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.SnakeCase, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.UpperSnakeCase, "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), new PropertyNameResolver(static x => "CustomName"), "JsonName");
 		}
 	}
 

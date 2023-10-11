@@ -1,6 +1,4 @@
-using System.Linq;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using Humanizer;
 
 namespace Json.Schema.Generation;
@@ -49,8 +47,4 @@ public static class PropertyNameResolvers
 	/// Property names to upper kebab case (e.g. `UPPER-KEBAB-CASE`).
 	/// </summary>
 	public static readonly PropertyNameResolver UpperKebabCase = x => x.Name.Kebaberize().ToUpperInvariant();
-	/// <summary>
-	/// Property name is read from <see cref="JsonPropertyNameAttribute"/>.
-	/// </summary>
-	public static readonly PropertyNameResolver ByJsonPropertyName = x => x.GetCustomAttributes<JsonPropertyNameAttribute>().FirstOrDefault()?.Name /* TODO: what do we do with the nullable here? */;
 }
