@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
 
 public class PropertyNameResolverTests
 {
-	class TargetWithJsonPropertyName
+	private class TargetWithJsonPropertyName
 	{
 		[JsonPropertyName("JsonName")]
+		[UsedImplicitly]
 		public string PropertyThatNeeds_Changing { get; set; }
 	}
 
-	class TargetWithoutJsonPropertyName
+	private class TargetWithoutJsonPropertyName
 	{
+		[UsedImplicitly]
 		public string PropertyThatNeeds_Changing { get; set; }
 	}
 
@@ -31,7 +36,7 @@ public class PropertyNameResolverTests
 			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.UpperKebabCase, "PROPERTY-THAT-NEEDS-CHANGING");
 			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.SnakeCase, "property_that_needs_changing");
 			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), PropertyNameResolvers.UpperSnakeCase, "PROPERTY_THAT_NEEDS_CHANGING");
-			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), new PropertyNameResolver(static x => "CustomName"), "CustomName");
+			yield return new TestCaseData(typeof(TargetWithoutJsonPropertyName), new PropertyNameResolver(static _ => "CustomName"), "CustomName");
 			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.AsDeclared, "JsonName");
 			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.CamelCase, "JsonName");
 			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.PascalCase, "JsonName");
@@ -39,7 +44,7 @@ public class PropertyNameResolverTests
 			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.UpperKebabCase, "JsonName");
 			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.SnakeCase, "JsonName");
 			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), PropertyNameResolvers.UpperSnakeCase, "JsonName");
-			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), new PropertyNameResolver(static x => "CustomName"), "JsonName");
+			yield return new TestCaseData(typeof(TargetWithJsonPropertyName), new PropertyNameResolver(static _ => "CustomName"), "JsonName");
 		}
 	}
 

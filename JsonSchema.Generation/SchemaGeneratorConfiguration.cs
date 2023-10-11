@@ -11,6 +11,8 @@ namespace Json.Schema.Generation;
 /// </summary>
 public class SchemaGeneratorConfiguration
 {
+	private PropertyNameResolver? _propertyNameResolver;
+
 	private sealed class DummyInfo : MemberInfo
 	{
 		public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();
@@ -68,7 +70,11 @@ public class SchemaGeneratorConfiguration
 	/// <remarks>
 	/// This can be replaced with any `Func&lt;MemberInfo, string&gt;`.
 	/// </remarks>
-	public PropertyNameResolver PropertyNameResolver { get; set; } = PropertyNameResolvers.AsDeclared;
+	public PropertyNameResolver? PropertyNameResolver
+	{
+		get => _propertyNameResolver ??= PropertyNameResolvers.AsDeclared;
+		set => _propertyNameResolver = value;
+	}
 
 	/// <summary>
 	/// Gets or sets whether to include `null` in the `type` keyword.

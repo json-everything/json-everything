@@ -200,7 +200,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var required = new List<string>();
 		foreach (var condition in conditions)
 		{
-			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver(condition.Member);
+			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(condition.Member);
 			if (!properties.TryGetValue(name, out var context))
 				properties[name] = context = new AdHocGenerationContext();
 			switch (condition.Attribute)
