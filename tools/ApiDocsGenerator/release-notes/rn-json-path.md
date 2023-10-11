@@ -2,7 +2,7 @@
 layout: page
 title: JsonPath.Net
 icon: fas fa-tag
-order: "8.08"
+order: "8.09"
 ---
 # [0.6.7](https://github.com/gregsdennis/json-everything/pull/526) {#release-path-0.6.7}
 

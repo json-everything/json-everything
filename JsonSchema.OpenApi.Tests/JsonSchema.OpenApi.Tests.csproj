@@ -20,7 +20,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\JsonPath\JsonPath.csproj" />
 		<ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
-		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
 	</ItemGroup>
 
 </Project>
