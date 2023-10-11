@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.Data.Tests;
 
-public class Tests
+public class DataTests
 {
 	private static JsonSchema InstanceRef { get; } = new JsonSchemaBuilder()
 		.Schema("https://json-everything.net/meta/data-2023")
