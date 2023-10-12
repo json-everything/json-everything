@@ -66,7 +66,20 @@ public class OptionalDataKeyword : IJsonSchemaKeyword
 		{
 			if (!reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved)) continue;
 
-			data.Add(reference.Key, resolved!);
+			var keywordType = SchemaKeywordRegistry.GetImplementationType(reference.Key);
+			if (keywordType == null) continue;
+
+			try
+			{
+				var keyword = (IJsonSchemaKeyword?)resolved.Deserialize(keywordType);
+				if (keyword == null) continue;
+
+				data.Add(reference.Key, resolved!);
+			}
+			catch (JsonException)
+			{
+				// invalid value: skip
+			}
 		}
 
 		var json = JsonSerializer.Serialize(data);
