@@ -30,6 +30,7 @@ public static class Vocabularies
 
 		vocabRegistry.Register(OpenApi);
 		SchemaKeywordRegistry.Register<ExampleKeyword>();
+		SchemaKeywordRegistry.RegisterNullValue(new ExampleKeyword(null));
 		SchemaKeywordRegistry.Register<DiscriminatorKeyword>();
 		SchemaKeywordRegistry.Register<ExternalDocsKeyword>();
 		SchemaKeywordRegistry.Register<XmlKeyword>();
