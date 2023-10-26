@@ -152,9 +152,8 @@ public class JsonSchema : IBaseDocument
 
 		options ??= EvaluationOptions.Default;
 
-		var schema = options.SchemaRegistry.Get(schemaUri) as JsonSchema;
-		if (schema == null)
-			throw new ArgumentException($"Schema URI {schemaId} unrecognized", nameof(root));
+		var schema = options.SchemaRegistry.Get(schemaUri) as JsonSchema ??
+		             throw new ArgumentException($"Schema URI {schemaId} unrecognized", nameof(root));
 
 		return schema.Evaluate(root, options);
 	}
@@ -406,8 +405,7 @@ public class JsonSchema : IBaseDocument
 					return version;
 				}
 
-				var metaSchema = registry.Get(metaSchemaId) as JsonSchema;
-				if (metaSchema == null)
+				var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
 
 				if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
