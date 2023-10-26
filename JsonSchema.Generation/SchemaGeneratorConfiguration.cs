@@ -56,7 +56,7 @@ public class SchemaGeneratorConfiguration
 	[Obsolete($"Use {nameof(PropertyNameResolver)} instead.")]
 	public PropertyNamingMethod? PropertyNamingMethod
 	{
-		get => x => PropertyNameResolver(new DummyInfo(x));
+		get => x => PropertyNameResolver!(new DummyInfo(x));
 		set
 		{
 			var method = value ?? PropertyNamingMethods.AsDeclared;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
@@ -9,6 +10,7 @@ namespace Json.Schema.Generation.Tests;
 
 public class ConditionalTests
 {
+	[UsedImplicitly]
 	[If(nameof(Toggle), true, 0)]
 	public class SingleCondition
 	{
@@ -60,7 +62,7 @@ public class ConditionalTests
 
 		VerifyGeneration<SingleCondition>(expected, new SchemaGeneratorConfiguration
 		{
-			PropertyNamingMethod = PropertyNamingMethods.CamelCase
+			PropertyNameResolver = PropertyNameResolvers.CamelCase
 		});
 	}
 
@@ -92,6 +94,7 @@ public class ConditionalTests
 	}
 
 
+	[UsedImplicitly]
 	[If(nameof(Toggle), true, "ifToggle")]
 	[If(nameof(OtherToggle), 42, "ifOtherToggle")]
 	public class MultipleConditionGroups
@@ -145,6 +148,7 @@ public class ConditionalTests
 		VerifyGeneration<MultipleConditionGroups>(expected);
 	}
 
+	[UsedImplicitly]
 	[If(nameof(Toggle), true, 0)]
 	[If(nameof(OtherToggle), 42, 0)]
 	public class MultipleConditionsInTheSameGroup
@@ -182,6 +186,7 @@ public class ConditionalTests
 		VerifyGeneration<MultipleConditionsInTheSameGroup>(expected);
 	}
 
+	[UsedImplicitly]
 	[If(nameof(Toggle), true, 0)]
 	public class SingleConditionMultipleProperties
 	{
@@ -219,6 +224,7 @@ public class ConditionalTests
 		VerifyGeneration<SingleConditionMultipleProperties>(expected);
 	}
 
+	[UsedImplicitly]
 	[IfEnum(nameof(Day))] // generates group for each value
 	public class EnumSwitch
 	{
@@ -269,6 +275,7 @@ public class ConditionalTests
 		VerifyGeneration<EnumSwitch>(expected);
 	}
 
+	[UsedImplicitly]
 	[If(nameof(Value), "unused", 0)]
 	public class UnusedConditionGroup
 	{
@@ -287,6 +294,7 @@ public class ConditionalTests
 		VerifyGeneration<UnusedConditionGroup>(expected);
 	}
 
+	[UsedImplicitly]
 	public class UnknownConditionGroup
 	{
 		[Required(ConditionGroup = "unknown")]
@@ -305,6 +313,7 @@ public class ConditionalTests
 		VerifyGeneration<UnknownConditionGroup>(expected);
 	}
 
+	[UsedImplicitly]
 	[If(nameof(AgeCategory), "child", "isChild")]
 	[If(nameof(AgeCategory), "adult", "isAdult")]
 	[If(nameof(AgeCategory), "senior", "isSenior")]
@@ -402,6 +411,7 @@ public class ConditionalTests
 		VerifyGeneration<SplitAgeRanges>(expected);
 	}
 
+	[UsedImplicitly]
 	[IfMin(nameof(Value), 10, "group")]
 	[IfMax(nameof(Value), 20, "group", IsExclusive = true)]
 	public class NumberRangeConditions
@@ -439,6 +449,7 @@ public class ConditionalTests
 		VerifyGeneration<NumberRangeConditions>(expected);
 	}
 
+	[UsedImplicitly]
 	[IfMin(nameof(Value), 10, "group")]
 	[IfMax(nameof(Value), 20, "group")]
 	public class StringLengthRangeConditions
@@ -476,6 +487,7 @@ public class ConditionalTests
 		VerifyGeneration<StringLengthRangeConditions>(expected);
 	}
 
+	[UsedImplicitly]
 	[IfMin(nameof(Value), 10, "group")]
 	[IfMax(nameof(Value), 20, "group")]
 	public class ArrayLengthRangeConditions
@@ -516,6 +528,7 @@ public class ConditionalTests
 		VerifyGeneration<ArrayLengthRangeConditions>(expected);
 	}
 
+	[UsedImplicitly]
 	[IfMin(nameof(Value), 10, "group")]
 	[IfMax(nameof(Value), 20, "group")]
 	public class DictionaryLengthRangeConditions

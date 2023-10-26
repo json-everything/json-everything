@@ -6,13 +6,12 @@ using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable InconsistentNaming
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Json.Schema.Generation.Tests;
 
 public class PropertyNamingMethodTests
 {
-#pragma warning disable CS0618 // Type or member is obsolete
 	private class TargetWithJsonPropertyName
 	{
 		[JsonPropertyName("JsonName")]
@@ -67,5 +66,4 @@ public class PropertyNamingMethodTests
 
 		AssertEqual(expected, actual);
 	}
-#pragma warning restore CS0618 // Type or member is obsolete
 }
