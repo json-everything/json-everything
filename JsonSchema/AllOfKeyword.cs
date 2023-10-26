@@ -82,14 +82,11 @@ internal class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
 {
 	public override AllOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		if (reader.TokenType == JsonTokenType.StartArray)
-		{
-			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
-			return new AllOfKeyword(schemas);
-		}
+		if (reader.TokenType != JsonTokenType.StartArray)
+			throw new JsonException("Expected array");
 
-		var schema = options.Read<JsonSchema>(ref reader)!;
-		return new AllOfKeyword(schema);
+		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		return new AllOfKeyword(schemas);
 	}
 	public override void Write(Utf8JsonWriter writer, AllOfKeyword value, JsonSerializerOptions options)
 	{
