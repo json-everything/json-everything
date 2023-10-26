@@ -48,7 +48,7 @@ Click ""Run"".
 
 Your code (or an error message) will be output in the bottom editor.
 
-Please be sure to read the [documentation](https://docs.json-everything.net/schema/schema-codegen/)
+Please be sure to read the [documentation](https://docs.json-everything.net/schema/codegen/schema-codegen/)
 to see what is supported.";
 
 	public const string SchemaGenerateData = @"
@@ -59,7 +59,7 @@ Enter the schema for which you like to generate data into the left editor.
 Click ""Run"", and the resulting data will appear in the right editor.
 
 There are a few limitations on which keywords are supported for data generation.  Please
-read the [documentation](https://docs.json-everything.net/schema/schema-datagen/) to find out
+read the [documentation](https://docs.json-everything.net/schema/datagen/schema-datagen/) to find out
 what's supported.";
 
 	public const string SchemaVersion = @"
