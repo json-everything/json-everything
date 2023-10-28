@@ -77,4 +77,13 @@ public class ExpressionCreationTests
 
 		Assert.AreEqual(expected, actual.ToString());
 	}
+
+	[Test]
+	public void LastArrayIndexWithNestProperty()
+	{
+		var expected = "/NestMore/-/Nest";
+		var actual = JsonPointer.Create<TestClass>(x => x.NestMore.Last().Nest);
+
+		Assert.AreEqual(expected, actual.ToString());
+	}
 }

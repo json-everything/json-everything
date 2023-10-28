@@ -174,13 +174,19 @@ public class JsonPointer : IEquatable<JsonPointer>
 				segments.Insert(0, PointerSegment.Create(me.Member.Name));
 				body = me.Expression;
 			}
-			else if (body is MethodCallExpression mce &&
-					 mce.Method.Name.StartsWith("get_") &&
-					 mce.Arguments.Count == 1 &&
-					 mce.Arguments[0].Type == typeof(int))
+			else if (body is MethodCallExpression mce1 &&
+					 mce1.Method.Name.StartsWith("get_") &&
+					 mce1.Arguments.Count == 1 &&
+					 mce1.Arguments[0].Type == typeof(int))
 			{
-				segments.Insert(0, PointerSegment.Create(mce.Arguments[0].ToString()));
-				body = mce.Object;
+				segments.Insert(0, PointerSegment.Create(mce1.Arguments[0].ToString()));
+				body = mce1.Object;
+			}
+			else if (body is MethodCallExpression { Method: { IsStatic: true, Name: nameof(Enumerable.Last) } } mce2 &&
+			         mce2.Method.DeclaringType == typeof(Enumerable))
+			{
+				segments.Insert(0, PointerSegment.Create("-"));
+				body = mce2.Arguments[0];
 			}
 			else if (body is BinaryExpression { Right: ConstantExpression arrayIndexExpression } binaryExpression
 					 and { NodeType: ExpressionType.ArrayIndex })
