@@ -86,12 +86,13 @@
             <param name="segments">A collection of segments.</param>
             <returns>The JSON Pointer.</returns>
         </member>
-        <member name="M:Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+        <member name="M:Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},Json.Pointer.PointerCreationOptions)">
             <summary>
             Generates a JSON Pointer from a lambda expression.
             </summary>
             <typeparam name="T">The type of the object.</typeparam>
             <param name="expression">The lambda expression which gives the pointer path.</param>
+            <param name="options">(optional) Options for creating the pointer.</param>
             <returns>The JSON Pointer.</returns>
             <exception cref="T:System.NotSupportedException">
             Thrown when the lambda expression contains a node that is not a property access or
@@ -184,6 +185,21 @@
         <member name="F:Json.Pointer.JsonPointerStyle.UriEncoded">
             <summary>
             Indicates only URI-encoded JSON pointers.
+            </summary>
+        </member>
+        <member name="T:Json.Pointer.PointerCreationOptions">
+            <summary>
+            Options for creating pointers using <see cref="M:Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},Json.Pointer.PointerCreationOptions)"/>.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PointerCreationOptions.Default">
+            <summary>
+            Default settings.
+            </summary>
+        </member>
+        <member name="P:Json.Pointer.PointerCreationOptions.PropertyNameResolver">
+            <summary>
+            Gets or sets the property naming resolver.  Default is <see cref="F:Json.Pointer.PropertyNameResolvers.AsDeclared"/>.
             </summary>
         </member>
         <member name="T:Json.Pointer.PointerParseException">
@@ -295,6 +311,53 @@
             </summary>
             <param name="value">A pointer segment that represents the value.</param>
             <remarks>No URI encoding is performed for implicit casts.</remarks>
+        </member>
+        <member name="T:Json.Pointer.PropertyNameResolver">
+            <summary>
+            Declares a property name resolution which is used to provide a property name.
+            </summary>
+            <param name="input">The property.</param>
+            <returns>The property name</returns>
+        </member>
+        <member name="T:Json.Pointer.PropertyNameResolvers">
+            <summary>
+            Defines a set of predefined property name resolution methods.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.AsDeclared">
+            <summary>
+            Makes no changes. Properties are generated with the name of the property in code.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.CamelCase">
+            <summary>
+            Property names to camel case (e.g. `camelCase`).
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.PascalCase">
+            <summary>
+            Property names to pascal case (e.g. `PascalCase`).
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.SnakeCase">
+            <summary>
+            Property names to snake case (e.g. `Snake_Case`).
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.UpperSnakeCase">
+            <summary>
+            Property names to upper snake case (e.g. `UPPER_SNAKE_CASE`).
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.KebabCase">
+            <summary>
+            Property names to kebab case (e.g. `Kebab-Case`).
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.PropertyNameResolvers.UpperKebabCase">
+            <summary>
+            Property names to upper kebab case (e.g. `UPPER-KEBAB-CASE`).
+            </summary>
         </member>
         <member name="T:Json.Pointer.RelativeJsonPointer">
             <summary>
