@@ -28,6 +28,28 @@ public class ExpressionCreationTests
 		Assert.AreEqual(expected, actual.ToString());
 	}
 
+	public static IEnumerable<TestCaseData> NamingOptions
+	{
+		get
+		{
+			yield return new TestCaseData(PropertyNameResolvers.AsDeclared, "/NestMore");
+			yield return new TestCaseData(PropertyNameResolvers.CamelCase, "/nestMore");
+			yield return new TestCaseData(PropertyNameResolvers.KebabCase, "/nest-more");
+			yield return new TestCaseData(PropertyNameResolvers.PascalCase, "/NestMore");
+			yield return new TestCaseData(PropertyNameResolvers.SnakeCase, "/nest_more");
+			yield return new TestCaseData(PropertyNameResolvers.UpperKebabCase, "/NEST-MORE");
+			yield return new TestCaseData(PropertyNameResolvers.UpperSnakeCase, "/NEST_MORE");
+		}
+	}
+
+	[TestCaseSource(nameof(NamingOptions))]
+	public void SimplePropertyWithOptions(PropertyNameResolver resolver, string expected)
+	{
+		var actual = JsonPointer.Create<TestClass>(x => x.NestMore, new PointerCreationOptions { PropertyNameResolver = resolver });
+
+		Assert.AreEqual(expected, actual.ToString());
+	}
+
 	[Test]
 	public void JsonProperty()
 	{
