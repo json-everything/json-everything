@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -35,9 +34,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	public PointerSegment[] Segments { get; private set; } = null!;
 
-#pragma warning disable CS8618
 	private JsonPointer() { }
-#pragma warning restore CS8618
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Json.Pointer.Tests;
@@ -64,6 +65,15 @@ public class ExpressionCreationTests
 	{
 		var expected = "/NestMore/5/Nest";
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[5].Nest);
+
+		Assert.AreEqual(expected, actual.ToString());
+	}
+
+	[Test]
+	public void LastArrayIndex()
+	{
+		var expected = "/NestMore/-";
+		var actual = JsonPointer.Create<TestClass>(x => x.NestMore.Last());
 
 		Assert.AreEqual(expected, actual.ToString());
 	}
