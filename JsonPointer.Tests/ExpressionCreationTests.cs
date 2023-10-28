@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using NUnit.Framework;
+// ReSharper disable CollectionNeverUpdated.Local
 
 namespace Json.Pointer.Tests;
 
@@ -9,6 +11,8 @@ public class ExpressionCreationTests
 	private class TestClass
 	{
 		public string String { get; set; }
+		[JsonPropertyName("customName")]
+		public string Other { get; set; }
 		public List<int> Ints { get; set; }
 		public TestClass Nest { get; set; }
 		public List<TestClass> NestMore { get; set; }
@@ -20,6 +24,15 @@ public class ExpressionCreationTests
 	{
 		var expected = "/String";
 		var actual = JsonPointer.Create<TestClass>(x => x.String);
+
+		Assert.AreEqual(expected, actual.ToString());
+	}
+
+	[Test]
+	public void JsonProperty()
+	{
+		var expected = "/customName";
+		var actual = JsonPointer.Create<TestClass>(x => x.Other);
 
 		Assert.AreEqual(expected, actual.ToString());
 	}
