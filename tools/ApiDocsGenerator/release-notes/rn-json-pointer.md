@@ -4,6 +4,14 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "8.10"
 ---
+# [3.1.0](https://github.com/gregsdennis/json-everything/pull/509) {#release-pointer-3.1.0}
+
+Enhanced support for creating pointers via Linq expressions.
+
+- Added support for the Linq method `.Last()` to generate a `-` segment which indicates the index beyond the last item in an array.
+- Added support for `[JsonPropertyName]` attribute.
+- Added support for custom naming transformations.
+
 # [3.0.3](https://github.com/gregsdennis/json-everything/pull/509) {#release-pointer-3.0.3}
 
 Improved performance for `JsonPointer.ToString()` by caching the string representation so that it's only generated once.

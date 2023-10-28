@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -35,9 +35,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	public PointerSegment[] Segments { get; private set; } = null!;
 
-#pragma warning disable CS8618
 	private JsonPointer() { }
-#pragma warning restore CS8618
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.
@@ -158,13 +156,25 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <typeparam name="T">The type of the object.</typeparam>
 	/// <param name="expression">The lambda expression which gives the pointer path.</param>
+	/// <param name="options">(optional) Options for creating the pointer.</param>
 	/// <returns>The JSON Pointer.</returns>
 	/// <exception cref="NotSupportedException">
 	/// Thrown when the lambda expression contains a node that is not a property access or
 	/// <see cref="int"/>-valued indexer.
 	/// </exception>
-	public static JsonPointer Create<T>(Expression<Func<T, object>> expression)
+	public static JsonPointer Create<T>(Expression<Func<T, object>> expression, PointerCreationOptions? options = null)
 	{
+		PointerSegment GetSegment(MemberInfo member)
+		{
+			var attribute = member.GetCustomAttribute<JsonPropertyNameAttribute>();
+			if (attribute is not null)
+				return attribute.Name;
+
+			return options!.PropertyNameResolver!(member);
+		}
+
+		options ??= PointerCreationOptions.Default;
+
 		var body = expression.Body;
 		var segments = new List<PointerSegment>();
 		while (body != null)
@@ -174,16 +184,22 @@ public class JsonPointer : IEquatable<JsonPointer>
 
 			if (body is MemberExpression me)
 			{
-				segments.Insert(0, PointerSegment.Create(me.Member.Name));
+				segments.Insert(0, GetSegment(me.Member));
 				body = me.Expression;
 			}
-			else if (body is MethodCallExpression mce &&
-					 mce.Method.Name.StartsWith("get_") &&
-					 mce.Arguments.Count == 1 &&
-					 mce.Arguments[0].Type == typeof(int))
+			else if (body is MethodCallExpression mce1 &&
+					 mce1.Method.Name.StartsWith("get_") &&
+					 mce1.Arguments.Count == 1 &&
+					 mce1.Arguments[0].Type == typeof(int))
 			{
-				segments.Insert(0, PointerSegment.Create(mce.Arguments[0].ToString()));
-				body = mce.Object;
+				segments.Insert(0, PointerSegment.Create(mce1.Arguments[0].ToString()));
+				body = mce1.Object;
+			}
+			else if (body is MethodCallExpression { Method: { IsStatic: true, Name: nameof(Enumerable.Last) } } mce2 &&
+			         mce2.Method.DeclaringType == typeof(Enumerable))
+			{
+				segments.Insert(0, PointerSegment.Create("-"));
+				body = mce2.Arguments[0];
 			}
 			else if (body is BinaryExpression { Right: ConstantExpression arrayIndexExpression } binaryExpression
 					 and { NodeType: ExpressionType.ArrayIndex })

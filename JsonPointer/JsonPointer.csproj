@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Json.Pointer</RootNamespace>
-    <Version>3.0.3</Version>
+    <Version>3.1.0</Version>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.3.0</FileVersion>
+    <FileVersion>3.1.0.0</FileVersion>
     <PackageId>JsonPointer.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Product>JsonPointer.Net</Product>
@@ -34,6 +34,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.11.10" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
@@ -54,10 +55,8 @@
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 
 </Project>
