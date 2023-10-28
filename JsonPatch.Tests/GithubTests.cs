@@ -180,4 +180,28 @@ public class GithubTests
 		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
 		Assert.IsNotNull(patchConfig.Apply(singleObject).Error);
 	}
+
+	public class Target543
+	{
+		public List<int> Values { get; set; }
+	}
+
+	[Test]
+	public void Issue543_CreatePatchToAddItem()
+	{
+		var targetObj = new Target543 { Values = new List<int> { 1, 2, 3, 4 } };
+		var target = JsonSerializer.SerializeToNode(targetObj);
+
+		var jsonPointer = JsonPointer.Create<Target543>(x => x.Values.Last());
+		var jsonPatch = new JsonPatch(PatchOperation.Add(jsonPointer, (JsonNode)42));
+
+		var expected = new JsonObject
+		{
+			["Values"] = new JsonArray { 1, 2, 3, 4, 42 }
+		};
+
+		var patchResult = jsonPatch.Apply(target);
+
+		Assert.IsTrue(expected.IsEquivalentTo(patchResult.Result));
+	}
 }
