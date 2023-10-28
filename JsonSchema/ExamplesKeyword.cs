@@ -72,9 +72,7 @@ internal class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>
 {
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read<JsonArray>(ref reader);
-		if (array is null)
-			throw new JsonException("Expected an array, but received null");
+		var array = options.Read<JsonArray>(ref reader) ?? throw new JsonException("Expected an array, but received null");
 
 		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);
 	}

@@ -4,6 +4,12 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.2.7](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.2.7}
+
+Fixed an issue with resolving `$ref`s that point into supported non-applicator keywords.  (JSON Schema optional behavior)
+
+Fixed deserialization bug where `allOf`, `anyOf`, and `oneOf` would allow a single schema instead of an array of schemas.  This now throws a `JsonException` as expected.
+
 # [5.2.6](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.2.6}
 
 Fixed an issue where subschemas that declared different `$schema` from their parent couldn't use features that were undefined by parent dialect but defined by the subschema dialect.

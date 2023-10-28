@@ -48,9 +48,8 @@ public static class SchemaKeywordRegistry
 	public static void Register<T>()
 		where T : IJsonSchemaKeyword
 	{
-		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
-		if (keyword == null)
-			throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
+		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>() ??
+		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords[keyword.Name] = typeof(T);
 	}
@@ -62,9 +61,8 @@ public static class SchemaKeywordRegistry
 	public static void Unregister<T>()
 		where T : IJsonSchemaKeyword
 	{
-		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>();
-		if (keyword == null)
-			throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
+		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>() ??
+		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords.TryRemove(keyword.Name, out _);
 	}

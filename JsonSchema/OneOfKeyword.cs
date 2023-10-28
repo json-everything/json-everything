@@ -87,14 +87,11 @@ internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 {
 	public override OneOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		if (reader.TokenType == JsonTokenType.StartArray)
-		{
-			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
-			return new OneOfKeyword(schemas);
-		}
+		if (reader.TokenType != JsonTokenType.StartArray)
+			throw new JsonException("Expected array");
 
-		var schema = options.Read<JsonSchema>(ref reader)!;
-		return new OneOfKeyword(schema);
+		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		return new OneOfKeyword(schemas);
 	}
 	public override void Write(Utf8JsonWriter writer, OneOfKeyword value, JsonSerializerOptions options)
 	{
