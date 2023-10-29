@@ -90,7 +90,7 @@ public static class AttributeHandler
 
 	internal static IEnumerable<Attribute> WhereHandled(this IEnumerable<Attribute> attributes)
 	{
-		return attributes.Where(x => x is IAttributeHandler or ObsoleteAttribute or JsonIgnoreAttribute ||
+		return attributes.Where(x => x is IAttributeHandler or ObsoleteAttribute or JsonIgnoreAttribute or JsonPropertyNameAttribute ||
 									 _externalHandlers.Any(h => typeof(IAttributeHandler<>)
 										 .MakeGenericType(x.GetType())
 										 .IsInstanceOfType(h)));
