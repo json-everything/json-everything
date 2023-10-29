@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.3.0](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.3.0}
+
+Added `EvaluationOptions.AddAnnotationForUnknownKeywords` which adds an annotation that contains an array of unknown keywords in the schema.
+
 # [5.2.7](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.2.7}
 
 Fixed an issue with resolving `$ref`s that point into supported non-applicator keywords.  (JSON Schema optional behavior)
