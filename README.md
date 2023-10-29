@@ -6,7 +6,7 @@
 
 ## What is `json-everything`?
 
-The primary philosophy behind `json-everything` is to ensure that common JSON functionality has good support in the System.Text.Json space.
+The primary philosophy behind `json-everything` is to ensure that common JSON functionality has good support in the _System.Text.Json_ space.
 
 The first step to that is checking whether there exist other projects that support a given function.
 
@@ -128,7 +128,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 </tr>
 <tr>
 <td>Yaml2JsonNode</td>
-<td>Conversions between the YAML document model in [YamlDotNet]() and `JsonNode` (both directions).</td>
+<td>Conversions between the YAML document model in <a href="https://github.com/aaubry/YamlDotNet">YamlDotNet</a> and <code>JsonNode</code> (both directions).</td>
 <td><a href="https://www.nuget.org/packages/Yaml2JsonNode/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Yaml2JsonNode.svg?svg=true"></img></td>
 <td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Yaml2JsonNode.svg?svg=true"></img></a></td>
 </tr>
