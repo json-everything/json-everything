@@ -4,6 +4,12 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.4.1](https://github.com/gregsdennis/json-everything/pull/546) {#release-schemagen-3.4.1}
+
+[#544](https://github.com/gregsdennis/json-everything/issues/544) - Objects that have two properties of the same type, one of which is marked with an `[Obsolete]` attribute will cause all properties to have a `deprecated: true` added to their schemas.  Thanks to [@filzrev](https://github.com/filzrev) for reporting this.
+
+Also affected by this were `[JsonPropertyName]` and `[JsonIgnore]`.
+
 # [3.4.0](https://github.com/gregsdennis/json-everything/pull/529) {#release-schemagen-3.4.0}
 
 [#528](https://github.com/gregsdennis/json-everything/pull/528) - [@juwens](https://github.com/juwens) suggesting adding `PropertyNameResolver` for property naming that takes the entire `MemberInfo` (instead of just the member name) in place of `PropertyNamingMethod` so that additional information can be used to determine a name for the JSON property.
