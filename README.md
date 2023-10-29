@@ -55,10 +55,10 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 <table>
 <tbody>
 <tr>
-<td width="214">JsonSchema.Net</td>
-<td width="415"><a href="https://json-schema.org">JSON Schema</a>, drafts 6 and higher</td>
+<td width="220">JsonSchema.Net</td>
+<td width="389"><a href="https://json-schema.org">JSON Schema</a>, drafts 6 and higher</td>
 <td width="100"><a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.svg?svg=true"></img></td>
-<td width="100"><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a></td>
+<td width="120"><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.Generation</td>
@@ -109,12 +109,12 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 <td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
-<tr>
 <td>JsonPointer.Net</td>
 <td>JSON Pointer (<a href="https://tools.ietf.org/html/rfc6901">RFC 6901</a>) and Relative JSON Pointer (<a href="https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html">Specification</a>)</td>
 <td><a href="https://www.nuget.org/packages/JsonPointer.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPointer.Net.svg?svg=true"></img></td>
 <td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img></a></td>
 </tr>
+<tr>
 <td>JsonLogic</td>
 <td>JsonLogic (<a href="https://jsonlogic.com">Website</a>) (.Net Standard 2.1)</td>
 <td><a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonLogic.svg?svg=true"></img></td>
