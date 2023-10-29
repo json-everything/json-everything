@@ -183,7 +183,7 @@ public class GithubTests
 
 	public class Target543
 	{
-		public List<int> Values { get; set; }
+		public List<int> Values { get; set; } = null!;
 	}
 
 	[Test]

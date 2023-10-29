@@ -285,4 +285,43 @@ public class ClientTests
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
 	}
+
+	private class Type544_ObsoleteProperties
+	{
+		[Obsolete]
+		public int AAA { get; set; }
+
+		public int BBB { get; set; }
+
+		[Obsolete("CCC is deprecated.")]
+		public int CCC { get; set; }
+	}
+
+	[Test]
+	public void Issue544_DeprecatedSpillingOverToOtherPropertiesOfSameType()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("AAA", new JsonSchemaBuilder().Ref("#/$defs/integer")),
+				("BBB", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("CCC", new JsonSchemaBuilder().Ref("#/$defs/integer"))
+			)
+			.Defs(
+				("integer", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Integer)
+					.Deprecated(true)
+				)
+			);
+
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<Type544_ObsoleteProperties>();
+
+		var schema = builder.Build();
+		var schemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+		Console.WriteLine(schemaJson);
+
+		Assert.AreEqual(1, schema.GetProperties()!["BBB"].Keywords!.Count);
+		Assert.AreEqual("type", schema.GetProperties()!["BBB"].Keywords!.First().Keyword());
+	}
 }

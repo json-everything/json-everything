@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Json.Schema.Generation;
 
@@ -89,7 +90,7 @@ public static class AttributeHandler
 
 	internal static IEnumerable<Attribute> WhereHandled(this IEnumerable<Attribute> attributes)
 	{
-		return attributes.Where(x => x is IAttributeHandler ||
+		return attributes.Where(x => x is IAttributeHandler or ObsoleteAttribute or JsonIgnoreAttribute ||
 									 _externalHandlers.Any(h => typeof(IAttributeHandler<>)
 										 .MakeGenericType(x.GetType())
 										 .IsInstanceOfType(h)));
