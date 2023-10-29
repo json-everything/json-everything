@@ -86,6 +86,12 @@ public class EvaluationOptions
 	public bool PreserveDroppedAnnotations { get; set; }
 
 	/// <summary>
+	/// Outputs an annotation that lists any unknown keywords.  Can be
+	/// useful for catching typos.
+	/// </summary>
+	public bool AddAnnotationForUnknownKeywords { get; set; }
+
+	/// <summary>
 	/// Gets the set of keyword types from which annotations will be ignored.
 	/// </summary>
 	public IEnumerable<Type>? IgnoredAnnotations => _ignoredAnnotationTypes;
@@ -126,6 +132,7 @@ public class EvaluationOptions
 			ProcessCustomKeywords = other.ProcessCustomKeywords,
 			OnlyKnownFormats = other.OnlyKnownFormats,
 			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations,
+			AddAnnotationForUnknownKeywords = other.AddAnnotationForUnknownKeywords,
 			Culture = other.Culture,
 			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null
 				? null

@@ -56,6 +56,7 @@ public class SchemaConstraint
 	internal JsonPointer BaseSchemaOffset { get; set; } = JsonPointer.Empty;
 	internal SchemaConstraint? Source { get; set; }
 	internal bool UseLocatorAsInstance { get; set; }
+	internal JsonArray? UnknownKeywords { get; set; }
 
 	internal SchemaConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, Uri schemaBaseUri, JsonSchema localSchema)
 	{

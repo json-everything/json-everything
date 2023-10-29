@@ -19,6 +19,8 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema : IBaseDocument
 {
+	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
+	
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
@@ -236,6 +238,8 @@ public class JsonSchema : IBaseDocument
 		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
 		evaluation.Evaluate(context);
 
+		if (constraint.UnknownKeywords != null)
+			evaluation.Results.SetAnnotation(_unknownKeywordsAnnotationKey, constraint.UnknownKeywords);
 
 		var results = evaluation.Results;
 		switch (options.OutputFormat)
@@ -358,7 +362,14 @@ public class JsonSchema : IBaseDocument
 			}
 			var localConstraints = new List<KeywordConstraint>();
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
+			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version).ToArray();
+			if (context.Options.AddAnnotationForUnknownKeywords)
+			{
+				var unknown = new JsonArray(Keywords!.Except(keywords)
+					.Concat(keywords.OfType<UnrecognizedKeyword>())
+					.Select(x => (JsonNode?)x.Keyword()).ToArray());
+				constraint.UnknownKeywords = unknown;
+			}
 			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 			{
 				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
