@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -51,6 +52,29 @@ public class UnrecognizedKeywordTests
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(2, result.Annotations!.Count);
 		Assert.IsTrue(new JsonArray{"foo"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+	}
+
+	[Test]
+	public void AnnotationsProducedForKnownButUnused()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Dependencies(new Dictionary<string, SchemaOrPropertyList>
+			{
+				["foo"] = (JsonSchema)false
+			});
+
+		var instance = new JsonObject { ["foo"] = 5 };
+		var result = schema.Evaluate(instance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			AddAnnotationForUnknownKeywords = true
+		});
+
+		Assert.IsTrue(result.IsValid);
+		Assert.AreEqual(2, result.Annotations!.Count);
+		Assert.IsTrue(instance.IsEquivalentTo(result.Annotations["dependencies"]));
+		Assert.IsTrue(new JsonArray{"dependencies"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
 	[Test]
