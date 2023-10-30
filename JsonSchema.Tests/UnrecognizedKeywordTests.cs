@@ -64,7 +64,7 @@ public class UnrecognizedKeywordTests
 				["foo"] = (JsonSchema)false
 			});
 
-		var instance = new JsonObject { ["foo"] = 5 };
+		var instance = new JsonObject { ["bar"] = 5 };
 		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
@@ -73,7 +73,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(2, result.Annotations!.Count);
-		Assert.IsTrue(instance.IsEquivalentTo(result.Annotations["dependencies"]));
+		Assert.IsTrue(new JsonObject { ["foo"] = false }.IsEquivalentTo(result.Annotations["dependencies"]));
 		Assert.IsTrue(new JsonArray{"dependencies"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
