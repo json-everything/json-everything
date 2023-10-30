@@ -19,6 +19,8 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema : IBaseDocument
 {
+	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
+	
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
@@ -236,6 +238,8 @@ public class JsonSchema : IBaseDocument
 		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
 		evaluation.Evaluate(context);
 
+		if (options.AddAnnotationForUnknownKeywords && constraint.UnknownKeywords != null)
+			evaluation.Results.SetAnnotation(_unknownKeywordsAnnotationKey, constraint.UnknownKeywords);
 
 		var results = evaluation.Results;
 		switch (options.OutputFormat)
@@ -358,10 +362,28 @@ public class JsonSchema : IBaseDocument
 			}
 			var localConstraints = new List<KeywordConstraint>();
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);
+			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version).ToArray();
+			var unrecognized = Keywords!.OfType<UnrecognizedKeyword>();
+			var unrecognizedButSupported = Keywords!.Except(keywords).ToArray();
+			if (context.Options.AddAnnotationForUnknownKeywords)
+				constraint.UnknownKeywords = new JsonArray(unrecognizedButSupported.Concat(unrecognized)
+					.Select(x => (JsonNode?)x.Keyword())
+					.ToArray());
 			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 			{
 				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
+				localConstraints.Add(keywordConstraint);
+			}
+
+			foreach (var keyword in unrecognizedButSupported)
+			{
+				var serialized = JsonSerializer.Serialize((object) keyword);
+				// TODO: The current keyword serializations include the keyword property name.
+				// This is an oversight and needs to be fixed in future versions.
+				// This is a breaking change: users may have their own keywords.
+				var jsonText = serialized.Split(new[] { ':' }, 2)[1];
+				var json = JsonNode.Parse(jsonText);
+				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
 			}
 
@@ -582,7 +604,7 @@ public class JsonSchema : IBaseDocument
 					var serialized = JsonSerializer.Serialize(localResolvable);
 					// TODO: The current keyword serializations include the keyword property name.
 					// This is an oversight and needs to be fixed in future versions.
-					// This is a breaking change.
+					// This is a breaking change: users may have their own keywords.
 					var jsonText = serialized.Split(new[] { ':' }, 2)[1];
 					var json = JsonNode.Parse(jsonText);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
@@ -716,7 +738,7 @@ internal class SchemaJsonConverter : JsonConverter<JsonSchema>
 		writer.WriteStartObject();
 		foreach (var keyword in value.Keywords!)
 		{
-			// TODO: The property name should be written here, probably.
+			// TODO: The property name should be written here, probably. (breaking change: users may have their own keywords)
 			JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
 		}
 

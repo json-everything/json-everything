@@ -117,6 +117,16 @@
 										</span>
 									</label>
 									<label class="my-2">
+										<InputCheckbox @bind-Value="_options.AddAnnotationForUnknownKeywords" DisplayName="Unknown keywords annotation" />
+										Unknown keywords annotation
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaUnknownKeywordsAnnotation"></MarkdownSpan>
+											</span>
+										</span>
+									</label>
+									<label class="my-2">
 										<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format"/>
 										Validate <span class="font-monospace">format</span>
 										<span class="tooltip-icon">
@@ -212,13 +222,15 @@
 		public SpecVersion OutputStructure { get; set; } = SpecVersion.DraftNext;
 		public bool ValidateFormat { get; set; }
 		public bool IncludeDroppedAnnotations { get; set; }
+		public bool AddAnnotationForUnknownKeywords { get; set; }
 
 		public EvaluationOptions ToValidationOptions() => new()
 		{
 			OutputFormat = OutputFormat,
 			EvaluateAs = Version,
 			RequireFormatValidation = ValidateFormat,
-			PreserveDroppedAnnotations = IncludeDroppedAnnotations
+			PreserveDroppedAnnotations = IncludeDroppedAnnotations,
+			AddAnnotationForUnknownKeywords = AddAnnotationForUnknownKeywords
 		};
 	}
 

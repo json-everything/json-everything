@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -32,7 +33,48 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations.First().Value));
+		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations["foo"]));
+	}
+
+	[Test]
+	public void UnknownKeywordAnnotationIsProduced()
+	{
+		var schemaText = "{\"foo\": \"bar\"}";
+
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+
+		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			AddAnnotationForUnknownKeywords = true
+		});
+
+		Assert.IsTrue(result.IsValid);
+		Assert.AreEqual(2, result.Annotations!.Count);
+		Assert.IsTrue(new JsonArray{"foo"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+	}
+
+	[Test]
+	public void AnnotationsProducedForKnownButUnused()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Dependencies(new Dictionary<string, SchemaOrPropertyList>
+			{
+				["foo"] = (JsonSchema)false
+			});
+
+		var instance = new JsonObject { ["bar"] = 5 };
+		var result = schema.Evaluate(instance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			AddAnnotationForUnknownKeywords = true
+		});
+
+		Assert.IsTrue(result.IsValid);
+		Assert.AreEqual(2, result.Annotations!.Count);
+		Assert.IsTrue(new JsonObject { ["foo"] = false }.IsEquivalentTo(result.Annotations["dependencies"]));
+		Assert.IsTrue(new JsonArray{"dependencies"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
 	[Test]
@@ -46,7 +88,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations.First().Value));
+		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations["foo"]));
 	}
 
 	[Test]
@@ -74,7 +116,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations.First().Value));
+		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations["foo"]));
 	}
 
 	[Test]
