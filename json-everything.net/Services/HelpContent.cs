@@ -90,6 +90,12 @@ Per the JSON Schema specification, subschemas which fail evaluation must drop th
 This option will include these annotations under a `droppedAnnotations` property when using the
 ""Draft-Next"" output. This can be useful for debugging.";
 
+	public const string SchemaUnknownKeywordsAnnotation = @"
+(experimental) Adds an annotation to the output that contains a list of schema keywords that were
+unrecognized by its meta-schema.  See
+[this JSON Schema discussion](https://github.com/orgs/json-schema-org/discussions/512) for more
+information to provide feedback on the potential feature.";
+
 	public const string SchemaValidateFormat = @"
 Allows you to specify whether the `format` keyword should be asserted.  Typically this is an
 annotation-only keyword, meaning that it will appear in the output, but it will not be validated.";
