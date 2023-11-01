@@ -3,7 +3,7 @@ using Json.More;
 
 namespace Json.JsonE;
 
-public static class JsonNodeExtensions
+internal static class JsonNodeExtensions
 {
 	private static readonly JsonNode? _emptyString = string.Empty;
 	private static readonly JsonNode? _zero = 0;

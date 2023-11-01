@@ -53,9 +53,12 @@
 		<ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Operators\" />
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 
 </Project>

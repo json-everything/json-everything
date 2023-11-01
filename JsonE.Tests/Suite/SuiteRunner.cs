@@ -42,7 +42,7 @@ public class SuiteRunner
 			var template = test.Template.Deserialize<JsonETemplate>()!;
 			var result = template.Evaluate(test.Context);
 
-			if (!test.HasError)
+			if (test.HasError)
 			{
 				Assert.Fail($"Expected error: {test.Error}");
 			}

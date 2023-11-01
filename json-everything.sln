@@ -140,7 +140,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JSON-e", "JSON-e", "{36E07D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE", "JsonE\JsonE.csproj", "{DCAA7E94-74F1-4B18-82A1-64F274E21394}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic.Tests", "JsonE.Tests\JsonLogic.Tests.csproj", "{02701B75-3297-4B4B-BECD-5F7D61D11B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE.Tests", "JsonE.Tests\JsonE.Tests.csproj", "{02701B75-3297-4B4B-BECD-5F7D61D11B8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
