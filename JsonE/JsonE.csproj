@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>Json.JsonE</RootNamespace>
+		<AssemblyName>JsonE.Net</AssemblyName>
+		<Authors>Greg Dennis</Authors>
+		<Company>Greg Dennis</Company>
+		<Description>
+			[JSON-e](https://json-e.js.org) built on the System.Text.Json namespace.
+		
+			Read the full documentation at https://docs.json-everything.net/json-e/basics/.
+		</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+		<PackageIcon>json-logo-256.png</PackageIcon>
+		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+		<PackageTags>json json-e jsone template transform</PackageTags>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-e/</PackageReleaseNotes>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+		<DocumentationFile>JsonE.xml</DocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<Nullable>enable</Nullable>
+		<NoWarn>CS1570</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-e.md" Link="release-notes.md" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\Resources\json-logo-256.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
+		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+	</Target>
+
+</Project>

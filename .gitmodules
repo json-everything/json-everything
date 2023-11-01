@@ -13,3 +13,6 @@
 [submodule "ref-repos/json-schema-vocab-test-suites"]
 	path = ref-repos/json-schema-vocab-test-suites
 	url = https://github.com/gregsdennis/json-schema-vocab-test-suites.git
+[submodule "ref-repos/json-e"]
+	path = ref-repos/json-e
+	url = https://github.com/json-e/json-e.git
