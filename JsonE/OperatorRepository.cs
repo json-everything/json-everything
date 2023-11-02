@@ -14,6 +14,7 @@ internal static class OperatorRepository
 		[FlattenOperator.Name] = new FlattenOperator(),
 		[FlattenDeepOperator.Name] = new FlattenDeepOperator(),
 		[MergeOperator.Name] = new MergeOperator(),
+		[MergeDeepOperator.Name] = new MergeDeepOperator(),
 	};
 
 	public static (IOperator?, JsonNode?) Get(JsonNode? node)
