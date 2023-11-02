@@ -50,7 +50,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+	  <ProjectReference Include="..\Json.More\Json.More.csproj" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

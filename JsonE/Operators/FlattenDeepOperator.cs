@@ -2,32 +2,31 @@
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
-using static Json.JsonE.Operators.CommonErrors;
 
 namespace Json.JsonE.Operators;
 
-internal class FlattenOperator : IOperator
+internal class FlattenDeepOperator : IOperator
 { 
-	public const string Name = "$flatten";
+	public const string Name = "$flattenDeep";
 
 	public void Validate(JsonNode? template)
 	{
 		var obj = template!.AsObject();
 
 		if (obj.Count > 1)
-			throw new TemplateException(UndefinedProperties(Name, obj.Select(x => x.Key).Where(x => x != Name)));
+			throw new TemplateException(CommonErrors.UndefinedProperties(Name, obj.Select(x => x.Key).Where(x => x != Name)));
 
 		var parameter = obj[Name];
 		if (parameter.IsTemplateOr<JsonArray>()) return;
 
-		throw new TemplateException(IncorrectValueType(Name, "an array"));
+		throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array"));
 	}
 
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var value = template!.AsObject()[Name]!;
 		var array = value.TryGetTemplate(out var t)
-			? t!.Evaluate(context) as JsonArray ?? throw new TemplateException(IncorrectValueType(Name, "an array"))
+			? t!.Evaluate(context) as JsonArray ?? throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array"))
 			: value.AsArray();
 
 		return array.SelectMany(Flatten).ToJsonArray();
@@ -43,7 +42,10 @@ internal class FlattenOperator : IOperator
 
 		foreach (var item in arr)
 		{
-			yield return item;
+			foreach (var child in Flatten(item))
+			{
+				yield return child;
+			}
 		}
 	}
 }

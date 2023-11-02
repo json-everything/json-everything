@@ -10,8 +10,10 @@ internal static class OperatorRepository
 {
 	private static readonly Dictionary<string, IOperator> _operators = new()
 	{
-		["$eval"] = new EvalOperator(),
+		[EvalOperator.Name] = new EvalOperator(),
 		[FlattenOperator.Name] = new FlattenOperator(),
+		[FlattenDeepOperator.Name] = new FlattenDeepOperator(),
+		[MergeOperator.Name] = new MergeOperator(),
 	};
 
 	public static (IOperator?, JsonNode?) Get(JsonNode? node)
@@ -22,7 +24,6 @@ internal static class OperatorRepository
 		var op = operatorKeys.Length switch
 		{
 			> 1 => throw new TemplateException("only one operator allowed"),
-			// TODO: check if `<identifier>` should be replaced by the key
 			0 => HasReservedWords(obj)
 				? throw new TemplateException("$<identifier> is reserved; use $$<identifier>")
 				: null,
@@ -31,9 +32,13 @@ internal static class OperatorRepository
 
 		if (op is null) return (null, node);
 
-		var value = obj[operatorKeys[0]];
-		var newTemplate = JsonETemplate.CreateInternal(value);
-		obj[operatorKeys[0]] = newTemplate;
+		var allKeys = obj.Select(x => x.Key).ToArray();
+		foreach (var key in allKeys)
+		{
+			var value = obj[key];
+			var newValue = value.CheckForTemplate();
+			obj[key] = newValue;
+		}
 
 		op.Validate(obj);
 		

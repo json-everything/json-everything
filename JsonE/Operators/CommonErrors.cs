@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.JsonE.Operators;
 
 internal static class CommonErrors
 {
 	public static string UndefinedProperties(string op, IEnumerable<string> extraProperties) => 
-		$"{op} has undefined properties: {string.Join(", ", extraProperties)}";
+		$"{op} has undefined properties: {string.Join(" ", extraProperties.OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase))}";
 
 	public static string IncorrectValueType(string op, string expectedType) =>
-		$"{op} value must evaluate to an {expectedType}";
+		$"{op} value must evaluate to {expectedType}";
 }

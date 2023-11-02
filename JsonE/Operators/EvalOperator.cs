@@ -5,6 +5,8 @@ namespace Json.JsonE.Operators;
 
 internal class EvalOperator : IOperator
 {
+	public const string Name = "$eval";
+
 	public void Validate(JsonNode? template)
 	{
 		

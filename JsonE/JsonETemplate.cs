@@ -29,16 +29,20 @@ public class JsonETemplate
 	/// <returns></returns>
 	public static JsonETemplate Create(JsonNode? node)
 	{
-		return CreateInternal(node.Copy());
-	}
-
-	internal static JsonETemplate CreateInternal(JsonNode? node)
-	{
 		if (node is JsonValue value && value.GetValue<object>() is JsonETemplate template)
 			return template;
 
 		var (op, newTemplate) = OperatorRepository.Get(node);
 		return new JsonETemplate(newTemplate, op);
+	}
+
+	internal static JsonNode? CreateNode(JsonNode? node)
+	{
+		if (node is JsonValue value && value.GetValue<object>() is JsonETemplate template)
+			return template;
+
+		var (op, newTemplate) = OperatorRepository.Get(node);
+		return op is null ? node : new JsonETemplate(newTemplate, op);
 	}
 
 	/// <summary>
@@ -79,7 +83,7 @@ internal class JsonETemplateJsonConverter : JsonConverter<JsonETemplate>
 	{
 		var node = options.Read<JsonNode?>(ref reader);
 
-		return JsonETemplate.CreateInternal(node);
+		return JsonETemplate.Create(node);
 	}
 
 	public override void Write(Utf8JsonWriter writer, JsonETemplate value, JsonSerializerOptions options)
