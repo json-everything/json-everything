@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Data.Common;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.JsonE;
@@ -19,5 +20,15 @@ internal static class JsonNodeExtensions
 		if (node.IsEquivalentTo(_emptyString)) return false;
 
 		return true;
+	}
+
+	public static bool TryGetTemplate(this JsonNode? node, out JsonETemplate? template)
+	{
+		template = null;
+		return node switch
+		{
+			JsonValue value when value.TryGetValue(out template) => true,
+			_ => false
+		};
 	}
 }
