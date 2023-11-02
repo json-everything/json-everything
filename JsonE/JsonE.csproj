@@ -53,6 +53,10 @@
 	  <ProjectReference Include="..\Json.More\Json.More.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Expressions\" />
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
