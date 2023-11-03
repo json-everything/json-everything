@@ -34,6 +34,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="IndexRange" Version="1.0.3" PrivateAssests="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
@@ -51,10 +52,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Json.More\Json.More.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Expressions\" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
