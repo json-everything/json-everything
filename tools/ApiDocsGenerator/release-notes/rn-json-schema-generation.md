@@ -4,7 +4,7 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
-# [3.4.2](https://github.com/gregsdennis/json-everything/pull/553) {#release-schemagen-3.4.1}
+# [3.4.2](https://github.com/gregsdennis/json-everything/pull/553) {#release-schemagen-3.4.2}
 
 [#551](https://github.com/gregsdennis/json-everything/issues/551) - Strings implement `IEnumerable<T>` and thus are considered arrays.  As a result `minItems` and `maxItems` were being applied  Thanks to [@domchlouba](https://github.com/domchlouba) for reporting this and recommending the fix.
 
