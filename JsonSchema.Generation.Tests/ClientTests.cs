@@ -324,4 +324,28 @@ public class ClientTests
 		Assert.AreEqual(1, schema.GetProperties()!["BBB"].Keywords!.Count);
 		Assert.AreEqual("type", schema.GetProperties()!["BBB"].Keywords!.First().Keyword());
 	}
+
+	private class Type551_MinItemsOnString
+	{
+		[MinItems(1)]
+		[MaxItems(10)]
+		public string Value { get; set; }
+	}
+
+	[Test]
+	public void Issue551_MinMaxItemsOnStringProperty()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			);
+
+		JsonSchema schema = new JsonSchemaBuilder().FromType<Type551_MinItemsOnString>();
+		var schemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+		Console.WriteLine(schemaJson);
+
+		Assert.AreEqual(1, schema.GetProperties()!["Value"].Keywords!.Count);
+		Assert.AreEqual("type", schema.GetProperties()!["Value"].Keywords!.First().Keyword());
+	}
 }
