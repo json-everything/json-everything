@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.4.2](https://github.com/gregsdennis/json-everything/pull/553) {#release-schemagen-3.4.2}
+
+[#551](https://github.com/gregsdennis/json-everything/issues/551) - Strings implement `IEnumerable<T>` and thus were considered arrays.  As a result `minItems` and `maxItems` were being applied.  Thanks to [@domchlouba](https://github.com/domchlouba) for reporting this and recommending the fix.
+
 # [3.4.1](https://github.com/gregsdennis/json-everything/pull/546) {#release-schemagen-3.4.1}
 
 [#544](https://github.com/gregsdennis/json-everything/issues/544) - Objects that have two properties of the same type, one of which is marked with an `[Obsolete]` attribute will cause all properties to have a `deprecated: true` added to their schemas.  Thanks to [@filzrev](https://github.com/filzrev) for reporting this.

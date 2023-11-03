@@ -20,9 +20,10 @@ public static class TypeExtensions
 	/// <returns>true if the type represents an array; false otherwise.</returns>
 	public static bool IsArray(this Type type)
 	{
-		return type.IsArray ||
-			   type == typeof(Array) ||
-			   typeof(IEnumerable).IsAssignableFrom(type);
+		return type != typeof(string) &&
+		       (type.IsArray ||
+		        type == typeof(Array) ||
+		        typeof(IEnumerable).IsAssignableFrom(type));
 	}
 
 	internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
