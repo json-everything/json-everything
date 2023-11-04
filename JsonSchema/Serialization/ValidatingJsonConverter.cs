@@ -64,7 +64,11 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory = o =>
 		{
 			var newOptions = new JsonSerializerOptions(o);
-			newOptions.Converters.Remove(this);
+			var existingConverters = o.Converters.OfType<ValidatingJsonConverter>().ToArray();
+			foreach (var c in existingConverters)
+			{
+				newOptions.Converters.Remove(c);
+			}
 			return newOptions;
 		};
 		converter = (JsonConverter)Activator.CreateInstance(converterType, schemaAttribute.Schema, optionsFactory);
@@ -114,7 +118,11 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 
 		if (validation.IsValid)
 			// TODO: this does not use the options reader because at least one test failed with a NotSupportedException
+			/*
+			return newOptions.Read<T>(ref reader);
+			/*/
 			return JsonSerializer.Deserialize<T>(ref reader, newOptions);
+			//*/
 
 		throw new JsonException("JSON does not meet schema requirements")
 		{
