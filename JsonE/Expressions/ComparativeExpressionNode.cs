@@ -10,8 +10,7 @@ internal static class ComparativeExpressionParser
 {
 	private static readonly IComparativeExpressionParser[] _parsers =
 	{
-		new BinaryComparativeExpressionParser(),
-		new UnaryComparativeExpressionParser()
+		new BinaryComparativeExpressionParser()
 	};
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ComparativeExpressionNode? expression)

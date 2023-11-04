@@ -16,7 +16,7 @@ internal static class ValueExpressionParser
 	{
 		new FunctionValueExpressionParser(),
 		new LiteralExpressionParser(),
-		new PathExpressionParser(),
+		new AccessorExpressionParser(),
 	};
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ValueExpressionNode? expression)

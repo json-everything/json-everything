@@ -5,7 +5,7 @@ namespace Json.JsonE.Expressions;
 
 internal static class FunctionExpressionParser
 {
-	public static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out List<ExpressionNode>? arguments, out IFunctionDefinition? function)
+	public static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out List<ExpressionNode>? arguments, out FunctionDefinition? function)
 	{
 		int i = index;
 
@@ -24,7 +24,7 @@ internal static class FunctionExpressionParser
 			return false;
 		}
 
-		if (!FunctionRepository.TryGet(name, out function))
+		if (!FunctionRepository.TryGet(name!, out function))
 		{
 			arguments = null;
 			function = null;
@@ -52,7 +52,7 @@ internal static class FunctionExpressionParser
 		arguments = new List<ExpressionNode>();
 		var done = false;
 
-		var parameterTypeList = ((IReflectiveFunctionDefinition)function).Evaluator.ArgTypes;
+		var parameterTypeList = function!.ParameterTypes;
 		var parameterIndex = 0;
 
 		while (i < source.Length && !done)
@@ -71,55 +71,14 @@ internal static class FunctionExpressionParser
 				return false;
 			}
 
-			if (parameterTypeList[parameterIndex] == FunctionType.Value)
+			if (!ValueExpressionParser.TryParse(source, ref i, out var expr))
 			{
-				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options))
-				{
-					arguments = null;
-					function = null;
-					return false;
-				}
-				arguments.Add(expr);
+				arguments = null;
+				function = null;
+				return false;
 			}
-			else if (parameterTypeList[parameterIndex] == FunctionType.Logical)
-			{
 
-				if (!BooleanResultExpressionParser.TryParse(source, ref i, out var expr, options))
-				{
-					arguments = null;
-					function = null;
-					return false;
-				}
-				arguments.Add(expr);
-			}
-			else
-			{
-				// this must return a path or function that returns nodelist
-				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options))
-				{
-					arguments = null;
-					function = null;
-					return false;
-				}
-
-				switch (expr)
-				{
-					case PathExpressionNode:
-						arguments.Add(expr);
-						break;
-					case FunctionValueExpressionNode { Function: not NodelistFunctionDefinition }:
-						arguments = null;
-						function = null;
-						return false;
-					case FunctionValueExpressionNode funcExpr:
-						arguments.Add(expr);
-						break;
-					default:
-						arguments = null;
-						function = null;
-						return false;
-				}
-			}
+			arguments.Add(expr!);
 
 			if (!source.ConsumeWhitespace(ref i))
 			{

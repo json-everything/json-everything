@@ -80,22 +80,22 @@ internal static class BinaryComparativeOperatorParser
 
 		var portion = source[index..(index + 2)];
 
-		if (portion.Equals("==", StringComparison.Ordinal))
+		if (portion.Equals("==".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.EqualTo;
 			index += 2;
 		}
-		else if (portion.Equals("!=", StringComparison.Ordinal))
+		else if (portion.Equals("!=".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.NotEqualTo;
 			index += 2;
 		}
-		else if (portion.Equals("<=", StringComparison.Ordinal))
+		else if (portion.Equals("<=".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.LessThanOrEqualTo;
 			index += 2;
 		}
-		else if (portion.Equals(">=", StringComparison.Ordinal))
+		else if (portion.Equals(">=".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.GreaterThanOrEqualTo;
 			index += 2;
@@ -110,7 +110,7 @@ internal static class BinaryComparativeOperatorParser
 			op = Operators.GreaterThan;
 			index++;
 		}
-		else if (portion.Equals("in", StringComparison.Ordinal))
+		else if (portion.Equals("in".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.In;
 			index += 2;
@@ -127,7 +127,7 @@ internal static class BinaryComparativeOperatorParser
 
 internal static class BinaryLogicalOperatorParser
 {
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IBinaryLogicalOperator? op)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out IBinaryLogicalOperator? op)
 	{
 		if (!source.ConsumeWhitespace(ref index))
 		{
@@ -143,12 +143,12 @@ internal static class BinaryLogicalOperatorParser
 
 		var portion = source[index..(index + 2)];
 
-		if (portion.Equals("&&", StringComparison.Ordinal))
+		if (portion.Equals("&&".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.And;
 			index += 2;
 		}
-		else if (portion.Equals("||", StringComparison.Ordinal))
+		else if (portion.Equals("||".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.Or;
 			index += 2;
@@ -165,7 +165,7 @@ internal static class BinaryLogicalOperatorParser
 
 internal static class UnaryLogicalOperatorParser
 {
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out IUnaryLogicalOperator? op)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out IUnaryLogicalOperator? op)
 	{
 		if (!source.ConsumeWhitespace(ref index))
 		{

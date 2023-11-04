@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions;
 
-internal abstract class BooleanResultExpressionNode : ExpressionNode, IFilterExpression
+internal abstract class BooleanResultExpressionNode : ExpressionNode, IExpression
 {
 	public abstract bool Evaluate(EvaluationContext context);
 }

@@ -11,8 +11,7 @@ internal static class LogicalExpressionParser
 	private static readonly ILogicalExpressionParser[] _parsers =
 	{
 		new BinaryLogicalExpressionParser(),
-		new UnaryLogicalExpressionParser(),
-		new FunctionBooleanExpressionParser()
+		new UnaryLogicalExpressionParser()
 	};
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out LogicalExpressionNode? expression)

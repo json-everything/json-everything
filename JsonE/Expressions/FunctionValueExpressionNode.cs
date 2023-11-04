@@ -8,33 +8,29 @@ namespace Json.JsonE.Expressions;
 
 internal class FunctionValueExpressionNode : ValueExpressionNode
 {
-	public IFunctionDefinition Function { get; }
+	public FunctionDefinition Function { get; }
 	public ExpressionNode[] Parameters { get; }
 
-	public FunctionValueExpressionNode(IFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
+	public FunctionValueExpressionNode(FunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
 	}
 
-	public override PathValue? Evaluate(EvaluationContext context)
+	public override JsonNode? Evaluate(EvaluationContext context)
 	{
-		var parameterValues = Parameters.Select(x =>
-		{
-			return x switch
-			{
-				ValueExpressionNode c => (object?)c.Evaluate(context),
-				BooleanResultExpressionNode b => b.Evaluate(globalParameter, localParameter),
-				_ => throw new ArgumentOutOfRangeException("parameter")
-			};
-		}).ToArray();
+		throw new NotImplementedException();
+		//var parameterValues = Parameters.Select(x =>
+		//{
+		//	return x switch
+		//	{
+		//		ValueExpressionNode c => (object?)c.Evaluate(context),
+		//		BooleanResultExpressionNode b => b.Evaluate(context),
+		//		_ => throw new ArgumentOutOfRangeException("parameter")
+		//	};
+		//}).ToArray();
 
-		return Function switch
-		{
-			FunctionDefinition vFunc => vFunc.Invoke(parameterValues),
-			NodelistFunctionDefinition nFunc => nFunc.Invoke(parameterValues),
-			_ => throw new ArgumentException("This shouldn't happen.  Logical functions are not valid here.")
-		};
+		//return Function.Invoke(parameterValues);
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -57,29 +53,24 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 
 	public override string ToString()
 	{
-		return $"{Function.Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)Parameters)})";
+		throw new NotImplementedException();
+		//return $"{Function.Name}({string.Join(',', Parameters.Select(x => x.ToString()).ToArray())})";
 	}
 }
 
 internal class FunctionValueExpressionParser : IValueExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ValueExpressionNode? expression)
 	{
 		int i = index;
-		if (!FunctionExpressionParser.TryParseFunction(source, ref i, out var parameters, out var function, options))
-		{
-			expression = null;
-			return false;
-		}
-
-		if (function is not FunctionDefinition valueFunction)
+		if (!FunctionExpressionParser.TryParseFunction(source, ref i, out var parameters, out var function))
 		{
 			expression = null;
 			return false;
 		}
 
 		index = i;
-		expression = new FunctionValueExpressionNode(valueFunction, parameters);
+		expression = new FunctionValueExpressionNode(function!, parameters!);
 		return true;
 	}
 }
