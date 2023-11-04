@@ -261,6 +261,36 @@ public class DeserializationTests
 		}
 	}
 
+	[Test]
+	public void WithSchema_MultipleDeserializations()
+	{
+		try
+		{
+			var jsonText = @"{
+  ""Bar"": ""bartholomew"",
+  ""Value"": 42
+}";
+
+			for (int i = 0; i < 10; i++)
+			{
+				var options = new JsonSerializerOptions
+				{
+					WriteIndented = true,
+					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+					Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
+				};
+
+				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, options);
+
+				Console.WriteLine(JsonSerializer.Serialize(model, options));
+			}
+		}
+		catch (Exception e)
+		{
+			HandleException(e);
+			throw;
+		}
+	}
 	/// <summary>
 	/// The validation result is passed in the <see cref="Exception.Data"/>
 	/// property under the `"validation"` key.

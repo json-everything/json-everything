@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.3.1](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.3.1}
+
+[#550](https://github.com/gregsdennis/json-everything/issues/550) - Fixed a stack overflow that would occur with `ValidatingJsonConverter` when using multiple options objects.  Thanks to [@EmmyDream](https://github.com/EmmyDream) for reporting.
+
 # [5.3.0](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.3.0}
 
 Added `EvaluationOptions.AddAnnotationForUnknownKeywords` which adds an annotation that contains an array of unknown keywords in the schema.
