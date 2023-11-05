@@ -165,4 +165,9 @@ internal static class SpanExtensions
 			return false;
 		}
 	}
+
+	public static bool TryParseYaml(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
+	{
+		throw new NotImplementedException();
+	}
 }

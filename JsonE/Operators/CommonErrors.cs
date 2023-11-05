@@ -12,7 +12,7 @@ internal static class CommonErrors
 	public static string IncorrectValueType(string op, string expectedType) =>
 		$"{op} value must evaluate to {expectedType}";
 
-	public static string IncorrectValueTypeFunction(string op) =>
+	public static string IncorrectArgType(string op) =>
 		$"invalid arguments to builtin: {op}";
 
 	public static string EndOfInput(int i) =>

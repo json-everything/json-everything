@@ -22,7 +22,7 @@ internal class FunctionExpressionNode : ExpressionNode
 	{
 		var parameterValues = Parameters.Select(x => x.Evaluate(context)).ToArray();
 
-		return Function.Invoke(parameterValues);
+		return Function.Invoke(parameterValues, context);
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -124,7 +124,8 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 				return false;
 			}
 
-			if (parameterIndex >= parameterTypeList.Length)
+			// TODO: validate arg types
+			if (!function.AcceptsParamsList && parameterIndex >= parameterTypeList.Length)
 			{
 				arguments = null;
 				function = null;
@@ -164,7 +165,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			parameterIndex++;
 		}
 
-		if (parameterIndex != parameterTypeList.Length)
+		if (!function.AcceptsParamsList && parameterIndex != parameterTypeList.Length)
 		{
 			arguments = null;
 			function = null;

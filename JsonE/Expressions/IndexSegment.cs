@@ -29,6 +29,22 @@ internal class IndexSegment : IContextAccessorSegment
 				return true;
 			}
 		}
+		else if (target is JsonValue val && val.TryGetValue(out string? str))
+		{
+			if (_index < 0)
+			{
+				if (-_index < str.Length)
+				{
+					value = str[str.Length + _index];
+					return true;
+				}
+			}
+			else if (_index < str.Length)
+			{
+				value = str[_index];
+				return true;
+			}
+		}
 
 		value = null;
 		return false;

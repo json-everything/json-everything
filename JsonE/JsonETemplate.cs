@@ -61,7 +61,7 @@ public class JsonETemplate
 		return Evaluate(evalContext);
 	}
 
-	private static void ValidateContext(JsonNode context)
+	private static void ValidateContext(JsonNode? context)
 	{
 		if (context is not JsonObject obj)
 			throw new TemplateException("context must be an object");
@@ -90,17 +90,17 @@ public class JsonETemplate
 	}
 }
 
-internal class JsonETemplateJsonConverter : JsonConverter<JsonETemplate>
+internal class JsonETemplateJsonConverter : JsonConverter<JsonETemplate?>
 {
-	public override JsonETemplate? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override JsonETemplate Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = options.Read<JsonNode?>(ref reader);
 
 		return JsonETemplate.Create(node);
 	}
 
-	public override void Write(Utf8JsonWriter writer, JsonETemplate value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, JsonETemplate? value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Template, options);
+		JsonSerializer.Serialize(writer, value?.Template, options);
 	}
 }

@@ -1,0 +1,21 @@
+﻿using System.Text.Json.Nodes;
+using Json.JsonE.Operators;
+using Json.More;
+
+namespace Json.JsonE.Functions;
+
+internal class StrFunction : FunctionDefinition
+{
+	public override string Name => "str";
+	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Number };
+	public override FunctionValueType ReturnType => FunctionValueType.String;
+
+	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
+	{
+		var num = (arguments[0] as JsonValue)?.GetNumber();
+		if (!num.HasValue)
+			throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+
+		return num.ToString();
+	}
+}

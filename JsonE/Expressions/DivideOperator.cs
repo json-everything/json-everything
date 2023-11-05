@@ -16,7 +16,7 @@ internal class DivideOperator : IBinaryOperator
 		var rNumber = rValue.GetNumber();
 
 		return rNumber is null or 0
-			? null
+			? throw new InterpreterException("divide by zero")
 			: (JsonNode?)(lValue.GetNumber() / rNumber);
 	}
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Nodes;
 
-namespace Json.JsonE.Expressions;
+namespace Json.JsonE.Functions;
 
 internal abstract class FunctionDefinition
 {
@@ -9,9 +9,11 @@ internal abstract class FunctionDefinition
 
 	public abstract FunctionValueType[] ParameterTypes { get; }
 
+	public virtual bool AcceptsParamsList => false;
+
 	public abstract FunctionValueType ReturnType { get; }
 
-	internal abstract JsonNode? Invoke(JsonNode?[] arguments);
+	internal abstract JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context);
 }
 
 [Flags]
@@ -23,5 +25,6 @@ internal enum FunctionValueType
 	Number = 1 << 2,
 	String = 1 << 3,
 	Array = 1 << 4,
-	Object = 1 << 5
+	Object = 1 << 5,
+	Any = 1 << 6 - 1
 }

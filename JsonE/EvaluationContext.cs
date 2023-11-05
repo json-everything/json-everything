@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
 
@@ -33,5 +32,15 @@ internal class EvaluationContext
 		}
 
 		throw new InterpreterException($"unknown context value {identifier}");
+	}
+
+	public bool IsDefined(ContextAccessor identifier)
+	{
+		foreach (var context in _contextStack)
+		{
+			if (identifier.TryFind(context, out _)) return true;
+		}
+
+		return false;
 	}
 }
