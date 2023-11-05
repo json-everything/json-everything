@@ -73,34 +73,4 @@ internal static class UtilityExtensions
 		index = i;
 		return true;
 	}
-
-	public static string HandleDotNetSupportIssues(this string regex)
-	{
-		var sb = new StringBuilder();
-		var escaped = false;
-		foreach (var c in regex)
-		{
-			if (!escaped && c == '.')
-			{
-				// The Regex class doesn't match `.` on non-BMP unicode very well,
-				// so we need to translate that to something it does understand.
-				// Ref: https://github.com/ietf-wg-jsonpath/iregexp/issues/22#issuecomment-1510543510
-				sb.Append(@"(\P{Cs}|\p{Cs}\p{Cs})");
-			}
-			else
-			{
-				sb.Append(c);
-				if (c == '\\')
-				{
-					escaped = true;
-					continue;
-				}
-			}
-
-			escaped = false;
-		}
-
-		var dotnetTranslation = sb.ToString();
-		return dotnetTranslation;
-	}
 }

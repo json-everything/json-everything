@@ -1,7 +1,9 @@
 ﻿using System.Text.Json;
 using System;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Json.More;
 
 namespace Json.JsonE;
@@ -52,9 +54,20 @@ public class JsonETemplate
 	/// <returns>A new JSON value result.</returns>
 	public JsonNode? Evaluate(JsonNode? context)
 	{
+		ValidateContext(context);
+
 		var evalContext = new EvaluationContext(context);
 
 		return Evaluate(evalContext);
+	}
+
+	private static void ValidateContext(JsonNode context)
+	{
+		if (context is not JsonObject obj)
+			throw new TemplateException("context must be an object");
+
+		if (obj.Any(x => !Regex.IsMatch(x.Key, "^[a-zA-Z_][a-zA-Z0-9_]*$")))
+			throw new TemplateException("top level keys of context must follow /[a-zA-Z_][a-zA-Z0-9_]*/");
 	}
 
 	internal JsonNode? Evaluate(EvaluationContext context)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Json.JsonE.Expressions;
 
 namespace Json.JsonE;
 
@@ -24,8 +25,13 @@ internal class EvaluationContext
 		return _contextStack.Pop();
 	}
 
-	public JsonNode? Find(string identifier)
+	public JsonNode? Find(ContextAccessor identifier)
 	{
-		throw new NotImplementedException();
+		foreach (var context in _contextStack)
+		{
+			if (identifier.TryFind(context, out var target)) return target;
+		}
+
+		throw new InterpreterException($"unknown context value {identifier}");
 	}
 }

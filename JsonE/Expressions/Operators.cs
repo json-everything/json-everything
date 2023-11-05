@@ -8,6 +8,7 @@ internal static class Operators
 	public static readonly IBinaryOperator Subtract = new SubtractOperator();
 	public static readonly IBinaryOperator Multiply = new MultiplyOperator();
 	public static readonly IBinaryOperator Divide = new DivideOperator();
+	public static readonly IBinaryOperator Exponent = new ExponentOperator();
 
 	public static readonly IBinaryOperator EqualTo = new EqualToOperator();
 	public static readonly IBinaryOperator NotEqualTo = new NotEqualToOperator();
@@ -67,8 +68,7 @@ internal static class Operators
 
 		if (portion.Equals("**".AsSpan(), StringComparison.Ordinal))
 		{
-			throw new NotImplementedException();
-			op = GreaterThanOrEqualTo;
+			op = Exponent;
 			index += 2;
 		}
 		else if (source[index] == '*')

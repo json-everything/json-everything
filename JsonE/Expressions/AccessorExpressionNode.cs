@@ -6,16 +6,16 @@ namespace Json.JsonE.Expressions;
 
 internal class AccessorExpressionNode : ExpressionNode
 {
-	public string Accessor { get; }
+	public ContextAccessor Accessor { get; }
 
-	public AccessorExpressionNode(string accessor)
+	public AccessorExpressionNode(ContextAccessor accessor)
 	{
 		Accessor = accessor;
 	}
 
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
-		throw new NotImplementedException();
+		return context.Find(Accessor);
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -23,14 +23,9 @@ internal class AccessorExpressionNode : ExpressionNode
 		builder.Append(Accessor);
 	}
 
-	public static implicit operator AccessorExpressionNode(string value)
-	{
-		return new AccessorExpressionNode(value);
-	}
-
 	public override string ToString()
 	{
-		return Accessor;
+		return Accessor.ToString();
 	}
 }
 
@@ -38,14 +33,13 @@ internal class AccessorExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
-		throw new NotImplementedException();
-		//if (!PathParser.TryParse(source, ref index, out var path))
-		//{
-		//	expression = null;
-		//	return false;
-		//}
+		if (!ContextAccessor.TryParse(source, ref index, out var accessor))
+		{
+			expression = null;
+			return false;
+		}
 
-		//expression = new AccessorExpressionNode(path);
+		expression = new AccessorExpressionNode(accessor!);
 		return true;
 	}
 }
