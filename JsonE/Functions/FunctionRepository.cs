@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Json.JsonE.Expressions;
 
-namespace Json.JsonE.Expressions;
+namespace Json.JsonE.Functions;
 
 internal static class FunctionRepository
 {
-	private class FunctionRegistration
-	{
-
-	}
-
 	private static readonly Dictionary<string, FunctionDefinition> _functions = new();
 
 	static FunctionRepository()
 	{
-		//Register(new LengthFunction());
+		Register(new LenFunction());
 		//Register(new CountFunction());
 		//Register(new MatchFunction());
 		//Register(new SearchFunction());

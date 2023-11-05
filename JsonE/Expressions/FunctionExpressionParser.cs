@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text;
+using Json.JsonE.Functions;
 
 namespace Json.JsonE.Expressions;
 
@@ -19,18 +20,9 @@ internal class FunctionExpressionNode : ExpressionNode
 
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
-		throw new NotImplementedException();
-		//var parameterValues = Parameters.Select(x =>
-		//{
-		//	return x switch
-		//	{
-		//		ValueExpressionNode c => (object?)c.Evaluate(context),
-		//		BooleanResultExpressionNode b => b.Evaluate(context),
-		//		_ => throw new ArgumentOutOfRangeException("parameter")
-		//	};
-		//}).ToArray();
+		var parameterValues = Parameters.Select(x => x.Evaluate(context)).ToArray();
 
-		//return Function.Invoke(parameterValues);
+		return Function.Invoke(parameterValues);
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -54,7 +46,8 @@ internal class FunctionExpressionNode : ExpressionNode
 	public override string ToString()
 	{
 		throw new NotImplementedException();
-		//return $"{Function.Name}({string.Join(',', Parameters.Select(x => x.ToString()).ToArray())})";
+		//var parameterList = string.Join(", ", Parameters);
+		//return $"{Function.Name}({parameterList})";
 	}
 }
 
@@ -62,10 +55,17 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
-		throw new NotImplementedException();
+		if (!TryParseFunction(source, ref index, out var func, out var args))
+		{
+			expression = null;
+			return false;
+		}
+
+		expression = new FunctionExpressionNode(func!, args!);
+		return true;
 	}
 
-	public static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out List<ExpressionNode>? arguments, out FunctionDefinition? function)
+	private static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out FunctionDefinition? function, out List<ExpressionNode>? arguments)
 	{
 		int i = index;
 

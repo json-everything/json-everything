@@ -8,7 +8,7 @@ internal static class ExpressionParser
 {
 	private static readonly IOperandExpressionParser[] _operandParsers =
 {
-		//new FunctionExpressionParser(),
+		new FunctionExpressionParser(),
 		new LiteralExpressionParser(),
 		new AccessorExpressionParser(),
 	};
