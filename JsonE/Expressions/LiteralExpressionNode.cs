@@ -34,7 +34,7 @@ internal class LiteralExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
-		if (!source.TryParseJson(ref index, out var node))
+		if (!source.TryParseYaml(ref index, out var node))
 		{
 			expression = null;
 			return false;

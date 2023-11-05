@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
+using Yaml2JsonNode;
 
 namespace Json.JsonE.Expressions;
 
@@ -63,7 +65,7 @@ internal static class SpanExtensions
 		return foundNumber;
 	}
 
-	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
+	public static bool TryParseYaml(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
 	{
 		if (!span.ConsumeWhitespace(ref i))
 		{
@@ -99,7 +101,7 @@ internal static class SpanExtensions
 					end = i;
 					var allowDash = true;
 					while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
-												 span[end].In('e', '.', '-', '+')))
+					                             span[end].In('e', '.', '-', '+')))
 					{
 						if (!allowDash && span[end] is '-' or '+') break;
 						allowDash = span[end] == 'e';
@@ -155,7 +157,7 @@ internal static class SpanExtensions
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			node = JsonNode.Parse(block.ToString()) ?? JsonNull.SignalNode;
+			node = YamlSerializer.Parse(block.ToString()).FirstOrDefault()?.ToJsonNode() ?? JsonNull.SignalNode;
 			i = end;
 			return true;
 		}
@@ -164,10 +166,5 @@ internal static class SpanExtensions
 			node = default;
 			return false;
 		}
-	}
-
-	public static bool TryParseYaml(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
-	{
-		throw new NotImplementedException();
 	}
 }

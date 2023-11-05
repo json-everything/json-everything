@@ -52,6 +52,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Json.More\Json.More.csproj" />
+	  <ProjectReference Include="..\Yaml2JsonNode\Yaml2JsonNode.csproj" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
