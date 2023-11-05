@@ -3,11 +3,11 @@ using Json.More;
 
 namespace Json.JsonE.Expressions;
 
-internal class NotEqualToOperator : IBinaryComparativeOperator
+internal class NotEqualToOperator : IBinaryOperator
 {
-	public int Precedence => 10;
+	public int Precedence => 3;
 
-	public bool Evaluate(JsonNode? left, JsonNode? right)
+	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
 		return !left.IsEquivalentTo(right);
 	}

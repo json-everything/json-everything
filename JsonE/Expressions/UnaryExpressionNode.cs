@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Text;
-
+using System.Text.Json.Nodes;
 using static Json.JsonE.Operators.CommonErrors;
 
 namespace Json.JsonE.Expressions;
 
-internal class UnaryLogicalExpressionNode : LogicalExpressionNode
+internal class UnaryExpressionNode : ExpressionNode
 {
-	public IUnaryLogicalOperator Operator { get; }
-	public BooleanResultExpressionNode Value { get; }
+	public IUnaryOperator Operator { get; }
+	public ExpressionNode Value { get; }
 
-	public UnaryLogicalExpressionNode(IUnaryLogicalOperator op, BooleanResultExpressionNode value)
+	public UnaryExpressionNode(IUnaryOperator op, ExpressionNode value)
 	{
 		Operator = op;
 		Value = value;
 	}
 
-	public override bool Evaluate(EvaluationContext context)
+	public override JsonNode? Evaluate(EvaluationContext context)
 	{
 		return Operator.Evaluate(Value.Evaluate(context));
 	}
 
 	public override void BuildString(StringBuilder builder)
 	{
-		var useGroup = Value is BinaryComparativeExpressionNode or BinaryLogicalExpressionNode;
+		var useGroup = Value is BinaryExpressionNode;
 
 		builder.Append(Operator);
 		if (useGroup)
@@ -39,9 +39,9 @@ internal class UnaryLogicalExpressionNode : LogicalExpressionNode
 	}
 }
 
-internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
+internal class UnaryExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, out LogicalExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
 		// currently only the "not" operator is known
 		// it expects a ! then either a comparison or logical expression
@@ -64,14 +64,14 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 			throw new TemplateException(EndOfInput(i));
 
 		// parse operator
-		if (!UnaryLogicalOperatorParser.TryParse(source, ref i, out var op))
+		if (!Operators.TryGet(source, ref i, out var op) || op is not IUnaryOperator unOp)
 		{
 			expression = null;
 			return false;
 		}
 
 		// parse comparison
-		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right))
+		if (!ExpressionParser.TryParse(source, ref i, out var right))
 		{
 			expression = null;
 			return false;
@@ -96,7 +96,7 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		expression = new UnaryLogicalExpressionNode(op!, right!);
+		expression = new UnaryExpressionNode(unOp, right!);
 		index = i;
 		return true;
 	}

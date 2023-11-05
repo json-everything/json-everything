@@ -4,29 +4,25 @@ namespace Json.JsonE.Expressions;
 
 internal static class Operators
 {
-	public static readonly IBinaryValueOperator Add = new AddOperator();
-	public static readonly IBinaryValueOperator Subtract = new SubtractOperator();
-	public static readonly IBinaryValueOperator Multiply = new MultiplyOperator();
-	public static readonly IBinaryValueOperator Divide = new DivideOperator();
+	public static readonly IBinaryOperator Add = new AddOperator();
+	public static readonly IBinaryOperator Subtract = new SubtractOperator();
+	public static readonly IBinaryOperator Multiply = new MultiplyOperator();
+	public static readonly IBinaryOperator Divide = new DivideOperator();
 
-	public static readonly IBinaryComparativeOperator EqualTo = new EqualToOperator();
-	public static readonly IBinaryComparativeOperator NotEqualTo = new NotEqualToOperator();
-	public static readonly IBinaryComparativeOperator LessThan = new LessThanOperator();
-	public static readonly IBinaryComparativeOperator LessThanOrEqualTo = new LessThanOrEqualToOperator();
-	public static readonly IBinaryComparativeOperator GreaterThan = new GreaterThanOperator();
-	public static readonly IBinaryComparativeOperator GreaterThanOrEqualTo = new GreaterThanOrEqualToOperator();
-	public static readonly IBinaryComparativeOperator In = new InOperator();
+	public static readonly IBinaryOperator EqualTo = new EqualToOperator();
+	public static readonly IBinaryOperator NotEqualTo = new NotEqualToOperator();
+	public static readonly IBinaryOperator LessThan = new LessThanOperator();
+	public static readonly IBinaryOperator LessThanOrEqualTo = new LessThanOrEqualToOperator();
+	public static readonly IBinaryOperator GreaterThan = new GreaterThanOperator();
+	public static readonly IBinaryOperator GreaterThanOrEqualTo = new GreaterThanOrEqualToOperator();
+	public static readonly IBinaryOperator In = new InOperator();
 
-	public static readonly IBinaryLogicalOperator And = new AndOperator();
-	public static readonly IBinaryLogicalOperator Or = new OrOperator();
+	public static readonly IBinaryOperator And = new AndOperator();
+	public static readonly IBinaryOperator Or = new OrOperator();
 
-	public static readonly IUnaryLogicalOperator Not = new NotOperator();
-	public static readonly IUnaryLogicalOperator NoOp = new NoOpOperator();
-}
+	public static readonly IUnaryOperator Not = new NotOperator();
 
-internal static class ValueOperatorParser
-{
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out IBinaryValueOperator? op)
+	public static bool TryGet(ReadOnlySpan<char> source, ref int index, out IExpressionOperator? op)
 	{
 		if (!source.ConsumeWhitespace(ref index))
 		{
@@ -37,19 +33,19 @@ internal static class ValueOperatorParser
 		switch (source[index])
 		{
 			case '+':
-				op = Operators.Add;
+				op = Add;
 				index++;
 				break;
 			case '-':
-				op = Operators.Subtract;
-				index++;
-				break;
-			case '*':
-				op = Operators.Multiply;
+				op = Subtract;
 				index++;
 				break;
 			case '/':
-				op = Operators.Divide;
+				op = Divide;
+				index++;
+				break;
+			case '!':
+				op = Not;
 				index++;
 				break;
 			default:
@@ -57,20 +53,9 @@ internal static class ValueOperatorParser
 				break;
 		}
 
-		return op != null;
-	}
-}
+		if (op != null) return true;
 
-internal static class BinaryComparativeOperatorParser
-{
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out IBinaryComparativeOperator? op)
-	{
-		if (!source.ConsumeWhitespace(ref index))
-		{
-			op = null;
-			return false;
-		}
-
+		// comparative operators
 		if (index > source.Length - 2)
 		{
 			// no need to check for < or > because there would be no room for an operand
@@ -80,103 +65,63 @@ internal static class BinaryComparativeOperatorParser
 
 		var portion = source[index..(index + 2)];
 
-		if (portion.Equals("==".AsSpan(), StringComparison.Ordinal))
+		if (portion.Equals("**".AsSpan(), StringComparison.Ordinal))
 		{
-			op = Operators.EqualTo;
+			throw new NotImplementedException();
+			op = GreaterThanOrEqualTo;
+			index += 2;
+		}
+		else if (source[index] == '*')
+		{
+			op = Multiply;
+			index++;
+		}
+		else if (portion.Equals("==".AsSpan(), StringComparison.Ordinal))
+		{
+			op = EqualTo;
 			index += 2;
 		}
 		else if (portion.Equals("!=".AsSpan(), StringComparison.Ordinal))
 		{
-			op = Operators.NotEqualTo;
+			op = NotEqualTo;
 			index += 2;
 		}
 		else if (portion.Equals("<=".AsSpan(), StringComparison.Ordinal))
 		{
-			op = Operators.LessThanOrEqualTo;
+			op = LessThanOrEqualTo;
 			index += 2;
 		}
 		else if (portion.Equals(">=".AsSpan(), StringComparison.Ordinal))
 		{
-			op = Operators.GreaterThanOrEqualTo;
+			op = GreaterThanOrEqualTo;
 			index += 2;
 		}
 		else if (source[index] == '<')
 		{
-			op = Operators.LessThan;
+			op = LessThan;
 			index++;
 		}
 		else if (source[index] == '>')
 		{
-			op = Operators.GreaterThan;
+			op = GreaterThan;
 			index++;
 		}
 		else if (portion.Equals("in".AsSpan(), StringComparison.Ordinal))
 		{
-			op = Operators.In;
+			op = In;
 			index += 2;
 		}
-		else
+
+		// logical operators
+		else if (portion.Equals("&&".AsSpan(), StringComparison.Ordinal))
 		{
-			op = null;
-			return false;
-		}
-
-		return true;
-	}
-}
-
-internal static class BinaryLogicalOperatorParser
-{
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out IBinaryLogicalOperator? op)
-	{
-		if (!source.ConsumeWhitespace(ref index))
-		{
-			op = null;
-			return false;
-		}
-
-		if (index > source.Length - 2)
-		{
-			op = null;
-			return false;
-		}
-
-		var portion = source[index..(index + 2)];
-
-		if (portion.Equals("&&".AsSpan(), StringComparison.Ordinal))
-		{
-			op = Operators.And;
+			op = And;
 			index += 2;
 		}
 		else if (portion.Equals("||".AsSpan(), StringComparison.Ordinal))
 		{
-			op = Operators.Or;
+			op = Or;
 			index += 2;
-		}
-		else
-		{
-			op = null;
-			return false;
-		}
-
-		return true;
-	}
-}
-
-internal static class UnaryLogicalOperatorParser
-{
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out IUnaryLogicalOperator? op)
-	{
-		if (!source.ConsumeWhitespace(ref index))
-		{
-			op = null;
-			return false;
-		}
-
-		if (source[index] == '!')
-		{
-			op = Operators.Not;
-			index++;
 		}
 		else
 		{

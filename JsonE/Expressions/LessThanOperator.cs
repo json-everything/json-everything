@@ -4,11 +4,11 @@ using Json.More;
 
 namespace Json.JsonE.Expressions;
 
-internal class LessThanOperator : IBinaryComparativeOperator
+internal class LessThanOperator : IBinaryOperator
 {
-	public int Precedence => 10;
+	public int Precedence => 3;
 
-	public bool Evaluate(JsonNode? left, JsonNode? right)
+	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
 		if (left is not JsonValue lValue ||
 		    right is not JsonValue rValue)

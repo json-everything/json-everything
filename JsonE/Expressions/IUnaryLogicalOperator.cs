@@ -1,6 +1,8 @@
-﻿namespace Json.JsonE.Expressions;
+﻿using System.Text.Json.Nodes;
 
-internal interface IUnaryLogicalOperator : IExpressionOperator
+namespace Json.JsonE.Expressions;
+
+internal interface IUnaryOperator : IExpressionOperator
 {
-	bool Evaluate(bool value);
+	JsonNode? Evaluate(JsonNode? node);
 }

@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions;
 
-internal class AccessorExpressionNode : ValueExpressionNode
+internal class AccessorExpressionNode : ExpressionNode
 {
 	public string Accessor { get; }
 
@@ -34,9 +34,9 @@ internal class AccessorExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class AccessorExpressionParser : IValueExpressionParser
+internal class AccessorExpressionParser : IOperandExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ValueExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
 		throw new NotImplementedException();
 		//if (!PathParser.TryParse(source, ref index, out var path))

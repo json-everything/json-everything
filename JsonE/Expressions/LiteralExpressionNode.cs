@@ -5,7 +5,7 @@ using Json.More;
 
 namespace Json.JsonE.Expressions;
 
-internal class LiteralExpressionNode : ValueExpressionNode
+internal class LiteralExpressionNode : ExpressionNode
 {
 	public JsonNode? Value { get; }
 
@@ -30,9 +30,9 @@ internal class LiteralExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class LiteralExpressionParser : IValueExpressionParser
+internal class LiteralExpressionParser : IOperandExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ValueExpressionNode? expression)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
 		if (!source.TryParseJson(ref index, out var node))
 		{

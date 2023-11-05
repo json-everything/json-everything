@@ -1,12 +1,14 @@
-﻿namespace Json.JsonE.Expressions;
+﻿using System.Text.Json.Nodes;
 
-internal class AndOperator : IBinaryLogicalOperator
+namespace Json.JsonE.Expressions;
+
+internal class AndOperator : IBinaryOperator
 {
-	public int Precedence => 22;
+	public int Precedence => 1;
 
-	public bool Evaluate(bool left, bool right)
+	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
-		return left && right;
+		return left.IsTruthy() && right.IsTruthy();
 	}
 
 	public override string ToString()

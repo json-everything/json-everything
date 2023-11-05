@@ -3,9 +3,9 @@ using Json.More;
 
 namespace Json.JsonE.Expressions;
 
-internal class DivideOperator : IBinaryValueOperator
+internal class DivideOperator : IBinaryOperator
 {
-	public int Precedence => 2;
+	public int Precedence => 6;
 
 	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{

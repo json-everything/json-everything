@@ -1,12 +1,14 @@
-﻿namespace Json.JsonE.Expressions;
+﻿using System.Text.Json.Nodes;
 
-internal class NotOperator : IUnaryLogicalOperator
+namespace Json.JsonE.Expressions;
+
+internal class NotOperator : IUnaryOperator
 {
 	public int Precedence => 20;
 
-	public bool Evaluate(bool value)
+	public JsonNode? Evaluate(JsonNode? value)
 	{
-		return !value;
+		return !value.IsTruthy();
 	}
 
 	public override string ToString()
