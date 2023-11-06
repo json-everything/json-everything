@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
 
@@ -30,6 +31,9 @@ internal class EvaluationContext
 		{
 			if (identifier.TryFind(context, out var target)) return target;
 		}
+
+		if (ReferenceEquals(identifier, ContextAccessor.Now))
+			return DateTime.Now.ToString("O");
 
 		throw new InterpreterException($"unknown context value {identifier}");
 	}

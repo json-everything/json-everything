@@ -41,11 +41,13 @@ public class SuiteRunner
 		{
 			OutputTest(test);
 
+			test.Context!["now"] = "2017-01-19T16:27:20.974Z";
+
 			var template = test.Template.Deserialize<JsonETemplate>()!;
 			var result = template.Evaluate(test.Context);
 
 			if (test.HasError) 
-				Assert.Fail($"Expected error: {test.Error}");
+				Assert.Fail($"Expected error: {test.Error}\nActual: {result}");
 
 			JsonAssert.AreEquivalent(test.Expected, result);
 		}

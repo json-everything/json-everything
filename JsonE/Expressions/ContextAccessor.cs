@@ -9,6 +9,8 @@ internal class ContextAccessor
 {
 	private readonly IEnumerable<IContextAccessorSegment> _segments;
 
+	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) });
+
 	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments)
 	{
 		_segments = segments;
