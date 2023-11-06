@@ -13,6 +13,7 @@ internal static class OperatorRepository
 		[EvalOperator.Name] = new EvalOperator(),
 		[FlattenOperator.Name] = new FlattenOperator(),
 		[FlattenDeepOperator.Name] = new FlattenDeepOperator(),
+		[FromNowOperator.Name] = new FromNowOperator(),
 		[MergeOperator.Name] = new MergeOperator(),
 		[MergeDeepOperator.Name] = new MergeDeepOperator(),
 		[ReverseOperator.Name] = new ReverseOperator(),

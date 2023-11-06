@@ -12,8 +12,7 @@ internal class MergeOperator : IOperator
 	{
 		var obj = template!.AsObject();
 
-		if (obj.Count > 1)
-			throw new TemplateException(CommonErrors.UndefinedProperties(Name, obj.Select(x => x.Key).Where(x => x != Name)));
+		obj.VerifyNoUndefinedProperties(Name);
 
 		var parameter = obj[Name];
 		if (parameter is JsonArray arr && arr.All(x => x.IsTemplateOr<JsonObject>()) ||
