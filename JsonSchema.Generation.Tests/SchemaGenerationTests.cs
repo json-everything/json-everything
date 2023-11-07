@@ -314,8 +314,10 @@ public class SchemaGenerationTests
 
 	private class InitializedType
 	{
-		[Default(42)]
-		public int FortyTwo { get; set; } = 42;
+		[Default(46)]
+		public int FortySix { get; set; } = 46;
+		[Default(2)]
+		public int Two { get; set; } = 2;
 	}
 
 	[Test]
@@ -324,9 +326,13 @@ public class SchemaGenerationTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("FortyTwo", new JsonSchemaBuilder()
+				("FortySix", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
-					.Default(42)
+					.Default(46)
+				),
+				("Two", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Integer)
+					.Default(2)
 				)
 			);
 
