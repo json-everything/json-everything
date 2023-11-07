@@ -107,6 +107,22 @@
             </summary>
             <param name="value">The value.</param>
         </member>
+        <member name="T:Json.Schema.Generation.DefaultAttribute">
+            <summary>
+            Applies a `default` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.DefaultAttribute.Value">
+            <summary>
+            The value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.DefaultAttribute.#ctor(System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.DefaultAttribute"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
         <member name="T:Json.Schema.Generation.DescriptionAttribute">
             <summary>
             Applies a `description` keyword.
@@ -816,11 +832,33 @@
         </member>
         <member name="M:Json.Schema.Generation.Intents.ConstIntent.#ctor(System.Object)">
             <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ConstIntent"/> instance.
             </summary>
             <param name="value">The value.</param>
         </member>
         <member name="M:Json.Schema.Generation.Intents.ConstIntent.Apply(Json.Schema.JsonSchemaBuilder)">
+            <summary>
+            Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="T:Json.Schema.Generation.Intents.DefaultIntent">
+            <summary>
+            Provides intent to create a `default` keyword.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Generation.Intents.DefaultIntent.Value">
+            <summary>
+            The expected value.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DefaultIntent.#ctor(System.Object)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.DefaultIntent"/> instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Json.Schema.Generation.Intents.DefaultIntent.Apply(Json.Schema.JsonSchemaBuilder)">
             <summary>
             Applies the keyword to the <see cref="T:Json.Schema.JsonSchemaBuilder"/>.
             </summary>
@@ -904,7 +942,7 @@
         </member>
         <member name="M:Json.Schema.Generation.Intents.ElseIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent})">
             <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ElseIntent"/> instance.
             </summary>
         </member>
         <member name="M:Json.Schema.Generation.Intents.ElseIntent.Apply(Json.Schema.JsonSchemaBuilder)">
@@ -1019,7 +1057,7 @@
         </member>
         <member name="M:Json.Schema.Generation.Intents.IfIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent})">
             <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.IfIntent"/> instance.
             </summary>
         </member>
         <member name="M:Json.Schema.Generation.Intents.IfIntent.Apply(Json.Schema.JsonSchemaBuilder)">
@@ -1417,7 +1455,7 @@
         </member>
         <member name="M:Json.Schema.Generation.Intents.ThenIntent.#ctor(System.Collections.Generic.IEnumerable{Json.Schema.Generation.ISchemaKeywordIntent})">
             <summary>
-            Creates a new <see cref="T:Json.Schema.Generation.Intents.AdditionalItemsIntent"/> instance.
+            Creates a new <see cref="T:Json.Schema.Generation.Intents.ThenIntent"/> instance.
             </summary>
         </member>
         <member name="M:Json.Schema.Generation.Intents.ThenIntent.Apply(Json.Schema.JsonSchemaBuilder)">
