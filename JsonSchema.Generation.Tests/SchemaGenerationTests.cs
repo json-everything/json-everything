@@ -314,6 +314,7 @@ public class SchemaGenerationTests
 
 	private class InitializedType
 	{
+		[Default(42)]
 		public int FortyTwo { get; set; } = 42;
 	}
 

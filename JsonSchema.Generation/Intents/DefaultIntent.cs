@@ -3,9 +3,9 @@
 namespace Json.Schema.Generation.Intents;
 
 /// <summary>
-/// Provides intent to create a `const` keyword.
+/// Provides intent to create a `default` keyword.
 /// </summary>
-public class ConstIntent : ISchemaKeywordIntent
+public class DefaultIntent : ISchemaKeywordIntent
 {
 	/// <summary>
 	/// The expected value.
@@ -13,10 +13,10 @@ public class ConstIntent : ISchemaKeywordIntent
 	public object? Value { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="ConstIntent"/> instance.
+	/// Creates a new <see cref="DefaultIntent"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public ConstIntent(object? value)
+	public DefaultIntent(object? value)
 	{
 		Value = value;
 	}
@@ -27,6 +27,6 @@ public class ConstIntent : ISchemaKeywordIntent
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Const(JsonValue.Create(Value));
+		builder.Default(JsonValue.Create(Value));
 	}
 }
