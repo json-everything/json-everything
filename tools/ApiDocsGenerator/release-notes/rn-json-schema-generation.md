@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "8.02"
 ---
+# [3.5.0](https://github.com/gregsdennis/json-everything/pull/557) {#release-schemagen-3.5.0}
+
+[#548](https://github.com/gregsdennis/json-everything/issues/551) - Add `[Default]` attribute to generate `default` keyword.
+
 # [3.4.2](https://github.com/gregsdennis/json-everything/pull/553) {#release-schemagen-3.4.2}
 
 [#551](https://github.com/gregsdennis/json-everything/issues/551) - Strings implement `IEnumerable<T>` and thus were considered arrays.  As a result `minItems` and `maxItems` were being applied.  Thanks to [@domchlouba](https://github.com/domchlouba) for reporting this and recommending the fix.

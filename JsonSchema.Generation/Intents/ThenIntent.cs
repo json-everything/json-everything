@@ -13,7 +13,7 @@ public class ThenIntent : ISchemaKeywordIntent
 	public IEnumerable<ISchemaKeywordIntent> Subschema { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="AdditionalItemsIntent"/> instance.
+	/// Creates a new <see cref="ThenIntent"/> instance.
 	/// </summary>
 	public ThenIntent(IEnumerable<ISchemaKeywordIntent> subschema)
 	{

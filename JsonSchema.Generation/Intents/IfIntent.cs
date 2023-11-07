@@ -13,7 +13,7 @@ public class IfIntent : ISchemaKeywordIntent
 	public IEnumerable<ISchemaKeywordIntent> Subschema { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="AdditionalItemsIntent"/> instance.
+	/// Creates a new <see cref="IfIntent"/> instance.
 	/// </summary>
 	public IfIntent(IEnumerable<ISchemaKeywordIntent> subschema)
 	{
