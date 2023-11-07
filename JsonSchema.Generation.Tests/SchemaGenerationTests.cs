@@ -311,4 +311,26 @@ public class SchemaGenerationTests
 
 		AssertEqual(expected, actual);
 	}
+
+	private class InitializedType
+	{
+		public int FortyTwo { get; set; } = 42;
+	}
+
+	[Test]
+	public void InitializedTypeGeneration()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("FortyTwo", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Integer)
+					.Default(42)
+				)
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<InitializedType>();
+
+		AssertEqual(expected, actual);
+	}
 }
