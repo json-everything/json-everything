@@ -72,7 +72,10 @@ public class JsonETemplate
 
 	internal JsonNode? Evaluate(EvaluationContext context)
 	{
-		return _operator?.Evaluate(Template, context) ?? Template;
+		// Null is a valid return from an operator.  Only return the template if there is no operator.
+		return _operator == null
+			? Template 
+			: _operator.Evaluate(Template, context);
 	}
 
 	//public static implicit operator JsonETemplate(JsonNode? node)

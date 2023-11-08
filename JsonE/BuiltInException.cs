@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Text.Json.Nodes;
 
 namespace Json.JsonE;
 
 /// <summary>
-/// Thrown from <see cref="JsonETemplate.Evaluate"/> when a built-in function cannot be evaluated.
+/// Thrown from <see cref="JsonETemplate.Evaluate(JsonNode?)"/> when a built-in function cannot be evaluated.
 /// </summary>
 public class BuiltInException : Exception
 {
