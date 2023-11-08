@@ -55,82 +55,69 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 <table>
 <tbody>
 <tr>
-<td width="220">JsonSchema.Net</td>
-<td width="389"><a href="https://json-schema.org">JSON Schema</a>, drafts 6 and higher</td>
-<td width="100"><a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.svg?svg=true"></img></td>
-<td width="120"><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a></td>
+<td width="270">JsonSchema.Net</td>
+<td width="440"><a href="https://json-schema.org">JSON Schema</a>, drafts 6 and higher</td>
+<td width="120"><a href="https://www.nuget.org/packages/JsonSchema.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.Generation</td>
 <td>Generation of schemas from .Net types</td>
-<td><a href="https://www.nuget.org/packages/JsonSchema.Net.Generation/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.Generation.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.Generation/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.Generation.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.CodeGeneration</td>
 <td>Generation of C# code from schemas (more languages to follow)</td>
-<td><a href="https://www.nuget.org/packages/JsonSchema.Net.CodeGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.CodeGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.CodeGeneration.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.DataGeneration</td>
 <td>Random instance data generation (powered by <a href="https://github.com/bchavez/Bogus">Bogus</a>)</td>
-<td><a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.DataGeneration.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.DataGeneration.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.Data</td>
 <td>A vocabulary for accessing instance and external data</td>
-<td><a href="https://www.nuget.org/packages/JsonSchema.Net.Data/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.Data.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Data.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.Data/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.Data.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Data.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.UniqueKeys</td>
 <td>A vocabulary for validating item uniqueness based on specific item values</td>
-<td><a href="https://www.nuget.org/packages/JsonSchema.Net.UniqueKeys/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.UniqueKeys.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.UniqueKeys.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.UniqueKeys/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.UniqueKeys.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.UniqueKeys.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonSchema.Net.OpenApi</td>
 <td><a href="https://www.openapis.org/">OpenApi 3.1</a> vocabulary extension (used by <a href="https://github.com/gregsdennis/Graeae">Graeae</a>)</td>
-<td><a href="https://www.nuget.org/packages/JsonSchema.Net.OpenApi/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.OpenApi.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.OpenApi.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonSchema.Net.OpenApi/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.OpenApi.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.OpenApi.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonPath.Net</td>
 <td>JSON Path (<a href="https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-jsonpath">IETF RFC in progress</a>) (.Net Standard 2.1)</td>
-<td><a href="https://www.nuget.org/packages/JsonPath.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPath.Net.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPath.Net.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonPath.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPath.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPath.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonPatch.Net</td>
 <td>JSON Patch (<a href="https://tools.ietf.org/html/rfc6902">RFC 6902</a>)</td>
-<td><a href="https://www.nuget.org/packages/JsonPatch.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPatch.Net.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonPatch.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPatch.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPatch.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonPointer.Net</td>
 <td>JSON Pointer (<a href="https://tools.ietf.org/html/rfc6901">RFC 6901</a>) and Relative JSON Pointer (<a href="https://tools.ietf.org/id/draft-handrews-relative-json-pointer-00.html">Specification</a>)</td>
-<td><a href="https://www.nuget.org/packages/JsonPointer.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPointer.Net.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonPointer.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonPointer.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonPointer.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>JsonLogic</td>
 <td>JsonLogic (<a href="https://jsonlogic.com">Website</a>) (.Net Standard 2.1)</td>
-<td><a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonLogic.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonLogic.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>Json.More.Net</td>
 <td>General-use extensions that probably should have been included in <em>System.Text.Json[.Nodes]</em> but weren't</td>
-<td><a href="https://www.nuget.org/packages/Json.More.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Json.More.Net.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/Json.More.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Json.More.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
 <td>Yaml2JsonNode</td>
 <td>Conversions between the YAML document model in <a href="https://github.com/aaubry/YamlDotNet">YamlDotNet</a> and <code>JsonNode</code> (both directions).</td>
-<td><a href="https://www.nuget.org/packages/Yaml2JsonNode/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Yaml2JsonNode.svg?svg=true"></img></td>
-<td><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Yaml2JsonNode.svg?svg=true"></img></a></td>
+<td><a href="https://www.nuget.org/packages/Yaml2JsonNode/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Yaml2JsonNode.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Yaml2JsonNode.svg?svg=true"></img></a></td>
 </tr>
 </tbody>
 </table>
