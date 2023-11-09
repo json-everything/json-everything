@@ -46,12 +46,12 @@ public class SuiteRunner
 			var template = test.Template.Deserialize<JsonETemplate>()!;
 			var result = template.Evaluate(test.Context);
 
-			if (test.HasError) 
+			if (test.HasError)
 				Assert.Fail($"Expected error: {test.Error}\nActual: {result}");
 
 			JsonAssert.AreEquivalent(test.Expected, result);
 		}
-		catch (Exception e)
+		catch (Exception e) when (e is not AssertionException)
 		{
 			if (!test.HasError) throw;
 			if (test.Error is not null)

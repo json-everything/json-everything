@@ -23,7 +23,7 @@ internal class FromNowFunction : FunctionDefinition
 			throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
 
 		DateTime now;
-		var interval = Interval.ParseAndGetTimeSpan(str);
+		var interval = Interval.Parse(str);
 		if (argNowStr != null)
 		{
 			if (!DateTime.TryParse(argNowStr, out now))
@@ -38,6 +38,6 @@ internal class FromNowFunction : FunctionDefinition
 				throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
 		}
 
-		return now.ToUniversalTime().Add(interval).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFK", CultureInfo.InvariantCulture);
+		return interval.AddTo(now.ToUniversalTime()).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFK", CultureInfo.InvariantCulture);
 	}
 }

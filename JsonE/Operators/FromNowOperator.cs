@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
 using Json.JsonE.Functions;
@@ -36,7 +35,7 @@ internal class FromNowOperator : IOperator
 			: value!.AsValue();
 
 		if (!intervalStr.TryGetValue(out string? str))
-			throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+			throw new TemplateException("$fromNow expects a string");
 
 		string? argFromStr = null;
 		if (obj.Count == 2)
@@ -47,11 +46,11 @@ internal class FromNowOperator : IOperator
 				: value!.AsValue();
 
 			if (!fromStr.TryGetValue(out argFromStr))
-				throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+				throw new TemplateException("$fromNow expects a string");
 		}
 
 		DateTime now;
-		var interval = Interval.ParseAndGetTimeSpan(str);
+		var interval = Interval.Parse(str);
 		if (argFromStr != null)
 		{
 			if (!DateTime.TryParse(argFromStr, out now))
@@ -66,6 +65,6 @@ internal class FromNowOperator : IOperator
 				throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
 		}
 
-		return now.ToUniversalTime().Add(interval).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFK", CultureInfo.InvariantCulture);
+		return interval.AddTo(now.ToUniversalTime()).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFK", CultureInfo.InvariantCulture);
 	}
 }
