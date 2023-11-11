@@ -6,8 +6,7 @@ namespace Json.JsonE.Functions;
 internal class TypeOfFunction : FunctionDefinition
 {
 	public override string Name => "typeof";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Any };
-	public override FunctionValueType ReturnType => FunctionValueType.String;
+	public override int[] ParameterCounts { get; } = { 1 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

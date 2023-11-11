@@ -8,8 +8,7 @@ namespace Json.JsonE.Functions;
 internal class JoinFunction : FunctionDefinition
 {
 	public override string Name => "join";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Array, FunctionValueType.String | FunctionValueType.Number };
-	public override FunctionValueType ReturnType => FunctionValueType.String;
+	public override int[] ParameterCounts { get; } = { 2 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

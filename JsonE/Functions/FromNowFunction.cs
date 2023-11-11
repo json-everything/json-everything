@@ -9,8 +9,7 @@ namespace Json.JsonE.Functions;
 internal class FromNowFunction : FunctionDefinition
 {
 	public override string Name => "fromNow";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.String, FunctionValueType.String };
-	public override FunctionValueType ReturnType => FunctionValueType.String;
+	public override int[] ParameterCounts { get; } = { 1, 2 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

@@ -40,8 +40,8 @@ public class JsonETemplate
 
 	internal static JsonNode? CreateNode(JsonNode? node)
 	{
-		if (node is JsonValue value && value.GetValue<object>() is JsonETemplate template)
-			return template;
+		if (node is JsonValue value && value.GetValue<object>() is JsonETemplate)
+			return node;
 
 		var (op, newTemplate) = OperatorRepository.Get(node);
 		return op is null ? node : new JsonETemplate(newTemplate, op);

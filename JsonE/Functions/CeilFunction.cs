@@ -8,8 +8,7 @@ namespace Json.JsonE.Functions;
 internal class CeilFunction : FunctionDefinition
 {
 	public override string Name => "ceil";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Number };
-	public override FunctionValueType ReturnType => FunctionValueType.Number;
+	public override int[] ParameterCounts { get; } = { 1 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

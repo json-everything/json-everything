@@ -8,8 +8,7 @@ namespace Json.JsonE.Functions;
 internal class AbsFunction : FunctionDefinition
 {
 	public override string Name => "abs";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Number };
-	public override FunctionValueType ReturnType => FunctionValueType.Number;
+	public override int[] ParameterCounts { get; } = { 1 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

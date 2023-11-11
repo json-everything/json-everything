@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Json.JsonE.Operators;
 
 namespace Json.JsonE.Functions;
@@ -7,8 +6,7 @@ namespace Json.JsonE.Functions;
 internal class UppercaseFunction : FunctionDefinition
 {
 	public override string Name => "uppercase";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.String };
-	public override FunctionValueType ReturnType => FunctionValueType.String;
+	public override int[] ParameterCounts { get; } = { 1 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

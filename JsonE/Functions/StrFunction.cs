@@ -7,8 +7,7 @@ namespace Json.JsonE.Functions;
 internal class StrFunction : FunctionDefinition
 {
 	public override string Name => "str";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Number };
-	public override FunctionValueType ReturnType => FunctionValueType.String;
+	public override int[] ParameterCounts { get; } = { 1 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

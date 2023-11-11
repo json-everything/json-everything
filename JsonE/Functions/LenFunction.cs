@@ -7,8 +7,7 @@ namespace Json.JsonE.Functions;
 internal class LenFunction : FunctionDefinition
 {
 	public override string Name => "len";
-	public override FunctionValueType[] ParameterTypes { get; } = { FunctionValueType.Array | FunctionValueType.String };
-	public override FunctionValueType ReturnType => FunctionValueType.Number;
+	public override int[] ParameterCounts { get; } = { 1 };
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

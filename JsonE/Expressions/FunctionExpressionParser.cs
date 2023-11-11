@@ -112,20 +112,12 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 		arguments = new List<ExpressionNode>();
 		var done = false;
 
-		var parameterTypeList = function!.ParameterTypes;
+		var parameterTypeList = function!.ParameterCounts;
 		var parameterIndex = 0;
 
 		while (i < source.Length && !done)
 		{
 			if (!source.ConsumeWhitespace(ref i))
-			{
-				arguments = null;
-				function = null;
-				return false;
-			}
-
-			// TODO: validate arg types
-			if (!function.AcceptsParamsList && parameterIndex >= parameterTypeList.Length)
 			{
 				arguments = null;
 				function = null;
@@ -165,7 +157,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			parameterIndex++;
 		}
 
-		if (!function.AcceptsParamsList && parameterIndex != parameterTypeList.Length)
+		if (!function.AcceptsParamsList && !parameterIndex.In(parameterTypeList))
 		{
 			arguments = null;
 			function = null;
