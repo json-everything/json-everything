@@ -126,9 +126,10 @@ All of the above libraries offer complete support for their associated specifica
 
 Error message translations for _JsonSchema.Net_ available in:
 
+- Norwegian `nb-NO`
 - Spanish `es`
-- Norwegian `nb-no`
-- Swedish `sv-se`
+- Swedish `sv-SE`
+- Turkish `tr-TR`
 
 ***NOTE** Each language pack is provided by its own Nuget package.*
 
