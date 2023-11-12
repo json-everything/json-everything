@@ -10,9 +10,9 @@ using Yaml2JsonNode;
 
 namespace Json.JsonE.Tests.Suite;
 
-public class SuiteRunner
+public class MoreTestsRunner
 {
-	private const string _testsFile = "../../../../ref-repos/json-e/specification.yml";
+	private const string _testsFile = "Files/more-tests.yml";
 	private static readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
 	private static IEnumerable<T>? DeserializeAll<T>(string yamlText, JsonSerializerOptions? options = null)

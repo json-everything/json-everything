@@ -20,9 +20,9 @@ internal static class OperatorRepository
 		[ReverseOperator.Name] = new ReverseOperator(),
 	};
 
-	public static (IOperator?, JsonNode?) Get(JsonNode? node)
+	public static IOperator? Get(JsonNode? node)
 	{
-		if (node is not JsonObject obj) return (null, node);
+		if (node is not JsonObject obj) return null;
 
 		var operatorKeys = obj.Select(x => x.Key).Intersect(_operators.Keys).ToArray();
 		var op = operatorKeys.Length switch
@@ -34,19 +34,11 @@ internal static class OperatorRepository
 			_ => _operators[operatorKeys[0]]
 		};
 
-		if (op is null) return (null, node);
-
-		var allKeys = obj.Select(x => x.Key).ToArray();
-		foreach (var key in allKeys)
-		{
-			var value = obj[key];
-			var newValue = value.CheckForTemplate();
-			obj[key] = newValue;
-		}
+		if (op is null) return null;
 
 		op.Validate(obj);
 		
-		return (op, obj);
+		return op;
 	}
 
 	private static bool HasReservedWords(JsonObject obj)

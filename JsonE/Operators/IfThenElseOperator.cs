@@ -37,10 +37,8 @@ internal class IfThenElseOperator : IOperator
 		obj.TryGetValue("then", out var thenValue, out _);
 		obj.TryGetValue("else", out var elseValue, out _);
 
-		if (thenValue.TryGetTemplate(out var thenTemplate))
-			thenValue = thenTemplate!.Evaluate(context);
-		if (elseValue.TryGetTemplate(out var elseTemplate))
-			elseValue = elseTemplate!.Evaluate(context);
+		thenValue = JsonE.Evaluate(thenValue, context);
+		elseValue = JsonE.Evaluate(elseValue, context);
 
 		return cond.IsTruthy() ? thenValue : elseValue;
 	}

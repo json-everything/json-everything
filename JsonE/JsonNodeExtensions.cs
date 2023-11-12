@@ -23,28 +23,13 @@ internal static class JsonNodeExtensions
 		return true;
 	}
 
-	public static JsonNode? CheckForTemplate(this JsonNode? node)
-	{
-		return JsonETemplate.CreateNode(node);
-	}
-
 	public static bool IsTemplateOr<T>(this JsonNode? node)
 	{
 		return node switch
 		{
 			T => true,
+			JsonObject when OperatorRepository.Get(node) != null => true,
 			JsonValue value when value.TryGetValue<T>(out _) => true,
-			JsonValue value when value.TryGetValue<JsonETemplate>(out _) => true,
-			_ => false
-		};
-	}
-
-	public static bool TryGetTemplate(this JsonNode? node, out JsonETemplate? template)
-	{
-		template = null;
-		return node switch
-		{
-			JsonValue value when value.TryGetValue(out template) => true,
 			_ => false
 		};
 	}

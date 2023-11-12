@@ -30,9 +30,8 @@ internal class FromNowOperator : IOperator
 	{
 		var obj = template!.AsObject();
 		var value = obj[Name];
-		var intervalStr = value.TryGetTemplate(out var t)
-			? t!.Evaluate(context) as JsonValue ?? throw new TemplateException(CommonErrors.IncorrectValueType(Name, "a string"))
-			: value!.AsValue();
+		var intervalStr = JsonE.Evaluate(value, context) as JsonValue ??
+		                  throw new TemplateException(CommonErrors.IncorrectValueType(Name, "a string"));
 
 		if (!intervalStr.TryGetValue(out string? str))
 			throw new TemplateException("$fromNow expects a string");
@@ -41,9 +40,8 @@ internal class FromNowOperator : IOperator
 		if (obj.Count == 2)
 		{
 			value = obj["from"];
-			var fromStr = value.TryGetTemplate(out t)
-				? t!.Evaluate(context) as JsonValue ?? throw new TemplateException(CommonErrors.IncorrectValueType(Name, "a string"))
-				: value!.AsValue();
+			var fromStr = JsonE.Evaluate(value, context) as JsonValue ??
+			              throw new TemplateException(CommonErrors.IncorrectValueType(Name, "a string"));
 
 			if (!fromStr.TryGetValue(out argFromStr))
 				throw new TemplateException("$fromNow expects a string");

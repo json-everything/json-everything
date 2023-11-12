@@ -25,9 +25,8 @@ internal class FlattenOperator : IOperator
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var value = template!.AsObject()[Name]!;
-		var array = value.TryGetTemplate(out var t)
-			? t!.Evaluate(context) as JsonArray ?? throw new TemplateException(IncorrectValueType(Name, "an array"))
-			: value.AsArray();
+		var array = JsonE.Evaluate(value, context) as JsonArray ??
+		            throw new TemplateException(IncorrectValueType(Name, "an array"));
 
 		return array.SelectMany(Flatten).ToJsonArray();
 	}

@@ -16,7 +16,7 @@ internal class MergeOperator : IOperator
 
 		var parameter = obj[Name];
 		if (parameter is JsonArray arr && arr.All(x => x.IsTemplateOr<JsonObject>()) ||
-		    parameter.TryGetTemplate(out _))
+		    OperatorRepository.Get(parameter) != null)
 			return;
 
 		throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"));
@@ -25,9 +25,8 @@ internal class MergeOperator : IOperator
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var value = template!.AsObject()[Name]!;
-		var array = value.TryGetTemplate(out var t)
-			? t!.Evaluate(context) as JsonArray ?? throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"))
-			: value.AsArray();
+		var array = JsonE.Evaluate(value, context) as JsonArray ??
+		            throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"));
 
 		return array.Aggregate(new JsonObject(), Merge);
 	}

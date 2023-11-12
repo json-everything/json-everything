@@ -1,0 +1,23 @@
+################################################################################
+# ### Specification for json-e
+# This document specifies the json-e template language through a series of
+# test cases on the form: `{title, context, template, result, error, panic}`
+# where `jsone.render(template, context) = result` and title is short name
+# for the test case. If the `error` property is specified as `true`, no result
+# needs to be specified, as the test case must throw an error. If the `panic`
+# property is specified as `true`, the test case is expected to throw an error
+# about invalid usage, typically invalid context.
+#
+# Comments explaining the test cases is encouraged, additionally entries with
+# {section: '...'} is encouraged to separate sections.
+#
+# Test conditions:
+#   1) Time at test time is expected to be '2017-01-19T16:27:20.974Z'
+################################################################################
+---
+section:  More tests
+---
+title:    Nested in an object
+context:  {}
+template: { key: {$reverse: [1,2,3]}}
+result:   {key: [3,2,1]}

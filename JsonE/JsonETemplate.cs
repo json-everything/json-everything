@@ -1,8 +1,5 @@
-﻿using System.Text.Json;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Json.More;
 
@@ -11,54 +8,20 @@ namespace Json.JsonE;
 /// <summary>
 /// Models a JSON-e template.
 /// </summary>
-[JsonConverter(typeof(JsonETemplateJsonConverter))]
-public class JsonETemplate
+public static class JsonE
 {
-	private readonly IOperator? _operator;
-	
-	internal JsonNode? Template { get; }
-
-	private JsonETemplate(JsonNode? template, IOperator? @operator)
-	{
-		Template = template;
-		_operator = @operator;
-	}
-
-	/// <summary>
-	/// Creates a new template.
-	/// </summary>
-	/// <param name="node">The JSON representation of the template.</param>
-	/// <returns></returns>
-	public static JsonETemplate Create(JsonNode? node)
-	{
-		if (node is JsonValue value && value.GetValue<object>() is JsonETemplate template)
-			return template;
-
-		var (op, newTemplate) = OperatorRepository.Get(node);
-		return new JsonETemplate(newTemplate, op);
-	}
-
-	internal static JsonNode? CreateNode(JsonNode? node)
-	{
-		if (node is JsonValue value && value.GetValue<object>() is JsonETemplate)
-			return node;
-
-		var (op, newTemplate) = OperatorRepository.Get(node);
-		return op is null ? node : new JsonETemplate(newTemplate, op);
-	}
-
 	/// <summary>
 	/// Evaluates the template against a JSON value context.
 	/// </summary>
+	/// <param name="template"></param>
 	/// <param name="context">The JSON value context</param>
 	/// <returns>A new JSON value result.</returns>
-	public JsonNode? Evaluate(JsonNode? context)
+	public static JsonNode? Evaluate(JsonNode? template, JsonNode? context)
 	{
 		ValidateContext(context);
-
 		var evalContext = new EvaluationContext(context);
-
-		return Evaluate(evalContext);
+		
+		return Evaluate(template, evalContext);
 	}
 
 	private static void ValidateContext(JsonNode? context)
@@ -70,40 +33,42 @@ public class JsonETemplate
 			throw new TemplateException("top level keys of context must follow /[a-zA-Z_][a-zA-Z0-9_]*/");
 	}
 
-	internal JsonNode? Evaluate(EvaluationContext context)
+	internal static JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
-		// Null is a valid return from an operator.  Only return the template if there is no operator.
-		return _operator == null
-			? Template 
-			: _operator.Evaluate(Template, context);
+		var op = OperatorRepository.Get(template);
+
+		if (op == null)
+			return MaybeEvaluateChildren(template, context);
+		
+		return op.Evaluate(template, context);
 	}
 
-	//public static implicit operator JsonETemplate(JsonNode? node)
-	//{
-	//	return Create(node);
-	//}
-
-	/// <summary>
-	/// Implicitly wraps a <see cref="JsonETemplate"/> in a <see cref="JsonValue"/>.
-	/// </summary>
-	/// <param name="template"></param>
-	public static implicit operator JsonNode(JsonETemplate template)
+	private static JsonNode? MaybeEvaluateChildren(JsonNode? node, EvaluationContext context)
 	{
-		return JsonValue.Create(template)!;
-	}
-}
+		switch (node)
+		{
+			case JsonObject obj:
+			{
+				var result = new JsonObject();
+				foreach (var kvp in obj)
+				{
+					result[kvp.Key] = Evaluate(kvp.Value, context);
+				}
 
-internal class JsonETemplateJsonConverter : JsonConverter<JsonETemplate?>
-{
-	public override JsonETemplate Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		var node = options.Read<JsonNode?>(ref reader);
+				return result;
+			}
+			case JsonArray arr:
+			{
+				var result = new JsonArray();
+				foreach (var item in arr)
+				{
+					result.Add(Evaluate(item, context));
+				}
 
-		return JsonETemplate.Create(node);
-	}
-
-	public override void Write(Utf8JsonWriter writer, JsonETemplate? value, JsonSerializerOptions options)
-	{
-		JsonSerializer.Serialize(writer, value?.Template, options);
+				return result;
+			}
+			default:
+				return node.Copy();
+		}
 	}
 }
