@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -50,6 +51,29 @@ public class AndRule : Rule
 		}
 
 		return first;
+	}
+
+	/// <inheritdoc />
+	public override Expression BuildExpressionPredicate<T>(ParameterExpression parameter)
+	{
+		if (this.Items.Count == 0)
+		{
+			throw new NotSupportedException("Need at least 1 clause for `and` rule");
+		}
+
+		if (this.Items.Count == 1)
+		{
+			return this.Items[0].BuildExpressionPredicate<T>(parameter);
+		}
+
+		var firstOr = Expression.AndAlso(this.Items[0].BuildExpressionPredicate<T>(parameter), this.Items[1].BuildExpressionPredicate<T>(parameter));
+
+		foreach (var rule in this.Items.Skip(2))
+		{
+			firstOr = Expression.AndAlso(firstOr, rule.BuildExpressionPredicate<T>(parameter));
+		}
+
+		return firstOr;
 	}
 }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -35,6 +37,13 @@ public class LiteralRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return Value;
+	}
+
+	/// <inheritdoc />
+	public override Expression BuildExpressionPredicate<T>(ParameterExpression parameter)
+	{
+		var value = this.Value?.GetValue<object>();
+		return Expression.Constant(value);
 	}
 }
 

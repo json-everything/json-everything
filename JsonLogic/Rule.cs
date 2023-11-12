@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -26,6 +27,17 @@ public abstract class Rule
 	/// </param>
 	/// <returns>The result of the rule.</returns>
 	public abstract JsonNode? Apply(JsonNode? data, JsonNode? contextData = null);
+
+	/// <summary>
+	/// Build expression trees for LINQ goodness.
+	/// </summary>
+	/// <param name="parameter">The parameter to build the expression for.</param>
+	/// <returns>An expression if it's supported</returns>
+	/// <exception cref="NotImplementedException">If the rule does not support expressions.</exception>
+	public virtual Expression BuildExpressionPredicate<T>(ParameterExpression parameter)
+	{
+		throw new NotImplementedException($"{this.GetType().Name} does not implement Expression building");
+	}
 
 	/// <summary>
 	/// Casts a JSON value to a <see cref="LiteralRule"/>.

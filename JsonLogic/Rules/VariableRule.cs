@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Common;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -52,6 +54,33 @@ public class VariableRule : Rule
 			return pathEval;
 
 		return DefaultValue?.Apply(data, contextData) ?? null;
+	}
+
+
+	/// <inheritdoc />
+	public override Expression BuildExpressionPredicate<T>(ParameterExpression parameter)
+	{
+		var paths = ((LiteralRule?)this.Path)?.Value?.GetValue<string>()?.Split(".") ?? throw new NotSupportedException($"Couldn't resolve path for path rule {this.Path}");
+		Expression param = null;
+		var type = typeof(T);
+		foreach (var identifier in paths)
+		{
+			var prop = type.GetProperty(identifier)!;
+			if (prop == null)
+			{
+				throw new NotSupportedException($"Couldn't find property {identifier} in rule {this}");
+			}
+
+			param = Expression.MakeMemberAccess(param ?? (Expression)parameter, prop);
+			type = prop.PropertyType;
+			var nullableUnderlying = Nullable.GetUnderlyingType(type);
+			if (nullableUnderlying != null)
+			{
+				param = Expression.Convert(param, nullableUnderlying);
+			}
+		}
+
+		return param;
 	}
 }
 

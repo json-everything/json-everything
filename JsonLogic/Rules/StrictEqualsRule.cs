@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -45,6 +46,12 @@ public class StrictEqualsRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return A.Apply(data, contextData).IsEquivalentTo(B.Apply(data, contextData));
+	}
+
+	/// <inheritdoc />
+	public override Expression BuildExpressionPredicate<T>(ParameterExpression parameter)
+	{
+		return Expression.Equal(this.A.BuildExpressionPredicate<T>(parameter), this.B.BuildExpressionPredicate<T>(parameter));
 	}
 }
 
