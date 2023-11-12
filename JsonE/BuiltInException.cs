@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 namespace Json.JsonE;
 
 /// <summary>
-/// Thrown from <see cref="JsonE.Evaluate(JsonNode?)"/> when a built-in function cannot be evaluated.
+/// Thrown from <see cref="JsonE.Evaluate(JsonNode?,JsonNode?)"/> when a built-in function cannot be evaluated.
 /// </summary>
 public class BuiltInException : Exception
 {

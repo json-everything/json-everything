@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 namespace Json.JsonE;
 
 /// <summary>
-/// Thrown from <see cref="JsonE.Evaluate(JsonNode?)"/> when a template cannot be evaluated.
+/// Thrown from <see cref="JsonE.Evaluate(JsonNode?,JsonNode?)"/> when a template cannot be evaluated.
 /// </summary>
 public class InterpreterException : Exception
 {

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.JsonE.Operators;
 using Json.More;
 
 namespace Json.JsonE;
@@ -52,7 +53,9 @@ public static class JsonE
 				var result = new JsonObject();
 				foreach (var kvp in obj)
 				{
-					result[kvp.Key] = Evaluate(kvp.Value, context);
+					var local = Evaluate(kvp.Value, context);
+					if (!ReferenceEquals(local, IfThenElseOperator.DeleteMarker))
+						result[kvp.Key] = local;
 				}
 
 				return result;
@@ -62,7 +65,9 @@ public static class JsonE
 				var result = new JsonArray();
 				foreach (var item in arr)
 				{
-					result.Add(Evaluate(item, context));
+					var local = Evaluate(item, context);
+					if (!ReferenceEquals(local, IfThenElseOperator.DeleteMarker))
+						result.Add(local);
 				}
 
 				return result;
