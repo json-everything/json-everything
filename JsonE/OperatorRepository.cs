@@ -17,9 +17,13 @@ internal static class OperatorRepository
 		[IfThenElseOperator.Name] = new IfThenElseOperator(),
 		[JsonOperator.Name] = new JsonOperator(),
 		[LetOperator.Name] = new LetOperator(),
+		[MapOperator.Name] = new MapOperator(),
+		[MatchOperator.Name] = new MatchOperator(),
 		[MergeOperator.Name] = new MergeOperator(),
 		[MergeDeepOperator.Name] = new MergeDeepOperator(),
 		[ReverseOperator.Name] = new ReverseOperator(),
+		[SortOperator.Name] = new SortOperator(),
+		[SwitchOperator.Name] = new SwitchOperator(),
 	};
 
 	public static IOperator? Get(JsonNode? node)

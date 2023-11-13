@@ -1,0 +1,15 @@
+﻿using System;
+
+namespace Json.JsonE;
+
+/// <summary>
+/// Thrown from <see cref="JsonE.Evaluate"/> when ???.
+/// </summary>
+public class TypeException : Exception
+{
+	/// <summary>
+	/// Creates a new instance of <see cref="TemplateException"/>.
+	/// </summary>
+	/// <param name="message">The error message.</param>
+	public TypeException(string message) : base(message){}
+}

@@ -12,9 +12,9 @@ internal static class CommonErrors
 	public static string IncorrectValueType(string op, string expectedType) =>
 		$"{op} value must evaluate to {expectedType}";
 
-	public static string IncorrectArgType(string op) =>
-		$"invalid arguments to builtin: {op}";
+	public static string IncorrectArgType(string op) => $"invalid arguments to builtin: {op}";
 
-	public static string EndOfInput(int i) =>
-		$"Unexpected end of input at index {i}";
+	public static string EndOfInput(int i) => $"Unexpected end of input at index {i}";
+
+	public static string SortSameType() => "$sorted values to be sorted must have the same type";
 }

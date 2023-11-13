@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Json.JsonE.Operators;
@@ -47,6 +48,13 @@ internal static class JsonNodeExtensions
 	public static void VerifyNoUndefinedProperties(this JsonObject obj, string op, params string[] additionalKeys)
 	{
 		var undefinedKeys = obj.Select(x => x.Key).Where(x => x != op && !additionalKeys.Contains(x)).ToArray();
+		if (undefinedKeys.Length != 0)
+			throw new TemplateException(CommonErrors.UndefinedProperties(op, undefinedKeys));
+	}
+
+	public static void VerifyNoUndefinedProperties(this JsonObject obj, string op, Regex additionalKey)
+	{
+		var undefinedKeys = obj.Select(x => x.Key).Where(x => x != op && !additionalKey.IsMatch(x)).ToArray();
 		if (undefinedKeys.Length != 0)
 			throw new TemplateException(CommonErrors.UndefinedProperties(op, undefinedKeys));
 	}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -10,6 +11,7 @@ internal class ContextAccessor
 	private readonly IEnumerable<IContextAccessorSegment> _segments;
 
 	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) });
+	public static ContextAccessor Root { get; } = new(Array.Empty<PropertySegment>());
 
 	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments)
 	{
@@ -101,6 +103,14 @@ internal class ContextAccessor
 		index = i;
 		accessor = new ContextAccessor(segments);
 		return true;
+	}
+
+	public static ContextAccessor ParseStub(string source)
+	{
+		int index = 0;
+		if (!TryParse(source.AsSpan(), ref index, out var accessor)) throw new TypeException("source.slice is not a function");
+
+		return new ContextAccessor(accessor!._segments.Skip(1));
 	}
 
 	private static bool TryParseQuotedName(ReadOnlySpan<char> source, ref int index, out IContextAccessorSegment? segment)

@@ -38,6 +38,13 @@ internal class EvaluationContext
 		throw new InterpreterException($"unknown context value {identifier}");
 	}
 
+	public static JsonNode? Find(JsonNode? context, ContextAccessor identifier)
+	{
+		if (identifier.TryFind(context, out var target)) return target;
+
+		throw new InterpreterException($"unknown context value {identifier}");
+	}
+
 	public bool IsDefined(ContextAccessor identifier)
 	{
 		foreach (var context in _contextStack)

@@ -17,6 +17,11 @@ internal class PropertySegment : IContextAccessorSegment
 	public bool TryFind(JsonNode? target, out JsonNode? value)
 	{
 		value = null;
-		return target is JsonObject obj && obj.TryGetValue(_name, out value, out _);
+		if (target is JsonObject obj) return obj.TryGetValue(_name, out value, out _);
+		
+		if (!_isBracketed) throw new InterpreterException("infix: . expects objects");
+		
+		return false;
+
 	}
 }
