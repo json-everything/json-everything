@@ -19,19 +19,11 @@ public static class JsonE
 	/// <returns>A new JSON value result.</returns>
 	public static JsonNode? Evaluate(JsonNode? template, JsonNode? context)
 	{
-		ValidateContext(context);
+		context.ValidateAsContext();
 		var evalContext = new EvaluationContext(context);
 		
-		return Evaluate(template, evalContext);
-	}
-
-	private static void ValidateContext(JsonNode? context)
-	{
-		if (context is not JsonObject obj)
-			throw new TemplateException("context must be an object");
-
-		if (obj.Any(x => !Regex.IsMatch(x.Key, "^[a-zA-Z_][a-zA-Z0-9_]*$")))
-			throw new TemplateException("top level keys of context must follow /[a-zA-Z_][a-zA-Z0-9_]*/");
+		var result = Evaluate(template, evalContext);
+		return ReferenceEquals(result, IfThenElseOperator.DeleteMarker) ? null : result;
 	}
 
 	internal static JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
@@ -55,7 +47,7 @@ public static class JsonE
 				{
 					var local = Evaluate(kvp.Value, context);
 					if (!ReferenceEquals(local, IfThenElseOperator.DeleteMarker))
-						result[kvp.Key] = local;
+						result[kvp.Key] = local.Copy();
 				}
 
 				return result;
@@ -67,13 +59,13 @@ public static class JsonE
 				{
 					var local = Evaluate(item, context);
 					if (!ReferenceEquals(local, IfThenElseOperator.DeleteMarker))
-						result.Add(local);
+						result.Add(local.Copy());
 				}
 
 				return result;
 			}
 			default:
-				return node.Copy();
+				return node;
 		}
 	}
 }

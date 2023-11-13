@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using Json.JsonE.Operators;
 using Json.More;
 
@@ -21,6 +22,15 @@ internal static class JsonNodeExtensions
 		if (node.IsEquivalentTo(_emptyString)) return false;
 
 		return true;
+	}
+
+	public static void ValidateAsContext(this JsonNode? context, string? location = null)
+	{
+		if (context is not JsonObject obj)
+			throw new TemplateException("context must be an object");
+
+		if (obj.Any(x => !Regex.IsMatch(x.Key, "^[a-zA-Z_][a-zA-Z0-9_]*$")))
+			throw new TemplateException($"top level keys of {location ?? "context"} must follow /[a-zA-Z_][a-zA-Z0-9_]*/");
 	}
 
 	public static bool IsTemplateOr<T>(this JsonNode? node)

@@ -15,6 +15,8 @@ internal static class OperatorRepository
 		[FlattenDeepOperator.Name] = new FlattenDeepOperator(),
 		[FromNowOperator.Name] = new FromNowOperator(),
 		[IfThenElseOperator.Name] = new IfThenElseOperator(),
+		[JsonOperator.Name] = new JsonOperator(),
+		[LetOperator.Name] = new LetOperator(),
 		[MergeOperator.Name] = new MergeOperator(),
 		[MergeDeepOperator.Name] = new MergeDeepOperator(),
 		[ReverseOperator.Name] = new ReverseOperator(),

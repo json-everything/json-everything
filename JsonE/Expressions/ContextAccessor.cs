@@ -18,13 +18,20 @@ internal class ContextAccessor
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
 	{
-		if (!source.ConsumeWhitespace(ref index))
+		int i = index;
+		if (!source.ConsumeWhitespace(ref i))
 		{
 			accessor = null;
 			return false;
 		}
 
-		if (!source.TryParseName(ref index, out var name))
+		if (!source.TryParseName(ref i, out var name))
+		{
+			accessor = null;
+			return false;
+		}
+
+		if (name.In("true", "false", "null"))
 		{
 			accessor = null;
 			return false;
@@ -32,7 +39,6 @@ internal class ContextAccessor
 
 		var segments = new List<IContextAccessorSegment>{new PropertySegment(name!, false)};
 
-		int i = index;
 		while (i < source.Length)
 		{
 			if (!source.ConsumeWhitespace(ref i))
