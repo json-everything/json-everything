@@ -11,9 +11,12 @@ internal class MultiplyOperator : IBinaryOperator
 	{
 		if (left is not JsonValue lValue ||
 		    right is not JsonValue rValue)
-			return null;
+			throw new InterpreterException("infix: * expects number * number");
 
-		return lValue.GetNumber() * rValue.GetNumber();
+		var lNumber = lValue.GetNumber() ?? throw new InterpreterException("infix: * expects number * number");
+		var rNumber = rValue.GetNumber() ?? throw new InterpreterException("infix: * expects number * number");
+
+		return lNumber * rNumber;
 	}
 
 	public override string ToString()

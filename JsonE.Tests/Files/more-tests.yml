@@ -21,3 +21,8 @@ title:    Nested in an object
 context:  {}
 template: { key: {$reverse: [1,2,3]}}
 result:   {key: [3,2,1]}
+---
+title:    $sort variable not used
+context:  {}
+template: { $sort: [1,2,3], by(x): foo.a}
+error:    'InterpreterError: unknown context value foo'

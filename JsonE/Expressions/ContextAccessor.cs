@@ -8,14 +8,14 @@ namespace Json.JsonE.Expressions;
 
 internal class ContextAccessor
 {
-	private readonly IEnumerable<IContextAccessorSegment> _segments;
+	private readonly IContextAccessorSegment[] _segments;
 
 	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) });
 	public static ContextAccessor Root { get; } = new(Array.Empty<PropertySegment>());
 
 	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments)
 	{
-		_segments = segments;
+		_segments = segments.ToArray();
 	}
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
@@ -105,10 +105,14 @@ internal class ContextAccessor
 		return true;
 	}
 
-	public static ContextAccessor ParseStub(string source)
+	public static ContextAccessor ParseStub(string source, string expectedVariable)
 	{
 		int index = 0;
 		if (!TryParse(source.AsSpan(), ref index, out var accessor)) throw new TypeException("source.slice is not a function");
+
+		var prop = (PropertySegment)accessor!._segments[0];
+		if (prop.Name != expectedVariable)
+			throw new InterpreterException($"unknown context value {prop.Name}");
 
 		return new ContextAccessor(accessor!._segments.Skip(1));
 	}

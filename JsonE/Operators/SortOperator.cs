@@ -38,8 +38,11 @@ internal class SortOperator : IOperator
 		var accessorEntry = obj.FirstOrDefault(x => x.Key != Name);
 		var accessor = ContextAccessor.Root;
 
-		if (accessorEntry.Key != null) 
-			accessor = ContextAccessor.ParseStub(accessorEntry.Value!.GetValue<string>());
+		if (accessorEntry.Key != null)
+		{
+			var variableName = _byForm.Match(accessorEntry.Key).Groups["var"].Value;
+			accessor = ContextAccessor.ParseStub(accessorEntry.Value!.GetValue<string>(), variableName);
+		}
 
 		var firstSortValue = EvaluationContext.Find(value[0], accessor);
 		var comparer = firstSortValue switch

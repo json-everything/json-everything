@@ -11,13 +11,14 @@ internal class DivideOperator : IBinaryOperator
 	{
 		if (left is not JsonValue lValue ||
 		    right is not JsonValue rValue)
-			return null;
+			throw new InterpreterException("infix: / expects number / number");
 
-		var rNumber = rValue.GetNumber();
+		var lNumber = lValue.GetNumber() ?? throw new InterpreterException("infix: / expects number / number");
+		var rNumber = rValue.GetNumber() ?? throw new InterpreterException("infix: / expects number / number");
 
-		return rNumber is null or 0
+		return rNumber == 0
 			? throw new InterpreterException("divide by zero")
-			: (JsonNode?)(lValue.GetNumber() / rNumber);
+			: (JsonNode?)(lNumber / rNumber);
 	}
 
 	public override string ToString()
