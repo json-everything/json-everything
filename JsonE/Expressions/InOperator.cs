@@ -11,13 +11,15 @@ internal class InOperator : IBinaryOperator
 
 	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
-		var values = right switch
+		return right switch
 		{
-			JsonArray arr => arr,
+			JsonArray arr => arr.Contains(left, JsonNodeEqualityComparer.Instance),
+			JsonObject obj => obj.Any(x => left.IsEquivalentTo(x.Key)),
+			JsonValue vRight when vRight.TryGetValue(out string? sRight) &&
+			                      left is JsonValue vLeft &&
+			                      vLeft.TryGetValue(out string? sLeft) => sRight.Contains(sLeft),
 			_ => throw new BuiltInException(CommonErrors.IncorrectArgType("in"))
 		};
-
-		return values.Contains(left, JsonNodeEqualityComparer.Instance);
 	}
 
 	public override string ToString()
