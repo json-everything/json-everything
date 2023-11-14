@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using Json.JsonE.Operators;
 
-namespace Json.JsonE;
+namespace Json.JsonE.Operators;
 
 internal static class OperatorRepository
 {

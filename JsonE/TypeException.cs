@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Text.Json.Nodes;
 
 namespace Json.JsonE;
 
 /// <summary>
-/// Thrown from <see cref="JsonE.Evaluate"/> when ???.
+/// Thrown from <see cref="JsonE.Evaluate(JsonNode?, JsonNode?)"/> when ???.
 /// </summary>
 public class TypeException : Exception
 {
