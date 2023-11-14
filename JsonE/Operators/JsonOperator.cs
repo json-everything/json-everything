@@ -1,4 +1,6 @@
-﻿using System.Text.Encodings.Web;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -24,8 +26,21 @@ internal class JsonOperator : IOperator
 		var obj = template!.AsObject();
 		var value = obj[Name];
 
-		var evaluated = JsonE.Evaluate(value, context);
+		var evaluated = Sort(JsonE.Evaluate(value, context));
 
 		return evaluated.AsJsonString(_serializerOptions);
+	}
+
+	private static JsonNode? Sort(JsonNode? node)
+	{
+		if (node is not JsonObject obj) return node;
+
+		var dict = new SortedDictionary<string, JsonNode?>(StringComparer.Ordinal);
+		foreach (var kvp in obj)
+		{
+			dict[kvp.Key] = Sort(kvp.Value);
+		}
+
+		return JsonSerializer.SerializeToNode(dict);
 	}
 }
