@@ -19,6 +19,7 @@ internal class TypeOfFunction : FunctionDefinition
 			case JsonArray:
 				return "array";
 			case JsonValue val:
+				if (ReferenceEquals(val, JsonNull.SignalNode)) return "null";
 				if (val.GetNumber().HasValue) return "number";
 				if (val.TryGetValue<string>(out _)) return "string";
 				if (val.TryGetValue<bool>(out _)) return "boolean";

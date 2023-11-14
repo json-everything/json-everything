@@ -22,8 +22,10 @@ internal static class Operators
 	public static readonly IBinaryOperator Or = new OrOperator();
 
 	public static readonly IUnaryOperator Not = new NotOperator();
+	public static readonly IUnaryOperator Negate = new NegateOperator();
+	public static readonly IUnaryOperator Posate = new PosateOperator();
 
-	public static bool TryGet(ReadOnlySpan<char> source, ref int index, out IExpressionOperator? op)
+	public static bool TryGetBinary(ReadOnlySpan<char> source, ref int index, out IExpressionOperator? op)
 	{
 		if (!source.ConsumeWhitespace(ref index))
 		{
@@ -43,10 +45,6 @@ internal static class Operators
 				break;
 			case '/':
 				op = Divide;
-				index++;
-				break;
-			case '!':
-				op = Not;
 				index++;
 				break;
 			default:
@@ -131,4 +129,35 @@ internal static class Operators
 
 		return true;
 	}
+
+	public static bool TryGetUnary(ReadOnlySpan<char> source, ref int index, out IExpressionOperator? op)
+	{
+		if (!source.ConsumeWhitespace(ref index))
+		{
+			op = null;
+			return false;
+		}
+
+		switch (source[index])
+		{
+			case '+':
+				op = Posate;
+				index++;
+				break;
+			case '-':
+				op = Negate;
+				index++;
+				break;
+			case '!':
+				op = Not;
+				index++;
+				break;
+			default:
+				op = null;
+				break;
+		}
+
+		return op != null;
+	}
+
 }

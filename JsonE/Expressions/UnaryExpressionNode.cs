@@ -39,7 +39,7 @@ internal class UnaryExpressionNode : ExpressionNode
 	}
 }
 
-internal class UnaryExpressionParser
+internal class UnaryExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
@@ -64,7 +64,7 @@ internal class UnaryExpressionParser
 			throw new TemplateException(EndOfInput(i));
 
 		// parse operator
-		if (!Operators.TryGet(source, ref i, out var op) || op is not IUnaryOperator unOp)
+		if (!Operators.TryGetUnary(source, ref i, out var op) || op is not IUnaryOperator unOp)
 		{
 			expression = null;
 			return false;
@@ -88,8 +88,7 @@ internal class UnaryExpressionParser
 			nestLevel--;
 			i++;
 		}
-		if (i == source.Length)
-			throw new TemplateException(EndOfInput(i));
+
 		if (nestLevel != 0)
 		{
 			expression = null;

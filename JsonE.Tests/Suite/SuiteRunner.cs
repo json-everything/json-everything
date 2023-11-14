@@ -68,6 +68,8 @@ public class SuiteRunner
 	{
 		if (exception is TemplateException) return "TemplateError";
 		if (exception is InterpreterException) return "InterpreterError";
+		if (exception is BuiltInException) return "BuiltinError";
+		if (exception is TypeException) return "TypeError";
 
 		return string.Empty;
 	}

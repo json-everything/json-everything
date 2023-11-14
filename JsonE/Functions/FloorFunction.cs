@@ -14,7 +14,7 @@ internal class FloorFunction : FunctionDefinition
 	{
 		var num = (arguments[0] as JsonValue)?.GetNumber();
 		if (!num.HasValue)
-			throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+			throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
 
 		return Math.Floor(num.Value);
 	}

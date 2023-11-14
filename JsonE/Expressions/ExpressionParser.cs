@@ -7,9 +7,10 @@ namespace Json.JsonE.Expressions;
 internal static class ExpressionParser
 {
 	private static readonly IOperandExpressionParser[] _operandParsers =
-{
+	{
 		new FunctionExpressionParser(),
 		new AccessorExpressionParser(),
+		new UnaryExpressionParser(),
 		new LiteralExpressionParser(),
 	};
 
@@ -70,7 +71,7 @@ internal static class ExpressionParser
 
 			var nextNest = nestLevel;
 			// parse operator
-			if (!Operators.TryGet(source, ref i, out var op) || op is not IBinaryOperator binOp)
+			if (!Operators.TryGetBinary(source, ref i, out var op) || op is not IBinaryOperator binOp)
 				break; // if we don't get a binary op, then we're done
 
 			// handle (

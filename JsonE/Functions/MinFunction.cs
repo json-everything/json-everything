@@ -15,7 +15,7 @@ internal class MinFunction : FunctionDefinition
 	{
 		var nums = arguments.Select(x => (x as JsonValue)?.GetNumber()).ToArray();
 		if (nums.Any(x => !x.HasValue))
-			throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+			throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
 
 		return nums.Min();
 	}

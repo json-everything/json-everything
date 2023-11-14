@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
+using Json.JsonE.Operators;
 using Json.More;
 
 namespace Json.JsonE.Expressions;
@@ -13,11 +14,8 @@ internal class InOperator : IBinaryOperator
 		var values = right switch
 		{
 			JsonArray arr => arr,
-			JsonObject obj => obj.Select(x => x.Value),
-			_ => null
+			_ => throw new BuiltInException(CommonErrors.IncorrectArgType("in"))
 		};
-
-		if (values == null) return false;
 
 		return values.Contains(left, JsonNodeEqualityComparer.Instance);
 	}

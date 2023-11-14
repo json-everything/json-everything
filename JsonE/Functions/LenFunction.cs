@@ -16,6 +16,6 @@ internal class LenFunction : FunctionDefinition
 		if (arg is JsonArray arr) return arr.Count;
 		if (arg is JsonValue val && val.TryGetValue(out string? str)) return new StringInfo(str).LengthInTextElements;
 
-		throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+		throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
 	}
 }
