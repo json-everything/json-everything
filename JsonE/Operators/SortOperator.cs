@@ -69,6 +69,7 @@ internal class SortOperator : IOperator
 				return context.Find(accessor!);
 			}, comparer!);
 
+			context.Pop();
 			return sorted.ToJsonArray();
 		}
 		catch (InvalidOperationException e)

@@ -31,3 +31,18 @@ title:    $sort variable not used (not in context)
 context:  {}
 template: { $sort: [2,1,3], by(x): foo}
 error:    'InterpreterError: unknown context value foo'
+---
+title:    $map over object, two vars
+context:  {}
+template:	{ $map: {a: 1, b: 2, c: 3}, 'each(v,k)': {'${k}x': {$eval: 'v + 1'}} }
+result:   {ax: 2, bx: 3, cx: 4}
+---
+title:    $map over object, two vars (overwrite)
+context:  {}
+template:	{ $map: {a: 1, b: 2, c: 3}, 'each(v,k)': {'foo': {$eval: 'v + 1'}} }
+result:   {foo: 4}
+---
+title:    $map over object, one var
+context:  {}
+template: {$map: {a: 1, b: 2, c: 3}, 'each(y)': {'${y.key}x': {$eval: 'y.val + 1'}}}
+result:   {ax: 2, bx: 3, cx: 4}

@@ -31,9 +31,9 @@ internal class MergeOperator : IOperator
 		return array.Aggregate(new JsonObject(), Merge);
 	}
 
-	private static JsonObject Merge(JsonObject result, JsonNode? current)
+	public static JsonObject Merge(JsonObject result, JsonNode? current)
 	{
-		var obj = current!.AsObject();
+		var obj = current as JsonObject ?? throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"));
 
 		foreach (var kvp in obj)
 		{
