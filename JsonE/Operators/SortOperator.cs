@@ -10,7 +10,7 @@ namespace Json.JsonE.Operators;
 
 internal class SortOperator : IOperator
 {
-	private static readonly Regex _byForm = new(@"^by\((?<var>[a-zA-Z_][a-zA-Z0-9_]*)\)");
+	private static readonly Regex _byForm = new(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)");
 
 	public const string Name = "$sort";
 	
@@ -37,14 +37,22 @@ internal class SortOperator : IOperator
 
 		var accessorEntry = obj.FirstOrDefault(x => x.Key != Name);
 		var accessor = ContextAccessor.Root;
+		var variableName = "x";
 
 		if (accessorEntry.Key != null)
 		{
-			var variableName = _byForm.Match(accessorEntry.Key).Groups["var"].Value;
-			accessor = ContextAccessor.ParseStub(accessorEntry.Value!.GetValue<string>(), variableName);
+			int index = 0;
+			if (!ContextAccessor.TryParse(accessorEntry.Value!.GetValue<string>().AsSpan(), ref index, out accessor))
+				throw new TemplateException("by() requires an accessor");
+			variableName = _byForm.Match(accessorEntry.Key).Groups["var"].Value;
 		}
 
-		var firstSortValue = EvaluationContext.Find(value[0], accessor);
+		var itemContext = new JsonObject
+		{
+			[variableName] = value[0].Copy()
+		};
+		context.Push(itemContext);
+		var firstSortValue = context.Find(accessor!);
 		var comparer = firstSortValue switch
 		{
 			JsonValue v when v.TryGetValue<string>(out _) => (IComparer<JsonNode>) JsonNodeStringComparer.Instance,
@@ -55,12 +63,18 @@ internal class SortOperator : IOperator
 
 		try
 		{
-			var sorted = value.OrderBy(x => EvaluationContext.Find(x, accessor), comparer!);
+			var sorted = value.OrderBy(x =>
+			{
+				itemContext[variableName] = x.Copy();
+				return context.Find(accessor!);
+			}, comparer!);
 
 			return sorted.ToJsonArray();
 		}
 		catch (InvalidOperationException e)
 		{
+			// .OrderBy() seems to have its own try/catch which wraps any exceptions.
+			// I hate doing this, but I really want the exception thrown by the comparer.
 			throw e.InnerException!;
 		}
 	}
@@ -92,6 +106,6 @@ internal class JsonNodeNumberComparer : IComparer<JsonNode>
 		var nX = (x as JsonValue)?.GetNumber() ?? throw new TemplateException(CommonErrors.SortSameType());
 		var nY = (y as JsonValue)?.GetNumber() ?? throw new TemplateException(CommonErrors.SortSameType());
 
-		return nX < nY ? -1 : 1;
+		return nX <= nY ? -1 : 1;
 	}
 }

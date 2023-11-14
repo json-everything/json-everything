@@ -9,13 +9,15 @@ namespace Json.JsonE.Expressions;
 internal class ContextAccessor
 {
 	private readonly IContextAccessorSegment[] _segments;
+	private readonly string _asString;
 
-	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) });
-	public static ContextAccessor Root { get; } = new(Array.Empty<PropertySegment>());
+	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) }, "now");
+	public static ContextAccessor Root { get; } = new(Array.Empty<PropertySegment>(), string.Empty);
 
-	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments)
+	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments, string asString)
 	{
 		_segments = segments.ToArray();
+		_asString = asString;
 	}
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
@@ -100,21 +102,10 @@ internal class ContextAccessor
 			break;
 		}
 
+		var asString = source[index..i].ToString();
 		index = i;
-		accessor = new ContextAccessor(segments);
+		accessor = new ContextAccessor(segments, asString);
 		return true;
-	}
-
-	public static ContextAccessor ParseStub(string source, string expectedVariable)
-	{
-		int index = 0;
-		if (!TryParse(source.AsSpan(), ref index, out var accessor)) throw new TypeException("source.slice is not a function");
-
-		var prop = (PropertySegment)accessor!._segments[0];
-		if (prop.Name != expectedVariable)
-			throw new InterpreterException($"unknown context value {prop.Name}");
-
-		return new ContextAccessor(accessor!._segments.Skip(1));
 	}
 
 	private static bool TryParseQuotedName(ReadOnlySpan<char> source, ref int index, out IContextAccessorSegment? segment)
@@ -250,4 +241,6 @@ internal class ContextAccessor
 		value = current;
 		return true;
 	}
+
+	public override string ToString() => _asString;
 }

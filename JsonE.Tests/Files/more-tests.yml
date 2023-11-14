@@ -22,7 +22,12 @@ context:  {}
 template: { key: {$reverse: [1,2,3]}}
 result:   {key: [3,2,1]}
 ---
-title:    $sort variable not used
+title:    $sort variable not used (in context)
+context:  { foo: 1 }
+template: { $sort: [2,1,3], by(x): foo}
+result:   [2,1,3]
+---
+title:    $sort variable not used (not in context)
 context:  {}
-template: { $sort: [1,2,3], by(x): foo.a}
+template: { $sort: [2,1,3], by(x): foo}
 error:    'InterpreterError: unknown context value foo'
