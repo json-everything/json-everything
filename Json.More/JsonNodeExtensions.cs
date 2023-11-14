@@ -46,6 +46,11 @@ public static class JsonNodeExtensions
 				if (aValue.GetValue<object>() is JsonElement aElement &&
 					bValue.GetValue<object>() is JsonElement bElement)
 					return aElement.IsEquivalentTo(bElement);
+
+				var aNumber = aValue.GetNumber();
+				var bNumber = bValue.GetNumber();
+				if (aNumber != null) return aNumber == bNumber;
+
 				return a.ToJsonString() == b.ToJsonString();
 			default:
 				return a?.ToJsonString() == b?.ToJsonString();
