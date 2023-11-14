@@ -23,6 +23,7 @@ internal static class OperatorRepository
 		[ReverseOperator.Name] = new ReverseOperator(),
 		[SortOperator.Name] = new SortOperator(),
 		[SwitchOperator.Name] = new SwitchOperator(),
+		["$default"] = null!
 	};
 
 	public static IOperator? Get(JsonNode? node)

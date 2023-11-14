@@ -9,8 +9,6 @@ internal class IfThenElseOperator : IOperator
 {
 	public const string Name = "$if";
 
-	public static readonly JsonNode DeleteMarker = "delete_marker"!;
-
 	public void Validate(JsonNode? template)
 	{
 		var obj = template!.AsObject();
@@ -33,7 +31,7 @@ internal class IfThenElseOperator : IOperator
 
 		int index = 0;
 		if (!ExpressionParser.TryParse(source.AsSpan(), ref index, out var expression))
-			throw new TemplateException("Expression is not valid"); // shouldn't happen because we checked it earl
+			throw new TemplateException("Expression is not valid"); // shouldn't happen because we checked it earlier
 
 		var cond = expression!.Evaluate(context);
 		var thenPresent = obj.TryGetValue("then", out var thenValue, out _);
@@ -43,7 +41,7 @@ internal class IfThenElseOperator : IOperator
 		elseValue = JsonE.Evaluate(elseValue, context);
 
 		return cond.IsTruthy()
-			? thenPresent ? thenValue : DeleteMarker
-			: elsePresent ? elseValue : DeleteMarker;
+			? thenPresent ? thenValue : JsonE.DeleteMarker
+			: elsePresent ? elseValue : JsonE.DeleteMarker;
 	}
 }

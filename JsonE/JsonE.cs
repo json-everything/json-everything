@@ -9,6 +9,8 @@ namespace Json.JsonE;
 /// </summary>
 public static class JsonE
 {
+	internal static readonly JsonNode DeleteMarker = "delete_marker"!;
+
 	/// <summary>
 	/// Evaluates the template against a JSON value context.
 	/// </summary>
@@ -21,7 +23,7 @@ public static class JsonE
 		var evalContext = new EvaluationContext(context);
 		
 		var result = Evaluate(template, evalContext);
-		return ReferenceEquals(result, IfThenElseOperator.DeleteMarker) ? null : result;
+		return ReferenceEquals(result, DeleteMarker) ? null : result;
 	}
 
 	internal static JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
@@ -44,7 +46,7 @@ public static class JsonE
 				foreach (var kvp in obj)
 				{
 					var local = Evaluate(kvp.Value, context);
-					if (!ReferenceEquals(local, IfThenElseOperator.DeleteMarker))
+					if (!ReferenceEquals(local, DeleteMarker))
 						result[kvp.Key] = local.Copy();
 				}
 
@@ -56,7 +58,7 @@ public static class JsonE
 				foreach (var item in arr)
 				{
 					var local = Evaluate(item, context);
-					if (!ReferenceEquals(local, IfThenElseOperator.DeleteMarker))
+					if (!ReferenceEquals(local, DeleteMarker))
 						result.Add(local.Copy());
 				}
 
