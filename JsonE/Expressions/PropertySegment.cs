@@ -19,10 +19,9 @@ internal class PropertySegment : IContextAccessorSegment
 	{
 		value = null;
 		if (target is JsonObject obj) return obj.TryGetValue(Name, out value, out _);
-		
-		if (!_isBracketed) throw new InterpreterException("infix: . expects objects");
-		
-		return false;
 
+		if (!_isBracketed) throw new InterpreterException("infix: . expects objects");
+
+		throw new InterpreterException("should only use integers to access arrays or strings");
 	}
 }

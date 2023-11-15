@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Operators;
 using Json.More;
@@ -14,7 +15,9 @@ internal class InOperator : IBinaryOperator
 		return right switch
 		{
 			JsonArray arr => arr.Contains(left, JsonNodeEqualityComparer.Instance),
-			JsonObject obj => obj.Any(x => left.IsEquivalentTo(x.Key)),
+			JsonObject obj => left is JsonValue val && val.TryGetValue(out string? key)
+				? obj.Any(x => string.Equals(key, x.Key, StringComparison.Ordinal))
+				: throw new InterpreterException("only strings can be found in objects"),
 			JsonValue vRight when vRight.TryGetValue(out string? sRight) &&
 			                      left is JsonValue vLeft &&
 			                      vLeft.TryGetValue(out string? sLeft) => sRight.Contains(sLeft),

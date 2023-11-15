@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Linq;
+using System.Text.Json.Nodes;
+using Json.JsonE.Expressions;
 using Json.JsonE.Operators;
 using Json.More;
 
@@ -30,10 +33,14 @@ public static class JsonE
 	{
 		var op = OperatorRepository.Get(template);
 
+		JsonNode? result;
+
 		if (op == null)
-			return MaybeEvaluateChildren(template, context);
-		
-		return op.Evaluate(template, context);
+			result = MaybeEvaluateChildren(template, context);
+		else
+			result = op.Evaluate(template, context);
+
+		return HandleStringInterpolation(result, context);
 	}
 
 	private static JsonNode? MaybeEvaluateChildren(JsonNode? node, EvaluationContext context)
@@ -67,5 +74,100 @@ public static class JsonE
 			default:
 				return node;
 		}
+	}
+
+	private static JsonNode? HandleStringInterpolation(JsonNode? value, EvaluationContext context)
+	{
+		if (ReferenceEquals(value, DeleteMarker)) return value;
+
+		switch (value)
+		{
+			case JsonObject obj:
+				foreach (var kvp in obj.ToArray())
+				{
+					obj.Remove(kvp.Key);
+					obj[Interpolate(kvp.Key, context)] = kvp.Value;
+				}
+				return obj;
+			case JsonValue val when val.TryGetValue(out string? str):
+				return Interpolate(str, context);
+			default:
+				return value;
+		}
+	}
+
+	private static string Interpolate(string value, EvaluationContext context)
+	{
+		var interpolated = value;
+		var starts = Enumerable.Range(0, value.Length - 2 + 1).Where(index => "${".Equals(value.Substring(index, 2)));
+
+		var source = value.AsSpan();
+		foreach (var start in starts)
+		{
+
+			var end = start + 2;
+			var nest = 1;
+			while (nest != 0 && end < source.Length)
+			{
+				end++;
+
+				switch (source[end])
+				{
+					case '{':
+						nest++;
+						continue;
+					case '}':
+						nest--;
+						continue;
+				}
+			}
+
+			if (end == source.Length)
+				throw new TemplateException("invalid expression inside string interpolation");
+
+			var textToReplace = source[start..(end + 1)].ToString();
+			if (start != 0 && source[start - 1] == '$')
+			{
+				var unescaped = source[(start + 1)..(end+1)].ToString();
+				interpolated = interpolated.Replace(textToReplace, unescaped);
+				continue;
+			}
+
+			var exprText = source[(start+2)..end];
+			var index = 0;
+			if (!ExpressionParser.TryParse(exprText, ref index, out var expr))
+				throw new TemplateException("invalid expression inside string interpolation");
+
+			var evaluated = expr!.Evaluate(context);
+			if (evaluated is null)
+			{
+				interpolated = interpolated.Replace(textToReplace, string.Empty);
+				continue;
+			}
+
+			if (evaluated is JsonValue val)
+			{
+				var n = val.GetNumber();
+				if (n.HasValue)
+				{
+					interpolated = interpolated.Replace(textToReplace, n.ToString());
+					continue;
+				}
+				if (val.TryGetValue(out string? s))
+				{
+					interpolated = interpolated.Replace(textToReplace, s);
+					continue;
+				}
+				if (val.TryGetValue(out bool b))
+				{
+					interpolated = interpolated.Replace(textToReplace, b ? "true" : "false");
+					continue;
+				}
+			}
+
+			throw new TemplateException($"interpolation of '{exprText.ToString()}' produced an array or object");
+		}
+
+		return interpolated;
 	}
 }

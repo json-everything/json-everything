@@ -49,6 +49,6 @@ internal static class OperatorRepository
 
 	private static bool HasReservedWords(JsonObject obj)
 	{
-		return obj.Any(x => Regex.IsMatch(x.Key, @"^\$[^$]"));
+		return obj.Any(x => Regex.IsMatch(x.Key, @"^\$[^${]"));
 	}
 }

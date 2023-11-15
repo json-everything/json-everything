@@ -104,7 +104,13 @@ internal static class ExpressionParser
 			if (left is BinaryExpressionNode bin)
 			{
 				if (bin.Precedence < Precedence(binOp))
+				{
+					while (bin.Right is BinaryExpressionNode bRight && bRight.Precedence < Precedence(binOp))
+					{
+						bin = bRight;
+					}
 					bin.Right = new BinaryExpressionNode(binOp, bin.Right, right, nestLevel);
+				}
 				else
 					left = new BinaryExpressionNode(binOp, left, right, nestLevel);
 			}
