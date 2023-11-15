@@ -10,10 +10,10 @@ internal class LetOperator : IOperator
 	{
 		var obj = template!.AsObject();
 
+		obj.VerifyNoUndefinedProperties(Name, "in");
+
 		var parameter = obj[Name];
 		if (parameter.IsTemplateOr<JsonObject>()) return;
-
-		obj.VerifyNoUndefinedProperties(Name, "in");
 
 		if (obj.Count != 2)
 			throw new TemplateException($"{Name} requires `in` property");

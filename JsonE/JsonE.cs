@@ -98,6 +98,8 @@ public static class JsonE
 
 	private static string Interpolate(string value, EvaluationContext context)
 	{
+		if (value.Length <= 2) return value;
+
 		var interpolated = value;
 		var starts = Enumerable.Range(0, value.Length - 2 + 1).Where(index => "${".Equals(value.Substring(index, 2)));
 

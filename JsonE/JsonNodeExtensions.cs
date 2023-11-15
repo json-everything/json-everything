@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Json.JsonE.Operators;
@@ -28,7 +27,7 @@ internal static class JsonNodeExtensions
 	public static void ValidateAsContext(this JsonNode? context, string? location = null)
 	{
 		if (context is not JsonObject obj)
-			throw new TemplateException("context must be an object");
+			throw new TemplateException($"{(location != null ? location + " value" : "context")} must be an object");
 
 		if (obj.Any(x => !Regex.IsMatch(x.Key, "^[a-zA-Z_][a-zA-Z0-9_]*$")))
 			throw new TemplateException($"top level keys of {location ?? "context"} must follow /[a-zA-Z_][a-zA-Z0-9_]*/");

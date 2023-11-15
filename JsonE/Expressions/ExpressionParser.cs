@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Json.JsonE.Expressions.Operators;
 using static Json.JsonE.Operators.CommonErrors;
 
 namespace Json.JsonE.Expressions;
@@ -64,18 +64,16 @@ internal static class ExpressionParser
 					nestLevel--;
 					i++;
 				}
-				if (i == source.Length)
-					throw new TemplateException(EndOfInput(i));
 				if (nestLevel == 0) continue;
 			}
 
 			var nextNest = nestLevel;
 			// parse operator
-			if (!Operators.TryGetBinary(source, ref i, out var op) || op is not IBinaryOperator binOp)
+			if (!OperatorRepository.TryGetBinary(source, ref i, out var op) || op is not IBinaryOperator binOp)
 				break; // if we don't get a binary op, then we're done
 
 			// handle (
-			if (!source.ConsumeWhitespace(ref index))
+			if (!source.ConsumeWhitespace(ref i))
 			{
 				expression = null;
 				return false;
@@ -103,9 +101,9 @@ internal static class ExpressionParser
 
 			if (left is BinaryExpressionNode bin)
 			{
-				if (bin.Precedence < Precedence(binOp))
+				if (bin.Precedence <= Precedence(binOp))
 				{
-					while (bin.Right is BinaryExpressionNode bRight && bRight.Precedence < Precedence(binOp))
+					while (bin.Right is BinaryExpressionNode bRight && bRight.Precedence <= Precedence(binOp))
 					{
 						bin = bRight;
 					}

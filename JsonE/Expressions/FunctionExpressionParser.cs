@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text;
-using Json.JsonE.Functions;
+using Json.JsonE.Expressions.Functions;
 
 namespace Json.JsonE.Expressions;
 
@@ -112,9 +112,6 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 		arguments = new List<ExpressionNode>();
 		var done = false;
 
-		var parameterTypeList = function!.ParameterCounts;
-		var parameterIndex = 0;
-
 		while (i < source.Length && !done)
 		{
 			if (!source.ConsumeWhitespace(ref i))
@@ -154,14 +151,6 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			}
 
 			i++;
-			parameterIndex++;
-		}
-
-		if (!function.AcceptsParamsList && !parameterIndex.In(parameterTypeList))
-		{
-			arguments = null;
-			function = null;
-			return false;
 		}
 
 		index = i;

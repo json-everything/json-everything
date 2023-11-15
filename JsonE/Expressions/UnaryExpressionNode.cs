@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json.Nodes;
+using Json.JsonE.Expressions.Operators;
 using static Json.JsonE.Operators.CommonErrors;
 
 namespace Json.JsonE.Expressions;
@@ -64,7 +65,7 @@ internal class UnaryExpressionParser : IOperandExpressionParser
 			throw new TemplateException(EndOfInput(i));
 
 		// parse operator
-		if (!Operators.TryGetUnary(source, ref i, out var op) || op is not IUnaryOperator unOp)
+		if (!OperatorRepository.TryGetUnary(source, ref i, out var op) || op is not IUnaryOperator unOp)
 		{
 			expression = null;
 			return false;
