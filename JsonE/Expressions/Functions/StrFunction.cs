@@ -10,7 +10,15 @@ internal class StrFunction : FunctionDefinition
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{
-		var num = (arguments[0] as JsonValue)?.GetNumber();
+		if (arguments[0] is null) return "null";
+
+		if (arguments[0] is not JsonValue val)
+			throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
+
+		if (val.TryGetValue(out string? str)) return str;
+		if (val.TryGetValue(out bool b)) return b ? "true" : "false";
+
+		var num = val.GetNumber();
 		if (!num.HasValue)
 			throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
 

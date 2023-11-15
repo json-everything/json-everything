@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -19,11 +21,17 @@ internal class SliceSegment : IContextAccessorSegment
 
 	public bool TryFind(JsonNode? target, out JsonNode? value)
 	{
-		if (target is not JsonArray arr)
+		value = null;
+		return target switch
 		{
-			value = null;
-			return false;
-		}
+			JsonArray arr => TryFind(arr, out value),
+			JsonValue val when val.TryGetValue(out string? str) => TryFind(str, out value),
+			_ => false
+		};
+	}
+
+	private bool TryFind(JsonArray arr, out JsonNode? value)
+	{
 		if (_step == 0)
 		{
 			value = null;
@@ -59,6 +67,46 @@ internal class SliceSegment : IContextAccessorSegment
 		}
 
 		value = result;
+		return true;
+	}
+
+	private bool TryFind(string arr, out JsonNode? value)
+	{
+		if (_step == 0)
+		{
+			value = null;
+			return false;
+		}
+
+		var result = new StringBuilder();
+
+		var step = _step ?? 1;
+		var start = _start ?? (step >= 0 ? 0 : arr.Length);
+		var end = _end ?? (step >= 0 ? arr.Length : -arr.Length - 1);
+		var (lower, upper) = Bounds(start, end, step, arr.Length);
+
+		if (step > 0)
+		{
+			var i = lower;
+			while (i < upper)
+			{
+				result.Append(arr[i]);
+				i += step;
+				if (i < 0) break; // overflow
+			}
+		}
+		else
+		{
+			var i = upper;
+			while (lower < i)
+			{
+				result.Append(arr[i]);
+				i += step;
+				if (i < 0) break; // overflow
+			}
+		}
+
+		value = result.ToString();
 		return true;
 	}
 

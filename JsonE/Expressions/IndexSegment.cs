@@ -22,14 +22,20 @@ internal class IndexSegment : IContextAccessorSegment
 					value = arr[arr.Count + _index];
 					return true;
 				}
+
+				throw new InterpreterException("index out of bounds");
 			}
-			else if (_index < arr.Count)
+			
+			if (_index < arr.Count)
 			{
 				value = arr[_index];
 				return true;
 			}
+
+			throw new InterpreterException("index out of bounds");
 		}
-		else if (target is JsonValue val && val.TryGetValue(out string? str))
+		
+		if (target is JsonValue val && val.TryGetValue(out string? str))
 		{
 			if (_index < 0)
 			{
@@ -38,12 +44,17 @@ internal class IndexSegment : IContextAccessorSegment
 					value = str[str.Length + _index];
 					return true;
 				}
+		
+				throw new InterpreterException("index out of bounds");
 			}
-			else if (_index < str.Length)
+			
+			if (_index < str.Length)
 			{
 				value = str[_index];
 				return true;
 			}
+		
+			throw new InterpreterException("index out of bounds");
 		}
 
 		value = null;
