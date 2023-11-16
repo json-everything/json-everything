@@ -36,7 +36,7 @@ internal class SortOperator : IOperator
 		if (value.Count == 0) return value;
 
 		var accessorEntry = obj.FirstOrDefault(x => x.Key != Name);
-		var accessor = ContextAccessor.Root;
+		var accessor = ContextAccessor.Default;
 		var variableName = "x";
 
 		if (accessorEntry.Key != null)
@@ -67,10 +67,10 @@ internal class SortOperator : IOperator
 			{
 				itemContext[variableName] = x.Copy();
 				return context.Find(accessor!);
-			}, comparer!);
+			}, comparer!).ToJsonArray();
 
 			context.Pop();
-			return sorted.ToJsonArray();
+			return sorted;
 		}
 		catch (InvalidOperationException e)
 		{

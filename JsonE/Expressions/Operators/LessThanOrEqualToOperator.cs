@@ -16,7 +16,7 @@ internal class LessThanOrEqualToOperator : IBinaryOperator
 
 		if (lValue.TryGetValue(out string? leftString) &&
 			rValue.TryGetValue(out string? rightString))
-			return string.Compare(leftString, rightString, StringComparison.Ordinal) > 0;
+			return string.Compare(leftString, rightString, StringComparison.Ordinal) <= 0;
 
 		var lNumber = lValue.GetNumber() ?? throw new InterpreterException("infix: <= expects numbers/strings <= numbers/strings");
 		var rNumber = rValue.GetNumber() ?? throw new InterpreterException("infix: <= expects numbers/strings <= numbers/strings");

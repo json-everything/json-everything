@@ -12,7 +12,7 @@ internal class ContextAccessor
 	private readonly string _asString;
 
 	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) }, "now");
-	public static ContextAccessor Root { get; } = new(Array.Empty<PropertySegment>(), string.Empty);
+	public static ContextAccessor Default { get; } = new(new[] { new PropertySegment("x", false) }, "x");
 
 	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments, string asString)
 	{

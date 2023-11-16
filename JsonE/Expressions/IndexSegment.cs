@@ -57,7 +57,9 @@ internal class IndexSegment : IContextAccessorSegment
 			throw new InterpreterException("index out of bounds");
 		}
 
-		value = null;
-		return false;
+		if (target is JsonObject)
+			throw new InterpreterException("object keys must be strings");
+
+		throw new InterpreterException("infix: \"[..]\" expects object, array, or string");
 	}
 }

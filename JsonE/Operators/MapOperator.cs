@@ -61,7 +61,9 @@ internal class MapOperator : IOperator
 			if (indexVar != null)
 				itemContext[indexVar] = i;
 
-			array.Add(JsonE.Evaluate(template, context).Copy());
+			var localResult = JsonE.Evaluate(template, context);
+			if (!ReferenceEquals(localResult, JsonE.DeleteMarker))
+				array.Add(localResult.Copy());
 		}
 
 		context.Pop();

@@ -23,6 +23,13 @@ internal class BinaryExpressionNode : ExpressionNode
 
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
+		if (Operator is IShortcuttingBinaryOperator shortcutter)
+		{
+			return shortcutter.ShouldContinue(Left.Evaluate(context), out var result)
+				? Operator.Evaluate(result, Right.Evaluate(context))
+				: result;
+		}
+
 		return Operator.Evaluate(Left.Evaluate(context), Right.Evaluate(context));
 	}
 
