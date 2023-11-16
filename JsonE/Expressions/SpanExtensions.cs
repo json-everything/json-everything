@@ -126,9 +126,11 @@ internal static class SpanExtensions
 					break;
 				case '{':
 				case '[':
+					var startChar = span[i];
 					end = i + 1;
 					endChar = span[i] == '{' ? '}' : ']';
 					var inString = false;
+					var nest = 0;
 					while (end < span.Length)
 					{
 						var escaped = false;
@@ -142,7 +144,15 @@ internal static class SpanExtensions
 						{
 							inString = !inString;
 						}
-						else if (!inString && span[end] == endChar) break;
+						else if (!inString)
+						{
+							if (span[end] == startChar) nest++;
+							if (span[end] == endChar)
+							{
+								if (nest == 0) break;
+								nest--;
+							}
+						}
 
 						end++;
 					}

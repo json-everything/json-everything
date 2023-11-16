@@ -74,7 +74,8 @@ internal class ContextAccessor
 
 					if (!TryParseQuotedName(source, ref i, out var segment) &&
 					    !TryParseSlice(source, ref i, out segment) &&
-					    !TryParseIndex(source, ref i, out segment))
+					    !TryParseIndex(source, ref i, out segment) &&
+					    !TryParseExpression(source, ref i, out segment))
 					{
 						accessor = null;
 						return false;
@@ -228,9 +229,21 @@ internal class ContextAccessor
 		return true;
 	}
 
-	public bool TryFind(JsonNode? target, out JsonNode? value)
+	private static bool TryParseExpression(ReadOnlySpan<char> source, ref int i, out IContextAccessorSegment? segment)
 	{
-		var current = target;
+		if (!ExpressionParser.TryParse(source, ref i, out var expression))
+		{
+			segment = null;
+			return false;
+		}
+
+		segment = new ExpressionSegment(expression!);
+		return true;
+	}
+
+	public bool TryFind(JsonNode? context, out JsonNode? value)
+	{
+		var current = context;
 		foreach (var segment in _segments)
 		{
 			if (!segment.TryFind(current, out value)) return false;

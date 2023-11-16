@@ -15,10 +15,10 @@ internal class PropertySegment : IContextAccessorSegment
 		_isBracketed = isBracketed;
 	}
 
-	public bool TryFind(JsonNode? target, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
 	{
 		value = null;
-		if (target is JsonObject obj) return obj.TryGetValue(Name, out value, out _);
+		if (contextValue is JsonObject obj) return obj.TryGetValue(Name, out value, out _);
 
 		if (!_isBracketed) throw new InterpreterException("infix: . expects objects");
 

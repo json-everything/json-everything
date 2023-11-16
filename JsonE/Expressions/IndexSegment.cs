@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions;
 
@@ -11,9 +12,9 @@ internal class IndexSegment : IContextAccessorSegment
 		_index = index;
 	}
 
-	public bool TryFind(JsonNode? target, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
 	{
-		if (target is JsonArray arr)
+		if (contextValue is JsonArray arr)
 		{
 			if (_index < 0)
 			{
@@ -35,7 +36,7 @@ internal class IndexSegment : IContextAccessorSegment
 			throw new InterpreterException("index out of bounds");
 		}
 		
-		if (target is JsonValue val && val.TryGetValue(out string? str))
+		if (contextValue is JsonValue val && val.TryGetValue(out string? str))
 		{
 			if (_index < 0)
 			{
@@ -57,9 +58,24 @@ internal class IndexSegment : IContextAccessorSegment
 			throw new InterpreterException("index out of bounds");
 		}
 
-		if (target is JsonObject)
+		if (contextValue is JsonObject)
 			throw new InterpreterException("object keys must be strings");
 
 		throw new InterpreterException("infix: \"[..]\" expects object, array, or string");
+	}
+}
+
+internal class ExpressionSegment : IContextAccessorSegment
+{
+	private readonly ExpressionNode _expression;
+
+	public ExpressionSegment(ExpressionNode expression)
+	{
+		_expression = expression;
+	}
+
+	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
+	{
+		throw new NotImplementedException();
 	}
 }

@@ -27,9 +27,9 @@ internal class EvaluationContext
 
 	public JsonNode? Find(ContextAccessor identifier)
 	{
-		foreach (var context in _contextStack)
+		foreach (var contextValue in _contextStack)
 		{
-			if (identifier.TryFind(context, out var target)) return target;
+			if (identifier.TryFind(contextValue, out var target)) return target;
 		}
 
 		if (ReferenceEquals(identifier, ContextAccessor.Now))

@@ -46,3 +46,13 @@ title:    $map over object, one var
 context:  {}
 template: {$map: {a: 1, b: 2, c: 3}, 'each(y)': {'${y.key}x': {$eval: 'y.val + 1'}}}
 result:   {ax: 2, bx: 3, cx: 4}
+---
+title:    index expression
+context:  {a: [10,11,12], b: 1}
+template: {$eval: 'a[b]'}
+result:   11
+---
+title:    index expression with +
+context:  {a: [10,11,12], b: 1}
+template: {$eval: 'a[b+1]'}
+result:   12

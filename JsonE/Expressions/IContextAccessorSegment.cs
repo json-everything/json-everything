@@ -4,5 +4,5 @@ namespace Json.JsonE.Expressions;
 
 internal interface IContextAccessorSegment
 {
-	bool TryFind(JsonNode? target, out JsonNode? value);
+	bool TryFind(JsonNode? contextValue, out JsonNode? value);
 }

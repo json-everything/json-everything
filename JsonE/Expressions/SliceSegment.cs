@@ -19,10 +19,10 @@ internal class SliceSegment : IContextAccessorSegment
 		_step = step;
 	}
 
-	public bool TryFind(JsonNode? target, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
 	{
 		value = null;
-		return target switch
+		return contextValue switch
 		{
 			JsonArray arr => TryFind(arr, out value),
 			JsonValue val when val.TryGetValue(out string? str) => TryFind(str, out value),
@@ -30,7 +30,7 @@ internal class SliceSegment : IContextAccessorSegment
 		};
 	}
 
-	private bool TryFind(JsonArray arr, out JsonNode? value)
+	private bool TryFind(JsonArray contextValue, out JsonNode? value)
 	{
 		if (_step == 0)
 		{
@@ -41,16 +41,16 @@ internal class SliceSegment : IContextAccessorSegment
 		var result = new JsonArray();
 
 		var step = _step ?? 1;
-		var start = _start ?? (step >= 0 ? 0 : arr.Count);
-		var end = _end ?? (step >= 0 ? arr.Count : -arr.Count - 1);
-		var (lower, upper) = Bounds(start, end, step, arr.Count);
+		var start = _start ?? (step >= 0 ? 0 : contextValue.Count);
+		var end = _end ?? (step >= 0 ? contextValue.Count : -contextValue.Count - 1);
+		var (lower, upper) = Bounds(start, end, step, contextValue.Count);
 
 		if (step > 0)
 		{
 			var i = lower;
 			while (i < upper)
 			{
-				result.Add(arr[i].Copy());
+				result.Add(contextValue[i].Copy());
 				i += step;
 				if (i < 0) break; // overflow
 			}
@@ -60,7 +60,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = upper;
 			while (lower < i)
 			{
-				result.Add(arr[i].Copy());
+				result.Add(contextValue[i].Copy());
 				i += step;
 				if (i < 0) break; // overflow
 			}
@@ -70,7 +70,7 @@ internal class SliceSegment : IContextAccessorSegment
 		return true;
 	}
 
-	private bool TryFind(string arr, out JsonNode? value)
+	private bool TryFind(string contextValue, out JsonNode? value)
 	{
 		if (_step == 0)
 		{
@@ -81,16 +81,16 @@ internal class SliceSegment : IContextAccessorSegment
 		var result = new StringBuilder();
 
 		var step = _step ?? 1;
-		var start = _start ?? (step >= 0 ? 0 : arr.Length);
-		var end = _end ?? (step >= 0 ? arr.Length : -arr.Length - 1);
-		var (lower, upper) = Bounds(start, end, step, arr.Length);
+		var start = _start ?? (step >= 0 ? 0 : contextValue.Length);
+		var end = _end ?? (step >= 0 ? contextValue.Length : -contextValue.Length - 1);
+		var (lower, upper) = Bounds(start, end, step, contextValue.Length);
 
 		if (step > 0)
 		{
 			var i = lower;
 			while (i < upper)
 			{
-				result.Append(arr[i]);
+				result.Append(contextValue[i]);
 				i += step;
 				if (i < 0) break; // overflow
 			}
@@ -100,7 +100,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = upper;
 			while (lower < i)
 			{
-				result.Append(arr[i]);
+				result.Append(contextValue[i]);
 				i += step;
 				if (i < 0) break; // overflow
 			}
