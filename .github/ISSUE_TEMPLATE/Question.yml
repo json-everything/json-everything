@@ -6,8 +6,13 @@ body:
     attributes:
       value: |
         Thanks for taking the time to help make this project better!
-
-        Please be sure that you've consulted the [documentation](https://docs.json-everything.net) as many questions already have answers there.
+  - type: checkboxes
+    id: docs
+    attributes:
+      label: Documentation
+      options:
+        - label: I have consulted the [documentation](https://docs.json-everything.net), and my question isn't answered there.
+          required: true
   - type: dropdown
     id: package
     attributes:
