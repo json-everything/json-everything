@@ -167,6 +167,24 @@
             <param name="right">A JSON Pointer.</param>
             <returns>`false` if the pointers are equal; `true` otherwise.</returns>
         </member>
+        <member name="T:Json.Pointer.JsonPointerJsonConverter">
+            <summary>
+            Converter for <see cref="T:Json.Pointer.JsonPointer"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Pointer.JsonPointer"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Pointer.JsonPointer,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+        </member>
         <member name="T:Json.Pointer.JsonPointerStyle">
             <summary>
             Enumerates the different styles of JSON pointers.
@@ -450,6 +468,24 @@
         <member name="M:Json.Pointer.RelativeJsonPointer.ToString">
             <summary>Returns the fully qualified type name of this instance.</summary>
             <returns>The fully qualified type name.</returns>
+        </member>
+        <member name="T:Json.Pointer.RelativeJsonPointerJsonConverter">
+            <summary>
+            Converter for <see cref="T:Json.Pointer.RelativeJsonPointer"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Pointer.RelativeJsonPointerJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Pointer.RelativeJsonPointer"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Pointer.RelativeJsonPointerJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Pointer.RelativeJsonPointer,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
         </member>
     </members>
 </doc>
