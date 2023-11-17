@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "8.10"
 ---
+# [3.2.0](https://github.com/gregsdennis/json-everything/pull/???) {#release-pointer-3.2.0}
+
+[#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
+
 # [3.1.0](https://github.com/gregsdennis/json-everything/pull/509) {#release-pointer-3.1.0}
 
 Enhanced support for creating pointers via Linq expressions.
