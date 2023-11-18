@@ -4,6 +4,10 @@ title: JsonSchema.Net.UniqueKeys
 icon: fas fa-tag
 order: "8.06"
 ---
+# [3.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-3.1.0}
+
+[#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
+
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/499) {#release-schemadata-3.0.1}
 
 Update error message usage IAW JsonSchema.Net v5.1.0.
