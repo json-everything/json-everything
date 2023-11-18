@@ -56,8 +56,16 @@ public class CommentKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
+/// <summary>
+/// JSON converter for <see cref="CommentKeyword"/>.
+/// </summary>
+public sealed class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="CommentKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override CommentKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.String)
@@ -67,6 +75,11 @@ internal class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
 
 		return new CommentKeyword(str);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, CommentKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(CommentKeyword.Name, value.Value);

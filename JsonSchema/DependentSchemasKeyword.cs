@@ -90,8 +90,16 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	}
 }
 
-internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSchemasKeyword>
+/// <summary>
+/// JSON converter for <see cref="DependentSchemasKeyword"/>.
+/// </summary>
+public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSchemasKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="DependentSchemasKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override DependentSchemasKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
@@ -100,6 +108,11 @@ internal class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSch
 		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		return new DependentSchemasKeyword(schema);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentSchemasKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DependentSchemasKeyword.Name);

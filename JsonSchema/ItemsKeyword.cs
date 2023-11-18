@@ -148,8 +148,16 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 	}
 }
 
-internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
+/// <summary>
+/// JSON converter for <see cref="ItemsKeyword"/>.
+/// </summary>
+public sealed class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="ItemsKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override ItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
@@ -161,6 +169,11 @@ internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 		var schema = options.Read<JsonSchema>(ref reader)!;
 		return new ItemsKeyword(schema);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(ItemsKeyword.Name);

@@ -54,8 +54,16 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	}
 }
 
-internal class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
+/// <summary>
+/// JSON converter for <see cref="DefinitionsKeyword"/>.
+/// </summary>
+public sealed class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="DefinitionsKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override DefinitionsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
@@ -64,6 +72,11 @@ internal class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeywor
 		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		return new DefinitionsKeyword(schema);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefinitionsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DefinitionsKeyword.Name);

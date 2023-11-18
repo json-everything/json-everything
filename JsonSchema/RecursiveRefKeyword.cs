@@ -113,8 +113,16 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
+/// <summary>
+/// JSON converter for <see cref="RecursiveRefKeyword"/>.
+/// </summary>
+public sealed class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="RecursiveRefKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override RecursiveRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var uri = reader.GetString()!;
@@ -122,6 +130,11 @@ internal class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRefKeyw
 
 
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RecursiveRefKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(RecursiveRefKeyword.Name);

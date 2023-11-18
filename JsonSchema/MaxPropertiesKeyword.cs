@@ -72,8 +72,16 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKeyword>
+/// <summary>
+/// JSON converter for <see cref="MaxPropertiesKeyword"/>.
+/// </summary>
+public sealed class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="MaxPropertiesKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override MaxPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.Number)
@@ -87,6 +95,11 @@ internal class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKe
 
 		return new MaxPropertiesKeyword((uint)number);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MaxPropertiesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MaxPropertiesKeyword.Name, value.Value);

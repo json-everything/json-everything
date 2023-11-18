@@ -83,8 +83,16 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>
+/// <summary>
+/// JSON converter for <see cref="DependentRequiredKeyword"/>.
+/// </summary>
+public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="DependentRequiredKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override DependentRequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
@@ -93,6 +101,11 @@ internal class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRe
 		var requirements = options.Read<Dictionary<string, List<string>>>(ref reader);
 		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DependentRequiredKeyword.Name);

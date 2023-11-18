@@ -79,8 +79,16 @@ public class SchemaKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
+/// <summary>
+/// JSON converter for <see cref="SchemaKeyword"/>.
+/// </summary>
+public sealed class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="SchemaKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override SchemaKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.String)
@@ -93,6 +101,10 @@ internal class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 		return new SchemaKeyword(uri);
 	}
 
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, SchemaKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(SchemaKeyword.Name, value.Schema.OriginalString);

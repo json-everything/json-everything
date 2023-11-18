@@ -55,8 +55,16 @@ public class MinContainsKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeyword>
+/// <summary>
+/// JSON converter for <see cref="MinContainsKeyword"/>.
+/// </summary>
+public sealed class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="MinContainsKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override MinContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.Number)
@@ -70,6 +78,11 @@ internal class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeywor
 
 		return new MinContainsKeyword((uint)number);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinContainsKeyword.Name, value.Value);

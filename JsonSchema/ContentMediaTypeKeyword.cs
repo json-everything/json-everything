@@ -56,8 +56,16 @@ public class ContentMediaTypeKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMediaTypeKeyword>
+/// <summary>
+/// JSON converter for <see cref="ContentMediaTypeKeyword"/>.
+/// </summary>
+public sealed class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMediaTypeKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="ContentMediaTypeKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override ContentMediaTypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.String)
@@ -67,6 +75,11 @@ internal class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMedia
 
 		return new ContentMediaTypeKeyword(str);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentMediaTypeKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(ContentMediaTypeKeyword.Name, value.Value);
