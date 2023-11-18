@@ -106,30 +106,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 			return;
 		}
 
-		if (evaluation.LocalInstance is JsonObject &&
-		    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
-		{
-			uint minimum = 1;
-			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
-				minimum = minContainsAnnotation!.GetValue<uint>();
-			uint? maximum = null;
-			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
-				maximum = maxContainsAnnotation!.GetValue<uint>();
-
-			var validProperties = evaluation.ChildEvaluations
-				.Where(x => x.Results.IsValid)
-				.Select(x => x.RelativeInstanceLocation.Segments[0].Value)
-				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validProperties));
-			
-			var actual = validProperties.Length;
-			if (actual < minimum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture), ("received", actual), ("minimum", minimum));
-			else if (actual > maximum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture), ("received", actual), ("maximum", maximum));
-			return;
-		}
-
 		evaluation.MarkAsSkipped();
 	}
 }
