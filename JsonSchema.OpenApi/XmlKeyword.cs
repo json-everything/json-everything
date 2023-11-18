@@ -112,7 +112,10 @@ public class XmlKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
+/// <summary>
+/// JSON converter for <see cref="XmlKeyword"/>.
+/// </summary>
+public sealed class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 {
 	// ReSharper disable UnusedAutoPropertyAccessor.Local
 	private class Model
@@ -130,6 +133,11 @@ internal class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 	}
 	// ReSharper restore UnusedAutoPropertyAccessor.Local
 
+	/// <summary>Reads and converts the JSON to type <see cref="XmlKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override XmlKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
@@ -141,6 +149,11 @@ internal class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 
 		return new XmlKeyword(model!.Namespace, model.Name, model.Prefix, model.Attribute, model.Wrapped, extensionData, node);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, XmlKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DiscriminatorKeyword.Name);

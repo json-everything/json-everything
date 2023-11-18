@@ -106,8 +106,16 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
+/// <summary>
+/// JSON converter for <see cref="UniqueKeysKeyword"/>.
+/// </summary>
+public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="UniqueKeysKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override UniqueKeysKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
@@ -117,6 +125,10 @@ internal class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
 		return new UniqueKeysKeyword(references);
 	}
 
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueKeysKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(UniqueKeysKeyword.Name);
