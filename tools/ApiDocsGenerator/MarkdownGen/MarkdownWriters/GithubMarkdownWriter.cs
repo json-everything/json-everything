@@ -150,7 +150,8 @@ public class GithubMarkdownWriter : IMarkdownWriter
 		text = text.Replace("&gt;", ">");
 		text = text.Replace("&lt;", "<");
 		text = text.Replace("|", "\\|");
-		return text.Replace(Environment.NewLine, "<br>");
+		return text.Replace(Environment.NewLine, " ");
+		//return text.Replace(Environment.NewLine, "<br>");
 	}
 
 	public string Bold(string text)
