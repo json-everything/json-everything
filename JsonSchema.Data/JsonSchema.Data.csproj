@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
 		<RootNamespace>Json.Schema.Data</RootNamespace>
