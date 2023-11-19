@@ -48,23 +48,6 @@ public class SchemaGeneratorConfiguration
 	public PropertyOrder PropertyOrder { get; set; }
 
 	/// <summary>
-	/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethods.AsDeclared"/>.
-	/// </summary>
-	/// <remarks>
-	/// This can be replaced with any `Func&lt;string, string&gt;`.
-	/// </remarks>
-	[Obsolete($"Use {nameof(PropertyNameResolver)} instead.")]
-	public PropertyNamingMethod? PropertyNamingMethod
-	{
-		get => x => PropertyNameResolver!(new DummyInfo(x));
-		set
-		{
-			var method = value ?? PropertyNamingMethods.AsDeclared;
-			PropertyNameResolver = x => method(x.Name);
-		}
-	}
-
-	/// <summary>
 	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.AsDeclared"/>.
 	/// </summary>
 	/// <remarks>
