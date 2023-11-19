@@ -117,7 +117,6 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExternalDocsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DiscriminatorKeyword.Name);
 		writer.WriteStartObject();
 		writer.WriteString("propertyName", value.Url.OriginalString);
 		if (value.Description != null)

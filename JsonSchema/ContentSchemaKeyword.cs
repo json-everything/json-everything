@@ -79,7 +79,6 @@ public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSch
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentSchemaKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ContentSchemaKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

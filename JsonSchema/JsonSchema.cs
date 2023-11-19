@@ -379,11 +379,7 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var serialized = JsonSerializer.Serialize((object) keyword);
-				// TODO: The current keyword serializations include the keyword property name.
-				// This is an oversight and needs to be fixed in future versions.
-				// This is a breaking change: users may have their own keywords.
-				var jsonText = serialized.Split([':'], 2)[1];
+				var jsonText = JsonSerializer.Serialize((object) keyword);
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -604,11 +600,7 @@ public class JsonSchema : IBaseDocument
 					break;
 				default: // non-applicator keyword
 					var serialized = JsonSerializer.Serialize(localResolvable);
-					// TODO: The current keyword serializations include the keyword property name.
-					// This is an oversight and needs to be fixed in future versions.
-					// This is a breaking change: users may have their own keywords.
-					var jsonText = serialized.Split([':'], 2)[1];
-					var json = JsonNode.Parse(jsonText);
+					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;
 					return ExtractSchemaFromData(newPointer, json, hostSchema);
@@ -752,7 +744,7 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 		writer.WriteStartObject();
 		foreach (var keyword in value.Keywords!)
 		{
-			// TODO: The property name should be written here, probably. (breaking change: users may have their own keywords)
+			writer.WritePropertyName(keyword.Keyword());
 			JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
 		}
 

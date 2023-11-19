@@ -139,7 +139,6 @@ public sealed class PatternPropertiesKeywordJsonConverter : JsonConverter<Patter
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PatternPropertiesKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var schema in value.Patterns)
 		{

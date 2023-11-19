@@ -95,7 +95,7 @@ public sealed class ExclusiveMinimumKeywordJsonConverter : JsonConverter<Exclusi
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExclusiveMinimumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(ExclusiveMinimumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

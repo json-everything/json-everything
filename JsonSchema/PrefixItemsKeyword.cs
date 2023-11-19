@@ -119,7 +119,6 @@ public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PrefixItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PrefixItemsKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var schema in value.ArraySchemas)
 		{

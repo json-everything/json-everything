@@ -131,7 +131,6 @@ public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueKeysKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(UniqueKeysKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Keys, options);
 	}
 }

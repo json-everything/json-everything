@@ -82,6 +82,6 @@ public sealed class ContentEncodingKeywordJsonConverter : JsonConverter<ContentE
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentEncodingKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(ContentEncodingKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

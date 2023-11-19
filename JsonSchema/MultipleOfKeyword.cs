@@ -99,7 +99,7 @@ public sealed class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MultipleOfKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MultipleOfKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

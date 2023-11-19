@@ -79,7 +79,6 @@ public sealed class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefinitionsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DefinitionsKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Definitions)
 		{

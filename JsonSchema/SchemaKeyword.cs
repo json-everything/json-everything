@@ -107,7 +107,7 @@ public sealed class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, SchemaKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(SchemaKeyword.Name, value.Schema.OriginalString);
+		writer.WriteStringValue(value.Schema.OriginalString);
 	}
 }
 

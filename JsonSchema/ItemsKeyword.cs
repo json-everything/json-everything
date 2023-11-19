@@ -176,7 +176,6 @@ public sealed class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ItemsKeyword.Name);
 		if (value.SingleSchema != null)
 			JsonSerializer.Serialize(writer, value.SingleSchema, options);
 		else

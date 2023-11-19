@@ -99,7 +99,6 @@ public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PropertiesKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Properties)
 		{

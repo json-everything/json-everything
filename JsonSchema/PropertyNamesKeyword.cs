@@ -102,7 +102,6 @@ public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNa
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyNamesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PropertyNamesKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

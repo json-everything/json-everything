@@ -85,6 +85,6 @@ public sealed class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MaxContainsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MaxContainsKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }

@@ -81,6 +81,6 @@ public sealed class DeprecatedKeywordJsonConverter : JsonConverter<DeprecatedKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DeprecatedKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(DeprecatedKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }
