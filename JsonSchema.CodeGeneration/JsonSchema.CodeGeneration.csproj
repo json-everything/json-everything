@@ -51,7 +51,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Humanizer.Core" Version="2.11.10" />
+	  <PackageReference Include="Humanizer.Core" Version="2.14.1" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
