@@ -128,23 +128,6 @@ public sealed class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 
 public static partial class ErrorMessages
 {
-	private static string? _invalidPattern;
-
-	/// <summary>
-	/// Gets or sets the error message for when the <see cref="PatternKeyword"/> contains
-	/// an invalid or unsupported regular expression.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[pattern]] - the regular expression
-	/// </remarks>
-	[Obsolete("Unsupported patterns will now throw exceptions.")]
-	public static string InvalidPattern
-	{
-		get => _invalidPattern ?? Get();
-		set => _invalidPattern = value;
-	}
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="PatternKeyword"/>.
 	/// </summary>

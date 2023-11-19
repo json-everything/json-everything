@@ -237,22 +237,3 @@ public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPr
 			JsonSerializer.Serialize(writer, value.Requirements, options);
 	}
 }
-
-public static partial class ErrorMessages
-{
-	private static string? _dependencies;
-
-	/// <summary>
-	/// Gets or sets the error message for <see cref="DependenciesKeyword"/>.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[properties]] - the properties which failed to match the requirements
-	/// </remarks>
-	[Obsolete("Use " + nameof(DependentRequired) + " or " + nameof(DependentSchemas) + " to set the appropriate message.")]
-	public static string Dependencies
-	{
-		get => _dependencies ?? Get();
-		set => _dependencies = value;
-	}
-}
