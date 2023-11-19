@@ -15,7 +15,7 @@ public static class JsonSerializerOptionsExtensions
 	/// </summary>
 	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
-	/// <returns>An implementation of <see cref="JsonConverter<>"/> as determined by the provided options</returns>
+	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
 	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options)
 	{
 		return (JsonConverter<T>)options.GetConverter(typeof(T));

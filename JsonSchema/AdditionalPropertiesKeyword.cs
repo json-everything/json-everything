@@ -81,7 +81,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SiblingDependencies = keywordConstraints,
+			SiblingDependencies = keywordConstraints!,
 			ChildDependencies = new[] { subschemaConstraint }
 		};
 	}
