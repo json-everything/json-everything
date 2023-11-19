@@ -14,7 +14,7 @@ internal static class JsonSerializerOptionsExtensions
 
 		public static ArbitraryDeserializer GetConverter(Type arbitraryType)
 		{
-			return _deserializerCache.GetOrAdd(arbitraryType, t => (ArbitraryDeserializer)Activator.CreateInstance(typeof(ArbitraryDeserializer<>).MakeGenericType(t)));
+			return _deserializerCache.GetOrAdd(arbitraryType, t => (ArbitraryDeserializer)Activator.CreateInstance(typeof(ArbitraryDeserializer<>).MakeGenericType(t))!);
 		}
 
 		public abstract object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options);

@@ -162,7 +162,7 @@ public class JsonSchema : IBaseDocument
 		return schema.Evaluate(root, options);
 	}
 
-	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N").Substring(0, 10)}");
+	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N")[..10]}");
 
 	/// <summary>
 	/// Gets a specified keyword if it exists.
@@ -255,7 +255,7 @@ public class JsonSchema : IBaseDocument
 			case OutputFormat.Hierarchical:
 				break;
 			default:
-				throw new ArgumentOutOfRangeException();
+				throw new ArgumentOutOfRangeException("options.OutputFormat");
 		}
 
 		return results;
@@ -383,7 +383,7 @@ public class JsonSchema : IBaseDocument
 				// TODO: The current keyword serializations include the keyword property name.
 				// This is an oversight and needs to be fixed in future versions.
 				// This is a breaking change: users may have their own keywords.
-				var jsonText = serialized.Split(new[] { ':' }, 2)[1];
+				var jsonText = serialized.Split([':'], 2)[1];
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -468,10 +468,10 @@ public class JsonSchema : IBaseDocument
 			{
 				if (evaluatingAs <= SpecVersion.Draft7 &&
 				    idKeyword.Id.OriginalString[0] == '#' &&
-				    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString.Substring(1)))
+				    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString[1..]))
 				{
 					schema.BaseUri = currentBaseUri;
-					resourceRoot.Anchors[idKeyword.Id.OriginalString.Substring(1)] = (schema, false);
+					resourceRoot.Anchors[idKeyword.Id.OriginalString[1..]] = (schema, false);
 				}
 				else
 				{
@@ -607,7 +607,7 @@ public class JsonSchema : IBaseDocument
 					// TODO: The current keyword serializations include the keyword property name.
 					// This is an oversight and needs to be fixed in future versions.
 					// This is a breaking change: users may have their own keywords.
-					var jsonText = serialized.Split(new[] { ':' }, 2)[1];
+					var jsonText = serialized.Split([':'], 2)[1];
 					var json = JsonNode.Parse(jsonText);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;

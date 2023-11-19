@@ -12,7 +12,7 @@ public static class KeywordExtensions
 {
 	static KeywordExtensions()
 	{
-		_keywordEvaluationGroups = new Dictionary<Type, int>();
+		_keywordEvaluationGroups = new();
 
 		var allTypes = GetAllKeywordTypes().ToList();
 
@@ -49,13 +49,12 @@ public static class KeywordExtensions
 		typeof(IJsonSchemaKeyword).Assembly
 			.GetTypes()
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface);
+			            t is { IsAbstract: false, IsInterface: false });
 
 	private static readonly Dictionary<Type, string> _keywordNames =
 		GetAllKeywordTypes()
 			.Where(t => t != typeof(UnrecognizedKeyword))
-			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
+			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>()!.Name);
 
 	/// <summary>
 	/// Gets the keyword string.

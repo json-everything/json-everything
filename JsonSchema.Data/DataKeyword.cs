@@ -94,7 +94,7 @@ public class DataKeyword : IJsonSchemaKeyword
 		}
 
 		if (failedReferences.Any())
-			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
+			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
 		var json = JsonSerializer.Serialize(data);
 		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
@@ -142,10 +142,11 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 {
 	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Where(x => x != typeof(UnrecognizedKeyword)).Select(GetKeyword).ToArray();
 
+	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	private static string GetKeyword(Type keywordType)
 	{
 		var field = keywordType.GetField("Name", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-		return (string)field!.GetValue(null);
+		return (string)field!.GetValue(null)!;
 	}
 
 	/// <summary>Reads and converts the JSON to type <see cref="DataKeyword"/>.</summary>

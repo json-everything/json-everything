@@ -114,8 +114,10 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(PatchOperation other)
+	public bool Equals(PatchOperation? other)
 	{
+		if (other is null) return false;
+
 		return Op == other.Op &&
 			   From.Equals(other.From) &&
 			   Path.Equals(other.Path) &&
@@ -125,9 +127,9 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		return obj is PatchOperation other && Equals(other);
+		return Equals(obj as PatchOperation);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>
@@ -228,7 +230,7 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 				break;
 			case OperationType.Unknown:
 			default:
-				throw new ArgumentOutOfRangeException();
+				throw new ArgumentOutOfRangeException("value.Op");
 		}
 
 		writer.WriteEndObject();
