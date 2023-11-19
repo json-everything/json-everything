@@ -102,7 +102,7 @@ public sealed class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropert
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinPropertiesKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

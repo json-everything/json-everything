@@ -104,7 +104,6 @@ public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ThenKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ThenKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

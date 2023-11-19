@@ -82,7 +82,6 @@ public sealed class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefaultKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DefaultKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

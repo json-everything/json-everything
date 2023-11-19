@@ -118,7 +118,6 @@ public sealed class AdditionalPropertiesKeywordJsonConverter : JsonConverter<Add
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, AdditionalPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(AdditionalPropertiesKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

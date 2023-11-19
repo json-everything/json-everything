@@ -174,7 +174,6 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DataKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DataKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.References)
 		{

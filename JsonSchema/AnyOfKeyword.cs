@@ -103,7 +103,6 @@ public sealed class AnyOfKeywordJsonConverter : JsonConverter<AnyOfKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, AnyOfKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(AnyOfKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var schema in value.Schemas)
 		{

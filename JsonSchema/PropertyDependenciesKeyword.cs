@@ -124,7 +124,6 @@ public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<Pro
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyDependenciesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PropertyDependenciesKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Dependencies, options);
 	}
 }

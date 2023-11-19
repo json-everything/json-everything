@@ -99,7 +99,7 @@ public sealed class MaximumKeywordJsonConverter : JsonConverter<MaximumKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MaximumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MaximumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

@@ -79,7 +79,6 @@ public sealed class UnrecognizedKeywordJsonConverter : JsonConverter<Unrecognize
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnrecognizedKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(value.Name);
 		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

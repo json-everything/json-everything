@@ -77,6 +77,6 @@ public sealed class RecursiveAnchorKeywordJsonConverter : JsonConverter<Recursiv
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RecursiveAnchorKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(RecursiveAnchorKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }

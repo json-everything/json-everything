@@ -133,7 +133,6 @@ public sealed class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RefKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(RefKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Reference, options);
 	}
 }

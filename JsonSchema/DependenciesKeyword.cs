@@ -139,7 +139,6 @@ public sealed class DependenciesKeywordJsonConverter : JsonConverter<Dependencie
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependenciesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DependenciesKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Requirements)
 		{

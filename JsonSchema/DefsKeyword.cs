@@ -83,7 +83,6 @@ public sealed class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DefsKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Definitions)
 		{

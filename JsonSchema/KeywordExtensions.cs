@@ -63,6 +63,7 @@ public static class KeywordExtensions
 	/// <returns>The keyword string.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="keyword"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
+	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	public static string Keyword(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
@@ -89,6 +90,7 @@ public static class KeywordExtensions
 	/// <returns>The keyword string.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="keywordType"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
+	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	public static string Keyword(this Type keywordType)
 	{
 		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));

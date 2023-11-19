@@ -81,6 +81,6 @@ public sealed class WriteOnlyKeywordJsonConverter : JsonConverter<WriteOnlyKeywo
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, WriteOnlyKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(WriteOnlyKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }

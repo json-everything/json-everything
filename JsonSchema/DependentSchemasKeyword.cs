@@ -115,7 +115,6 @@ public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<Depende
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentSchemasKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DependentSchemasKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Schemas)
 		{

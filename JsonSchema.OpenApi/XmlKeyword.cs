@@ -156,7 +156,6 @@ public sealed class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, XmlKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DiscriminatorKeyword.Name);
 		writer.WriteStartObject();
 		if (value.Namespace != null)
 			writer.WriteString("namespace", value.Namespace.OriginalString);

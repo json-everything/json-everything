@@ -137,7 +137,6 @@ public sealed class RecursiveRefKeywordJsonConverter : JsonConverter<RecursiveRe
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RecursiveRefKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(RecursiveRefKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Reference, options);
 	}
 }
