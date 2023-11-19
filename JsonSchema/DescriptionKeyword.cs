@@ -83,6 +83,6 @@ public sealed class DescriptionKeywordJsonConverter : JsonConverter<DescriptionK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DescriptionKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(DescriptionKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

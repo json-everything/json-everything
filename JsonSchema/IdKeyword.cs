@@ -85,6 +85,6 @@ public sealed class IdKeywordJsonConverter : JsonConverter<IdKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, IdKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(IdKeyword.Name, value.Id.OriginalString);
+		writer.WriteStringValue(value.Id.OriginalString);
 	}
 }

@@ -110,7 +110,7 @@ public sealed class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(UniqueItemsKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }
 

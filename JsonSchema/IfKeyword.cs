@@ -92,7 +92,6 @@ public sealed class IfKeywordJsonConverter : JsonConverter<IfKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, IfKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(IfKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

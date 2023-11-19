@@ -122,7 +122,7 @@ public sealed class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PatternKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(PatternKeyword.Name, value.Value.ToString());
+		writer.WriteStringValue(value.Value.ToString());
 	}
 }
 

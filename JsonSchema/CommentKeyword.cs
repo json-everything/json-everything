@@ -82,6 +82,6 @@ public sealed class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, CommentKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(CommentKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

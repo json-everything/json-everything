@@ -137,7 +137,6 @@ public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<Un
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnevaluatedPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(UnevaluatedPropertiesKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

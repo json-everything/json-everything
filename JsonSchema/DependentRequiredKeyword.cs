@@ -108,7 +108,6 @@ public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<Depend
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DependentRequiredKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Requirements)
 		{

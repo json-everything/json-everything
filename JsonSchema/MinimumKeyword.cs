@@ -99,7 +99,7 @@ public sealed class MinimumKeywordJsonConverter : JsonConverter<MinimumKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinimumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinimumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

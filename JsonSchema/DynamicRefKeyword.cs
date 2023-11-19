@@ -141,7 +141,6 @@ public sealed class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DynamicRefKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Reference, options);
 	}
 }

@@ -81,6 +81,6 @@ public sealed class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, TitleKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(TitleKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

@@ -118,7 +118,6 @@ public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, TypeKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(TypeKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Type, options);
 	}
 }

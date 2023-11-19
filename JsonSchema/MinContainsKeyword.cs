@@ -85,6 +85,6 @@ public sealed class MinContainsKeywordJsonConverter : JsonConverter<MinContainsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinContainsKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }

@@ -85,6 +85,6 @@ public sealed class AnchorKeywordJsonConverter : JsonConverter<AnchorKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, AnchorKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(AnchorKeyword.Name, value.Anchor);
+		writer.WriteStringValue(value.Anchor);
 	}
 }

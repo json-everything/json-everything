@@ -132,7 +132,7 @@ public sealed class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, FormatKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(FormatKeyword.Name, value.Value.Key);
+		writer.WriteStringValue(value.Value.Key);
 	}
 }
 

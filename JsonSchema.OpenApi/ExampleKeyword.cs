@@ -72,7 +72,6 @@ public sealed class ExampleKeywordJsonConverter : JsonConverter<ExampleKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExampleKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ExampleKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

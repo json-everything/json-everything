@@ -103,7 +103,7 @@ public sealed class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeywo
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinLengthKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinLengthKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

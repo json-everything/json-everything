@@ -123,7 +123,6 @@ public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, EnumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(EnumKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{

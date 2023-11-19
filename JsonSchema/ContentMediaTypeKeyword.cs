@@ -82,6 +82,6 @@ public sealed class ContentMediaTypeKeywordJsonConverter : JsonConverter<Content
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentMediaTypeKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(ContentMediaTypeKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

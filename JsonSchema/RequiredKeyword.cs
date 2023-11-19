@@ -100,7 +100,6 @@ public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RequiredKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(RequiredKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var property in value.Properties)
 		{

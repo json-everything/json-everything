@@ -91,7 +91,6 @@ public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, NotKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(NotKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

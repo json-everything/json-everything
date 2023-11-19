@@ -121,7 +121,6 @@ public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<Discrimina
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DiscriminatorKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DiscriminatorKeyword.Name);
 		writer.WriteStartObject();
 		writer.WriteString("propertyName", value.PropertyName);
 		if (value.Mapping != null)

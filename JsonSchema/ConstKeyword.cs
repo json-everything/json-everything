@@ -89,7 +89,6 @@ public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ConstKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ConstKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

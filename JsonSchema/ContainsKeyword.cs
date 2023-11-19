@@ -133,7 +133,6 @@ public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContainsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ContainsKeyword.Name);
 		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

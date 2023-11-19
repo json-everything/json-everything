@@ -59,7 +59,6 @@ public class VocabularyTests
 
 		public override void Write(Utf8JsonWriter writer, MinDateKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(MinDateKeyword.Name);
 			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
 		}
 	}
@@ -110,7 +109,6 @@ public class VocabularyTests
 
 		public override void Write(Utf8JsonWriter writer, NonVocabMinDateKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(NonVocabMinDateKeyword.Name);
 			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
 		}
 	}
@@ -152,7 +150,6 @@ public class VocabularyTests
 
 		public override void Write(Utf8JsonWriter writer, MaxDateKeyword value, JsonSerializerOptions options)
 		{
-			writer.WritePropertyName(MaxDateKeyword.Name);
 			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
 		}
 	}
