@@ -30,7 +30,7 @@ public static class SchemaKeywordRegistry
 				.GetTypes()
 				.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
 							t.GetCustomAttribute<SchemaKeywordAttribute>() != null)
-				.Select(t => new { Type = t, Keyword = t.GetCustomAttribute<SchemaKeywordAttribute>().Name })
+				.Select(t => new { Type = t, Keyword = t.GetCustomAttribute<SchemaKeywordAttribute>()!.Name })
 				.ToDictionary(k => k.Keyword, k => k.Type));
 
 		using var document = JsonDocument.Parse("null");

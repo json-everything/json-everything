@@ -24,7 +24,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	public static readonly JsonPointer Empty =
 		new()
 		{
-			Segments = Array.Empty<PointerSegment>()
+			Segments = []
 		};
 
 	private string? _uriEncoded;
@@ -205,7 +205,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 					 and { NodeType: ExpressionType.ArrayIndex })
 			{
 				// Array index
-				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value.ToString()));
+				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value!.ToString()!));
 				body = binaryExpression.Left;
 			}
 			else if (body is ParameterExpression) break; // this is the param of the expression itself.
@@ -361,7 +361,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		{
 			foreach (var segment in Segments)
 			{
-				sb.Append("/");
+				sb.Append('/');
 				sb.Append(segment.ToString(pointerStyle));
 			}
 
