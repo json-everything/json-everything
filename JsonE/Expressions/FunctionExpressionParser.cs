@@ -84,12 +84,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			return false;
 		}
 
-		if (!FunctionRepository.TryGet(name!, out function))
-		{
-			arguments = null;
-			function = null;
-			return false;
-		}
+		function = FunctionRepository.Get(name!);
 
 		if (!source.ConsumeWhitespace(ref i) || i == source.Length)
 		{

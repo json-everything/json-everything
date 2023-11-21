@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions.Functions;
 
@@ -11,12 +12,15 @@ internal static class FunctionRepository
 			.Assembly
 			.DefinedTypes
 			.Where(x => typeof(FunctionDefinition).IsAssignableFrom(x) &&
-						!x.IsAbstract)
+						!x.IsAbstract &&
+						x != typeof(ContextedFunction))
 			.Select(x => (FunctionDefinition)Activator.CreateInstance(x))
 			.ToDictionary(x => x.Name);
 
-	public static bool TryGet(string name, out FunctionDefinition? function)
+	public static FunctionDefinition Get(string name)
 	{
-		return _functions.TryGetValue(name, out function);
+		return _functions.TryGetValue(name, out var function)
+			? function
+			: new ContextedFunction(name);
 	}
 }
