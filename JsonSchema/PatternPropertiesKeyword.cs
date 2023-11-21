@@ -100,8 +100,16 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	}
 }
 
-internal class PatternPropertiesKeywordJsonConverter : JsonConverter<PatternPropertiesKeyword>
+/// <summary>
+/// JSON converter for <see cref="PatternPropertiesKeyword"/>.
+/// </summary>
+public sealed class PatternPropertiesKeywordJsonConverter : JsonConverter<PatternPropertiesKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="PatternPropertiesKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override PatternPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
@@ -124,6 +132,11 @@ internal class PatternPropertiesKeywordJsonConverter : JsonConverter<PatternProp
 		}
 		return new PatternPropertiesKeyword(schemas, invalidProps);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(PatternPropertiesKeyword.Name);

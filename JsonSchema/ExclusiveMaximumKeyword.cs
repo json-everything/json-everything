@@ -69,8 +69,16 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMaximumKeyword>
+/// <summary>
+/// JSON converter for <see cref="ExclusiveMaximumKeyword"/>.
+/// </summary>
+public sealed class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMaximumKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="ExclusiveMaximumKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override ExclusiveMaximumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.Number)
@@ -80,6 +88,11 @@ internal class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMax
 
 		return new ExclusiveMaximumKeyword(number);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExclusiveMaximumKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(ExclusiveMaximumKeyword.Name, value.Value);

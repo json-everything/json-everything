@@ -94,8 +94,16 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
+/// <summary>
+/// JSON converter for <see cref="VocabularyKeyword"/>.
+/// </summary>
+public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="VocabularyKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override VocabularyKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.StartObject)
@@ -105,6 +113,11 @@ internal class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
 		var withUris = schema!.ToDictionary(kvp => new Uri(kvp.Key), kvp => kvp.Value);
 		return new VocabularyKeyword(withUris);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, VocabularyKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(VocabularyKeyword.Name);

@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "8.01"
 ---
+# [5.4.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.4.0}
+
+[#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
+
 # [5.3.1](https://github.com/gregsdennis/json-everything/pull/534) {#release-schema-5.3.1}
 
 [#550](https://github.com/gregsdennis/json-everything/issues/550) - Fixed a stack overflow that would occur with `ValidatingJsonConverter` when using multiple options objects.  Thanks to [@EmmyDream](https://github.com/EmmyDream) for reporting.

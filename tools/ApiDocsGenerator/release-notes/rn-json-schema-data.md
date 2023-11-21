@@ -4,6 +4,10 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "8.05"
 ---
+# [4.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-4.1.0}
+
+[#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
+
 # [4.0.1](https://github.com/gregsdennis/json-everything/pull/521) {#release-schemadata-4.0.1}
 
 Fixes an internal reflection issue caused by updating _JsonSchema.Net_ to v5.2.3.

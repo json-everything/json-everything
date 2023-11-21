@@ -66,14 +66,27 @@ public class ConstKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
+/// <summary>
+/// JSON converter for <see cref="ConstKeyword"/>.
+/// </summary>
+public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="ConstKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override ConstKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = options.Read<JsonNode>(ref reader);
 
 		return new ConstKeyword(node);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ConstKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(ConstKeyword.Name);

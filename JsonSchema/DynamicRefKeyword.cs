@@ -117,8 +117,16 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
+/// <summary>
+/// JSON converter for <see cref="DynamicRefKeyword"/>.
+/// </summary>
+public sealed class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="DynamicRefKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override DynamicRefKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var uri = reader.GetString()!;
@@ -126,6 +134,11 @@ internal class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
 
 
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(DynamicRefKeyword.Name);

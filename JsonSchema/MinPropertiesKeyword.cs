@@ -72,8 +72,16 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKeyword>
+/// <summary>
+/// JSON converter for <see cref="MinPropertiesKeyword"/>.
+/// </summary>
+public sealed class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="MinPropertiesKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override MinPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.Number)
@@ -87,6 +95,11 @@ internal class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKe
 
 		return new MinPropertiesKeyword((uint)number);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinPropertiesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteNumber(MinPropertiesKeyword.Name, value.Value);

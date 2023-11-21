@@ -106,42 +106,31 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 			return;
 		}
 
-		if (evaluation.LocalInstance is JsonObject &&
-		    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
-		{
-			uint minimum = 1;
-			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
-				minimum = minContainsAnnotation!.GetValue<uint>();
-			uint? maximum = null;
-			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
-				maximum = maxContainsAnnotation!.GetValue<uint>();
-
-			var validProperties = evaluation.ChildEvaluations
-				.Where(x => x.Results.IsValid)
-				.Select(x => x.RelativeInstanceLocation.Segments[0].Value)
-				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validProperties));
-			
-			var actual = validProperties.Length;
-			if (actual < minimum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture), ("received", actual), ("minimum", minimum));
-			else if (actual > maximum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture), ("received", actual), ("maximum", maximum));
-			return;
-		}
-
 		evaluation.MarkAsSkipped();
 	}
 }
 
-internal class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
+/// <summary>
+/// JSON converter for <see cref="ContainsKeyword"/>.
+/// </summary>
+public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="ContainsKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var schema = options.Read<JsonSchema>(ref reader)!;
 
 		return new ContainsKeyword(schema);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContainsKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(ContainsKeyword.Name);

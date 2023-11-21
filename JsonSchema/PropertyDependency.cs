@@ -97,8 +97,16 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 	}
 }
 
-internal class PropertyDependencyJsonConverter : JsonConverter<PropertyDependency>
+/// <summary>
+/// JSON converter for <see cref="PropertyDependency"/>.
+/// </summary>
+public sealed class PropertyDependencyJsonConverter : JsonConverter<PropertyDependency>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependency"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var schemas = options.Read<Dictionary<string, JsonSchema>>(ref reader);
@@ -106,6 +114,10 @@ internal class PropertyDependencyJsonConverter : JsonConverter<PropertyDependenc
 		return new PropertyDependency(schemas!);
 	}
 
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyDependency value, JsonSerializerOptions options)
 	{
 		JsonSerializer.Serialize(writer, value.Schemas, options);

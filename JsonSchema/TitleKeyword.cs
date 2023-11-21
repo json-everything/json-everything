@@ -55,8 +55,16 @@ public class TitleKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
+/// <summary>
+/// JSON converter for <see cref="TitleKeyword"/>.
+/// </summary>
+public sealed class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="TitleKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override TitleKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.String)
@@ -66,6 +74,11 @@ internal class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
 
 		return new TitleKeyword(str);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, TitleKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(TitleKeyword.Name, value.Value);

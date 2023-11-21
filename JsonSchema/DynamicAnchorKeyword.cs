@@ -53,8 +53,16 @@ public class DynamicAnchorKeyword : IJsonSchemaKeyword
 	}
 }
 
-internal class DynamicAnchorKeywordJsonConverter : JsonConverter<DynamicAnchorKeyword>
+/// <summary>
+/// JSON converter for <see cref="DynamicAnchorKeyword"/>.
+/// </summary>
+public sealed class DynamicAnchorKeywordJsonConverter : JsonConverter<DynamicAnchorKeyword>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="DynamicAnchorKeyword"/>.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override DynamicAnchorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType != JsonTokenType.String)
@@ -66,6 +74,11 @@ internal class DynamicAnchorKeywordJsonConverter : JsonConverter<DynamicAnchorKe
 
 		return new DynamicAnchorKeyword(uriString);
 	}
+
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DynamicAnchorKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteString(DynamicAnchorKeyword.Name, value.Value);
