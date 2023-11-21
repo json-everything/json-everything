@@ -50,6 +50,24 @@
             <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
             <returns>A constraint object.</returns>
         </member>
+        <member name="T:Json.Schema.OpenApi.DiscriminatorKeywordJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:Json.Schema.OpenApi.DiscriminatorKeyword"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeywordJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.OpenApi.DiscriminatorKeyword"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.DiscriminatorKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.OpenApi.DiscriminatorKeyword,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+        </member>
         <member name="T:Json.Schema.OpenApi.ExampleKeyword">
             <summary>
             Handles `example`.
@@ -77,6 +95,24 @@
             </param>
             <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
             <returns>A constraint object.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.ExampleKeywordJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:Json.Schema.OpenApi.ExampleKeyword"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeywordJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.OpenApi.ExampleKeyword"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExampleKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.OpenApi.ExampleKeyword,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
         </member>
         <member name="T:Json.Schema.OpenApi.ExternalDocsKeyword">
             <summary>
@@ -123,6 +159,24 @@
             </param>
             <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
             <returns>A constraint object.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.ExternalDocsKeywordJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:Json.Schema.OpenApi.ExternalDocsKeyword"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeywordJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.OpenApi.ExternalDocsKeyword"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.ExternalDocsKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.OpenApi.ExternalDocsKeyword,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
         </member>
         <member name="T:Json.Schema.OpenApi.Formats">
             <summary>
@@ -362,6 +416,24 @@
             </param>
             <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
             <returns>A constraint object.</returns>
+        </member>
+        <member name="T:Json.Schema.OpenApi.XmlKeywordJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:Json.Schema.OpenApi.XmlKeyword"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeywordJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.OpenApi.XmlKeyword"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Schema.OpenApi.XmlKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.OpenApi.XmlKeyword,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
         </member>
     </members>
 </doc>

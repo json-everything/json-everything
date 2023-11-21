@@ -99,6 +99,24 @@
             <param name="context">The <see cref="T:Json.Schema.EvaluationContext"/>.</param>
             <returns>A constraint object.</returns>
         </member>
+        <member name="T:Json.Schema.UniqueKeys.UniqueKeysKeywordJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:Json.Schema.UniqueKeys.UniqueKeysKeyword"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.UniqueKeys.UniqueKeysKeywordJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.UniqueKeys.UniqueKeysKeyword"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Schema.UniqueKeys.UniqueKeysKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.UniqueKeys.UniqueKeysKeyword,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+        </member>
         <member name="T:Json.Schema.UniqueKeys.Vocabularies">
             <summary>
             Declares the vocabularies of the supported drafts.

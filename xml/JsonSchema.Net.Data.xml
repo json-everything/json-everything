@@ -68,6 +68,24 @@
             Thrown when the URI scheme is not `http`, `https`, or `file`.
             </exception>
         </member>
+        <member name="T:Json.Schema.Data.DataKeywordJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:Json.Schema.Data.DataKeyword"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Data.DataKeywordJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Reads and converts the JSON to type <see cref="T:Json.Schema.Data.DataKeyword"/>.</summary>
+            <param name="reader">The reader.</param>
+            <param name="typeToConvert">The type to convert.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Json.Schema.Data.DataKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.Data.DataKeyword,System.Text.Json.JsonSerializerOptions)">
+            <summary>Writes a specified value as JSON.</summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to convert to JSON.</param>
+            <param name="options">An object that specifies serialization options to use.</param>
+        </member>
         <member name="T:Json.Schema.Data.IDataResourceIdentifier">
             <summary>
             Provides an abstraction for different resource identifier types.
