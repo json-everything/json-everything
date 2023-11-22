@@ -5,12 +5,12 @@ namespace Json.JsonE.Expressions.Functions;
 
 internal class RStripFunction : FunctionDefinition
 {
-	public override string Name => "rstrip";
+	private const string _name = "rstrip";
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{
 		if (arguments[0] is not JsonValue val || !val.TryGetValue(out string? str))
-			throw new InterpreterException(CommonErrors.IncorrectArgType(Name));
+			throw new InterpreterException(CommonErrors.IncorrectArgType(_name));
 
 		return str.TrimEnd();
 	}

@@ -9,25 +9,29 @@ namespace Json.JsonE.Expressions;
 
 internal class FunctionExpressionNode : ExpressionNode
 {
-	public FunctionDefinition Function { get; }
+	public ContextAccessor FunctionAccessor { get; }
 	public ExpressionNode[] Parameters { get; }
 
-	public FunctionExpressionNode(FunctionDefinition function, IEnumerable<ExpressionNode> parameters)
+	public FunctionExpressionNode(ContextAccessor functionAccessor, IEnumerable<ExpressionNode> parameters)
 	{
-		Function = function;
+		FunctionAccessor = functionAccessor;
 		Parameters = parameters.ToArray();
 	}
 
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
+		if (context.Find(FunctionAccessor) is not JsonValue functionNode ||
+		    !functionNode.TryGetValue(out FunctionDefinition? function))
+			throw new TemplateException($"Cannot find function for `{FunctionAccessor}`");
+
 		var parameterValues = Parameters.Select(x => x.Evaluate(context)).ToArray();
 
-		return Function.Invoke(parameterValues, context);
+		return function.Invoke(parameterValues, context);
 	}
 
 	public override void BuildString(StringBuilder builder)
 	{
-		builder.Append(Function.Name);
+		//builder.Append(Function.Name);
 		builder.Append('(');
 
 		if (Parameters.Any())
@@ -55,41 +59,39 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
-		if (!TryParseFunction(source, ref index, out var func, out var args))
+		if (!TryParseFunction(source, ref index, out var accessor, out var args))
 		{
 			expression = null;
 			return false;
 		}
 
-		expression = new FunctionExpressionNode(func!, args!);
+		expression = new FunctionExpressionNode(accessor!, args!);
 		return true;
 	}
 
-	private static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out FunctionDefinition? function, out List<ExpressionNode>? arguments)
+	private static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor, out List<ExpressionNode>? arguments)
 	{
 		int i = index;
 
 		if (!source.ConsumeWhitespace(ref i))
 		{
 			arguments = null;
-			function = null;
+			accessor = null;
 			return false;
 		}
 
-		// parse function name
-		if (!source.TryParseName(ref i, out var name))
+		// parse function accessor
+		if (!ContextAccessor.TryParse(source, ref i, out accessor))
 		{
 			arguments = null;
-			function = null;
+			accessor = null;
 			return false;
 		}
-
-		function = FunctionRepository.Get(name!);
 
 		if (!source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			arguments = null;
-			function = null;
+			accessor = null;
 			return false;
 		}
 
@@ -97,7 +99,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 		if (source[i] != '(')
 		{
 			arguments = null;
-			function = null;
+			accessor = null;
 			return false;
 		}
 
@@ -112,14 +114,14 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			if (!source.ConsumeWhitespace(ref i))
 			{
 				arguments = null;
-				function = null;
+				accessor = null;
 				return false;
 			}
 
 			if (!ExpressionParser.TryParse(source, ref i, out var expr))
 			{
 				arguments = null;
-				function = null;
+				accessor = null;
 				return false;
 			}
 
@@ -128,7 +130,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			if (!source.ConsumeWhitespace(ref i))
 			{
 				arguments = null;
-				function = null;
+				accessor = null;
 				return false;
 			}
 
@@ -141,7 +143,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 					break;
 				default:
 					arguments = null;
-					function = null;
+					accessor = null;
 					return false;
 			}
 

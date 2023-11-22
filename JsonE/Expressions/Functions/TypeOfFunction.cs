@@ -5,7 +5,7 @@ namespace Json.JsonE.Expressions.Functions;
 
 internal class TypeOfFunction : FunctionDefinition
 {
-	public override string Name => "typeof";
+	private const string _name = "typeof";
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{

@@ -6,7 +6,7 @@ namespace Json.JsonE.Expressions.Functions;
 
 internal class LenFunction : FunctionDefinition
 {
-	public override string Name => "len";
+	private const string _name = "len";
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{
@@ -15,6 +15,6 @@ internal class LenFunction : FunctionDefinition
 		if (arg is JsonArray arr) return arr.Count;
 		if (arg is JsonValue val && val.TryGetValue(out string? str)) return new StringInfo(str).LengthInTextElements;
 
-		throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
+		throw new BuiltInException(CommonErrors.IncorrectArgType(_name));
 	}
 }

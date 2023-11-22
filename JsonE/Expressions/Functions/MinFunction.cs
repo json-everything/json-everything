@@ -7,13 +7,13 @@ namespace Json.JsonE.Expressions.Functions;
 
 internal class MinFunction : FunctionDefinition
 {
-	public override string Name => "min";
+	private const string _name = "min";
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{
 		var nums = arguments.Select(x => (x as JsonValue)?.GetNumber()).ToArray();
 		if (nums.Any(x => !x.HasValue))
-			throw new BuiltInException(CommonErrors.IncorrectArgType(Name));
+			throw new BuiltInException(CommonErrors.IncorrectArgType(_name));
 
 		return nums.Min();
 	}

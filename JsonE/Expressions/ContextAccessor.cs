@@ -6,13 +6,13 @@ using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions;
 
-internal class ContextAccessor
+public class ContextAccessor
 {
 	private readonly IContextAccessorSegment[] _segments;
 	private readonly string _asString;
 
-	public static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) }, "now");
-	public static ContextAccessor Default { get; } = new(new[] { new PropertySegment("x", false) }, "x");
+	internal static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) }, "now");
+	internal static ContextAccessor Default { get; } = new(new[] { new PropertySegment("x", false) }, "x");
 
 	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments, string asString)
 	{
@@ -20,7 +20,7 @@ internal class ContextAccessor
 		_asString = asString;
 	}
 
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
+	internal static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
 	{
 		int i = index;
 		if (!source.ConsumeWhitespace(ref i))
@@ -241,7 +241,7 @@ internal class ContextAccessor
 		return true;
 	}
 
-	public bool TryFind(JsonNode? context, out JsonNode? value)
+	internal bool TryFind(JsonNode? context, out JsonNode? value)
 	{
 		var current = context;
 		foreach (var segment in _segments)

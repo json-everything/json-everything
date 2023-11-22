@@ -2,16 +2,42 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
+using Json.JsonE.Expressions.Functions;
 
 namespace Json.JsonE;
 
-internal class EvaluationContext
+public class EvaluationContext
 {
+	private static readonly JsonObject _functionsContext =
+		new()
+		{
+			["abs"] = new AbsFunction(),
+			["ceil"] = new CeilFunction(),
+			["defined"] = new DefinedFunction(),
+			["floor"] = new FloorFunction(),
+			["fromNow"] = new FromNowFunction(),
+			["join"] = new JoinFunction(),
+			["len"] = new LenFunction(),
+			["lowercase"] = new LowercaseFunction(),
+			["lstrip"] = new LStripFunction(),
+			["max"] = new MaxFunction(),
+			["min"] = new MinFunction(),
+			["number"] = new NumberFunction(),
+			["rstrip"] = new RStripFunction(),
+			["split"] = new SplitFunction(),
+			["sqrt"] = new SqrtFunction(),
+			["str"] = new StrFunction(),
+			["strip"] = new StripFunction(),
+			["typeof"] = new TypeOfFunction(),
+			["uppercase"] = new UppercaseFunction()
+		};
+
 	private readonly Stack<JsonNode?> _contextStack;
 
 	public EvaluationContext(JsonNode? baseContext)
 	{
 		_contextStack = new Stack<JsonNode?>();
+		_contextStack.Push(_functionsContext);
 		_contextStack.Push(baseContext);
 	}
 
@@ -34,13 +60,6 @@ internal class EvaluationContext
 
 		if (ReferenceEquals(identifier, ContextAccessor.Now))
 			return DateTime.Now.ToString("O");
-
-		throw new InterpreterException($"unknown context value {identifier}");
-	}
-
-	public static JsonNode? Find(JsonNode? context, ContextAccessor identifier)
-	{
-		if (identifier.TryFind(context, out var target)) return target;
 
 		throw new InterpreterException($"unknown context value {identifier}");
 	}
