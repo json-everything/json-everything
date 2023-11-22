@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.JsonE.Expressions.Functions;
 using Json.JsonE.Operators;
 using Json.More;
 
@@ -56,5 +58,34 @@ internal static class JsonNodeExtensions
 		var undefinedKeys = obj.Select(x => x.Key).Where(x => x != op && !additionalKey.IsMatch(x)).ToArray();
 		if (undefinedKeys.Length != 0)
 			throw new TemplateException(CommonErrors.UndefinedProperties(op, undefinedKeys));
+	}
+
+	public static void ValidateNotReturningFunction(this JsonNode? result)
+	{
+		var queue = new Queue<JsonNode?>();
+		queue.Enqueue(result);
+		while (queue.Count != 0)
+		{
+			var current = queue.Dequeue();
+			switch (current)
+			{
+				case JsonObject obj:
+					foreach (var kvp in obj)
+					{
+						queue.Enqueue(kvp.Value);
+					}
+					break;
+				case JsonArray arr:
+					foreach (var item in arr)
+					{
+						queue.Enqueue(item);
+					}
+					break;
+				case JsonValue val:
+					if (val.TryGetValue<FunctionDefinition>(out _))
+						throw new TemplateException("evaluated template contained uncalled functions");
+					break;
+			}
+		}
 	}
 }

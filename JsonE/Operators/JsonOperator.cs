@@ -27,6 +27,7 @@ internal class JsonOperator : IOperator
 		var value = obj[Name];
 
 		var evaluated = Sort(JsonE.Evaluate(value, context));
+		evaluated.ValidateNotReturningFunction();
 
 		return evaluated.AsJsonString(_serializerOptions);
 	}

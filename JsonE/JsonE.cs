@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
+using Json.JsonE.Expressions.Functions;
 using Json.JsonE.Operators;
 using Json.More;
 
@@ -26,6 +28,7 @@ public static class JsonE
 		var evalContext = new EvaluationContext(context);
 		
 		var result = Evaluate(template, evalContext);
+		result.ValidateNotReturningFunction();
 		return ReferenceEquals(result, DeleteMarker) ? null : result;
 	}
 
@@ -172,4 +175,5 @@ public static class JsonE
 
 		return interpolated;
 	}
+
 }
