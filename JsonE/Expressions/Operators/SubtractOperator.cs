@@ -5,7 +5,7 @@ namespace Json.JsonE.Expressions.Operators;
 
 internal class SubtractOperator : IBinaryOperator
 {
-	public int Precedence => 7;
+	public int Precedence => 5;
 
 	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{

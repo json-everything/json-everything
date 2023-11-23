@@ -19,7 +19,7 @@ internal class SliceSegment : IContextAccessorSegment
 		_step = step;
 	}
 
-	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, EvaluationContext fullContext, out JsonNode? value)
 	{
 		value = null;
 		return contextValue switch

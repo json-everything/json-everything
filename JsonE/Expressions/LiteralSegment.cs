@@ -11,7 +11,7 @@ internal class LiteralSegment : IContextAccessorSegment
 		_literal = literal;
 	}
 
-	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, EvaluationContext fullContext, out JsonNode? value)
 	{
 		value = _literal;
 		return true;

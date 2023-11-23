@@ -15,7 +15,7 @@ internal class PropertySegment : IContextAccessorSegment
 		_isBracketed = isBracketed;
 	}
 
-	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, EvaluationContext fullContext, out JsonNode? value)
 	{
 		return TryFind(Name, _isBracketed, contextValue, out value);
 	}

@@ -12,7 +12,7 @@ internal class IndexSegment : IContextAccessorSegment
 		_index = index;
 	}
 
-	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
+	public bool TryFind(JsonNode? contextValue, EvaluationContext fullContext, out JsonNode? value)
 	{
 		return TryFind(_index, contextValue, out value);
 	}
@@ -67,45 +67,5 @@ internal class IndexSegment : IContextAccessorSegment
 			throw new InterpreterException("object keys must be strings");
 
 		throw new InterpreterException("infix: \"[..]\" expects object, array, or string");
-	}
-}
-
-internal class ExpressionSegment : IContextAccessorSegment
-{
-	private readonly ExpressionNode _expression;
-
-	public ExpressionSegment(ExpressionNode expression)
-	{
-		_expression = expression;
-	}
-
-	// TODO: add eval context here
-	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
-	{
-		var evaluated = _expression.Evaluate(new EvaluationContext(contextValue)) as JsonValue;
-
-		if (evaluated.TryGetValue(out string? prop))
-			return PropertySegment.TryFind(prop, true, contextValue, out value);
-
-		if (evaluated.TryGetValue(out int index))
-			return IndexSegment.TryFind(index, contextValue, out value);
-
-		throw new InterpreterException("object keys must be strings");
-	}
-}
-
-internal class LiteralSegment : IContextAccessorSegment
-{
-	private readonly JsonNode? _literal;
-
-	public LiteralSegment(JsonNode? literal)
-	{
-		_literal = literal;
-	}
-
-	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
-	{
-		value = _literal;
-		return true;
 	}
 }

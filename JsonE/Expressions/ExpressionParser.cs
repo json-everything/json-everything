@@ -104,9 +104,9 @@ internal static class ExpressionParser
 
 			if (left is BinaryExpressionNode bin)
 			{
-				if (bin.Precedence <= Precedence(binOp))
+				if (bin.Precedence < Precedence(binOp) || (bin.Operator is ExponentOperator && binOp is ExponentOperator))
 				{
-					while (bin.Right is BinaryExpressionNode bRight && bRight.Precedence <= Precedence(binOp))
+					while (bin.Right is BinaryExpressionNode bRight && (bin.Precedence < Precedence(binOp) || (bin.Operator is ExponentOperator && binOp is ExponentOperator)))
 					{
 						bin = bRight;
 					}

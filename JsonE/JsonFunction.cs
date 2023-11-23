@@ -1,14 +1,13 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 
-namespace Json.JsonE.Expressions.Functions;
+namespace Json.JsonE;
 
 public delegate JsonNode? JsonFunctionDelegate(JsonNode?[] arguments, EvaluationContext context);
 
 public class JsonFunction : FunctionDefinition
 {
 	public string Name { get; }
-	
+
 	private readonly JsonFunctionDelegate _function;
 
 	private JsonFunction(JsonFunctionDelegate function)

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json.Nodes;
+using Json.JsonE.Expressions;
 
-namespace Json.JsonE.Expressions;
+namespace Json.JsonE;
 
 public class ContextAccessor
 {
@@ -23,7 +23,7 @@ public class ContextAccessor
 
 	internal static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
 	{
-		int i = index;
+		var i = index;
 		if (!source.ConsumeWhitespace(ref i))
 		{
 			accessor = null;
@@ -80,9 +80,9 @@ public class ContextAccessor
 					}
 
 					if (!TryParseQuotedName(source, ref i, out var segment) &&
-					    !TryParseSlice(source, ref i, out segment) &&
-					    !TryParseIndex(source, ref i, out segment) &&
-					    !TryParseExpression(source, ref i, out segment))
+						!TryParseSlice(source, ref i, out segment) &&
+						!TryParseIndex(source, ref i, out segment) &&
+						!TryParseExpression(source, ref i, out segment))
 					{
 						accessor = null;
 						return false;
@@ -248,12 +248,12 @@ public class ContextAccessor
 		return true;
 	}
 
-	internal bool TryFind(JsonNode? context, out JsonNode? value)
+	internal bool TryFind(JsonNode? localContext, EvaluationContext fullContext, out JsonNode? value)
 	{
-		var current = context;
+		var current = localContext;
 		foreach (var segment in _segments)
 		{
-			if (!segment.TryFind(current, out value)) return false;
+			if (!segment.TryFind(current, fullContext, out value)) return false;
 
 			current = value;
 		}

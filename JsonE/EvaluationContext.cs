@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Json.JsonE.Expressions;
 using Json.JsonE.Expressions.Functions;
 
 namespace Json.JsonE;
@@ -38,6 +37,7 @@ public class EvaluationContext
 	{
 		_contextStack = new Stack<JsonNode?>();
 		_contextStack.Push(_functionsContext);
+		_contextStack.Push(new JsonObject { ["now"] = DateTime.Now.ToString("O") });
 		_contextStack.Push(baseContext);
 	}
 
@@ -55,11 +55,8 @@ public class EvaluationContext
 	{
 		foreach (var contextValue in _contextStack)
 		{
-			if (identifier.TryFind(contextValue, out var target)) return target;
+			if (identifier.TryFind(contextValue, this, out var target)) return target;
 		}
-
-		if (ReferenceEquals(identifier, ContextAccessor.Now))
-			return DateTime.Now.ToString("O");
 
 		throw new InterpreterException($"unknown context value {identifier}");
 	}
@@ -68,7 +65,7 @@ public class EvaluationContext
 	{
 		foreach (var context in _contextStack)
 		{
-			if (identifier.TryFind(context, out _)) return true;
+			if (identifier.TryFind(context, this, out _)) return true;
 		}
 
 		return false;

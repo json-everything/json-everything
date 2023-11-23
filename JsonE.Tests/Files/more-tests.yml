@@ -56,3 +56,83 @@ title:    index expression with +
 context:  {a: [10,11,12], b: 1}
 template: {$eval: 'a[b+1]'}
 result:   12
+---
+title: 'multiplication with addition'
+context: {a: 2}
+template: {$eval: 'a * 3 + 4'}
+result: 10
+---
+title: 'multiplication with subtraction'
+context: {a: 2}
+template: {$eval: 'a * 3 - 4'}
+result: 2
+---
+title: 'multiplication with division'
+context: {a: 4}
+template: {$eval: 'a * 3 / 2'}
+result: 6
+---
+title: 'multiplication with exponentiation'
+context: {a: 2}
+template: {$eval: 'a * 3 ** 4'}
+result: 162
+---
+title: 'division with addition'
+context: {a: 12}
+template: {$eval: 'a / 3 + 4'}
+result: 8
+---
+title: 'division with subtraction'
+context: {a: 6}
+template: {$eval: 'a / 3 - 4'}
+result: -2
+---
+title: 'division with division'
+context: {a: 12}
+template: {$eval: 'a / 3 / 2'}
+result: 2
+---
+title: 'division with exponentiation'
+context: {a: 162}
+template: {$eval: 'a / 3 ** 4'}
+result: 2
+---
+title: 'multiplication with grouped addition'
+context: {a: 2}
+template: {$eval: 'a * (3 + 4)'}
+result: 14
+---
+title: 'multiplication with grouped subtraction'
+context: {a: 2}
+template: {$eval: 'a * (3 - 4)'}
+result: -2
+---
+title: 'multiplication with grouped division'
+context: {a: 4}
+template: {$eval: 'a * (4 / 2)'}
+result: 8
+---
+title: 'grouped multiplication with exponentiation'
+context: {a: 4}
+template: {$eval: '(a * 3) ** 2'}
+result: 144
+---
+title: 'division with grouped addition'
+context: {a: 14}
+template: {$eval: 'a / (3 + 4)'}
+result: 2
+---
+title: 'division with grouped subtraction'
+context: {a: 6}
+template: {$eval: 'a / (3 - 4)'}
+result: -6
+---
+title: 'division with grouped division'
+context: {a: 12}
+template: {$eval: 'a / (6 / 2)'}
+result: 4
+---
+title: 'grouped division with exponentiation'
+context: {a: 12}
+template: {$eval: '(a / 3) ** 4'}
+result: 256

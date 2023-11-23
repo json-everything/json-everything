@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace Json.JsonE.Expressions.Functions;
+namespace Json.JsonE;
 
 public abstract class FunctionDefinition
 {
