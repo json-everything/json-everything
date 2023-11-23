@@ -55,7 +55,10 @@ public static class JsonE
 				var result = new JsonObject();
 				foreach (var kvp in obj)
 				{
-					var local = Evaluate(kvp.Value, context);
+					var local = kvp.Value is JsonValue val &&
+					            val.TryGetValue(out JsonExpression? json)
+						? json.Expression.Evaluate(context)
+						: Evaluate(kvp.Value, context);
 					if (!ReferenceEquals(local, DeleteMarker))
 						result[HandleEscapedKey(kvp.Key)] = local.Copy();
 				}

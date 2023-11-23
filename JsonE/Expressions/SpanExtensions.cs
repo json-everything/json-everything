@@ -76,7 +76,6 @@ internal static class SpanExtensions
 		try
 		{
 			int end = i;
-			char endChar;
 			switch (span[i])
 			{
 				case 'f':
@@ -111,7 +110,7 @@ internal static class SpanExtensions
 				case '\'':
 				case '"':
 					end = i + 1;
-					endChar = span[i];
+					var endChar = span[i];
 					while (end < span.Length && span[end] != endChar)
 					{
 						if (span[end] == '\\')
@@ -119,41 +118,6 @@ internal static class SpanExtensions
 							end++;
 							if (end >= span.Length) break;
 						}
-						end++;
-					}
-
-					end++;
-					break;
-				case '{':
-				case '[':
-					var startChar = span[i];
-					end = i + 1;
-					endChar = span[i] == '{' ? '}' : ']';
-					var inString = false;
-					var nest = 0;
-					while (end < span.Length)
-					{
-						var escaped = false;
-						if (span[end] == '\\')
-						{
-							escaped = true;
-							end++;
-							if (end >= span.Length) break;
-						}
-						if (!escaped && span[end] == '"')
-						{
-							inString = !inString;
-						}
-						else if (!inString)
-						{
-							if (span[end] == startChar) nest++;
-							if (span[end] == endChar)
-							{
-								if (nest == 0) break;
-								nest--;
-							}
-						}
-
 						end++;
 					}
 
@@ -176,5 +140,52 @@ internal static class SpanExtensions
 			node = default;
 			return false;
 		}
+	}
+
+	public static bool TryParseName(this ReadOnlySpan<char> source, ref int index, out string? name)
+	{
+		var i = index;
+
+		if (!source.ConsumeWhitespace(ref i) || i == source.Length)
+		{
+			name = null;
+			return false;
+		}
+
+		if (i < source.Length && source[i].IsValidForPropertyNameStart())
+		{
+			i++;
+			while (i < source.Length && source[i].IsValidForPropertyName())
+			{
+				i++;
+			}
+		}
+
+		if (index == i)
+		{
+			name = null;
+			return false;
+		}
+
+		name = source[index..i].ToString();
+		index = i;
+		return true;
+	}
+
+	private static bool IsValidForPropertyName(this char ch)
+	{
+		return ch.In('a'..('z' + 1)) ||
+		       ch.In('A'..('Z' + 1)) ||
+		       ch.In('0'..('9' + 1)) ||
+		       ch.In('_') ||
+		       ch.In(0x80..0x10FFFF);
+	}
+
+	private static bool IsValidForPropertyNameStart(this char ch)
+	{
+		return ch.In('a'..('z' + 1)) ||
+		       ch.In('A'..('Z' + 1)) ||
+		       ch.In('_') ||
+		       ch.In(0x80..0x10FFFF);
 	}
 }

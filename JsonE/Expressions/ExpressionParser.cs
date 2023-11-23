@@ -9,9 +9,9 @@ internal static class ExpressionParser
 	private static readonly IOperandExpressionParser[] _operandParsers =
 	{
 		new UnaryExpressionParser(),
+		new ObjectExpressionParser(),
 		new FunctionExpressionParser(),
-		new AccessorExpressionParser(),
-		new LiteralExpressionParser(),
+		new AccessorExpressionParser(), // handles literals
 	};
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression, bool skipFunctions = false)
