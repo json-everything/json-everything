@@ -57,7 +57,7 @@ public static class JsonE
 				{
 					var local = Evaluate(kvp.Value, context);
 					if (!ReferenceEquals(local, DeleteMarker))
-						result[kvp.Key] = local.Copy();
+						result[HandleEscapedKey(kvp.Key)] = local.Copy();
 				}
 
 				return result;
@@ -77,6 +77,12 @@ public static class JsonE
 			default:
 				return node;
 		}
+	}
+
+	private static string HandleEscapedKey(string key)
+	{
+		if (key.StartsWith("$$")) return key[1..];
+		return key;
 	}
 
 	private static JsonNode? HandleStringInterpolation(JsonNode? value, EvaluationContext context)
