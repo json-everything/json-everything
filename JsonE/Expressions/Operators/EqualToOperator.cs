@@ -9,6 +9,11 @@ internal class EqualToOperator : IBinaryOperator
 
 	public JsonNode? Evaluate(JsonNode? left, JsonNode? right)
 	{
+		if (left is JsonValue lVal && right is JsonValue rVal &&
+		    lVal.TryGetValue(out FunctionDefinition? lFunc) &&
+		    rVal.TryGetValue(out FunctionDefinition? rFunc))
+			return ReferenceEquals(lFunc, rFunc);
+
 		return left.IsEquivalentTo(right);
 	}
 
