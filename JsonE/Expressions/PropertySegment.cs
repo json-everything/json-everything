@@ -23,7 +23,7 @@ internal class PropertySegment : IContextAccessorSegment
 	public static bool TryFind(string name, bool isBracketed, JsonNode? contextValue, out JsonNode? value)
 	{
 		value = null;
-		if (contextValue is JsonObject obj) return obj.TryGetValue(name, out value, out _);
+		if (contextValue is JsonObject obj) return obj.TryGetValue(name, out value, out _) || isBracketed;
 
 		if (!isBracketed) throw new InterpreterException("infix: . expects objects");
 

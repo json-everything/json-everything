@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -29,19 +30,25 @@ public class ContextAccessor
 			return false;
 		}
 
-		if (!source.TryParseName(ref i, out var name))
+		var segments = new List<IContextAccessorSegment>();
+
+		if (source.TryParseName(ref i, out var name))
+		{
+			if (name.In("true", "false", "null"))
+			{
+				accessor = null;
+				return false;
+			}
+
+			segments.Add(new PropertySegment(name!, false));
+		}
+		else if (source.TryParseLiteral(ref i, out var literal))
+			segments.Add(new LiteralSegment(literal));
+		else
 		{
 			accessor = null;
 			return false;
 		}
-
-		if (name.In("true", "false", "null"))
-		{
-			accessor = null;
-			return false;
-		}
-
-		var segments = new List<IContextAccessorSegment>{new PropertySegment(name!, false)};
 
 		while (i < source.Length)
 		{
@@ -256,4 +263,9 @@ public class ContextAccessor
 	}
 
 	public override string ToString() => _asString;
+
+	public static implicit operator ContextAccessor(string name)
+	{
+		return new ContextAccessor(new IContextAccessorSegment[] { new PropertySegment(name, false) }, name);
+	}
 }

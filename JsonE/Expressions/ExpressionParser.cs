@@ -8,13 +8,13 @@ internal static class ExpressionParser
 {
 	private static readonly IOperandExpressionParser[] _operandParsers =
 	{
+		new UnaryExpressionParser(),
 		new FunctionExpressionParser(),
 		new AccessorExpressionParser(),
-		new UnaryExpressionParser(),
 		new LiteralExpressionParser(),
 	};
 
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression, bool skipFunctions = false)
 	{
 		int i = index;
 		var nestLevel = 0;
@@ -32,6 +32,7 @@ internal static class ExpressionParser
 			nestLevel++;
 			i++;
 		}
+
 		if (i == source.Length)
 			throw new TemplateException(EndOfInput(i));
 
@@ -39,6 +40,7 @@ internal static class ExpressionParser
 		ExpressionNode? left = null;
 		foreach (var parser in _operandParsers)
 		{
+			if (skipFunctions && parser is FunctionExpressionParser) continue;
 			if (parser.TryParse(source, ref i, out left)) break;
 		}
 
@@ -64,6 +66,7 @@ internal static class ExpressionParser
 					nestLevel--;
 					i++;
 				}
+
 				if (nestLevel == 0) continue;
 			}
 
@@ -107,6 +110,7 @@ internal static class ExpressionParser
 					{
 						bin = bRight;
 					}
+
 					bin.Right = new BinaryExpressionNode(binOp, bin.Right, right, nestLevel);
 				}
 				else

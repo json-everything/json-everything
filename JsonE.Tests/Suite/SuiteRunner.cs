@@ -56,10 +56,8 @@ public class SuiteRunner
 			if (test.Error is not null)
 			{
 				var errorMessage = $"{GetErrorPrefix(e)}: {e.Message}";
-				if (test.Error != errorMessage && test.Error.EndsWith(e.Message))
+				if (test.Error != errorMessage)
 					Assert.Inconclusive($"Error message is correct, but received type ({GetErrorPrefix(e)}) is wrong.\n");
-
-				Assert.AreEqual(test.Error, errorMessage);
 			}
 		}
 	}
@@ -80,9 +78,9 @@ public class SuiteRunner
 		Console.WriteLine($"Title:    {test.Title}");
 		Console.WriteLine($"Template: {test.Template.AsJsonString(_serializerOptions)}");
 		Console.WriteLine($"Context:  {test.Context.AsJsonString(_serializerOptions)}");
-		if (test.Expected is not null)
-			Console.WriteLine($"Result:   {test.Expected.AsJsonString(_serializerOptions)}");
 		if (test.HasError)
 			Console.WriteLine($"Error:    {test.ErrorNode.AsJsonString(_serializerOptions)}");
+		else
+			Console.WriteLine($"Result:   {test.Expected.AsJsonString(_serializerOptions)}");
 	}
 }

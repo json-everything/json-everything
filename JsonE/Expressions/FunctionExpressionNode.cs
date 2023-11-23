@@ -21,8 +21,10 @@ internal class FunctionExpressionNode : ExpressionNode
 
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
-		if (context.Find(FunctionExpression) is not JsonValue functionNode)
+		if (FunctionExpression.Evaluate(context) is not JsonValue functionNode)
 			throw new InterpreterException($"unknown context value {FunctionExpression}");
+		if (functionNode.TryGetValue(out string? functionName))
+			functionNode = context.Find(functionName)!.AsValue();
 		if (!functionNode.TryGetValue(out FunctionDefinition? function))
 			throw new InterpreterException($"{functionNode} is not callable");
 
@@ -61,39 +63,39 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
-		if (!TryParseFunction(source, ref index, out var accessor, out var args))
+		if (!TryParseFunction(source, ref index, out var expr, out var args))
 		{
 			expression = null;
 			return false;
 		}
 
-		expression = new FunctionExpressionNode(accessor!, args!);
+		expression = new FunctionExpressionNode(expr!, args!);
 		return true;
 	}
 
-	private static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor, out List<ExpressionNode>? arguments)
+	private static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out ExpressionNode? funcExpr, out List<ExpressionNode>? arguments)
 	{
 		int i = index;
 
 		if (!source.ConsumeWhitespace(ref i))
 		{
 			arguments = null;
-			accessor = null;
+			funcExpr = null;
 			return false;
 		}
 
 		// parse function accessor
-		if (!ContextAccessor.TryParse(source, ref i, out accessor))
+		if (!ExpressionParser.TryParse(source, ref i, out funcExpr, true))
 		{
 			arguments = null;
-			accessor = null;
+			funcExpr = null;
 			return false;
 		}
 
 		if (!source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			arguments = null;
-			accessor = null;
+			funcExpr = null;
 			return false;
 		}
 
@@ -101,7 +103,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 		if (source[i] != '(')
 		{
 			arguments = null;
-			accessor = null;
+			funcExpr = null;
 			return false;
 		}
 
@@ -116,14 +118,14 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			if (!source.ConsumeWhitespace(ref i))
 			{
 				arguments = null;
-				accessor = null;
+				funcExpr = null;
 				return false;
 			}
 
 			if (!ExpressionParser.TryParse(source, ref i, out var expr))
 			{
 				arguments = null;
-				accessor = null;
+				funcExpr = null;
 				return false;
 			}
 
@@ -132,7 +134,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			if (!source.ConsumeWhitespace(ref i))
 			{
 				arguments = null;
-				accessor = null;
+				funcExpr = null;
 				return false;
 			}
 
@@ -145,7 +147,7 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 					break;
 				default:
 					arguments = null;
-					accessor = null;
+					funcExpr = null;
 					return false;
 			}
 

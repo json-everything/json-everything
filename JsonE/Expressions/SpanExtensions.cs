@@ -65,7 +65,7 @@ internal static class SpanExtensions
 		return foundNumber;
 	}
 
-	public static bool TryParseYaml(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
+	public static bool TryParseLiteral(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
 	{
 		if (!span.ConsumeWhitespace(ref i))
 		{
