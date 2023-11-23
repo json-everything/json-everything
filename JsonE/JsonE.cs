@@ -70,7 +70,10 @@ public static class JsonE
 				var result = new JsonArray();
 				foreach (var item in arr)
 				{
-					var local = Evaluate(item, context);
+					var local = item is JsonValue val &&
+					            val.TryGetValue(out JsonExpression? json)
+						? json.Expression.Evaluate(context)
+						: Evaluate(item, context);
 					if (!ReferenceEquals(local, DeleteMarker))
 						result.Add(local.Copy());
 				}

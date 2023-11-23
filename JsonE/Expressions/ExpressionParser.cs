@@ -10,6 +10,7 @@ internal static class ExpressionParser
 	{
 		new UnaryExpressionParser(),
 		new ObjectExpressionParser(),
+		new ArrayExpressionParser(),
 		new FunctionExpressionParser(),
 		new AccessorExpressionParser(), // handles literals
 	};

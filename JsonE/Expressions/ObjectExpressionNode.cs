@@ -87,18 +87,25 @@ internal class ObjectExpressionParser : IOperandExpressionParser
 				return false;
 			}
 
-			obj[key] = JsonExpression.Create(value!);
+			obj[key!] = JsonExpression.Create(value!);
 
-			// read ,
-			if (source[i] is not (',' or '}'))
+			// read , or }
+			if (source[i] is ',')
 			{
-				expression = null;
-				return false;
+				i++;
+				continue;
+			}
+			if (source[i] is '}')
+			{
+				i++;
+				break;
 			}
 
-			i++;
+			expression = null;
+			return false;
 		}
 
+		index = i;
 		expression = new ObjectExpressionNode(obj);
 		return true;
 	}
