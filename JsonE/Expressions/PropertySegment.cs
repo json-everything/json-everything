@@ -17,10 +17,15 @@ internal class PropertySegment : IContextAccessorSegment
 
 	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
 	{
-		value = null;
-		if (contextValue is JsonObject obj) return obj.TryGetValue(Name, out value, out _);
+		return TryFind(Name, _isBracketed, contextValue, out value);
+	}
 
-		if (!_isBracketed) throw new InterpreterException("infix: . expects objects");
+	public static bool TryFind(string name, bool isBracketed, JsonNode? contextValue, out JsonNode? value)
+	{
+		value = null;
+		if (contextValue is JsonObject obj) return obj.TryGetValue(name, out value, out _);
+
+		if (!isBracketed) throw new InterpreterException("infix: . expects objects");
 
 		throw new InterpreterException("should only use integers to access arrays or strings");
 	}

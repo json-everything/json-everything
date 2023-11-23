@@ -14,22 +14,27 @@ internal class IndexSegment : IContextAccessorSegment
 
 	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
 	{
+		return TryFind(_index, contextValue, out value);
+	}
+
+	public static bool TryFind(int index, JsonNode? contextValue, out JsonNode? value)
+	{
 		if (contextValue is JsonArray arr)
 		{
-			if (_index < 0)
+			if (index < 0)
 			{
-				if (-_index < arr.Count)
+				if (-index < arr.Count)
 				{
-					value = arr[arr.Count + _index];
+					value = arr[arr.Count + index];
 					return true;
 				}
 
 				throw new InterpreterException("index out of bounds");
 			}
 			
-			if (_index < arr.Count)
+			if (index < arr.Count)
 			{
-				value = arr[_index];
+				value = arr[index];
 				return true;
 			}
 
@@ -38,20 +43,20 @@ internal class IndexSegment : IContextAccessorSegment
 		
 		if (contextValue is JsonValue val && val.TryGetValue(out string? str))
 		{
-			if (_index < 0)
+			if (index < 0)
 			{
-				if (-_index < str.Length)
+				if (-index < str.Length)
 				{
-					value = str[str.Length + _index];
+					value = str[str.Length + index];
 					return true;
 				}
 		
 				throw new InterpreterException("index out of bounds");
 			}
 			
-			if (_index < str.Length)
+			if (index < str.Length)
 			{
-				value = str[_index];
+				value = str[index];
 				return true;
 			}
 		
@@ -74,8 +79,17 @@ internal class ExpressionSegment : IContextAccessorSegment
 		_expression = expression;
 	}
 
+	// TODO: add eval context here
 	public bool TryFind(JsonNode? contextValue, out JsonNode? value)
 	{
-		throw new NotImplementedException();
+		var evaluated = _expression.Evaluate(new EvaluationContext(contextValue)) as JsonValue;
+
+		if (evaluated.TryGetValue(out string? prop))
+			return PropertySegment.TryFind(prop, true, contextValue, out value);
+
+		if (evaluated.TryGetValue(out int index))
+			return IndexSegment.TryFind(index, contextValue, out value);
+
+		throw new InterpreterException("object keys must be strings");
 	}
 }

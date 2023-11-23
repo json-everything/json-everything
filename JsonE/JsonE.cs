@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
-using Json.JsonE.Expressions.Functions;
 using Json.JsonE.Operators;
 using Json.More;
 
@@ -22,8 +20,10 @@ public static class JsonE
 	/// <param name="template"></param>
 	/// <param name="context">The JSON value context</param>
 	/// <returns>A new JSON value result.</returns>
-	public static JsonNode? Evaluate(JsonNode? template, JsonNode? context)
+	public static JsonNode? Evaluate(JsonNode? template, JsonNode? context = null)
 	{
+		context ??= new JsonObject();
+
 		context.ValidateAsContext();
 		var evalContext = new EvaluationContext(context);
 		
@@ -109,36 +109,44 @@ public static class JsonE
 		var source = value.AsSpan();
 		foreach (var start in starts)
 		{
-
+			char? stringStartChar = null;
 			var end = start + 2;
 			var nest = 1;
 			while (nest != 0 && end < source.Length)
 			{
-				end++;
-
 				switch (source[end])
 				{
+					case '\'':
+					case '"':
+						if (!stringStartChar.HasValue)
+							stringStartChar = source[end];
+						else if (stringStartChar.Value == source[end])
+							stringStartChar = null;
+						break;
 					case '{':
-						nest++;
-						continue;
+						if (!stringStartChar.HasValue)
+							nest++;
+						break;
 					case '}':
-						nest--;
-						continue;
+						if (!stringStartChar.HasValue)
+							nest--;
+						break;
 				}
+				end++;
 			}
 
-			if (end == source.Length)
+			if (end > source.Length)
 				throw new TemplateException("invalid expression inside string interpolation");
 
-			var textToReplace = source[start..(end + 1)].ToString();
+			var textToReplace = source[start..end].ToString();
 			if (start != 0 && source[start - 1] == '$')
 			{
-				var unescaped = source[(start + 1)..(end+1)].ToString();
+				var unescaped = source[(start + 1)..end].ToString();
 				interpolated = interpolated.Replace(textToReplace, unescaped);
 				continue;
 			}
 
-			var exprText = source[(start+2)..end];
+			var exprText = source[(start + 2)..(end - 1)];
 			var index = 0;
 			if (!ExpressionParser.TryParse(exprText, ref index, out var expr))
 				throw new TemplateException("invalid expression inside string interpolation");

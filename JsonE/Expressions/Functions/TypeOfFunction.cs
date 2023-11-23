@@ -22,6 +22,7 @@ internal class TypeOfFunction : FunctionDefinition
 				if (val.GetNumber().HasValue) return "number";
 				if (val.TryGetValue<string>(out _)) return "string";
 				if (val.TryGetValue<bool>(out _)) return "boolean";
+				if (val.TryGetValue<FunctionDefinition>(out _)) return "function";
 				break;
 		}
 

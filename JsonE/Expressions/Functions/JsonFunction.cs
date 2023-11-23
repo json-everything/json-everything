@@ -3,18 +3,20 @@ using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions.Functions;
 
+public delegate JsonNode? JsonFunctionDelegate(JsonNode?[] arguments, EvaluationContext context);
+
 public class JsonFunction : FunctionDefinition
 {
 	public string Name { get; }
 	
-	private readonly Func<JsonNode?[], EvaluationContext, JsonNode> _function;
+	private readonly JsonFunctionDelegate _function;
 
-	private JsonFunction(Func<JsonNode?[], EvaluationContext, JsonNode> function)
+	private JsonFunction(JsonFunctionDelegate function)
 	{
 		_function = function;
 	}
 
-	public static JsonFunction Create(Func<JsonNode?[], EvaluationContext, JsonNode> function)
+	public static JsonFunction Create(JsonFunctionDelegate function)
 	{
 		return new JsonFunction(function);
 	}

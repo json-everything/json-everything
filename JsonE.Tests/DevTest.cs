@@ -1,14 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.JsonE.Expressions.Functions;
+using Json.More;
 using NUnit.Framework;
-using Yaml2JsonNode;
-using YamlDotNet.RepresentationModel;
-using YamlDotNet.Serialization;
 
 namespace Json.JsonE.Tests;
 
@@ -17,6 +11,13 @@ public class DevTest
 	[Test]
 	public void Check()
 	{
+		var context = new JsonObject
+		{
+			["test"] = JsonFunction.Create((arguments, context) => true)
+		};
 
+		var result = JsonE.Evaluate(new JsonObject { ["$eval"] = "test(1)" }, context);
+
+		Console.WriteLine(result.AsJsonString());
 	}
 }

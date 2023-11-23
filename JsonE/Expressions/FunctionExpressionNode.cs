@@ -9,20 +9,22 @@ namespace Json.JsonE.Expressions;
 
 internal class FunctionExpressionNode : ExpressionNode
 {
-	public ContextAccessor FunctionAccessor { get; }
+	// TODO: this needs to be an expression
+	public ExpressionNode FunctionExpression { get; }
 	public ExpressionNode[] Parameters { get; }
 
-	public FunctionExpressionNode(ContextAccessor functionAccessor, IEnumerable<ExpressionNode> parameters)
+	public FunctionExpressionNode(ExpressionNode functionExpression, IEnumerable<ExpressionNode> parameters)
 	{
-		FunctionAccessor = functionAccessor;
+		FunctionExpression = functionExpression;
 		Parameters = parameters.ToArray();
 	}
 
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
-		if (context.Find(FunctionAccessor) is not JsonValue functionNode ||
-		    !functionNode.TryGetValue(out FunctionDefinition? function))
-			throw new TemplateException($"Cannot find function for `{FunctionAccessor}`");
+		if (context.Find(FunctionExpression) is not JsonValue functionNode)
+			throw new InterpreterException($"unknown context value {FunctionExpression}");
+		if (!functionNode.TryGetValue(out FunctionDefinition? function))
+			throw new InterpreterException($"{functionNode} is not callable");
 
 		var parameterValues = Parameters.Select(x => x.Evaluate(context)).ToArray();
 
