@@ -2,12 +2,19 @@
 
 namespace Json.JsonE;
 
+/// <summary>
+/// Defines a signature for custom JSON-e functions.
+/// </summary>
+/// <param name="arguments"></param>
+/// <param name="context"></param>
+/// <returns></returns>
 public delegate JsonNode? JsonFunctionDelegate(JsonNode?[] arguments, EvaluationContext context);
 
+/// <summary>
+/// Serves as a <see cref="JsonNode"/>-compatible wrapper for a custom JSON-e function.
+/// </summary>
 public class JsonFunction : FunctionDefinition
 {
-	public string Name { get; }
-
 	private readonly JsonFunctionDelegate _function;
 
 	private JsonFunction(JsonFunctionDelegate function)
@@ -15,6 +22,11 @@ public class JsonFunction : FunctionDefinition
 		_function = function;
 	}
 
+	/// <summary>
+	/// Creates a new <see cref="JsonFunction"/>.
+	/// </summary>
+	/// <param name="function"></param>
+	/// <returns></returns>
 	public static JsonFunction Create(JsonFunctionDelegate function)
 	{
 		return new JsonFunction(function);

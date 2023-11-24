@@ -5,6 +5,9 @@ using Json.More;
 
 namespace Json.JsonE;
 
+/// <summary>
+/// Represents a property.  Used for retrieving data from the context.
+/// </summary>
 public class ContextAccessor
 {
 	private readonly string _name;
@@ -50,10 +53,21 @@ public class ContextAccessor
 		return context.TryGetValue(_name, out value, out _);
 	}
 
+	/// <summary>Returns a string that represents the current object.</summary>
+	/// <returns>A string that represents the current object.</returns>
 	public override string ToString() => _name;
 
+	/// <summary>
+	/// Implicitly converts a string into a <see cref="ContextAccessor"/>
+	/// by using <see cref="TryParse(ReadOnlySpan{char}, ref int, out ContextAccessor?)"/>
+	/// </summary>
+	/// <param name="name"></param>
 	public static implicit operator ContextAccessor(string name)
 	{
-		return new ContextAccessor(name);
+		int index = 0;
+		if (!TryParse(name.AsSpan(), ref index, out var accessor))
+			throw new TemplateException($"{name} is not a valid accessor");
+
+		return accessor!;
 	}
 }

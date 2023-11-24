@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
-using Json.JsonE.Expressions;
 
-namespace Json.JsonE;
+namespace Json.JsonE.Expressions;
 
-public class ValueAccessor
+internal class ValueAccessor
 {
 	private readonly IContextAccessorSegment[] _segments;
 	private readonly string _asString;

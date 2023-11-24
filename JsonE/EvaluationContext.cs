@@ -5,6 +5,9 @@ using Json.JsonE.Expressions.Functions;
 
 namespace Json.JsonE;
 
+/// <summary>
+/// Provides context data for JSON-e evaluation.
+/// </summary>
 public class EvaluationContext
 {
 	private static readonly JsonObject _functionsContext =
@@ -33,7 +36,7 @@ public class EvaluationContext
 
 	private readonly Stack<JsonObject> _contextStack;
 
-	public EvaluationContext(JsonObject baseContext)
+	internal EvaluationContext(JsonObject baseContext)
 	{
 		_contextStack = new Stack<JsonObject>();
 		_contextStack.Push(_functionsContext);
@@ -41,16 +44,30 @@ public class EvaluationContext
 		_contextStack.Push(baseContext);
 	}
 
+	/// <summary>
+	/// Adds or overrides context data.
+	/// </summary>
+	/// <param name="newContext"></param>
 	public void Push(JsonObject newContext)
 	{
 		_contextStack.Push(newContext);
 	}
 
+	/// <summary>
+	/// Removes the previous context data.  Call only if you've explicitly added context data with <see cref="Push(JsonObject)"/>
+	/// </summary>
+	/// <returns></returns>
 	public JsonNode? Pop()
 	{
 		return _contextStack.Pop();
 	}
 
+	/// <summary>
+	/// Finds data within the context.
+	/// </summary>
+	/// <param name="identifier">An accessor.</param>
+	/// <returns>The value, if it exists.</returns>
+	/// <exception cref="InterpreterException">Thrown if the context doesn't contain the indicated property.</exception>
 	public JsonNode? Find(ContextAccessor identifier)
 	{
 		foreach (var contextValue in _contextStack)
@@ -61,6 +78,11 @@ public class EvaluationContext
 		throw new InterpreterException($"unknown context value {identifier}");
 	}
 
+	/// <summary>
+	/// Checks data for a given property.
+	/// </summary>
+	/// <param name="identifier">An accessor.</param>
+	/// <returns>true if the value exists in the context; otherwise false.</returns>
 	public bool IsDefined(ContextAccessor identifier)
 	{
 		foreach (var context in _contextStack)
