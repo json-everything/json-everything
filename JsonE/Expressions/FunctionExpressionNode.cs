@@ -58,43 +58,15 @@ internal class FunctionExpressionNode : ExpressionNode
 	}
 }
 
-internal class FunctionExpressionParser : IOperandExpressionParser
+internal static class FunctionArgumentParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
-	{
-		if (!TryParseFunction(source, ref index, out var expr, out var args))
-		{
-			expression = null;
-			return false;
-		}
-
-		expression = new FunctionExpressionNode(expr!, args!);
-		return true;
-	}
-
-	private static bool TryParseFunction(ReadOnlySpan<char> source, ref int index, out ExpressionNode? funcExpr, out List<ExpressionNode>? arguments)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out List<ExpressionNode>? arguments)
 	{
 		int i = index;
-
-		if (!source.ConsumeWhitespace(ref i))
-		{
-			arguments = null;
-			funcExpr = null;
-			return false;
-		}
-
-		// parse function accessor
-		if (!ExpressionParser.TryParse(source, ref i, out funcExpr, true))
-		{
-			arguments = null;
-			funcExpr = null;
-			return false;
-		}
 
 		if (!source.ConsumeWhitespace(ref i) || i == source.Length)
 		{
 			arguments = null;
-			funcExpr = null;
 			return false;
 		}
 
@@ -102,7 +74,6 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 		if (source[i] != '(')
 		{
 			arguments = null;
-			funcExpr = null;
 			return false;
 		}
 
@@ -117,14 +88,12 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			if (!source.ConsumeWhitespace(ref i))
 			{
 				arguments = null;
-				funcExpr = null;
 				return false;
 			}
 
 			if (!ExpressionParser.TryParse(source, ref i, out var expr))
 			{
 				arguments = null;
-				funcExpr = null;
 				return false;
 			}
 
@@ -133,7 +102,6 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 			if (!source.ConsumeWhitespace(ref i))
 			{
 				arguments = null;
-				funcExpr = null;
 				return false;
 			}
 
@@ -146,7 +114,6 @@ internal class FunctionExpressionParser : IOperandExpressionParser
 					break;
 				default:
 					arguments = null;
-					funcExpr = null;
 					return false;
 			}
 

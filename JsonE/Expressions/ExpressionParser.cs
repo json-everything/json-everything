@@ -11,7 +11,6 @@ internal static class ExpressionParser
 		new ObjectExpressionParser(),
 		new ArrayExpressionParser(),
 		new UnaryExpressionParser(),
-		new FunctionExpressionParser(),
 		new ContextAccessorExpressionParser(),
 		new PrimitiveExpressionParser(),
 	};
@@ -38,10 +37,12 @@ internal static class ExpressionParser
 			return false;
 		}
 
+		var isGroup = false;
 		while (i < source.Length && source[i] == '(')
 		{
 			nestLevel++;
 			i++;
+			isGroup = true;
 		}
 
 		if (i == source.Length)
@@ -51,7 +52,7 @@ internal static class ExpressionParser
 		ExpressionNode? left = null;
 		foreach (var parser in _operandParsers)
 		{
-			if (skipFunctions && parser is FunctionExpressionParser) continue;
+			if (skipFunctions && parser is FunctionArgumentParser) continue;
 			if (parser.TryParse(source, ref i, out left)) break;
 		}
 
@@ -63,6 +64,9 @@ internal static class ExpressionParser
 
 		if (ValueAccessor.TryParse(source, ref i, out var valueAccessor)) 
 			left = new ValueAccessorExpressionNode(left, valueAccessor!);
+
+		if (FunctionArgumentParser.TryParse(source, ref i, out var functionArguments)) 
+			left = new FunctionExpressionNode(left, functionArguments!);
 
 		while (i < source.Length)
 		{
@@ -119,6 +123,9 @@ internal static class ExpressionParser
 			if (ValueAccessor.TryParse(source, ref i, out valueAccessor))
 				right = new ValueAccessorExpressionNode(right, valueAccessor!);
 
+			if (FunctionArgumentParser.TryParse(source, ref i, out functionArguments))
+				right = new FunctionExpressionNode(right, functionArguments!);
+
 			if (left is BinaryExpressionNode bin)
 			{
 				if (bin.Precedence < Precedence(binOp) || (bin.Operator is ExponentOperator && binOp is ExponentOperator))
@@ -143,6 +150,15 @@ internal static class ExpressionParser
 		{
 			expression = null;
 			return false;
+		}
+
+		if (isGroup)
+		{
+			if (ValueAccessor.TryParse(source, ref i, out valueAccessor))
+				left = new ValueAccessorExpressionNode(left, valueAccessor!);
+
+			if (FunctionArgumentParser.TryParse(source, ref i, out functionArguments))
+				left = new FunctionExpressionNode(left, functionArguments!);
 		}
 
 		index = i;
