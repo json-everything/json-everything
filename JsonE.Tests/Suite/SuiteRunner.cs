@@ -57,7 +57,9 @@ public class SuiteRunner
 			{
 				var errorMessage = $"{GetErrorPrefix(e)}: {e.Message}";
 				if (test.Error != errorMessage)
-					Assert.Inconclusive($"Error message is correct, but received type ({GetErrorPrefix(e)}) is wrong.\n");
+					Assert.Inconclusive($"Received error message, but it was different.\n" +
+					                    $"  Expected: {test.Error}\n" +
+					                    $"  Actual: {errorMessage}\n");
 			}
 		}
 	}

@@ -103,7 +103,9 @@ internal static class SpanExtensions
 						allowDash = span[end] == 'e';
 						end++;
 					}
-					break;
+					node = decimal.Parse(span[i..end].ToString());
+					i = end;
+					return true;
 				case '\'':
 				case '"':
 					end = i + 1;
