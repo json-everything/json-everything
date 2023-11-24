@@ -77,6 +77,9 @@ internal class ArrayExpressionParser : IOperandExpressionParser
 			return false;
 		}
 
+		if (arr.Count == 0 && source[i] == ']')
+			i++;
+
 		index = i;
 		expression = new ArrayExpressionNode(arr);
 		return true;

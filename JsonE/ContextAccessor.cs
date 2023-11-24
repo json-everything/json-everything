@@ -13,7 +13,6 @@ public class ContextAccessor
 	private readonly string _name;
 
 	internal static ContextAccessor Now { get; } = "now";
-	internal static ContextAccessor Default { get; } = "x";
 
 	private ContextAccessor(string asString)
 	{

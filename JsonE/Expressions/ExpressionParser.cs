@@ -8,13 +8,22 @@ internal static class ExpressionParser
 {
 	private static readonly IOperandExpressionParser[] _operandParsers =
 	{
+		new ObjectExpressionParser(),
+		new ArrayExpressionParser(),
 		new UnaryExpressionParser(),
 		new FunctionExpressionParser(),
 		new ContextAccessorExpressionParser(),
 		new PrimitiveExpressionParser(),
-		new ObjectExpressionParser(),
-		new ArrayExpressionParser(),
 	};
+
+	public static ExpressionNode Parse(ReadOnlySpan<char> source)
+	{
+		int index = 0;
+		if (!TryParse(source, ref index, out var expression) || index != source.Length)
+			throw new TemplateException("Expression is not valid");
+
+		return expression!;
+	}
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression, bool skipFunctions = false)
 	{

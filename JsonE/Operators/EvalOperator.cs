@@ -17,10 +17,8 @@ internal class EvalOperator : IOperator
 		if (parameter is not JsonValue value || !value.TryGetValue(out string? source))
 			throw new TemplateException("$eval must be given a string expression");
 
-		int index = 0;
-		if (!ExpressionParser.TryParse(source.AsSpan(), ref index, out var expression))
-			throw new TemplateException("Expression is not valid");
+		var expression = ExpressionParser.Parse(source.AsSpan());
 
-		return expression!.Evaluate(context);
+		return expression.Evaluate(context);
 	}
 }

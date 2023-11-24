@@ -41,10 +41,7 @@ internal class ValueAccessor
 				case '.':
 					i++;
 					if (!source.TryParseName(ref i, out var name))
-					{
-						accessor = null;
-						return false;
-					}
+						throw new TemplateException("Invalid name after dot accessor");
 
 					segments.Add(new PropertySegment(name!, false));
 					continue;
@@ -58,13 +55,10 @@ internal class ValueAccessor
 					}
 
 					if (!TryParseQuotedName(source, ref i, out var segment) &&
-						!TryParseSlice(source, ref i, out segment) &&
-						!TryParseIndex(source, ref i, out segment) &&
-						!TryParseExpression(source, ref i, out segment))
-					{
-						accessor = null;
-						return false;
-					}
+					    !TryParseSlice(source, ref i, out segment) &&
+					    !TryParseIndex(source, ref i, out segment) &&
+					    !TryParseExpression(source, ref i, out segment))
+						throw new TemplateException("Cannot determine segment type");
 
 					segments.Add(segment!);
 
@@ -75,10 +69,7 @@ internal class ValueAccessor
 					}
 
 					if (source[i] != ']')
-					{
-						accessor = null;
-						return false;
-					}
+						throw new TemplateException("Missing closing ]");
 
 					i++;
 
@@ -86,6 +77,12 @@ internal class ValueAccessor
 			}
 
 			break;
+		}
+
+		if (segments.Count == 0)
+		{
+			accessor = null;
+			return false;
 		}
 
 		var asString = source[index..i].ToString();

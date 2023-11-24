@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.JsonE.Expressions;
 using Json.More;
 
 namespace Json.JsonE.Operators;
@@ -10,6 +11,7 @@ namespace Json.JsonE.Operators;
 internal class SortOperator : IOperator
 {
 	private static readonly Regex _byForm = new(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)");
+	//private static readonly ExpressionNode _defaultAccessorExpression = ExpressionParser.Parse("x".AsSpan());
 
 	public const string Name = "$sort";
 
@@ -28,15 +30,13 @@ internal class SortOperator : IOperator
 		var value = JsonE.Evaluate(parameter, context)!.AsArray();
 		if (value.Count == 0) return value;
 
-		var accessorEntry = obj.FirstOrDefault(x => x.Key != Name);
-		var accessor = ContextAccessor.Default;
+		var sortExpression = ExpressionParser.Parse("x".AsSpan());
 		var variableName = "x";
 
+		var accessorEntry = obj.FirstOrDefault(x => x.Key != Name);
 		if (accessorEntry.Key != null)
 		{
-			int index = 0;
-			if (!ContextAccessor.TryParse(accessorEntry.Value!.GetValue<string>().AsSpan(), ref index, out accessor))
-				throw new TemplateException("by() requires an accessor");
+			sortExpression = ExpressionParser.Parse(accessorEntry.Value!.GetValue<string>().AsSpan());
 			variableName = _byForm.Match(accessorEntry.Key).Groups["var"].Value;
 		}
 
@@ -45,7 +45,7 @@ internal class SortOperator : IOperator
 			[variableName] = value[0].Copy()
 		};
 		context.Push(itemContext);
-		var firstSortValue = context.Find(accessor!);
+		var firstSortValue = sortExpression.Evaluate(context);
 		var comparer = firstSortValue switch
 		{
 			JsonValue v when v.TryGetValue<string>(out _) => (IComparer<JsonNode>) JsonNodeStringComparer.Instance,
@@ -59,7 +59,7 @@ internal class SortOperator : IOperator
 			var sorted = value.OrderBy(x =>
 			{
 				itemContext[variableName] = x.Copy();
-				return context.Find(accessor!);
+				return sortExpression.Evaluate(context);
 			}, comparer!).ToJsonArray();
 
 			context.Pop();

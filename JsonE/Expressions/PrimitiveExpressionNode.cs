@@ -11,7 +11,7 @@ internal class PrimitiveExpressionNode : ExpressionNode
 
 	public PrimitiveExpressionNode(JsonNode? value)
 	{
-		Value = value ?? JsonNull.SignalNode;
+		Value = value;
 	}
 
 	public override JsonNode? Evaluate(EvaluationContext context)

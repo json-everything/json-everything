@@ -105,6 +105,9 @@ internal class ObjectExpressionParser : IOperandExpressionParser
 			return false;
 		}
 
+		if (obj.Count == 0 && source[i] == '}')
+			i++;
+
 		index = i;
 		expression = new ObjectExpressionNode(obj);
 		return true;

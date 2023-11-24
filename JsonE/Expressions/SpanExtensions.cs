@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json.Nodes;
-using Json.More;
-using Yaml2JsonNode;
 
 namespace Json.JsonE.Expressions;
 
@@ -131,7 +128,7 @@ internal static class SpanExtensions
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			node = JsonNode.Parse(block.ToString()) ?? JsonNull.SignalNode;
+			node = JsonNode.Parse(block.ToString());
 			i = end;
 			return true;
 		}
