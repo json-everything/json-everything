@@ -120,16 +120,15 @@ internal static class SpanExtensions
 						end++;
 					}
 
-					end++;
-					break;
+					node = span[(i + 1)..end].ToString();
+					i = end+1;
+					return true;
 				default:
 					node = default;
 					return false;
 			}
 
 			var block = span[i..end];
-			if (block[0] == '\'' && block[^1] == '\'')
-				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
 			node = JsonNode.Parse(block.ToString());
 			i = end;
 			return true;

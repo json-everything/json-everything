@@ -1,4 +1,6 @@
 using System;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
@@ -10,13 +12,11 @@ public class DevTest
 	[Test]
 	public void Check()
 	{
-		var context = new JsonObject
+		var value = JsonNode.Parse("\"\\uE1FF\"");
+
+		Console.WriteLine(JsonSerializer.Serialize(value, new JsonSerializerOptions
 		{
-			["test"] = JsonFunction.Create((arguments, context) => true)
-		};
-
-		var result = JsonE.Evaluate(new JsonObject { ["$eval"] = "test(1)" }, context);
-
-		Console.WriteLine(result.AsJsonString());
+			//Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		}));
 	}
 }
