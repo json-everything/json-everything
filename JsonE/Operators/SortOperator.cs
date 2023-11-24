@@ -12,26 +12,20 @@ internal class SortOperator : IOperator
 	private static readonly Regex _byForm = new(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)");
 
 	public const string Name = "$sort";
-	
-	public void Validate(JsonNode? template)
+
+	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
+		obj.VerifyNoUndefinedProperties(Name, _byForm);
+
+		if (obj.Count > 2)
+			throw new TemplateException("Expected no more than two keys");
 
 		var parameter = obj[Name];
 		if (!parameter.IsTemplateOr<JsonArray>())
 			throw new TemplateException(CommonErrors.SortSameType());
 
-		obj.VerifyNoUndefinedProperties(Name, _byForm);
-
-		if (obj.Count > 2)
-			throw new TemplateException("Expected no more than two keys");
-	}
-
-	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
-	{
-		var obj = template!.AsObject();
-
-		var value = JsonE.Evaluate(obj[Name], context)!.AsArray();
+		var value = JsonE.Evaluate(parameter, context)!.AsArray();
 		if (value.Count == 0) return value;
 
 		var accessorEntry = obj.FirstOrDefault(x => x.Key != Name);

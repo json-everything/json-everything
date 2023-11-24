@@ -13,17 +13,12 @@ internal class JsonOperator : IOperator
 		new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
 	public const string Name = "$json";
-	
-	public void Validate(JsonNode? template)
-	{
-		var obj = template!.AsObject();
-
-		obj.VerifyNoUndefinedProperties(Name);
-	}
 
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
+		obj.VerifyNoUndefinedProperties(Name);
+	
 		var value = obj[Name];
 
 		var evaluated = Sort(JsonE.Evaluate(value, context));

@@ -8,26 +8,12 @@ namespace Json.JsonE.Operators;
 internal class FromNowOperator : IOperator
 {
 	public const string Name = "$fromNow";
-	
-	public void Validate(JsonNode? template)
-	{
-		var obj = template!.AsObject();
-
-		obj.VerifyNoUndefinedProperties(Name, "from");
-
-		var parameter = obj[Name];
-		if (parameter.IsTemplateOr<string>()) return;
-
-		if (obj.Count > 1)
-		{
-			parameter = obj["from"];
-			if (parameter.IsTemplateOr<string>()) return;
-		}
-	}
 
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
+		obj.VerifyNoUndefinedProperties(Name, "from");
+
 		var value = obj[Name];
 		var intervalStr = JsonE.Evaluate(value, context) as JsonValue ??
 		                  throw new TemplateException(CommonErrors.IncorrectValueType(Name, "a string"));

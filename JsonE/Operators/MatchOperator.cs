@@ -9,22 +9,14 @@ namespace Json.JsonE.Operators;
 internal class MatchOperator : IOperator
 {
 	public const string Name = "$match";
-	
-	public void Validate(JsonNode? template)
-	{
-		var obj = template!.AsObject();
-
-		obj.VerifyNoUndefinedProperties(Name);
-
-		var parameter = obj[Name];
-		if (!parameter.IsTemplateOr<JsonObject>())
-			throw new TemplateException("$match can evaluate objects only");
-	}
 
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
-		var value = JsonE.Evaluate(obj[Name], context)!.AsObject();
+		obj.VerifyNoUndefinedProperties(Name);
+	
+		var value = JsonE.Evaluate(obj[Name], context) as JsonObject ??
+			throw new TemplateException("$match can evaluate objects only");
 
 		var array = new JsonArray();
 		foreach (var kvp in value.OrderBy(x => x.Key, StringComparer.Ordinal))

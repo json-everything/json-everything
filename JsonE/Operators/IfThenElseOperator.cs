@@ -9,10 +9,9 @@ internal class IfThenElseOperator : IOperator
 {
 	public const string Name = "$if";
 
-	public void Validate(JsonNode? template)
+	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
-
 		obj.VerifyNoUndefinedProperties(Name, "then", "else");
 
 		var parameter = obj[Name];
@@ -20,18 +19,8 @@ internal class IfThenElseOperator : IOperator
 			throw new TemplateException("$eval must be given a string expression");
 
 		int index = 0;
-		if (!ExpressionParser.TryParse(source.AsSpan(), ref index, out _))
-			throw new TemplateException("Expression is not valid");
-	}
-
-	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
-	{
-		var obj = template!.AsObject();
-		var source = obj[Name]!.GetValue<string>();
-
-		int index = 0;
 		if (!ExpressionParser.TryParse(source.AsSpan(), ref index, out var expression))
-			throw new TemplateException("Expression is not valid"); // shouldn't happen because we checked it earlier
+			throw new TemplateException("Expression is not valid");
 
 		var cond = expression!.Evaluate(context);
 		var thenPresent = obj.TryGetValue("then", out var thenValue, out _);

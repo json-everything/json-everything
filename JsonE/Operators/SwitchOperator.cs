@@ -10,21 +10,17 @@ internal class SwitchOperator : IOperator
 {
 	public const string Name = "$switch";
 
-	public void Validate(JsonNode? template)
+	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
-
 		obj.VerifyNoUndefinedProperties(Name);
+
 
 		var parameter = obj[Name];
 		if (!parameter.IsTemplateOr<JsonObject>())
 			throw new TemplateException("$switch can evaluate objects only");
-	}
 
-	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
-	{
-		var obj = template!.AsObject();
-		var value = JsonE.Evaluate(obj[Name], context)!.AsObject();
+		var value = JsonE.Evaluate(parameter, context)!.AsObject();
 
 		// $default may be present but null-valued
 		var def = value.FirstOrDefault(x => x.Key == "$default");

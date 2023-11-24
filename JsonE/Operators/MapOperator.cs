@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Json.More;
@@ -11,22 +10,12 @@ internal class MapOperator : IOperator
 	private static readonly Regex _byForm = new(@"^each\(\s*(?<var1>[a-zA-Z_][a-zA-Z0-9_]*)\s*(,\s*(?<var2>[a-zA-Z_][a-zA-Z0-9_]*))?\s*\)");
 
 	public const string Name = "$map";
-	
-	public void Validate(JsonNode? template)
-	{
-		var obj = template!.AsObject();
-
-		obj.VerifyNoUndefinedProperties(Name, _byForm);
-
-		var parameter = obj[Name];
-		if (parameter.IsTemplateOr<JsonObject>() || parameter.IsTemplateOr<JsonArray>()) return;
-
-		throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array or object"));
-	}
 
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
+		obj.VerifyNoUndefinedProperties(Name, _byForm);
+	
 		var value = JsonE.Evaluate(obj[Name], context);
 
 		var eachEntry = obj.FirstOrDefault(x => x.Key != Name);
@@ -36,7 +25,7 @@ internal class MapOperator : IOperator
 		{
 			JsonArray a => EvaluateAsArray(a, eachEntry.Key, eachTemplate, context),
 			JsonObject o => EvaluateAsObject(o, eachEntry.Key, eachTemplate, context),
-			_ => throw new Exception("This shouldn't happen")
+			_ => throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array or object"))
 		};
 	}
 

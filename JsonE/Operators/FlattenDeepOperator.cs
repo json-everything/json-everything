@@ -9,21 +9,13 @@ internal class FlattenDeepOperator : IOperator
 { 
 	public const string Name = "$flattenDeep";
 
-	public void Validate(JsonNode? template)
+	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
 
 		obj.VerifyNoUndefinedProperties(Name);
 
-		var parameter = obj[Name];
-		if (parameter.IsTemplateOr<JsonArray>()) return;
-
-		throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array"));
-	}
-
-	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
-	{
-		var value = template!.AsObject()[Name]!;
+		var value = obj[Name];
 		var array = JsonE.Evaluate(value, context) as JsonArray ??
 		            throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array"));
 

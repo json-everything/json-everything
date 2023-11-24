@@ -40,10 +40,6 @@ internal static class OperatorRepository
 			_ => _operators[operatorKeys[0]]
 		};
 
-		if (op is null) return null;
-
-		op.Validate(obj);
-		
 		return op;
 	}
 

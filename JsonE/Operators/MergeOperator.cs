@@ -8,23 +8,12 @@ internal class MergeOperator : IOperator
 { 
 	public const string Name = "$merge";
 
-	public void Validate(JsonNode? template)
-	{
-		var obj = template!.AsObject();
-
-		obj.VerifyNoUndefinedProperties(Name);
-
-		var parameter = obj[Name];
-		if (parameter is JsonArray arr && arr.All(x => x.IsTemplateOr<JsonObject>()) ||
-		    OperatorRepository.Get(parameter) != null)
-			return;
-
-		throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"));
-	}
-
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
-		var value = template!.AsObject()[Name]!;
+		var obj = template!.AsObject();
+		obj.VerifyNoUndefinedProperties(Name);
+
+		var value = obj[Name]!;
 		var array = JsonE.Evaluate(value, context) as JsonArray ??
 		            throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"));
 
