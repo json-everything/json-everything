@@ -13,6 +13,7 @@ body:
       description: What package are you using
       options:
         - Json.More.Net
+        - JsonE.Net
         - JsonLogic
         - JsonPath.Net
         - JsonPatch.Net
