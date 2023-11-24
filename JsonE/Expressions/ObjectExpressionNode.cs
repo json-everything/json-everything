@@ -93,6 +93,11 @@ internal class ObjectExpressionParser : IOperandExpressionParser
 			if (source[i] is ',')
 			{
 				i++;
+				if (source[i] is '}')
+				{
+					expression = null;
+					return false;
+				}
 				continue;
 			}
 			if (source[i] is '}')

@@ -136,3 +136,8 @@ title: 'grouped division with exponentiation'
 context: {a: 12}
 template: {$eval: '(a / 3) ** 4'}
 result: 256
+---
+title:    trailing comma in array
+context:  {}
+template: { $eval: '[2,1,]'}
+error:    true
