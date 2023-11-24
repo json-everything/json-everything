@@ -1,0 +1,36 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: Publish JsonE.Net
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - JsonE/**
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      # Publish
+      - name: publish json-e
+        id: publish_e
+        uses: alirezanet/publish-nuget@v3.0.0
+        with:
+          PROJECT_FILE_PATH: JsonE/JsonE.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          INCLUDE_SYMBOLS: true
+          TAG_FORMAT: json-e-v*
+      - name: archive packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive-packages
+          path: |
+            **/*.nupkg
+            **/*.snupkg
