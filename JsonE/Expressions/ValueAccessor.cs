@@ -158,10 +158,8 @@ internal class ValueAccessor
 	private static bool TryParseSlice(ReadOnlySpan<char> source, ref int index, out IContextAccessorSegment? segment)
 	{
 		var i = index;
-		int? start = null, end = null, step = null;
 
-		if (source.TryGetInt(ref i, out var value))
-			start = value;
+		ExpressionParser.TryParse(source, ref i, out var start);
 
 		if (!source.ConsumeWhitespace(ref i))
 		{
@@ -183,8 +181,7 @@ internal class ValueAccessor
 			return false;
 		}
 
-		if (source.TryGetInt(ref i, out value))
-			end = value;
+		ExpressionParser.TryParse(source, ref i, out var end);
 
 		if (!source.ConsumeWhitespace(ref i))
 		{
@@ -192,6 +189,7 @@ internal class ValueAccessor
 			return false;
 		}
 
+		ExpressionNode? step = null;
 		if (source[i] == ':')
 		{
 			i++; // consume :
@@ -202,8 +200,7 @@ internal class ValueAccessor
 				return false;
 			}
 
-			if (source.TryGetInt(ref i, out value))
-				step = value;
+			ExpressionParser.TryParse(source, ref i, out step);
 		}
 
 		index = i;

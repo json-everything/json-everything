@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -8,11 +7,11 @@ namespace Json.JsonE.Expressions;
 
 internal class SliceSegment : IContextAccessorSegment
 {
-	private readonly int? _start;
-	private readonly int? _end;
-	private readonly int? _step;
+	private readonly ExpressionNode? _start;
+	private readonly ExpressionNode? _end;
+	private readonly ExpressionNode? _step;
 
-	public SliceSegment(int? start, int? end, int? step)
+	public SliceSegment(ExpressionNode? start, ExpressionNode? end, ExpressionNode? step)
 	{
 		_start = start;
 		_end = end;
@@ -21,18 +20,43 @@ internal class SliceSegment : IContextAccessorSegment
 
 	public bool TryFind(JsonNode? contextValue, EvaluationContext fullContext, out JsonNode? value)
 	{
+		var (start, end, step) = GetValues(fullContext);
 		value = null;
 		return contextValue switch
 		{
-			JsonArray arr => TryFind(arr, out value),
-			JsonValue val when val.TryGetValue(out string? str) => TryFind(str, out value),
+			JsonArray arr => TryFind(start, end, step, arr, out value),
+			JsonValue val when val.TryGetValue(out string? str) => TryFind(start, end, step, str, out value),
 			_ => false
 		};
 	}
 
-	private bool TryFind(JsonArray contextValue, out JsonNode? value)
+	private (int?, int?, int?) GetValues(EvaluationContext context)
 	{
-		if (_step == 0)
+		return (
+			GetValue(_start, context),
+			GetValue(_end, context),
+			GetValue(_step, context)
+		);
+	}
+
+	private static int? GetValue(ExpressionNode? expr, EvaluationContext context)
+	{
+		if (expr is null) return null;
+
+		var node = expr.Evaluate(context);
+		if (node is not JsonValue value)
+			throw new InterpreterException("Slice requires integer values");
+		var num = value.GetNumber();
+		var index = (int?)num;
+		if (num == null || num != index)
+			throw new InterpreterException("Slice requires integer values");
+
+		return index;
+	}
+
+	private static bool TryFind(int? start, int? end, int? step, JsonArray contextValue, out JsonNode? value)
+	{
+		if (step == 0)
 		{
 			value = null;
 			return false;
@@ -40,10 +64,10 @@ internal class SliceSegment : IContextAccessorSegment
 
 		var result = new JsonArray();
 
-		var step = _step ?? 1;
-		var start = _start ?? (step >= 0 ? 0 : contextValue.Count);
-		var end = _end ?? (step >= 0 ? contextValue.Count : -contextValue.Count - 1);
-		var (lower, upper) = Bounds(start, end, step, contextValue.Count);
+		step ??= 1;
+		start ??= (step >= 0 ? 0 : contextValue.Count);
+		end ??= (step >= 0 ? contextValue.Count : -contextValue.Count - 1);
+		var (lower, upper) = Bounds(start.Value, end.Value, step.Value, contextValue.Count);
 
 		if (step > 0)
 		{
@@ -51,7 +75,7 @@ internal class SliceSegment : IContextAccessorSegment
 			while (i < upper)
 			{
 				result.Add(contextValue[i].Copy());
-				i += step;
+				i += step.Value;
 				if (i < 0) break; // overflow
 			}
 		}
@@ -61,7 +85,7 @@ internal class SliceSegment : IContextAccessorSegment
 			while (lower < i)
 			{
 				result.Add(contextValue[i].Copy());
-				i += step;
+				i += step.Value;
 				if (i < 0) break; // overflow
 			}
 		}
@@ -70,9 +94,9 @@ internal class SliceSegment : IContextAccessorSegment
 		return true;
 	}
 
-	private bool TryFind(string contextValue, out JsonNode? value)
+	private static bool TryFind(int? start, int? end, int? step, string contextValue, out JsonNode? value)
 	{
-		if (_step == 0)
+		if (step == 0)
 		{
 			value = null;
 			return false;
@@ -80,10 +104,10 @@ internal class SliceSegment : IContextAccessorSegment
 
 		var result = new StringBuilder();
 
-		var step = _step ?? 1;
-		var start = _start ?? (step >= 0 ? 0 : contextValue.Length);
-		var end = _end ?? (step >= 0 ? contextValue.Length : -contextValue.Length - 1);
-		var (lower, upper) = Bounds(start, end, step, contextValue.Length);
+		step ??= 1;
+		start ??= (step >= 0 ? 0 : contextValue.Length);
+		end ??= (step >= 0 ? contextValue.Length : -contextValue.Length - 1);
+		var (lower, upper) = Bounds(start.Value, end.Value, step.Value, contextValue.Length);
 
 		if (step > 0)
 		{
@@ -91,7 +115,7 @@ internal class SliceSegment : IContextAccessorSegment
 			while (i < upper)
 			{
 				result.Append(contextValue[i]);
-				i += step;
+				i += step.Value;
 				if (i < 0) break; // overflow
 			}
 		}
@@ -101,7 +125,7 @@ internal class SliceSegment : IContextAccessorSegment
 			while (lower < i)
 			{
 				result.Append(contextValue[i]);
-				i += step;
+				i += step.Value;
 				if (i < 0) break; // overflow
 			}
 		}
