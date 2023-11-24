@@ -27,7 +27,7 @@ internal class LetOperator : IOperator
 		var additionalContext = JsonE.Evaluate(value, context);
 		additionalContext.ValidateAsContext(Name);
 
-		context.Push(additionalContext);
+		context.Push((JsonObject)additionalContext!);
 		var result = JsonE.Evaluate(obj["in"], context);
 		context.Pop();
 

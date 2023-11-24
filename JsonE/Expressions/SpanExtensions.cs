@@ -65,7 +65,7 @@ internal static class SpanExtensions
 		return foundNumber;
 	}
 
-	public static bool TryParseLiteral(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
+	public static bool TryParsePrimitive(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
 	{
 		if (!span.ConsumeWhitespace(ref i))
 		{
@@ -131,7 +131,7 @@ internal static class SpanExtensions
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			node = YamlSerializer.Parse(block.ToString()).FirstOrDefault()?.ToJsonNode() ?? JsonNull.SignalNode;
+			node = JsonNode.Parse(block.ToString()) ?? JsonNull.SignalNode;
 			i = end;
 			return true;
 		}

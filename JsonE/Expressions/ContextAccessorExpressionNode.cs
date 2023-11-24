@@ -4,11 +4,11 @@ using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions;
 
-internal class AccessorExpressionNode : ExpressionNode
+internal class ContextAccessorExpressionNode : ExpressionNode
 {
 	public ContextAccessor Accessor { get; }
 
-	public AccessorExpressionNode(ContextAccessor accessor)
+	public ContextAccessorExpressionNode(ContextAccessor accessor)
 	{
 		Accessor = accessor;
 	}
@@ -29,7 +29,7 @@ internal class AccessorExpressionNode : ExpressionNode
 	}
 }
 
-internal class AccessorExpressionParser : IOperandExpressionParser
+internal class ContextAccessorExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
@@ -39,7 +39,7 @@ internal class AccessorExpressionParser : IOperandExpressionParser
 			return false;
 		}
 
-		expression = new AccessorExpressionNode(accessor!);
+		expression = new ContextAccessorExpressionNode(accessor!);
 		return true;
 	}
 }

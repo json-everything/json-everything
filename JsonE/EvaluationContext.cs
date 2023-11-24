@@ -31,17 +31,17 @@ public class EvaluationContext
 			["uppercase"] = new UppercaseFunction()
 		};
 
-	private readonly Stack<JsonNode?> _contextStack;
+	private readonly Stack<JsonObject> _contextStack;
 
-	public EvaluationContext(JsonNode? baseContext)
+	public EvaluationContext(JsonObject baseContext)
 	{
-		_contextStack = new Stack<JsonNode?>();
+		_contextStack = new Stack<JsonObject>();
 		_contextStack.Push(_functionsContext);
 		_contextStack.Push(new JsonObject { ["now"] = DateTime.Now.ToString("O") });
 		_contextStack.Push(baseContext);
 	}
 
-	public void Push(JsonNode? newContext)
+	public void Push(JsonObject newContext)
 	{
 		_contextStack.Push(newContext);
 	}
@@ -55,7 +55,7 @@ public class EvaluationContext
 	{
 		foreach (var contextValue in _contextStack)
 		{
-			if (identifier.TryFind(contextValue, this, out var target)) return target;
+			if (identifier.TryFind(contextValue, out var target)) return target;
 		}
 
 		throw new InterpreterException($"unknown context value {identifier}");
@@ -65,7 +65,7 @@ public class EvaluationContext
 	{
 		foreach (var context in _contextStack)
 		{
-			if (identifier.TryFind(context, this, out _)) return true;
+			if (identifier.TryFind(context, out _)) return true;
 		}
 
 		return false;

@@ -5,11 +5,11 @@ using Json.More;
 
 namespace Json.JsonE.Expressions;
 
-internal class LiteralExpressionNode : ExpressionNode
+internal class PrimitiveExpressionNode : ExpressionNode
 {
 	public JsonNode? Value { get; }
 
-	public LiteralExpressionNode(JsonNode? value)
+	public PrimitiveExpressionNode(JsonNode? value)
 	{
 		Value = value ?? JsonNull.SignalNode;
 	}
@@ -30,17 +30,17 @@ internal class LiteralExpressionNode : ExpressionNode
 	}
 }
 
-internal class LiteralExpressionParser : IOperandExpressionParser
+internal class PrimitiveExpressionParser : IOperandExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression)
 	{
-		if (!source.TryParseLiteral(ref index, out var node))
+		if (!source.TryParsePrimitive(ref index, out var node))
 		{
 			expression = null;
 			return false;
 		}
 
-		expression = new LiteralExpressionNode(node);
+		expression = new PrimitiveExpressionNode(node);
 		return true;
 	}
 }

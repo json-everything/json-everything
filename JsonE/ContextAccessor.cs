@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
+using Json.More;
 
 namespace Json.JsonE;
 
 public class ContextAccessor
 {
-	private readonly IContextAccessorSegment[] _segments;
-	private readonly string _asString;
+	private readonly string _name;
 
-	internal static ContextAccessor Now { get; } = new(new[] { new PropertySegment("now", false) }, "now");
-	internal static ContextAccessor Default { get; } = new(new[] { new PropertySegment("x", false) }, "x");
+	internal static ContextAccessor Now { get; } = "now";
+	internal static ContextAccessor Default { get; } = "x";
 
-	private ContextAccessor(IEnumerable<IContextAccessorSegment> segments, string asString)
+	private ContextAccessor(string asString)
 	{
-		_segments = segments.ToArray();
-		_asString = asString;
+		_name = asString;
 	}
 
 	internal static bool TryParse(ReadOnlySpan<char> source, ref int index, out ContextAccessor? accessor)
@@ -30,8 +26,6 @@ public class ContextAccessor
 			return false;
 		}
 
-		var segments = new List<IContextAccessorSegment>();
-
 		if (source.TryParseName(ref i, out var name))
 		{
 			if (name.In("true", "false", "null"))
@@ -39,233 +33,27 @@ public class ContextAccessor
 				accessor = null;
 				return false;
 			}
-
-			segments.Add(new PropertySegment(name!, false));
 		}
-		else if (source.TryParseLiteral(ref i, out var literal))
-			segments.Add(new LiteralSegment(literal));
 		else
 		{
 			accessor = null;
 			return false;
 		}
 
-		while (i < source.Length)
-		{
-			if (!source.ConsumeWhitespace(ref i))
-			{
-				accessor = null;
-				return false;
-			}
-
-			switch (source[i])
-			{
-				case '.':
-					i++;
-					if (!source.TryParseName(ref i, out name))
-					{
-						accessor = null;
-						return false;
-					}
-
-					segments.Add(new PropertySegment(name!, false));
-					continue;
-				case '[':
-					i++;
-
-					if (!source.ConsumeWhitespace(ref i))
-					{
-						accessor = null;
-						return false;
-					}
-
-					if (!TryParseQuotedName(source, ref i, out var segment) &&
-						!TryParseSlice(source, ref i, out segment) &&
-						!TryParseIndex(source, ref i, out segment) &&
-						!TryParseExpression(source, ref i, out segment))
-					{
-						accessor = null;
-						return false;
-					}
-
-					segments.Add(segment!);
-
-					if (!source.ConsumeWhitespace(ref i))
-					{
-						accessor = null;
-						return false;
-					}
-
-					if (source[i] != ']')
-					{
-						accessor = null;
-						return false;
-					}
-
-					i++;
-
-					continue;
-			}
-
-			break;
-		}
-
-		var asString = source[index..i].ToString();
 		index = i;
-		accessor = new ContextAccessor(segments, asString);
+		accessor = new ContextAccessor(name!);
 		return true;
 	}
 
-	private static bool TryParseQuotedName(ReadOnlySpan<char> source, ref int index, out IContextAccessorSegment? segment)
+	internal bool TryFind(JsonObject context, out JsonNode? value)
 	{
-		char quoteChar;
-		var i = index;
-		switch (source[index])
-		{
-			case '"':
-				quoteChar = '"';
-				i++;
-				break;
-			case '\'':
-				quoteChar = '\'';
-				i++;
-				break;
-			default:
-				segment = null;
-				return false;
-		}
-
-		var done = false;
-		var sb = new StringBuilder();
-		while (i < source.Length && !done)
-		{
-			if (source[i] == quoteChar)
-			{
-				done = true;
-				i++;
-			}
-			else
-			{
-				if (!source.EnsureValidNameCharacter(i))
-				{
-					segment = null;
-					return false;
-				}
-				sb.Append(source[i]);
-				i++;
-			}
-		}
-
-		if (!done)
-		{
-			segment = null;
-			return false;
-		}
-
-		index = i;
-		segment = new PropertySegment(sb.ToString(), true);
-		return true;
-
+		return context.TryGetValue(_name, out value, out _);
 	}
 
-	private static bool TryParseIndex(ReadOnlySpan<char> source, ref int index, out IContextAccessorSegment? segment)
-	{
-		if (!source.TryGetInt(ref index, out var i))
-		{
-			segment = null;
-			return false;
-		}
-
-		segment = new IndexSegment(i);
-		return true;
-	}
-
-	private static bool TryParseSlice(ReadOnlySpan<char> source, ref int index, out IContextAccessorSegment? segment)
-	{
-		var i = index;
-		int? start = null, end = null, step = null;
-
-		if (source.TryGetInt(ref i, out var value))
-			start = value;
-
-		if (!source.ConsumeWhitespace(ref i))
-		{
-			segment = null;
-			return false;
-		}
-
-		if (source[i] != ':')
-		{
-			segment = null;
-			return false;
-		}
-
-		i++; // consume :
-
-		if (!source.ConsumeWhitespace(ref i))
-		{
-			segment = null;
-			return false;
-		}
-
-		if (source.TryGetInt(ref i, out value))
-			end = value;
-
-		if (!source.ConsumeWhitespace(ref i))
-		{
-			segment = null;
-			return false;
-		}
-
-		if (source[i] == ':')
-		{
-			i++; // consume :
-
-			if (!source.ConsumeWhitespace(ref i))
-			{
-				segment = null;
-				return false;
-			}
-
-			if (source.TryGetInt(ref i, out value))
-				step = value;
-		}
-
-		index = i;
-		segment = new SliceSegment(start, end, step);
-		return true;
-	}
-
-	private static bool TryParseExpression(ReadOnlySpan<char> source, ref int i, out IContextAccessorSegment? segment)
-	{
-		if (!ExpressionParser.TryParse(source, ref i, out var expression))
-		{
-			segment = null;
-			return false;
-		}
-
-		segment = new ExpressionSegment(expression!);
-		return true;
-	}
-
-	internal bool TryFind(JsonNode? localContext, EvaluationContext fullContext, out JsonNode? value)
-	{
-		var current = localContext;
-		foreach (var segment in _segments)
-		{
-			if (!segment.TryFind(current, fullContext, out value)) return false;
-
-			current = value;
-		}
-
-		value = current;
-		return true;
-	}
-
-	public override string ToString() => _asString;
+	public override string ToString() => _name;
 
 	public static implicit operator ContextAccessor(string name)
 	{
-		return new ContextAccessor(new IContextAccessorSegment[] { new PropertySegment(name, false) }, name);
+		return new ContextAccessor(name);
 	}
 }

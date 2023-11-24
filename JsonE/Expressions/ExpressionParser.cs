@@ -9,10 +9,11 @@ internal static class ExpressionParser
 	private static readonly IOperandExpressionParser[] _operandParsers =
 	{
 		new UnaryExpressionParser(),
+		new FunctionExpressionParser(),
+		new ContextAccessorExpressionParser(),
+		new PrimitiveExpressionParser(),
 		new ObjectExpressionParser(),
 		new ArrayExpressionParser(),
-		new FunctionExpressionParser(),
-		new AccessorExpressionParser(), // handles literals
 	};
 
 	public static bool TryParse(ReadOnlySpan<char> source, ref int index, out ExpressionNode? expression, bool skipFunctions = false)
@@ -50,6 +51,9 @@ internal static class ExpressionParser
 			expression = null;
 			return false;
 		}
+
+		if (ValueAccessor.TryParse(source, ref i, out var valueAccessor)) 
+			left = new ValueAccessorExpressionNode(left, valueAccessor!);
 
 		while (i < source.Length)
 		{
@@ -102,6 +106,9 @@ internal static class ExpressionParser
 				expression = null;
 				return false;
 			}
+
+			if (ValueAccessor.TryParse(source, ref i, out valueAccessor))
+				right = new ValueAccessorExpressionNode(right, valueAccessor!);
 
 			if (left is BinaryExpressionNode bin)
 			{

@@ -25,7 +25,7 @@ public static class JsonE
 		context ??= new JsonObject();
 
 		context.ValidateAsContext();
-		var evalContext = new EvaluationContext(context);
+		var evalContext = new EvaluationContext((JsonObject)context);
 		
 		var result = Evaluate(template, evalContext);
 		result.ValidateNotReturningFunction();
