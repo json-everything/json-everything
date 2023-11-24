@@ -22,19 +22,19 @@ namespace ApiDocsGenerator
 
 			CopyReleaseNotes(outputDir, "release-notes");
 
-			await GenerateAndSaveDocs<JsonSchema>("9.01", outputDir, "api");
-			await GenerateAndSaveDocs<DataKeyword>("9.02", outputDir, "api");
-			await GenerateAndSaveDocs<UniqueKeysKeyword>("9.03", outputDir, "api");
-			await GenerateAndSaveDocs<DiscriminatorKeyword>("9.04", outputDir, "api");
-			await GenerateAndSaveDocs<ISchemaGenerator>("9.05", outputDir, "api");
-			await GenerateAndSaveDocs<NumberRange>("9.06", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(CodeGenExtensions), "9.07", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPath>("9.08", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPatch>("9.09", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPointer>("9.10", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonLogic), "9.11", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonNull), "9.12", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(YamlConverter), "9.13", outputDir, "api");
+			await GenerateAndSaveDocs<JsonSchema>("10.01", outputDir, "api");
+			await GenerateAndSaveDocs<DataKeyword>("10.02", outputDir, "api");
+			await GenerateAndSaveDocs<UniqueKeysKeyword>("10.03", outputDir, "api");
+			await GenerateAndSaveDocs<DiscriminatorKeyword>("10.04", outputDir, "api");
+			await GenerateAndSaveDocs<ISchemaGenerator>("10.05", outputDir, "api");
+			await GenerateAndSaveDocs<NumberRange>("10.06", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(CodeGenExtensions), "10.07", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPath>("10.08", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPatch>("10.09", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPointer>("10.10", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonLogic), "10.11", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonNull), "10.12", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(YamlConverter), "10.13", outputDir, "api");
 		}
 
 		private static void CopyReleaseNotes(params string[] outputDir)
