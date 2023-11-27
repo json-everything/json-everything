@@ -6,7 +6,7 @@ namespace Json.JsonE;
 /// <summary>
 /// Thrown from <see cref="JsonE.Evaluate(JsonNode?, JsonNode?)"/> when ???.
 /// </summary>
-public class TypeException : Exception
+public class TypeException : JsonEException
 {
 	/// <summary>
 	/// Creates a new instance of <see cref="TemplateException"/>.
