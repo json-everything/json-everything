@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Json.JsonE.Expressions.Operators;
 using static Json.JsonE.Operators.CommonErrors;
 
@@ -62,11 +63,24 @@ internal static class ExpressionParser
 			return false;
 		}
 
-		if (ValueAccessor.TryParse(source, ref i, out var valueAccessor)) 
-			left = new ValueAccessorExpressionNode(left, valueAccessor!);
+		bool stillBuildingOperand;
+		ValueAccessor? valueAccessor;
+		List<ExpressionNode>? functionArguments;
+		do
+		{
+			stillBuildingOperand = false;
+			if (ValueAccessor.TryParse(source, ref i, out valueAccessor))
+			{
+				left = new ValueAccessorExpressionNode(left, valueAccessor!);
+				stillBuildingOperand = true;
+			}
 
-		if (FunctionArgumentParser.TryParse(source, ref i, out var functionArguments)) 
-			left = new FunctionExpressionNode(left, functionArguments!);
+			if (FunctionArgumentParser.TryParse(source, ref i, out functionArguments))
+			{
+				left = new FunctionExpressionNode(left, functionArguments!);
+				stillBuildingOperand = true;
+			}
+		} while (stillBuildingOperand);
 
 		while (i < source.Length)
 		{
@@ -120,11 +134,21 @@ internal static class ExpressionParser
 				return false;
 			}
 
-			if (ValueAccessor.TryParse(source, ref i, out valueAccessor))
-				right = new ValueAccessorExpressionNode(right, valueAccessor!);
+			do
+			{
+				stillBuildingOperand = false;
+				if (ValueAccessor.TryParse(source, ref i, out valueAccessor))
+				{
+					right = new ValueAccessorExpressionNode(right, valueAccessor!);
+					stillBuildingOperand = true;
+				}
 
-			if (FunctionArgumentParser.TryParse(source, ref i, out functionArguments))
-				right = new FunctionExpressionNode(right, functionArguments!);
+				if (FunctionArgumentParser.TryParse(source, ref i, out functionArguments))
+				{
+					right = new FunctionExpressionNode(right, functionArguments!);
+					stillBuildingOperand = true;
+				}
+			} while (stillBuildingOperand);
 
 			if (left is BinaryExpressionNode bin)
 			{

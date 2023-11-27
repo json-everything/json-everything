@@ -141,3 +141,8 @@ title:    trailing comma in array
 context:  {}
 template: { $eval: '[2,1,]'}
 error:    true
+---
+title:    accessor after function call
+context:  {}
+template: {$eval: 'split("left:right", ":")[1]'}
+result:   right
