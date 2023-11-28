@@ -72,6 +72,7 @@ jobs:
           VERSION=${{ needs.build.outputs.version }}
           PKG_NAME=JsonSchema.Net.${VERSION}.nupkg
           echo ${PKG_NAME}
+          ls nupkg/
           nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org -SkipDuplicate
       - name: archive packages
         uses: actions/upload-artifact@v3
