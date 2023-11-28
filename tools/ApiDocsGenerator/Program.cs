@@ -1,4 +1,5 @@
-﻿using Json.Logic;
+﻿using Json.JsonE;
+using Json.Logic;
 using Json.More;
 using Json.Patch;
 using Json.Path;
@@ -33,8 +34,9 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs<JsonPatch>("10.09", outputDir, "api");
 			await GenerateAndSaveDocs<JsonPointer>("10.10", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(JsonLogic), "10.11", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonNull), "10.12", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(YamlConverter), "10.13", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonE), "10.12", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonNull), "10.13", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(YamlConverter), "10.14", outputDir, "api");
 		}
 
 		private static void CopyReleaseNotes(params string[] outputDir)

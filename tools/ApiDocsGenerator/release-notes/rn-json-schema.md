@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net
 icon: fas fa-tag
-order: "8.01"
+order: "08.01"
 ---
 # [5.4.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.4.0}
 
