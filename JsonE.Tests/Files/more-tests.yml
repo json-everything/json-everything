@@ -1,0 +1,148 @@
+################################################################################
+# ### Specification for json-e
+# This document specifies the json-e template language through a series of
+# test cases on the form: `{title, context, template, result, error, panic}`
+# where `jsone.render(template, context) = result` and title is short name
+# for the test case. If the `error` property is specified as `true`, no result
+# needs to be specified, as the test case must throw an error. If the `panic`
+# property is specified as `true`, the test case is expected to throw an error
+# about invalid usage, typically invalid context.
+#
+# Comments explaining the test cases is encouraged, additionally entries with
+# {section: '...'} is encouraged to separate sections.
+#
+# Test conditions:
+#   1) Time at test time is expected to be '2017-01-19T16:27:20.974Z'
+################################################################################
+---
+section:  More tests
+---
+title:    Nested in an object
+context:  {}
+template: { key: {$reverse: [1,2,3]}}
+result:   {key: [3,2,1]}
+---
+title:    $sort variable not used (in context)
+context:  { foo: 1 }
+template: { $sort: [2,1,3], by(x): foo}
+result:   [2,1,3]
+---
+title:    $sort variable not used (not in context)
+context:  {}
+template: { $sort: [2,1,3], by(x): foo}
+error:    'InterpreterError: unknown context value foo'
+---
+title:    $map over object, two vars
+context:  {}
+template:	{ $map: {a: 1, b: 2, c: 3}, 'each(v,k)': {'${k}x': {$eval: 'v + 1'}} }
+result:   {ax: 2, bx: 3, cx: 4}
+---
+title:    $map over object, two vars (overwrite)
+context:  {}
+template:	{ $map: {a: 1, b: 2, c: 3}, 'each(v,k)': {'foo': {$eval: 'v + 1'}} }
+result:   {foo: 4}
+---
+title:    $map over object, one var
+context:  {}
+template: {$map: {a: 1, b: 2, c: 3}, 'each(y)': {'${y.key}x': {$eval: 'y.val + 1'}}}
+result:   {ax: 2, bx: 3, cx: 4}
+---
+title:    index expression
+context:  {a: [10,11,12], b: 1}
+template: {$eval: 'a[b]'}
+result:   11
+---
+title:    index expression with +
+context:  {a: [10,11,12], b: 1}
+template: {$eval: 'a[b+1]'}
+result:   12
+---
+title: 'multiplication with addition'
+context: {a: 2}
+template: {$eval: 'a * 3 + 4'}
+result: 10
+---
+title: 'multiplication with subtraction'
+context: {a: 2}
+template: {$eval: 'a * 3 - 4'}
+result: 2
+---
+title: 'multiplication with division'
+context: {a: 4}
+template: {$eval: 'a * 3 / 2'}
+result: 6
+---
+title: 'multiplication with exponentiation'
+context: {a: 2}
+template: {$eval: 'a * 3 ** 4'}
+result: 162
+---
+title: 'division with addition'
+context: {a: 12}
+template: {$eval: 'a / 3 + 4'}
+result: 8
+---
+title: 'division with subtraction'
+context: {a: 6}
+template: {$eval: 'a / 3 - 4'}
+result: -2
+---
+title: 'division with division'
+context: {a: 12}
+template: {$eval: 'a / 3 / 2'}
+result: 2
+---
+title: 'division with exponentiation'
+context: {a: 162}
+template: {$eval: 'a / 3 ** 4'}
+result: 2
+---
+title: 'multiplication with grouped addition'
+context: {a: 2}
+template: {$eval: 'a * (3 + 4)'}
+result: 14
+---
+title: 'multiplication with grouped subtraction'
+context: {a: 2}
+template: {$eval: 'a * (3 - 4)'}
+result: -2
+---
+title: 'multiplication with grouped division'
+context: {a: 4}
+template: {$eval: 'a * (4 / 2)'}
+result: 8
+---
+title: 'grouped multiplication with exponentiation'
+context: {a: 4}
+template: {$eval: '(a * 3) ** 2'}
+result: 144
+---
+title: 'division with grouped addition'
+context: {a: 14}
+template: {$eval: 'a / (3 + 4)'}
+result: 2
+---
+title: 'division with grouped subtraction'
+context: {a: 6}
+template: {$eval: 'a / (3 - 4)'}
+result: -6
+---
+title: 'division with grouped division'
+context: {a: 12}
+template: {$eval: 'a / (6 / 2)'}
+result: 4
+---
+title: 'grouped division with exponentiation'
+context: {a: 12}
+template: {$eval: '(a / 3) ** 4'}
+result: 256
+---
+title:    trailing comma in array
+context:  {}
+template: { $eval: '[2,1,]'}
+error:    true
+---
+title:    accessor after function call
+context:  {}
+template: {$eval: 'split("left:right", ":")[1]'}
+result:   right

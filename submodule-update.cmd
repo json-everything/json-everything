@@ -30,4 +30,10 @@ git checkout main
 git pull
 cd ..
 
+cd json-e
+git fetch
+git checkout main
+git pull
+cd ..
+
 cd ..

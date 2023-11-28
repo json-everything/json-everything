@@ -34,5 +34,8 @@
 "pkg:patch":
   - '### Nuget Package\s*JsonPatch\.Net'
 
+"pkg:json-e":
+  - '### Nuget Package\s*JsonE.Net'
+
 "pkg:yaml":
   - '### Nuget Package\s*Yaml2JsonNode'
