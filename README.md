@@ -111,7 +111,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 </tr>
 <tr>
 <td>JsonE.Net</td>
-<td>JsonE.Net (<a href="https://json-e.js.org/">Website</a>)</td>
+<td>JSON-e (<a href="https://json-e.js.org/">Website</a>)</td>
 <td><a href="https://www.nuget.org/packages/JsonE.Net/">&nbsp;&nbsp;<img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonE.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonE.Net.svg?svg=true"></img></a></td>
 </tr>
 <tr>
