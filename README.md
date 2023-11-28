@@ -110,6 +110,11 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 <td><a href="https://www.nuget.org/packages/JsonLogic/">&nbsp;&nbsp;<img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonLogic.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a></td>
 </tr>
 <tr>
+<td>JsonE.Net</td>
+<td>JsonE.Net (<a href="https://json-e.js.org/">Website</a>)</td>
+<td><a href="https://www.nuget.org/packages/JsonE.Net/">&nbsp;&nbsp;<img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonE.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonE.Net.svg?svg=true"></img></a></td>
+</tr>
+<tr>
 <td>Json.More.Net</td>
 <td>General-use extensions that probably should have been included in <em>System.Text.Json[.Nodes]</em> but weren't</td>
 <td><a href="https://www.nuget.org/packages/Json.More.Net/">&nbsp;&nbsp;<img alt="NuGet version" src="https://img.shields.io/nuget/vpre/Json.More.Net.svg?svg=true"></img><br><img alt="NuGet version" src="https://img.shields.io/nuget/dt/Json.More.Net.svg?svg=true"></img></a></td>
