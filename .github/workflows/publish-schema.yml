@@ -73,7 +73,7 @@ jobs:
           PKG_NAME=JsonSchema.Net.${VERSION}.nupkg
           echo ${PKG_NAME}
           ls nupkg/
-          nuget push nupkg/${PKG_NAME} -Source https://www.nuget.org -SkipDuplicate
+          nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org/v3/index.json -SkipDuplicate
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
@@ -105,7 +105,7 @@ jobs:
         run: |
           PKG_NAME=*.nupkg
           echo ${PKG_NAME}
-          nuget push nupkg/*.nupkg -Source https://www.nuget.org -SkipDuplicate
+          nuget push nupkg/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
