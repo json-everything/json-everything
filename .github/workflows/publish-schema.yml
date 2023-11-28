@@ -71,9 +71,9 @@ jobs:
           NUSPEC_NAME=JsonSchema.Net.nuspec
           VERSION=${{ needs.build.outputs.version }}
           PKG_NAME=JsonSchema.Net.${VERSION}.nupkg
-          echo ${PKG_NAME}
+          # echo ${PKG_NAME}
           ls nupkg/
-          nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org/v3/index.json -SkipDuplicate
+          nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org/v3/index.json -SkipDuplicate -Verbosity detailed
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
