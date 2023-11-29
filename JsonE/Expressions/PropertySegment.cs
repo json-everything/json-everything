@@ -29,4 +29,6 @@ internal class PropertySegment : IContextAccessorSegment
 
 		throw new InterpreterException("should only use integers to access arrays or strings");
 	}
+
+	public override string ToString() => Name;
 }

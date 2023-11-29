@@ -22,7 +22,7 @@ internal class MergeDeepOperator : IOperator
 
 	private static JsonObject Merge(JsonObject result, JsonNode? current)
 	{
-		var obj = current!.AsObject();
+		var obj = current as JsonObject ?? throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array of objects"));
 
 		foreach (var kvp in obj)
 		{

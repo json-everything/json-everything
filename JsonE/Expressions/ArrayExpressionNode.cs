@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json.Nodes;
+using Json.JsonE.Operators;
 using Json.More;
 
 namespace Json.JsonE.Expressions;
@@ -54,10 +55,7 @@ internal class ArrayExpressionParser : IOperandExpressionParser
 
 			// read expression
 			if (!ExpressionParser.TryParse(source, ref i, out var value))
-			{
-				expression = null;
-				return false;
-			}
+				throw new SyntaxException(CommonErrors.WrongToken(source[i]));
 
 			arr.Add(JsonExpression.Create(value!));
 

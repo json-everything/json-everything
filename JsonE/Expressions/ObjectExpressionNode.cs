@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json.Nodes;
+using Json.JsonE.Operators;
 using Json.More;
 
 namespace Json.JsonE.Expressions;
@@ -43,27 +44,29 @@ internal class ObjectExpressionParser : IOperandExpressionParser
 		// consume {
 		int i = index + 1;
 		var obj = new JsonObject();
+		var done = false;
 
-		while (i < source.Length && source[i] != '}')
+		while (i < source.Length)
 		{
 			if (!source.ConsumeWhitespace(ref i))
-			{
-				expression = null;
-				return false;
-			}
+				throw new SyntaxException(CommonErrors.EndOfInput());
 
 			// read name
 			if (!TryParseString(source, ref i, out var key))
 			{
+				if (source[i] is '}')
+				{
+					done = true;
+					i++;
+					break;
+				}
+
 				expression = null;
 				return false;
 			}
 
 			if (!source.ConsumeWhitespace(ref i))
-			{
-				expression = null;
-				return false;
-			}
+				throw new SyntaxException(CommonErrors.EndOfInput());
 
 			// read :
 			if (source[i] != ':')
@@ -75,17 +78,11 @@ internal class ObjectExpressionParser : IOperandExpressionParser
 			i++;
 
 			if (!source.ConsumeWhitespace(ref i))
-			{
-				expression = null;
-				return false;
-			}
+				throw new SyntaxException(CommonErrors.EndOfInput());
 
 			// read expression
 			if (!ExpressionParser.TryParse(source, ref i, out var value))
-			{
-				expression = null;
-				return false;
-			}
+				throw new SyntaxException(CommonErrors.WrongToken(source[i]));
 
 			obj[key!] = JsonExpression.Create(value!);
 
@@ -93,22 +90,19 @@ internal class ObjectExpressionParser : IOperandExpressionParser
 			if (source[i] is ',')
 			{
 				i++;
-				if (source[i] is '}')
-				{
-					expression = null;
-					return false;
-				}
 				continue;
 			}
 			if (source[i] is '}')
 			{
+				done = true;
 				i++;
 				break;
 			}
 
-			expression = null;
-			return false;
+			throw new SyntaxException(CommonErrors.WrongToken(source[i]));
 		}
+
+		if (!done) throw new SyntaxException(CommonErrors.EndOfInput());
 
 		if (obj.Count == 0 && source[i] == '}')
 			i++;

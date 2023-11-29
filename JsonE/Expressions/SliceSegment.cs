@@ -45,11 +45,11 @@ internal class SliceSegment : IContextAccessorSegment
 
 		var node = expr.Evaluate(context);
 		if (node is not JsonValue value)
-			throw new InterpreterException("Slice requires integer values");
+			throw new InterpreterException("cannot perform interval access with non-integers");
 		var num = value.GetNumber();
 		var index = (int?)num;
 		if (num == null || num != index)
-			throw new InterpreterException("Slice requires integer values");
+			throw new InterpreterException("cannot perform interval access with non-integers");
 
 		return index;
 	}
