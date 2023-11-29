@@ -74,6 +74,11 @@ jobs:
           # echo ${PKG_NAME}
           ls nupkg/
           nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org/v3/index.json -SkipDuplicate -Verbosity detailed
+      - name: create tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: schema-v${{ needs.build.outputs.version }}
+          tag_exists_error: false
       - name: archive packages
         uses: actions/upload-artifact@v3
         with:
