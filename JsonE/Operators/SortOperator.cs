@@ -11,7 +11,6 @@ namespace Json.JsonE.Operators;
 internal class SortOperator : IOperator
 {
 	private static readonly Regex _byForm = new(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)");
-	//private static readonly ExpressionNode _defaultAccessorExpression = ExpressionParser.Parse("x".AsSpan());
 
 	public const string Name = "$sort";
 
@@ -95,7 +94,7 @@ internal class JsonNodeStringComparer : IComparer<JsonNode>
 
 	private JsonNodeStringComparer(){}
 
-	public int Compare(JsonNode x, JsonNode y)
+	public int Compare(JsonNode? x, JsonNode? y)
 	{
 		var sX = (x as JsonValue)?.GetValue<string>() ?? throw new TemplateException(CommonErrors.SortSameType());
 		var sY = (y as JsonValue)?.GetValue<string>() ?? throw new TemplateException(CommonErrors.SortSameType());
@@ -110,7 +109,7 @@ internal class JsonNodeNumberComparer : IComparer<JsonNode>
 
 	private JsonNodeNumberComparer(){}
 
-	public int Compare(JsonNode x, JsonNode y)
+	public int Compare(JsonNode? x, JsonNode? y)
 	{
 		var nX = (x as JsonValue)?.GetNumber() ?? throw new TemplateException(CommonErrors.SortSameType());
 		var nY = (y as JsonValue)?.GetNumber() ?? throw new TemplateException(CommonErrors.SortSameType());

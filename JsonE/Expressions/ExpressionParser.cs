@@ -53,7 +53,6 @@ internal static class ExpressionParser
 		ExpressionNode? left = null;
 		foreach (var parser in _operandParsers)
 		{
-			if (skipFunctions && parser is FunctionArgumentParser) continue;
 			if (parser.TryParse(source, ref i, out left)) break;
 		}
 
