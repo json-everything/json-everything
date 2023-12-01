@@ -30,7 +30,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
-		<NoWarn>CS1570</NoWarn>
+		<NoWarn>CS1570,IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

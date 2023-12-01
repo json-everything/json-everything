@@ -1,7 +1,9 @@
-﻿namespace Json.JsonE;
+﻿using System.Text.Json.Nodes;
+
+namespace Json.JsonE;
 
 /// <summary>
-/// Thrown from <see cref="JsonE.Evaluate"/> when an expression contains invalid syntax.
+/// Thrown from <see cref="JsonE.Evaluate(JsonNode?, JsonNode?)"/> when an expression contains invalid syntax.
 /// </summary>
 public class SyntaxException : JsonEException
 {
