@@ -62,7 +62,7 @@ public class FormatTests
 
 		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
-		Assert.False(result.IsValid);
+		result.AssertInvalid();
 	}
 
 	private static readonly Uri _formatAssertionMetaSchemaId = new("https://json-everything/test/format-assertion");
