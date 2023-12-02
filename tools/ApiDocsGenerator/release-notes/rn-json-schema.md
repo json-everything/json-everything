@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "08.01"
 ---
+# [5.4.1](https://github.com/gregsdennis/json-everything/pull/572) {#release-pointer-5.4.1}
+
+[#570](https://github.com/gregsdennis/json-everything/issues/570) - RFC 3339 date/times require the time zone offset.  Thanks to [@danielstarck](https://github.com/danielstarck) for identifying and fixing this issue.
+
 # [5.4.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.4.0}
 
 [#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
