@@ -52,6 +52,19 @@ public class FormatTests
 		Assert.True(result.IsValid);
 	}
 
+	[Test]
+	public void DateTime_MissingTimeOffset_Fail()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Format(Formats.DateTime);
+
+		var value = JsonNode.Parse("\"2023-04-28T21:51:26\"");
+
+		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
+
+		result.AssertInvalid();
+	}
+
 	private static readonly Uri _formatAssertionMetaSchemaId = new("https://json-everything/test/format-assertion");
 	private static readonly JsonSchema _formatAssertionMetaSchema =
 		new JsonSchemaBuilder()
