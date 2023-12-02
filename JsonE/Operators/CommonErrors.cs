@@ -14,7 +14,19 @@ internal static class CommonErrors
 
 	public static string IncorrectArgType(string op) => $"invalid arguments to builtin: {op}";
 
+	public static string IncorrectArgType(string op, string explanation) => $"invalid arguments to builtin: {op}: {explanation}";
+
 	public static string EndOfInput(int i) => $"Unexpected end of input at index {i}";
 
 	public static string SortSameType() => "$sorted values to be sorted must have the same type";
+
+	public static string WrongToken(string token) => $"Found: {token} token, expected one of: !, (, +, -, [, false, identifier, null, number, string, true, {{";
+
+	public static string WrongToken(char token) => $"Found: {token} token, expected one of: !, (, +, -, [, false, identifier, null, number, string, true, {{";
+
+	public static string WrongToken(string token, params string[] expected) => $"Found: {token} token, expected one of: {string.Join(",", expected)}";
+
+	public static string WrongToken(char token, params string[] expected) => $"Found: {token} token, expected one of: {string.Join(",", expected)}";
+
+	public static string EndOfInput() => "Unexpected end of input";
 }

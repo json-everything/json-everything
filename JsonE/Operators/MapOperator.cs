@@ -95,7 +95,8 @@ internal class MapOperator : IOperator
 				itemContext[valueVar]!["key"] = kvp.Key;
 			}
 
-			MergeOperator.Merge(obj, JsonE.Evaluate(template, context));
+			var evaluated = JsonE.Evaluate(template, context) as JsonObject ?? throw new TemplateException("$map on objects expects each(x) to evaluate to an object");
+			MergeOperator.Merge(obj, evaluated);
 		}
 
 		context.Pop();

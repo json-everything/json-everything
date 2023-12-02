@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text;
+using Json.JsonE.Operators;
 
 namespace Json.JsonE.Expressions;
 
@@ -21,7 +22,7 @@ internal class FunctionExpressionNode : ExpressionNode
 	public override JsonNode? Evaluate(EvaluationContext context)
 	{
 		if (FunctionExpression.Evaluate(context) is not JsonValue functionNode)
-			throw new InterpreterException($"unknown context value {FunctionExpression}");
+			throw new InterpreterException($"unknown context value \"{FunctionExpression}\"");
 		if (functionNode.TryGetValue(out string? functionName))
 			functionNode = context.Find(functionName)!.AsValue();
 		if (!functionNode.TryGetValue(out FunctionDefinition? function))
@@ -91,19 +92,19 @@ internal static class FunctionArgumentParser
 				return false;
 			}
 
-			if (!ExpressionParser.TryParse(source, ref i, out var expr))
+			if (source[i] == ')' && arguments.Count == 0)
 			{
-				arguments = null;
-				return false;
+				i++;
+				break;
 			}
+
+			if (!ExpressionParser.TryParse(source, ref i, out var expr))
+				throw new SyntaxException(CommonErrors.WrongToken(source[i]));
 
 			arguments.Add(expr!);
 
 			if (!source.ConsumeWhitespace(ref i))
-			{
-				arguments = null;
-				return false;
-			}
+				throw new SyntaxException(CommonErrors.EndOfInput());
 
 			switch (source[i])
 			{

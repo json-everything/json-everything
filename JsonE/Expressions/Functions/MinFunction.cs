@@ -11,6 +11,9 @@ internal class MinFunction : FunctionDefinition
 
 	internal override JsonNode? Invoke(JsonNode?[] arguments, EvaluationContext context)
 	{
+		if (arguments.Length == 0)
+			throw new BuiltInException(CommonErrors.IncorrectArgType(_name, "expected at least 1 arguments"));
+
 		var nums = arguments.Select(x => (x as JsonValue)?.GetNumber()).ToArray();
 		if (nums.Any(x => !x.HasValue))
 			throw new BuiltInException(CommonErrors.IncorrectArgType(_name));

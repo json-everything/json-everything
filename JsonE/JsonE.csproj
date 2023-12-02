@@ -19,9 +19,9 @@
 		<PackageTags>json json-e jsone template transform</PackageTags>
 		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-e/</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0</FileVersion>
+		<FileVersion>1.0.1</FileVersion>
 		<DocumentationFile>JsonE.Net.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -30,7 +30,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
-		<NoWarn>CS1570</NoWarn>
+		<NoWarn>CS1570,IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

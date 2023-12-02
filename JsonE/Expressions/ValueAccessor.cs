@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
+using Json.JsonE.Operators;
 
 namespace Json.JsonE.Expressions;
 
@@ -41,7 +42,7 @@ internal class ValueAccessor
 				case '.':
 					i++;
 					if (!source.TryParseName(ref i, out var name))
-						throw new TemplateException("Invalid name after dot accessor");
+						throw new SyntaxException(CommonErrors.WrongToken(source[i], "identifier"));
 
 					segments.Add(new PropertySegment(name!, false));
 					continue;
@@ -58,18 +59,14 @@ internal class ValueAccessor
 					    !TryParseSlice(source, ref i, out segment) &&
 					    !TryParseIndex(source, ref i, out segment) &&
 					    !TryParseExpression(source, ref i, out segment))
-						throw new TemplateException("Cannot determine segment type");
+						throw new SyntaxException(CommonErrors.WrongToken(source[i]));
 
 					segments.Add(segment!);
 
 					if (!source.ConsumeWhitespace(ref i))
-					{
-						accessor = null;
-						return false;
-					}
-
+						throw new SyntaxException("Missing closing ]");
 					if (source[i] != ']')
-						throw new TemplateException("Missing closing ]");
+						throw new SyntaxException(CommonErrors.WrongToken(source[i], "]"));
 
 					i++;
 
@@ -175,32 +172,24 @@ internal class ValueAccessor
 
 		i++; // consume :
 
-		if (!source.ConsumeWhitespace(ref i))
-		{
-			segment = null;
-			return false;
-		}
-
-		ExpressionParser.TryParse(source, ref i, out var end);
-
-		if (!source.ConsumeWhitespace(ref i))
-		{
-			segment = null;
-			return false;
-		}
-
 		ExpressionNode? step = null;
-		if (source[i] == ':')
+		ExpressionNode? end = null;
+		if (source.ConsumeWhitespace(ref i))
 		{
-			i++; // consume :
+			ExpressionParser.TryParse(source, ref i, out end);
 
-			if (!source.ConsumeWhitespace(ref i))
+			if (source.ConsumeWhitespace(ref i))
 			{
-				segment = null;
-				return false;
-			}
+				if (source[i] == ':')
+				{
+					i++; // consume :
 
-			ExpressionParser.TryParse(source, ref i, out step);
+					if (source.ConsumeWhitespace(ref i))
+					{
+						ExpressionParser.TryParse(source, ref i, out step);
+					}
+				}
+			}
 		}
 
 		index = i;
@@ -226,7 +215,11 @@ internal class ValueAccessor
 		foreach (var segment in _segments)
 		{
 			if (!segment.TryFind(current, fullContext, out var value))
-				throw new InterpreterException($"unknown context value {segment}");
+			{
+				if (current is JsonObject)
+					throw new InterpreterException($"object has no property \"{segment}\"");
+				throw new InterpreterException($"unknown context value \"{segment}\"");
+			}
 
 			current = value;
 		}
