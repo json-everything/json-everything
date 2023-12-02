@@ -48,11 +48,11 @@ internal class SortOperator : IOperator
 		var firstSortValue = sortExpression.Evaluate(context);
 		var comparer = firstSortValue switch
 		{
-			JsonValue v when v.TryGetValue<string>(out _) => (IComparer<JsonNode>) JsonNodeStringComparer.Instance,
+			JsonValue v when v.TryGetValue<char>(out _) => JsonNodeCharComparer.Instance,
+			JsonValue v when v.TryGetValue<string>(out _) => JsonNodeStringComparer.Instance,
 			JsonValue v when v.GetNumber() != null => JsonNodeNumberComparer.Instance,
-			_ => null
+			_ => (IComparer<JsonNode>?)null
 		} ?? throw new TemplateException(CommonErrors.SortSameType());
-
 
 		try
 		{
@@ -71,6 +71,21 @@ internal class SortOperator : IOperator
 			// I hate doing this, but I really want the exception thrown by the comparer.
 			throw e.InnerException!;
 		}
+	}
+}
+
+internal class JsonNodeCharComparer : IComparer<JsonNode>
+{
+	public static JsonNodeCharComparer Instance { get; } = new();
+
+	private JsonNodeCharComparer(){}
+
+	public int Compare(JsonNode x, JsonNode y)
+	{
+		var sX = (x as JsonValue)?.GetValue<char>() ?? throw new TemplateException(CommonErrors.SortSameType());
+		var sY = (y as JsonValue)?.GetValue<char>() ?? throw new TemplateException(CommonErrors.SortSameType());
+
+		return sX < sY ? -1 : 1;
 	}
 }
 
