@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -45,7 +46,7 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <param name="source">The source string.</param>
 	/// <param name="segment">The resulting segments.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
-	public static bool TryParse(string? source, out PointerSegment? segment)
+	public static bool TryParse(string? source, [NotNullWhen(true)] out PointerSegment? segment)
 	{
 		if (source == null)
 		{
