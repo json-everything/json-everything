@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -79,7 +80,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <param name="pointer">The resulting pointer.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(string source, out JsonPointer? pointer)
+	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer? pointer)
 	{
 		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (source == string.Empty)

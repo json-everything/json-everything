@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -144,7 +145,7 @@ public class RelativeJsonPointer
 	/// <param name="relativePointer">The resulting relative pointer.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(string source, out RelativeJsonPointer? relativePointer)
+	public static bool TryParse(string source, [NotNullWhen(true)] out RelativeJsonPointer? relativePointer)
 	{
 		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (string.IsNullOrWhiteSpace(source))
