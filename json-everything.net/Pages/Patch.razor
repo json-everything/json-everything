@@ -37,41 +37,60 @@
 		<div class="vstack gap-3 mt-4 me-3">
 			<div>
 				<div class="row">
-					<div class="col-5">
-						<label class="w-100">
-							Patch / Source data
-							<div class="editor-input">
-								<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
-							</div>
-						</label>
-					</div>
-					<div class="col mx-2 align-items-center row">
-						<div class="vstack gap-3 align-self-center">
-							<button class="btn btn-primary" @onclick="Apply">Apply</button>
-							<hr/>
-							<button class="btn btn-primary" @onclick="Generate">Generate</button>
+					<div class="col-2">
+						<div class="vstack gap-3">
+							<EditForm Model="_options" class="vstack">
+							<label class="my-2">
+								What do you want to do?<br/>
+								<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
+										@foreach (PatchOperations operation in Enum.GetValues(typeof(PatchOperations)))
+									{
+										<option value="@operation">@GetDescription(operation)</option>
+									}
+								</InputSelect>
+							</label>
+						<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
+						<hr />
+						<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
+							</EditForm>
 						</div>
 					</div>
-					<div class="col-5">
-						<label class="w-100">
-							Data / Target data
-							<div class="editor-input">
-								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
+					<div class="col-10">
+						<div>
+							<div class="row">
+								<div class="col-6">
+									<label class="w-100">
+										@PatchEditorLabel
+										<div class="editor-input">
+											<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
+								<div class="col-6">
+									<label class="w-100">
+										Data / Target data
+										<div class="editor-input">
+											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
 							</div>
-						</label>
+						</div>
+			    
+						<div class="row">
+							<label>
+								Result
+								<div class="editor-input">
+									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									              CssClass="h-100"/>
+								</div>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
-    
-			<label>
-				Result
-				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-					              CssClass="h-100"/>
-				</div>
-			</label>
 		</div>
 	</div>
 </div>
@@ -82,14 +101,82 @@
 	private MonacoEditor _instanceEditor;
 	private MonacoEditor _outputEditor;
 
+	private readonly PatchOptionsModel _options = new();
+
 	private readonly List<LibraryVersion> _libraries = new()
 	{
 		LibraryVersion.GetFor<JsonPatch>(),
 	};
+
+	private PatchOperations _operation = PatchOperations.Apply;
+
 #pragma warning restore CS8618
+
+	private class PatchOptionsModel{}
+
+	public enum PatchOperations
+	{
+		Apply,
+		Generate,
+	}
+
+	public PatchOperations Operation
+	{
+		get => _operation;
+		set
+		{
+			_operation = value;
+	
+			switch (value)
+			{
+				case PatchOperations.Apply:
+					ConfigureForApply();
+					break;
+				case PatchOperations.Generate:
+					ConfigureForGenerate();
+					break;
+				default:
+					ConfigureForApply();
+					break;
+			}
+		}
+	}
+
+	private string HelpSummary { get; set; } = HelpContent.PatchApply;
+	private string PatchEditorLabel { get; set; } = "Patch";
 
 	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
 	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private static string GetDescription(PatchOperations operation) => operation switch
+	{
+		PatchOperations.Apply => "Apply",
+		PatchOperations.Generate => "Generate",
+	};
+
+	private void ConfigureForApply()
+	{
+		PatchEditorLabel = "Patch";
+
+		HelpSummary = HelpContent.PatchApply;
+	}
+
+	private void ConfigureForGenerate()
+	{
+		PatchEditorLabel = "Source data";
+
+		HelpSummary = HelpContent.PatchGenerate;
+	}
+
+	private async Task Run()
+	{
+		await (Operation switch
+			{
+				PatchOperations.Apply => Apply(),
+				PatchOperations.Generate => Generate(),
+				_ => Task.CompletedTask
+			});
+	}
 
 	private async Task Apply()
 	{
@@ -192,6 +279,10 @@
 		{
 			await LoadSavedPatch();
 			await LoadSavedInstance();
+
+			await _patchEditor.SetLanguageAsync("json");
+			await _patchEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await DataManager.Set("schema-input-language", "json");
 		}
 
 		await base.OnAfterRenderAsync(firstRender);

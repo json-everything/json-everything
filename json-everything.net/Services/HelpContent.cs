@@ -165,4 +165,15 @@ Please read the [documentation](https://docs.json-everything.net/json-e/basics/)
 
 It may also be beneficial to compare your results with the [original JavaScript playground](https://json-e.js.org/playground.html).
 ";
+
+	public const string PatchApply = @"
+To apply a patch, enter the patch in the left editor and the data to patch in the right editor.
+";
+
+	public const string PatchGenerate = @"
+To generate a patch, enter the starting data in the left editor and the target data in the right editor.
+
+Patch generation follows an iterative strategy, preferring multiple small changes.  This may result in
+larger patches than expected.
+";
 }
