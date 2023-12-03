@@ -155,4 +155,14 @@ For example, `@.foo` would be valid as a complete path.
 By default, _JsonPath.Net_ operates per the specification.  The above options allow
 the library to deviate from the specification in useful ways.
 ";
+
+	public const string JsonEEvaluate = @"
+JSON-e evaluates templates with an optional context.
+
+The template may be any JSON value, and the context must be an object.  The output will be displayed below.
+
+Please read the [documentation](https://docs.json-everything.net/json-e/basics/) for more information.
+
+It may also be beneficial to compare your results with the [original JavaScript playground](https://json-e.js.org/playground.html).
+";
 }

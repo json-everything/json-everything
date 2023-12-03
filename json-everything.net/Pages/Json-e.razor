@@ -1,0 +1,182 @@
+﻿@page "/json-e"
+@using BlazorMonaco
+@using System.Text.Json
+@using JsonEverythingNet.Services
+@using EditorOptions = JsonEverythingNet.Services.EditorOptions
+@using System.Text.Encodings.Web
+@using System.Text.Json.Nodes
+@using Json.JsonE
+
+@inject DataManager DataManager;
+@inject NavigationManager NavigationManager;
+
+<PageTitle>JSON-e - json-everything.net</PageTitle>
+
+<div class="row mx-3 fill-remaining">
+	<div class="mh-100 scroll">
+		<div class="navbar me-2">
+			<div class="align-items-center hstack mx-2">
+				<h1 class="display-4">JSON-e</h1>
+				<div class="align-items-center mx-3">
+					<div>
+						Templating and transformation of JSON data
+						<br/>
+						Learn more about
+						<a href="https://json-e.js.org/" target="_blank">JSON-e <ExternalLinkIcon /></a>
+					</div>
+				</div>
+			</div>
+			<div class="align-items-center mt-1">
+				@foreach (var library in _libraries)
+				{
+					<NugetLibrary Library="library"/>
+				}
+			</div>
+		</div>
+		<div class="vstack gap-3 mt-4 me-3">
+			<div>
+				<div class="row">
+					<div class="col-2">
+						<div class="vstack gap-3">
+							<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
+							<hr/>
+							<MarkdownSpan Content="@HelpContent.JsonEEvaluate"></MarkdownSpan>
+						</div>
+					</div>
+					<div class="col-10">
+						<div>
+							<div class="row">
+								<div class="col-6">
+									<label class="w-100">
+										Template
+										<div class="editor-input">
+											<MonacoEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
+								<div class="col-6">
+									<label class="w-100">
+										Context
+										<div class="editor-input">
+											<MonacoEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											              CssClass="h-100"/>
+										</div>
+									</label>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<label class="mb-4">
+								Results
+								<div class="editor-input">
+									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									              CssClass="h-100 mb-2"/>
+								</div>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+#pragma warning disable CS8618
+	private MonacoEditor _templateEditor;
+	private MonacoEditor _contextEditor;
+	private MonacoEditor _outputEditor;
+#pragma warning restore CS8618
+
+	private readonly List<LibraryVersion> _libraries = new()
+	{
+		LibraryVersion.GetFor<JsonFunction>(),
+	};
+	private static readonly JsonSerializerOptions _serializerOptions = new()
+	{
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+
+	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+
+	private async Task Run()
+	{
+		await HandleTemplateChanged();
+		await HandleContextChanged();
+
+		await Evaluate();
+	}
+
+	private async Task Evaluate()
+	{
+		await _outputEditor.SetLanguageAsync("json");
+	
+		try
+		{
+			var template = JsonNode.Parse(await _templateEditor.GetValue());
+			var contextText = await _contextEditor.GetValue();
+			var context = string.IsNullOrWhiteSpace(contextText) ? null : JsonNode.Parse(contextText);
+
+			var results = JsonE.Evaluate(template, context);
+
+			var resultText = JsonSerializer.Serialize(results, _serializerOptions);
+
+			await _outputEditor.SetValue(resultText);
+		}
+		catch (Exception e)
+		{
+			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetValue(e.Message);
+		}
+	}
+
+	private async Task HandleTemplateChanged()
+	{
+		await DataManager.SaveEditorValue(_templateEditor, "json-e-template");
+	}
+
+	private async Task LoadSavedTemplate()
+	{
+		await DataManager.LoadEditorValue(_templateEditor, "json-e-template");
+	}
+
+	private async Task HandleContextChanged()
+	{
+		await DataManager.SaveEditorValue(_contextEditor, "json-e-context");
+	}
+
+	private async Task LoadSavedContext()
+	{
+		await DataManager.LoadEditorValue(_contextEditor, "json-e-context");
+	}
+
+	private async Task LoadSavedSettings()
+	{
+		var language = await DataManager.Get("schema-input-language") ?? "json";
+		await _templateEditor.SetLanguageAsync(language);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await LoadSavedTemplate();
+			await LoadSavedContext();
+			await LoadSavedSettings();
+
+			await _templateEditor.SetLanguageAsync("json");
+			await _templateEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _contextEditor.SetLanguageAsync("json");
+			await _contextEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _outputEditor.SetLanguageAsync("json");
+			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await DataManager.Set("schema-input-language", "json");
+		}
+
+		await base.OnAfterRenderAsync(firstRender);
+	}
+}
