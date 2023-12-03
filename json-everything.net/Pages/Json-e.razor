@@ -6,6 +6,7 @@
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
 @using Json.JsonE
+@using Yaml2JsonNode
 
 @inject DataManager DataManager;
 
@@ -50,7 +51,7 @@
 										Template
 										<div class="editor-input">
 											<MonacoEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-											              CssClass="h-100"/>
+														  CssClass="h-100" OnDidChangeModelContent="HandleTemplateChanged" />
 										</div>
 									</label>
 								</div>
@@ -59,7 +60,7 @@
 										Context
 										<div class="editor-input">
 											<MonacoEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-											              CssClass="h-100"/>
+														  CssClass="h-100" OnDidChangeModelContent="HandleContextChanged" />
 										</div>
 									</label>
 								</div>
@@ -104,25 +105,38 @@
 
 	private async Task Run()
 	{
-		await HandleTemplateChanged();
-		await HandleContextChanged();
+		await SaveTemplate();
+		await SaveContext();
 
 		await Evaluate();
 	}
 
 	private async Task Evaluate()
 	{
-		await _outputEditor.SetLanguageAsync("json");
+		await _outputEditor.SetLanguageAsync("yaml");
 	
 		try
 		{
-			var template = JsonNode.Parse(await _templateEditor.GetValue());
+			var templateText = await _templateEditor.GetValue();
+			var template = YamlSerializer.Parse(templateText).Single().ToJsonNode();
 			var contextText = await _contextEditor.GetValue();
-			var context = string.IsNullOrWhiteSpace(contextText) ? null : JsonNode.Parse(contextText);
+			var context = string.IsNullOrWhiteSpace(contextText) ? null : YamlSerializer.Parse(contextText).Single().ToJsonNode();
+
+			var usesYaml = !TryParseJson(templateText) || !TryParseJson(contextText);
 
 			var results = JsonE.Evaluate(template, context);
 
-			var resultText = JsonSerializer.Serialize(results, _serializerOptions);
+			string resultText;
+			if (usesYaml)
+			{
+				await _outputEditor.SetLanguageAsync("yaml");
+				resultText = YamlSerializer.Serialize(results, _serializerOptions);
+			}
+			else
+			{
+				await _outputEditor.SetLanguageAsync("json");
+				resultText = JsonSerializer.Serialize(results, _serializerOptions);
+			}
 
 			await _outputEditor.SetValue(resultText);
 		}
@@ -133,7 +147,38 @@
 		}
 	}
 
+	private static bool TryParseJson(string text)
+	{
+		try
+		{
+			JsonNode.Parse(text);
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
+	private static bool TryParseYaml(string text)
+	{
+		try
+		{
+			YamlSerializer.Parse(text);
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
 	private async Task HandleTemplateChanged()
+	{
+		await UpdateLanguage(_templateEditor);
+	}
+
+	private async Task SaveTemplate()
 	{
 		await DataManager.SaveEditorValue(_templateEditor, "json-e-template");
 	}
@@ -145,6 +190,11 @@
 
 	private async Task HandleContextChanged()
 	{
+		await UpdateLanguage(_contextEditor);
+	}
+
+	private async Task SaveContext()
+	{
 		await DataManager.SaveEditorValue(_contextEditor, "json-e-context");
 	}
 
@@ -153,10 +203,14 @@
 		await DataManager.LoadEditorValue(_contextEditor, "json-e-context");
 	}
 
-	private async Task LoadSavedSettings()
+	private static async Task UpdateLanguage(MonacoEditor editor)
 	{
-		var language = await DataManager.Get("schema-input-language") ?? "json";
-		await _templateEditor.SetLanguageAsync(language);
+		var text = await editor.GetValue();
+
+		if (TryParseJson(text))
+			await editor.SetLanguageAsync("json");
+		else if (TryParseYaml(text))
+			await editor.SetLanguageAsync("yaml");
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -165,15 +219,13 @@
 		{
 			await LoadSavedTemplate();
 			await LoadSavedContext();
-			await LoadSavedSettings();
 
-			await _templateEditor.SetLanguageAsync("json");
+			await _templateEditor.SetLanguageAsync("yaml");
 			await _templateEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-			await _contextEditor.SetLanguageAsync("json");
+			await _contextEditor.SetLanguageAsync("yaml");
 			await _contextEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-			await _outputEditor.SetLanguageAsync("json");
+			await _outputEditor.SetLanguageAsync("yaml");
 			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-			await DataManager.Set("schema-input-language", "json");
 		}
 
 		await base.OnAfterRenderAsync(firstRender);

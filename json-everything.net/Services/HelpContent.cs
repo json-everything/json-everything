@@ -164,6 +164,8 @@ The template may be any JSON value, and the context must be an object.  The outp
 Please read the [documentation](https://docs.json-everything.net/json-e/basics/) for more information.
 
 It may also be beneficial to compare your results with the [original JavaScript playground](https://json-e.js.org/playground.html).
+
+This playground also supports YAML input.  If either of the inputs are YAML, the output will also be YAML.
 ";
 
 	public const string PatchApply = @"
