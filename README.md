@@ -140,7 +140,7 @@ Error message translations for _JsonSchema.Net_ available in:
 
 You can also view JSON Schema Test Suite results on [Bowtie](https://bowtie-json-schema.github.io/bowtie), which runs the test suite against multiple implementations across different platforms.
 
-***DISCLAIMER** My library, _JsonSchema.Net_ is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
+***DISCLAIMER** My library, JsonSchema.Net, is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
 
 ## System.Text.Json support by other projects
 
@@ -156,9 +156,9 @@ If you don't find what you're looking for here, please try one of these excellen
   - JSON Schema with a C# code generation focus
 - (more to come)
 
-If you use JSON to do something that is not covered by a library in this suite or one of the above projects, feel free to [create a feature issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=feature&template=Feature_request.md).
+If you use JSON to do something that is not covered by a library in this suite or one of the above projects, feel free to [create a feature issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=feature&projects=&template=New_function.yml).
 
-If you have or know of another project that extends System.Text.Json to do cool things, I'd like to list it here, so please [create a general issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=question&template=Question.md) to let me know about it.
+If you have or know of another project that extends System.Text.Json to do cool things, I'd like to list it here, so please [create a general issue](https://github.com/gregsdennis/json-everything/issues/new) to let me know about it.
 
 ## Contributors
 
