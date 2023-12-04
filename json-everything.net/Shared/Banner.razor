@@ -1,4 +1,4 @@
-﻿<div class="banner-container">
+﻿<div class="banner-container; @Style">
 	<div class="announcement-border text-center px-3 py-1 div-hcenter">
 		<div>
 			<strong>@Title</strong>
@@ -13,6 +13,8 @@
 	public string Title { get; set; }
 	[Parameter]
 	public string Content { get; set; }
+	[Parameter]
+	public string Style { get; set; } = string.Empty;
 #pragma warning restore CS8618
 
 	public const string AnnouncementTitle = "Announcement!";

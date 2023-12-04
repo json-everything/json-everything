@@ -160,22 +160,9 @@
 		}
 	}
 
-	private static bool TryParseYaml(string text)
-	{
-		try
-		{
-			YamlSerializer.Parse(text);
-			return true;
-		}
-		catch
-		{
-			return false;
-		}
-	}
-
 	private async Task HandleTemplateChanged()
 	{
-		await UpdateLanguage(_templateEditor);
+		await _templateEditor.DetectLanguage();
 	}
 
 	private async Task SaveTemplate()
@@ -190,7 +177,7 @@
 
 	private async Task HandleContextChanged()
 	{
-		await UpdateLanguage(_contextEditor);
+		await _contextEditor.DetectLanguage();
 	}
 
 	private async Task SaveContext()
@@ -201,16 +188,6 @@
 	private async Task LoadSavedContext()
 	{
 		await DataManager.LoadEditorValue(_contextEditor, "json-e-context");
-	}
-
-	private static async Task UpdateLanguage(MonacoEditor editor)
-	{
-		var text = await editor.GetValue();
-
-		if (TryParseJson(text))
-			await editor.SetLanguageAsync("json");
-		else if (TryParseYaml(text))
-			await editor.SetLanguageAsync("yaml");
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

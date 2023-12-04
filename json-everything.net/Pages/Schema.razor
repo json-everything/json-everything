@@ -16,6 +16,7 @@
 @using Json.Schema.CodeGeneration
 @using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
+@using Yaml2JsonNode
 
 @inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
@@ -35,6 +36,7 @@
 						<a href="https://json-schema.org" target="_blank">JSON Schema <ExternalLinkIcon/></a>
 					</div>
 				</div>
+				<Banner Content="The JSON Schema playground inputs now support YAML!" Style="margin-top:0;"></Banner>
 			</div>
 			<div class="align-items-center mt-1">
 				@foreach (var library in _libraries)
@@ -151,7 +153,7 @@
 										@SchemaEditorLabel
 										<div class="editor-input">
 											<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-											              CssClass="h-100"/>
+														  CssClass="h-100" OnDidChangeModelContent="HandleSchemaChanged" />
 										</div>
 									</label>
 								</div>
@@ -160,7 +162,7 @@
 										Instance
 										<div class="editor-input">
 											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-											              CssClass="h-100"/>
+														  CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
 										</div>
 									</label>
 								</div>
@@ -341,8 +343,8 @@
 
 	private async Task Run()
 	{
-		await HandleSchemaChanged();
-		await HandleInstanceChanged();
+		await SaveSchema();
+		await SaveInstance();
 
 		switch (Operation)
 		{
@@ -371,7 +373,7 @@
 		try
 		{
 			var text = await _schemaEditor.GetValue();
-			schema = JsonSchema.FromText(text);
+			schema = YamlSerializer.Deserialize<JsonSchema>(text)!;
 		}
 		catch (Exception e)
 		{
@@ -382,7 +384,7 @@
 		JsonNode? instance;
 		try
 		{
-			instance = JsonNode.Parse(await _instanceEditor.GetValue());
+			instance = YamlSerializer.Parse(await _instanceEditor.GetValue()).Single().ToJsonNode();
 		}
 		catch (Exception e)
 		{
@@ -435,7 +437,7 @@
 		{
 			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
 			await _instanceEditor.SetValue(instance);
-			await HandleInstanceChanged();
+			await SaveInstance();
 		}
 		else
 		{
@@ -544,9 +546,14 @@ namespace JsonEverythingTemp
 	//	return "Compilation error";
 	//}
 
-	private async Task HandleSchemaChanged()
+	private async Task SaveSchema()
 	{
 		await DataManager.SaveEditorValue(_schemaEditor, "schema");
+	}
+
+	private async Task HandleSchemaChanged()
+	{
+		await _schemaEditor.DetectLanguage();
 	}
 
 	private async Task LoadSavedSchema()
@@ -554,9 +561,14 @@ namespace JsonEverythingTemp
 		await DataManager.LoadEditorValue(_schemaEditor, "schema");
 	}
 
-	private async Task HandleInstanceChanged()
+	private async Task SaveInstance()
 	{
 		await DataManager.SaveEditorValue(_instanceEditor, "schema-instance");
+	}
+
+	private async Task HandleInstanceChanged()
+	{
+		await _instanceEditor.DetectLanguage();
 	}
 
 	private async Task LoadSavedInstance()
