@@ -173,6 +173,17 @@ public class JsonPointer : IEquatable<JsonPointer>
 			return options!.PropertyNameResolver!(member);
 		}
 
+		// adapted from https://stackoverflow.com/a/2616980/878701
+		object GetValue(Expression? member)
+		{
+			if (member == null) return "null";
+
+			var objectMember = Expression.Convert(member, typeof(object));
+			var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+			var getter = getterLambda.Compile();
+			return getter();
+		}
+
 		options ??= PointerCreationOptions.Default;
 
 		var body = expression.Body;
@@ -192,7 +203,9 @@ public class JsonPointer : IEquatable<JsonPointer>
 					 mce1.Arguments.Count == 1 &&
 					 mce1.Arguments[0].Type == typeof(int))
 			{
-				segments.Insert(0, PointerSegment.Create(mce1.Arguments[0].ToString()));
+				var arg = mce1.Arguments[0];
+				var value = GetValue(arg);
+				segments.Insert(0, PointerSegment.Create(value.ToString()));
 				body = mce1.Object;
 			}
 			else if (body is MethodCallExpression { Method: { IsStatic: true, Name: nameof(Enumerable.Last) } } mce2 &&
