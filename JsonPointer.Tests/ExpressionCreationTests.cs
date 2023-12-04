@@ -121,4 +121,26 @@ public class ExpressionCreationTests
 
 		Assert.AreEqual(expected, actual.ToString());
 	}
+
+	[Test]
+	public void ArrayIndexUsingVariable()
+	{
+		var index = 5;
+
+		var expected = "/NestMore/5/Nest";
+		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[index].Nest);
+
+		Assert.AreEqual(expected, actual.ToString());
+	}
+
+	[Test]
+	public void ArrayIndexUsingMember()
+	{
+		var index = new { Foo = 5 };
+
+		var expected = "/NestMore/5/Nest";
+		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[index.Foo].Nest);
+
+		Assert.AreEqual(expected, actual.ToString());
+	}
 }
