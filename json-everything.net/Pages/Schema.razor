@@ -599,6 +599,12 @@ namespace JsonEverythingTemp
 			await LoadSavedSettings();
 
 			await LoadAssemblyReferences();
+
+			await _schemaEditor.DetectLanguage();
+			await _instanceEditor.DetectLanguage();
+
+			await _outputEditor.SetLanguageAsync("json");
+			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		}
 
 		await base.OnAfterRenderAsync(firstRender);

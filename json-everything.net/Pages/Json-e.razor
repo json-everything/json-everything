@@ -197,10 +197,9 @@
 			await LoadSavedTemplate();
 			await LoadSavedContext();
 
-			await _templateEditor.SetLanguageAsync("yaml");
-			await _templateEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-			await _contextEditor.SetLanguageAsync("yaml");
-			await _contextEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _templateEditor.DetectLanguage();
+			await _contextEditor.DetectLanguage();
+
 			await _outputEditor.SetLanguageAsync("yaml");
 			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		}
