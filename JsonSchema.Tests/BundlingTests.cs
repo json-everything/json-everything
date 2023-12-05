@@ -244,4 +244,85 @@ public class BundlingTests
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/baz"));
 	}
+
+	[Test]
+	public void BundleSimpleRecursiveSchema()
+	{
+		JsonSchema linkedListNode = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/linked-list")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("next", new JsonSchemaBuilder().Ref("#"))
+			);
+
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(linkedListNode);
+
+		var actual = linkedListNode.Bundle(options);
+
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/linked-list"));
+	}
+
+	[Test]
+	public void BundleDualRecursiveSchema()
+	{
+		JsonSchema a = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/a")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("next", new JsonSchemaBuilder().Ref("b"))
+			);
+		JsonSchema b = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/b")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("next", new JsonSchemaBuilder().Ref("a"))
+			);
+
+		// for reference
+		// ReSharper disable once UnusedVariable
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Id("https://json-everything/a(bundled)")
+			.Defs(
+				("a", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/a")
+					.Type(SchemaValueType.Object)
+					.Properties(
+						("value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+						("next", new JsonSchemaBuilder().Ref("b"))
+					)
+				),
+				("b", new JsonSchemaBuilder()
+					.Schema(MetaSchemas.Draft202012Id)
+					.Id("https://json-everything/b")
+					.Type(SchemaValueType.Object)
+					.Properties(
+						("value", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+						("next", new JsonSchemaBuilder().Ref("a"))
+					)
+				)
+			)
+			.Ref("a");
+
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(a);
+		options.SchemaRegistry.Register(b);
+
+		var actual = a.Bundle(options);
+
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/a"));
+		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/b"));
+	}
 }

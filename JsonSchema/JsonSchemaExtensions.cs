@@ -91,6 +91,7 @@ public static partial class JsonSchemaExtensions
 		JsonSchema.Initialize(jsonSchema, options.SchemaRegistry);
 
 		var schemasToSearch = new List<JsonSchema>();
+		var searchedSchemas = new List<JsonSchema>(); // uses reference equality
 		var externalSchemas = new Dictionary<string, JsonSchema>();
 		var bundledReferences = new List<Uri>();
 		var referencesToCheck = new List<Uri> { jsonSchema.BaseUri };
@@ -109,18 +110,24 @@ public static partial class JsonSchemaExtensions
 			JsonSchema.Initialize(resolvedSchema, options.SchemaRegistry);
 
 			if (!bundledReferences.Contains(nextReference))
+			{
 				externalSchemas.Add(Guid.NewGuid().ToString("N").Substring(0, 10), resolvedSchema);
+				bundledReferences.Add(nextReference);
+			}
 			schemasToSearch.Add(resolvedSchema);
 
 			while (schemasToSearch.Count != 0)
 			{
 				var schema = schemasToSearch[0];
 				schemasToSearch.RemoveAt(0);
+				if (searchedSchemas.Contains(schema)) continue;
 
 				if (schema.Keywords == null) continue;
-
+				
+				searchedSchemas.Add(schema);
 				schemasToSearch.AddRange(schema.Keywords.SelectMany(JsonSchema.GetSubschemas));
 
+				// this handles references that are already bundled.
 				if (schema.BaseUri != nextReference && !bundledReferences.Contains(schema.BaseUri))
 					bundledReferences.Add(schema.BaseUri);
 
