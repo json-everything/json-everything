@@ -2,7 +2,7 @@
 layout: page
 title: Json.More.Net
 icon: fas fa-tag
-order: "08.13"
+order: "09.13"
 ---
 # [1.9.2](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.9.2}
 

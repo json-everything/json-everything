@@ -2,7 +2,7 @@
 layout: page
 title: JsonPointer.Net
 icon: fas fa-tag
-order: "08.10"
+order: "09.10"
 ---
 # [3.2.1](https://github.com/gregsdennis/json-everything/pull/573) {#release-pointer-3.2.1}
 
