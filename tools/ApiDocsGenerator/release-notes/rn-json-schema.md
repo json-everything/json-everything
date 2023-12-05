@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "08.01"
 ---
+# [5.4.2](https://github.com/gregsdennis/json-everything/pull/575) {#release-pointer-5.4.2}
+
+[#574](https://github.com/gregsdennis/json-everything/issues/574) - Bundling multi-schema recursion throws an exception.  Thanks to [@Tommyknocker1982](https://github.com/Tommyknocker1982) for reporting.
+
 # [5.4.1](https://github.com/gregsdennis/json-everything/pull/572) {#release-pointer-5.4.1}
 
 [#570](https://github.com/gregsdennis/json-everything/issues/570) - RFC 3339 date/times require the time zone offset.  Thanks to [@danielstarck](https://github.com/danielstarck) for identifying and fixing this issue.
