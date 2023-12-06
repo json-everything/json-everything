@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.Pointer;
 
 namespace Json.Schema.ArrayExt;
@@ -11,18 +14,23 @@ public class OrderingSpecifier
 	/// <summary>
 	/// Gets a pointer to the value.
 	/// </summary>
+	[JsonPropertyName("by")]
 	public JsonPointer By { get; }
 	/// <summary>
 	/// Gets the direction of the ordering.
 	/// </summary>
+	[JsonPropertyName("direction")]
 	public Direction Direction { get; }
 	/// <summary>
 	/// For strings, gets the culture to use.
 	/// </summary>
+	[JsonPropertyName("culture")]
+	[JsonConverter(typeof(CustomCultureInfoConverter))]
 	public CultureInfo Culture { get; }
 	/// <summary>
 	/// For strings, gets whether to consider case sensitivity.
 	/// </summary>
+	[JsonPropertyName("ignoreCase")]
 	public bool IgnoreCase { get; }
 
 	/// <summary>
@@ -38,5 +46,21 @@ public class OrderingSpecifier
 		Direction = direction;
 		Culture = culture ?? CultureInfo.InvariantCulture;
 		IgnoreCase = ignoreCase;
+	}
+}
+
+internal class CustomCultureInfoConverter : JsonConverter<CultureInfo>
+{
+	public override CultureInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var text = reader.GetString();
+		if (text == "none") return CultureInfo.InvariantCulture;
+		
+		return CultureInfo.GetCultureInfo(text!);
+	}
+
+	public override void Write(Utf8JsonWriter writer, CultureInfo value, JsonSerializerOptions options)
+	{
+		writer.WriteStringValue(value.ToString());
 	}
 }

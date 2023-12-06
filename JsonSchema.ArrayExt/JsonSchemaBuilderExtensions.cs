@@ -56,4 +56,16 @@ public static class JsonSchemaBuilderExtensions
 		builder.Add(new UniqueKeysKeyword(keys.Select(x => JsonPointer.Parse(x))));
 		return builder;
 	}
+
+	/// <summary>
+	/// Adds an `ordering` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="specifiers">The collection of ordering specifiers.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Ordering(this JsonSchemaBuilder builder, params OrderingSpecifier[] specifiers)
+	{
+		builder.Add(new OrderingKeyword(specifiers));
+		return builder;
+	}
 }

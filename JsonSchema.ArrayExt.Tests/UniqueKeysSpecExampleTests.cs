@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.ArrayExt.Tests;
 
-public class SpecExampleTests
+public class UniqueKeysSpecExampleTests
 {
 	private readonly JsonSchema _singleKeySchema = new JsonSchemaBuilder()
 		.Schema(MetaSchemas.ArrayExtId)
@@ -27,14 +27,6 @@ public class SpecExampleTests
 			)
 		)
 		.UniqueKeys("/foo", "/bar");
-
-	[OneTimeSetUp]
-	public void Setup()
-	{
-		Vocabularies.Register();
-
-		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
-	}
 
 	[Test]
 	public void SingleKeySchema_UniqueValuesAtKeyPasses()

@@ -13,7 +13,7 @@ public static class Vocabularies
 	/// <summary>
 	/// The data vocabulary.
 	/// </summary>
-	public static readonly Vocabulary ArrayExt = new(ArrayExtId, typeof(UniqueKeysKeyword));
+	public static readonly Vocabulary ArrayExt = new(ArrayExtId, typeof(UniqueKeysKeyword), typeof(OrderingKeyword));
 
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
