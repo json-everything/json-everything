@@ -22,6 +22,9 @@
 "pkg:schema-unique-keys":
   - JsonSchema.UniqueKeys/**/*
 
+"pkg:schema-array-ext":
+  - JsonSchema.ArrayExt/**/*
+
 "pkg:logic":
   - JsonLogic/**/*
 
