@@ -10,7 +10,7 @@ using Json.Pointer;
 namespace Json.Schema.ArrayExt;
 
 /// <summary>
-/// Represents the `data` keyword.
+/// Represents the `uniqueKeys` keyword.
 /// </summary>
 [SchemaKeyword(Name)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
