@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Json.Pointer;
 
-namespace Json.Schema.UniqueKeys;
+namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Some extensions for <see cref="JsonSchema"/>

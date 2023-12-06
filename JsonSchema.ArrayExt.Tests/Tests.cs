@@ -2,12 +2,12 @@ using System.Text.Json;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
-namespace Json.Schema.UniqueKeys.Tests;
+namespace Json.Schema.ArrayExt.Tests;
 
 public class SpecExampleTests
 {
 	private readonly JsonSchema _singleKeySchema = new JsonSchemaBuilder()
-		.Schema(MetaSchemas.UniqueKeysId)
+		.Schema(MetaSchemas.ArrayExtId)
 		.Type(SchemaValueType.Array)
 		.Items(new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -17,7 +17,7 @@ public class SpecExampleTests
 		)
 		.UniqueKeys("/foo");
 	private readonly JsonSchema _multiKeySchema = new JsonSchemaBuilder()
-		.Schema(MetaSchemas.UniqueKeysId)
+		.Schema(MetaSchemas.ArrayExtId)
 		.Type(SchemaValueType.Array)
 		.Items(new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)

@@ -5,7 +5,6 @@
 @using System.Text.Json
 @using Json.Schema.Data
 @using Json.Schema.Generation
-@using Json.Schema.UniqueKeys
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
@@ -13,10 +12,12 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using Json.Schema.ArrayExt
 @using Json.Schema.CodeGeneration
 @using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
 @using Yaml2JsonNode
+@using Vocabularies = Json.Schema.ArrayExt.Vocabularies
 
 @inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
@@ -591,7 +592,7 @@ namespace JsonEverythingTemp
 		if (firstRender)
 		{
 			Json.Schema.Data.Vocabularies.Register();
-			Json.Schema.UniqueKeys.Vocabularies.Register();
+			Vocabularies.Register();
 			Json.Schema.OpenApi.Vocabularies.Register();
 
 			await LoadSavedSchema();

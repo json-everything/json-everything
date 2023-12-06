@@ -2,7 +2,7 @@
 using System.Linq;
 using Json.Pointer;
 
-namespace Json.Schema.UniqueKeys;
+namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Provides a fluent interface for <see cref="JsonSchemaBuilder"/>.

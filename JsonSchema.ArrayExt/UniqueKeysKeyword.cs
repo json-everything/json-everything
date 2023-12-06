@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
 
-namespace Json.Schema.UniqueKeys;
+namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Represents the `data` keyword.
@@ -16,7 +16,7 @@ namespace Json.Schema.UniqueKeys;
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [SchemaSpecVersion(SpecVersion.Draft202012)]
 [SchemaSpecVersion(SpecVersion.DraftNext)]
-[Vocabulary(Vocabularies.UniqueKeysId)]
+[Vocabulary(Vocabularies.ArrayExtId)]
 [JsonConverter(typeof(UniqueKeysKeywordJsonConverter))]
 public class UniqueKeysKeyword : IJsonSchemaKeyword
 {

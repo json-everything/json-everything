@@ -1,4 +1,4 @@
-﻿namespace Json.Schema.UniqueKeys;
+﻿namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
@@ -8,12 +8,12 @@ public static class Vocabularies
 	/// <summary>
 	/// The data vocabulary ID.
 	/// </summary>
-	public const string UniqueKeysId = "https://gregsdennis.github.io/json-everything/vocabs-unique-keys";
+	public const string ArrayExtId = "https://docs.json-everything.net/schema/vocabs/array-ext";
 
 	/// <summary>
 	/// The data vocabulary.
 	/// </summary>
-	public static readonly Vocabulary UniqueKeys = new(UniqueKeysId, typeof(UniqueKeysKeyword));
+	public static readonly Vocabulary ArrayExt = new(ArrayExtId, typeof(UniqueKeysKeyword));
 
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
@@ -23,8 +23,8 @@ public static class Vocabularies
 		vocabRegistry ??= VocabularyRegistry.Global;
 		schemaRegistry ??= SchemaRegistry.Global;
 
-		vocabRegistry.Register(UniqueKeys);
+		vocabRegistry.Register(ArrayExt);
 		SchemaKeywordRegistry.Register<UniqueKeysKeyword>();
-		schemaRegistry.Register(MetaSchemas.UniqueKeys);
+		schemaRegistry.Register(MetaSchemas.ArrayExt_202012);
 	}
 }
