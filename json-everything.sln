@@ -77,9 +77,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patch", "Patch", "{AD28D909
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pointer", "Pointer", "{66DDF95D-B908-4A5F-A546-6725D31F35E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.UniqueKeys", "JsonSchema.UniqueKeys\JsonSchema.UniqueKeys.csproj", "{2C489C55-CDC4-47B6-BF94-B1D4755047A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.ArrayExt", "JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj", "{2C489C55-CDC4-47B6-BF94-B1D4755047A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.UniqueKeys.Tests", "JsonSchema.UniqueKeys.Tests\JsonSchema.UniqueKeys.Tests.csproj", "{5844BA9B-31F6-4A34-A391-BE9016029BB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.ArrayExt.Tests", "JsonSchema.ArrayExt.Tests\JsonSchema.ArrayExt.Tests.csproj", "{5844BA9B-31F6-4A34-A391-BE9016029BB6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ACD36FCC-3A8D-45CF-BC6B-5E2380D421E9}"
 	ProjectSection(SolutionItems) = preProject
