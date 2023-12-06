@@ -25,6 +25,7 @@ public static class Vocabularies
 
 		vocabRegistry.Register(ArrayExt);
 		SchemaKeywordRegistry.Register<UniqueKeysKeyword>();
+		SchemaKeywordRegistry.Register<OrderingKeyword>();
 		schemaRegistry.Register(MetaSchemas.ArrayExt);
 		schemaRegistry.Register(MetaSchemas.ArrayExt_202012);
 	}

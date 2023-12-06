@@ -31,6 +31,37 @@ public static class MetaSchemas
 					.Items(new JsonSchemaBuilder()
 						.Type(SchemaValueType.String)
 						.Format(Formats.JsonPointer))
+				),
+				(OrderingKeyword.Name, new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder()
+						.Type(SchemaValueType.Object)
+						.Properties(
+							("by", new JsonSchemaBuilder()
+								.Type(SchemaValueType.String)
+								.Format(Formats.JsonPointer)
+							),
+							("direction", new JsonSchemaBuilder()
+								.Enum("asc", "desc")
+								.Default("asc")
+							),
+							("culture", new JsonSchemaBuilder()
+								.OneOf(
+									new JsonSchemaBuilder().Const("none"),
+									new JsonSchemaBuilder()
+										.Type(SchemaValueType.String)
+										.Pattern("^[a-z]{2}(-[A-Z]{2})$")
+								)
+								.Default("none")
+							),
+							("ignoreCase", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Boolean)
+								.Default(false)
+							)
+						)
+						.Required("by")
+					)
+					.MinItems(1)
 				)
 			);
 
