@@ -228,20 +228,31 @@ public class RelativeJsonPointer
 			if (current == null) return false;
 		}
 
+		if (ArrayIndexManipulator != 0)
+		{
+			if (current.Parent is not JsonArray parent) return false;
+
+			var indexOfCurrent = parent.IndexOf(current);
+			var newIndex = indexOfCurrent + ArrayIndexManipulator;
+
+			if (newIndex < 0 || newIndex >= parent.Count) return false;
+			current = parent[newIndex];
+		}
+
 		if (IsIndexQuery)
 		{
-			var parent = current.Parent;
+			var parent = current?.Parent;
 			switch (parent)
 			{
 				case JsonObject obj:
-					result = obj.Single(x => ReferenceEquals(x.Value, current)).Key;
-					return true;
+					current = obj.Single(x => ReferenceEquals(x.Value, current)).Key;
+					break;
 				case JsonArray array:
-					result = array.IndexOf(current);
-					return true;
+					current = array.IndexOf(current);
+					break;
+				default:
+					return false;
 			}
-
-			return false;
 		}
 
 		return Pointer.TryEvaluate(current, out result);

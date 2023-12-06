@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Text.Json;
+﻿using System.Collections;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
@@ -16,10 +14,10 @@ public class RelativeJsonPointerTests
 		{
 			yield return new TestCaseData("0", "\"baz\"");
 			yield return new TestCaseData("1/0", "\"bar\"");
-			//yield return new TestCaseData("0-1", "\"bar\"");
+			yield return new TestCaseData("0-1", "\"bar\"");
 			yield return new TestCaseData("2/highly/nested/objects", "true");
 			yield return new TestCaseData("0#", "1");
-			//yield return new TestCaseData("0-1#", "0");
+			yield return new TestCaseData("0-1#", "0");
 			yield return new TestCaseData("1#", "\"foo\"");
 		}
 	}
