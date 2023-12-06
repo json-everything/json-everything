@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [3.2.2](https://github.com/gregsdennis/json-everything/pull/576) {#release-pointer-3.2.2}
+
+Implemented support for index modifiers for Relative JSON Pointers (e.g. the `+1` in `0+1/foo`), which apparently just weren't supported.
+
 # [3.2.1](https://github.com/gregsdennis/json-everything/pull/573) {#release-pointer-3.2.1}
 
 [#555](https://github.com/gregsdennis/json-everything/issues/555) - JSON Pointer creation using Linq expressions should support using local variables in indexers.  Thanks to [@OmiCron07](https://github.com/OmiCron07) for suggesting.
