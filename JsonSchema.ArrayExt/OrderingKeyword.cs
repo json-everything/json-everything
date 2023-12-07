@@ -121,7 +121,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 
 		if (vBasis.TryGetValue(out string? sBasis))
 		{
-			var compareOptions = specifier.IgnoreCase ? CompareOptions.IgnoreCase : CompareOptions.None;
+			var compareOptions = specifier.IgnoreCase ? CompareOptions.OrdinalIgnoreCase : CompareOptions.Ordinal;
 			if (vCurrent.TryGetValue(out string? sCurrent))
 			{
 				var comparison = string.Compare(sBasis, sCurrent, specifier.Culture, compareOptions);

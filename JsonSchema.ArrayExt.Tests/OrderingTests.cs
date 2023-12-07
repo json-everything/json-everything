@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 using Json.Schema.Tests;
@@ -185,5 +187,50 @@ public class OrderingTests
 		var result = schema.Evaluate(instance);
 
 		result.AssertInvalid();
+	}
+
+	[Test]
+	public void IgnoreCaseFalse_Passing()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Array)
+			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
+
+		var instance = new JsonArray { "alpha", "beta", "charlie", "delta" };
+
+		var result = schema.Evaluate(instance);
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void IgnoreCaseFalse_Failing()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Array)
+			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
+
+		var instance = new JsonArray { "alpha", "Beta", "charlie", "delta" };
+
+		var result = schema.Evaluate(instance);
+
+		result.AssertInvalid();
+	}
+
+	[Test]
+	public void IgnoreCaseTrue()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Array)
+			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: true));
+
+		var instance = new JsonArray { "alpha", "Beta", "charlie", "delta" };
+
+		var result = schema.Evaluate(instance);
+
+		result.AssertValid();
 	}
 }
