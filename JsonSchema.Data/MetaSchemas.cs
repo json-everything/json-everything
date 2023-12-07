@@ -34,14 +34,18 @@ public static class MetaSchemas
 							new JsonSchemaBuilder().Format(Formats.JsonPointer),
 							new JsonSchemaBuilder().Format(Formats.RelativeJsonPointer),
 							new JsonSchemaBuilder().Format("json-path"),
-							new JsonSchemaBuilder().Format(Formats.UriReference)
+							new JsonSchemaBuilder()
+								.Format(Formats.IriReference)
+								.Pattern("^#")
+							,
+							new JsonSchemaBuilder().Format(Formats.Iri)
 						)
 					)
 					.PropertyNames(new JsonSchemaBuilder()
 						.Not(new JsonSchemaBuilder()
 							.Enum(
-								SchemaKeyword.Name,
 								IdKeyword.Name,
+								SchemaKeyword.Name,
 								RefKeyword.Name,
 								AnchorKeyword.Name,
 								DynamicRefKeyword.Name,
@@ -75,7 +79,7 @@ public static class MetaSchemas
 				(Vocabularies.DataId, true)
 			)
 			.DynamicAnchor("meta")
-			.Title("Referenced data meta-schema")
+			.Title("Data 2020-12 meta-schema")
 			.AllOf(
 				new JsonSchemaBuilder().Ref(Schema.MetaSchemas.Draft202012Id),
 				new JsonSchemaBuilder().Ref(DataId)
