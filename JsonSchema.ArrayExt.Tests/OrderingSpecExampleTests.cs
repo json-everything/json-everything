@@ -73,9 +73,10 @@ public class OrderingSpecExampleTests
 	[Test]
 	public void MultipleSpecifierPassingInstance()
 	{
+		// string is descending
 		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""Lorem"" },
   { ""foo"": 1, ""bar"": ""ipsum"" },
+  { ""foo"": 1, ""bar"": ""Lorem"" },
   { ""foo"": 2, ""bar"": ""dolor"" },
   { ""foo"": 3, ""bar"": ""sit"" },
   { ""foo"": 5, ""bar"": ""amet"" }
@@ -89,9 +90,10 @@ public class OrderingSpecExampleTests
 	[Test]
 	public void MultipleSpecifierFailingInstance_Secondary()
 	{
+		// string is descending
 		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""ipsum"" },
   { ""foo"": 1, ""bar"": ""Lorem"" },
+  { ""foo"": 1, ""bar"": ""ipsum"" },
   { ""foo"": 2, ""bar"": ""dolor"" },
   { ""foo"": 3, ""bar"": ""sit"" },
   { ""foo"": 5, ""bar"": ""amet"" }
