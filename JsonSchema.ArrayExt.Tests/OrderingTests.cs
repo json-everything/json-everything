@@ -1,5 +1,3 @@
-using System;
-using System.Globalization;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 using Json.Schema.Tests;

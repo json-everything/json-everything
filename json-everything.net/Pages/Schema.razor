@@ -17,7 +17,6 @@
 @using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
 @using Yaml2JsonNode
-@using Vocabularies = Json.Schema.ArrayExt.Vocabularies
 
 @inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
@@ -592,8 +591,9 @@ namespace JsonEverythingTemp
 		if (firstRender)
 		{
 			Json.Schema.Data.Vocabularies.Register();
-			Vocabularies.Register();
+			Json.Schema.ArrayExt.Vocabularies.Register();
 			Json.Schema.OpenApi.Vocabularies.Register();
+			Json.Schema.UniqueKeys.Vocabularies.Register();
 
 			await LoadSavedSchema();
 			await LoadSavedInstance();
