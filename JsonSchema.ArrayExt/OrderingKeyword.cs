@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.ArrayExt;
 
@@ -17,6 +19,13 @@ namespace Json.Schema.ArrayExt;
 [JsonConverter(typeof(OrderingKeywordJsonConverter))]
 public class OrderingKeyword : IJsonSchemaKeyword
 {
+	private enum Ordering
+	{
+		Before = -1,
+		Same,
+		After
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -56,9 +65,92 @@ public class OrderingKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (evaluation.LocalInstance is not JsonArray array) return;
+		if (array.Count <= 1) return;
 
-		throw new NotImplementedException();
+		var i = 1;
+
+		while (i < array.Count)
+		{
+			var basisItem = array[i-1];
+			var currentItem = array[i];
+
+			foreach (var specifier in Specifiers)
+			{
+				// TODO: successive specifiers only matter if the previous values are equal
+
+				if (!specifier.By.TryEvaluate(basisItem, out var basisValue))
+				{
+					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
+						.ReplaceTokens(
+							("index", i-1),
+							("pointer", specifier.By)
+						));
+					return;
+				}
+
+				if (!specifier.By.TryEvaluate(currentItem, out var currentValue))
+				{
+					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
+						.ReplaceTokens(
+							("index", i),
+							("pointer", specifier.By)
+						));
+					return;
+				}
+
+				var check = GetOrdering(basisValue, currentValue, specifier);
+
+				if (check.Ordering == Ordering.Before) break;
+				if (check.Ordering == Ordering.After)
+				{
+					// basis should be after current
+					evaluation.Results.Fail(Name, "Item at index [[index]] is not in order"
+						.ReplaceTokens(							("index", i)));
+					return;
+				}
+			}
+
+			i++;
+		}
 	}
+
+	private static (Ordering? Ordering, string? ErrorMessage) GetOrdering(JsonNode? basis, JsonNode? current, OrderingSpecifier specifier)
+	{
+		if (basis is not JsonValue vBasis || current is not JsonValue vCurrent)
+			return (null, "Comparisons may only occur between strings or numbers");
+
+		if (vBasis.TryGetValue(out string? sBasis))
+		{
+			var compareOptions = specifier.IgnoreCase ? CompareOptions.IgnoreCase : CompareOptions.None;
+			if (vCurrent.TryGetValue(out string? sCurrent))
+			{
+				var comparison = string.Compare(sBasis, sCurrent, specifier.Culture, compareOptions);
+				return (AdjustForDirection(ComparisonToOrdering(comparison), specifier.Direction), null);
+			}
+
+			return (null, "Comparisons must occur between values of the same type");
+		}
+
+		var nBasis = vBasis.GetNumber();
+		var nCurrent = vCurrent.GetNumber();
+		if (!nBasis.HasValue || !nCurrent.HasValue)
+			return (null, "Comparisons must occur between values of the same type");
+
+		return (AdjustForDirection(ComparisonToOrdering(nBasis.Value.CompareTo(nCurrent)), specifier.Direction), null);
+	}
+
+	private static Ordering ComparisonToOrdering(int comparison) =>
+		comparison switch
+		{
+			< 0 => Ordering.Before,
+			0 => Ordering.Same,
+			> 0 => Ordering.After
+		};
+
+	private static Ordering AdjustForDirection(Ordering ordering, Direction direction) =>
+		direction == Direction.Descending
+			? (Ordering)((int)ordering * -1)
+			: ordering;
 }
 
 /// <summary>
