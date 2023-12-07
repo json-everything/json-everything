@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Json.Path;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -39,6 +40,7 @@ public static class JsonSchemaBuilderExtensions
 	{
 		if (identifier[0] != '#' && JsonPointer.TryParse(identifier, out var jp)) return new JsonPointerIdentifier(jp!);
 		if (RelativeJsonPointer.TryParse(identifier, out var rjp)) return new RelativeJsonPointerIdentifier(rjp!);
+		if (JsonPath.TryParse(identifier, out var path)) return new JsonPathIdentifier(path);
 		if (Uri.TryCreate(identifier, UriKind.RelativeOrAbsolute, out var uri)) return new UriIdentifier(uri);
 
 		throw new JsonException($"Cannot identify type of resource identifier for '{identifier}'");

@@ -8,7 +8,7 @@ public static class Vocabularies
 	/// <summary>
 	/// The data vocabulary ID.
 	/// </summary>
-	public const string DataId = "https://json-everything.net/vocabs-data-2022";
+	public const string DataId = "https://json-everything.net/vocabs-data-2023";
 
 	/// <summary>
 	/// The data vocabulary.
@@ -26,5 +26,6 @@ public static class Vocabularies
 		vocabRegistry.Register(Data);
 		SchemaKeywordRegistry.Register<DataKeyword>();
 		schemaRegistry.Register(MetaSchemas.Data);
+		schemaRegistry.Register(MetaSchemas.Data_202012);
 	}
 }
