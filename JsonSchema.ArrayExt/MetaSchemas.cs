@@ -8,7 +8,7 @@ namespace Json.Schema.ArrayExt;
 public static class MetaSchemas
 {
 	/// <summary>
-	/// The data vocabulary meta-schema ID.
+	/// The array extensions vocabulary meta-schema ID.
 	/// </summary>
 	public static readonly Uri ArrayExtId = new("https://json-everything.net/meta/vocab/array-ext");
 	/// <summary>
@@ -18,7 +18,7 @@ public static class MetaSchemas
 	public static readonly Uri ArrayExt_202012Id = new("https://json-everything.net/meta/array-ext");
 
 	/// <summary>
-	/// The data vocabulary meta-schema.
+	/// The array extensions vocabulary meta-schema.
 	/// </summary>
 	public static readonly JsonSchema ArrayExt =
 		new JsonSchemaBuilder()
@@ -66,7 +66,7 @@ public static class MetaSchemas
 			);
 
 	/// <summary>
-	/// The data vocabulary meta-schema.
+	/// A meta-schema which incorporates the array extensions vocabulary.
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
 	public static readonly JsonSchema ArrayExt_202012 =

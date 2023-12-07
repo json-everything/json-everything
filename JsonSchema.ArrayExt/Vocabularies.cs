@@ -6,17 +6,17 @@
 public static class Vocabularies
 {
 	/// <summary>
-	/// The data vocabulary ID.
+	/// The array extensions vocabulary ID.
 	/// </summary>
 	public const string ArrayExtId = "https://docs.json-everything.net/schema/vocabs/array-ext";
 
 	/// <summary>
-	/// The data vocabulary.
+	/// The array extensions vocabulary.
 	/// </summary>
 	public static readonly Vocabulary ArrayExt = new(ArrayExtId, typeof(UniqueKeysKeyword), typeof(OrderingKeyword));
 
 	/// <summary>
-	/// Registers the all components required to use the data vocabulary.
+	/// Registers the all components required to use the array extensions vocabulary.
 	/// </summary>
 	public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
 	{
