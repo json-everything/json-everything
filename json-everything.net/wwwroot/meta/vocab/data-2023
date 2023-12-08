@@ -1,9 +1,8 @@
 {
   "$id": "https://json-everything.net/schema/meta/vocab/data-2023",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Referenced data meta-schema",
-  "properties": {
-    "data": {
+  "$defs": {
+    "formedSchema": {
       "additionalProperties": {
         "type": "string",
         "oneOf": [
@@ -34,5 +33,10 @@
       },
       "default": {}
     }
+  },
+  "title": "Referenced data meta-schema",
+  "properties": {
+    "data": { "$ref": "#/$defs/formedSchema" },
+    "optionalData": { "$ref": "#/$defs/formedSchema" }
   }
 }
