@@ -13,16 +13,22 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 
 	private MemberInfoMetadataTokenComparer()
 	{
-		var typeStack = new List<Type>();
-		Type? type = typeof(T);
+		var typeStack = new Stack<Type>();
+		var type = typeof(T);
 
 		do
 		{
-			typeStack.Insert(0, type);
-			type = type.BaseType;
-		} while (type != null);
+			typeStack.Push(type);
+			type = type.BaseType!;
 
-		_typeOrder = typeStack.Select(GetMetadataToken).ToArray();
+		} while (type != null!);
+
+		_typeOrder = typeStack.Select(x =>
+		{
+			var metadataToken = GetMetadataToken(x);
+			Console.WriteLine($"{x.Name} - {metadataToken}");
+			return metadataToken;
+		}).ToArray();
 	}
 
 	public override int Compare(MemberInfo? x, MemberInfo? y)
@@ -47,7 +53,9 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 			if (xIndex < 0) return 1;
 			if (yIndex < 0) return -1;
 
-			return Comparer<int>.Default.Compare(xIndex, yIndex);
+			var comparison = Comparer<int>.Default.Compare(xIndex, yIndex);
+			Console.WriteLine($"{x.DeclaringType.Name}.{x.Name} ({xIndex}) vs {y.DeclaringType.Name}.{y.Name} ({yIndex}) : {comparison}");
+			return comparison;
 		}
 
 		// Members were declared in the same type. Use the metadata tokens for the members

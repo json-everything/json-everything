@@ -48,15 +48,14 @@ public class PropertyOrderTests
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
 
-		Console.WriteLine("stack output (get 1, 2 locally - start with most recent)");
-		var stack = new Stack<int>();
-		stack.Push(2);
-		stack.Push(1);
-		var asArray = stack.Select(x => x).ToArray();
-		foreach (var key in asArray)
-		{
-			Console.WriteLine(key);
-		}
+		Console.WriteLine();
+		Console.WriteLine("Expected:");
+		Console.WriteLine(@"Object - 33554577
+SpecifiedOrder - 33554530
+SpecifiedOrderDerived - 33554531
+SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.Second (1) : 1
+SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.First (1) : 1");
+		Console.WriteLine();
 
 		Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.ElementAt(0));
 		Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.ElementAt(1));
