@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests;
@@ -49,8 +48,12 @@ public class PropertyOrderTests
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions{WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
-		foreach (var key in properties.Properties.Keys)
+		Console.WriteLine("stack output (get 1, 2 locally - start with most recent)");
+		var stack = new Stack<int>();
+		stack.Push(2);
+		stack.Push(1);
+		var asArray = stack.Select(x => x).ToArray();
+		foreach (var key in asArray)
 		{
 			Console.WriteLine(key);
 		}

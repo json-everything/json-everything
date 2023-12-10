@@ -13,14 +13,14 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 
 	private MemberInfoMetadataTokenComparer()
 	{
-		var typeStack = new Stack<Type>();
-		var type = typeof(T);
+		var typeStack = new List<Type>();
+		Type? type = typeof(T);
 
 		do
 		{
-			typeStack.Push(type);
-			type = type.BaseType!;
-		} while (type != null!);
+			typeStack.Insert(0, type);
+			type = type.BaseType;
+		} while (type != null);
 
 		_typeOrder = typeStack.Select(GetMetadataToken).ToArray();
 	}
