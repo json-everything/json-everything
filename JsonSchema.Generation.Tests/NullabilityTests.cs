@@ -186,4 +186,85 @@ public class NullabilityTests
 		AssertEqual(expected, actual);
 	}
 
+	private class DifferingNullabilityValueType
+	{
+		public int NonNullable { get; set; }
+		public int? Nullable { get; set; }
+	}
+
+	[Test]
+	public void NullableIntAndNonNullableInt()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("NonNullable", new JsonSchemaBuilder().Type(Integer)),
+				("Nullable", new JsonSchemaBuilder().Type(Integer | Null))
+			);
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<DifferingNullabilityValueType>(new SchemaGeneratorConfiguration
+			{
+				Nullability = AllowForNullableValueTypes,
+				Optimize = false
+			})
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class DifferingNullabilityValueTypeUsingAttribute
+	{
+		public int NonNullable { get; set; }
+		[Nullable(true)]
+		public int? Nullable { get; set; }
+	}
+
+	[Test]
+	public void NullableIntAndNonNullableIntUsingAttribute()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("NonNullable", new JsonSchemaBuilder().Type(Integer)),
+				("Nullable", new JsonSchemaBuilder().Type(Integer | Null))
+			);
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<DifferingNullabilityValueTypeUsingAttribute>(new SchemaGeneratorConfiguration
+			{
+				Optimize = false
+			})
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class DifferingNullabilityReferenceType
+	{
+		public string NonNullable { get; set; }
+		[Nullable(true)]
+		public string? Nullable { get; set; }
+	}
+
+	[Test]
+	public void NullableStringAndNonNullableString()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("NonNullable", new JsonSchemaBuilder().Type(String)),
+				("Nullable", new JsonSchemaBuilder().Type(String | Null))
+			);
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<DifferingNullabilityReferenceType>(new SchemaGeneratorConfiguration
+			{
+				Nullability = AllowForNullableValueTypes,
+				Optimize = false
+			})
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
 }
