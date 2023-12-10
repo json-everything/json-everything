@@ -4,6 +4,16 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.04"
 ---
+# [1.2.0](https://github.com/gregsdennis/json-everything/pull/582) {#release-schemadatagen-1.2.0}
+
+[#580](https://github.com/gregsdennis/json-everything/issues/580) - Add support for `pattern` by incorporating [FARE library](https://github.com/moodmosaic/Fare).
+
+Only simple subschemas with a single, simple `pattern` is supported.
+
+- Combining multiple regular expressions using `allOf`, `anyOf`, or `oneOf` is not supported.
+- Inverting regular expressions using `not` is not supported.
+- Any regular expression not supported by the FARE library is not supported.
+
 # 1.1.0 (no PR) {#release-schemadatagen-1.1.0}
 
 Updated JsonSchema.Net reference to v4.0.0.
