@@ -62,9 +62,7 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 	{
 		if (member == null) return false;
 
-#if NET5_0
-				return member.HasMetadataToken();
-#else
+#if NETSTANDARD2_0
 		try
 		{
 			// ReSharper disable once UnusedVariable
@@ -75,6 +73,8 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 		{
 			return false;
 		}
+#else
+		return member.HasMetadataToken();
 #endif
 	}
 
