@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Json.Schema.Generation;
 
 internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 {
-	private readonly int[] _typeOrder;
+	private readonly Type[] _typeOrder;
 
 	public static MemberInfoMetadataTokenComparer<T> Instance { get; } = new();
 
@@ -20,9 +19,10 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 		{
 			typeStack.Push(type);
 			type = type.BaseType!;
+
 		} while (type != null!);
 
-		_typeOrder = typeStack.Select(GetMetadataToken).ToArray();
+		_typeOrder = typeStack.ToArray();
 	}
 
 	public override int Compare(MemberInfo? x, MemberInfo? y)
@@ -32,20 +32,19 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 		if (y == null) return -1;
 
 		// Get metadata tokens for the types that declared the members.
-		var xTypeToken = GetMetadataToken(x.DeclaringType);
-		var yTypeToken = GetMetadataToken(y.DeclaringType);
+		var xOwnerType = x.DeclaringType;
+		var yOwnerType = y.DeclaringType;
 
-		if (xTypeToken != yTypeToken)
+		if (xOwnerType != yOwnerType)
 		{
 			// Members were declared in different types. Find the _typeOrder indices for
 			// the types so that we can identify which one we consider to be the
 			// least-derived type.
-			var xIndex = Array.IndexOf(_typeOrder, xTypeToken);
-			var yIndex = Array.IndexOf(_typeOrder, yTypeToken);
+			var xIndex = Array.IndexOf(_typeOrder, xOwnerType);
+			var yIndex = Array.IndexOf(_typeOrder, yOwnerType);
 
-			if (xIndex < 0 && yIndex < 0) return Comparer<int>.Default.Compare(xTypeToken, yTypeToken);
-			if (xIndex < 0) return 1;
-			if (yIndex < 0) return -1;
+			// one of the types wasn't found (shouldn't happen)
+			if (xIndex < 0 || yIndex < 0) return int.MaxValue;
 
 			return Comparer<int>.Default.Compare(xIndex, yIndex);
 		}
@@ -62,9 +61,7 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 	{
 		if (member == null) return false;
 
-#if NET5_0
-				return member.HasMetadataToken();
-#else
+#if NETSTANDARD2_0
 		try
 		{
 			// ReSharper disable once UnusedVariable
@@ -75,6 +72,8 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 		{
 			return false;
 		}
+#else
+		return member.HasMetadataToken();
 #endif
 	}
 
