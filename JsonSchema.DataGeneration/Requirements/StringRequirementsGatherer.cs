@@ -34,12 +34,13 @@ internal class StringRequirementsGatherer : IRequirementsGatherer
 			supportsStrings = true;
 		}
 
-		//var pattern = schema.Keywords!.OfType<PatternKeyword>().FirstOrDefault()?.Value;
-		//if (pattern != null)
-		//{
-		//	context.Patterns ??= new List<Regex>();
-		//	context.Patterns.Add(pattern);
-		//}
+		var pattern = schema.Keywords?.OfType<PatternKeyword>().FirstOrDefault()?.Value;
+		if (pattern != null)
+		{
+			//context.Patterns ??= new List<Regex>();
+			//context.Patterns.Add(pattern);
+			context.Pattern = pattern;
+		}
 
 		if (context.Format != null)
 			context.HasConflict = true;
