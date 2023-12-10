@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Bogus;
 using Bogus.Extensions;
-using Json.More;
+using Fare;
 
 namespace Json.Schema.DataGeneration.Generators;
 
@@ -49,6 +49,30 @@ internal class StringGenerator : IDataGenerator
 
 	public GenerationResult Generate(RequirementsContext context)
 	{
+		if (context.Pattern != null)
+		{
+			if (context.StringLengths != null) throw new NotSupportedException("Cannot generate strings that match regex and also specify string lengths");
+
+			string overallRegex = string.Empty;
+
+			//if (context.Patterns != null)
+			//{
+			//	if (context.Patterns.Count == 1)
+			//		overallRegex = context.Patterns[0].ToString();
+			//	else
+			//		overallRegex += HelperExtensions.Require(context.Patterns.Select(x => x.ToString()));
+			//}
+
+			//if (context.AntiPatterns != null)
+			//	overallRegex += HelperExtensions.Forbid(context.AntiPatterns.Select(x => x.ToString()));
+			if (context.Pattern != null)
+				overallRegex = context.Pattern.ToString();
+
+			Console.WriteLine(overallRegex);
+
+			return GenerationResult.Success(new Xeger(overallRegex).Generate());
+		}
+
 		var ranges = context.StringLengths ?? _defaultRange;
 		var range = JsonSchemaExtensions.Randomizer.ArrayElement(ranges.Ranges.ToArray());
 		var minimum = range.Minimum.Value != NumberRangeSet.MinRangeValue
@@ -57,26 +81,6 @@ internal class StringGenerator : IDataGenerator
 		var maximum = range.Maximum.Value != NumberRangeSet.MaxRangeValue
 			? (uint)Math.Min(_maxStringLength, range.Maximum.Value)
 			: Math.Min(_maxStringLength, DefaultMaxLength);
-
-		//var rangeRegex = $".{{{range.Minimum.Value},{range.Maximum.Value}}}";
-
-		//string overallRegex = string.Empty;
-
-		//if (context.Patterns != null)
-		//{
-		//	if (context.Patterns.Count == 1)
-		//		overallRegex = context.Patterns[0].ToString();
-		//	else
-		//		overallRegex += HelperExtensions.Require(context.Patterns.Select(x => x.ToString()));
-		//}
-
-		//if (context.AntiPatterns != null)
-		//	overallRegex += HelperExtensions.Forbid(context.AntiPatterns.Select(x => x.ToString()));
-
-		//overallRegex += rangeRegex;
-		//overallRegex = $"^{overallRegex}$";
-
-		//Console.WriteLine(overallRegex);
 
 		if (context.Format != null)
 		{

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using Json.More;
 
 namespace Json.Schema.DataGeneration;
@@ -30,6 +31,7 @@ internal class RequirementsContext
 	// https://www.ocpsoft.org/tutorials/regular-expressions/and-in-regex/
 	//public List<Regex>? Patterns { get; set; }
 	//public List<Regex>? AntiPatterns { get; set; }
+	public Regex? Pattern { get; set; }
 	public string? Format { get; set; }
 
 	public List<RequirementsContext>? SequentialItems { get; set; }
@@ -75,6 +77,8 @@ internal class RequirementsContext
 		//	Patterns = other.Patterns.ToList();
 		//if (other.AntiPatterns != null)
 		//	AntiPatterns = other.AntiPatterns.ToList();
+		if (other.Pattern != null)
+			Pattern = other.Pattern;
 
 		if (other.ItemCounts != null)
 			ItemCounts = new NumberRangeSet(other.ItemCounts);
@@ -168,6 +172,9 @@ internal class RequirementsContext
 			//context.Patterns = AntiPatterns;
 			//context.AntiPatterns = Patterns;
 			//return true;
+			if (Pattern != null)
+				throw new NotSupportedException("Cannot generate string against negative pattern");
+
 			return false;
 		}
 
@@ -242,7 +249,7 @@ internal class RequirementsContext
 			return true;
 		}
 
-		var allBreakers = new Func<RequirementsContext, bool>[]
+		var allBreakers = new[]
 		{
 			BreakType,
 			BreakNumberRange,
@@ -320,6 +327,11 @@ internal class RequirementsContext
 		//	AntiPatterns = other.AntiPatterns;
 		//else if (other.AntiPatterns != null)
 		//	AntiPatterns.AddRange(other.AntiPatterns);
+
+		if (Pattern == null)
+			Pattern = other.Pattern;
+		else if (other.Pattern != null)
+			throw new NotSupportedException("Generator only supports `pattern` on a single branch.");
 
 		if (ItemCounts == null || !ItemCounts.Ranges.Any())
 			ItemCounts = other.ItemCounts;

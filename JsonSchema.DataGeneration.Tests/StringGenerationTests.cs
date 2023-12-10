@@ -48,7 +48,6 @@ public class StringGenerationTests
 	}
 
 	[Test]
-	[Ignore("regex not supported")]
 	public void ContainsDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
@@ -59,7 +58,6 @@ public class StringGenerationTests
 	}
 
 	[Test]
-	[Ignore("regex not supported")]
 	public void ContainsDogWithSizeConstraints()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
@@ -68,22 +66,20 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		Assert.Throws<NotSupportedException>(() => Run(schema));
 	}
 
 	[Test]
-	[Ignore("regex not supported")]
 	public void DoesNotContainDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Not(new JsonSchemaBuilder().Pattern("dog"));
 
-		Run(schema);
+		Assert.Throws<NotSupportedException>(() => Run(schema));
 	}
 
 	[Test]
-	[Ignore("regex not supported")]
 	public void DoesNotContainDogWithSizeConstraints()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
@@ -92,11 +88,10 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		Assert.Throws<NotSupportedException>(() => Run(schema));
 	}
 
 	[Test]
-	[Ignore("not supported by regex lib")]
 	public void ContainsCatAndDoesNotContainDogWithSizeConstraints()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
@@ -106,11 +101,10 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		Assert.Throws<NotSupportedException>(() => Run(schema));
 	}
 
 	[Test]
-	[Ignore("regex not supported")]
 	public void ContainsEitherCatOrDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
@@ -122,11 +116,10 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		Assert.Throws<NotSupportedException>(() => Run(schema));
 	}
 
 	[Test]
-	[Ignore("regex not supported")]
 	public void ContainsExclusivelyEitherCatOrDog()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
@@ -138,7 +131,7 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		Assert.Throws<NotSupportedException>(() => Run(schema));
 	}
 
 	[Test]
