@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>netstandard2.1</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
 		<RootNamespace>Json.Schema.Data</RootNamespace>
@@ -20,9 +20,9 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>4.1.0</Version>
-		<FileVersion>4.1.0.0</FileVersion>
-		<AssemblyVersion>4.0.0.0</AssemblyVersion>
+		<Version>5.0.0</Version>
+		<FileVersion>5.0.0.0</FileVersion>
+		<AssemblyVersion>5.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -33,6 +33,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\JsonPath\JsonPath.csproj" />
 		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
 	</ItemGroup>
 
@@ -53,10 +54,8 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 
 </Project>

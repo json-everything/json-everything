@@ -28,7 +28,7 @@ public class Suite
 		// ReSharper disable once HeuristicUnreachableCode
 		var testCasesPath = _useExternal ? _externalTestCasesPath : _testCasesPath;
 
-		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
+		var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
@@ -41,7 +41,7 @@ public class Suite
 		var allTests = new List<TestCaseData>();
 		foreach (var fileName in fileNames)
 		{
-			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
+			var shortFileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
 			{
@@ -74,7 +74,7 @@ public class Suite
 	{
 		var remotesPath = _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath;
 
-		var remotesFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, remotesPath)
+		var remotesFilePath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, remotesPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(remotesFilePath))
 			throw new Exception("cannot find remotes path");
@@ -131,7 +131,7 @@ public class Suite
 		// ReSharper disable once HeuristicUnreachableCode
 		var testCasesPath = _useExternal ? _externalCoreSchemasPath : _coreSchemasPath;
 
-		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
+		var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
 
@@ -140,7 +140,7 @@ public class Suite
 		var allTests = new List<TestCaseData>();
 		foreach (var fileName in fileNames)
 		{
-			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
+			var shortFileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 			var contents = File.ReadAllText(fileName);
 
 			var name = $"${shortFileName}";
