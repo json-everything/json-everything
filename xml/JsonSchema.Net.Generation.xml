@@ -332,22 +332,6 @@
             Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonExcludeAttribute"/>.
             </summary>
         </member>
-        <member name="T:Json.Schema.Generation.JsonIncludeAttribute">
-             <summary>
-             Indicates that the property or field should be included for serialization and deserialization.
-             </summary>
-             <remarks>
-             When applied to a public property, indicates that non-public getters and setters should be used for serialization and deserialization.
-            
-             Non-public properties and fields are not allowed when serializing and deserializing. If the attribute is used on a non-public property or field,
-             an <see cref="T:System.InvalidOperationException"/> is thrown during the first serialization or deserialization of the declaring type.
-             </remarks>
-        </member>
-        <member name="M:Json.Schema.Generation.JsonIncludeAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:Json.Schema.Generation.JsonIncludeAttribute"/>.
-            </summary>
-        </member>
         <member name="T:Json.Schema.Generation.JsonNumberHandlingAttributeHandler">
             <summary>
             Handler for the <see cref="T:System.Text.Json.Serialization.JsonNumberHandlingAttribute"/>.
@@ -1980,6 +1964,13 @@
             </summary>
             <param name="type">The type.</param>
             <returns>true if the type represents an array; false otherwise.</returns>
+        </member>
+        <member name="M:Json.Schema.Generation.TypeExtensions.IsNullableValueType(System.Type)">
+            <summary>
+            Determines if the type is a nullable value type, i.e. <see cref="T:System.Nullable`1"/>.
+            </summary>
+            <param name="type">The type</param>
+            <returns>True if the type is <see cref="T:System.Nullable`1"/>; false otherwise.</returns>
         </member>
         <member name="T:Json.Schema.Generation.TypeGenerationContext">
             <summary>
