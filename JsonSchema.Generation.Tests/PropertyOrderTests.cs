@@ -48,12 +48,6 @@ public class PropertyOrderTests
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
 
-		Console.WriteLine();
-		Console.WriteLine("Expected:");
-		Console.WriteLine(@"SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.Second (1) : 1
-SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.First (1) : 1");
-		Console.WriteLine();
-
 		Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.ElementAt(0));
 		Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.ElementAt(1));
 		Assert.AreEqual(nameof(SpecifiedOrderDerived.Third), properties.Properties.Keys.ElementAt(2));

@@ -46,9 +46,7 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 			// one of the types wasn't found (shouldn't happen)
 			if (xIndex < 0 || yIndex < 0) return int.MaxValue;
 
-			var comparison = Comparer<int>.Default.Compare(xIndex, yIndex);
-			Console.WriteLine($"{x.DeclaringType.Name}.{x.Name} ({xIndex}) vs {y.DeclaringType.Name}.{y.Name} ({yIndex}) : {comparison}");
-			return comparison;
+			return Comparer<int>.Default.Compare(xIndex, yIndex);
 		}
 
 		// Members were declared in the same type. Use the metadata tokens for the members
