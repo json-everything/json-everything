@@ -50,10 +50,7 @@ public class PropertyOrderTests
 
 		Console.WriteLine();
 		Console.WriteLine("Expected:");
-		Console.WriteLine(@"Object - 33554577
-SpecifiedOrder - 33554530
-SpecifiedOrderDerived - 33554531
-SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.Second (1) : 1
+		Console.WriteLine(@"SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.Second (1) : 1
 SpecifiedOrderDerived.Third (2) vs SpecifiedOrder.First (1) : 1");
 		Console.WriteLine();
 
