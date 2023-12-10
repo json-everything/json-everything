@@ -6,7 +6,7 @@ order: "09.02"
 ---
 # [3.5.0](https://github.com/gregsdennis/json-everything/pull/581) {#release-schemagen-3.5.0}
 
-[#579](https://github.com/gregsdennis/json-everything/issues/551) - Types which contained properties with both nullable and non-nullable versions of the same value type would attribute all properties as nullable.  Thanks to [@tjochums](https://github.com/tjochums) for reporting.
+[#579](https://github.com/gregsdennis/json-everything/issues/579) - Types which contained properties with both nullable and non-nullable versions of the same value type would attribute all properties as nullable.  Thanks to [@tjochums](https://github.com/tjochums) for reporting.
 
 Also fixed a hash code collision issue with property ordering.
 
