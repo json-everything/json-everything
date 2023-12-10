@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Generation.Tests;
@@ -45,6 +48,12 @@ public class PropertyOrderTests
 			.FromType<SpecifiedOrderDerived>(config);
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions{WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+		foreach (var key in properties.Properties.Keys)
+		{
+			Console.WriteLine(key);
+		}
 
 		Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.ElementAt(0));
 		Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.ElementAt(1));
