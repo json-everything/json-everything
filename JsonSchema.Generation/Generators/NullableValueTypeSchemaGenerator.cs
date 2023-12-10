@@ -6,7 +6,7 @@ internal class NullableValueTypeSchemaGenerator : ISchemaGenerator
 {
 	public bool Handles(Type type)
 	{
-		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+		return type.IsNullableValueType();
 	}
 
 	public void AddConstraints(SchemaGenerationContextBase context)

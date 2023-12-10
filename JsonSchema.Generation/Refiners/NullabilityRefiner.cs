@@ -28,19 +28,31 @@ internal class NullabilityRefiner : ISchemaRefiner
 		if (nullabilityOverride.HasValue)
 		{
 			if (nullabilityOverride.Value)
-				typeIntent.Type |= SchemaValueType.Null;
+			{
+				if (context.Type.IsNullableValueType())
+					ReplaceTypeWithNullableIntent(context, typeIntent);
+				else
+					typeIntent.Type |= SchemaValueType.Null;
+			}
 			else
 				typeIntent.Type &= ~SchemaValueType.Null;
 			return;
 		}
 
 		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
-			context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-			typeIntent.Type |= SchemaValueType.Null;
+		    context.Type.IsNullableValueType()) 
+			ReplaceTypeWithNullableIntent(context, typeIntent);
 
 		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
 			// see https://stackoverflow.com/a/16578846/878701
 			!context.Type.IsValueType)
 			typeIntent.Type |= SchemaValueType.Null;
+	}
+
+	private static void ReplaceTypeWithNullableIntent(SchemaGenerationContextBase context, TypeIntent typeIntent)
+	{
+		var nullableTypeIntent = new TypeIntent(typeIntent.Type | SchemaValueType.Null);
+		var index = context.Intents.IndexOf(typeIntent);
+		context.Intents[index] = nullableTypeIntent;
 	}
 }

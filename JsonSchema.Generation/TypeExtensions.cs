@@ -115,16 +115,14 @@ public static class TypeExtensions
 
 		return name;
 	}
-}
 
-internal static class GeneralExtensions
-{
-	public static decimal ClampToDecimal(this double value)
+	/// <summary>
+	/// Determines if the type is a nullable value type, i.e. <see cref="Nullable{T}"/>.
+	/// </summary>
+	/// <param name="type">The type</param>
+	/// <returns>True if the type is <see cref="Nullable{T}"/>; false otherwise.</returns>
+	public static bool IsNullableValueType(this Type type)
 	{
-		return value <= (double)decimal.MinValue
-			? decimal.MinValue
-			: (double)decimal.MaxValue <= value
-				? decimal.MaxValue
-				: Convert.ToDecimal(value);
+		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 	}
 }
