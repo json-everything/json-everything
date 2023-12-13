@@ -26,5 +26,29 @@ namespace Json.Path.Tests
 			Assert.AreEqual("$.store.book[*].author", pathString);
 		}
 
+		[Test]
+		public void ConvertFromJsonPath()
+		{
+			var path = JsonPath.Parse("$.store.book[*].author");
+			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
+			var path2 = typeConverter.ConvertFrom(path) as JsonPath;
+
+			Assert.IsNotNull(path2);
+			Assert.AreNotSame(path, path2);
+			Assert.AreEqual("$.store.book[*].author", path2!.ToString());
+		}
+
+		[Test]
+		public void ConvertToJsonPath()
+		{
+			var path = JsonPath.Parse("$.store.book[*].author");
+			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
+			var path2 = typeConverter.ConvertTo(path, typeof(JsonPath)) as JsonPath;
+
+			Assert.IsNotNull(path2);
+			Assert.AreNotSame(path, path2);
+			Assert.AreEqual("$.store.book[*].author", path2!.ToString());
+		}
+
 	}
 }

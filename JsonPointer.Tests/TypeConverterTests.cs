@@ -26,5 +26,29 @@ namespace Json.Pointer.Tests
 			Assert.AreEqual("/foo", pointerString);
 		}
 
+		[Test]
+		public void ConvertFromJsonPointer()
+		{
+			var pointer = JsonPointer.Parse("/foo");
+			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
+			var pointer2 = typeConverter.ConvertFrom(pointer) as JsonPointer;
+
+			Assert.IsNotNull(pointer2);
+			Assert.AreNotSame(pointer, pointer2);
+			Assert.AreEqual("/foo", pointer2!.ToString());
+		}
+
+		[Test]
+		public void ConvertToJsonPointer()
+		{
+			var pointer = JsonPointer.Parse("/foo");
+			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
+			var pointer2 = typeConverter.ConvertTo(pointer, typeof(JsonPointer)) as JsonPointer;
+
+			Assert.IsNotNull(pointer2);
+			Assert.AreNotSame(pointer, pointer2);
+			Assert.AreEqual("/foo", pointer2!.ToString());
+		}
+
   }
 }
