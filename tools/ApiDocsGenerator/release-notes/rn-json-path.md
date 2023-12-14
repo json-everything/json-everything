@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [0.6.8](https://github.com/gregsdennis/json-everything/pull/590) {#release-path-0.6.8}
+
+[#585](https://github.com/gregsdennis/json-everything/issues/585) - Added support for `TypeConverter` so that an application config can properly convert to JSON Path in config models.  Thanks to [@wazzamatazz](https://github.com/wazzamatazz) for raising the issue and providing the implementation.
+
 # [0.6.7](https://github.com/gregsdennis/json-everything/pull/526) {#release-path-0.6.7}
 
 Whitespace between multiple selectors inside brackets was supported for `.Parse()` but not `.TryParse()`.  Thanks to [@Andrej-Peplinski](https://github.com/Andrej-Peplinski) for reporting this.
