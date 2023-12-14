@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Json.Path;
 /// Represents a JSON Path.
 /// </summary>
 [JsonConverter(typeof(JsonPathConverter))]
+[TypeConverter(typeof(JsonPathTypeConverter))]
 public class JsonPath
 {
 	/// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,6 +17,7 @@ namespace Json.Pointer;
 /// Represents a JSON Pointer IAW RFC 6901.
 /// </summary>
 [JsonConverter(typeof(JsonPointerJsonConverter))]
+[TypeConverter(typeof(JsonPointerTypeConverter))]
 public class JsonPointer : IEquatable<JsonPointer>
 {
 	/// <summary>
