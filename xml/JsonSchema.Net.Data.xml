@@ -100,6 +100,31 @@
             <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
             <returns>True if resolution was successful; false otherwise.</returns>
         </member>
+        <member name="T:Json.Schema.Data.JsonPathIdentifier">
+            <summary>
+            Handles data references that are JSON Paths.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.Data.JsonPathIdentifier.Query">
+            <summary>
+            Gets the JSON Path query.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.Data.JsonPathIdentifier.#ctor(Json.Path.JsonPath)">
+            <summary>
+            Creates a new <see cref="T:Json.Schema.Data.JsonPathIdentifier"/>.
+            </summary>
+            <param name="query"></param>
+        </member>
+        <member name="M:Json.Schema.Data.JsonPathIdentifier.TryResolve(Json.Schema.KeywordEvaluation,Json.Schema.SchemaRegistry,System.Text.Json.Nodes.JsonNode@)">
+            <summary>
+            Resolves a resource.
+            </summary>
+            <param name="evaluation">The evaluation being process.  This will help identify.</param>
+            <param name="registry">The schema registry.</param>
+            <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
+            <returns>True if resolution was successful; false otherwise.</returns>
+        </member>
         <member name="T:Json.Schema.Data.JsonPointerIdentifier">
             <summary>
             Handles data references that are JSON Pointers.
@@ -170,9 +195,19 @@
             The data vocabulary meta-schema ID.
             </summary>
         </member>
+        <member name="F:Json.Schema.Data.MetaSchemas.Data_202012Id">
+            <summary>
+            The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
+            </summary>
+        </member>
         <member name="F:Json.Schema.Data.MetaSchemas.Data">
             <summary>
             The data vocabulary meta-schema.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.Data.MetaSchemas.Data_202012">
+            <summary>
+            A 2020-12 meta-schema which incorporates the data vocabulary.
             </summary>
         </member>
         <member name="T:Json.Schema.Data.RelativeJsonPointerIdentifier">

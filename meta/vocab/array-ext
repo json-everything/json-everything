@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-everything.net/meta/vocab/array-ext",
+  "title": "Array extensions meta-schema",
+  "properties": {
+    "uniqueKeys": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "json-pointer"
+      },
+      "minItems": 1
+    },
+    "ordering": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "by": {
+            "type": "string",
+            "format": "json-pointer"
+          },
+          "direction": {
+            "enum": [ "asc", "desc" ],
+            "default": "asc"
+          },
+          "culture": {
+            "oneOf": [
+              { "const": "none" },
+              {
+                "type": "string",
+                "pattern": "^[a-z]{2}(-[A-Z]{2})$"
+              }
+            ],
+            "default": "none"
+          },
+          "ignoreCase": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [ "by" ]
+      }
+    }
+  }
+}
