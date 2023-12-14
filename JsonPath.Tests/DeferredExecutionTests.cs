@@ -27,7 +27,7 @@ public class DeferredExecutionTests
 	[Test]
 	public void GettingFirstMatchIsQuick()
 	{
-		var data = Enumerable.Range(0, 100000).Select(x => (JsonNode?)x).ToJsonArray();
+		var data = Enumerable.Range(0, 1000000).Select(x => (JsonNode?)x).ToJsonArray();
 		var query = JsonPath.Parse("$[? @ > 0 ]");
 
 		var result = query.Evaluate(data);
@@ -47,6 +47,7 @@ public class DeferredExecutionTests
 		Assert.AreEqual(1.0, first.Value!.AsValue().GetNumber());
 		sw.Stop();
 
+		Console.WriteLine($"items in full results: {asList.Count}");
 		Console.WriteLine($"Time for shortcutted query: {shortcutted}ms");
 		Console.WriteLine($"Time for full evaluation:   {sw.ElapsedMilliseconds}ms");
 		Assert.Less(shortcutted, sw.ElapsedMilliseconds);

@@ -20,9 +20,9 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<PackageTags>json-path jsonpath query path json</PackageTags>
 		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-path/</PackageReleaseNotes>
-		<Version>0.6.8</Version>
-		<FileVersion>0.6.8.0</FileVersion>
-		<AssemblyVersion>0.6.0.0</AssemblyVersion>
+		<Version>0.7.0</Version>
+		<FileVersion>0.7.0.0</FileVersion>
+		<AssemblyVersion>0.7.0.0</AssemblyVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
