@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [3.3.0](https://github.com/gregsdennis/json-everything/pull/590) {#release-pointer-3.3.0}
+
+[#585](https://github.com/gregsdennis/json-everything/issues/585) - Added support for `TypeConverter` so that an application config can properly convert to JSON Pointer in config models.  Thanks to [@wazzamatazz](https://github.com/wazzamatazz) for raising the issue and providing the implementation.
+
 # [3.2.2](https://github.com/gregsdennis/json-everything/pull/576) {#release-pointer-3.2.2}
 
 Implemented support for index modifiers for Relative JSON Pointers (e.g. the `+1` in `0+1/foo`), which apparently just weren't supported.
