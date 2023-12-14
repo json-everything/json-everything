@@ -183,6 +183,7 @@
 	{
 		await SavePatch();
 		await SaveInstance();
+		await _outputEditor.SetValue(string.Empty);
 
 		JsonPatch patch;
 		try
@@ -222,6 +223,7 @@
 	{
 		await SavePatch();
 		await SaveInstance();
+		await _outputEditor.SetValue(string.Empty);
 
 		JsonElement source;
 		try
@@ -286,6 +288,7 @@
 			await DataManager.Set("schema-input-language", "json");
 		}
 
+		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 }

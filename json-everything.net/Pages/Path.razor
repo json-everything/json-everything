@@ -175,12 +175,14 @@
 			await LoadSavedInstance();
 		}
 
+		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 
 	private async Task Evaluate()
 	{
 		await SaveInstance();
+		await _outputEditor.SetValue(string.Empty);
 
 		JsonPath path;
 		try

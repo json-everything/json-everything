@@ -368,7 +368,8 @@
 	private async Task Validate()
 	{
 		await _outputEditor.SetLanguageAsync("json");
-	
+		await _outputEditor.SetValue(string.Empty);
+
 		JsonSchema schema;
 		try
 		{
@@ -418,6 +419,7 @@
 	private async Task GenerateData()
 	{
 		await _outputEditor.SetLanguageAsync("json");
+		await _outputEditor.SetValue(string.Empty);
 
 		JsonSchema schema;
 		try
@@ -448,6 +450,7 @@
 	private async Task GenerateCode()
 	{
 		await _outputEditor.SetLanguageAsync("csharp");
+		await _outputEditor.SetValue(string.Empty);
 
 		JsonSchema schema;
 		try
@@ -477,6 +480,7 @@
 	private async Task GenerateSchema()
 	{
 		await _outputEditor.SetLanguageAsync("json");
+		await _outputEditor.SetValue(string.Empty);
 
 		try
 		{
@@ -607,6 +611,7 @@ namespace JsonEverythingTemp
 			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		}
 
+		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 

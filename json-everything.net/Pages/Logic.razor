@@ -90,6 +90,7 @@
 	{
 		await SaveLogic();
 		await SaveInstance();
+		await _outputEditor.SetValue(string.Empty);
 
 		Rule rule;
 		try
@@ -151,6 +152,7 @@
 			await LoadSavedInstance();
 		}
 
+		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 }

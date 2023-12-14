@@ -114,7 +114,8 @@
 	private async Task Evaluate()
 	{
 		await _outputEditor.SetLanguageAsync("yaml");
-	
+		await _outputEditor.SetValue(string.Empty);
+
 		try
 		{
 			var templateText = await _templateEditor.GetValue();
@@ -204,6 +205,7 @@
 			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 		}
 
+		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 }
