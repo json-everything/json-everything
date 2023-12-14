@@ -609,9 +609,9 @@ namespace JsonEverythingTemp
 
 			await _outputEditor.SetLanguageAsync("json");
 			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _outputEditor.SetValue(string.Empty);
 		}
 
-		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 

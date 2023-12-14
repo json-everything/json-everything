@@ -173,9 +173,9 @@
 		{
 			await LoadSavedPath();
 			await LoadSavedInstance();
+			await _outputEditor.SetValue(string.Empty);
 		}
 
-		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 

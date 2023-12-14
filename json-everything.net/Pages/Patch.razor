@@ -286,9 +286,9 @@
 			await _patchEditor.SetLanguageAsync("json");
 			await _patchEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 			await DataManager.Set("schema-input-language", "json");
+			await _outputEditor.SetValue(string.Empty);
 		}
 
-		await _outputEditor.SetValue(string.Empty);
 		await base.OnAfterRenderAsync(firstRender);
 	}
 }
