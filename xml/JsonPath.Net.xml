@@ -401,6 +401,43 @@
             <returns>A string containing a JSON Pointer.</returns>
             <exception cref="T:System.InvalidOperationException">Thrown if the path is not singular.</exception>
         </member>
+        <member name="T:Json.Path.JsonPathTypeConverter">
+            <summary>
+            <see cref="T:System.ComponentModel.TypeConverter"/> for <see cref="T:Json.Path.JsonPath"/>.
+            </summary>
+        </member>
+        <member name="F:Json.Path.JsonPathTypeConverter._standardValues">
+            <summary>
+            The standard values used by this converter.
+            </summary>
+            <remarks>
+              This field is initialized using a so-called poor man's lazy in <see cref="M:Json.Path.JsonPathTypeConverter.GetStandardValues(System.ComponentModel.ITypeDescriptorContext)"/>.
+            </remarks>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.GetStandardValuesSupported(System.ComponentModel.ITypeDescriptorContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.GetStandardValuesExclusive(System.ComponentModel.ITypeDescriptorContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.GetStandardValues(System.ComponentModel.ITypeDescriptorContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Path.JsonPathTypeConverter.IsValid(System.ComponentModel.ITypeDescriptorContext,System.Object)">
+            <inheritdoc/>
+        </member>
         <member name="T:Json.Path.LengthFunction">
             <summary>
             Implements the `length()` function to get:

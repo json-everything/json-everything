@@ -205,6 +205,43 @@
             Indicates only URI-encoded JSON pointers.
             </summary>
         </member>
+        <member name="T:Json.Pointer.JsonPointerTypeConverter">
+            <summary>
+            <see cref="T:System.ComponentModel.TypeConverter"/> for <see cref="T:Json.Pointer.JsonPointer"/>.
+            </summary>
+        </member>
+        <member name="F:Json.Pointer.JsonPointerTypeConverter._standardValues">
+            <summary>
+            The standard values used by this converter.
+            </summary>
+            <remarks>
+              This field is initialized using a so-called poor man's lazy in <see cref="M:Json.Pointer.JsonPointerTypeConverter.GetStandardValues(System.ComponentModel.ITypeDescriptorContext)"/>.
+            </remarks>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.GetStandardValuesSupported(System.ComponentModel.ITypeDescriptorContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.GetStandardValuesExclusive(System.ComponentModel.ITypeDescriptorContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.GetStandardValues(System.ComponentModel.ITypeDescriptorContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Pointer.JsonPointerTypeConverter.IsValid(System.ComponentModel.ITypeDescriptorContext,System.Object)">
+            <inheritdoc/>
+        </member>
         <member name="T:Json.Pointer.PointerCreationOptions">
             <summary>
             Options for creating pointers using <see cref="M:Json.Pointer.JsonPointer.Create``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},Json.Pointer.PointerCreationOptions)"/>.
