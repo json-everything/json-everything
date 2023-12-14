@@ -4,7 +4,7 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
-# [0.7.0](https://github.com/gregsdennis/json-everything/pull/590) {#release-path-0.7.0}
+# [0.7.0](https://github.com/gregsdennis/json-everything/pull/591) {#release-path-0.7.0}
 
 [#583](https://github.com/gregsdennis/json-everything/issues/583) - Updated `NodeList` to implement `IEnumerable<T>` instead of `IReadOnlyList<T>`, which enables follow-on Linq queries, making the entire JSON Path evaluation a deferred execution query.  Thanks to [@qt-kaneko](https://github.com/qt-kaneko) for explaining a use case that led to this change.
 
