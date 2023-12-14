@@ -2,12 +2,12 @@ using System.Text.Json;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
-namespace Json.Schema.UniqueKeys.Tests;
+namespace Json.Schema.ArrayExt.Tests;
 
-public class SpecExampleTests
+public class UniqueKeysSpecExampleTests
 {
 	private readonly JsonSchema _singleKeySchema = new JsonSchemaBuilder()
-		.Schema(MetaSchemas.UniqueKeysId)
+		.Schema(MetaSchemas.ArrayExtId)
 		.Type(SchemaValueType.Array)
 		.Items(new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -17,7 +17,7 @@ public class SpecExampleTests
 		)
 		.UniqueKeys("/foo");
 	private readonly JsonSchema _multiKeySchema = new JsonSchemaBuilder()
-		.Schema(MetaSchemas.UniqueKeysId)
+		.Schema(MetaSchemas.ArrayExtId)
 		.Type(SchemaValueType.Array)
 		.Items(new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -27,14 +27,6 @@ public class SpecExampleTests
 			)
 		)
 		.UniqueKeys("/foo", "/bar");
-
-	[OneTimeSetUp]
-	public void Setup()
-	{
-		Vocabularies.Register();
-
-		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
-	}
 
 	[Test]
 	public void SingleKeySchema_UniqueValuesAtKeyPasses()

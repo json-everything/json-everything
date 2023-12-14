@@ -5,12 +5,12 @@ using Json.Patch;
 using Json.Path;
 using Json.Pointer;
 using Json.Schema;
+using Json.Schema.ArrayExt;
 using Json.Schema.CodeGeneration;
 using Json.Schema.Data;
 using Json.Schema.DataGeneration;
 using Json.Schema.Generation.Generators;
 using Json.Schema.OpenApi;
-using Json.Schema.UniqueKeys;
 using Yaml2JsonNode;
 
 namespace ApiDocsGenerator

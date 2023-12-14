@@ -1,0 +1,42 @@
+{
+  "$id": "https://json-everything.net/schema/meta/vocab/data-2023",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "formedSchema": {
+      "additionalProperties": {
+        "type": "string",
+        "oneOf": [
+          { "format": "json-pointer" },
+          { "format": "relative-json-pointer" },
+          { "format": "json-path" },
+          {
+            "format": "iri-reference",
+            "pattern": "^#"
+          },
+          { "format": "iri" }
+        ]
+      },
+      "propertyNames": {
+        "not": {
+          "anyOf": [
+            { "const": "$id" },
+            { "const": "$schema" },
+            { "const": "$ref" },
+            { "const": "$anchor" },
+            { "const": "$dynamicRef" },
+            { "const": "$dynamicAnchor" },
+            { "const": "$vocabulary" },
+            { "const": "$comment" },
+            { "const": "$defs" }
+          ]
+        }
+      },
+      "default": {}
+    }
+  },
+  "title": "Referenced data meta-schema",
+  "properties": {
+    "data": { "$ref": "#/$defs/formedSchema" },
+    "optionalData": { "$ref": "#/$defs/formedSchema" }
+  }
+}

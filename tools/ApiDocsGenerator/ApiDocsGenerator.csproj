@@ -20,7 +20,7 @@
     <ProjectReference Include="..\..\JsonSchema.Data\JsonSchema.Data.csproj" />
     <ProjectReference Include="..\..\JsonSchema.Generation\JsonSchema.Generation.csproj" />
     <ProjectReference Include="..\..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
-    <ProjectReference Include="..\..\JsonSchema.UniqueKeys\JsonSchema.UniqueKeys.csproj" />
+    <ProjectReference Include="..\..\JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj" />
     <ProjectReference Include="..\..\JsonSchema\JsonSchema.csproj" />
     <ProjectReference Include="..\..\Yaml2JsonNode\Yaml2JsonNode.csproj" />
   </ItemGroup>

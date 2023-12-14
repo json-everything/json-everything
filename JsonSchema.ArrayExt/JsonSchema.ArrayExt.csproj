@@ -3,26 +3,26 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
-		<AssemblyName>JsonSchema.Net.UniqueKeys</AssemblyName>
-		<RootNamespace>Json.Schema.UniqueKeys</RootNamespace>
+		<AssemblyName>JsonSchema.Net.ArrayExt</AssemblyName>
+		<RootNamespace>Json.Schema.ArrayExt</RootNamespace>
 		<Authors>Greg Dennis</Authors>
 		<Description>
-			Extends JsonSchema.Net to provide the "uniqueKeys" keyword.
+			Extends JsonSchema.Net to provide keywords to extend array validation.
 		
-			Learn about this JSON Schema vocabulary at https://docs.json-everything.net/schema/vocabs/uniquekeys/.
+			Learn about this JSON Schema vocabulary at https://docs.json-everything.net/schema/vocabs/array-ext/.
 		</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema evaluation validation schema json</PackageTags>
-		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-unique-keys/</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-array-ext/</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<DocumentationFile>JsonSchema.Net.UniqueKeys.xml</DocumentationFile>
+		<DocumentationFile>JsonSchema.Net.ArrayExt.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>3.1.0</Version>
-		<FileVersion>3.1.0.0</FileVersion>
-		<AssemblyVersion>3.0.0.0</AssemblyVersion>
+		<Version>1.0.0-beta1</Version>
+		<FileVersion>1.0.0.0</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -30,6 +30,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
+		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -41,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-unique-keys.md" Link="release-notes.md" />
+		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-array-ext.md" Link="release-notes.md" />
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
@@ -53,8 +54,6 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
 		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>

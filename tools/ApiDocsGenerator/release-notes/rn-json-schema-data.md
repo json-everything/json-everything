@@ -4,6 +4,24 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "09.05"
 ---
+# [5.0.0-beta1](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.0.0}
+
+Updated to support new Data 2023 vocabulary.
+
+## Breaking changes {#release-pointer-5.0.0-breaks}
+
+- Library has been updated to .Net Standard 2.1 in order to reference _JsonPath.Net_.
+- Metaschema has been split into one for the vocabulary itself (`.Data`) and one for the 2020-12 extension (`.Data_202012`).
+- All URIs updated from `*-2022` to `*-2023`.
+
+## Migration {#release-pointer-5.0.0-migration}
+
+References to `MetaSchemas.Data` will need to be changed to `MetaSchemas.Data_202012`.
+
+## Additions
+
+`data` now supports JSON Path references.  See [vocabulary spec](https://docs.json-everything.net/schema/vocabs/data-2023/) for an example.
+
 # [4.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-4.1.0}
 
 [#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.

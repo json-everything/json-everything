@@ -22,6 +22,9 @@
 "pkg:schema-unique-keys":
   - '### Nuget Package\s*JsonSchema\.Net\.UniqueKeys'
 
+"pkg:schema-array-ext":
+  - '### Nuget Package\s*JsonSchema\.Net\.ArrayExt'
+
 "pkg:logic":
   - '### Nuget Package\s*JsonLogic'
 

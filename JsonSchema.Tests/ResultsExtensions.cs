@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -13,11 +12,7 @@ public static class ResultsExtensions
 {
 	public static void AssertInvalid(this EvaluationResults results, string? expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}));
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
 
 		Assert.False(results.IsValid);
 		AssertEquivalent(results, expected);
@@ -25,11 +20,7 @@ public static class ResultsExtensions
 
 	public static void AssertValid(this EvaluationResults results, string? expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}));
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
 
 		Assert.True(results.IsValid);
 		AssertEquivalent(results, expected);

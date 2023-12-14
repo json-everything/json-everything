@@ -2,7 +2,7 @@
 using System.Linq;
 using Json.Pointer;
 
-namespace Json.Schema.UniqueKeys;
+namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Provides a fluent interface for <see cref="JsonSchemaBuilder"/>.
@@ -54,6 +54,18 @@ public static class JsonSchemaBuilderExtensions
 	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params string[] keys)
 	{
 		builder.Add(new UniqueKeysKeyword(keys.Select(x => JsonPointer.Parse(x))));
+		return builder;
+	}
+
+	/// <summary>
+	/// Adds an `ordering` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="specifiers">The collection of ordering specifiers.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Ordering(this JsonSchemaBuilder builder, params OrderingSpecifier[] specifiers)
+	{
+		builder.Add(new OrderingKeyword(specifiers));
 		return builder;
 	}
 }

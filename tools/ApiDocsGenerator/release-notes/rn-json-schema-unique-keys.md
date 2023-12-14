@@ -2,8 +2,11 @@
 layout: page
 title: JsonSchema.Net.UniqueKeys
 icon: fas fa-tag
-order: "09.06"
+order: "09.14"
 ---
+> This library has been deprecated and replaced by JsonSchema.Net.ArrayExt.
+{: .prompt-warning }
+
 # [3.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-3.1.0}
 
 [#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.

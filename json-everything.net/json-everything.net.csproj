@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
+    <PackageReference Include="JsonSchema.Net.UniqueKeys" Version="3.1.0" />
     <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.5" />
@@ -30,7 +31,7 @@
     <ProjectReference Include="..\JsonSchema.Data\JsonSchema.Data.csproj" />
     <ProjectReference Include="..\JsonSchema.Generation\JsonSchema.Generation.csproj" />
     <ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
-    <ProjectReference Include="..\JsonSchema.UniqueKeys\JsonSchema.UniqueKeys.csproj" />
+    <ProjectReference Include="..\JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj" />
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
     <ProjectReference Include="..\Yaml2JsonNode\Yaml2JsonNode.csproj" />
   </ItemGroup>
@@ -43,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\meta\" />
     <Folder Include="wwwroot\xml\" />
   </ItemGroup>
 
