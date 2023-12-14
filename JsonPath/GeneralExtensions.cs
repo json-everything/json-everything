@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Json.Path.Expressions;
 
@@ -7,17 +6,6 @@ namespace Json.Path;
 
 internal static class GeneralExtensions
 {
-	public static IEnumerable<FunctionType> ToArgumentTypes(this object?[] arguments)
-	{
-		return arguments.Select(x =>
-		{
-			if (x is JsonPathValue) return FunctionType.Value;
-			if (x is LogicalPathValue) return FunctionType.Logical;
-			if (x is NodeListPathValue) return FunctionType.Nodelist;
-			return FunctionType.Unspecified;
-		});
-	}
-
 	public static object?[] ExtractArgumentValues(this object?[] arguments, FunctionType[] parameterTypes)
 	{
 		return arguments
