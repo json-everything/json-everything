@@ -355,11 +355,26 @@ public class ClientTests
 	}
 
 	[Test]
-	public void Generate_Schema_For_SelfContainingType_Should_Work()
+	public void Issue587_SelfContainingTypeWithoutOptimization()
 	{
 		var generator = new JsonSchemaBuilder();
 
 		var schema = generator.FromType(typeof(Category), new() { Optimize = false }).Build();
+
+		Assert.IsNotNull(schema);
+	}
+
+	private class InventoryItem
+	{
+		public Category Category { get; set; }
+	}
+
+	[Test]
+	public void Issue587_TypeContainingSelfContainingTypeWithoutOptimization()
+	{
+		var generator = new JsonSchemaBuilder();
+
+		var schema = generator.FromType(typeof(InventoryItem), new() { Optimize = false }).Build();
 
 		Assert.IsNotNull(schema);
 	}
