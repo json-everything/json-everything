@@ -378,4 +378,24 @@ public class ClientTests
 
 		Assert.IsNotNull(schema);
 	}
+
+	private class LoopA
+	{
+		public LoopB Value { get; set; }
+	}
+
+	private class LoopB
+	{
+		public LoopA Value { get; set; }
+	}
+
+	[Test]
+	public void Issue587_MutuallyContainingTypesWithoutOptimization()
+	{
+		var generator = new JsonSchemaBuilder();
+
+		var schema = generator.FromType(typeof(LoopA), new() { Optimize = false }).Build();
+
+		Assert.IsNotNull(schema);
+	}
 }
