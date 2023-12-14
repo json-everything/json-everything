@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
-      Publish
+      # Publish
       - name: publish schema array ext
         id: publish_schema_array_ext
         uses: alirezanet/publish-nuget@v3.0.0
