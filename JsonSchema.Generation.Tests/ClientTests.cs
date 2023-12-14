@@ -348,4 +348,19 @@ public class ClientTests
 		Assert.AreEqual(1, schema.GetProperties()!["Value"].Keywords!.Count);
 		Assert.AreEqual("type", schema.GetProperties()!["Value"].Keywords!.First().Keyword());
 	}
+
+	private class Category
+	{
+		public List<Category>? Children { get; set; }
+	}
+
+	[Test]
+	public void Generate_Schema_For_SelfContainingType_Should_Work()
+	{
+		var generator = new JsonSchemaBuilder();
+
+		var schema = generator.FromType(typeof(Category), new() { Optimize = false }).Build();
+
+		Assert.IsNotNull(schema);
+	}
 }
