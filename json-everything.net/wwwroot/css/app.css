@@ -236,6 +236,10 @@ a.navbar-brand {
 	unicode-bidi: normal;
 }
 
+.btn:hover{
+  color: lightgray;
+}
+
 /*--- EXTERNAL LINK ICON ---*/
 
 .img-text-icon {
