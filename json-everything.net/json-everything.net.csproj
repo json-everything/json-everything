@@ -43,8 +43,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\xml\" />
-  </ItemGroup>
-
 </Project>
