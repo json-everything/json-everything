@@ -292,9 +292,12 @@
 
 	private void ConfigureForEvaluation()
 	{
-		_schemaEditor.SetLanguage("json");
 		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+		Task.Run(async () =>
+		{
+			await _schemaEditor.DetectLanguage();
+			await DataManager.Set("schema-input-language", "json");
+		});
 			
 		SchemaEditorLabel = "Schema";
 
@@ -305,9 +308,12 @@
 
 	private void ConfigureForCodeGen()
 	{
-		_schemaEditor.SetLanguage("json");
 		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+		Task.Run(async () =>
+		{
+			await _schemaEditor.DetectLanguage();
+			await DataManager.Set("schema-input-language", "json");
+		});
 			
 		SchemaEditorLabel = "Schema";
 
@@ -331,9 +337,12 @@
 
 	private void ConfigureForDataGen()
 	{
-		_schemaEditor.SetLanguage("json");
 		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-		Task.Run(() => DataManager.Set("schema-input-language", "json"));
+		Task.Run(async () =>
+		{
+			await _schemaEditor.DetectLanguage();
+			await DataManager.Set("schema-input-language", "json");
+		});
 			
 		SchemaEditorLabel = "Schema";
 
@@ -425,7 +434,7 @@
 		JsonSchema schema;
 		try
 		{
-			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+			schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
 		}
 		catch (Exception e)
 		{
@@ -456,7 +465,7 @@
 		JsonSchema schema;
 		try
 		{
-			schema = JsonSchema.FromText(await _schemaEditor.GetValue());
+			schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
 		}
 		catch (Exception e)
 		{
