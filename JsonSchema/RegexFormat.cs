@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace Json.Schema;
 
@@ -16,7 +15,7 @@ public class RegexFormat : Format
 	/// </summary>
 	/// <param name="key">The format key.</param>
 	/// <param name="regex">The regular expression.</param>
-	public RegexFormat(string key, [RegexPattern] string regex)
+	public RegexFormat(string key, string regex)
 		: base(key)
 	{
 		_regex = new Regex(regex, RegexOptions.ECMAScript | RegexOptions.Compiled);

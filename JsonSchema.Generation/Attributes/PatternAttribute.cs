@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -21,7 +20,7 @@ public class PatternAttribute : ConditionalAttribute, IAttributeHandler
 	/// Creates a new <see cref="PatternAttribute"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public PatternAttribute([RegexPattern] string value)
+	public PatternAttribute(string value)
 	{
 		Value = value;
 	}
