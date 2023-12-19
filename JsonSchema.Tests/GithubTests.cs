@@ -936,7 +936,7 @@ public class GithubTests
 		options.SchemaRegistry.Register(baseDocument);
 
 		var schemaLocation = JsonPointer.Parse("/components/parameters/user/content/application~1json/schema");
-		var schema = baseDocument.FindSubschema(schemaLocation, options);
+		var schema = baseDocument.FindSubschema(schemaLocation, options)!;
 
 		var instance = new JsonObject
 		{
@@ -947,5 +947,9 @@ public class GithubTests
 		var result = schema.Evaluate(instance, options);
 
 		result.AssertInvalid();
+
+		var targetSchemaLocation = result.Details[0].Details[0].SchemaLocation;
+
+		Assert.AreEqual("http://localhost/#/components/schemas/user/properties/last-name", targetSchemaLocation.OriginalString);
 	}
 }
