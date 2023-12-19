@@ -177,6 +177,7 @@ public static class JsonNodeExtensions
 			return null;
 		}
 		if (value.TryGetValue(out byte b)) return b;
+		if (value.TryGetValue(out sbyte sb)) return sb;
 		if (value.TryGetValue(out short s)) return s;
 		if (value.TryGetValue(out ushort us)) return us;
 		if (value.TryGetValue(out int i)) return i;

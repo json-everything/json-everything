@@ -4,6 +4,12 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [1.9.3](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.9.3}
+
+[#598](https://github.com/gregsdennis/json-everything/pull/598) - `sbyte` should be recognized as an integer type for `.IsInteger()` extension on `Type`.  Thanks to [@grbell-ms](https://github.com/grbell-ms) for submitting this fix.
+
+Also added `sbyte` support for `.GetInteger()` extension on `JsonNode`.
+
 # [1.9.2](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.9.2}
 
 Fixes an issue with number equality that specifically affects `decimal`s stored in `JsonNode`s.
