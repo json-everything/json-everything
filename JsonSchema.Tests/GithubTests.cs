@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
+using Json.Pointer;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -919,5 +921,31 @@ public class GithubTests
 		TestContext.Out.WriteLine(new string('-', (int)expectedBytePositionInLine - 1) + '^');
 		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
 		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
-  }
+	}
+
+	[Test]
+	public void Issue600_BaseDocumentOutputSchemaLocation()
+	{
+		var file = GetFile(600, "schema");
+		var text = File.ReadAllText(file);
+
+		var baseDocumentJson = JsonNode.Parse(text)!;
+		var baseDocument = new JsonNodeBaseDocument(baseDocumentJson, new Uri("http://localhost/v1"));
+
+		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
+		options.SchemaRegistry.Register(baseDocument);
+
+		var schemaLocation = JsonPointer.Parse("/components/parameters/user/content/application~1json/schema");
+		var schema = baseDocument.FindSubschema(schemaLocation, options);
+
+		var instance = new JsonObject
+		{
+			["foo-name"] = "foo",
+			["last-name"] = "bar"
+		};
+
+		var result = schema.Evaluate(instance, options);
+
+		result.AssertInvalid();
+	}
 }
