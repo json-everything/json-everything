@@ -950,6 +950,6 @@ public class GithubTests
 
 		var targetSchemaLocation = result.Details[0].Details[0].SchemaLocation;
 
-		Assert.AreEqual("http://localhost/#/components/schemas/user/properties/last-name", targetSchemaLocation.OriginalString);
+		Assert.AreEqual("http://localhost/v1#/components/schemas/user/properties/last-name", targetSchemaLocation.OriginalString);
 	}
 }

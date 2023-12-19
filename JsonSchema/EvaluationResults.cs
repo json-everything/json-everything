@@ -137,6 +137,8 @@ public class EvaluationResults
 				localEvaluationPathStart = i + 1;
 		}
 
+		if (_reference == null && _currentUri == Parent?._currentUri)
+			_reference = Parent._reference;
 		var fragment = _reference ?? JsonPointer.Empty;
 		fragment = fragment.Combine(EvaluationPath.Segments.Skip(localEvaluationPathStart).ToArray());
 
