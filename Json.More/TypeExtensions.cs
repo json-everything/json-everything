@@ -15,6 +15,7 @@ public static class TypeExtensions
 	public static bool IsInteger(this Type type)
 	{
 		return type == typeof(byte) ||
+			   type == typeof(sbyte) ||
 			   type == typeof(short) ||
 			   type == typeof(ushort) ||
 			   type == typeof(int) ||
