@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [5.4.3](https://github.com/gregsdennis/json-everything/pull/601) {#release-pointer-5.4.3}
+
+[#600](https://github.com/gregsdennis/json-everything/issues/600) - Reported schema location not correct for JSON Schemas embedded within non-schema JSON documents (e.g. OpenAPI).  Thanks to [@Fresa](https://github.com/Fresa) for reporting.
+
 # [5.4.2](https://github.com/gregsdennis/json-everything/pull/575) {#release-pointer-5.4.2}
 
 [#574](https://github.com/gregsdennis/json-everything/issues/574) - Bundling multi-schema recursion throws an exception.  Thanks to [@Tommyknocker1982](https://github.com/Tommyknocker1982) for reporting.
