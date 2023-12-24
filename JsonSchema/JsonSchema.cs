@@ -20,7 +20,9 @@ namespace Json.Schema;
 public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
-	
+
+	private static readonly HashSet<SpecVersion> _specVersions = new HashSet<SpecVersion>(Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>());
+
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
@@ -405,7 +407,7 @@ public class JsonSchema : IBaseDocument
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
-		if (!Enum.IsDefined(typeof(SpecVersion), desiredDraft)) return desiredDraft;
+		if (!IsDefinedSpecVersion(desiredDraft)) return desiredDraft;
 
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{
@@ -509,6 +511,8 @@ public class JsonSchema : IBaseDocument
 			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
 		}
 	}
+
+	private static bool IsDefinedSpecVersion(SpecVersion specVersion) => _specVersions.Contains(specVersion);
 
 	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
 	{
