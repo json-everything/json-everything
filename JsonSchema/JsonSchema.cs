@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,6 +24,7 @@ public class JsonSchema : IBaseDocument
 	
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
+	private readonly ConcurrentDictionary<EvaluationOptions?, OptionsDerivedValues> _optionsDerivedValuesCache = new();
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -222,27 +224,22 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
 	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
-		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
+#pragma warning disable CS8622 // Factory does not need to handle null since GetOrAdd will throw if key is null
+		var optionsDerivedValues = _optionsDerivedValuesCache.GetOrAdd(options ?? EvaluationOptions.Default, OptionsDerivedValuesFactory);
+#pragma warning restore CS8622
 
-		// BaseUri may change if $id is present
-		// TODO: remove options.EvaluatingAs
-		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
+		var cachedOptions = optionsDerivedValues.EvaluationOptions;
+		var cachedConstraint = optionsDerivedValues.SchemaConstraint;
+		var cachedContext = optionsDerivedValues.EvaluationContext;
+		
+		var evaluation = cachedConstraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, cachedOptions);
+		evaluation.Evaluate(cachedContext);
 
-
-		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
-		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
-		if (!BoolValue.HasValue)
-			PopulateConstraint(constraint, context);
-
-		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
-		evaluation.Evaluate(context);
-
-		if (options.AddAnnotationForUnknownKeywords && constraint.UnknownKeywords != null)
-			evaluation.Results.SetAnnotation(_unknownKeywordsAnnotationKey, constraint.UnknownKeywords);
+		if (cachedOptions.AddAnnotationForUnknownKeywords && cachedConstraint.UnknownKeywords != null)
+			evaluation.Results.SetAnnotation(_unknownKeywordsAnnotationKey, cachedConstraint.UnknownKeywords);
 
 		var results = evaluation.Results;
-		switch (options.OutputFormat)
+		switch (cachedOptions.OutputFormat)
 		{
 			case OutputFormat.Flag:
 				results.ToFlag();
@@ -666,6 +663,37 @@ public class JsonSchema : IBaseDocument
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 		var idKeyword = Keywords!.OfType<IIdKeyword>().SingleOrDefault();
 		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
+	}
+
+	private OptionsDerivedValues OptionsDerivedValuesFactory(EvaluationOptions options)
+	{
+		options = EvaluationOptions.From(options);
+		// BaseUri may change if $id is present
+		// TODO: remove options.EvaluatingAs
+		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
+		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
+
+
+		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
+		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
+		if (!BoolValue.HasValue)
+			PopulateConstraint(constraint, context);
+
+		return new OptionsDerivedValues(options, constraint, context);
+	}
+
+	private sealed class OptionsDerivedValues
+	{
+		public EvaluationOptions EvaluationOptions { get; }
+		public SchemaConstraint SchemaConstraint { get; }
+		public EvaluationContext EvaluationContext { get; }
+
+		public OptionsDerivedValues(EvaluationOptions evaluationOptions, SchemaConstraint schemaConstraint, EvaluationContext evaluationContext)
+		{
+			EvaluationOptions = evaluationOptions;
+			SchemaConstraint = schemaConstraint;
+			EvaluationContext = evaluationContext;
+		}
 	}
 }
 
