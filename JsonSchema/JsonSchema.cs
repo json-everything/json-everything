@@ -407,7 +407,7 @@ public class JsonSchema : IBaseDocument
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
-		if (!IsDefinedSpecVersion(desiredDraft)) return desiredDraft;
+		if (!_specVersions.Contains(desiredDraft)) return desiredDraft;
 
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{
@@ -511,8 +511,6 @@ public class JsonSchema : IBaseDocument
 			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
 		}
 	}
-
-	private static bool IsDefinedSpecVersion(SpecVersion specVersion) => _specVersions.Contains(specVersion);
 
 	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
 	{
