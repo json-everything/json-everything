@@ -20,7 +20,9 @@ namespace Json.Schema;
 public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
-	
+
+	private static readonly HashSet<SpecVersion> _definedSpecVersions = new HashSet<SpecVersion>(Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>());
+
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
 
@@ -405,7 +407,7 @@ public class JsonSchema : IBaseDocument
 	{
 		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
 		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
-		if (!Enum.IsDefined(typeof(SpecVersion), desiredDraft)) return desiredDraft;
+		if (!_definedSpecVersions.Contains(desiredDraft)) return desiredDraft;
 
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{

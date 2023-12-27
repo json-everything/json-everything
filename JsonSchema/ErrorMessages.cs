@@ -20,6 +20,7 @@ namespace Json.Schema;
 public static partial class ErrorMessages
 {
 	private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
+	private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
 	/// <summary>
 	/// Gets or sets a culture to use for error messages.  Default is <see cref="CultureInfo.CurrentCulture"/>.
@@ -52,7 +53,7 @@ public static partial class ErrorMessages
 		for (var i = 0; i < parameters.Length; i++)
 		{
 			var parameter = parameters[i];
-			values[i] = JsonSerializer.Serialize(parameter.value, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+			values[i] = JsonSerializer.Serialize(parameter.value, _jsonSerializerOptions);
 			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}
 
