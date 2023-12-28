@@ -74,12 +74,14 @@ internal static class FunctionExpressionParser
 
 			if (parameterTypeList[parameterIndex] == FunctionType.Value)
 			{
-				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options))
+				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options) ||
+				    expr is PathExpressionNode { Path.IsSingular: false })
 				{
 					arguments = null;
 					function = null;
 					return false;
 				}
+
 				arguments.Add(expr);
 			}
 			else if (parameterTypeList[parameterIndex] == FunctionType.Logical)
