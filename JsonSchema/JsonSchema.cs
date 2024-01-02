@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -24,7 +23,8 @@ public class JsonSchema : IBaseDocument
 	
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
-	private readonly ConcurrentDictionary<EvaluationOptions?, OptionsDerivedValues> _optionsDerivedValuesCache = new();
+	
+	private (EvaluationOptions, OptionsDerivedValues)? _optionsDerivedValuesCache;
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -224,10 +224,14 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
 	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
-#pragma warning disable CS8622 // Factory does not need to handle null since GetOrAdd will throw if key is null
-		var optionsDerivedValues = _optionsDerivedValuesCache.GetOrAdd(options ?? EvaluationOptions.Default, OptionsDerivedValuesFactory);
-#pragma warning restore CS8622
+		var actualOptions = options ?? EvaluationOptions.Default;
+		
+		if (!_optionsDerivedValuesCache.HasValue || _optionsDerivedValuesCache.Value.Item1 != actualOptions)
+		{
+			_optionsDerivedValuesCache = (actualOptions, GetOptionsDerivedValues(actualOptions));
+		}
 
+		var optionsDerivedValues = _optionsDerivedValuesCache!.Value.Item2;
 		var cachedOptions = optionsDerivedValues.EvaluationOptions;
 		var cachedConstraint = optionsDerivedValues.SchemaConstraint;
 		var cachedContext = optionsDerivedValues.EvaluationContext;
@@ -665,7 +669,7 @@ public class JsonSchema : IBaseDocument
 		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
 	}
 
-	private OptionsDerivedValues OptionsDerivedValuesFactory(EvaluationOptions options)
+	private OptionsDerivedValues GetOptionsDerivedValues(EvaluationOptions options)
 	{
 		options = EvaluationOptions.From(options);
 		// BaseUri may change if $id is present
