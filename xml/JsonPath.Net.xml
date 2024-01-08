@@ -193,6 +193,11 @@
             Base class for defining an expression function which returns `ValueType`.
             </summary>
         </member>
+        <member name="P:Json.Path.ValueFunctionDefinition.Nothing">
+            <summary>
+            Represents the absence of a JSON value and is distinct from any JSON value, including null.
+            </summary>
+        </member>
         <member name="P:Json.Path.ValueFunctionDefinition.Name">
             <summary>
             Gets the function name.
