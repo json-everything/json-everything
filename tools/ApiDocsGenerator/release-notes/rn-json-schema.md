@@ -4,9 +4,11 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [5.4.4](https://github.com/gregsdennis/json-everything/pull/606) {#release-pointer-5.4.4}
+# [5.5.0](https://github.com/gregsdennis/json-everything/pull/606) {#release-pointer-5.5.0}
 
 [#604](https://github.com/gregsdennis/json-everything/pull/604) - Performance improvements.  Thanks to [@danielstarck](https://github.com/danielstarck) for contributing these.
+
+[#605](https://github.com/gregsdennis/json-everything/pull/605) - Support external types for validating JSON converter.
 
 # [5.4.3](https://github.com/gregsdennis/json-everything/pull/601) {#release-pointer-5.4.3}
 
