@@ -28,6 +28,13 @@ internal interface IReflectiveFunctionDefinition
 /// </summary>
 public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
+	private class NothingValue{}
+
+	/// <summary>
+	/// Represents the absence of a JSON value and is distinct from any JSON value, including null.
+	/// </summary>
+	public static JsonValue Nothing { get; } = JsonValue.Create(new NothingValue())!;
+
 	/// <summary>
 	/// Gets the function name.
 	/// </summary>

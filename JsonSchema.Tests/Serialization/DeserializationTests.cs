@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Json.Schema.Serialization;
@@ -41,12 +42,27 @@ public class DeserializationTests
 			)
 			.Required(nameof(Foo.Value));
 
+	public static readonly JsonSchema PointSchema =
+		new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("X", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Y", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+			)
+			.AdditionalProperties(false);
+
 	private static readonly JsonSerializerOptions _options = new()
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 		Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
 	};
+
+	[SetUp]
+	public void Setup()
+	{
+		ValidatingJsonConverter.MapType<Point>(PointSchema);
+	}
 
 	/// <summary>
 	/// Demonstrates that even without a schema, the incorrect JSON data type is
@@ -291,6 +307,68 @@ public class DeserializationTests
 			throw;
 		}
 	}
+
+	[Test]
+	public void InaccessibleType_Valid()
+	{
+		try
+		{
+			var jsonText = @"{
+  ""X"": 4,
+  ""Y"": 5
+}";
+
+			var options = new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+				Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
+			};
+
+			var model = JsonSerializer.Deserialize<Point>(jsonText, options);
+
+			Console.WriteLine(JsonSerializer.Serialize(model, options));
+		}
+		catch (Exception e)
+		{
+			HandleException(e);
+			throw;
+		}
+	}
+
+	[Test]
+	public void InaccessibleType_Invalid()
+	{
+		Assert.Throws<JsonException>(() =>
+			{
+				try
+				{
+					var jsonText = @"{
+  ""X"": ""string"",
+  ""Y"": 5
+}";
+
+					var options = new JsonSerializerOptions
+					{
+						WriteIndented = true,
+						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+						Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
+					};
+
+					var model = JsonSerializer.Deserialize<Point>(jsonText, options);
+
+					Console.WriteLine(JsonSerializer.Serialize(model, options));
+				}
+				catch (Exception e)
+				{
+					HandleException(e);
+					Assert.AreEqual("JSON does not meet schema requirements", e.Message);
+					throw;
+				}
+			}
+		);
+	}
+
 	/// <summary>
 	/// The validation result is passed in the <see cref="Exception.Data"/>
 	/// property under the `"validation"` key.

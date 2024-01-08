@@ -15,6 +15,7 @@ namespace Json.Schema.Serialization;
 public class ValidatingJsonConverter : JsonConverterFactory
 {
 	private static readonly ConcurrentDictionary<Type, JsonConverter?> _cache = new();
+	private static readonly ValidatingJsonConverter _instance = new();
 
 	/// <summary>
 	/// Specifies the output format.
@@ -28,6 +29,11 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// a meta-schema declaring draft 2020-12.
 	/// </summary>
 	public bool? RequireFormatValidation { get; set; }
+
+	public static void MapType<T>(JsonSchema schema)
+	{
+		_instance.CreateConverter(typeof(T), schema);
+	}
 
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
 	/// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
@@ -57,7 +63,13 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		if (_cache.TryGetValue(typeToConvert, out var converter)) return converter;
 
 		var schemaAttribute = (JsonSchemaAttribute)typeToConvert.GetCustomAttributes(typeof(JsonSchemaAttribute)).Single();
+		var schema = schemaAttribute.Schema;
 
+		return CreateConverter(typeToConvert, schema);
+	}
+
+	private JsonConverter? CreateConverter(Type typeToConvert, JsonSchema schema)
+	{
 		var converterType = typeof(ValidatingJsonConverter<>).MakeGenericType(typeToConvert);
 
 		// ReSharper disable once ConvertToLocalFunction
@@ -71,7 +83,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 			}
 			return newOptions;
 		};
-		converter = (JsonConverter)Activator.CreateInstance(converterType, schemaAttribute.Schema, optionsFactory);
+		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory);
 
 		var validatingConverter = (IValidatingJsonConverter)converter;
 		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
