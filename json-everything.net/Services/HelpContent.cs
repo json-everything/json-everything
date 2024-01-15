@@ -14,12 +14,11 @@ Ensure the options are as desired and click ""Run"".
 All of the `json-everything` vocabulary extensions are also available.  Use these URIs for your
 `$schema` value to enable them:
 
-- [Data](https://docs.json-everything.net/schema/vocabs/data-2022/) - `https://json-everything.net/meta/data-2022`
+- [Data](https://docs.json-everything.net/schema/vocabs/data-2023/) - `https://json-everything.net/meta/data-2023`
 - [OpenAPI v3.1](https://docs.json-everything.net/schema/vocabs/openapi/) - `https://spec.openapis.org/oas/3.1/meta/base`
 - [ArrayExt](https://docs.json-everything.net/schema/vocabs/array-ext/) - `https://json-everything.net/meta/vocab/array-ext`
-- [UniqueKeys](https://docs.json-everything.net/schema/vocabs/uniquekeys/)\* - `https://gregsdennis.github.io/json-everything/meta/unique-keys`
 
-\* _The UniqueKeys vocabulary is being replaced by the ArrayExt._";
+\* _The UniqueKeys vocabulary has been replaced by ArrayExt.  It and Data 2022 are still supported._";
 
 	public const string SchemaGenerateSchema = @"
 ## Generating a Schema
