@@ -30,6 +30,11 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </summary>
 	public bool? RequireFormatValidation { get; set; }
 
+	/// <summary>
+	/// Adds an explicit type/schema mapping for types external types which cannot be decorated with <see cref="JsonSchemaAttribute"/>.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="schema"></param>
 	public static void MapType<T>(JsonSchema schema)
 	{
 		_instance.CreateConverter(typeof(T), schema);
