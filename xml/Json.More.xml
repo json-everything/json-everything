@@ -32,6 +32,23 @@
             <param name="value">The value to convert. The value of <see cref="P:System.Text.Json.Serialization.JsonConverter`1.HandleNull" /> determines if the converter handles <see langword="null" /> values.</param>
             <param name="options">The options to use when writing the value.</param>
         </member>
+        <member name="T:Json.More.JsonArrayTupleConverter">
+            <summary>
+            Provides JSON serialization for the <see cref="T:System.ValueTuple`1"/> family of types.
+            </summary>
+        </member>
+        <member name="M:Json.More.JsonArrayTupleConverter.CanConvert(System.Type)">
+            <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
+            <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
+            <returns>
+            <see langword="true" /> if the instance can convert the specified object type; otherwise, <see langword="false" />.</returns>
+        </member>
+        <member name="M:Json.More.JsonArrayTupleConverter.CreateConverter(System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>Creates a converter for a specified type.</summary>
+            <param name="typeToConvert">The type handled by the converter.</param>
+            <param name="options">The serialization options to use.</param>
+            <returns>A converter which is compatible with <paramref name="typeToConvert" />.</returns>
+        </member>
         <member name="T:Json.More.JsonDocumentEqualityComparer">
              <summary>
              Calculates equality between two <see cref="T:System.Text.Json.JsonDocument"/>s.
