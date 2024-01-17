@@ -4,6 +4,10 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [1.10.0](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.10.0}
+
+[dotnet/runtime #70352](https://github.com/dotnet/runtime/issues/70352) - Adds `JsonArrayTupleConverter`.
+
 # [1.9.3](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.9.3}
 
 [#598](https://github.com/gregsdennis/json-everything/pull/598) - `sbyte` should be recognized as an integer type for `.IsInteger()` extension on `Type`.  Thanks to [@grbell-ms](https://github.com/grbell-ms) for submitting this fix.
