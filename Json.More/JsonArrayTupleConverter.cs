@@ -21,7 +21,7 @@ public class JsonArrayTupleConverter : JsonConverterFactory
 	/// <summary>Creates a converter for a specified type.</summary>
 	/// <param name="typeToConvert">The type handled by the converter.</param>
 	/// <param name="options">The serialization options to use.</param>
-	/// <returns>A converter for which <typeparamref name="T" /> is compatible with <paramref name="typeToConvert" />.</returns>
+	/// <returns>A converter which is compatible with <paramref name="typeToConvert" />.</returns>
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		var typeParams = typeToConvert.GetGenericArguments();
@@ -52,7 +52,7 @@ internal class JsonArrayTupleConverter<T> : JsonConverter<ValueTuple<T>>
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<ValueTuple<T>>(ref reader)!;
+		var value = options.Read<ValueTuple<T>>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
@@ -82,7 +82,7 @@ internal class JsonArrayTupleConverter<T1, T2> : JsonConverter<(T1, T2)>
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<(T1, T2)>(ref reader)!;
+		var value = options.Read<(T1, T2)>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
@@ -112,7 +112,7 @@ internal class JsonArrayTupleConverter<T1, T2, T3> : JsonConverter<(T1, T2, T3)>
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<(T1, T2, T3)>(ref reader)!;
+		var value = options.Read<(T1, T2, T3)>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
@@ -142,7 +142,7 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4> : JsonConverter<(T1, T2, 
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<(T1, T2, T3, T4)>(ref reader)!;
+		var value = options.Read<(T1, T2, T3, T4)>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
@@ -172,7 +172,7 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5> : JsonConverter<(T1, 
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<(T1, T2, T3, T4, T5)>(ref reader)!;
+		var value = options.Read<(T1, T2, T3, T4, T5)>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
@@ -202,7 +202,7 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6> : JsonConverter<(
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<(T1, T2, T3, T4, T5, T6)>(ref reader)!;
+		var value = options.Read<(T1, T2, T3, T4, T5, T6)>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
@@ -232,7 +232,7 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6, T7> : JsonConvert
 
 		options = JsonCollectionTupleConverter.ManageConverters(options);
 
-		var value = options.Read<(T1, T2, T3, T4, T5, T6, T7)>(ref reader)!;
+		var value = options.Read<(T1, T2, T3, T4, T5, T6, T7)>(ref reader);
 		reader.Read();
 
 		if (reader.TokenType != JsonTokenType.EndArray)
