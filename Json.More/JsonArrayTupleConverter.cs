@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -86,7 +87,8 @@ internal class JsonArrayTupleConverter<T1, T2> : JsonConverter<(T1, T2)>
 	public override void Write(Utf8JsonWriter writer, (T1, T2) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
 		writer.WriteEndArray();
 	}
 }
@@ -106,10 +108,10 @@ internal class JsonArrayTupleConverter<T1, T2, T3> : JsonConverter<(T1, T2, T3)>
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
 		writer.WriteEndArray();
 	}
 }
@@ -129,10 +131,11 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4> : JsonConverter<(T1, T2, 
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
 		writer.WriteEndArray();
 	}
 }
@@ -152,10 +155,12 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5> : JsonConverter<(T1, 
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4, T5)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
 		writer.WriteEndArray();
 	}
 }
@@ -175,10 +180,13 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6> : JsonConverter<(
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5, T6) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4, T5, T6)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
+		JsonSerializer.Serialize(writer, value.Item6, typeof(T6), options);
 		writer.WriteEndArray();
 	}
 }
@@ -198,10 +206,14 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6, T7> : JsonConvert
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5, T6, T7) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4, T5, T6, T7)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
+		JsonSerializer.Serialize(writer, value.Item6, typeof(T6), options);
+		JsonSerializer.Serialize(writer, value.Item7, typeof(T7), options);
 		writer.WriteEndArray();
 	}
 }
@@ -222,141 +234,8 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6, T7, TRest> : Json
 
 	public override void Write(Utf8JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-		
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>), options);
+		ValueWriter.WriteValues(writer, ValueWriter.Unwrap8(value), options);
 		writer.WriteEndArray();
-	}
-}
-
-internal static class ValueReader
-{
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static ValueTuple<T> ReadValues1<T>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T>(ref enumerator, options);
-
-		return new ValueTuple<T>(value1);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static (T1, T2) ReadValues2<T1, T2>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-
-		return (value1, value2);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static (T1, T2, T3) ReadValues3<T1, T2, T3>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-		var value3 = JsonElementExtensions.ReadValue<T3>(ref enumerator, options);
-
-		return (value1, value2, value3);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static (T1, T2, T3, T4) ReadValues4<T1, T2, T3, T4>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-		var value3 = JsonElementExtensions.ReadValue<T3>(ref enumerator, options);
-		var value4 = JsonElementExtensions.ReadValue<T4>(ref enumerator, options);
-
-		return (value1, value2, value3, value4);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static (T1, T2, T3, T4, T5) ReadValues5<T1, T2, T3, T4, T5>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-		var value3 = JsonElementExtensions.ReadValue<T3>(ref enumerator, options);
-		var value4 = JsonElementExtensions.ReadValue<T4>(ref enumerator, options);
-		var value5 = JsonElementExtensions.ReadValue<T5>(ref enumerator, options);
-
-		return (value1, value2, value3, value4, value5);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static (T1, T2, T3, T4, T5, T6) ReadValues6<T1, T2, T3, T4, T5, T6>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-		var value3 = JsonElementExtensions.ReadValue<T3>(ref enumerator, options);
-		var value4 = JsonElementExtensions.ReadValue<T4>(ref enumerator, options);
-		var value5 = JsonElementExtensions.ReadValue<T5>(ref enumerator, options);
-		var value6 = JsonElementExtensions.ReadValue<T6>(ref enumerator, options);
-
-		return (value1, value2, value3, value4, value5, value6);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static (T1, T2, T3, T4, T5, T6, T7) ReadValues7<T1, T2, T3, T4, T5, T6, T7>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-		var value3 = JsonElementExtensions.ReadValue<T3>(ref enumerator, options);
-		var value4 = JsonElementExtensions.ReadValue<T4>(ref enumerator, options);
-		var value5 = JsonElementExtensions.ReadValue<T5>(ref enumerator, options);
-		var value6 = JsonElementExtensions.ReadValue<T6>(ref enumerator, options);
-		var value7 = JsonElementExtensions.ReadValue<T7>(ref enumerator, options);
-
-		return (value1, value2, value3, value4, value5, value6, value7);
-	}
-
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> ReadValues8<T1, T2, T3, T4, T5, T6, T7, TRest>(JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
-		where TRest : struct
-// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-	{
-		var value1 = JsonElementExtensions.ReadValue<T1>(ref enumerator, options);
-		var value2 = JsonElementExtensions.ReadValue<T2>(ref enumerator, options);
-		var value3 = JsonElementExtensions.ReadValue<T3>(ref enumerator, options);
-		var value4 = JsonElementExtensions.ReadValue<T4>(ref enumerator, options);
-		var value5 = JsonElementExtensions.ReadValue<T5>(ref enumerator, options);
-		var value6 = JsonElementExtensions.ReadValue<T6>(ref enumerator, options);
-		var value7 = JsonElementExtensions.ReadValue<T7>(ref enumerator, options);
-
-		var restParams = typeof(TRest).GetGenericArguments();
-		var method = GetReadValuesMethod($"ReadValues{restParams.Length}", restParams);
-
-		var rest = (TRest) method.Invoke(null, new object[] { enumerator, options });
-
-		return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value1, value2, value3, value4, value5, value6, value7, rest);
-	}
-
-	private static MethodInfo GetReadValuesMethod(string methodName, Type[] types)
-	{
-		var type = typeof(ValueReader);
-		var generic = type.GetMethod(methodName);
-		return generic!.MakeGenericMethod(types);
 	}
 }
