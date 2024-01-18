@@ -109,4 +109,15 @@ public class JsonArrayTupleConverterDeserializationTests
 
 		Assert.AreEqual(expected, actual);
 	}
+
+	[Test]
+	public void TupleInObject()
+	{
+		var expected = (false, new ObjectWithTuple { Tuple = (42, "foo") });
+		var json = "[false,{\"Tuple\":[42,\"foo\"]}]";
+
+		var actual = JsonSerializer.Deserialize<(bool, ObjectWithTuple)>(json, _options);
+
+		Assert.AreEqual(expected, actual);
+	}
 }
