@@ -7,15 +7,11 @@ namespace Json.More;
 
 internal static class ValueWriter
 {
-#pragma warning disable IDE1006
-	// ReSharper disable InconsistentNaming
-	public static void WriteValues(Utf8JsonWriter writer, IEnumerable<(object?, Type)> values, JsonSerializerOptions options)
-		// ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
+	public static void WriteValues(Utf8JsonWriter writer, IEnumerable<(object? value, Type type)> values, JsonSerializerOptions options)
 	{
 		foreach (var item in values)
 		{
-			JsonSerializer.Serialize(writer, item.Item1, item.Item2, options);
+			JsonSerializer.Serialize(writer, item.value, item.type, options);
 		}
 	}
 
