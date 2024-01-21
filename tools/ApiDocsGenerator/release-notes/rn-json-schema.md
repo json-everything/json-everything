@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [5.5.1](https://github.com/gregsdennis/json-everything/pull/616) {#release-pointer-5.5.1}
+
+Fix typo in `minProperties` error message.  Thanks to [@ArmaanMcleod](https://github.com/ArmaanMcleod) for submitting this fix.
+
 # [5.5.0](https://github.com/gregsdennis/json-everything/pull/606) {#release-pointer-5.5.0}
 
 [#604](https://github.com/gregsdennis/json-everything/pull/604) - Performance improvements.  Thanks to [@danielstarck](https://github.com/danielstarck) for contributing these.
