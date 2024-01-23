@@ -4,7 +4,11 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
-# [1.10.0](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.10.0}
+# [1.10.1](https://github.com/gregsdennis/json-everything/pull/615) {#release-more-1.10.1}
+
+Continuation of v1.10.0: performance improvements for `JsonArrayTupleConverter`.
+
+# [1.10.0](https://github.com/gregsdennis/json-everything/pull/613) {#release-more-1.10.0}
 
 [dotnet/runtime #70352](https://github.com/dotnet/runtime/issues/70352) - Adds `JsonArrayTupleConverter`.
 

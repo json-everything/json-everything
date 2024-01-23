@@ -274,4 +274,10 @@ public static class JsonElementExtensions
 		JsonValueKind.Object => JsonObject.Create(element),
 		_ => JsonValue.Create(element)
 	};
+
+	internal static T ReadValue<T>(ref JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
+	{
+		enumerator.MoveNext();
+		return enumerator.Current.Deserialize<T>(options) ?? throw new JsonException("Expected value");
+	}
 }

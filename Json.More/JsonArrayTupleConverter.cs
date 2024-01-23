@@ -48,26 +48,23 @@ internal class JsonArrayTupleConverter<T> : JsonConverter<ValueTuple<T>>
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<ValueTuple<T>>(ref reader);
-		reader.Read();
+		enumerator.MoveNext();
+		var value = enumerator.Current.Deserialize<T>()!;
 
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
+		if (enumerator.MoveNext())
+			throw new JsonException("Expected an array with 1 value but received more.");
 
-		return value;
+		return new ValueTuple<T>(value);
 	}
 
 	public override void Write(Utf8JsonWriter writer, ValueTuple<T> value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof(ValueTuple<T>), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T), options);
 		writer.WriteEndArray();
 	}
 }
@@ -78,26 +75,18 @@ internal class JsonArrayTupleConverter<T1, T2> : JsonConverter<(T1, T2)>
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<(T1, T2)>(ref reader);
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues2<T1, T2>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
 		writer.WriteEndArray();
 	}
 }
@@ -108,26 +97,19 @@ internal class JsonArrayTupleConverter<T1, T2, T3> : JsonConverter<(T1, T2, T3)>
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
+	
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
-		var value = options.Read<(T1, T2, T3)>(ref reader);
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues3<T1, T2, T3>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
 		writer.WriteEndArray();
 	}
 }
@@ -138,26 +120,20 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4> : JsonConverter<(T1, T2, 
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<(T1, T2, T3, T4)>(ref reader);
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues4<T1, T2, T3, T4>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
 		writer.WriteEndArray();
 	}
 }
@@ -168,26 +144,21 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5> : JsonConverter<(T1, 
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<(T1, T2, T3, T4, T5)>(ref reader);
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues5<T1, T2, T3, T4, T5>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4, T5)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
 		writer.WriteEndArray();
 	}
 }
@@ -198,26 +169,22 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6> : JsonConverter<(
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<(T1, T2, T3, T4, T5, T6)>(ref reader);
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues6<T1, T2, T3, T4, T5, T6>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5, T6) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4, T5, T6)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
+		JsonSerializer.Serialize(writer, value.Item6, typeof(T6), options);
 		writer.WriteEndArray();
 	}
 }
@@ -228,26 +195,23 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6, T7> : JsonConvert
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<(T1, T2, T3, T4, T5, T6, T7)>(ref reader);
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues7<T1, T2, T3, T4, T5, T6, T7>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5, T6, T7) value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof((T1, T2, T3, T4, T5, T6, T7)), options);
+		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
+		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
+		JsonSerializer.Serialize(writer, value.Item6, typeof(T6), options);
+		JsonSerializer.Serialize(writer, value.Item7, typeof(T7), options);
 		writer.WriteEndArray();
 	}
 }
@@ -259,26 +223,17 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6, T7, TRest> : Json
 	{
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected tuple to be encoded as an array.");
-		reader.Read();
 
-		options = JsonCollectionTupleConverter.ManageConverters(options);
+		var array = JsonElement.ParseValue(ref reader);
+		var enumerator = array.EnumerateArray();
 
-		var value = options.Read<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>(ref reader)!;
-		reader.Read();
-
-		if (reader.TokenType != JsonTokenType.EndArray)
-			throw new JsonException("Expected end of array.");
-		reader.Read();
-
-		return value;
+		return ValueReader.ReadValues8<T1, T2, T3, T4, T5, T6, T7, TRest>(enumerator, options);
 	}
 
 	public override void Write(Utf8JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> value, JsonSerializerOptions options)
 	{
-		options = JsonCollectionTupleConverter.ManageConverters(options);
-		
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value, typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>), options);
+		ValueWriter.WriteValues(writer, ValueWriter.Unwrap8(value), options);
 		writer.WriteEndArray();
 	}
 }
