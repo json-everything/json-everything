@@ -4,7 +4,7 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "09.05"
 ---
-# [5.0.1](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.0.1}
+# [5.0.1](https://github.com/gregsdennis/json-everything/commit/d71868e58ff1c5ac1c393622c8f792eede44b09c) {#release-pointer-5.0.1}
 
 Corrected meta-schema URIs.
 
