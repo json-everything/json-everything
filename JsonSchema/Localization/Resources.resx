@@ -184,7 +184,7 @@
     <value>Value should be at least [[limit]] characters</value>
   </data>
   <data name="Error_MinProperties" xml:space="preserve">
-    <value>Value should have at least[[limit]] properties</value>
+    <value>Value should have at least [[limit]] properties</value>
   </data>
   <data name="Error_MultipleOf" xml:space="preserve">
     <value>[[received]] should be a multiple of [[divisor]]</value>
