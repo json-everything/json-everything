@@ -11,12 +11,12 @@ public static class MetaSchemas
 	/// <summary>
 	/// The data vocabulary meta-schema ID.
 	/// </summary>
-	public static readonly Uri DataId = new("https://json-everything.net/schema/meta/vocab/data-2023");
+	public static readonly Uri DataId = new("https://json-everything.net/meta/vocab/data-2023");
 	/// <summary>
 	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
-	public static readonly Uri Data_202012Id = new("https://json-everything.net/schema/meta/data-2023");
+	public static readonly Uri Data_202012Id = new("https://json-everything.net/meta/data-2023");
 
 	/// <summary>
 	/// The data vocabulary meta-schema.

@@ -4,7 +4,21 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "09.05"
 ---
-# [5.0.0-beta1](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.0.0}
+# [5.0.1](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.0.1}
+
+Corrected meta-schema URIs.
+
+Was:
+
+- Vocab meta-schema: `https://json-everything.net/schema/meta/vocab/data-2023`
+- 2020-12 meta-schema: `https://json-everything.net/schema/meta/data-2023`
+
+Is:
+
+- Vocab meta-schema: `https://json-everything.net/meta/vocab/data-2023`
+- 2020-12 meta-schema: `https://json-everything.net/meta/data-2023`
+
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.0.0}
 
 Updated to support new Data 2023 vocabulary.
 
