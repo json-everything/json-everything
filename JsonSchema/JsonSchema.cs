@@ -21,10 +21,10 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = new HashSet<SpecVersion>(Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>());
+	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>()];
 
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
-	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = new();
+	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -78,7 +78,7 @@ public class JsonSchema : IBaseDocument
 	/// </summary>
 	public SpecVersion DeclaredVersion { get; private set; }
 
-	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = new();
+	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
 	private JsonSchema(bool value)
@@ -350,7 +350,7 @@ public class JsonSchema : IBaseDocument
 				if (refKeyword != null)
 				{
 					var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
-					constraint.Constraints = new[] { refConstraint };
+					constraint.Constraints = [refConstraint];
 					return;
 				}
 			}
@@ -385,7 +385,7 @@ public class JsonSchema : IBaseDocument
 				localConstraints.Add(keywordConstraint);
 			}
 
-			constraint.Constraints = localConstraints.ToArray();
+			constraint.Constraints = [.. localConstraints];
 			if (dynamicScopeChanged)
 			{
 				context.Scope.Pop();
@@ -443,7 +443,7 @@ public class JsonSchema : IBaseDocument
 		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
 		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
 
-		return candidates.Any() ? candidates.Max() : SpecVersion.DraftNext;
+		return candidates.Length != 0 ? candidates.Max() : SpecVersion.DraftNext;
 	}
 
 	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs = SpecVersion.Unspecified, bool selfRegister = false)

@@ -112,7 +112,7 @@ public class RelativeJsonPointer
 		while (i < span.Length && char.IsDigit(span[i])) i++;
 		if (i == 0) throw new PointerParseException($"`{nameof(source)}` must start with a non-negative integer");
 
-		var parentSteps = uint.Parse(span.Slice(0, i).ToString());
+		var parentSteps = uint.Parse(span[..i].ToString());
 		if (i == span.Length) return new RelativeJsonPointer(parentSteps, JsonPointer.Empty);
 
 		int indexManipulation = 0;
@@ -122,7 +122,7 @@ public class RelativeJsonPointer
 			i++;
 			var start = i;
 			while (i < span.Length && char.IsDigit(span[i])) i++;
-			indexManipulation = sign * int.Parse(span.Slice(start, i - start).ToString());
+			indexManipulation = sign * int.Parse(span[start..i].ToString());
 			if (i == span.Length) return new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer.Empty);
 		}
 		if (span[i] == '#')
@@ -133,7 +133,7 @@ public class RelativeJsonPointer
 
 		if (span[i] != '/') throw new PointerParseException($"{nameof(source)} must contain either a `#` or a pointer after the initial number");
 
-		var pointer = JsonPointer.Parse(span.Slice(i).ToString());
+		var pointer = JsonPointer.Parse(span[i..].ToString());
 
 		return new RelativeJsonPointer(parentSteps, indexManipulation, pointer);
 	}
@@ -164,7 +164,7 @@ public class RelativeJsonPointer
 			return false;
 		}
 
-		var parentSteps = uint.Parse(span.Slice(0, i).ToString());
+		var parentSteps = uint.Parse(span[..i].ToString());
 		if (i == span.Length)
 		{
 			relativePointer = new RelativeJsonPointer(parentSteps, JsonPointer.Empty);
@@ -178,7 +178,7 @@ public class RelativeJsonPointer
 			i++;
 			var start = i;
 			while (i < span.Length && char.IsDigit(span[i])) i++;
-			indexManipulation = sign * int.Parse(span.Slice(start, i - start).ToString());
+			indexManipulation = sign * int.Parse(span[start..i].ToString());
 			if (i == span.Length)
 			{
 				relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer.Empty);
@@ -202,7 +202,7 @@ public class RelativeJsonPointer
 			return false;
 		}
 
-		if (!JsonPointer.TryParse(span.Slice(i).ToString(), out var pointer))
+		if (!JsonPointer.TryParse(span[i..].ToString(), out var pointer))
 		{
 			relativePointer = null;
 			return false;

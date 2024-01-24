@@ -177,7 +177,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		}
 
 		// adapted from https://stackoverflow.com/a/2616980/878701
-		object GetValue(Expression? member)
+		object? GetValue(Expression? member)
 		{
 			if (member == null) return "null";
 
@@ -207,8 +207,8 @@ public class JsonPointer : IEquatable<JsonPointer>
 					 mce1.Arguments[0].Type == typeof(int))
 			{
 				var arg = mce1.Arguments[0];
-				var value = GetValue(arg);
-				segments.Insert(0, PointerSegment.Create(value.ToString()));
+				var value = GetValue(arg) ?? throw new NotSupportedException("Method in expression must return a non-null expression");
+				segments.Insert(0, PointerSegment.Create(value.ToString()!));
 				body = mce1.Object;
 			}
 			else if (body is MethodCallExpression { Method: { IsStatic: true, Name: nameof(Enumerable.Last) } } mce2 &&

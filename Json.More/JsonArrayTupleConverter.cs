@@ -25,7 +25,7 @@ public class JsonArrayTupleConverter : JsonConverterFactory
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		var typeParams = typeToConvert.GetGenericArguments();
-		Type converterType = typeParams.Length switch
+		var converterType = typeParams.Length switch
 		{
 			1 => typeof(JsonArrayTupleConverter<>).MakeGenericType(typeParams),
 			2 => typeof(JsonArrayTupleConverter<,>).MakeGenericType(typeParams),
@@ -38,7 +38,7 @@ public class JsonArrayTupleConverter : JsonConverterFactory
 			_ => throw new ArgumentOutOfRangeException()
 		};
 
-		return (JsonConverter)Activator.CreateInstance(converterType, Array.Empty<object>());
+		return (JsonConverter?)Activator.CreateInstance(converterType, []);
 	}
 }
 

@@ -9,9 +9,9 @@ internal static class ValueWriter
 {
 	public static void WriteValues(Utf8JsonWriter writer, IEnumerable<(object? value, Type type)> values, JsonSerializerOptions options)
 	{
-		foreach (var item in values)
+		foreach (var (value, type) in values)
 		{
-			JsonSerializer.Serialize(writer, item.value, item.type, options);
+			JsonSerializer.Serialize(writer, value, type, options);
 		}
 	}
 
@@ -85,7 +85,7 @@ internal static class ValueWriter
 		var typeParams = typeof(TRest).GetGenericArguments();
 		var method = GetUnwrapMethod($"Unwrap{typeParams.Length}", typeParams);
 
-		var unwrapped = (IEnumerable<(object?, Type)>) method.Invoke(null, new object[] { value.Rest });
+		var unwrapped = (IEnumerable<(object?, Type)>) method.Invoke(null, new object[] { value.Rest })!;
 		foreach (var item in unwrapped)
 		{
 			yield return item;
