@@ -88,7 +88,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 			}
 			return newOptions;
 		};
-		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory);
+		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory)!;
 
 		var validatingConverter = (IValidatingJsonConverter)converter;
 		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;

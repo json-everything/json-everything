@@ -19,19 +19,19 @@ namespace Json.Path
 		private static StandardValuesCollection? _standardValues;
 
 		/// <inheritdoc/>
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
 		{
 			return sourceType == typeof(string) || sourceType == typeof(JsonPath) || base.CanConvertFrom(context, sourceType);
 		}
 
 		/// <inheritdoc/>
-		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+		public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
 		{
 			return destinationType == typeof(string) || destinationType == typeof(JsonPath) || base.CanConvertTo(context, destinationType);
 		}
 
 		/// <inheritdoc/>
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
 		{
 			if (value is string s)
 			{
@@ -46,7 +46,7 @@ namespace Json.Path
 		}
 
 		/// <inheritdoc/>
-		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+		public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
 		{
 			if (value is JsonPath path)
 			{
@@ -64,25 +64,25 @@ namespace Json.Path
 		}
 
 		/// <inheritdoc/>
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext? context)
 		{
 			return true;
 		}
 
 		/// <inheritdoc/>
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext? context)
 		{
 			return false;
 		}
 
 		/// <inheritdoc/>
-		public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+		public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext? context)
 		{
 			return _standardValues ??= new StandardValuesCollection(new[] { JsonPath.Root });
 		}
 
 		/// <inheritdoc/>
-		public override bool IsValid(ITypeDescriptorContext context, object value)
+		public override bool IsValid(ITypeDescriptorContext? context, object? value)
 		{
 			if (value is string s)
 			{

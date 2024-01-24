@@ -38,6 +38,10 @@
     <Compile Include="..\netstandard-support\attributes.cs" Link="attributes.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+	<PackageReference Include="IndexRange" Version="1.0.3" PrivateAssests="All" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
