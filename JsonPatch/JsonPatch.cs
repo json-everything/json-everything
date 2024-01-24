@@ -83,6 +83,13 @@ public class JsonPatch : IEquatable<JsonPatch>
 	}
 }
 
+[JsonSerializable(typeof(JsonPatch))]
+[JsonSourceGenerationOptions(WriteIndented = true)]
+internal partial class JsonPatchSerializationContext : JsonSerializerContext
+{
+
+}
+
 /// <summary>
 /// Provides JSON conversion logic for <see cref="JsonPatch"/>.
 /// </summary>

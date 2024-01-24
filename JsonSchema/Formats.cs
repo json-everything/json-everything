@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -113,11 +114,27 @@ public static class Formats
 
 	static Formats()
 	{
-		_registry = new ConcurrentDictionary<string, Format>(
-			typeof(Formats)
-				.GetFields(BindingFlags.Static | BindingFlags.Public)
-				.Select(f => (Format)f.GetValue(null)!)
-				.ToDictionary(f => f.Key));
+		_registry = new ConcurrentDictionary<string, Format>(new Dictionary<string, Format>() {
+			{ Date.Key, Date },
+			{ DateTime.Key, DateTime },
+			{ Duration.Key, Duration },
+			{ Email.Key, Email },
+			{ Hostname.Key, Hostname },
+			{ IdnEmail.Key, IdnEmail },
+			{ IdnHostname.Key, IdnHostname },
+			{ Ipv4.Key, Ipv4 },
+			{ Ipv6.Key, Ipv6 },
+			{ Iri.Key, Iri },
+			{ IriReference.Key, IriReference },
+			{ JsonPointer.Key, JsonPointer },
+			{ Regex.Key, Regex },
+			{ RelativeJsonPointer.Key, RelativeJsonPointer },
+			{ Time.Key, Time },
+			{ Uri.Key, Uri },
+			{ UriReference.Key, UriReference },
+			{ UriTemplate.Key, UriTemplate },
+			{ Uuid.Key, Uuid }
+		});
 	}
 
 	/// <summary>

@@ -1,16 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
+
+[JsonSerializable(typeof(JsonSchema))]
+[JsonSerializable(typeof(AdditionalItemsKeyword))]
+[JsonSerializable(typeof(AdditionalPropertiesKeyword))]
+[JsonSerializable(typeof(AllOfKeyword))]
+[JsonSerializable(typeof(AnchorKeyword))]
+[JsonSerializable(typeof(AnyOfKeyword))]
+[JsonSerializable(typeof(CommentKeyword))]
+[JsonSerializable(typeof(ConstKeyword))]
+[JsonSerializable(typeof(ContainsKeyword))]
+[JsonSerializable(typeof(ContentEncodingKeyword))]
+[JsonSerializable(typeof(ContentMediaTypeKeyword))]
+[JsonSerializable(typeof(ContentSchemaKeyword))]
+[JsonSerializable(typeof(DefaultKeyword))]
+[JsonSerializable(typeof(DefinitionsKeyword))]
+[JsonSerializable(typeof(DefsKeyword))]
+[JsonSerializable(typeof(DependenciesKeyword))]
+[JsonSerializable(typeof(DependentRequiredKeyword))]
+[JsonSerializable(typeof(DependentSchemasKeyword))]
+[JsonSerializable(typeof(DeprecatedKeyword))]
+[JsonSerializable(typeof(DescriptionKeyword))]
+[JsonSerializable(typeof(DynamicAnchorKeyword))]
+[JsonSerializable(typeof(DynamicRefKeyword))]
+[JsonSerializable(typeof(ElseKeyword))]
+[JsonSerializable(typeof(EnumKeyword))]
+[JsonSerializable(typeof(ExamplesKeyword))]
+[JsonSerializable(typeof(ExclusiveMaximumKeyword))]
+[JsonSerializable(typeof(ExclusiveMinimumKeyword))]
+[JsonSerializable(typeof(FormatKeyword))]
+[JsonSerializable(typeof(IdKeyword))]
+[JsonSerializable(typeof(IfKeyword))]
+[JsonSerializable(typeof(ItemsKeyword))]
+[JsonSerializable(typeof(KeywordConstraint))]
+[JsonSerializable(typeof(KeywordEvaluation))]
+[JsonSerializable(typeof(MaxContainsKeyword))]
+[JsonSerializable(typeof(MaximumKeyword))]
+[JsonSerializable(typeof(MaxItemsKeyword))]
+[JsonSerializable(typeof(MaxLengthKeyword))]
+[JsonSerializable(typeof(MaxPropertiesKeyword))]
+[JsonSerializable(typeof(MinContainsKeyword))]
+[JsonSerializable(typeof(MinimumKeyword))]
+[JsonSerializable(typeof(MinItemsKeyword))]
+[JsonSerializable(typeof(MinLengthKeyword))]
+[JsonSerializable(typeof(MinPropertiesKeyword))]
+[JsonSerializable(typeof(MultipleOfKeyword))]
+[JsonSerializable(typeof(NotKeyword))]
+[JsonSerializable(typeof(OneOfKeyword))]
+[JsonSerializable(typeof(PatternKeyword))]
+[JsonSerializable(typeof(PatternPropertiesKeyword))]
+[JsonSerializable(typeof(PrefixItemsKeyword))]
+[JsonSerializable(typeof(PropertiesKeyword))]
+[JsonSerializable(typeof(PropertyDependenciesKeyword))]
+[JsonSerializable(typeof(PropertyNamesKeyword))]
+[JsonSerializable(typeof(ReadOnlyKeyword))]
+[JsonSerializable(typeof(RecursiveAnchorKeyword))]
+[JsonSerializable(typeof(RecursiveRefKeyword))]
+[JsonSerializable(typeof(RefKeyword))]
+[JsonSerializable(typeof(RequiredKeyword))]
+[JsonSerializable(typeof(SchemaKeyword))]
+[JsonSerializable(typeof(ThenKeyword))]
+[JsonSerializable(typeof(TitleKeyword))]
+[JsonSerializable(typeof(TypeKeyword))]
+[JsonSerializable(typeof(UnevaluatedItemsKeyword))]
+[JsonSerializable(typeof(UnevaluatedPropertiesKeyword))]
+[JsonSerializable(typeof(UniqueItemsKeyword))]
+[JsonSerializable(typeof(UnrecognizedKeyword))]
+[JsonSerializable(typeof(VocabularyKeyword))]
+[JsonSerializable(typeof(WriteOnlyKeyword))]
+
+[JsonSerializable(typeof(SchemaValueType))]
+[JsonSerializable(typeof(String[]))]
+[JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
+[JsonSerializable(typeof(Dictionary<string, bool>))]
+[JsonSerializable(typeof(List<JsonSchema>))]
+[JsonSerializable(typeof(List<string>))]
+[JsonSerializable(typeof(JsonArray))]
+[JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
+[JsonSerializable(typeof(Dictionary<string, List<string>>))]
+[JsonSerializable(typeof(int[]))]
+[JsonSourceGenerationOptions(WriteIndented = true)]
+internal partial class JsonSchemaSerializationContext : JsonSerializerContext
+{
+
+}
 
 /// <summary>
 /// Represents a JSON Schema.
@@ -98,10 +184,33 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options = null)
+	[RequiresUnreferencedCode("TODO")]
+	[RequiresDynamicCode("TODO")]
+	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options)
 	{
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
+		var path = Path.GetFullPath(fileName);
+		// For some reason, full *nix file paths (which start with '/') don't work quite right when
+		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
+		// first folder in the path is then interpreted as the host.  To account for this, we
+		// need to prepend with 'file://' instead.
+		var protocol = path.StartsWith("/") ? "file://" : "file:///";
+		schema.BaseUri = new Uri($"{protocol}{path}");
+		return schema;
+	}
+
+	/// <summary>
+	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
+	/// </summary>
+	/// <param name="fileName">The filename to load, URL-decoded.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
+	public static JsonSchema FromFile(string fileName)
+	{
+		var text = File.ReadAllText(fileName);
+		var schema = FromText(text);
 		var path = Path.GetFullPath(fileName);
 		// For some reason, full *nix file paths (which start with '/') don't work quite right when
 		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
@@ -119,9 +228,22 @@ public class JsonSchema : IBaseDocument
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options = null)
+	[RequiresUnreferencedCode("TODO")]
+	[RequiresDynamicCode("TODO")]
+	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options)
 	{
 		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
+	}
+
+	/// <summary>
+	/// Deserializes a <see cref="JsonSchema"/> from text.
+	/// </summary>
+	/// <param name="jsonText">The text to parse.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+	public static JsonSchema FromText(string jsonText)
+	{
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializationContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -130,9 +252,23 @@ public class JsonSchema : IBaseDocument
 	/// <param name="source">A stream.</param>
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	[RequiresUnreferencedCode("TODO")]
+	[RequiresDynamicCode("TODO")]
 	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
 	{
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
+	}
+
+	/// <summary>
+	/// Deserializes a <see cref="JsonSchema"/> from a stream.
+	/// </summary>
+	/// <param name="source">A stream.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	[RequiresUnreferencedCode("TODO")]
+	[RequiresDynamicCode("TODO")]
+	public static ValueTask<JsonSchema> FromStream(Stream source)
+	{
+		return JsonSerializer.DeserializeAsync<JsonSchema>(source, JsonSchemaSerializationContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -438,7 +574,11 @@ public class JsonSchema : IBaseDocument
 
 		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
 
+#if NET6_0_OR_GREATER
+		var allDraftsArray = Enum.GetValues<SpecVersion>();
+#else
 		var allDraftsArray = Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
+#endif
 		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
 		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
 		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
@@ -668,6 +808,10 @@ public class JsonSchema : IBaseDocument
 /// </summary>
 public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 {
+	public SchemaJsonConverter()
+	{
+
+	}
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>

@@ -20,6 +20,11 @@ public static class JsonSerializerOptionsExtensions
 	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializerOptions.GetConverter(Type)")]
 	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options)
 	{
+		if (options.TryGetTypeInfo(typeof(T), out var typeinfo))
+		{
+			return (JsonConverter<T>)typeinfo.Converter;
+		}
+
 		return (JsonConverter<T>)options.GetConverter(typeof(T));
 	}
 

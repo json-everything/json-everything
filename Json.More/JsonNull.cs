@@ -24,9 +24,7 @@ public class JsonNull
 	/// <summary>
 	/// Provides a static instance of this class wrapped in a <see cref="JsonNode"/>.
 	/// </summary>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "In order to be useful, JsonNull needs to be wrapped by a JsonValue, which is not trimming-safe.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "In order to be useful, JsonNull needs to be wrapped by a JsonValue, which is not trimming-safe.")]
-	public static JsonNode SignalNode { get; } = JsonValue.Create(new JsonNull())!;
+	public static JsonNode SignalNode { get; } = JsonValue.Create<JsonNull>(new JsonNull())!;
 
 	private JsonNull() { }
 }
