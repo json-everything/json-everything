@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8</TargetFrameworks>
 	  <PackageId>Yaml2JsonNode</PackageId>
 	  <Authors>Greg Dennis</Authors>
 	  <Version>1.2.4</Version>
