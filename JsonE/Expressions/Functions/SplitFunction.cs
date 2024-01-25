@@ -16,15 +16,15 @@ internal class SplitFunction : FunctionDefinition
 			throw new BuiltInException(CommonErrors.IncorrectArgType(_name));
 		if (arguments[1] is not JsonValue val2)
 			throw new BuiltInException(CommonErrors.IncorrectArgType(_name));
-		string? split = null;
+		string? split;
 		var num = val2.GetNumber();
 		if (num.HasValue)
 			split = num.ToString();
 		else if (!val2.TryGetValue(out split))
 			throw new BuiltInException(CommonErrors.IncorrectArgType(_name));
 
-		if (split == string.Empty)
-			return source.Select(x => (JsonNode?)x).ToJsonArray();
+		if (split is null) return source;
+		if (split == string.Empty) return source.Select(x => (JsonNode?)x).ToJsonArray();
 
 		return source.Split(new []{split}, StringSplitOptions.None).Select(x => (JsonNode?)x).ToJsonArray();
 	}

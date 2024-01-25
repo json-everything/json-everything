@@ -10,6 +10,9 @@ internal class LetOperator : IOperator
 	{
 		var obj = template!.AsObject();
 		obj.VerifyNoUndefinedProperties(Name, "in");
+
+		if (obj.Count != 2)
+			throw new TemplateException("$let operator requires an `in` clause");
 	
 		var value = obj[Name];
 
