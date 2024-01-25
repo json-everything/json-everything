@@ -98,7 +98,7 @@ public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<Depend
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var requirements = options.Read<Dictionary<string, List<string>>>(ref reader);
+		var requirements = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringListString)!;
 		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 

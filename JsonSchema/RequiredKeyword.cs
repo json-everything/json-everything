@@ -91,7 +91,9 @@ public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword
 	/// <returns>The converted value.</returns>
 	public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		return new RequiredKeyword(options.Read<string[]>(ref reader) ?? throw new JsonException("Expected array"));
+		return new RequiredKeyword(
+			JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.StringArray) 
+			?? throw new JsonException("Expected array"));
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

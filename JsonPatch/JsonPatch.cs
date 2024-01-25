@@ -86,10 +86,12 @@ public class JsonPatch : IEquatable<JsonPatch>
 [JsonSerializable(typeof(JsonPatch))]
 [JsonSerializable(typeof(List<JsonPatch>))]
 [JsonSerializable(typeof(IReadOnlyList<JsonPatch>))]
-[JsonSourceGenerationOptions(WriteIndented = true)]
-internal partial class JsonPatchSerializationContext : JsonSerializerContext
+[JsonSerializable(typeof(PatchOperation))]
+[JsonSerializable(typeof(List<PatchOperation>))]
+[JsonSerializable(typeof(PatchOperationJsonConverter.Model))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+internal partial class JsonPatchSerializerContext : JsonSerializerContext
 {
-
 }
 
 /// <summary>
@@ -104,7 +106,7 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <returns>The converted value.</returns>
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var operations = JsonSerializer.Deserialize<List<PatchOperation>>(ref reader, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })!;
+		var operations = JsonSerializer.Deserialize(ref reader, JsonPatchSerializerContext.Default.ListPatchOperation)!;
 
 		return new JsonPatch(operations);
 	}
@@ -116,7 +118,7 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
 #if NET6_0_OR_GREATER
-		JsonSerializer.Serialize(writer, value.Operations, JsonPatchSerializationContext.Default.IReadOnlyListJsonPatch);
+		JsonSerializer.Serialize(writer, value.Operations, JsonPatchSerializerContext.Default.IReadOnlyListJsonPatch);
 #else
 		JsonSerializer.Serialize(writer, value.Operations);
 #endif

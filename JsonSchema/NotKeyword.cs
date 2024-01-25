@@ -80,7 +80,7 @@ public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
 	/// <returns>The converted value.</returns>
 	public override NotKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
 
 		return new NotKeyword(schema);
 	}

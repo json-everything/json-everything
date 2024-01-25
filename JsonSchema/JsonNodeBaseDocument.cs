@@ -51,7 +51,7 @@ public class JsonNodeBaseDocument : IBaseDocument
 		{
 			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
 
-			var schema = location.Deserialize<JsonSchema>();
+			var schema = location.Deserialize(JsonSchemaSerializationContext.Default.JsonSchema);
 			if (schema != null)
 				JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
 

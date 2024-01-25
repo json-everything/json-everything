@@ -129,7 +129,7 @@ public sealed class DependenciesKeywordJsonConverter : JsonConverter<Dependencie
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var dependencies = options.Read<Dictionary<string, SchemaOrPropertyList>>(ref reader)!;
+		var dependencies = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringSchemaOrPropertyList)!;
 		return new DependenciesKeyword(dependencies);
 	}
 
@@ -220,9 +220,9 @@ public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPr
 	public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new SchemaOrPropertyList(options.Read<List<string>>(ref reader)!);
+			return new SchemaOrPropertyList(JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.ListString)!);
 
-		return new SchemaOrPropertyList(options.Read<JsonSchema>(ref reader)!);
+		return new SchemaOrPropertyList(JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

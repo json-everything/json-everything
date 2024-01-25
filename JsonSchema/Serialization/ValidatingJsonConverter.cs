@@ -123,7 +123,7 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var readerCopy = reader;
-		var node = options.Read<JsonNode?>(ref readerCopy);
+		var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode);
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{

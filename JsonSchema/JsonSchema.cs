@@ -92,7 +92,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
 [JsonSerializable(typeof(Dictionary<string, List<string>>))]
 [JsonSerializable(typeof(int[]))]
-[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
 internal partial class JsonSchemaSerializationContext : JsonSerializerContext
 {
 
@@ -842,7 +842,7 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
 					{
-						var node = options.Read<JsonNode>(ref reader);
+						var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode)!;
 						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
 						keywords.Add(unrecognizedKeyword);
 						break;

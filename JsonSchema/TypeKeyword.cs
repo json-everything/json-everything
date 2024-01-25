@@ -107,7 +107,7 @@ public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	/// <returns>The converted value.</returns>
 	public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var type = options.Read<SchemaValueType>(ref reader);
+		var type = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.SchemaValueType);
 
 		return new TypeKeyword(type);
 	}

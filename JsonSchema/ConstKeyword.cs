@@ -78,7 +78,7 @@ public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 	/// <returns>The converted value.</returns>
 	public override ConstKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode>(ref reader);
+		var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode);
 
 		return new ConstKeyword(node);
 	}

@@ -16,18 +16,11 @@ public static class JsonSerializerOptionsExtensions
 	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
 	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
+	[RequiresDynamicCode("Calls JsonSerializerOptions.GetConverter")]
+	[RequiresUnreferencedCode("Calls JsonSerializerOptions.GetConverter")]
 	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options)
 	{
-#if NET6_0_OR_GREATER
-		if (options.TryGetTypeInfo(typeof(T), out var typeinfo))
-		{
-			return (JsonConverter<T>)typeinfo.Converter;
-		}
-#endif
-
-#pragma warning disable IL2026, IL3050 // NAOT callers should not get this far
 		return (JsonConverter<T>)options.GetConverter(typeof(T));
-#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>
@@ -40,6 +33,8 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
 	/// <param name="reader">The <see cref="Utf8JsonReader"/> to read from.</param>
 	/// <returns>The value that was converted.</returns>
+	[RequiresDynamicCode("Calls JsonSerializerOptions.GetConverter")]
+	[RequiresUnreferencedCode("Calls JsonSerializerOptions.GetConverter")]
 	public static T? Read<T>(this JsonSerializerOptions options, ref Utf8JsonReader reader)
 	{
 		return options.GetConverter<T>().Read(ref reader, typeof(T), options);

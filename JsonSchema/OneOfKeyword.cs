@@ -98,7 +98,7 @@ public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.ListJsonSchema)!;
 		return new OneOfKeyword(schemas);
 	}
 

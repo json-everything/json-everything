@@ -105,7 +105,7 @@ public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<Depende
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringJsonSchema)!;
 		return new DependentSchemasKeyword(schema);
 	}
 
