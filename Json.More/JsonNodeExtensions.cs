@@ -19,13 +19,26 @@ public static class JsonNodeExtensions
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
-#if !NET8_0_OR_GREATER
+#if NET8_0
 	/// <summary>
 	/// Determines JSON-compatible equivalence.
 	/// </summary>
 	/// <param name="a">The first element.</param>
 	/// <param name="b">The second element.</param>
 	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
+	/// <remarks>
+	/// <see cref="JsonNode.DeepEquals(JsonNode,JsonNode)"/> has trouble testing numeric
+	/// equality when `decimal` is involved.  As such it is still advised to use this
+	/// method instead.  See https://github.com/dotnet/runtime/issues/97490.
+	/// </remarks>
+#else
+	/// <summary>
+	/// Determines JSON-compatible equivalence.
+	/// </summary>
+	/// <param name="a">The first element.</param>
+	/// <param name="b">The second element.</param>
+	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
+#endif
 	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
 		switch (a, b)
@@ -57,7 +70,6 @@ public static class JsonNodeExtensions
 				return a?.ToJsonString() == b?.ToJsonString();
 		}
 	}
-#endif
 
 	// source: https://stackoverflow.com/a/60592310/878701, modified for netstandard2.0
 	// license: https://creativecommons.org/licenses/by-sa/4.0/
@@ -73,12 +85,7 @@ public static class JsonNodeExtensions
 	/// - https://github.com/gregsdennis/json-everything/issues/76
 	/// - https://github.com/dotnet/runtime/issues/33388
 	/// </remarks>
-#if NET8_0_OR_GREATER
-	internal
-#else
-	public
-#endif
-		static int GetEquivalenceHashCode(this JsonNode node, int maxHashDepth = -1)
+	public static int GetEquivalenceHashCode(this JsonNode node, int maxHashDepth = -1)
 	{
 		static void Add(ref int current, object? newValue)
 		{
