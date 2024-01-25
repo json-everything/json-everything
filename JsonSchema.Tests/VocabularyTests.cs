@@ -10,6 +10,8 @@ using NUnit.Framework;
 
 namespace Json.Schema.Tests;
 
+public partial class VocabularyTests
+{
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
 	[JsonConverter(typeof(MinDateJsonConverter))]
@@ -43,7 +45,7 @@ namespace Json.Schema.Tests;
 		}
 	}
 
-	internal class MinDateJsonConverter : JsonConverter<MinDateKeyword>
+	private class MinDateJsonConverter : JsonConverter<MinDateKeyword>
 	{
 		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -93,7 +95,7 @@ namespace Json.Schema.Tests;
 		}
 	}
 
-	internal class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>
+	private class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>
 	{
 		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -134,7 +136,7 @@ namespace Json.Schema.Tests;
 		}
 	}
 
-	public class MaxDateJsonConverter : JsonConverter<MaxDateKeyword>
+	private class MaxDateJsonConverter : JsonConverter<MaxDateKeyword>
 	{
 		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -152,8 +154,6 @@ namespace Json.Schema.Tests;
 		}
 	}
 
-public class VocabularyTests
-{
 	private static readonly JsonSerializerOptions _serializerOptions = new()
 	{
 		WriteIndented = true,
@@ -365,6 +365,79 @@ public class VocabularyTests
 		results.AssertValid();
 	}
 
+	[SchemaKeyword(Name)]
+	[SchemaSpecVersion(SpecVersion.Draft202012)]
+	[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]
+	public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword
+	{
+		internal const string Name = "exclusiveMinimum";
+
+		private readonly ExclusiveMinimumKeyword? _postDraft6Keyword;
+
+		public bool? BoolValue { get; }
+		public decimal? NumberValue => _postDraft6Keyword?.Value;
+
+		public Draft4ExclusiveMinimumKeyword(bool value)
+		{
+			BoolValue = value;
+		}
+
+		public Draft4ExclusiveMinimumKeyword(decimal value)
+		{
+			_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
+		}
+
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
+			IReadOnlyList<KeywordConstraint> localConstraints,
+			EvaluationContext context)
+		{
+			if (BoolValue.HasValue)
+			{
+				var minimumConstraint = localConstraints.GetKeywordConstraint<MinimumKeyword>();
+
+				var constraint = new KeywordConstraint(Name, (e, _) =>
+				{
+					if (!BoolValue.Value) return;
+
+					var minimum = (decimal?)6;// context.LocalSchema.GetMinimum();
+
+					if (!minimum.HasValue) return;
+
+					var schemaValueType = e.LocalInstance.GetSchemaValueType();
+					if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
+
+					var number = e.LocalInstance!.AsValue().GetNumber();
+					if (number == minimum)
+						e.Results.Fail(Name, "minimum is exclusive");
+				});
+				if (minimumConstraint != null)
+					constraint.SiblingDependencies = new[] { minimumConstraint };
+				return constraint;
+			}
+			else
+				return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
+		}
+	}
+	internal class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
+	{
+		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			return reader.TokenType switch
+			{
+				JsonTokenType.True or JsonTokenType.False => new Draft4ExclusiveMinimumKeyword(reader.GetBoolean()),
+				JsonTokenType.Number => new Draft4ExclusiveMinimumKeyword(reader.GetDecimal()),
+				_ => throw new JsonException("Expected boolean or number")
+			};
+		}
+
+		public override void Write(Utf8JsonWriter writer, Draft4ExclusiveMinimumKeyword value, JsonSerializerOptions options)
+		{
+			if (value.BoolValue.HasValue)
+				writer.WriteBoolean(Draft4ExclusiveMinimumKeyword.Name, value.BoolValue.Value);
+			else
+				writer.WriteNumber(Draft4ExclusiveMinimumKeyword.Name, value.NumberValue!.Value);
+		}
+	}
 
 	[TestCase(3, false)]
 	[TestCase(8, true)]
@@ -439,88 +512,15 @@ public class VocabularyTests
 #endif
 		}
 	}
-}
 
-[SchemaKeyword(Name)]
-[SchemaSpecVersion(SpecVersion.Draft202012)]
-[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]
-public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword
-{
-	internal const string Name = "exclusiveMinimum";
-
-	private readonly ExclusiveMinimumKeyword? _postDraft6Keyword;
-
-	public bool? BoolValue { get; }
-	public decimal? NumberValue => _postDraft6Keyword?.Value;
-
-	public Draft4ExclusiveMinimumKeyword(bool value)
+	[JsonSerializable(typeof(VocabularyTests.Draft4ExclusiveMinimumKeyword))]
+	[JsonSerializable(typeof(VocabularyTests.MinDateKeyword))]
+	[JsonSerializable(typeof(VocabularyTests.NonVocabMinDateKeyword))]
+	[JsonSerializable(typeof(VocabularyTests.MaxDateKeyword))]
+	internal partial class VocabularySerializerContext : JsonSerializerContext
 	{
-		BoolValue = value;
-	}
 
-	public Draft4ExclusiveMinimumKeyword(decimal value)
-	{
-		_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
-	}
-
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
-		EvaluationContext context)
-	{
-		if (BoolValue.HasValue)
-		{
-			var minimumConstraint = localConstraints.GetKeywordConstraint<MinimumKeyword>();
-
-			var constraint = new KeywordConstraint(Name, (e, _) =>
-			{
-				if (!BoolValue.Value) return;
-
-				var minimum = (decimal?)6;// context.LocalSchema.GetMinimum();
-
-				if (!minimum.HasValue) return;
-
-				var schemaValueType = e.LocalInstance.GetSchemaValueType();
-				if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
-
-				var number = e.LocalInstance!.AsValue().GetNumber();
-				if (number == minimum)
-					e.Results.Fail(Name, "minimum is exclusive");
-			});
-			if (minimumConstraint != null)
-				constraint.SiblingDependencies = new[] { minimumConstraint };
-			return constraint;
-		}
-		else
-			return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
 	}
 }
 
-internal class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
-{
-	public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		return reader.TokenType switch
-		{
-			JsonTokenType.True or JsonTokenType.False => new Draft4ExclusiveMinimumKeyword(reader.GetBoolean()),
-			JsonTokenType.Number => new Draft4ExclusiveMinimumKeyword(reader.GetDecimal()),
-			_ => throw new JsonException("Expected boolean or number")
-		};
-	}
 
-	public override void Write(Utf8JsonWriter writer, Draft4ExclusiveMinimumKeyword value, JsonSerializerOptions options)
-	{
-		if (value.BoolValue.HasValue)
-			writer.WriteBoolean(Draft4ExclusiveMinimumKeyword.Name, value.BoolValue.Value);
-		else
-			writer.WriteNumber(Draft4ExclusiveMinimumKeyword.Name, value.NumberValue!.Value);
-	}
-}
-
-[JsonSerializable(typeof(Draft4ExclusiveMinimumKeyword))]
-[JsonSerializable(typeof(MinDateKeyword))]
-[JsonSerializable(typeof(NonVocabMinDateKeyword))]
-[JsonSerializable(typeof(MaxDateKeyword))]
-internal partial class VocabularySerializerContext : JsonSerializerContext
-{
-
-}
