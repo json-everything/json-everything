@@ -34,6 +34,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
 	</ItemGroup>
 

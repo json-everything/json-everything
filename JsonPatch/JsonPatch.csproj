@@ -24,16 +24,21 @@
     <PackageIcon>json-logo-256.png</PackageIcon>
 	<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-patch/</PackageReleaseNotes>
     <DocumentationFile>JsonPatch.Net.xml</DocumentationFile>
-	  <IncludeSymbols>true</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	  <SignAssembly>true</SignAssembly>
-	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-		<Nullable>enable</Nullable>
+	<SignAssembly>true</SignAssembly>
+	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+	<Nullable>enable</Nullable>
+	<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
     <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-patch.md" Link="release-notes.md" />
     <None Include="..\LICENSE">
       <Pack>True</Pack>

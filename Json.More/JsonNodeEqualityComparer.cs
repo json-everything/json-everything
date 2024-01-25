@@ -26,7 +26,11 @@ public class JsonNodeEqualityComparer : IEqualityComparer<JsonNode?>
 	/// <returns>true if the specified objects are equal; otherwise, false.</returns>
 	public bool Equals(JsonNode? x, JsonNode? y)
 	{
+#if NET8_0_OR_GREATER
+		return JsonNode.DeepEquals(x, y);
+#else
 		return x.IsEquivalentTo(y);
+#endif
 	}
 
 	/// <summary>Returns a hash code for the specified object.</summary>

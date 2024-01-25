@@ -32,17 +32,18 @@
 	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 	<Nullable>enable</Nullable>
 	<NoWarn>IDE0290</NoWarn>
+	<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\netstandard-support\attributes.cs" Link="attributes.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-	<PackageReference Include="IndexRange" Version="1.0.3" PrivateAssests="All" />
+    <Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="PolySharp" Version="1.14.1">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>

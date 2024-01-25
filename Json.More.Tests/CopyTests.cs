@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Nodes;
+﻿#if !NET8_0_OR_GREATER
+
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.More.Tests;
@@ -24,3 +26,5 @@ public class CopyTests
 		Assert.IsTrue(source.IsEquivalentTo(copy));
 	}
 }
+
+#endif
