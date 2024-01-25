@@ -23,7 +23,7 @@ public class EnumStringConverterTests
 
 		Assert.AreEqual(expected, actual);
 
-		var deserialized = JsonSerializer.Deserialize<ConversionTest>(actual);
+		var deserialized = JsonSerializer.Deserialize<ConversionTest>(actual)!;
 
 		Assert.AreEqual(DayOfWeek.Wednesday, deserialized.Day);
 	}
@@ -77,7 +77,7 @@ public class EnumStringConverterTests
 
 		Assert.AreEqual(expected, actual);
 
-		var deserialized = JsonSerializer.Deserialize<FlagsEnumContainer>(actual);
+		var deserialized = JsonSerializer.Deserialize<FlagsEnumContainer>(actual)!;
 
 		Assert.AreEqual(CustomFlagsEnum.One | CustomFlagsEnum.Two, deserialized.Value);
 	}

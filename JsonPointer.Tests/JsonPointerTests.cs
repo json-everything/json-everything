@@ -55,7 +55,7 @@ public class JsonPointerTests
 
 		var pointer = JsonPointer.Parse("/c/0");
 
-		var actual = pointer.Evaluate(target.RootElement);
+		var actual = pointer.Evaluate(target.RootElement)!;
 
 		// ReSharper disable once PossibleInvalidOperationException
 		Assert.AreEqual(false, actual.Value.GetBoolean());
@@ -81,7 +81,7 @@ public class JsonPointerTests
 
 		var pointer = JsonPointer.Parse("/b/-");
 
-		var actual = pointer.Evaluate(target.RootElement);
+		var actual = pointer.Evaluate(target.RootElement)!;
 
 		// ReSharper disable once PossibleInvalidOperationException
 		Assert.AreEqual(JsonValueKind.Null, actual.Value.ValueKind);
