@@ -418,7 +418,8 @@ public partial class VocabularyTests
 				return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
 		}
 	}
-	internal class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
+
+	private class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
 	{
 		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
