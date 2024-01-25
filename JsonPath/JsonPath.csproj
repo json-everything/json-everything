@@ -32,7 +32,12 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
+		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-path.md" Link="release-notes.md" />

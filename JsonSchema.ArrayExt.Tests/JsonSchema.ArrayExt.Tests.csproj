@@ -4,11 +4,16 @@
 		<TargetFrameworks>netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<IsPackable>false</IsPackable>
+		<Nullable>enable</Nullable>
 
 		<RootNamespace>Json.Schema.ArrayExt.Tests</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="NUnit" Version="3.14.0" />

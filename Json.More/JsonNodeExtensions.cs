@@ -20,6 +20,7 @@ public static class JsonNodeExtensions
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
+#if !NET8_0_OR_GREATER
 	/// <summary>
 	/// Determines JSON-compatible equivalence.
 	/// </summary>
@@ -57,6 +58,7 @@ public static class JsonNodeExtensions
 				return a?.ToJsonString() == b?.ToJsonString();
 		}
 	}
+#endif
 
 	// source: https://stackoverflow.com/a/60592310/878701, modified for netstandard2.0
 	// license: https://creativecommons.org/licenses/by-sa/4.0/
@@ -72,7 +74,12 @@ public static class JsonNodeExtensions
 	/// - https://github.com/gregsdennis/json-everything/issues/76
 	/// - https://github.com/dotnet/runtime/issues/33388
 	/// </remarks>
-	public static int GetEquivalenceHashCode(this JsonNode node, int maxHashDepth = -1)
+#if NET8_0_OR_GREATER
+	internal
+#else
+	public
+#endif
+		static int GetEquivalenceHashCode(this JsonNode node, int maxHashDepth = -1)
 	{
 		static void Add(ref int current, object? newValue)
 		{
@@ -82,7 +89,6 @@ public static class JsonNodeExtensions
 			}
 		}
 
-		// ReSharper disable once InconsistentNaming
 		void ComputeHashCode(JsonNode? target, ref int current, int depth)
 		{
 			if (target == null) return;
@@ -190,6 +196,7 @@ public static class JsonNodeExtensions
 		return null;
 	}
 
+#if !NET8_0_OR_GREATER
 	/// <summary>
 	/// Creates a deep copy of a node.
 	/// </summary>
@@ -241,6 +248,7 @@ public static class JsonNodeExtensions
 			_ => throw new ArgumentOutOfRangeException(nameof(source))
 		};
 	}
+#endif
 
 	/// <summary>
 	/// Convenience method that wraps <see cref="JsonObject.TryGetPropertyValue(string, out JsonNode?)"/>
@@ -280,7 +288,11 @@ public static class JsonNodeExtensions
 	[RequiresUnreferencedCode("Calls Json.More.JsonNodeExtensions.Copy(IEnumerable<JsonNode>)")]
 	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
 	{
+#if NET8_0_OR_GREATER
+		return new JsonArray(nodes.Select(x => x?.DeepClone()).ToArray());
+#else
 		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
+#endif
 	}
 
 	///  <summary>
@@ -300,7 +312,7 @@ public static class JsonNodeExtensions
 		var segments = GetSegments(current);
 
 		var sb = new StringBuilder();
-		sb.Append("$");
+		sb.Append('$');
 		segments.Pop();  // first is always null - the root
 		while (segments.Any())
 		{

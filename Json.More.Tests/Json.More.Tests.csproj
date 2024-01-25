@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
 
@@ -10,6 +11,10 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />

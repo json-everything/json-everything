@@ -14,6 +14,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="NUnit" Version="3.14.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />

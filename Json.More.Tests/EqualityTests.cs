@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Nodes;
+﻿#if !NET8_0_OR_GREATER
+
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Json.More.Tests;
@@ -52,3 +54,5 @@ public class EqualityTests
 		Assert.IsTrue(intFour.IsEquivalentTo(floatFour));
 	}
 }
+
+#endif
