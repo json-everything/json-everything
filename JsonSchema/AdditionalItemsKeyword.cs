@@ -111,6 +111,6 @@ public sealed class AdditionalItemsKeywordJsonConverter : JsonConverter<Addition
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, AdditionalItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(AdditionalItemsKeyword.Name);
+		JsonSerializer.Serialize(writer, value.Schema, JsonSchemaSerializationContext.Default.JsonSchema);
 	}
 }

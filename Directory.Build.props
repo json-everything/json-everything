@@ -3,7 +3,7 @@
   <PropertyGroup>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(ProjectName)' != 'JsonSchema.Tests' and '$(ProjectName)' != 'JsonPatch.Tests'">
+  <PropertyGroup Condition="!$(ProjectName.EndsWith('.Tests'))">
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
   </PropertyGroup>
 </Project>

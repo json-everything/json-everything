@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -120,6 +121,8 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 		_optionsFactory = optionsFactory;
 	}
 
+	[RequiresDynamicCode("This uses a non-AOT friendly version of JsonSerializer.Deserialize.")]
+	[RequiresUnreferencedCode("This uses a non-AOT friendly version of JsonSerializer.Deserialize.")]
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var readerCopy = reader;

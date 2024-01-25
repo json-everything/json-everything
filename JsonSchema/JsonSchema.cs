@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -853,8 +854,27 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
-										 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					{
+#if NET6_0_OR_GREATER
+						if (SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out JsonTypeInfo? typeinfo))
+						{
+							implementation = JsonSerializer.Deserialize(ref reader, typeinfo!) as IJsonSchemaKeyword ??
+								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+						}
+						else
+#endif
+						if (SchemaKeywordRegistry.RequiresDynamicSerialization)
+						{
+#pragma warning disable IL2026, IL3050 // Suppress because to get here the caller of SchemaKeywordRegistry must have suppressed the AOT warnings themselves
+							implementation = JsonSerializer.Deserialize(ref reader, keywordType) as IJsonSchemaKeyword ??
+								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+#pragma warning restore IL2026, IL3050
+						}
+						else
+						{
+							throw new InvalidOperationException($"Could not deserialize keyword `{keyword}`; missing type information");
+						}
+					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:
