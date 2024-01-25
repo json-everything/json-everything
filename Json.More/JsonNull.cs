@@ -40,8 +40,6 @@ internal class JsonNullConverter : JsonConverter<JsonNull>
 
 	public override void Write(Utf8JsonWriter writer, JsonNull value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(value, JsonNullSerializationContext.Default.JsonNull);
-		
 		writer.WriteNullValue();
 	}
 }

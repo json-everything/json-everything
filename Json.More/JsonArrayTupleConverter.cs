@@ -59,8 +59,6 @@ internal class JsonArrayTupleConverter<T> : JsonConverter<ValueTuple<T>>
 		var array = JsonElement.ParseValue(ref reader);
 		var enumerator = array.EnumerateArray();
 
-		enumerator.MoveNext();
-
 		return ValueReader.ReadValues1<T>(enumerator, options);
 	}
 
