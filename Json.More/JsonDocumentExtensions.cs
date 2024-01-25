@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace Json.More;
 
@@ -25,6 +26,8 @@ public static class JsonDocumentExtensions
 	/// <param name="value">The value to convert.</param>
 	/// <param name="options">(optional) JSON serialization options.</param>
 	/// <returns>A <see cref="JsonDocument"/> representing the vale.</returns>
+	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize<T>(T, JsonSerializerOptions)")]
+	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize<T>(T, JsonSerializerOptions)")]
 	public static JsonDocument ToJsonDocument<T>(this T value, JsonSerializerOptions? options = null)
 	{
 		if (value is JsonDocument doc) return doc;

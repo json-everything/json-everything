@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -23,6 +24,8 @@ public class JsonNull
 	/// <summary>
 	/// Provides a static instance of this class wrapped in a <see cref="JsonNode"/>.
 	/// </summary>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "In order to be useful, JsonNull needs to be wrapped by a JsonValue, which is not trimming-safe.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "In order to be useful, JsonNull needs to be wrapped by a JsonValue, which is not trimming-safe.")]
 	public static JsonNode SignalNode { get; } = JsonValue.Create(new JsonNull())!;
 
 	private JsonNull() { }
@@ -37,6 +40,6 @@ internal class JsonNullConverter : JsonConverter<JsonNull>
 
 	public override void Write(Utf8JsonWriter writer, JsonNull value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, (JsonNode?)null, options);
+		writer.WriteNullValue();
 	}
 }

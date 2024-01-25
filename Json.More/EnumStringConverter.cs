@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -38,7 +39,7 @@ namespace Json.More;
 /// }
 /// ```
 /// </example>
-public class EnumStringConverter<T> : JsonConverter<T>
+public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : JsonConverter<T>
 	where T : Enum
 {
 	private static Dictionary<string, T>? _readValues;

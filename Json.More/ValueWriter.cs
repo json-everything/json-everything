@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
 
@@ -7,6 +8,8 @@ namespace Json.More;
 
 internal static class ValueWriter
 {
+	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
+	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
 	public static void WriteValues(Utf8JsonWriter writer, IEnumerable<(object? value, Type type)> values, JsonSerializerOptions options)
 	{
 		foreach (var (value, type) in values)
@@ -71,6 +74,8 @@ internal static class ValueWriter
 		yield return (value.Item7, typeof(T7));
 	}
 
+	[RequiresDynamicCode("Calls Json.More.ValueWriter.GetUnwrapMethod(String, Type[])")]
+	[RequiresUnreferencedCode("Calls Json.More.ValueWriter.GetUnwrapMethod(String, Type[])")]
 	public static IEnumerable<(object?, Type)> Unwrap8<T1, T2, T3, T4, T5, T6, T7, TRest>(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> value)
 		where TRest : struct
 	{
@@ -92,6 +97,8 @@ internal static class ValueWriter
 		}
 	}
 
+	[RequiresDynamicCode("Calls System.Reflection.MethodInfo.MakeGenericMethod(params Type[])")]
+	[RequiresUnreferencedCode("Calls System.Type.GetMethod(String) and System.Reflection.MethodInfo.MakeGenericMethod(Type[])")]
 	private static MethodInfo GetUnwrapMethod(string methodName, Type[] types)
 	{
 		var type = typeof(ValueWriter);
