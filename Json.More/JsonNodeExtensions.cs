@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -198,6 +199,8 @@ public static class JsonNodeExtensions
 	///	`JsonNode` may only be part of a single JSON tree, i.e. have a single parent.
 	/// Copying a node allows its value to be saved to another JSON tree.
 	/// </remarks>
+	[RequiresDynamicCode("Calls System.Text.Json.Nodes.JsonValue.Create<T>(T, JsonNodeOptions?)")]
+	[RequiresUnreferencedCode("Calls System.Text.Json.Nodes.JsonValue.Create<T>(T, JsonNodeOptions?)")]
 	public static JsonNode? Copy(this JsonNode? source)
 	{
 		JsonNode CopyObject(JsonObject obj)
@@ -222,6 +225,8 @@ public static class JsonNodeExtensions
 			return newArr;
 		}
 
+		[RequiresDynamicCode("Calls System.Text.Json.Nodes.JsonValue.Create<T>(T, JsonNodeOptions?)")]
+		[RequiresUnreferencedCode("Calls System.Text.Json.Nodes.JsonValue.Create<T>(T, JsonNodeOptions?)")]
 		JsonNode? CopyValue(JsonValue val)
 		{
 			return JsonValue.Create(val.GetValue<object>());
@@ -271,6 +276,8 @@ public static class JsonNodeExtensions
 	/// </summary>
 	/// <param name="nodes">The nodes.</param>
 	/// <returns>A JSON array.</returns>
+	[RequiresDynamicCode("Calls Json.More.JsonNodeExtensions.Copy(IEnumerable<JsonNode>)")]
+	[RequiresUnreferencedCode("Calls Json.More.JsonNodeExtensions.Copy(IEnumerable<JsonNode>)")]
 	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
 	{
 		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
