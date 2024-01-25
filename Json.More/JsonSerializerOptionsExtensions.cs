@@ -25,7 +25,9 @@ public static class JsonSerializerOptionsExtensions
 		}
 #endif
 
+#pragma warning disable IL2026, IL3050 // NAOT callers should not get this far
 		return (JsonConverter<T>)options.GetConverter(typeof(T));
+#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>

@@ -24,7 +24,7 @@ public class JsonNull
 	/// <summary>
 	/// Provides a static instance of this class wrapped in a <see cref="JsonNode"/>.
 	/// </summary>
-	public static JsonNode SignalNode { get; } = JsonValue.Create<JsonNull>(new JsonNull())!;
+	public static JsonNode SignalNode { get; } = JsonValue.Create(new JsonNull(), JsonNullSerializationContext.Default.JsonNull)!;
 
 	private JsonNull() { }
 }
@@ -46,7 +46,7 @@ internal class JsonNullConverter : JsonConverter<JsonNull>
 /// Provides a serialization context for <see cref="JsonNull"/>.
 /// </summary>
 [JsonSerializable(typeof(JsonNull))]
-public partial class JsonNullSerializationContext : JsonSerializerContext
+internal partial class JsonNullSerializationContext : JsonSerializerContext
 {
 
 }

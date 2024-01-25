@@ -84,6 +84,8 @@ public class JsonPatch : IEquatable<JsonPatch>
 }
 
 [JsonSerializable(typeof(JsonPatch))]
+[JsonSerializable(typeof(List<JsonPatch>))]
+[JsonSerializable(typeof(IReadOnlyList<JsonPatch>))]
 [JsonSourceGenerationOptions(WriteIndented = true)]
 internal partial class JsonPatchSerializationContext : JsonSerializerContext
 {
@@ -113,6 +115,10 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
+#if NET6_0_OR_GREATER
+		JsonSerializer.Serialize(writer, value.Operations, JsonPatchSerializationContext.Default.IReadOnlyListJsonPatch);
+#else
 		JsonSerializer.Serialize(writer, value.Operations);
+#endif
 	}
 }

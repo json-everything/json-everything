@@ -107,7 +107,11 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
+#if NET6_0_OR_GREATER
+	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..Enum.GetValues<SpecVersion>()];
+#else
 	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>()];
+#endif
 
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
@@ -808,10 +812,6 @@ public class JsonSchema : IBaseDocument
 /// </summary>
 public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 {
-	public SchemaJsonConverter()
-	{
-
-	}
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
