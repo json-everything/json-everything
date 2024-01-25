@@ -33,12 +33,14 @@ internal static class JsonSerializerOptionsExtensions
 
 	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType)
 	{
+#if NET6_0_OR_GREATER
 		if (options.TryGetTypeInfo(arbitraryType, out var typeinfo))
 		{
 			return JsonSerializer.Deserialize(ref reader, typeinfo);
 		}
 
 		// TODO: make the above TypeInfo path support the SchemaRegistry things.
+#endif
 
 		var converter = ArbitraryDeserializer.GetConverter(arbitraryType);
 		return converter.Read(ref reader, options);

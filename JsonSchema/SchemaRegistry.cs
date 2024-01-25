@@ -8,7 +8,7 @@ namespace Json.Schema;
 /// </summary>
 public class SchemaRegistry
 {
-	private class Registration
+	internal class Registration
 	{
 		public IBaseDocument Root { get; set; } = null!;
 	}
