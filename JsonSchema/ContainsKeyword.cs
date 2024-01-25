@@ -96,11 +96,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
-#if NET6_0_OR_GREATER
 			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializationContext.Default.Int32Array));
-#else
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
-#endif
 
 			var actual = validIndices.Length;
 			if (actual < minimum)
