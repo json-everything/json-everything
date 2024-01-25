@@ -82,7 +82,7 @@ public class SpecificationTests
 
 		var pointer = JsonPointer.Parse(pointerString);
 
-		var actual = pointer.Evaluate(target.RootElement);
+		var actual = pointer.Evaluate(target.RootElement)!;
 
 		using var expected = JsonDocument.Parse(expectedString);
 
