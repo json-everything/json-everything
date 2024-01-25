@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Json.Schema;
 
@@ -8,7 +9,7 @@ namespace Json.Schema;
 /// </summary>
 public class SchemaRegistry
 {
-	internal class Registration
+	private class Registration
 	{
 		public IBaseDocument Root { get; set; } = null!;
 	}

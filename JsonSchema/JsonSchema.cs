@@ -46,8 +46,6 @@ namespace Json.Schema;
 [JsonSerializable(typeof(IdKeyword))]
 [JsonSerializable(typeof(IfKeyword))]
 [JsonSerializable(typeof(ItemsKeyword))]
-[JsonSerializable(typeof(KeywordConstraint))]
-[JsonSerializable(typeof(KeywordEvaluation))]
 [JsonSerializable(typeof(MaxContainsKeyword))]
 [JsonSerializable(typeof(MaximumKeyword))]
 [JsonSerializable(typeof(MaxItemsKeyword))]
@@ -82,9 +80,9 @@ namespace Json.Schema;
 [JsonSerializable(typeof(UnrecognizedKeyword))]
 [JsonSerializable(typeof(VocabularyKeyword))]
 [JsonSerializable(typeof(WriteOnlyKeyword))]
-
+[JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(SchemaValueType))]
-[JsonSerializable(typeof(String[]))]
+[JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
 [JsonSerializable(typeof(Dictionary<string, bool>))]
 [JsonSerializable(typeof(List<JsonSchema>))]
@@ -855,7 +853,7 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
 					{
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER // JsonSerializer.Deserialize that takes a Utf8Reader isn't in the STJ that NetStandard 2.0 compiles against.
 						if (SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out JsonTypeInfo? typeinfo))
 						{
 							implementation = JsonSerializer.Deserialize(ref reader, typeinfo!) as IJsonSchemaKeyword ??
